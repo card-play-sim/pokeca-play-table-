@@ -219,10 +219,11 @@
     if(view().mode==='practice')for(const [type,label] of [['return_hand_to_deck','練習操作：山札へ戻す'],['discard_card','練習操作：トラッシュへ']]){const a={type,cardId:id};container.append(button(label,()=>{dispatch('you',a);closeSheet();},{disabled:!port.canDispatch('you',a)}));}
   }
   function handMenu(id){if(view().turnPlayer!=='you'){detail(id);return;}openSheet(getCard(id)?.card.name || '手札','<div class="menu-list" id="hand-actions"></div>');addHandActions(id,$('hand-actions'));$('hand-actions').append(button('詳細を見る',()=>detail(id)));}
+  function attackCostLabel(card,index){const cost=card?.attacks?.[index]?.cost;if(!Array.isArray(cost))return '';const labels={C:'無色',無色:'無色'};return ' · 必要エネ '+(cost.length?cost.map(x=>labels[x]||x).join('・'):'なし');}
   function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind!=='retreat')){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    for(const option of options.filter(o=>o.kind!=='retreat')){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
     const retreatOptions=options.filter(o=>o.kind==='retreat');
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
