@@ -5,7 +5,7 @@
   const esc=x=>String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const symbols={'水':'💧','炎':'🔥','草':'✦','超':'◉','悪':'◐','雷':'ϟ','闘':'◆','鋼':'⬡'};
   let store=null,persistenceReady=false,storageUnavailable=false;
-  function saveSession(){if(!persistenceReady||!store||storageUnavailable)return;try{store.save(port.getResumeSnapshot());$('save-status').textContent='自動保存済';$('save-status').classList.remove('save-error');}catch(error){storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';$('save-status').classList.add('save-error');throw error;}}
+  function saveSession(){if(!persistenceReady||!store||storageUnavailable)return;try{store.save(port.getResumeSnapshot());$('save-status').textContent='自動保存済';$('save-status').classList.remove('save-error');}catch(error){storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';$('save-status').title='保存失敗：'+String(error?.message||error);$('save-status').classList.add('save-error');throw error;}}
   function downloadJSON(value,filename){const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   let game=Pokeca.createPracticeGame(),port,selected=null,drag=null,longTimer=null,suppressClick=0,toastTimer=null;
   const metrics={moves:0,shuffles:0,animationErrors:0};
