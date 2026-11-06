@@ -412,7 +412,7 @@
     }catch(error){toast('AI停止：'+error.message);}
     finally{aiPracticeRunning=false;render();}
   }
-  $('end-turn').onclick=async()=>{if(Date.now()<confirmTouchGuardUntil)return;const s=view();if(s.turnPlayer==='ai'&&(aiAutoMode||aiPracticeRunning)){toast('相手AIの処理中です。手動で番を終了できません');return;}if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
+  $('end-turn').onclick=async()=>{const s=view();if(s.turnPlayer==='ai'&&(aiAutoMode||aiPracticeRunning)){toast('相手AIの処理中です。手動で番を終了できません');return;}if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
     const result=dispatch(s.turnPlayer,{type:'end_turn'});
     if(result.ok&&aiAutoMode&&s.turnPlayer==='you'&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   }};
