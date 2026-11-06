@@ -94,7 +94,7 @@
     $('attack-button').title=attackOptions.length?(attackOptions.some(o=>o.enabled)?'ワザを選択':'現在使えるワザはありません'):'ワザが登録されていません';
     $('ability-button').title=abilityOptions.length?(abilityOptions.some(o=>o.enabled)?'特性を選択':'現在使える特性はありません'):'手動で使う特性はありません';
     $('draw-button').disabled=!port.canDispatch('you',{type:'draw',count:1});
-    $('end-turn').disabled=!port.canDispatch(s.turnPlayer,{type:'end_turn'});
+    $('end-turn').disabled=!port.canDispatch(s.turnPlayer,{type:'end_turn'})||(s.turnPlayer==='ai'&&(aiAutoMode||aiPracticeRunning));
     $('end-turn').textContent=s.turnPlayer==='you'?'番を終える →':'相手の番を終える →';
     $('stadium-name').textContent=s.stadium?.name || 'スタジアムなし';
     $('stadium-art').innerHTML=s.stadium?cardArt(s.stadium):'';
@@ -390,7 +390,7 @@
     }catch(error){toast('AI停止：'+error.message);}
     finally{aiPracticeRunning=false;}
   }
-  $('end-turn').onclick=async()=>{if(Date.now()<confirmTouchGuardUntil)return;const s=view();if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
+  $('end-turn').onclick=async()=>{if(Date.now()<confirmTouchGuardUntil)return;const s=view();if(s.turnPlayer==='ai'&&(aiAutoMode||aiPracticeRunning)){toast('相手AIの処理中です。手動で番を終了できません');return;}if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
     const result=dispatch(s.turnPlayer,{type:'end_turn'});
     if(result.ok&&aiAutoMode&&s.turnPlayer==='you'&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   }};
