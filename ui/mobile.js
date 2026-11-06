@@ -85,6 +85,14 @@
     const notable=actions.find(e=>!['draw','end_turn'].includes(e.type)) || actions[0];
     recent.classList.toggle('recent-opponent',notable?.player==='ai');recent.classList.toggle('recent-self',!!notable&&notable.player!=='ai');
     recent.innerHTML=notable?'<span class="recent-player">'+(notable.player==='ai'?'相手':'自分')+'</span><span class="recent-description">'+esc(eventText(notable))+'</span><span class="recent-open">履歴 ›</span>':'直近の行動：まだありません';recent.setAttribute('role','button');recent.setAttribute('tabindex','0');recent.onclick=history;recent.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();history();}};
+    // Action availability is derived from the same legal options as card taps.
+    const myTurn=s.status==='active'&&s.turnPlayer==='you';
+    const attackOptions=you.active?port.getPokemonActions('you',idOf(you.active)).filter(o=>o.kind==='attack'):[];
+    const abilityOptions=[you.active,...you.bench].filter(Boolean).flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind==='ability'));
+    $('attack-button').disabled=!myTurn||!attackOptions.some(o=>o.enabled);
+    $('ability-button').disabled=!myTurn||!abilityOptions.some(o=>o.enabled);
+    $('attack-button').title=attackOptions.length?(attackOptions.some(o=>o.enabled)?'ワザを選択':'現在使えるワザはありません'):'ワザが登録されていません';
+    $('ability-button').title=abilityOptions.length?(abilityOptions.some(o=>o.enabled)?'特性を選択':'現在使える特性はありません'):'手動で使う特性はありません';
     $('draw-button').disabled=!port.canDispatch('you',{type:'draw',count:1});
     $('end-turn').disabled=!port.canDispatch(s.turnPlayer,{type:'end_turn'});
     $('end-turn').textContent=s.turnPlayer==='you'?'番を終える →':'相手の番を終える →';
