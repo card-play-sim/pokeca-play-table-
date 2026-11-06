@@ -197,7 +197,24 @@
   function scopedStates(playerId){return port.getStatusView().filter(s=>s.scope==='PLAYER'?s.playerId===playerId:s.scope==='FIELD'&&(!s.playerIds || s.playerIds.includes(playerId)));}
   function scopedStateDetail(playerId){openSheet((playerId==='you'?'自分':'相手')+'側・場の制限',scopedStates(playerId).map(effectRow).join('') || '<p>現在有効な制限はありません。</p>');}
   function addHandActions(id,container){const card=getCard(id)?.card;
-    if(card?.cardType==='SUPPORTER'){const a={type:'play_supporter',cardId:id},explanation=port.getActionExplanation('you',a);container.append(button('サポートを使う',()=>{dispatch('you',a);closeSheet();},{disabled:!explanation.ok}));if(!explanation.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',explanation.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    if(card?.cardType==='SUPPORTER'){
+      const a={type:'play_supporter',cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
+      if(search){
+        const deck=port.getSnapshot().players.find(p=>p.id==='you').deck;
+        const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
+        const allowed=port.getActionExplanation('you',{...a,selectedCardIds:[]});
+        container.append(button('山札を見る・カードを選ぶ',async()=>{
+          const ids=await selectCards({title:'山札から選ぶ（サポートの効果対象のみ）',min:Math.min(search.min||0,candidates.length),max:search.max||1,candidates:candidates.map(c=>({id:idOf(c),name:c.name}))});
+          if(ids===null)return;
+          const result=dispatch('you',{...a,selectedCardIds:ids});if(result.ok)closeSheet();
+        },{disabled:!allowed.ok}));
+        if(!allowed.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',allowed.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+      }else{
+        const explanation=port.getActionExplanation('you',a);
+        container.append(button('サポートを使う',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!explanation.ok}));
+        if(!explanation.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',explanation.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+      }
+    }
     for(const [kind,type,label] of [['ITEM','play_item','グッズを使う'],['STADIUM','play_stadium','スタジアムを出す']])if(card?.cardType===kind){
       const a={type,cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
       if(search){
