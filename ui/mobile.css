@@ -176,3 +176,13 @@
   .hand{gap:3px;padding-left:2px;padding-right:2px;justify-content:flex-start}
   .hand .card{flex:0 0 min(54px,calc((100vw - 42px)/7));width:min(54px,calc((100vw - 42px)/7));height:auto;aspect-ratio:54/76;min-width:0}
 }
+
+/* v167: keep the game board, turn controls and hand in one Android viewport. */
+html,body{height:100%;max-height:100%;overflow:hidden}
+@media(max-width:600px){
+  .app{height:100dvh;max-height:100dvh;min-height:0;grid-template-rows:50px 24px minmax(0,1fr) 38px 101px 18px;overflow:hidden}
+  .topbar,.turnbar,.table,.actionbar,.hand-panel{min-height:0}
+  .hand{height:77px;max-height:77px;overflow-y:hidden}
+  .hand .card{height:69px;max-height:69px}
+  .actionbar #end-turn{min-width:105px;min-height:36px}
+}
