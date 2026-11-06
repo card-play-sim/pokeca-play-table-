@@ -1485,6 +1485,13 @@ function check(game, playerId, action) {
       if(game.stadiumPlayedTurn===game.turnNumber&&game.stadiumPlayedBy===playerId)errors.push('この番はスタジアムを出しました');
       break;
     case 'play_supporter':
+      if(card?.commands?.some(c=>c.command==='SEARCH_DECK')){
+        const searches=card.commands.filter(c=>c.command==='SEARCH_DECK');
+        if(searches.length!==1||!Array.isArray(action.selectedCardIds)||new Set(action.selectedCardIds).size!==action.selectedCardIds.length)errors.push('山札からの選択が必要です');
+        else {const search=searches[0];const valid=p.deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
+          if(action.selectedCardIds.length>(search.max||1)||action.selectedCardIds.length<Math.min(search.min||0,valid.length)||action.selectedCardIds.some(id=>!valid.some(c=>idOf(c)===id)))errors.push('選択できないカードが含まれています');
+        }
+      }
       if (card?.cardType!=='SUPPORTER' || !Array.isArray(card.commands) || !card.commands.length) errors.push('実行可能なサポートではありません');
       if (game.turnNumber===1) errors.push('先攻の最初の番はサポートを使えません');
       if (p.turnLimits?.supporterUsed) errors.push('サポートは使用済みです');
@@ -1555,7 +1562,8 @@ function execute(game, playerId, action) {
       record(game,playerId,'stadium_played',{cardId:idOf(card),cardName:card.name});break;
     case 'play_supporter':
       p.hand.splice(index,1);p.discard.push(card);
-      for(const command of card.commands.slice().sort((a,b)=>a.order-b.order)) {if(command.command==='DEMO_JUDGE_HAND_RESET') demoJudgeHandReset(game,playerId,command.amount);else Effects.apply(game,command,{playerId,sourceInstanceId:idOf(card),sourceType:'SUPPORTER',actionType:'TRAINER',effectName:card.name,sourceCardName:card.name});}
+      const supporterRefs={};
+      for(const command of card.commands.slice().sort((a,b)=>a.order-b.order)) {if(command.command==='DEMO_JUDGE_HAND_RESET') demoJudgeHandReset(game,playerId,command.amount);else Effects.apply(game,command,{playerId,sourceInstanceId:idOf(card),sourceType:'SUPPORTER',actionType:'TRAINER',effectName:card.name,sourceCardName:card.name,selections:Object.fromEntries(card.commands.filter(c=>c.command==='SEARCH_DECK').map(c=>[c.resultRef,action.selectedCardIds||[]]))},supporterRefs);}
       p.turnLimits.supporterUsed=true;record(game,playerId,'supporter_used',{cardId:idOf(card),cardName:card.name});break;
     case 'return_hand_to_deck':
       p.hand.splice(index,1);p.deck.push(card);record(game,playerId,'return_to_deck',{cardId:idOf(card),cardName:card.name});break;
