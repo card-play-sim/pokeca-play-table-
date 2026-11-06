@@ -215,8 +215,10 @@
   async function resolveOption(option){let action=clone(option.action);
     if(option.energyRequest){const ids=await selectCards({title:'にげるためのエネルギーを選ぶ',...option.energyRequest});if(!ids)return;action.energyIds=ids;}
     if(option.targets){const id=await selectCards({title:'特性の対象を選ぶ',min:1,max:1,candidates:option.targets.map(id=>({id,name:getCard(id)?.card.name || id}))});if(!id)return;action.targetIds=id;}
+    // All bench targeting goes through the engine-provided legal candidate list.
+    // Never permit free-form damage or counter placement from the UI.
     for(const request of option.requests || []) {
-      const choices=await selectCards({title:request.kind==='CARD'?'山札からサポートを選ぶ':'相手のポケモンを選ぶ',min:request.min,max:request.max,candidates:request.candidates.map(c=>({...c,id:c.instanceId || idOf(c)}))});
+      const choices=await selectCards({title:request.kind==='CARD'?'山札からサポートを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,candidates:request.candidates.map(c=>({...c,id:c.instanceId || idOf(c)}))});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
     }
