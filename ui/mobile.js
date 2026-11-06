@@ -332,10 +332,12 @@
       });
       counter.textContent=chosen.size+' / '+pending.count+'枚 選択中';
       submit.innerHTML='';
-      submit.append(button('選んだサイドを手札に加える',()=>{
+      const confirm=button('選んだサイドを手札に加える',()=>{
         const result=dispatch('you',{type:'take_prizes',slots:[...chosen]});
         if(result.ok){prizeDialogOpen=false;closeSheet();}
-      },{disabled:chosen.size!==pending.count}));
+        else{const error=(result.errors||['サイドを取得できません']).join(' / ');counter.textContent='取得できません：'+error;}
+      },{disabled:chosen.size!==pending.count});
+      confirm.className='primary';confirm.style.cssText='width:100%;min-height:48px;font-weight:700;';submit.append(confirm);
     };
     paint();
   }
