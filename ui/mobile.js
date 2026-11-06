@@ -11,7 +11,22 @@
   const metrics={moves:0,shuffles:0,animationErrors:0};
   let animationsEnabled=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sheet=$('sheet');
-  function toast(text){$('toast').textContent=text;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
+  function japaneseError(value){
+    const msg=String(value ?? '操作できません');
+    const known=[
+      [/Normal energy attachment already used this turn/i,'この番はすでにエネルギーを1枚つけています'],
+      [/Not this player's turn|Only the current player may draw through this action|Action player is not the current turn player/i,'今は自分の番ではありません'],
+      [/First player cannot attack on the first turn/i,'先攻最初の番はワザを使えません'],
+      [/An attack has already been used this turn/i,'この番はすでにワザを使っています'],
+      [/Attack energy cost is not satisfied|Insufficient Energy|Missing required .* Energy/i,'ワザに必要なエネルギーが足りません'],
+      [/Selected hand card does not exist|Hand card not found/i,'選択した手札が見つかりません'],
+      [/Normal energy attachment/i,'エネルギーをつけられません'],
+      [/No legal|Illegal action|Action is not legal/i,'この操作はできません']
+    ];
+    for(const [pattern,label] of known)if(pattern.test(msg))return label;
+    return msg;
+  }
+  function toast(text){$('toast').textContent=japaneseError(text);$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
   function closeSheet(){if(sheet.open)sheet.close();if(typeof prizeDialogOpen!=='undefined')prizeDialogOpen=false;}
   // A tap on the dimmed backdrop closes information sheets, but not confirmation dialogs.
   // Require pointer down and up to both be outside to avoid dismissing during a swipe.
@@ -97,9 +112,10 @@
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
     document.querySelectorAll('.bench-slot.empty').forEach(el=>el.onclick=()=>{if(selected)dropOn(el);});
   }
-  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)){selected=null;highlight();handMenu(id);return;}selected=selected===id?null:id;highlight();
+  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
     if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';return;}
     const entry=getCard(id);if(!entry)return;
+    $('interaction-hint').textContent='選択中：'+(entry.card.name||'カード')+'・配置先をタップ';
     const options=port.getHandActions('you',id);
     if(options.length){if(entry.card.cardType==='STADIUM'){toast('中央のスタジアム欄をタップ、またはカードをもう一度タップ');$('interaction-hint').textContent='スタジアム欄をタップして配置';}else{toast('緑色の対象へドラッグ、またはタップ');$('interaction-hint').textContent='緑の対象をタップして配置';}}
     else if(['SUPPORTER','ITEM','STADIUM'].includes(entry.card.cardType))handMenu(id);
