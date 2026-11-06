@@ -239,9 +239,9 @@
     const selectedIds=new Set();let settled=false;
     const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open)sheet.close();resolve(value);};
     const cancel=()=>done(null);
-    openSheet(title,`<p>選択できるカードだけを表示しています。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
+    openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`対象を${min}匹選択してください。`:`${min}〜${max}匹選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
-    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max)selectedIds.add(card.id);}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');$('selection-cards').append(b);}
+    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max)selectedIds.add(card.id);else toast('選べる対象は最大'+max+'匹です');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');$('selection-cards').append(b);}
     $('selection-confirm').onclick=()=>done([...selectedIds]);
   });}
   function dispatch(playerId,action){const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
