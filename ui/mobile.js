@@ -204,7 +204,7 @@
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
         const allowed=port.getActionExplanation('you',{...a,selectedCardIds:[]});
         container.append(button('山札を見る・カードを選ぶ',async()=>{
-          const ids=await selectCards({title:'山札から選ぶ（サポートの効果対象のみ）',min:Math.min(search.min||0,candidates.length),max:search.max||1,candidates:candidates.map(c=>({id:idOf(c),name:c.name}))});
+          const ids=await selectDeckSearch({title:'サポートの効果：山札を確認',deck,search});
           if(ids===null)return;
           const result=dispatch('you',{...a,selectedCardIds:ids});if(result.ok)closeSheet();
         },{disabled:!allowed.ok}));
@@ -222,7 +222,7 @@
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
         const allowed=port.getActionExplanation('you',{...a,selectedCardIds:[]});
         container.append(button('山札を見る・カードを選ぶ',async()=>{
-          const ids=await selectCards({title:'山札から選ぶ（効果の対象のみ）',min:Math.min(search.min||0,candidates.length),max:search.max||1,candidates:candidates.map(c=>({id:idOf(c),name:c.name}))});
+          const ids=await selectDeckSearch({title:'グッズの効果：山札を確認',deck,search});
           if(ids===null)return;
           const result=dispatch('you',{...a,selectedCardIds:ids});if(result.ok)closeSheet();
         },{disabled:!allowed.ok}));
@@ -281,6 +281,32 @@
     for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max)selectedIds.add(card.id);else toast('選べる数は最大'+max+unit+'です');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');$('selection-cards').append(b);}
     $('selection-confirm').onclick=()=>done([...selectedIds]);
   });}
+  function selectDeckSearch({title,deck,search}) {
+    const filters=search.filter||[];
+    if(!Array.isArray(filters)||!filters.every(f=>f.field==='cardType'&&f.operator==='EQUALS')){toast('この検索条件はまだ未対応です');return Promise.resolve(null);}
+    const eligible=deck.filter(c=>filters.every(f=>c.cardType===f.value));
+    const minimum=Math.min(search.min||0,eligible.length),maximum=search.max||1;
+    return new Promise(resolve=>{
+      const selectedIds=new Set();let settled=false;
+      const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open)sheet.close();resolve(value);};
+      const cancel=()=>done(null);
+      openSheet(title,`<p>山札全${deck.length}枚を表示しています。選択できるのは効果の条件を満たすカードだけです。選択 ${minimum}〜${maximum}枚。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${maximum}</span><button id="selection-confirm" class="primary" ${minimum?'disabled':''}>決定</button></div>`);
+      sheet.addEventListener('close',cancel);
+      for(const card of deck){
+        const id=idOf(card),allowed=eligible.some(c=>idOf(c)===id);
+        const b=button(card.name||'カード',()=>{
+          if(!allowed)return;
+          if(selectedIds.has(id))selectedIds.delete(id);
+          else {if(maximum===1)selectedIds.clear();if(selectedIds.size<maximum)selectedIds.add(id);else toast('最大'+maximum+'枚までです');}
+          document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));
+          $('selection-count').textContent=selectedIds.size+'/'+maximum;
+          $('selection-confirm').disabled=selectedIds.size<minimum;
+        },{disabled:!allowed});
+        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';$('selection-cards').append(b);
+      }
+      $('selection-confirm').onclick=()=>done([...selectedIds]);
+    });
+  }
   function dispatch(playerId,action){const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
     if(!result.ok){toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
