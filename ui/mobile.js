@@ -339,6 +339,22 @@
   document.addEventListener('click',e=>{if(e.isTrusted&&e.detail>0&&Date.now()<suppressClick){e.preventDefault();e.stopImmediatePropagation();}},true);
   $('sheet-close').onclick=()=>closeSheet();
   $('history-open').onclick=history;
+  function quickAction(kind){
+    const state=view(),me=state.players.find(p=>p.id==='you');
+    if(state.status!=='active'||state.turnPlayer!=='you'){toast('今は自分の操作ができません');return;}
+    const mons=kind==='attack'?[me.active].filter(Boolean):[me.active,...me.bench].filter(Boolean);
+    const actions=mons.flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind===kind).map(o=>({mon,option:o})));
+    openSheet(kind==='attack'?'ワザを選ぶ':'特性を選ぶ','<p>使用する'+(kind==='attack'?'ワザ':'特性')+'を選んでください。使用できないものは灰色で表示します。</p><div id="quick-actions" class="menu-list"></div>');
+    const list=$('quick-actions');
+    if(!actions.length){list.textContent=kind==='attack'?'使えるワザが登録されていません':'手動で使う特性はありません';return;}
+    for(const {mon,option} of actions){
+      const label=(mon.name||'ポケモン')+' · '+option.label+(option.used?'（使用済み）':'');
+      list.append(button(label,()=>resolveOption(option),{disabled:!option.enabled}));
+      if(!option.enabled&&option.disabledReasons?.length)list.append(button('使用できない理由',()=>toast(option.disabledReasons.join(' / '))));
+    }
+  }
+  $('attack-button').onclick=()=>quickAction('attack');
+  $('ability-button').onclick=()=>quickAction('ability');
   $('draw-button').onclick=()=>dispatch('you',{type:'draw',count:1});
   // Opt-in AI practice: legal actions are selected from the existing AI Port,
   // never applied directly to Game State. Manual opponent control remains available.
