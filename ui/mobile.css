@@ -170,3 +170,9 @@
 @media(max-width:380px){.actionbar #interaction-hint{display:none}.actionbar #attack-button,.actionbar #ability-button{min-width:57px;font-size:10px}}
 
 .actionbar #attack-button:disabled,.actionbar #ability-button:disabled{background:#b6bdb9!important;border-color:#a5ada8!important;color:#45544d!important;opacity:.72;box-shadow:none;cursor:not-allowed}
+
+/* v166: fit a seven-card opening hand across narrow Android screens. */
+@media(max-width:600px){
+  .hand{gap:3px;padding-left:2px;padding-right:2px;justify-content:flex-start}
+  .hand .card{flex:0 0 min(54px,calc((100vw - 42px)/7));width:min(54px,calc((100vw - 42px)/7));height:auto;aspect-ratio:54/76;min-width:0}
+}
