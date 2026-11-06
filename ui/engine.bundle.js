@@ -905,8 +905,13 @@ function drawCards(game, playerId, count = 1) {
   if (playerId !== game.turnPlayer) throw new Error('Only the current player may draw through this action');
   if (!Number.isInteger(count) || count < 1) throw new Error('Draw count must be a positive integer');
   const p = playerOf(game, playerId);
-  if (p.deck.length < count) { game.status = 'finished'; game.winner = opponentOf(game, playerId).id; record(game, 'deck_out', { playerId }); return { drawn: [], deckOut: true }; }
-  const drawn = p.deck.splice(0, count); p.hand.push(...drawn); record(game, 'draw', { playerId, count, cardIds: drawn.map(cardId) });
+  // Only the mandatory turn-start draw can cause deck-out defeat.
+  // Effect draws take as many cards as remain in the deck.
+  if (p.deck.length === 0 && count === 1 && game.mode === 'match' && game.turnStartDrawPending === true) {
+    game.status = 'finished'; game.winner = opponentOf(game, playerId).id;
+    record(game, 'deck_out', { playerId }); return { drawn: [], deckOut: true };
+  }
+  const drawn = p.deck.splice(0, Math.min(count, p.deck.length)); p.hand.push(...drawn); record(game, 'draw', { playerId, count, cardIds: drawn.map(cardId) });
   return { drawn: clone(drawn), deckOut: false };
 }
 function attachEnergy(game, playerId, cardIndex, target = 'active') {
@@ -1036,7 +1041,11 @@ function endTurn(game, playerId) {
   Effects.refresh(game);
   // Match turns draw one card at the start. Practice fixtures retain manual draw controls.
   // A failed turn-start draw ends the match by deck-out through the existing rule path.
-  if (game.mode === 'match' && game.status === 'active') drawCards(game, next.id, 1);
+  if (game.mode === 'match' && game.status === 'active') {
+    game.turnStartDrawPending = true;
+    try { drawCards(game, next.id, 1); }
+    finally { delete game.turnStartDrawPending; }
+  }
   return game.turnPlayer;
 }
 function validateState(game) {
