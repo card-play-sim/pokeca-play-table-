@@ -375,6 +375,7 @@
     if(aiPracticeRunning)return;
     if(view().turnPlayer!=='ai'){toast('相手の番になってから実行してください');return;}
     aiPracticeRunning=true;
+    render();
     try{
       const result=await Pokeca.runAITurn(port,'ai',{
         policy:({legalActions})=>{
@@ -388,7 +389,7 @@
       }
       else toast('AI停止：'+(result.errors||[result.stage]).join(' / '));
     }catch(error){toast('AI停止：'+error.message);}
-    finally{aiPracticeRunning=false;}
+    finally{aiPracticeRunning=false;render();}
   }
   $('end-turn').onclick=async()=>{if(Date.now()<confirmTouchGuardUntil)return;const s=view();if(s.turnPlayer==='ai'&&(aiAutoMode||aiPracticeRunning)){toast('相手AIの処理中です。手動で番を終了できません');return;}if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
     const result=dispatch(s.turnPlayer,{type:'end_turn'});
