@@ -142,3 +142,14 @@
 #opponent-hand-count{display:inline-flex;align-items:center;justify-content:center;min-width:40px;padding:2px 6px;border-radius:7px;background:#244e42;color:white;font-size:15px;font-weight:900;line-height:1.2;font-variant-numeric:tabular-nums}
 .opponent-hand-summary #opponent-hand{margin-left:0;padding-right:5px;max-width:65px;overflow:hidden;flex-shrink:1}
 @media(max-width:380px){.opponent-hand-label{font-size:10px}.opponent-hand-summary #opponent-hand{max-width:36px}.opponent-hand-summary{gap:3px;padding:2px 4px}}
+
+/* Readable HP plate: remaining HP / max HP, clear of bottom energy badges. */
+.card .field-hp{box-sizing:border-box;position:absolute;bottom:19px;left:3px;right:3px;width:auto;display:flex;align-items:baseline;justify-content:center;gap:2px;padding:3px 2px;border-radius:6px;background:#173f36f2;color:#fff;font-size:11px;font-weight:800;line-height:1.1;box-shadow:0 1px 4px #0005;z-index:2;white-space:nowrap;pointer-events:none}
+.card .field-hp b{font-size:9px;color:#d2f3dc}
+.card .field-hp strong{font-size:15px;font-weight:900;font-variant-numeric:tabular-nums}
+.card .field-hp .hp-total{font-size:9px;color:#e1eae5;font-weight:700}
+.active-slot .card .field-hp{bottom:23px;padding:4px 2px}
+.active-slot .card .field-hp strong{font-size:18px}
+.bench-slot .card .field-hp{bottom:17px;left:2px;right:2px;padding:3px 1px}
+.bench-slot .card .field-hp strong{font-size:13px}
+.bench-slot .card .field-hp .hp-total{font-size:8px}
