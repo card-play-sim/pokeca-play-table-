@@ -1448,6 +1448,9 @@ function check(game, playerId, action) {
   switch(action.type) {
     case 'evolve':
       if (card.kind !== 'pokemon' || card.basic !== false || !card.evolvesFrom || card.evolvesFrom !== (target.species || target.name)) errors.push('進化先が一致しません');
+      // The printed evolution stage must advance by exactly one. Species alone is insufficient.
+      const fromStage=target.basic===true?0:target.stage;
+      if (!Number.isInteger(fromStage) || !Number.isInteger(card.stage) || card.stage!==fromStage+1 || card.stage>2 || card.stage<1) errors.push('進化段階が一致しません（たね→1進化→2進化の順番が必要です）');
       if (game.turnNumber <= 2 || (target.enteredTurn ?? game.turnNumber) >= game.turnNumber || target.evolvedTurn === game.turnNumber) errors.push('この番は進化できません');
       if (!(Number.isFinite(card.hp) && card.hp > 0)) errors.push('進化カード情報が不足しています');
       break;
@@ -1595,7 +1598,7 @@ function createPracticeGame(index=1) {
     hand:i===0?[
       {id:'hand-basic',name:'練習たね',species:'practice-basic',kind:'pokemon',basic:true,hp:120,retreatCost:0,attacks:[{name:'練習ワザ',damage:10,cost:[]}]},
       {id:'hand-energy',name:'基本水エネルギー',kind:'energy',energyType:'水'},
-      {id:'hand-evolution',name:'練習進化',species:'practice-evolved',evolvesFrom:'practice-basic',kind:'pokemon',basic:false,hp:180,retreatCost:1,attacks:[{name:'進化の練習',damage:30,cost:[]}]},
+      {id:'hand-evolution',name:'練習進化',species:'practice-evolved',evolvesFrom:'practice-basic',kind:'pokemon',basic:false,stage:1,hp:180,retreatCost:1,attacks:[{name:'進化の練習',damage:30,cost:[]}]},
       {id:'hand-tool',name:'練習用どうぐ',kind:'tool',text:'装着操作専用。追加効果はありません。'},
       {id:'hand-supporter',name:'練習サポート',kind:'trainer',cardType:'SUPPORTER',commands:[{order:1,command:'DRAW',amount:1}]},
       ...Array.from({length:5},(_,n)=>({id:'hand-energy-'+n,name:'基本水エネルギー',kind:'energy',energyType:'水'}))
