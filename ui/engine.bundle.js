@@ -1194,8 +1194,8 @@ function checkAction(game, playerId, action) {
   if (!p) errors.push('Action player does not exist');
   if (!action || typeof action.type !== 'string') return result([...errors, 'Action type is required']);
   if(game?.pendingPrizeSelection && action.type!=='take_prizes')errors.push('サイドを選んでから続行してください');
-  if (game?.phase !== 'main' && !['setup', 'between_turns', 'play_active_basic', 'bench_basic'].includes(action.type)) errors.push('Action is not allowed in the current phase');
-  if (game?.phase === 'setup' && !['setup', 'between_turns', 'play_active_basic', 'bench_basic'].includes(action.type)) errors.push('Main actions are blocked during setup');
+  if (game?.phase !== 'main' && !['setup', 'between_turns', 'play_active_basic', 'bench_basic', 'take_prizes'].includes(action.type)) errors.push('Action is not allowed in the current phase');
+  if (game?.phase === 'setup' && !['setup', 'between_turns', 'play_active_basic', 'bench_basic', 'take_prizes'].includes(action.type)) errors.push('Main actions are blocked during setup');
   if (game?.mode === 'match' && game.turnNumber === 1 && ['attack','effect_attack','attack_turn'].includes(action.type)) errors.push('First player cannot attack on the first turn');
 
   errors.push(...StateRules.blocked(game,playerId,action).map(StateRules.reason));
