@@ -237,7 +237,7 @@
   }
   function selectCards({title,min,max,candidates}) {return new Promise(resolve=>{
     const selectedIds=new Set();let settled=false;
-    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);resolve(value);};
+    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open)sheet.close();resolve(value);};
     const cancel=()=>done(null);
     openSheet(title,`<p>選択できるカードだけを表示しています。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
