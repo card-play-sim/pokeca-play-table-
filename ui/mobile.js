@@ -246,7 +246,12 @@
     if(option.kind==='retreat'&&!await confirmAction(`エネルギー${action.energyIds.length}枚をトラッシュして、選んだベンチへにげます。実行しますか？`)){closeSheet();return;}
     if(option.kind==='attack'&&!await confirmAction('「'+option.label+'」を使います。解決後に番が進みます。よろしいですか？')){closeSheet();return;}
     if(option.kind==='ability'&&!await confirmAction('特性「'+option.label+'」を使います。よろしいですか？')){closeSheet();return;}
-    closeSheet();dispatch('you',action);
+    closeSheet();const used=dispatch('you',action);
+    if(used.ok&&option.kind==='attack'&&view().status==='active'&&view().turnPlayer==='you'){
+      const ended=dispatch('you',{type:'end_turn'});
+      if(!ended.ok)toast('ワザは使用済みです。番の終了を確認してください');
+      else if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
+    }
   }
   function selectCards({title,min,max,candidates}) {return new Promise(resolve=>{
     const unit=/エネルギー|カード|山札|サポート/.test(title)?'枚':'匹';
@@ -471,13 +476,9 @@
       if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
     }));
     list.append(button('相手AIの番を実行（練習版）',()=>{closeSheet();void runOpponentPracticeTurn();},{disabled:view().turnPlayer!=='ai'||aiPracticeRunning}));
-    list.append(button('すぐ遊ぶ：架空カードのAI試験対戦',async()=>{
-      if(!await confirmAction('架空の試験カードだけで60枚対戦を開始します。公式デッキ・正式カードではありません。現在の対戦は保存されます。'))return;
-      try{const result=Pokeca.createDemoMatch();if(!result.ok)throw Error(result.stage);
-        if(!await protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
-        selected=null;closeSheet();toast('架空カードのAI試験対戦を開始しました');
-        if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
-      }catch(error){toast('試験対戦を開始できません：'+error.message);}
+    list.append(button('対戦準備から始める：架空カードのAI試験対戦',async()=>{
+      if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
+      try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
     }));
     list.append(button('60枚デッキJSONで試験対戦開始',()=>{
       openSheet('60枚デッキの試験対戦',`<p>各カードに verified:true を持つ60枚JSONを入力できます。ただしJSONの自己申告フラグだけでは公式証跡を確認できません。この機能は試験用であり、公式デッキ・本番検証済みとは認定しません。固定2デッキ45種類の本番カード識別は未完了です。</p><label>自分のデッキJSON<input id="match-deck-you" type="file" accept="application/json,.json"></label><label>AIのデッキJSON<input id="match-deck-ai" type="file" accept="application/json,.json"></label><label>先攻プレイヤー<select id="match-first-player"><option value="you">自分が先攻</option><option value="ai">AIが先攻</option></select></label><label><input id="match-auto-bench" type="checkbox" checked> 試験用：初期手札のたねをベンチへ自動配置（最大5匹）</label><div class="menu-list"><button id="match-start-verified">検証して対戦開始</button></div>`);
