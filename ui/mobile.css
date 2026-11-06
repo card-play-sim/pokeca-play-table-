@@ -168,3 +168,5 @@
 .actionbar #ability-button{background:#315e9a;color:#fff;border:1px solid #234977}
 .actionbar #draw-button,.actionbar #end-turn{flex:0 0 auto;padding-left:4px;padding-right:4px;font-size:10px;white-space:nowrap}
 @media(max-width:380px){.actionbar #interaction-hint{display:none}.actionbar #attack-button,.actionbar #ability-button{min-width:57px;font-size:10px}}
+
+.actionbar #attack-button:disabled,.actionbar #ability-button:disabled{background:#b6bdb9!important;border-color:#a5ada8!important;color:#45544d!important;opacity:.72;box-shadow:none;cursor:not-allowed}
