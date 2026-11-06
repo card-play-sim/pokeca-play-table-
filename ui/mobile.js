@@ -497,7 +497,7 @@
     list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
     Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
-  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:saveSession});
+  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
   let restored=false,recoveryWarning='';
   await (async()=>{
