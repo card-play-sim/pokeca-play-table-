@@ -186,3 +186,12 @@ html,body{height:100%;max-height:100%;overflow:hidden}
   .hand .card{height:69px;max-height:69px}
   .actionbar #end-turn{min-width:105px;min-height:36px}
 }
+
+/* v168: Android installed PWA can report a viewport taller than the visible area.
+   Reserve space for system navigation so the complete hand and footer stay on-screen. */
+@media(max-width:600px){
+  .app{height:calc(100dvh - 72px);max-height:calc(100dvh - 72px);grid-template-rows:46px 23px minmax(0,1fr) 38px 106px 18px}
+  .hand-panel{overflow:hidden}
+  .hand{height:82px;max-height:82px}
+  .hand .card{height:72px;max-height:72px}
+}
