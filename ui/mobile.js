@@ -4,8 +4,21 @@
   const idOf=c=>c?.id || c?.cardId;
   const esc=x=>String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const symbols={'水':'💧','炎':'🔥','草':'✦','超':'◉','悪':'◐','雷':'ϟ','闘':'◆','鋼':'⬡'};
-  let store=null,persistenceReady=false,storageUnavailable=false;
-  function saveSession(force=false){if(!persistenceReady||!store||(!force&&storageUnavailable))return;try{store.save(port.getResumeSnapshot());storageUnavailable=false;$('save-status').textContent='自動保存済';$('save-status').title='';$('save-status').classList.remove('save-error');}catch(error){storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';$('save-status').title='保存失敗：'+String(error?.message||error);$('save-status').classList.add('save-error');throw error;}}
+  let store=null,persistenceReady=false,storageUnavailable=false,saveQueue=Promise.resolve();
+  function saveSession(force=false){
+    if(!persistenceReady||!store||(!force&&storageUnavailable))return saveQueue;
+    const snapshot=port.getResumeSnapshot();
+    $('save-status').textContent='保存中';
+    const pending=saveQueue.catch(()=>{}).then(()=>store.save(snapshot)).then(()=>{
+      storageUnavailable=false;$('save-status').textContent='自動保存済';$('save-status').title='';$('save-status').classList.remove('save-error');
+    },error=>{
+      storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';
+      $('save-status').title='保存失敗：'+String(error?.message||error);$('save-status').classList.add('save-error');
+      throw error;
+    });
+    saveQueue=pending;
+    return pending;
+  }
   function downloadJSON(value,filename){const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   let game=Pokeca.createPracticeGame(),port,selected=null,drag=null,longTimer=null,suppressClick=0,toastTimer=null;
   const metrics={moves:0,shuffles:0,animationErrors:0};
@@ -302,15 +315,15 @@
     const summary=state=>state.players.map(p=>({player:p.id,active:p.active?{name:p.active.name,id:idOf(p.active),damage:p.active.damage}:null,bench:p.bench.map(c=>({name:c.name,id:idOf(c),damage:c.damage})),handCount:p.hand.length,deckCount:p.deck.length,prizes:p.prizes}));
     openSheet('この1手の変化（閲覧専用）',`<p>${esc(step.action.type)} · ${esc(step.legality)} / 評価：未設定</p><h3>操作前</h3><pre>${esc(JSON.stringify(summary(step.beforeState),null,2))}</pre><h3>操作後</h3><pre>${esc(JSON.stringify(summary(step.afterState),null,2))}</pre><p>変化した箇所：${esc(step.changes.map(c=>c.path.join('.')).join(' / ') || 'なし')}</p><p>予定Effect Command：${esc((step.plannedEffectCommands || []).map(c=>c.command).join(' → ') || 'なし')}</p><p>確定Effect Command：${esc(step.effectCommands.map(c=>c.command).join(' → ') || 'なし')}</p><p>判定段階：${esc(step.result.stage)} / ${esc(step.result.errors.join(' / ') || '成功')}</p>`);
   }
-  function savesMenu(){openSheet('中断・再開／保存データ','<p>再開用JSONはGame Stateと研究履歴を含みます。対戦ログの書き出しとは別形式です。山札・相手手札など非公開情報も含むため、保管先に注意してください。</p><div class="menu-list" id="save-actions"></div><label>再開用JSONを読み込む<input type="file" id="resume-file" accept="application/json,.json"></label><div class="menu-list" id="saved-matches"></div>');
-    $('save-actions').append(button('端末への保存を再試行',()=>{try{if(!store)store=PokecaStorage.createMatchStore(window.localStorage);saveSession(true);toast('端末への保存を確認しました');}catch(error){toast('保存できません：'+error.message+'。再開用JSONを書き出してください');}}));
+  async function savesMenu(){openSheet('中断・再開／保存データ','<p>再開用JSONはGame Stateと研究履歴を含みます。対戦ログの書き出しとは別形式です。山札・相手手札など非公開情報も含むため、保管先に注意してください。</p><div class="menu-list" id="save-actions"></div><label>再開用JSONを読み込む<input type="file" id="resume-file" accept="application/json,.json"></label><div class="menu-list" id="saved-matches"></div>');
+    $('save-actions').append(button('端末への保存を再試行',async()=>{try{await saveSession(true);toast('端末への保存を確認しました');}catch(error){toast('保存できません：'+error.message+'。再開用JSONを書き出してください');}}));
     $('save-actions').append(button('再開用JSONを書き出す',()=>{try{const saved=port.getResumeSnapshot();downloadJSON(saved,'pokeca-resume-'+saved.matchId+'.json');toast('再開用JSONの書き出しを開始しました。端末のダウンロードを確認してください');}catch(error){toast('JSONを書き出せません：'+error.message);}}));
-    const list=store?store.list():[];
-    for(const item of list){$('saved-matches').append(button(item.valid?`再開：TURN ${item.turnNumber} · ${item.status} · ${item.matchId}`:`破損・未対応の保存（保持中）：${item.matchId}`,async()=>{if(!await confirmAction('選んだ対戦の保存状態へ切り替えますか？'))return;try{const result=port.restoreSession(store.read(item.matchId));if(!result.ok)throw Error(result.errors.join(' / '));selected=null;closeSheet();toast('保存した対戦を再開しました');if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();}catch(error){toast('再開できません：'+error.message);}},{disabled:!item.valid}));}
+    const list=store?await store.list():[];
+    for(const item of list){$('saved-matches').append(button(item.valid?`再開：TURN ${item.turnNumber} · ${item.status} · ${item.matchId}`:`破損・未対応の保存（保持中）：${item.matchId}`,async()=>{if(!await confirmAction('選んだ対戦の保存状態へ切り替えますか？'))return;try{const result=port.restoreSession(await store.read(item.matchId));if(!result.ok)throw Error(result.errors.join(' / '));selected=null;closeSheet();toast('保存した対戦を再開しました');if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();}catch(error){toast('再開できません：'+error.message);}},{disabled:!item.valid}));}
     $('resume-file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>25*1024*1024)throw Error('ファイルが大きすぎます');const saved=JSON.parse(await file.text());if(!await confirmAction('再開用JSONの状態へ切り替えますか？'))return;const result=port.restoreSession(saved);if(!result.ok)throw Error(result.errors.join(' / '));selected=null;closeSheet();toast('再開用JSONを復元しました');}catch(error){toast('復元できません：'+error.message);}};
   }
-  function saveSafely(){try{saveSession();}catch(error){toast('保存失敗：'+error.message+'。再開用JSONを書き出してください');}}
-  function protectBeforeNewMatch(){try{if(!store)store=PokecaStorage.createMatchStore(window.localStorage);saveSession(true);return true;}catch(error){toast('前の対戦を保存できないため切替を中止しました。再開用JSONを書き出してください：'+error.message);return false;}}
+  function saveSafely(){void saveSession().catch(error=>{toast('保存失敗：'+error.message+'。再開用JSONを書き出してください');});}
+  async function protectBeforeNewMatch(){try{await saveSession(true);return true;}catch(error){toast('前の対戦を保存できないため切替を中止しました。再開用JSONを書き出してください：'+error.message);return false;}}
   let prizeDialogOpen=false;
   sheet.addEventListener('close',()=>{prizeDialogOpen=false;});
   function showPrizeChoice(){
@@ -433,12 +446,12 @@
       }
     };
     paint();
-    start.onclick=()=>{
+    start.onclick=async()=>{
       if(!activeId)return;
       try{
         const result=Pokeca.createDemoMatch({rng:setupRng(seed),autoBenchBasics:false,startingActive:{you:activeId},startingBench:{you:[...benchIds]}});
         if(!result.ok)throw Error(result.stage);
-        if(!protectBeforeNewMatch())return;
+        if(!await protectBeforeNewMatch())return;
         const loaded=port.loadGame(result.game);
         if(!loaded.ok)throw Error(loaded.errors.join(' / '));
         selected=null;closeSheet();toast('対戦準備完了：選んだ配置で開始しました');
@@ -461,7 +474,7 @@
     list.append(button('すぐ遊ぶ：架空カードのAI試験対戦',async()=>{
       if(!await confirmAction('架空の試験カードだけで60枚対戦を開始します。公式デッキ・正式カードではありません。現在の対戦は保存されます。'))return;
       try{const result=Pokeca.createDemoMatch();if(!result.ok)throw Error(result.stage);
-        if(!protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+        if(!await protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
         selected=null;closeSheet();toast('架空カードのAI試験対戦を開始しました');
         if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
       }catch(error){toast('試験対戦を開始できません：'+error.message);}
@@ -475,19 +488,20 @@
           const result=Pokeca.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,firstPlayer:$('match-first-player').value,autoBenchBasics:$('match-auto-bench').checked});
           if(!result.ok)throw Error('初期手札にたねポケモンが出ませんでした。'+result.stage);
           if(!await confirmAction('自己申告JSONによる試験対戦を開始しますか？ 公式カードの検証済み判定ではありません。現在の対戦は自動保存されます。'))return;
-          if(!protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+          if(!await protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
           selected=null;closeSheet();toast('60枚JSONによる試験対戦を開始しました');
           if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
         }catch(error){toast('対戦開始不可：'+error.message);}
       };
     }));
     list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
-    Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
+    Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
   port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:saveSession});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
   let restored=false,recoveryWarning='';
-  try{store=PokecaStorage.createMatchStore(window.localStorage);const saves=store.list();if(saves.length){const valid=saves.filter(entry=>entry.valid);if(!valid.length)throw Error('保存データを確認できません（既存データは削除しません）');let failures=[];for(const entry of valid){try{const result=port.restoreSession(store.read(entry.matchId));if(!result.ok)throw Error(result.errors.join(' / '));restored=true;break;}catch(error){failures.push(entry.matchId+': '+String(error?.message||error));}}if(!restored)throw Error('保存データの再開に失敗：'+failures.join(' / '));}}
+  await (async()=>{
+  try{store=PokecaStorage.createIndexedMatchStore(window.localStorage);const saves=await store.list();if(saves.length){const valid=saves.filter(entry=>entry.valid);if(!valid.length)throw Error('保存データを確認できません（既存データは削除しません）');let failures=[];for(const entry of valid){try{const result=port.restoreSession(await store.read(entry.matchId));if(!result.ok)throw Error(result.errors.join(' / '));restored=true;break;}catch(error){failures.push(entry.matchId+': '+String(error?.message||error));}}if(!restored)throw Error('保存データの再開に失敗：'+failures.join(' / '));}}
   catch(error){recoveryWarning=error.message;storageUnavailable=true;}
   if(!restored){const loaded=port.loadGame(game);if(!loaded.ok)toast(loaded.errors.join(' / '));}
   persistenceReady=true;
@@ -496,4 +510,5 @@
   else{saveSafely();if(restored)toast('前回の対戦を再開しました');}
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveSafely();});
   window.addEventListener('pagehide',saveSafely);
+  })();
 })();
