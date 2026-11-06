@@ -1541,7 +1541,8 @@ function execute(game, playerId, action) {
     }
     case 'play_item':
       p.hand.splice(index,1);p.discard.push(card);
-      for(const command of card.commands.slice().sort((a,b)=>a.order-b.order))Effects.apply(game,command,{playerId,sourceInstanceId:idOf(card),sourceType:'ITEM',actionType:'TRAINER',effectName:card.name,sourceCardName:card.name,selections:Object.fromEntries(card.commands.filter(c=>c.command==='SEARCH_DECK').map(c=>[c.resultRef,action.selectedCardIds||[]]))});
+      const itemRefs={};
+      for(const command of card.commands.slice().sort((a,b)=>a.order-b.order))Effects.apply(game,command,{playerId,sourceInstanceId:idOf(card),sourceType:'ITEM',actionType:'TRAINER',effectName:card.name,sourceCardName:card.name,selections:Object.fromEntries(card.commands.filter(c=>c.command==='SEARCH_DECK').map(c=>[c.resultRef,action.selectedCardIds||[]]))},itemRefs);
       record(game,playerId,'item_used',{cardId:idOf(card),cardName:card.name});break;
     case 'play_stadium':
       p.hand.splice(index,1);
