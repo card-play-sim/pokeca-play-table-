@@ -164,14 +164,14 @@
   function dropOn(el){const option=actionFor(el);if(!option)return false;const r=dispatch('you',option.action);if(r.ok){selected=null;highlight();}return r.ok;}
   function pointerStart(e,el){if(e.button!==0)return;suppressClick=0;
     clearTimeout(longTimer);const id=el.dataset.cardId;
-    drag={pointerId:e.pointerId,x:e.clientX,y:e.clientY,el,id,hand:!!el.dataset.hand,active:false,scroll:false};
+    drag={pointerId:e.pointerId,x:e.clientX,y:e.clientY,el,id,hand:!!el.dataset.hand,retreatSource:!el.dataset.hand&&el.dataset.owner==='you'&&!!view().players.find(p=>p.id==='you')?.active&&idOf(view().players.find(p=>p.id==='you').active)===id,active:false,scroll:false};
     longTimer=setTimeout(()=>{if(drag&&!drag.active&&!drag.scroll){suppressClick=Date.now()+1000;detail(id);clearGesture();suppressClick=Date.now()+500;}},480);
   }
   function pointerMove(e){if(!drag||drag.pointerId!==e.pointerId)return;
     const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
     if(!drag.active && Math.hypot(dx,dy)>8){clearTimeout(longTimer);
-      if(!drag.hand||Math.abs(dx)>Math.abs(dy)){drag.scroll=true;return;}
-      if(dy<-8){drag.active=true;selected=drag.id;highlight();suppressClick=Date.now()+1000;
+      if((!drag.hand&&!drag.retreatSource)||(!drag.retreatSource&&Math.abs(dx)>Math.abs(dy))){drag.scroll=true;return;}
+      if((drag.retreatSource&&Math.hypot(dx,dy)>12)||(!drag.retreatSource&&dy<-8)){drag.active=true;if(!drag.retreatSource)selected=drag.id;highlight();suppressClick=Date.now()+1000;
         try{drag.el.setPointerCapture(e.pointerId);}catch(_){}
         const ghost=drag.el.cloneNode(true);ghost.removeAttribute('data-card-id');ghost.classList.add('drag-ghost');document.body.appendChild(ghost);drag.ghost=ghost;
       }
@@ -179,7 +179,7 @@
     if(drag.active){e.preventDefault();drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';highlight();const el=document.elementFromPoint(e.clientX,e.clientY);if(actionFor(el)) (el.closest('[data-card-id],.bench-slot,#self-active')||el).classList.add('drop-hover');}
   }
   function pointerEnd(e){clearTimeout(longTimer);if(!drag)return;
-    const active=drag.active;const tapTarget=!active&&!drag.scroll&&e.pointerType==='touch'&&Date.now()>=suppressClick?(e.target.closest('[data-state-card]') || drag.el):null;if(active){const el=document.elementFromPoint(e.clientX,e.clientY);if(!dropOn(el)){port.dispatch('you',{type:'invalid_drop',cardId:selected,targetInstanceId:el?.closest('[data-card-id]')?.dataset.cardId || null});toast('ここには置けません。状態は変更されていません');}}
+    const active=drag.active;const tapTarget=!active&&!drag.scroll&&e.pointerType==='touch'&&Date.now()>=suppressClick?(e.target.closest('[data-state-card]') || drag.el):null;if(active){const el=document.elementFromPoint(e.clientX,e.clientY);if(drag.retreatSource){const target=el?.closest('#self-bench [data-card-id]');const targetId=target?.dataset.cardId;const choices=port.getPokemonActions('you',drag.id).filter(o=>o.kind==='retreat');const option=choices.find(o=>o.action.benchInstanceId===targetId);if(option?.enabled){void resolveOption(option);}else if(option){toast('にげられません：'+(option.disabledReasons||['条件を満たしていません']).join(' / '));}else toast('にげる先の自分のベンチポケモンにスライドしてください');}else if(!dropOn(el)){port.dispatch('you',{type:'invalid_drop',cardId:selected,targetInstanceId:el?.closest('[data-card-id]')?.dataset.cardId || null});toast('ここには置けません。状態は変更されていません');}}
     clearGesture();if(tapTarget){tapTarget.click();suppressClick=Date.now()+500;}if(active)suppressClick=Date.now()+500;
   }
   function clearGesture(){clearTimeout(longTimer);suppressClick=Math.min(suppressClick,Date.now()+120);if(drag?.ghost)drag.ghost.remove();drag=null;document.querySelectorAll('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));}
