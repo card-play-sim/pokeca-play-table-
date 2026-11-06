@@ -310,6 +310,7 @@
     $('resume-file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>25*1024*1024)throw Error('ファイルが大きすぎます');const saved=JSON.parse(await file.text());if(!await confirmAction('再開用JSONの状態へ切り替えますか？'))return;const result=port.restoreSession(saved);if(!result.ok)throw Error(result.errors.join(' / '));selected=null;closeSheet();toast('再開用JSONを復元しました');}catch(error){toast('復元できません：'+error.message);}};
   }
   function saveSafely(){try{saveSession();}catch(error){toast('保存失敗：'+error.message+'。再開用JSONを書き出してください');}}
+  function protectBeforeNewMatch(){try{if(!store)store=PokecaStorage.createMatchStore(window.localStorage);saveSession(true);return true;}catch(error){toast('前の対戦を保存できないため切替を中止しました。再開用JSONを書き出してください：'+error.message);return false;}}
   let prizeDialogOpen=false;
   sheet.addEventListener('close',()=>{prizeDialogOpen=false;});
   function showPrizeChoice(){
@@ -435,7 +436,7 @@
       try{
         const result=Pokeca.createDemoMatch({rng:setupRng(seed),autoBenchBasics:false,startingActive:{you:activeId},startingBench:{you:[...benchIds]}});
         if(!result.ok)throw Error(result.stage);
-        saveSafely();
+        if(!protectBeforeNewMatch())return;
         const loaded=port.loadGame(result.game);
         if(!loaded.ok)throw Error(loaded.errors.join(' / '));
         selected=null;closeSheet();toast('対戦準備完了：選んだ配置で開始しました');
@@ -458,7 +459,7 @@
     list.append(button('すぐ遊ぶ：架空カードのAI試験対戦',async()=>{
       if(!await confirmAction('架空の試験カードだけで60枚対戦を開始します。公式デッキ・正式カードではありません。現在の対戦は保存されます。'))return;
       try{const result=Pokeca.createDemoMatch();if(!result.ok)throw Error(result.stage);
-        saveSafely();const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+        if(!protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
         selected=null;closeSheet();toast('架空カードのAI試験対戦を開始しました');
         if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
       }catch(error){toast('試験対戦を開始できません：'+error.message);}
@@ -472,14 +473,14 @@
           const result=Pokeca.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,firstPlayer:$('match-first-player').value,autoBenchBasics:$('match-auto-bench').checked});
           if(!result.ok)throw Error('初期手札にたねポケモンが出ませんでした。'+result.stage);
           if(!await confirmAction('自己申告JSONによる試験対戦を開始しますか？ 公式カードの検証済み判定ではありません。現在の対戦は自動保存されます。'))return;
-          saveSafely();const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+          if(!protectBeforeNewMatch())return;const loaded=port.loadGame(result.game);if(!loaded.ok)throw Error(loaded.errors.join(' / '));
           selected=null;closeSheet();toast('60枚JSONによる試験対戦を開始しました');
           if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
         }catch(error){toast('対戦開始不可：'+error.message);}
       };
     }));
     list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
-    Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){saveSafely();closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
+    Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
   port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:saveSession});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
