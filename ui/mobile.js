@@ -232,6 +232,7 @@
     }
     if(option.kind==='retreat'&&!await confirmAction(`エネルギー${action.energyIds.length}枚をトラッシュして、選んだベンチへにげます。実行しますか？`)){closeSheet();return;}
     if(option.kind==='attack'&&!await confirmAction('「'+option.label+'」を使います。解決後に番が進みます。よろしいですか？')){closeSheet();return;}
+    if(option.kind==='ability'&&!await confirmAction('特性「'+option.label+'」を使います。よろしいですか？')){closeSheet();return;}
     closeSheet();dispatch('you',action);
   }
   function selectCards({title,min,max,candidates}) {return new Promise(resolve=>{
