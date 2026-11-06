@@ -222,11 +222,11 @@
   }
   async function resolveOption(option){let action=clone(option.action);
     if(option.energyRequest){const ids=await selectCards({title:'にげるためのエネルギーを選ぶ',...option.energyRequest});if(!ids)return;action.energyIds=ids;}
-    if(option.targets){const id=await selectCards({title:'特性の対象を選ぶ',min:1,max:1,candidates:option.targets.map(id=>({id,name:getCard(id)?.card.name || id}))});if(!id)return;action.targetIds=id;}
+    if(option.targets){const id=await selectCards({title:'特性の対象を選ぶ',min:1,max:1,candidates:option.targets.map(id=>{const state=view();const owner=state.players.find(p=>idOf(p.active)===id||p.bench.some(b=>idOf(b)===id));const index=owner?.bench.findIndex(b=>idOf(b)===id)??-1;const mon=owner?.active&&idOf(owner.active)===id?owner.active:owner?.bench[index];return {id,name:(owner?.id==='you'?'自分':'相手')+' '+(index>=0?'ベンチ'+(index+1):'バトル場')+' · '+(mon?.name||getCard(id)?.card.name||id)+(mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'')};})});if(!id)return;action.targetIds=id;}
     // All bench targeting goes through the engine-provided legal candidate list.
     // Never permit free-form damage or counter placement from the UI.
     for(const request of option.requests || []) {
-      const choices=await selectCards({title:request.kind==='CARD'?'山札からサポートを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';const side=owner?.id==='you'?'自分':'相手';const hp=Number.isFinite(Number(c.hp))?' · 残りHP '+Math.max(0,Number(c.hp)-Number(c.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(c.name||'ポケモン')+hp};})});
+      const choices=await selectCards({title:request.kind==='CARD'?'山札からサポートを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';const side=owner?.id==='you'?'自分':'相手';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
     }
