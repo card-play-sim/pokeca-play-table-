@@ -471,7 +471,7 @@
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
       if(result.ok){
         const recent=view().history.filter(e=>e.player==='ai'&&!['end_turn','draw'].includes(e.type)).slice(-1)[0];
-        toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手');
+        toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms');
       }
       else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
     }catch(error){toast('AI停止：'+error.message);}
