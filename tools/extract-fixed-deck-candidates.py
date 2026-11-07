@@ -40,8 +40,12 @@ def main(archive, decks_file, output):
         if image and image.get("cardId") == card.get("cardId") and image.get("cardNumber") == card.get("cardNumber"):
             candidate["imageSourceUrl"] = image["sourceUrl"]
             candidate["imageRightsStatus"] = image.get("rightsStatus", "not_checked")
+        if "imageSourceUrl" not in candidate:
+            raise ValueError(f"Missing verified official image for {cid}")
         candidates.append(candidate)
     candidates.sort(key=lambda c: (c["name"], int(c["officialCardId"])))
+    if len({str(c["officialCardId"]) for c in candidates}) != len(candidates):
+        raise ValueError("Duplicate official card IDs in candidate export")
     result = {
         "status": "CANDIDATES_ONLY_NOT_ENGINE_READY",
         "adoptedPrintIds": [],
