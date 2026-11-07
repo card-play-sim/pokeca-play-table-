@@ -15,6 +15,9 @@ PREFIX = "https://www.pokemon-card.com/assets/images/card_images/"
 def main(archive, decks_file, output):
     with zipfile.ZipFile(archive) as z:
         catalog = json.loads(z.read(CATALOG))
+    images = {str(i.get("officialCardId")): i for i in catalog.get("images", [])
+    if i.get("status") == "reference_only" and isinstance(i.get("sourceUrl"), str)
+    and i["sourceUrl"].startswith(PREFIX)}
     decks = json.loads(Path(decks_file).read_text(encoding="utf-8"))["decks"]
     names = {c["name"] for d in decks for c in d["cards"] if c["category"] == "pokemon"}
     candidates = []
@@ -28,7 +31,7 @@ def main(archive, decks_file, output):
             continue
         if not isinstance(card.get("hp"), int) or not isinstance(card.get("attacks"), list):
             continue
-        candidates.append({key: card.get(key) for key in (
+        candidate = {key: card.get(key) for key in (
             "officialCardId", "name", "cardType", "pokemonStage", "hp", "types",
             "abilities", "attacks", "weakness", "resistance", "retreatCost",
             "cardNumber", "regulationMark", "officialPageUrl", "verificationStatus"
