@@ -69,8 +69,10 @@
     const currentPrint=card.evolutionCards?.length?card.evolutionCards[card.evolutionCards.length-1]:card;
     const cardId=String(currentPrint.officialCardId ?? currentPrint.catalogCardId ?? '');
     const verifiedUrl=window.PokecaImageResolver?.resolvePreview(card) || '';
-    const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || verifiedUrl || '';
-    if(explicit)return /^https:\/\//i.test(explicit)?explicit:'';
+    const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
+    // A verified official print takes precedence over unverified runtime URLs.
+    if(verifiedUrl)return verifiedUrl;
+    if(explicit)return /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//i.test(explicit)?explicit:'';
     if(card.evolutionCards?.length || currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
     return window.PokecaArt?.[card.name] || '';
   }
