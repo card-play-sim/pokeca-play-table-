@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const ctx={window:{}};
+const ctx={window:{},URL};
 vm.runInNewContext(fs.readFileSync('ui/official-candidate-loader.js','utf8'),ctx);
 const load=ctx.window.PokecaOfficialCandidates.normalize;
 const card={officialCardId:'47847',name:'メガガルーラex',verificationStatus:'verified',cardType:'pokemon',pokemonStage:'たね',hp:300,attacks:[{name:'マシンガンコンボ',cost:['無色'],text:'効果'}],abilities:[{name:'おつかいダッシュ',text:'効果'}],cardNumber:'M1S 051/063',regulationMark:'I',officialPageUrl:'https://www.pokemon-card.com/card-search/details.php/card/47847/regu/XY',imageSourceUrl:'https://www.pokemon-card.com/assets/images/card_images/large/M1S/047847_P_MGARURAEX.jpg'};
