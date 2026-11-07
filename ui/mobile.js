@@ -67,7 +67,7 @@
     // Prefer the official source URL carried by the verified card record.
     // Never guess a print from its name when an official identity is present.
     const currentPrint=card.evolutionCards?.length?card.evolutionCards[card.evolutionCards.length-1]:card;
-    const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
+    const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || window.PokecaVerifiedArt?.[String(currentPrint.officialCardId ?? currentPrint.catalogCardId ?? '')] || '';
     if(explicit)return /^https:\/\//i.test(explicit)?explicit:'';
     if(currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
     return window.PokecaArt?.[card.name] || '';
