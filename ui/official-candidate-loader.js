@@ -5,7 +5,7 @@
 'use strict';
 const ROOT='https://www.pokemon-card.com/assets/images/card_images/';
 function normalize(data){
- if(!data||data.status!=='CANDIDATES_ONLY_NOT_ENGINE_READY'||!Array.isArray(data.cards)||!Array.isArray(data.adoptedPrintIds)||data.adoptedPrintIds.length)throw Error('Untrusted candidate dataset');
+ if(!data||!['CANDIDATES_ONLY_NOT_ENGINE_READY','VERIFIED_CANDIDATES_NOT_ADOPTED'].includes(data.status)||!Array.isArray(data.cards)||!Array.isArray(data.adoptedPrintIds)||data.adoptedPrintIds.length)throw Error('Untrusted candidate dataset');
  const byId=Object.create(null),byName=Object.create(null),imageByOfficialCardId=Object.create(null);
  for(const c of data.cards){
   if(!c||c.verificationStatus!=='verified'||c.cardType!=='pokemon'||c.pokemonStage!=='たね'||!/^\d+$/.test(String(c.officialCardId))||!c.name||!Number.isInteger(c.hp)||c.hp<=0||!Array.isArray(c.attacks)||!Array.isArray(c.abilities))throw Error('Invalid candidate');
