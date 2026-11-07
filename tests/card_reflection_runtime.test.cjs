@@ -63,8 +63,10 @@ assert.equal(visiblePokemon.energyCards.some(c => c.id === energyId), true, 'UI 
 assert.equal(energyAfter.normalEnergyAttached, true, 'once-per-turn energy limit marked');
 const secondIndex = energyAfter.hand.findIndex(c => c.kind === 'energy');
 assert.ok(secondIndex >= 0, 'second energy exists for limit check');
+const beforeRejectedEnergy = JSON.stringify(port.getSnapshot());
 const secondResult = port.dispatch('you', {type: 'attach_energy', cardIndex: secondIndex, target: targetIndex});
 assert.equal(secondResult.ok, false, 'second normal energy attachment must be rejected');
 assert.equal(port.getSnapshot().players.find(p => p.id === 'you').hand.length, energyAfter.hand.length, 'failed action must not remove energy');
+assert.equal(JSON.stringify(port.getSnapshot()), beforeRejectedEnergy, 'rejected energy action must preserve entire authoritative state');
 console.log('PASS: attach_energy hand -1, physical energy attached, UI view synchronized, second attachment rejected');
 
