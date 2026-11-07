@@ -243,6 +243,21 @@
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
     for(const option of options.filter(o=>o.kind!=='retreat')){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    // If the action adapter omits a declared ability, expose a guarded
+    // engine-validated action instead of silently showing only card info.
+    // This does not authorize an ability or bypass Rule Engine legality.
+    const declared=Array.isArray(entry?.card?.abilities)?entry.card.abilities:[];
+    for(const ability of declared.filter(a=>a?.type==='DECLARED'&&typeof a.id==='string'&&!options.some(o=>o.kind==='ability'&&o.action?.abilityId===a.id))){
+      const action={type:'use_ability',sourceInstanceId:id,abilityId:ability.id};
+      const explanation=port.getActionExplanation('you',action);
+      container.append(button('特性 · '+(ability.name||ability.id),()=>{
+        const check=port.getActionExplanation('you',action);
+        if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
+        const result=dispatch('you',action);if(result.ok)closeSheet();
+      },{disabled:!explanation.ok||!!ability.target}));
+      if(ability.target)container.append(button('特性の対象選択は未対応',()=>toast('この特性の対象選択は未対応です')));
+      else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+    }
     const retreatOptions=options.filter(o=>o.kind==='retreat');
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
