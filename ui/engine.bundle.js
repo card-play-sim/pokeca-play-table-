@@ -203,20 +203,23 @@ async function runAITurn(port, playerId='ai', {policy=chooseBaseline,maxActions=
   const initial=port.getSnapshot();
   if(initial.status!=='active' || initial.turnPlayer!==playerId) return {ok:false,stage:'not_turn',actions:0};
   const results=[];
+  let slowestActionMs=0;
   for(let i=0;i<maxActions;i++){
     const snapshot=port.getSnapshot();
-    if(snapshot.status!=='active' || snapshot.turnPlayer!==playerId) return {ok:true,actions:results.length,results};
+    if(snapshot.status!=='active' || snapshot.turnPlayer!==playerId) return {ok:true,actions:results.length,results,slowestActionMs:Math.round(slowestActionMs)};
     let result;
+    const actionStarted=performance.now();
     try {result=await chooseAndDispatch(port,playerId,policy);}
-    catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results};}
-    if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results};
+    finally {slowestActionMs=Math.max(slowestActionMs,performance.now()-actionStarted);}
+    catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results,slowestActionMs:Math.round(slowestActionMs)};}
+    if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results,slowestActionMs:Math.round(slowestActionMs)};
     results.push(result);
     // Yield occasionally so the mobile browser can process input and paint.
     // No game action is skipped, reordered or synthesized by this yield.
     if(i%3===2) await new Promise(resolve=>setTimeout(resolve,0));
   }
   // Bound is a safety stop, not an invented end_turn or PASS.
-  return {ok:false,stage:'action_limit',actions:results.length,errors:['AI action limit reached'],results};
+  return {ok:false,stage:'action_limit',actions:results.length,errors:['AI action limit reached'],results,slowestActionMs:Math.round(slowestActionMs)};
 }
 module.exports={runAITurn};
 
