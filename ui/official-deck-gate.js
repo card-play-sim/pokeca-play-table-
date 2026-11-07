@@ -9,6 +9,7 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
  const issues=[],seen=new Set();
  if(!deck||!Array.isArray(deck.cards))return {ready:false,issues:[fail('DECK_INVALID','','Missing deck cards')]};
  const total=deck.cards.reduce((n,c)=>n+(Number.isInteger(c?.count)&&c.count>0?c.count:0),0);
+ if(deck.cards.length===0)issues.push(fail('DECK_EMPTY',deck.name,'Deck has no entries'));
  if(total!==60)issues.push(fail('DECK_COUNT_INVALID',deck.name,'Expected 60 cards, got '+total));
  for(const entry of deck.cards){
   const name=entry.name;
@@ -25,10 +26,11 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
   }
   if(entry.category==='pokemon'){
    if(!Number.isInteger(record.hp)||record.hp<=0)issues.push(fail('HP_MISSING',name,key));
-   if(!Array.isArray(record.attacks))issues.push(fail('ATTACKS_MISSING',name,key));
-   if(!Array.isArray(record.abilities))issues.push(fail('ABILITIES_MISSING',name,key));
+   if(record.pokemonStage!=='たね'&&record.pokemonStage!=='1進化'&&record.pokemonStage!=='2進化')issues.push(fail('STAGE_MISSING',name,key));
+   if(!Array.isArray(record.attacks)||record.attacks.some(a=>typeof a?.name!=='string'||!Array.isArray(a.cost)||typeof a.text!=='string'))issues.push(fail('ATTACKS_MISSING',name,key));
+   if(!Array.isArray(record.abilities)||record.abilities.some(a=>typeof a?.name!=='string'||typeof a.text!=='string'))issues.push(fail('ABILITIES_MISSING',name,key));
   }
-  if(!effects||effects.engineReadable!==true)issues.push(fail('EFFECT_NOT_ENGINE_READY',name,key));
+  if(!effects||effects.engineReadable!==true||String(effects.officialCardId)!==key)issues.push(fail('EFFECT_NOT_ENGINE_READY',name,key));
   if(seen.has(key))issues.push(fail('DUPLICATE_PRINT_ENTRY',name,key));
   seen.add(key);
  }
