@@ -19,9 +19,26 @@ assert.equal(gate.validate(deck([card('B')]),record,art,effect).ready,false);
 assert.equal(gate.validate(deck([card('A')]),{123:{...record[123],hp:0}},art,effect).ready,false);
 assert.equal(gate.validate(deck([card('A')]),record,{},effect).ready,false);
 assert.equal(gate.validate(deck([card('A')]),record,art,{}).ready,false);
-assert.equal(gate.validatePair([deck([card('A')]),deck([card('A')])],record,art,effect).ready,true);
+assert.equal(gate.validatePair([deck([card('A')]),deck([card('A')])],record,art,effect).ready,false);
 assert.equal(gate.validatePair([deck([card('A')]),deck([card('B')])],record,art,effect).ready,false);
 assert.equal(gate.validatePair([deck([card('A')])],record,art,effect).ready,false);
 assert.equal(gate.validate(deck([null]),record,art,effect).ready,false);
 assert.equal(gate.validate(deck([card('A',60)]),{123:{...record[123],cardType:'item'}},art,effect).ready,false);
-console.log('Official deck readiness gate: fail-closed checks passed');
+// A legal 60-card fixture: 15 different official print IDs, four of each.
+const legalCards=[],legalRecords={},legalImages={},legalEffects={};
+for(let i=0;i<15;i++){
+ const id=String(1000+i),name='ポケモン'+i;
+ legalCards.push({name,count:4,category:'pokemon',officialCardId:id,identityStatus:'CONFIRMED'});
+ legalRecords[id]={name,cardType:'pokemon',hp:70,pokemonStage:'たね',attacks:[],abilities:[]};
+ legalImages[id]={name,sourceUrl:'https://www.pokemon-card.com/assets/images/card_images/large/test.jpg'};
+ legalEffects[id]={engineReadable:true,officialCardId:id};
+}
+assert.equal(gate.validate(deck(legalCards),legalRecords,legalImages,legalEffects).ready,true);
+assert.equal(gate.validatePair([deck(legalCards),deck(legalCards)],legalRecords,legalImages,legalEffects).ready,true);
+// Multiple print editions of the same name still share a four-copy limit.
+const overflow=legalCards.map(x=>({...x}));
+overflow[1].name=overflow[0].name;
+legalRecords[overflow[1].officialCardId].name=overflow[0].name;
+legalImages[overflow[1].officialCardId].name=overflow[0].name;
+assert.equal(gate.validate(deck(overflow),legalRecords,legalImages,legalEffects).ready,false);
+console.log('Official deck readiness gate: fail-closed and valid-fixture checks passed');
