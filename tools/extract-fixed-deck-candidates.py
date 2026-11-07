@@ -35,7 +35,12 @@ def main(archive, decks_file, output):
             "officialCardId", "name", "cardType", "pokemonStage", "hp", "types",
             "abilities", "attacks", "weakness", "resistance", "retreatCost",
             "cardNumber", "regulationMark", "officialPageUrl", "verificationStatus"
-        )})
+        )}
+        image = images.get(cid)
+        if image and image.get("cardId") == card.get("cardId") and image.get("cardNumber") == card.get("cardNumber"):
+            candidate["imageSourceUrl"] = image["sourceUrl"]
+            candidate["imageRightsStatus"] = image.get("rightsStatus", "not_checked")
+        candidates.append(candidate)
     candidates.sort(key=lambda c: (c["name"], int(c["officialCardId"])))
     result = {
         "status": "CANDIDATES_ONLY_NOT_ENGINE_READY",
