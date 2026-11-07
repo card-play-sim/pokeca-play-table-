@@ -482,7 +482,7 @@
       });
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
       const perf=result.phaseTotals;
-      showAiPerformance('AI直近：'+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+(perf?' / 探索'+Math.round(perf.searchMs)+'ms・実行'+Math.round(perf.dispatchMs)+'ms・候補最大'+perf.maxCandidates:'')+(result.ok?'':' / 停止'));
+      showAiPerformance('AI直近：'+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+(perf?' / 探索'+Math.round(perf.searchMs)+'ms・選択'+Math.round(perf.decisionMs)+'ms・実行'+Math.round(perf.dispatchMs)+'ms・候補最大'+perf.maxCandidates+(perf.truncated?'（候補上限）':''):'')+(result.ok?'':' / 停止'));
       if(result.ok){
         const phase=result.phaseTotals;
         const phaseLabel=phase?' / 探索'+Math.round(phase.searchMs)+'ms・実行'+Math.round(phase.dispatchMs)+'ms・候補最大'+phase.maxCandidates+(phase.truncated?'（上限到達）':''):'';
@@ -490,7 +490,10 @@
         toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+phaseLabel);
       }
       else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
-    }catch(error){toast('AI停止：'+error.message);}
+    }catch(error){
+      showAiPerformance('AI停止：'+((performance.now()-aiStartedAt)/1000).toFixed(1)+'秒 / '+String(error?.message||error));
+      toast('AI停止：'+error.message);
+    }
     finally{aiPracticeRunning=false;render();}
   }
   $('end-turn').onclick=async()=>{const s=view();if(s.turnPlayer==='ai'&&aiAutoMode){if(!aiPracticeRunning)void runOpponentPracticeTurn();return;}if(s.turnPlayer==='ai'&&aiPracticeRunning)return;if(await confirmAction((s.turnPlayer==='you'?'自分':'相手')+'の番を終了しますか？')){
