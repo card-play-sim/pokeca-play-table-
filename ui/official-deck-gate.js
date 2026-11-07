@@ -4,16 +4,16 @@
  */
 (function(global){
 'use strict';
-const OWN=Object.prototype.hasOwnProperty;
 const fail=(code,name,detail)=>({code,name,detail});
 function validate(deck,cardRegistry,imageRegistry,effectRegistry){
  const issues=[],seen=new Set();
  if(!deck||!Array.isArray(deck.cards))return {ready:false,issues:[fail('DECK_INVALID','','Missing deck cards')]};
- const total=deck.cards.reduce((n,c)=>n+Number(c.count||0),0);
+ const total=deck.cards.reduce((n,c)=>n+(Number.isInteger(c?.count)&&c.count>0?c.count:0),0);
  if(total!==60)issues.push(fail('DECK_COUNT_INVALID',deck.name,'Expected 60 cards, got '+total));
  for(const entry of deck.cards){
   const name=entry.name;
   if(!Number.isInteger(entry.count)||entry.count<1)issues.push(fail('COUNT_INVALID',name,'Invalid count'));
+  if(typeof name!=='string'||!name.trim()){issues.push(fail('CARD_NAME_INVALID',String(name),'Missing name'));continue;}
   const id=entry.officialCardId;
   if(id==null||!/^\d+$/.test(String(id))||entry.identityStatus!=='CONFIRMED'){
    issues.push(fail('PRINT_NOT_CONFIRMED',name,'An adopted official print ID is required'));continue;
@@ -29,10 +29,15 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
    if(!Array.isArray(record.abilities))issues.push(fail('ABILITIES_MISSING',name,key));
   }
   if(!effects||effects.engineReadable!==true)issues.push(fail('EFFECT_NOT_ENGINE_READY',name,key));
-  if(seen.has(key)&&!OWN.call(entry,'allowSamePrintRepeat'))issues.push(fail('DUPLICATE_PRINT_ENTRY',name,key));
+  if(seen.has(key))issues.push(fail('DUPLICATE_PRINT_ENTRY',name,key));
   seen.add(key);
  }
  return {ready:issues.length===0,issues,checked:deck.cards.length,total};
 }
-global.PokecaOfficialDeckGate=Object.freeze({validate});
+function validatePair(decks,cardRegistry,imageRegistry,effectRegistry){
+ if(!Array.isArray(decks)||decks.length!==2)return {ready:false,issues:[fail('DECK_PAIR_INVALID','','Expected exactly two decks')],decks:[]};
+ const reports=decks.map(d=>validate(d,cardRegistry,imageRegistry,effectRegistry));
+ return {ready:reports.every(x=>x.ready),issues:reports.flatMap((x,i)=>x.issues.map(issue=>({...issue,deck:decks[i].id||decks[i].name}))),decks:reports};
+}
+global.PokecaOfficialDeckGate=Object.freeze({validate,validatePair});
 })(window);
