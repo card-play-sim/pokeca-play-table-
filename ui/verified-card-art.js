@@ -43,5 +43,13 @@ window.PokecaVerifiedArt=Object.freeze({
   "50639": {
     "name": "ピカチュウ",
     "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050639_P_PIKACHIXYUU.jpg"
-  }
+  },
+  "45770": {"name": "ドラメシヤ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg"},
+  "46662": {"name": "スボミー", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046662_P_SUBOMI.jpg"},
+  "46779": {"name": "ドラメシヤ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046779_P_DORAMESHIYA.jpg"},
+  "47465": {"name": "ロケット団のニューラ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047465_P_ROKETTODANNONIXYURA.jpg"},
+  "48533": {"name": "スボミー", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048533_P_SUBOMI.jpg"},
+  "48654": {"name": "ドラメシヤ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048654_P_DORAMESHIYA.jpg"},
+  "49262": {"name": "ドラメシヤ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049262_P_DORAMESHIYA.jpg"},
+  "49971": {"name": "ドラメシヤ", "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049971_P_DORAMESHIYA.jpg"}
 });
