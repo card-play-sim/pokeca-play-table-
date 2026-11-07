@@ -30,6 +30,16 @@ class MobileHeaderLayoutTest(unittest.TestCase):
         self.assertNotIn("el.textContent=message", section)
         self.assertNotIn("appendChild(container)", section)
 
+    def test_service_worker_and_html_build_match(self):
+        import re
+        sw = (ROOT / "sw.js").read_text(encoding="utf-8")
+        html_versions = set(re.findall(r"\\?build=(\\d+)", self.html))
+        cache_versions = set(re.findall(r"pokeca-first-playable-v(\\d+)", sw))
+        sw_versions = set(re.findall(r"\\?build=(\\d+)", sw))
+        self.assertEqual(len(html_versions), 1, "HTML assets must share one build")
+        self.assertEqual(html_versions, cache_versions, "SW cache must match HTML build")
+        self.assertEqual(html_versions, sw_versions, "SW assets must match HTML build")
+
     def test_header_overflow_guards_exist(self):
         self.assertIn(".turnbar{display:flex", self.css)
         self.assertIn(".turnbar #game-note{display:none}", self.css)
