@@ -457,11 +457,30 @@
   function showAiPerformance(message){
     let el=$('ai-performance');
     if(!el){
+      const container=document.createElement('div');
+      container.style.cssText='display:flex;align-items:flex-start;gap:6px;padding:3px 6px';
       el=document.createElement('div');
       el.id='ai-performance';
       el.setAttribute('role','status');
-      el.style.cssText='font-size:11px;line-height:1.4;opacity:.8;padding:3px 6px;overflow-wrap:anywhere';
-      $('turn-label').parentElement.appendChild(el);
+      el.style.cssText='font-size:11px;line-height:1.4;opacity:.8;overflow-wrap:anywhere;min-width:0;flex:1';
+      const copy=document.createElement('button');
+      copy.type='button';
+      copy.textContent='計測をコピー';
+      copy.setAttribute('aria-label','AIの直近計測結果をコピー');
+      copy.style.cssText='font-size:11px;flex-shrink:0;padding:4px 6px';
+      copy.addEventListener('click',async()=>{
+        const report=el.textContent;
+        try{
+          if(!navigator.clipboard?.writeText)throw Error('clipboard unavailable');
+          await navigator.clipboard.writeText(report);
+          toast('AI計測結果をコピーしました');
+        }catch(_){
+          // On browsers without clipboard permission, allow manual copy.
+          window.prompt('AI計測結果を長押しでコピーしてください',report);
+        }
+      });
+      container.append(el,copy);
+      $('turn-label').parentElement.appendChild(container);
     }
     el.textContent=message;
   }
