@@ -1,0 +1,28 @@
+name: Card reflection runtime checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ui/engine.bundle.js'
+      - 'tests/card_reflection_runtime.test.cjs'
+      - '.github/workflows/card-reflection-tests.yml'
+  pull_request:
+    paths:
+      - 'ui/engine.bundle.js'
+      - 'tests/card_reflection_runtime.test.cjs'
+      - '.github/workflows/card-reflection-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  card-reflection:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify card hand-to-bench transition and UI state
+        run: node tests/card_reflection_runtime.test.cjs
