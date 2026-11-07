@@ -606,7 +606,18 @@
     if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
     try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
   };
+  async function fixedDeckMenu(){
+    try{
+      const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
+      if(!response.ok)throw Error('HTTP '+response.status);
+      const data=await response.json();
+      if(!Array.isArray(data.decks)||data.decks.length!==2||data.decks.some(d=>d.cards.reduce((sum,c)=>sum+c.count,0)!==60))throw Error('60枚検証に失敗');
+      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>`<div><b>${c.count}枚</b> ${esc(c.name)}</div>`).join('')}</div></section>`).join('');
+      openSheet('固定2デッキ・構成確認',`<p>正式デッキ構成の試験登録です。対戦への読み込み・公式画像・効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+    }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
+  }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
     list.append(button(animationsEnabled?'アニメーション：オン（タップでオフ）':'アニメーション：オフ（タップでオン）',()=>{animationsEnabled=!animationsEnabled;closeSheet();}));
     list.append(button('中断・再開／保存データ',savesMenu));
     list.append(button(aiAutoMode?'AI自動応答：オン（タップでオフ）':'AI自動応答：オフ（タップでオン）',()=>{
