@@ -470,8 +470,10 @@
       });
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
       if(result.ok){
+        const phase=result.phaseTotals;
+        const phaseLabel=phase?' / 探索'+Math.round(phase.searchMs)+'ms・実行'+Math.round(phase.dispatchMs)+'ms・候補最大'+phase.maxCandidates+(phase.truncated?'（上限到達）':''):'';
         const recent=view().history.filter(e=>e.player==='ai'&&!['end_turn','draw'].includes(e.type)).slice(-1)[0];
-        toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms');
+        toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+phaseLabel);
       }
       else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
     }catch(error){toast('AI停止：'+error.message);}
