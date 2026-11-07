@@ -457,6 +457,7 @@
     if(aiPracticeRunning)return;
     if(view().turnPlayer!=='ai'){toast('相手の番になってから実行してください');return;}
     aiPracticeRunning=true;
+    const aiStartedAt=performance.now();
     render();
     // Let Android paint the busy state before the synchronous AI action loop.
     await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
@@ -467,11 +468,12 @@
           return Pokeca.chooseBaseline({legalActions:candidates});
         }
       });
+      const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
       if(result.ok){
         const recent=view().history.filter(e=>e.player==='ai'&&!['end_turn','draw'].includes(e.type)).slice(-1)[0];
-        toast(recent?'相手：'+eventText(recent):'AIの番が終了しました');
+        toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手');
       }
-      else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止：'+reason+'。右下の「AIの番を再開」で再試行できます');}
+      else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
     }catch(error){toast('AI停止：'+error.message);}
     finally{aiPracticeRunning=false;render();}
   }
