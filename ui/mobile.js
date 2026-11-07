@@ -202,7 +202,8 @@
       if(search){
         const deck=port.getSnapshot().players.find(p=>p.id==='you').deck;
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
-        const allowed=port.getActionExplanation('you',{...a,selectedCardIds:[]});
+        const probeIds=candidates.slice(0,Math.min(search.min||0,candidates.length)).map(c=>idOf(c));
+        const allowed=port.getActionExplanation('you',{...a,selectedCardIds:probeIds});
         container.append(button('山札を見る・カードを選ぶ',async()=>{
           const ids=await selectDeckSearch({title:'サポートの効果：山札を確認',deck,search});
           if(ids===null)return;
@@ -220,7 +221,8 @@
       if(search){
         const snapshot=port.getSnapshot(),deck=snapshot.players.find(p=>p.id==='you').deck;
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
-        const allowed=port.getActionExplanation('you',{...a,selectedCardIds:[]});
+        const probeIds=candidates.slice(0,Math.min(search.min||0,candidates.length)).map(c=>idOf(c));
+        const allowed=port.getActionExplanation('you',{...a,selectedCardIds:probeIds});
         container.append(button('山札を見る・カードを選ぶ',async()=>{
           const ids=await selectDeckSearch({title:'グッズの効果：山札を確認',deck,search});
           if(ids===null)return;
