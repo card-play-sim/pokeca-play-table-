@@ -198,3 +198,8 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 
 /* Small Android screens: preserve the action buttons and avoid header overlap. */
 @media(max-width:420px){.topbar .brand{gap:4px}.topbar .brand-mark{font-size:20px}.topbar h1{font-size:13px;letter-spacing:1px}.topbar .top-actions{gap:3px}.topbar .top-actions button{padding:3px 5px;font-size:10px}.turnbar #game-note{display:none}.turnbar #ai-performance{margin-left:auto}}
+
+/* Card art fallback: hide until image load fails; preserve card aspect and hit area. */
+.card [hidden]{display:none!important}
+.card .art-load-fallback:not([hidden]){display:block;width:100%;height:100%;min-height:0}
+.card .art-load-fallback>.card-fallback{width:100%;height:100%}
