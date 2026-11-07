@@ -501,7 +501,7 @@
       });
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
       const perf=result.phaseTotals;
-      showAiPerformance('AI直近：'+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+(perf?' / 探索'+Math.round(perf.searchMs)+'ms・選択'+Math.round(perf.decisionMs)+'ms・実行'+Math.round(perf.dispatchMs)+'ms・候補最大'+perf.maxCandidates+(perf.truncated?'（候補上限）':''):'')+(result.ok?'':' / 停止'));
+      showAiPerformance('AI直近：'+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms（'+(result.slowestActionType||'不明')+'）'+(perf?' / 探索'+Math.round(perf.searchMs)+'ms・選択'+Math.round(perf.decisionMs)+'ms・実行'+Math.round(perf.dispatchMs)+'ms・候補最大'+perf.maxCandidates+(perf.truncated?'（候補上限）':''):'')+(result.ok?'':' / 停止'));
       if(result.ok){
         const phase=result.phaseTotals;
         const phaseLabel=phase?' / 探索'+Math.round(phase.searchMs)+'ms・実行'+Math.round(phase.dispatchMs)+'ms・候補最大'+phase.maxCandidates+(phase.truncated?'（上限到達）':''):'';
