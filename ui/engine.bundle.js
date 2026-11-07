@@ -211,22 +211,24 @@ async function runAITurn(port, playerId='ai', {policy=chooseBaseline,maxActions=
   if(initial.status!=='active' || initial.turnPlayer!==playerId) return {ok:false,stage:'not_turn',actions:0};
   const results=[];
   let slowestActionMs=0;
+  const phaseTotals={searchMs:0,decisionMs:0,dispatchMs:0,maxCandidates:0,truncated:false};
   for(let i=0;i<maxActions;i++){
     const snapshot=port.getSnapshot();
-    if(snapshot.status!=='active' || snapshot.turnPlayer!==playerId) return {ok:true,actions:results.length,results,slowestActionMs:Math.round(slowestActionMs)};
+    if(snapshot.status!=='active' || snapshot.turnPlayer!==playerId) return {ok:true,actions:results.length,results,slowestActionMs:Math.round(slowestActionMs),phaseTotals};
     let result;
     const actionStarted=performance.now();
     try {result=await chooseAndDispatch(port,playerId,policy);}
     catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results,slowestActionMs:Math.round(Math.max(slowestActionMs,performance.now()-actionStarted))};}
     slowestActionMs=Math.max(slowestActionMs,performance.now()-actionStarted);
-    if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results,slowestActionMs:Math.round(slowestActionMs)};
+    if(result.aiDiagnostic){for(const key of ['searchMs','decisionMs','dispatchMs'])phaseTotals[key]+=result.aiDiagnostic[key];phaseTotals.maxCandidates=Math.max(phaseTotals.maxCandidates,result.aiDiagnostic.candidateCount);phaseTotals.truncated ||= result.aiDiagnostic.truncated;}
+    if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results,slowestActionMs:Math.round(slowestActionMs),phaseTotals};
     results.push(result);
     // Yield occasionally so the mobile browser can process input and paint.
     // No game action is skipped, reordered or synthesized by this yield.
     if(i%3===2) await new Promise(resolve=>setTimeout(resolve,0));
   }
   // Bound is a safety stop, not an invented end_turn or PASS.
-  return {ok:false,stage:'action_limit',actions:results.length,errors:['AI action limit reached'],results,slowestActionMs:Math.round(slowestActionMs)};
+  return {ok:false,stage:'action_limit',actions:results.length,errors:['AI action limit reached'],results,slowestActionMs:Math.round(slowestActionMs),phaseTotals};
 }
 module.exports={runAITurn};
 
