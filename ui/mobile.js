@@ -66,9 +66,10 @@
   function imageURL(card){
     // Prefer the official source URL carried by the verified card record.
     // Never guess a print from its name when an official identity is present.
-    const explicit=card.imageUrl || card.imageSourceUrl || card.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
+    const currentPrint=card.evolutionCards?.length?card.evolutionCards[card.evolutionCards.length-1]:card;
+    const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || (currentPrint===card?'':card.imageUrl || card.imageSourceUrl || card.images?.find(x=>x?.sourceUrl)?.sourceUrl || '');
     if(explicit)return /^https:\/\//i.test(explicit)?explicit:'';
-    if(card.officialCardId || card.catalogCardId)return '';
+    if(currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
     return window.PokecaArt?.[card.name] || '';
   }
   function cardArt(card){const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">`:`<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
