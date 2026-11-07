@@ -70,3 +70,54 @@ assert.equal(port.getSnapshot().players.find(p => p.id === 'you').hand.length, e
 assert.equal(JSON.stringify(port.getSnapshot()), beforeRejectedEnergy, 'rejected energy action must preserve entire authoritative state');
 console.log('PASS: attach_energy hand -1, physical energy attached, UI view synchronized, second attachment rejected');
 
+
+
+const evolutionGame = Pokeca.createPracticeGame(1);
+const evoPlayer = evolutionGame.players.find(p => p.id === 'you');
+const basicIndex = evoPlayer.hand.findIndex(c => c.id === 'hand-basic');
+const basicForEvolution = evoPlayer.hand.splice(basicIndex, 1)[0];
+evoPlayer.bench.push({...basicForEvolution, enteredTurn: 1, damage: 0, energyCards: [], energies: [], evolutionCards: []});
+let evolutionState = evolutionGame;
+const evolutionPort = Pokeca.createUIPort({
+  getGame: () => evolutionState,
+  setGame: next => { evolutionState = next; },
+  onChange: () => {},
+  onSessionChange: () => {}
+});
+assert.equal(evolutionPort.loadGame(evolutionGame).ok, true, 'synthetic evolution setup must load');
+const evolutionBefore = evolutionPort.getSnapshot().players.find(p => p.id === 'you');
+const evoCard = evolutionBefore.hand.find(c => c.id === 'hand-evolution');
+const evoAction = {type: 'evolve', cardId: evoCard.id, targetInstanceId: 'hand-basic'};
+assert.equal(evolutionPort.canDispatch('you', evoAction), true, 'evolution after earlier turn must be legal');
+const evoResult = evolutionPort.dispatch('you', evoAction);
+assert.equal(evoResult.ok, true, JSON.stringify(evoResult.errors || evoResult));
+const evolutionAfter = evolutionPort.getSnapshot().players.find(p => p.id === 'you');
+const evolved = evolutionAfter.bench.find(c => c.id === 'hand-basic');
+const evolvedView = evolutionPort.getView('you').players.find(p => p.id === 'you').bench.find(c => c.id === 'hand-basic');
+assert.equal(evolutionAfter.hand.length, evolutionBefore.hand.length - 1, 'evolution card leaves hand');
+assert.equal(evolved.evolutionCards.filter(c => c.id === evoCard.id).length, 1, 'physical evolution card tracked');
+assert.equal(evolved.name, evoCard.name, 'evolved Pokemon display name changes');
+assert.equal(evolved.hp, evoCard.hp, 'evolved Pokemon HP changes');
+assert.equal(evolvedView.name, evoCard.name, 'UI projection displays evolution');
+assert.equal(evolvedView.evolutionCards.some(c => c.id === evoCard.id), true, 'UI projection includes physical evolution card');
+assert.equal(evolved.evolvedTurn, evolutionGame.turnNumber, 'evolution turn is recorded');
+console.log('PASS: evolve hand -1, physical evolution retained, name/HP and UI view synchronized');
+
+const illegalGame = Pokeca.createPracticeGame(1);
+const illegalPlayer = illegalGame.players.find(p => p.id === 'you');
+const illegalBasicIndex = illegalPlayer.hand.findIndex(c => c.id === 'hand-basic');
+const illegalBasic = illegalPlayer.hand.splice(illegalBasicIndex, 1)[0];
+illegalPlayer.bench.push({...illegalBasic, enteredTurn: illegalGame.turnNumber, energyCards: [], energies: []});
+let illegalState = illegalGame;
+const illegalPort = Pokeca.createUIPort({
+  getGame: () => illegalState,
+  setGame: next => { illegalState = next; },
+  onChange: () => {},
+  onSessionChange: () => {}
+});
+assert.equal(illegalPort.loadGame(illegalGame).ok, true, 'same-turn evolution setup must load');
+const illegalBefore = JSON.stringify(illegalPort.getSnapshot());
+const illegalResult = illegalPort.dispatch('you', evoAction);
+assert.equal(illegalResult.ok, false, 'Pokemon entering this turn cannot evolve');
+assert.equal(JSON.stringify(illegalPort.getSnapshot()), illegalBefore, 'rejected evolution must preserve entire state');
+console.log('PASS: same-turn evolution rejected without state changes');
