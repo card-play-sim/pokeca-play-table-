@@ -21,7 +21,7 @@ function normalize(data){
   const id=String(c.officialCardId);
   if(!/^[HIJ]$/.test(c.regulationMark)||typeof c.cardNumber!=='string'||!c.cardNumber.trim()||
      typeof c.officialPageUrl!=='string'||!c.officialPageUrl.startsWith(PAGE)||
-     !c.officialPageUrl.includes(id)||!validImage(c))throw Error('Incomplete official print evidence '+id);
+     !c.officialPageUrl.startsWith(PAGE+id+'/')||!validImage(c))throw Error('Incomplete official print evidence '+id);
   if(byId[id])throw Error('Duplicate official ID '+id);
   const record=Object.freeze({...c});
   byId[id]=record;
