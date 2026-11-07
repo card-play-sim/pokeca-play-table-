@@ -15,9 +15,15 @@ PREFIX = "https://www.pokemon-card.com/assets/images/card_images/"
 def main(archive, decks_file, output):
     with zipfile.ZipFile(archive) as z:
         catalog = json.loads(z.read(CATALOG))
-    images = {str(i.get("officialCardId")): i for i in catalog.get("images", [])
-    if i.get("status") == "reference_only" and isinstance(i.get("sourceUrl"), str)
-    and i["sourceUrl"].startswith(PREFIX)}
+    images = {}
+    for image in catalog.get("images", []):
+        if (image.get("status") == "reference_only"
+                and isinstance(image.get("sourceUrl"), str)
+                and image["sourceUrl"].startswith(PREFIX)):
+            key = str(image.get("officialCardId"))
+            if key in images:
+                raise ValueError(f"Duplicate official image ID {key}")
+            images[key] = image
     decks = json.loads(Path(decks_file).read_text(encoding="utf-8"))["decks"]
     names = {c["name"] for d in decks for c in d["cards"] if c["category"] == "pokemon"}
     candidates = []
@@ -37,7 +43,9 @@ def main(archive, decks_file, output):
             "cardNumber", "regulationMark", "officialPageUrl", "verificationStatus"
         )}
         image = images.get(cid)
-        if image and image.get("cardId") == card.get("cardId") and image.get("cardNumber") == card.get("cardNumber"):
+        if (image and image.get("cardId") == card.get("cardId")
+                and image.get("cardNumber") == card.get("cardNumber")
+                and image.get("officialPageUrl") == card.get("officialPageUrl")):
             candidate["imageSourceUrl"] = image["sourceUrl"]
             candidate["imageRightsStatus"] = image.get("rightsStatus", "not_checked")
         if "imageSourceUrl" not in candidate:
