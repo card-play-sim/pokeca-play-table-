@@ -73,8 +73,9 @@
     // A verified official print takes precedence over unverified runtime URLs.
     if(verifiedUrl)return verifiedUrl;
     if(explicit)return /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//i.test(explicit)?explicit:'';
-    if(card.evolutionCards?.length || currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
-    return window.PokecaArt?.[card.name] || '';
+    // Existing bundled artwork is a visual fallback, not proof of print identity.
+    // It must remain available even when the gameplay instance has an official ID.
+    return window.PokecaArt?.[currentPrint.name] || window.PokecaArt?.[card.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
   // Original energy-card illustration for the practice deck (not an official print).
