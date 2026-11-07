@@ -187,7 +187,10 @@ async function chooseAndDispatch(port,playerId,policy,options){
  const before=port.getSnapshot(),legal=getLegalActions(before,playerId,options);
  const chosen=await policy({observation:port.getView(playerId),legalActions:clone(legal.actions),coverage:legal.coverage});
  if(JSON.stringify(port.getSnapshot())!==JSON.stringify(before))return {ok:false,stage:'stale',errors:['AI選択中に状態が更新されました']};
- if(!legal.actions.some(a=>JSON.stringify(a)===JSON.stringify(chosen)))return port.dispatch(playerId,{type:'invalid_ai_selection',requestedAction:chosen ?? null},{origin:'AI'});
+ // Serialize the chosen action once, not once for every candidate.
+ // Preserve exact JSON equality and the existing invalid-selection gateway.
+ const chosenKey=JSON.stringify(chosen);
+ if(!legal.actions.some(a=>JSON.stringify(a)===chosenKey))return port.dispatch(playerId,{type:'invalid_ai_selection',requestedAction:chosen ?? null},{origin:'AI'});
  return port.dispatch(playerId,chosen,{origin:'AI'});
 }
 module.exports={getLegalActions,chooseAndDispatch};
