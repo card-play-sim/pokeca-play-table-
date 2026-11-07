@@ -75,8 +75,16 @@
     if(currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
     return window.PokecaArt?.[card.name] || '';
   }
-  function cardArt(card){const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">`:`<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
-  function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
+  function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
+  function cardArt(card){const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false"><span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`:fallbackArt(card);}
+  // Image hosts can reject hotlinks or fail offline; keep the card operable.
+  document.addEventListener('error',event=>{
+    const img=event.target;
+    if(img?.tagName!=='IMG'||!img.nextElementSibling?.classList.contains('art-load-fallback'))return;
+    img.hidden=true;
+    img.nextElementSibling.hidden=false;
+  },true);
+    function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
   function badges(card,snapshot,owner){let html='';
     if(card.damage)html+=`<span class="badge damage">${esc(card.damage)}</span>`;
     if(card.energyCards?.length)html+=`<span class="badge">${card.energyCards.map(e=>esc(symbols[e.energyType] || '◆')).join('')}${card.energyCards.length}</span>`;
