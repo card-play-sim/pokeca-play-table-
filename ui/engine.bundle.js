@@ -211,6 +211,9 @@ async function runAITurn(port, playerId='ai', {policy=chooseBaseline,maxActions=
     catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results};}
     if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results};
     results.push(result);
+    // Yield occasionally so the mobile browser can process input and paint.
+    // No game action is skipped, reordered or synthesized by this yield.
+    if(i%3===2) await new Promise(resolve=>setTimeout(resolve,0));
   }
   // Bound is a safety stop, not an invented end_turn or PASS.
   return {ok:false,stage:'action_limit',actions:results.length,errors:['AI action limit reached'],results};
