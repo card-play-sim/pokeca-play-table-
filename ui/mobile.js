@@ -102,14 +102,21 @@
     function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
   function badges(card,snapshot,owner){let html='';
     if(card.damage)html+=`<span class="badge damage">${esc(card.damage)}</span>`;
-    if(card.energyCards?.length)html+=`<span class="badge">${card.energyCards.map(e=>esc(symbols[e.energyType] || '◆')).join('')}${card.energyCards.length}</span>`;
+    
     if(card.tools?.length)html+=`<span class="badge">⌘ ${card.tools.length}</span>`;
     if(card.statusCondition)html+=`<span class="badge effect" data-state-card="${esc(idOf(card))}">${esc(port.getCardInfo(owner.id,idOf(card))?.specialStatus?.short || card.statusCondition)}</span>`;
     const states=statesFor(snapshot,idOf(card));for(const state of states)html+=`<span class="badge effect" role="button" aria-label="${esc(state.label)}・詳細" data-state-card="${esc(idOf(card))}">${esc(state.short)}</span>`;
     if(Object.keys(owner.turnLimits?.abilityUses || {}).some(k=>k.startsWith(idOf(card)+':')))html+='<span class="badge used">特性 使用済</span>';
     return html?`<span class="badges">${html}</span>`:'';
   }
-  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
+  function attachedEnergyHTML(card){
+    if(card.kind!=='pokemon'||!card.energyCards?.length)return '';
+    const counts=new Map();
+    for(const energy of card.energyCards){const type=String(energy.energyType||'不明');counts.set(type,(counts.get(type)||0)+1);}
+    const chips=[...counts].map(([type,n])=>`<span class="attached-energy-chip" title="${esc(type)}エネルギー ${n}枚">${esc(symbols[type]||'◆')}<b>${n}</b></span>`).join('');
+    return `<span class="attached-energy-strip" aria-label="装着エネルギー ${card.energyCards.length}枚">${chips}</span>`;
+  }
+  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
   function render(){const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
