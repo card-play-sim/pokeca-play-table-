@@ -6,7 +6,7 @@
 'use strict';
 const fail=(code,name,detail)=>({code,name,detail});
 function validate(deck,cardRegistry,imageRegistry,effectRegistry){
- const issues=[],seen=new Set();
+ const issues=[],seen=new Set(),copiesByName=new Map();
  if(!deck||!Array.isArray(deck.cards))return {ready:false,issues:[fail('DECK_INVALID','','Missing deck cards')]};
  const total=deck.cards.reduce((n,c)=>n+(Number.isInteger(c?.count)&&c.count>0?c.count:0),0);
  if(deck.cards.length===0)issues.push(fail('DECK_EMPTY',deck.name,'Deck has no entries'));
@@ -15,7 +15,11 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
   if(!entry||typeof entry!=='object'){issues.push(fail('CARD_ENTRY_INVALID','','Null or non-object entry'));continue;}
   const name=entry.name;
   if(!Number.isInteger(entry.count)||entry.count<1)issues.push(fail('COUNT_INVALID',name,'Invalid count'));
-  if(entry.count>4&&!['basic-energy'].includes(entry.category))issues.push(fail('COPY_LIMIT_EXCEEDED',name,'More than four copies'));
+  if(entry.category!=='basic-energy'){
+   const copies=(copiesByName.get(name)||0)+(Number.isInteger(entry.count)&&entry.count>0?entry.count:0);
+   copiesByName.set(name,copies);
+   if(copies>4)issues.push(fail('COPY_LIMIT_EXCEEDED',name,'More than four copies across print editions'));
+  }
   if(typeof name!=='string'||!name.trim()){issues.push(fail('CARD_NAME_INVALID',String(name),'Missing name'));continue;}
   const id=entry.officialCardId;
   if(id==null||!/^\d+$/.test(String(id))||entry.identityStatus!=='CONFIRMED'){
