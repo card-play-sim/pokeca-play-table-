@@ -12,15 +12,17 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
  if(deck.cards.length===0)issues.push(fail('DECK_EMPTY',deck.name,'Deck has no entries'));
  if(total!==60)issues.push(fail('DECK_COUNT_INVALID',deck.name,'Expected 60 cards, got '+total));
  for(const entry of deck.cards){
+  if(!entry||typeof entry!=='object'){issues.push(fail('CARD_ENTRY_INVALID','','Null or non-object entry'));continue;}
   const name=entry.name;
   if(!Number.isInteger(entry.count)||entry.count<1)issues.push(fail('COUNT_INVALID',name,'Invalid count'));
+  if(entry.count>4&&!['basic-energy'].includes(entry.category))issues.push(fail('COPY_LIMIT_EXCEEDED',name,'More than four copies'));
   if(typeof name!=='string'||!name.trim()){issues.push(fail('CARD_NAME_INVALID',String(name),'Missing name'));continue;}
   const id=entry.officialCardId;
   if(id==null||!/^\d+$/.test(String(id))||entry.identityStatus!=='CONFIRMED'){
    issues.push(fail('PRINT_NOT_CONFIRMED',name,'An adopted official print ID is required'));continue;
   }
   const key=String(id),record=cardRegistry?.[key],image=imageRegistry?.[key],effects=effectRegistry?.[key];
-  if(!record||record.name!==name){issues.push(fail('CARD_DATA_MISMATCH',name,key));continue;}
+  if(!record||record.name!==name||record.cardType!==entry.category){issues.push(fail('CARD_DATA_MISMATCH',name,key));continue;}
   if(!image||image.name!==name||!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(image.sourceUrl||'')){
    issues.push(fail('OFFICIAL_IMAGE_MISSING',name,key));
   }
@@ -30,7 +32,7 @@ function validate(deck,cardRegistry,imageRegistry,effectRegistry){
    if(!Array.isArray(record.attacks)||record.attacks.some(a=>typeof a?.name!=='string'||!Array.isArray(a.cost)||typeof a.text!=='string'))issues.push(fail('ATTACKS_MISSING',name,key));
    if(!Array.isArray(record.abilities)||record.abilities.some(a=>typeof a?.name!=='string'||typeof a.text!=='string'))issues.push(fail('ABILITIES_MISSING',name,key));
   }
-  if(!effects||effects.engineReadable!==true||String(effects.officialCardId)!==key)issues.push(fail('EFFECT_NOT_ENGINE_READY',name,key));
+  if(entry.category!=='basic-energy'&&(!effects||effects.engineReadable!==true||String(effects.officialCardId)!==key))issues.push(fail('EFFECT_NOT_ENGINE_READY',name,key));
   if(seen.has(key))issues.push(fail('DUPLICATE_PRINT_ENTRY',name,key));
   seen.add(key);
  }
