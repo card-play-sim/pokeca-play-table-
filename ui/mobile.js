@@ -76,7 +76,22 @@
     return window.PokecaArt?.[card.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
-  function cardArt(card){const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false"><span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`:fallbackArt(card);}
+  // Original energy-card illustration for the practice deck (not an official print).
+  // Energy type is explicit in the game state, so no card-name/print inference is needed.
+  function energyArt(card){
+    if(card.kind!=='energy')return '';
+    const palette={
+      '草':['#458c4b','#e2f3c6','✦'],'炎':['#d95830','#ffe0a2','●'],
+      '水':['#287db6','#d2edff','◆'],'雷':['#c79b17','#fff2a0','ϟ'],
+      '超':['#844da5','#ead6f6','◉'],'闘':['#a87944','#f3dec0','◆'],
+      '悪':['#444654','#d4d6df','◐'],'鋼':['#65828a','#dce9ed','⬡']
+    };
+    const [dark,light,symbol]=palette[card.energyType]||['#657e75','#e0ebe6','◇'];
+    const type=String(card.energyType||'エネルギー').replace(/[<>&"']/g,'');
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="308" viewBox="0 0 220 308"><defs><linearGradient id="g" x2=".7" y2="1"><stop stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient></defs><rect width="220" height="308" rx="12" fill="#f5f1db"/><rect x="8" y="8" width="204" height="292" rx="9" fill="url(#g)" stroke="${dark}" stroke-width="5"/><text x="110" y="37" font-size="17" font-family="sans-serif" font-weight="bold" fill="#24352d" text-anchor="middle">基本${type}エネルギー</text><circle cx="110" cy="150" r="77" fill="${dark}" stroke="#fff9e7" stroke-width="9"/><circle cx="110" cy="150" r="63" fill="none" stroke="${light}" stroke-width="3"/><text x="110" y="178" font-size="85" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">${symbol}</text><text x="110" y="278" font-size="13" font-family="sans-serif" fill="#24352d" text-anchor="middle">操作練習用イメージ</text></svg>`;
+    return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  }
+  function cardArt(card){const energyUrl=energyArt(card);if(energyUrl)return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー・練習用画像" draggable="false">`;const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false"><span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`:fallbackArt(card);}
   // Image hosts can reject hotlinks or fail offline; keep the card operable.
   document.addEventListener('error',event=>{
     const img=event.target;
