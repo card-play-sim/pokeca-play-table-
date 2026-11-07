@@ -22,6 +22,17 @@
     const record=entries.get(String(id));
     return record&&record.name===print.name?record.sourceUrl:'';
   }
-  global.PokecaImageResolver=Object.freeze({register,resolve,count:()=>entries.size});
+  function resolvePreview(card){
+    const exact=resolve(card);
+    if(exact)return exact;
+    // For identity-free practice cards only, use a uniquely registered visual preview.
+    // Never infer a print when an official ID was supplied.
+    if(!card||typeof card!=='object')return '';
+    const print=Array.isArray(card.evolutionCards)&&card.evolutionCards.length?card.evolutionCards.at(-1):card;
+    if(print.officialCardId!=null||print.catalogCardId!=null||card.officialCardId!=null||card.catalogCardId!=null)return '';
+    const matches=[...entries.values()].filter(r=>r.name===print.name);
+    return matches.length===1?matches[0].sourceUrl:'';
+  }
+  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,count:()=>entries.size});
   register(global.PokecaVerifiedArt||{});
 })(window);
