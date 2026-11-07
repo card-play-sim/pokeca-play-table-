@@ -458,6 +458,8 @@
     if(view().turnPlayer!=='ai'){toast('相手の番になってから実行してください');return;}
     aiPracticeRunning=true;
     render();
+    // Let Android paint the busy state before the synchronous AI action loop.
+    await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
     try{
       const result=await Pokeca.runAITurn(port,'ai',{
         policy:({legalActions})=>{
