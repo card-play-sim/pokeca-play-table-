@@ -210,8 +210,8 @@ async function runAITurn(port, playerId='ai', {policy=chooseBaseline,maxActions=
     let result;
     const actionStarted=performance.now();
     try {result=await chooseAndDispatch(port,playerId,policy);}
-    finally {slowestActionMs=Math.max(slowestActionMs,performance.now()-actionStarted);}
-    catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results,slowestActionMs:Math.round(slowestActionMs)};}
+    catch(error){return {ok:false,stage:'policy',actions:results.length,errors:[error.message],results,slowestActionMs:Math.round(Math.max(slowestActionMs,performance.now()-actionStarted))};}
+    slowestActionMs=Math.max(slowestActionMs,performance.now()-actionStarted);
     if(!result.ok) return {ok:false,stage:result.stage||'dispatch',actions:results.length,errors:result.errors||[],results,slowestActionMs:Math.round(slowestActionMs)};
     results.push(result);
     // Yield occasionally so the mobile browser can process input and paint.
