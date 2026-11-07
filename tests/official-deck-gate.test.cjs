@@ -1,0 +1,25 @@
+/* Run with: node tests/official-deck-gate.test.cjs */
+const assert=require('node:assert/strict');
+const vm=require('node:vm');
+const fs=require('node:fs');
+const context={window:{}};
+vm.runInNewContext(fs.readFileSync('ui/official-deck-gate.js','utf8'),context);
+const gate=context.window.PokecaOfficialDeckGate;
+const deck=(cards)=>({name:'test',cards});
+const card=(name,count=60)=>({name,count,category:'pokemon',officialCardId:'123',identityStatus:'CONFIRMED'});
+const record={123:{name:'A',hp:70,attacks:[],abilities:[]}};
+const art={123:{name:'A',sourceUrl:'https://www.pokemon-card.com/assets/images/card_images/large/test.jpg'}};
+const effect={123:{engineReadable:true}};
+const ready=()=>gate.validate(deck([card('A')]),record,art,effect);
+assert.equal(ready().ready,true);
+assert.equal(gate.validate(deck([card('A',59)]),record,art,effect).ready,false);
+assert.equal(gate.validate(deck([{...card('A'),officialCardId:null}]),record,art,effect).ready,false);
+assert.equal(gate.validate(deck([{...card('A'),identityStatus:'UNCONFIRMED'}]),record,art,effect).ready,false);
+assert.equal(gate.validate(deck([card('B')]),record,art,effect).ready,false);
+assert.equal(gate.validate(deck([card('A')]),{123:{...record[123],hp:0}},art,effect).ready,false);
+assert.equal(gate.validate(deck([card('A')]),record,{},effect).ready,false);
+assert.equal(gate.validate(deck([card('A')]),record,art,{}).ready,false);
+assert.equal(gate.validatePair([deck([card('A')]),deck([card('A')])],record,art,effect).ready,true);
+assert.equal(gate.validatePair([deck([card('A')]),deck([card('B')])],record,art,effect).ready,false);
+assert.equal(gate.validatePair([deck([card('A')])],record,art,effect).ready,false);
+console.log('Official deck readiness gate: 11 assertions passed');
