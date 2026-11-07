@@ -453,6 +453,18 @@
   // never applied directly to Game State. Manual opponent control remains available.
   let aiAutoMode=true;
   let aiPracticeRunning=false;
+  // Session-only performance evidence: never written to the saved match.
+  function showAiPerformance(message){
+    let el=$('ai-performance');
+    if(!el){
+      el=document.createElement('div');
+      el.id='ai-performance';
+      el.setAttribute('role','status');
+      el.style.cssText='font-size:11px;line-height:1.4;opacity:.8;padding:3px 6px;overflow-wrap:anywhere';
+      $('turn-label').parentElement.appendChild(el);
+    }
+    el.textContent=message;
+  }
   async function runOpponentPracticeTurn(){
     if(aiPracticeRunning)return;
     if(view().turnPlayer!=='ai'){toast('相手の番になってから実行してください');return;}
@@ -469,6 +481,8 @@
         }
       });
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
+      const perf=result.phaseTotals;
+      showAiPerformance('AI直近：'+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+(perf?' / 探索'+Math.round(perf.searchMs)+'ms・実行'+Math.round(perf.dispatchMs)+'ms・候補最大'+perf.maxCandidates:'')+(result.ok?'':' / 停止'));
       if(result.ok){
         const phase=result.phaseTotals;
         const phaseLabel=phase?' / 探索'+Math.round(phase.searchMs)+'ms・実行'+Math.round(phase.dispatchMs)+'ms・候補最大'+phase.maxCandidates+(phase.truncated?'（上限到達）':''):'';
