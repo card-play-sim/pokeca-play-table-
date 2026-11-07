@@ -43,11 +43,14 @@ def main(archive, decks_file, output):
             "cardNumber", "regulationMark", "officialPageUrl", "verificationStatus"
         )}
         image = images.get(cid)
-        if (image and image.get("cardId") == card.get("cardId")
+        if (image and image.get("imageId") == card.get("imageId")
+                and image.get("cardId") == card.get("cardId")
                 and image.get("cardNumber") == card.get("cardNumber")
                 and image.get("officialPageUrl") == card.get("officialPageUrl")):
             candidate["imageSourceUrl"] = image["sourceUrl"]
             candidate["imageRightsStatus"] = image.get("rightsStatus", "not_checked")
+        if not isinstance(card.get("abilities"), list):
+            raise ValueError(f"Missing verified abilities for {cid}")
         if "imageSourceUrl" not in candidate:
             raise ValueError(f"Missing verified official image for {cid}")
         candidates.append(candidate)
