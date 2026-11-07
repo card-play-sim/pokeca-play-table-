@@ -184,14 +184,18 @@ function getLegalActions(game,playerId,{maxCandidates=2000}={}){
  return {actions,complete:false,truncated,coverage:'implemented actions only; no claim of complete official rules',playerId};
 }
 async function chooseAndDispatch(port,playerId,policy,options){
+ const start=performance.now();
  const before=port.getSnapshot(),legal=getLegalActions(before,playerId,options);
+ const searchMs=performance.now()-start;
  const chosen=await policy({observation:port.getView(playerId),legalActions:clone(legal.actions),coverage:legal.coverage});
  if(JSON.stringify(port.getSnapshot())!==JSON.stringify(before))return {ok:false,stage:'stale',errors:['AI選択中に状態が更新されました']};
  // Serialize the chosen action once, not once for every candidate.
  // Preserve exact JSON equality and the existing invalid-selection gateway.
  const chosenKey=JSON.stringify(chosen);
- if(!legal.actions.some(a=>JSON.stringify(a)===chosenKey))return port.dispatch(playerId,{type:'invalid_ai_selection',requestedAction:chosen ?? null},{origin:'AI'});
- return port.dispatch(playerId,chosen,{origin:'AI'});
+ const legalChoice=legal.actions.some(a=>JSON.stringify(a)===chosenKey);
+ const decisionMs=performance.now()-start-searchMs;
+ const dispatched=legalChoice?port.dispatch(playerId,chosen,{origin:'AI'}):port.dispatch(playerId,{type:'invalid_ai_selection',requestedAction:chosen ?? null},{origin:'AI'});
+ return {...dispatched,aiDiagnostic:{searchMs,decisionMs,dispatchMs:performance.now()-start-searchMs-decisionMs,candidateCount:legal.actions.length,truncated:legal.truncated}};
 }
 module.exports={getLegalActions,chooseAndDispatch};
 
