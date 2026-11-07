@@ -616,7 +616,16 @@
       const data=await response.json();
       if(!Array.isArray(data.decks)||data.decks.length!==2||data.decks.some(d=>d.cards.reduce((sum,c)=>sum+c.count,0)!==60))throw Error('60枚検証に失敗');
       const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" loading="lazy" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
-      openSheet('固定2デッキ・構成確認',`<p>正式デッキ構成の試験登録です。対戦への読み込み・公式画像・効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+      openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p><p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+      const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
+      let loaded=0,failed=0;
+      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${data.decks.reduce((n,d)=>n+d.cards.filter(c=>!(window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name])).length,0)}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
+      for(const img of imgs){
+        const onLoad=()=>{loaded++;update();},onError=()=>{failed++;update();};
+        if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
+        else{img.addEventListener('load',onLoad,{once:true});img.addEventListener('error',onError,{once:true});}
+      }
+      update();
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
