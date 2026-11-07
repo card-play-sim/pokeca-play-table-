@@ -68,7 +68,7 @@
     // Never guess a print from its name when an official identity is present.
     const currentPrint=card.evolutionCards?.length?card.evolutionCards[card.evolutionCards.length-1]:card;
     const cardId=String(currentPrint.officialCardId ?? currentPrint.catalogCardId ?? '');
-    const verifiedUrl=window.PokecaImageResolver?.resolve(card) || '';
+    const verifiedUrl=window.PokecaImageResolver?.resolvePreview(card) || '';
     const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || verifiedUrl || '';
     if(explicit)return /^https:\/\//i.test(explicit)?explicit:'';
     if(card.evolutionCards?.length || currentPrint.officialCardId || currentPrint.catalogCardId || card.officialCardId || card.catalogCardId)return '';
