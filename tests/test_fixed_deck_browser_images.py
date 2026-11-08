@@ -42,6 +42,22 @@ async def main():
         missing = sorted(set(row["name"] for row in coverage if not row["decoded"]))
         unique_names = set(row["name"] for row in coverage)
         assert len(unique_names) == 45, f"Expected 45 unique names, got {len(unique_names)}"
+        deck_counts = await page.evaluate("""async () => {
+          const res=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
+          const data=await res.json();
+          return data.decks.map(deck=>({name:deck.name,total:deck.cards.reduce((sum,c)=>sum+c.count,0),
+            cards:deck.cards.map(c=>({name:c.name,count:c.count}))}));
+        }""")
+        assert len(deck_counts)==2 and all(deck["total"]==60 for deck in deck_counts), "Fixed deck 60+60 mismatch"
+        by_name = {row["name"]:row["decoded"] for row in coverage}
+        expanded = [
+          {"name":c["name"],"count":c["count"],"decoded":by_name.get(c["name"],False)}
+          for deck in deck_counts for c in deck["cards"]
+        ]
+        expanded_success=sum(row["count"] for row in expanded if row["decoded"])
+        assert sum(row["count"] for row in expanded)==120, "Fixed deck 120 copies mismatch"
+        assert expanded_success==120, f"Not all 120 fixed deck copies have working image templates: {expanded_success}/120"
+        print(f"Fixed 120 card copies covered by decoded image template: {expanded_success}/120")
         Path("artifacts").mkdir(exist_ok=True)
         Path("artifacts/fixed-deck-45-image-coverage.json").write_text(
             json.dumps({"uniqueNames":len(unique_names),"totalEntries":len(coverage),
