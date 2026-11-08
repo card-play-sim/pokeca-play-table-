@@ -19,16 +19,15 @@ jobs:
       - name: Validate and merge verified references (dry run)
         run: node scripts/merge-official-images.cjs
       - name: Check fixed 120 official image coverage (strict, expected to fail until verified)
-        continue-on-error: true
         env:
           REPORT_PATH: data/fixed-120-image-gate-report.json
         run: node scripts/check-fixed-120-images.cjs
       - name: Verify remote official image bytes
-        continue-on-error: true
         run: node scripts/check-official-image-http.mjs
       - name: Show proposed registry changes
         run: git diff -- data/official-image-registry.json
       - name: Upload proposed registry and audit
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: proposed-official-image-registry
