@@ -18,6 +18,10 @@ async def main():
           const match=txt.match(/検査済 (\\d+)\\/(\\d+)/);
           return match && Number(match[1])===Number(match[2]);
         }""", timeout=30000)
+        entries = page.locator(".deck-manifest-list > div")
+        entry_count = await entries.count()
+        print(f"Deck card types displayed: {entry_count}")
+        assert entry_count == 56, f"Expected 56 deck entries (30 + 26), got {entry_count}"
         images = await page.locator(".deck-manifest-list img").count()
         loaded = await page.locator(".deck-manifest-list img").evaluate_all(
             "(els) => els.filter(x => x.complete && x.naturalWidth > 0).length"
