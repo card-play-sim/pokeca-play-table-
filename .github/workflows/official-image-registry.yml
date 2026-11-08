@@ -18,6 +18,11 @@ jobs:
           node-version: '22'
       - name: Validate and merge verified references (dry run)
         run: node scripts/merge-official-images.cjs
+      - name: Check fixed 120 official image coverage (strict, expected to fail until verified)
+        continue-on-error: true
+        env:
+          REPORT_PATH: data/fixed-120-image-gate-report.json
+        run: node scripts/check-fixed-120-images.cjs
       - name: Show proposed registry changes
         run: git diff -- data/official-image-registry.json
       - name: Upload proposed registry and audit
@@ -27,3 +32,4 @@ jobs:
           path: |
             data/official-image-registry.json
             data/official-image-registry-audit.json
+            data/fixed-120-image-gate-report.json
