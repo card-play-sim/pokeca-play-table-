@@ -9,7 +9,11 @@
     for(const [id,record] of Object.entries(source)){
       if(!/^\d+$/.test(id)||!record||typeof record.name!=='string'||typeof record.sourceUrl!=='string')continue;
       if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(record.sourceUrl))continue;
-      if(entries.has(id))continue;
+      if(entries.has(id)){
+        const existing=entries.get(id);
+        if(existing.name!==record.name||existing.sourceUrl!==record.sourceUrl)throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
+        continue;
+      }
       entries.set(id,{name:record.name,sourceUrl:record.sourceUrl});added++;
     }
     return added;
@@ -51,7 +55,7 @@
       const id=String(c?.officialCardId??'');
       if(!/^\d+$/.test(id)||typeof c.name!=='string'||typeof c.imageSourceUrl!=='string'||
          !c.imageSourceUrl.startsWith('https://www.pokemon-card.com/assets/images/card_images/'))throw Error('IMAGE_REGISTRY_INVALID_CARD_'+id);
-      if(map[id]&&map[id].sourceUrl!==c.imageSourceUrl)throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
+      if(map[id]&&(map[id].sourceUrl!==c.imageSourceUrl||map[id].name!==c.name))throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
       map[id]={name:c.name,sourceUrl:c.imageSourceUrl};
     }
     return {received:data.cards.length,registered:register(map),total:entries.size};
