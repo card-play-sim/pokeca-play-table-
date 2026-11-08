@@ -8,12 +8,15 @@ const {audit}=require('../scripts/check-fixed-120-images.cjs');
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const registry=read('data/official-image-registry.json'),decks=read('data/fixed-test-decks.json');
 const before=JSON.stringify(registry),deckBefore=JSON.stringify(decks);
-assert.equal(registry.cards.length,27);
+const original=read('tests/fixtures/original-27-image-registry.json');
+assert.equal(original.cards.length,27);
+const {preserved}=require('../scripts/automate-official-images.cjs');
+for(const card of original.cards)assert(preserved(card,registry.cards.find(r=>r.officialCardId===card.officialCardId)),'original 27-print evidence preserved');
 assert.deepEqual(mergeReviewed(registry,{cards:[]}).registry,registry,'all 27 records and every evidence field survive empty merge');
 const replay={cards:registry.cards.map(c=>({...c,officialPageUrl:c.officialPageUrl||'https://www.pokemon-card.com/card-search/details.php/card/'+c.officialCardId,verified:true}))};
 const replayDecks={decks:[{cards:registry.cards.map(c=>({name:c.name,count:1}))}]};
 const imported=importEvidence(replay,registry,replayDecks);
-assert.equal(imported.added,0);assert.equal(imported.registry.cards.length,27);
+assert.equal(imported.added,0);assert.equal(imported.registry.cards.length,registry.cards.length);
 for(const old of registry.cards){const result=imported.registry.cards.find(c=>c.officialCardId===old.officialCardId);for(const key of Object.keys(old))assert.deepEqual(result[key],old[key]);}
 assert.equal(JSON.stringify(registry),before);assert.equal(JSON.stringify(decks),deckBefore);
 const base={officialCardId:'1',name:'TEST',set:'A',cardNumber:'001/100',imageSourceUrl:'https://www.pokemon-card.com/assets/images/card_images/large/A/000001_P_TEST.jpg',officialPageUrl:'https://www.pokemon-card.com/card-search/details.php/card/1',verified:true,evidence:{detailSha256:'a'.repeat(64)}};

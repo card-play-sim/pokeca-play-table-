@@ -6,6 +6,7 @@ const {atomic,hash,collect,parseSearch}=require('../scripts/collect-official-ima
 const {persist}=require('../scripts/persist-official-image-results.cjs');
 const root=path.resolve(__dirname,'..'),branch='feature/official-image-registry-automation';
 const original=JSON.parse(fs.readFileSync(path.join(root,'data/official-image-registry.json')));
+const originalCount=original.cards.length;
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const candidate=(id='60001')=>({officialCardId:id,name:'TEST '+id,set:'TEST',cardNumber:'001/100',officialDetailsUrl:'https://www.pokemon-card.com/card-search/details.php/card/'+id});
 const image=c=>'https://www.pokemon-card.com/assets/images/card_images/large/TEST/0'+c.officialCardId+'_P_TEST.jpg';
@@ -48,7 +49,7 @@ function gitFixture(dir){
   const first=await run({...opts(dir),fetcher});
   assert.equal(first.registrationPass,true);assert.equal(first.productionPass,false);assert.equal(calls,2);
   assert.equal(first.imageReferencesAdded,2);assert.equal(first.existingRecordsPreserved,true);assert.equal(first.protectedUnchanged,true);
-  const registry=read(path.join(dir,'data/official-image-registry.json'));assert.equal(registry.cards.length,29);
+  const registry=read(path.join(dir,'data/official-image-registry.json'));assert.equal(registry.cards.length,originalCount+2);
   for(const old of original.cards)assert(preserved(old,registry.cards.find(c=>c.officialCardId===old.officialCardId)));
   const before=fs.readFileSync(path.join(dir,'data/official-image-registry.json'));
   const again=await run({...opts(dir),fetcher:async()=>{throw Error('unexpected second fetch');}});
@@ -73,7 +74,7 @@ function gitFixture(dir){
   // Print mismatch is isolated, audited and never converted to successful registration.
   const bad=fixture();const badRemote=gitFixture(bad);const blocked=await run({...opts(bad),fetcher:async url=>response(html(candidate(url.match(/card\/(\d+)/)[1]),url.includes('60001')?{set:'WRONG'}:{}))});
   assert.equal(blocked.registrationPass,false);assert.equal(blocked.safeToPersist,true);assert.equal(blocked.holds[0].reason,'PRINT_MISMATCH');
-  assert.equal(read(path.join(bad,'data/official-image-registry.json')).cards.length,28);
+  assert.equal(read(path.join(bad,'data/official-image-registry.json')).cards.length,originalCount+1);
   assert.equal(blocked.nextCursor,0);assert(fs.readdirSync(path.join(bad,'data/image-automation/quarantine')).length>0);
   const savedBlocked=persist({root:bad});assert.equal(savedBlocked.registrationPass,false);assert.equal(savedBlocked.pushed,true);
   assert.equal(JSON.parse(git(badRemote,'show',savedBlocked.commit+':data/image-automation/latest.json')).registrationPass,false,'GitHub audit cannot turn a collection failure into success');
@@ -82,7 +83,7 @@ function gitFixture(dir){
   // A failing HTTP request opens the circuit before requesting the next candidate.
   const http=fixture();let httpCalls=0;const fail=await run({...opts(http),fetcher:async()=>{httpCalls++;return {ok:false,status:429,headers:{get:()=> 'text/html'}};}});
   assert.equal(httpCalls,1);assert.equal(fail.registrationPass,false);assert.equal(fail.holds[1].reason,'SAFE_STOP');
-  assert.equal(read(path.join(http,'data/official-image-registry.json')).cards.length,27);
+  assert.equal(read(path.join(http,'data/official-image-registry.json')).cards.length,originalCount);
 
   const budget=fixture();let budgetCalls=0;
   const limited=await run({...opts(budget),maxRequests:1,fetcher:async url=>{budgetCalls++;return response(html(candidate(url.match(/card\/(\d+)/)[1])));}});
@@ -100,7 +101,7 @@ function gitFixture(dir){
   assert.equal(ioCalls,1);assert.equal(diskFail.registrationPass,false);assert.equal(diskFail.safeToPersist,false);assert.match(diskFail.error,/DISK_FAILURE/);
   // Resume after a crash between registry write and receipt write completes the record without duplicate fetch.
   const recovered=await run({...opts(io),fetcher:async url=>response(html(candidate(url.match(/card\/(\d+)/)[1])))});
-  assert.equal(recovered.registrationPass,true);assert.equal(recovered.replayed,1);assert.equal(read(path.join(io,'data/official-image-registry.json')).cards.length,29);
+  assert.equal(recovered.registrationPass,true);assert.equal(recovered.replayed,1);assert.equal(read(path.join(io,'data/official-image-registry.json')).cards.length,originalCount+2);
 
   const tamper=fixture([candidate()]);await run({...opts(tamper),fetcher:async()=>response(html(candidate()))});
   const file=path.join(tamper,'data/image-automation/records/60001.json'),saved=read(file);

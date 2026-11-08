@@ -669,6 +669,7 @@
   }
   async function fixedDeckMenu(){
     try{
+      await imageRegistryReady;
       const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
       if(!response.ok)throw Error('HTTP '+response.status);
       const data=await response.json();
@@ -679,7 +680,12 @@
       const imageCandidates=uniqueNames.filter(name=>fixedDeckPreview(name));
       const noImageNames=uniqueNames.filter(name=>!imageCandidates.includes(name));
       const imageStatus='<p>画像候補 '+imageCandidates.length+'/45種類・未登録 '+noImageNames.length+'種類 / 登録済み公式印刷版 '+imageRegistryCount+'件。画像候補は実際の読み込み成功・利用許諾・印刷版確定を意味しません。</p>';
-      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=fixedDeckPreview(c)||fixedDeckPlaceholder(c.name);const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
+      const summary=data.decks.map(deck=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類</p><div class="deck-manifest-list">${deck.cards.map((c,i)=>{
+        const source=fixedDeckPreview(c),url=source||fixedDeckPlaceholder(c.name);
+        const kind=source?(c.identityStatus==='CONFIRMED'&&c.set&&c.cardNumber?'official':'candidate'):'placeholder';
+        const fallback=source?`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(c.name))}" alt="${esc(c.name)}（オリジナル仮画像）" style="width:56px;height:76px;object-fit:contain" draggable="false" hidden>`:'';
+        return `<div data-deck-id="${esc(deck.id)}" data-entry-index="${i}" data-card-name="${esc(c.name)}" data-official-card-id="${esc(c.officialCardId||'')}" data-image-kind="${kind}" style="display:flex;align-items:center;gap:8px;min-height:78px"><span class="deck-art" style="display:inline-flex;width:56px;height:76px;flex-shrink:0"><img data-image-primary="true" src="${esc(url)}" alt="${esc(c.name)}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain">${fallback}</span><span><b>${c.count}枚</b> ${esc(c.name)}<small>${kind==='official'?'印刷版確定':kind==='candidate'?'候補プレビュー・印刷版未確定':'仮画像・印刷版未確定'}</small></span></div>`;
+      }).join('')}</div></section>`).join('');
       openSheet('固定2デッキ・構成確認',`<p>印刷版ID未確定の画像は候補プレビュー／仮画像です。公式120枚表示合格とは扱いません。</p><p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
       // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
@@ -725,9 +731,9 @@
       status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
       $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
       const diagnostics=button('画像診断を一括保存（JSON）',()=>{
-        const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({deck:deck.name,name:card.name,count:card.count})));
+        const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({...card,deck:deck.name,deckId:deck.id})));
         const unique=[...new Set(cards.map(card=>card.name))];
-        const report={schemaVersion:1,createdAt:new Date().toISOString(),decks:data.decks.map(deck=>({name:deck.name,total:deck.total})),physicalCards:cards.reduce((sum,card)=>sum+card.count,0),uniqueNames:unique.length,registeredImages:window.PokecaImageResolver?.count()||0,unresolvedEngineNames:unresolved,missingPreviewNames:unique.filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])),loadFailures:window.PokecaImageFailures||[],cards};
+        const report={schemaVersion:2,printDisplay:window.PokecaFixedDeckImageStatus||null,createdAt:new Date().toISOString(),decks:data.decks.map(deck=>({name:deck.name,total:deck.total})),physicalCards:cards.reduce((sum,card)=>sum+card.count,0),uniqueNames:unique.length,registeredImages:window.PokecaImageResolver?.count()||0,unresolvedEngineNames:unresolved,missingPreviewNames:unique.filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])),loadFailures:window.PokecaImageFailures||[],cards};
         const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
         const link=document.createElement('a');link.href=url;link.download='pokeca-image-diagnostics.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
       });
@@ -749,15 +755,24 @@
       }
       // Force all image checks to start even for cards below the mobile viewport.
       // Lazy loading previously left the diagnostics permanently incomplete.
-      const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
-      let loaded=0,failed=0;
-      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`候補／仮画像の表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
-      for(const img of imgs){
-        let settled=false;const onLoad=()=>{if(settled)return;settled=true;loaded++;update();},onError=()=>{if(settled)return;if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;settled=true;failed++;update();};
-        if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
-        else{img.addEventListener('load',onLoad,{once:true});img.addEventListener('error',onError);}
-      }
-      update();
+      const rows=[...$('sheet-content').querySelectorAll('.deck-manifest-list > div')];
+      const imgs=rows.map(row=>row.querySelector('[data-image-primary]'));
+      const cards=data.decks.flatMap(deck=>deck.cards);
+      const update=()=>{
+        if(!rows[0]?.isConnected)return;
+        const measured=rows.map((row,i)=>{
+          const img=imgs[i],card=cards[i],exact=window.PokecaImageResolver.resolve(card);
+          const observation={sourceUrl:img.currentSrc||img.src,decoded:img.complete&&img.naturalWidth>0,visible:!img.hidden&&getComputedStyle(img).display!=='none'};
+          return {...window.PokecaFixedDeckImageAudit.entry(card,exact?{...card,imageSourceUrl:exact}:null,observation),deckId:row.dataset.deckId,entryIndex:Number(row.dataset.entryIndex),imageKind:row.dataset.imageKind};
+        });
+        window.PokecaFixedDeckImageStatus=window.PokecaFixedDeckImageAudit.summarize(measured);
+        const settled=imgs.filter(img=>img.complete).length,failed=imgs.filter(img=>img.complete&&!img.naturalWidth).length;
+        const node=$('deck-image-check');
+        if(node)node.textContent=`公式印刷版の表示成功 ${window.PokecaFixedDeckImageStatus.officialDisplayedCopies}/120枚 / 未完了 ${window.PokecaFixedDeckImageStatus.pendingCopies}枚 / 候補プレビュー ${window.PokecaFixedDeckImageStatus.candidatePreviewCopies}枚（確定数に含めません） / 画像読込失敗 ${failed} / 検査済 ${settled}/${imgs.length}`;
+      };
+      for(const img of imgs){img.addEventListener('load',update);img.addEventListener('error',()=>queueMicrotask(update));}
+      requestAnimationFrame(update);
+
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
@@ -796,7 +811,7 @@
   // Import all evidence-backed print images in one operation, independent of deck size.
   // Never modifies cards, saved matches, or print identities.
   window.PokecaImageRegistryStatus={state:'loading'};
-  window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(result=>{
+  const imageRegistryReady=window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(result=>{
     window.PokecaImageRegistryStatus={state:'ready',...result};
     render();
   }).catch(error=>{

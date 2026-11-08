@@ -48,7 +48,9 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Android-sized reload and error regression (synthetic images)
         id: functional
-        run: python tests/test_image_automation_browser.py
+        run: |
+          python tests/test_image_automation_browser.py
+          python tests/test_fixed_deck_image_accounting_browser.py
       - name: Collect, verify, register and reread each approved candidate
         id: collect
         run: node scripts/automate-official-images.cjs --refresh

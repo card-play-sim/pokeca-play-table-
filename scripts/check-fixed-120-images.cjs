@@ -15,7 +15,7 @@ function audit(source,data){
       total+=card.count;
       const x=names.get(card.name)||{name:card.name,count:0,ids:new Set(),matched:new Set(),unconfirmed:0,missing:0};
       x.count+=card.count;
-      if(card.officialCardId==null||card.identityStatus!=='CONFIRMED')x.unconfirmed+=card.count;
+      if(card.officialCardId==null||card.identityStatus!=='CONFIRMED'||!card.set||!card.cardNumber)x.unconfirmed+=card.count;
       else{
         const id=String(card.officialCardId);x.ids.add(id);
         if(rules.matches(map.get(id),card))x.matched.add(id);else x.missing+=card.count;

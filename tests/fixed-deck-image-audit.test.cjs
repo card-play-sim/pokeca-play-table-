@@ -1,0 +1,20 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const audit=require('../ui/fixed-deck-image-audit.js');
+const url='https://www.pokemon-card.com/assets/images/card_images/large/TEST/000001_P_TEST.jpg';
+const card={name:'TEST',count:4,officialCardId:'1',identityStatus:'CONFIRMED',set:'TEST',cardNumber:'001/100'};
+const record={...card,imageSourceUrl:url};
+const painted={sourceUrl:url,decoded:true,visible:true};
+assert.equal(audit.entry(card,record,painted).officialDisplayedCopies,4);
+assert.throws(()=>audit.entry({...card,count:-1},record,painted),/FIXED_CARD_COUNT/);
+for(const change of [{officialCardId:null},{identityStatus:'UNCONFIRMED'},{set:null},{cardNumber:null}])assert.equal(audit.entry({...card,...change},record,painted).officialDisplayedCopies,0);
+for(const change of [{name:'OTHER'},{set:'OTHER'},{cardNumber:'002/100'}])assert.equal(audit.entry(card,{...record,...change},painted).officialDisplayedCopies,0);
+for(const change of [{decoded:false},{visible:false},{sourceUrl:'data:image/svg+xml,placeholder'},{sourceUrl:url.replace('TEST.jpg','OTHER.jpg')}])assert.equal(audit.entry(card,record,{...painted,...change}).officialDisplayedCopies,0);
+const preview=audit.entry({...card,identityStatus:'UNCONFIRMED'},record,painted);assert.equal(preview.candidatePreview,true);assert.equal(preview.pendingCopies,4);
+const rows=JSON.parse(fs.readFileSync('data/fixed-test-decks.json')).decks.flatMap(d=>d.cards).map((c,i)=>{
+ const exact={...c,officialCardId:String(i+1),set:'TEST',cardNumber:'001/100',identityStatus:'CONFIRMED'};
+ return audit.entry(exact,{...exact,imageSourceUrl:url},painted);
+});
+assert.equal(audit.summarize(rows).productionPass,true);
+assert.equal(audit.summarize([...rows.slice(0,-1),{...rows.at(-1),officialDisplayedCopies:0}]).productionPass,false);
+console.log('PASS exact-print image accounting: decoded previews, placeholders, wrong prints and invisible images cannot pass');
