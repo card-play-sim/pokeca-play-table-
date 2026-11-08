@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "TEXT_CONSTRAINT_FILTER_NOT_PRINT_ADOPTION",
+  "source": "pokeca_fixed_deck_55_verified_pokemon_candidates.json",
+  "constraint": "User fixed Kangaskhan deck requires Shaymin ability はなのカーテン",
+  "name": "シェイミ",
+  "sourceCandidateCount": 9,
+  "matchedOfficialCardIds": [
+    "47301",
+    "47367",
+    "47860",
+    "48534"
+  ],
+  "excludedOfficialCardIds": [
+    "45152",
+    "48755",
+    "46559",
+    "49636",
+    "50452"
+  ],
+  "matchedCount": 4,
+  "excludedCount": 5,
+  "adoptedOfficialCardId": null,
+  "engineReady": false,
+  "reason": "Only these four source records have the specified ability. Selecting a unique print requires additional evidence; matching text does not establish implemented effects."
+}
