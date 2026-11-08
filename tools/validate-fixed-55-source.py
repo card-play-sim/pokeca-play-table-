@@ -23,6 +23,9 @@ def main(candidate_path, archive_path):
     with zipfile.ZipFile(archive_path) as archive:
         catalog = json.loads(archive.read(CATALOG))
     source = {str(c["officialCardId"]): c for c in catalog["cards"]}
+    images = {str(i["officialCardId"]): i for i in catalog["images"]}
+    if len(images) != len(catalog["images"]):
+        raise ValueError("Duplicate image official IDs")
     if len(source) != len(catalog["cards"]):
         raise ValueError("Duplicate source official IDs")
     if data.get("status") != "VERIFIED_SOURCE_CANDIDATES_NOT_ADOPTED":
@@ -42,6 +45,9 @@ def main(candidate_path, archive_path):
                 raise ValueError("Source mismatch: " + str(card["officialCardId"]) + " " + field)
         if card["pokemonStage"] != "たね" or card["regulationMark"] not in "HIJ":
             raise ValueError("Invalid source scope")
+        image = images.get(str(card["officialCardId"]))
+        if image is None or image.get("sourceUrl") != card["imageSourceUrl"] or image.get("cardNumber") != card["cardNumber"]:
+            raise ValueError("Official image reference mismatch: " + str(card["officialCardId"]))
         if not card["imageSourceUrl"].startswith("https://www.pokemon-card.com/assets/images/card_images/"):
             raise ValueError("Image URL not from official source")
     counts = Counter(c["name"] for c in cards)
