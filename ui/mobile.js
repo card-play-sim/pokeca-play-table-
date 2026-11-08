@@ -98,7 +98,7 @@
     const energyUrl=card.kind==='energy'&&officialBasicEnergy[card.energyType]?officialBasicEnergy[card.energyType]:energyArt(card);
     if(energyUrl){
       const energyFallback=energyArt(card);
-      const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:'';
+      const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
       return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
     }
     const url=imageURL(card);
