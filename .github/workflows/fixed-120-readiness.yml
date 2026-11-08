@@ -11,6 +11,8 @@ on:
       - 'sw.js'
       - 'tests/fixed-120-readiness.test.js'
       - 'tests/playable-demo-smoke.test.js'
+      - 'tests/image-evidence-bulk-import.test.js'
+      - 'scripts/import-verified-image-evidence.cjs'
       - '.github/workflows/fixed-120-readiness.yml'
   workflow_dispatch:
 jobs:
@@ -32,3 +34,4 @@ jobs:
         run: |
           node tests/fixed-120-readiness.test.js
           node tests/playable-demo-smoke.test.js
+          node tests/image-evidence-bulk-import.test.js
