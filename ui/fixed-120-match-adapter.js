@@ -1,7 +1,7 @@
 /* Fixed 120-card match adapter. No print IDs or effects are inferred from names. */
 (function(root){
   'use strict';
-  function expand(deck,records,owner){
+  function expand(deck,records,owner,options={}){
     if(!deck||!Array.isArray(deck.cards))throw Error('Fixed deck missing');
     if(!records||typeof records!=='object')throw Error('Verified card records missing');
     const out=[];
@@ -24,6 +24,8 @@
       if(record.kind==='pokemon'&&!Array.isArray(record.attacks))throw Error('ワザ情報未接続: '+item.name);
       if(record.effectStatus!=='verified' || record.engineReadable!==true)
         throw Error('公式効果未接続: '+item.name);
+      if(!options.testOnlyAllowSynthetic && (String(record.officialCardId).startsWith('SYNTHETIC_') || String(record.sourceEvidence).startsWith('TEST_ONLY_')))
+        throw Error('試験用カードを本番対戦に使用できません: '+item.name);
       if(!record.sourceEvidence || typeof record.sourceEvidence!=='string')
         throw Error('公式証跡未接続: '+item.name);
       for(let i=0;i<item.count;i++)out.push({...record,id:owner+'-'+out.length+'-'+record.officialCardId});
@@ -34,8 +36,8 @@
   function createMatch(manifest,records,engine,options={}){
     if(!manifest||!Array.isArray(manifest.decks)||manifest.decks.length!==2)throw Error('固定2デッキ不正');
     if(typeof engine?.createMatchFromVerifiedDecks!=='function')throw Error('対戦エンジン未接続');
-    const you=expand(manifest.decks[0],records,'you');
-    const ai=expand(manifest.decks[1],records,'ai');
+    const you=expand(manifest.decks[0],records,'you',options);
+    const ai=expand(manifest.decks[1],records,'ai',options);
     return engine.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,autoBenchBasics:true,...options});
   }
   root.PokecaFixed120={expand,createMatch};
