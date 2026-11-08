@@ -113,6 +113,10 @@
   document.addEventListener('error',event=>{
     const img=event.target;
     if(img?.tagName!=='IMG'||!img.nextElementSibling?.classList.contains('art-load-fallback'))return;
+    const id=img.closest('[data-official-card-id]')?.dataset.officialCardId||null;
+    const report=window.PokecaImageFailures||(window.PokecaImageFailures=[]);
+    const entry={name:img.alt||'',officialCardId:id,sourceUrl:img.currentSrc||img.src||'',reason:'IMAGE_LOAD_ERROR'};
+    if(!report.some(item=>item.sourceUrl===entry.sourceUrl&&item.officialCardId===entry.officialCardId))report.push(entry);
     img.hidden=true;
     img.nextElementSibling.hidden=false;
   },true);
