@@ -27,7 +27,7 @@ def build(archive):
             raise ValueError("Invalid official image reference: " + card_id)
         if card_id in images:
             raise ValueError("Duplicate image ID: " + card_id)
-        images[card_id] = url
+        images[card_id] = (url, item.get("imageId"), item.get("cardId"), item.get("rightsStatus"))
     cards = []
     seen = set()
     for card in catalog.get("cards", []):
@@ -36,18 +36,23 @@ def build(archive):
             continue
         if cid in seen:
             raise ValueError("Duplicate card ID: " + cid)
+        url, image_id, linked_card_id, rights_status = images[cid]
+        if image_id != card.get("imageId") or linked_card_id != card.get("cardId"):
+            raise ValueError("Image/card identity mismatch: " + cid)
+        if rights_status != "not_checked":
+            raise ValueError("Unexpected image rights state: " + cid)
         seen.add(cid)
         if card.get("verificationStatus") != "verified":
             raise ValueError("Unverified card: " + cid)
         cards.append({
             "officialCardId": cid,
             "name": card["name"],
-            "imageSourceUrl": images[cid],
+            "imageSourceUrl": url,
             "displayPermission": "unconfirmed",
             "renderAllowed": False,
         })
-    if len(cards) != 1940:
-        raise ValueError("Unexpected formal basic-Pokemon count: " + str(len(cards)))
+    if len(cards) != 1940 or len(images) != 1940 or len(seen) != len(images):
+        raise ValueError("Formal catalog/image one-to-one mismatch: " + str((len(cards), len(images), len(seen))))
     return {
         "schemaVersion": 1,
         "status": "REVIEW_ONLY_NO_PUBLIC_RENDER",
