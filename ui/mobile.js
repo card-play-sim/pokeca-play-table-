@@ -93,8 +93,23 @@
     const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="220" height="308" viewBox="0 0 220 308"><defs><linearGradient id="g" x2=".7" y2="1"><stop stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient></defs><rect width="220" height="308" rx="12" fill="#f5f1db"/><rect x="8" y="8" width="204" height="292" rx="9" fill="url(#g)" stroke="${dark}" stroke-width="5"/><text x="110" y="37" font-size="17" font-family="sans-serif" font-weight="bold" fill="#24352d" text-anchor="middle">基本${type}エネルギー</text><circle cx="110" cy="150" r="77" fill="${dark}" stroke="#fff9e7" stroke-width="9"/><circle cx="110" cy="150" r="63" fill="none" stroke="${light}" stroke-width="3"/><text x="110" y="178" font-size="85" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">${symbol}</text><text x="110" y="278" font-size="13" font-family="sans-serif" fill="#24352d" text-anchor="middle">操作練習用イメージ</text></svg>`;
     return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
   }
-  function cardArt(card){const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};const energyUrl=card.kind==='energy'&&officialBasicEnergy[card.energyType]?officialBasicEnergy[card.energyType]:energyArt(card);if(energyUrl)return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー・練習用画像" draggable="false">`;const url=imageURL(card);return url?`<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false"><span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`:fallbackArt(card);}
-  // Image hosts can reject hotlinks or fail offline; keep the card operable.
+  function cardArt(card){
+    const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};
+    const energyUrl=card.kind==='energy'&&officialBasicEnergy[card.energyType]?officialBasicEnergy[card.energyType]:energyArt(card);
+    if(energyUrl){
+      const energyFallback=energyArt(card);
+      const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:'';
+      return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
+    }
+    const url=imageURL(card);
+    if(!url)return fallbackArt(card);
+    const bundled=window.PokecaArt?.[card.name]||'';
+    const fallback=bundled&&bundled!==url
+      ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
+      :`<span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`;
+    return `<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
+  }
+    // Image hosts can reject hotlinks or fail offline; keep the card operable.
   document.addEventListener('error',event=>{
     const img=event.target;
     if(img?.tagName!=='IMG'||!img.nextElementSibling?.classList.contains('art-load-fallback'))return;
