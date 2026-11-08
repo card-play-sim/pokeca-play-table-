@@ -1,0 +1,29 @@
+name: Official image registry validation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/official-image-candidates-reviewed.json'
+      - 'scripts/merge-official-images.cjs'
+      - '.github/workflows/official-image-registry.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate and merge verified references (dry run)
+        run: node scripts/merge-official-images.cjs
+      - name: Show proposed registry changes
+        run: git diff -- data/official-image-registry.json
+      - name: Upload proposed registry and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: proposed-official-image-registry
+          path: |
+            data/official-image-registry.json
+            data/official-image-registry-audit.json
