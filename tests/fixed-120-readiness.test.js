@@ -92,3 +92,14 @@ const unknownCategory=JSON.parse(JSON.stringify(manifest));
 unknownCategory.decks[0].cards[0].category='unknown';
 assert.throws(()=>adapter.createMatch(unknownCategory,fakeRecords,capture,{testOnlyAllowSynthetic:true}),/カード分類が不正/);
 console.log('Unknown category rejection: PASS');
+
+const html=fs.readFileSync('index.html','utf8');
+const sw=fs.readFileSync('sw.js','utf8');
+const versions=[...html.matchAll(/build=(\d+)/g)].map(m=>m[1]);
+assert.ok(versions.length>=7);
+assert.equal(new Set(versions).size,1,'HTML build versions disagree');
+const version=versions[0];
+assert.ok(html.includes('v'+version+'</strong>'),'Visible version label is stale');
+assert.ok(sw.includes('pokeca-first-playable-v'+version),'Service worker cache version is stale');
+assert.ok(sw.includes('ui/mobile.js?build='+version),'Mobile script precache is stale');
+console.log('PWA build label and cache consistency: PASS v'+version);
