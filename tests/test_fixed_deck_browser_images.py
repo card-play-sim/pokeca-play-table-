@@ -49,6 +49,11 @@ async def main():
               "missingUniqueNames":missing,"entries":coverage},
               ensure_ascii=False,indent=2),encoding="utf-8")
         print(f"Actual fixed deck coverage: {len(unique_names)-len(missing)}/45 unique names; missing {len(missing)}")
+        print("MISSING_IMAGE_NAMES_JSON=" + json.dumps(missing, ensure_ascii=False))
+        print("MISSING_IMAGE_COUNTS=" + json.dumps({
+          row["name"]:sum(1 for r in coverage if r["name"]==row["name"])
+          for row in coverage if row["name"] in missing
+        }, ensure_ascii=False))
         diagnostic = await page.locator("#deck-image-check").inner_text()
         Path("artifacts").mkdir(exist_ok=True)
         await page.locator("#sheet").screenshot(path="artifacts/fixed-deck-images-mobile.png")
