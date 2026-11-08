@@ -153,6 +153,7 @@
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
   function render(){const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
+    if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning)queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
     $('game-note').textContent=s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
     $('opponent-hand').innerHTML=Array.from({length:Math.min(opp.handCount,14)},()=>'<i class="card-back"></i>').join('');$('opponent-hand-count').textContent=opp.handCount+'枚';
@@ -555,7 +556,7 @@
   }
   async function runOpponentPracticeTurn(){
     if(aiPracticeRunning)return;
-    if(view().turnPlayer!=='ai'){toast('相手の番になってから実行してください');return;}
+    if(view().turnPlayer!=='ai'&&view().pendingPrizeSelection?.playerId!=='ai'){toast('相手の番になってから実行してください');return;}
     aiPracticeRunning=true;
     const aiStartedAt=performance.now();
     render();
