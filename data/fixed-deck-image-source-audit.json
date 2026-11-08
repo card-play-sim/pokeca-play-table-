@@ -15,15 +15,14 @@
     }
   ],
   "uniqueCardNames": 45,
-  "registryPrints": 22,
-  "registryCoveredNames": 11,
+  "registryPrints": 23,
+  "registryCoveredNames": 12,
   "embeddedImageNames": [
     "ドラメシヤ",
     "ドロンチ",
     "ドラパルトex"
   ],
   "notInRegistryOrEmbedded": [
-    "ファイアローex",
     "ハイパーボール",
     "夜のタンカ",
     "エネルギーつけかえ",
@@ -65,6 +64,9 @@
     "Name-only coverage is not proof of exact print identity.",
     "Do not auto-adopt print IDs into game state.",
     "Official image URLs may fail to load in browser.",
-    "Other image fallback sources are not counted here."
-  ]
+    "Other image fallback sources are not counted here.",
+    "Audit regenerated against current live registry; embedded source list was preserved from previous inspection.",
+    "A card covered by both registry and embedded art counts only once."
+  ],
+  "sourceRegistryBlobSha": "744a1cd4fd654cb09742fe1aeb1516e6d39e5a3b"
 }
