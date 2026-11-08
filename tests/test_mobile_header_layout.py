@@ -33,8 +33,8 @@ class MobileHeaderLayoutTest(unittest.TestCase):
     def test_service_worker_and_html_build_match(self):
         import re
         sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-        html_versions = set(re.findall(r"\\?build=(\\d+)", self.html))
-        cache_versions = set(re.findall(r"pokeca-first-playable-v(\\d+)", sw))
+        html_versions = set(re.findall(r"\?build=(\d+)", self.html))
+        cache_versions = set(re.findall(r"pokeca-first-playable-v(\d+)", sw))
         sw_versions = set(re.findall(r"\\?build=(\\d+)", sw))
         self.assertEqual(len(html_versions), 1, "HTML assets must share one build")
         self.assertEqual(html_versions, cache_versions, "SW cache must match HTML build")
