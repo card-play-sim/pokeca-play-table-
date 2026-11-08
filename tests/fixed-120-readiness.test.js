@@ -64,3 +64,14 @@ for(const player of match.game.players){
   assert.equal(player.deck.length+player.hand.length+player.prizeCards.length+player.bench.length+1,60);
 }
 console.log('Real bundled engine initial match: PASS (synthetic cards only; gameplay effects not certified)');
+
+ // Reject category mismatches even if a record is otherwise marked verified.
+const badKind={...fakeRecords, [manifest.decks[0].cards[0].name]:{...fakeRecords[manifest.decks[0].cards[0].name],kind:'trainer'}};
+assert.throws(()=>adapter.createMatch(manifest,badKind,capture),/分類が不一致/);
+const badCount=JSON.parse(JSON.stringify(manifest));
+badCount.decks[0].cards[0].count=1.5;
+assert.throws(()=>adapter.createMatch(badCount,fakeRecords,capture),/枚数不正/);
+const duplicate=JSON.parse(JSON.stringify(manifest));
+duplicate.decks[0].cards.push({...duplicate.decks[0].cards[0]});
+assert.throws(()=>adapter.createMatch(duplicate,fakeRecords,capture),/重複行/);
+console.log('Malformed deck and mismatched card identity guards: PASS');
