@@ -16,6 +16,7 @@ jobs:
           node --check ui/mobile.js
           node --check ui/fixed-120-match-adapter.js
           node tests/test_fixed_120_adapter.cjs
+          node tests/kangaskhan_proof.test.cjs
           node --check ui/engine.bundle.js
           node --check ui/card-image-resolver.js
           node --check ui/verified-card-art.js
