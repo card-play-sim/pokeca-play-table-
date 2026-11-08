@@ -3,7 +3,8 @@
   "source": [
     "data/fixed-test-decks.json",
     "data/fixed-deck-identity-audit.json",
-    "data/fixed-deck-formal-1945-pokemon-candidates.json"
+    "data/fixed-deck-formal-1945-pokemon-candidates.json",
+    "card-play-sim/pokeca-card-simulator/card_effects.json"
   ],
   "status": "BLOCKED_MISSING_VERIFIED_CARD_AND_EFFECT_DATA",
   "counts": {
@@ -624,5 +625,25 @@
       "image": "NOT_CONFIRMED_FOR_ALL_PRINTS",
       "engineReady": false
     }
-  ]
+  ],
+  "effectProofCrossCheck": {
+    "source": "card-play-sim/pokeca-card-simulator/card_effects.json",
+    "proofOfficialCardIds": [
+      "45164",
+      "50623",
+      "45159",
+      "50384",
+      "50639"
+    ],
+    "proofCardNames": [
+      "ケルディオ",
+      "ラプラス",
+      "ワニノコ",
+      "ヤミラミ",
+      "ピカチュウ"
+    ],
+    "matchingFixedDeckCardNames": [],
+    "readyEffectsForFixedDeck": 0,
+    "note": "Existing five validated effects are for other card names and cannot be mapped to the fixed 45 types by similarity."
+  }
 }
