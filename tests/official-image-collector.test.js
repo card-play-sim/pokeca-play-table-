@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {parseDetail}=require('../scripts/collect-official-image-evidence.cjs');
+const name='ドロンチ',id='45771';
+const image='https://www.pokemon-card.com/assets/images/card_images/large/SV6/045771_P_DORONCHI.jpg';
+assert.deepEqual(parseDetail('<html>'+name+'<img src="'+image+'"></html>',id,name),{status:'CANDIDATE',imageSourceUrl:image});
+assert.equal(parseDetail('<html>'+name+'<img src="'+image+'"></html>','45772',name).status,'HOLD');
+assert.equal(parseDetail('<html>別カード<img src="'+image+'"></html>',id,name).status,'HOLD');
+assert.equal(parseDetail('<html>'+name+'<img src="/assets/images/card_images/large/SV6/045771_P_DORONCHI.jpg"></html>',id,name).status,'CANDIDATE');
+assert.equal(parseDetail('<html>'+name+'</html>',id,name).status,'HOLD');
+console.log('official image collector parsing: PASS');
