@@ -87,3 +87,8 @@ assert.equal(received.ai.length,60);
 assert.equal(received.maxOpeningAttempts,100);
 assert.equal(received.autoBenchBasics,true);
 console.log('Validated match options cannot be overridden: PASS');
+
+const unknownCategory=JSON.parse(JSON.stringify(manifest));
+unknownCategory.decks[0].cards[0].category='unknown';
+assert.throws(()=>adapter.createMatch(unknownCategory,fakeRecords,capture,{testOnlyAllowSynthetic:true}),/カード分類が不正/);
+console.log('Unknown category rejection: PASS');
