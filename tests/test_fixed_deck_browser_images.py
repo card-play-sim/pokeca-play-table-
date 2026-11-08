@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 from playwright.async_api import async_playwright
 
 async def main():
@@ -22,11 +23,15 @@ async def main():
             "(els) => els.filter(x => x.complete && x.naturalWidth > 0).length"
         )
         diagnostic = await page.locator("#deck-image-check").inner_text()
+        Path("artifacts").mkdir(exist_ok=True)
+        await page.locator("#sheet").screenshot(path="artifacts/fixed-deck-images-mobile.png")
+        Path("artifacts/fixed-deck-image-result.txt").write_text(f"Images {loaded}/{images}; {diagnostic}\\nJavaScript errors: {errors}\\n", encoding="utf-8")
         print(f"Images {loaded}/{images}; {diagnostic}")
         print("JavaScript errors:", errors)
         assert not errors, "Browser runtime errors: " + str(errors)
         assert images > 0, "No card image elements"
         assert loaded > 0, "No image was actually decoded by Chromium"
+        assert loaded == images, f"Image decode failures: {loaded}/{images}"
         await browser.close()
 
 asyncio.run(main())
