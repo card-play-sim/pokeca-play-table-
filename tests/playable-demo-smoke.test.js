@@ -26,7 +26,12 @@ assert.equal(game.turnPlayer,'ai');
 const aiActions=engine.getLegalActions(game,'ai');
 assert.ok(aiActions.actions.some(a=>a.type==='end_turn'));
 assert.ok(aiActions.actions.length>0);
-assert.equal(port.dispatch('ai',aiActions.actions.find(a=>a.type==='end_turn')).ok,true);
-assert.equal(game.turnPlayer,'you');
-assert.equal(game.turnNumber,3);
-console.log('Demo playable engine: 60-card setup, first-turn attack lock, legal actions and two turns PASS (synthetic demo only)');
+// Run the real AI policy, not merely an artificial end-turn action.
+(async()=>{
+  const aiResult=await engine.runAITurn(port,'ai',{maxActions:30});
+  assert.equal(aiResult.ok,true,JSON.stringify({stage:aiResult.stage,errors:aiResult.errors}));
+  assert.ok(aiResult.actions>=1);
+  assert.equal(game.turnPlayer,'you');
+  assert.equal(game.turnNumber,3);
+  console.log('Demo engine: setup, first-turn lock, legal moves, real AI turn PASS (synthetic demo only)');
+})().catch(error=>{console.error(error);process.exitCode=1;});
