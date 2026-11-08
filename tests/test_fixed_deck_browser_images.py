@@ -1,4 +1,5 @@
 import asyncio
+import json
 from pathlib import Path
 from playwright.async_api import async_playwright
 
@@ -28,6 +29,26 @@ async def main():
         loaded = await page.locator(".deck-manifest-list img").evaluate_all(
             "(els) => els.filter(x => x.complete && x.naturalWidth > 0).length"
         )
+        coverage = await page.evaluate("""() => {
+          const rows=[...document.querySelectorAll('.deck-manifest-list > div')];
+          return rows.map(row=>{
+            const name=row.querySelector('span b')?.parentElement?.textContent?.replace(/^\\s*\\d+枚\\s*/, '').trim() || '';
+            const img=row.querySelector('img');
+            return {name, hasImage:!!img, decoded:!!img && img.complete && img.naturalWidth>0,
+              source:img?.currentSrc||img?.src||null,
+              fallbackVisible:!!row.querySelector('span:not([hidden])') && !img};
+          });
+        }""")
+        missing = sorted(set(row["name"] for row in coverage if not row["decoded"]))
+        unique_names = set(row["name"] for row in coverage)
+        assert len(unique_names) == 45, f"Expected 45 unique names, got {len(unique_names)}"
+        Path("artifacts").mkdir(exist_ok=True)
+        Path("artifacts/fixed-deck-45-image-coverage.json").write_text(
+            json.dumps({"uniqueNames":len(unique_names),"totalEntries":len(coverage),
+              "decodedEntries":sum(row["decoded"] for row in coverage),
+              "missingUniqueNames":missing,"entries":coverage},
+              ensure_ascii=False,indent=2),encoding="utf-8")
+        print(f"Actual fixed deck coverage: {len(unique_names)-len(missing)}/45 unique names; missing {len(missing)}")
         diagnostic = await page.locator("#deck-image-check").inner_text()
         Path("artifacts").mkdir(exist_ok=True)
         await page.locator("#sheet").screenshot(path="artifacts/fixed-deck-images-mobile.png")
