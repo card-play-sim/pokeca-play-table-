@@ -6,6 +6,8 @@ on:
       - 'tests/image-registry-import.test.mjs'
       - 'tests/image-registry-existing.test.mjs'
       - 'tests/image-registry-invalid.test.mjs'
+      - 'tests/image-resolver-capacity.test.mjs'
+      - 'ui/card-image-resolver.js'
       - '.github/workflows/image-registry-capacity.yml'
   workflow_dispatch:
 jobs:
@@ -33,3 +35,5 @@ jobs:
           if-no-files-found: error
       - name: Verify invalid reference quarantine and recovery
         run: node tests/image-registry-invalid.test.mjs
+      - name: Verify 5001-entry browser resolver behavior
+        run: node tests/image-resolver-capacity.test.mjs
