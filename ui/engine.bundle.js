@@ -955,7 +955,6 @@ function canPayAttack(pokemon, attack) {
     for (let i = 0; i < physical.length; i++) {
       const card = physical[i];
       if (!card || card.kind !== 'energy' || card.cardType === 'SPECIAL_ENERGY' || card.isSpecial === true || card.special === true || card.energyClass === 'special' || card.energyType !== pokemon.energies[i]) return false;
-      if (typeof card.name === 'string' && !card.name.startsWith('基本') && !card.name.startsWith('Basic ')) return false;
     }
   }
   const have = [...(pokemon?.energies || [])];
