@@ -947,6 +947,17 @@ function attachEnergy(game, playerId, cardIndex, target = 'active') {
   p.normalEnergyAttached = true; record(game, 'attach_energy', { playerId, target, energyType: energy.energyType }); return true;
 }
 function canPayAttack(pokemon, attack) {
+  // Physical energy cards are authoritative when available. Unknown special-energy
+  // contributions must not be guessed from the legacy one-type-per-card view.
+  const physical = pokemon?.energyCards;
+  if (Array.isArray(physical) && physical.length) {
+    if (physical.length !== (pokemon?.energies || []).length) return false;
+    for (let i = 0; i < physical.length; i++) {
+      const card = physical[i];
+      if (!card || card.kind !== 'energy' || card.cardType === 'SPECIAL_ENERGY' || card.isSpecial === true || card.special === true || card.energyClass === 'special' || card.energyType !== pokemon.energies[i]) return false;
+      if (typeof card.name === 'string' && !card.name.startsWith('基本') && !card.name.startsWith('Basic ')) return false;
+    }
+  }
   const have = [...(pokemon?.energies || [])];
   const costs = attack?.cost || [];
   // Generic colorless costs can be paid by any energy; typed costs require a matching type.
