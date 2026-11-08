@@ -1,0 +1,23 @@
+name: Official image real browser load
+on:
+  pull_request:
+    paths:
+      - 'tests/image-browser-load.mjs'
+      - 'data/official-image-registry.json'
+      - '.github/workflows/image-browser-load.yml'
+  workflow_dispatch:
+jobs:
+  chromium-official-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runner
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Load five real official image URLs in Chromium
+        run: node tests/image-browser-load.mjs
