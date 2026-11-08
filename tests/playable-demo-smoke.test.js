@@ -42,14 +42,15 @@ assert.ok(aiActions.actions.length>0);
   const fullPort=engine.createUIPort({getGame:()=>fullGame,setGame:next=>{fullGame=next;}});
   const seen=new Set();
   let completedTurns=0;
-  for(let t=0;t<12&&fullGame.status==='active';t++){
-    const playerId=fullGame.turnPlayer;
+  for(let t=0;t<60&&fullGame.status==='active';t++){
+    const playerId=fullGame.pendingPrizeSelection?.playerId||fullGame.turnPlayer;
     const result=await engine.runAITurn(fullPort,playerId,{maxActions:30});
-    if(!result.ok)break;
+    assert.equal(result.ok,true,'AI turn '+t+': '+JSON.stringify(result.errors));
     assert.ok(result.actions>0,'No actions on turn '+t);
     completedTurns++;
     for(const action of result.results||[])if(action?.value?.type)seen.add(action.value.type);
   }
-  assert.ok(completedTurns>=2,'Demo failed to complete two AI turns');
-  console.log('Demo AI-vs-AI multi-turn smoke: '+completedTurns+' turns, status '+fullGame.status+' (synthetic demo only)');
+  assert.equal(fullGame.status,'finished','Demo did not reach a game result');
+  assert.ok(seen.has('attack_turn'),'No attack action was performed');
+  console.log('Demo AI-vs-AI full match FINISHED in '+completedTurns+' actions cycles (synthetic demo only)');
 })().catch(error=>{console.error(error);process.exitCode=1;});
