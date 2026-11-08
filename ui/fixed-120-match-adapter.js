@@ -14,6 +14,10 @@
       if(record.kind==='pokemon'&&(!Number.isInteger(record.hp)||record.hp<=0||typeof record.basic!=='boolean'))
         throw Error('HP・進化段階未確認: '+item.name);
       if(record.kind==='pokemon'&&!Array.isArray(record.attacks))throw Error('ワザ情報未接続: '+item.name);
+      if(record.effectStatus!=='verified' || record.engineReadable!==true)
+        throw Error('公式効果未接続: '+item.name);
+      if(!record.sourceEvidence || typeof record.sourceEvidence!=='string')
+        throw Error('公式証跡未接続: '+item.name);
       for(let i=0;i<item.count;i++)out.push({...record,id:owner+'-'+out.length+'-'+record.officialCardId});
     }
     if(out.length!==60)throw Error('60枚構成に不一致: '+owner);
