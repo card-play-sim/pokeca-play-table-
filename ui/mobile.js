@@ -659,9 +659,9 @@
       let loaded=0,failed=0;
       const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
       for(const img of imgs){
-        const onLoad=()=>{loaded++;update();},onError=()=>{if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;failed++;update();};
+        let settled=false;const onLoad=()=>{if(settled)return;settled=true;loaded++;update();},onError=()=>{if(settled)return;if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;settled=true;failed++;update();};
         if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
-        else{img.addEventListener('load',onLoad,{once:true});img.addEventListener('error',onError,{once:true});}
+        else{img.addEventListener('load',onLoad,{once:true});img.addEventListener('error',onError);}
       }
       update();
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
