@@ -712,7 +712,18 @@
         }
       }catch(error){console.warn('Candidate reference unavailable',error);}
       const availableRecords=window.PokecaFixed120VerifiedRecords||{};
-      const unresolved=missing.filter(name=>!(availableRecords[name]?.verified===true&&availableRecords[name]?.officialCardId&&availableRecords[name]?.engineReadable===true&&availableRecords[name]?.effectStatus==='verified'&&availableRecords[name]?.sourceEvidence));
+      const unresolved=missing.filter(name=>{
+        const record=availableRecords[name];
+        const deckEntry=data.decks.flatMap(deck=>deck.cards).find(card=>card.name===name);
+        const kindByCategory={pokemon:'pokemon',energy:'energy',goods:'trainer',support:'trainer',supporter:'trainer',item:'trainer',tool:'tool',stadium:'stadium'};
+        return !(record?.verified===true&&record.name===name&&record.officialCardId&&
+          !String(record.officialCardId).startsWith('SYNTHETIC_')&&
+          record.kind===kindByCategory[deckEntry?.category]&&
+          (record.kind!=='pokemon'||(Number.isInteger(record.hp)&&record.hp>0&&typeof record.basic==='boolean'&&Array.isArray(record.attacks)))&&
+          record.engineReadable===true&&record.effectStatus==='verified'&&
+          typeof record.sourceEvidence==='string'&&record.sourceEvidence.length>0&&
+          !record.sourceEvidence.startsWith('TEST_ONLY_'));
+      });
       const status=document.createElement('p');
       status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
       $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
