@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "generatedFor": "fixed-test-decks.json",
+  "scope": "Read-only source coverage; not network image load verification or adopted card identities",
+  "deckCounts": [
+    {
+      "name": "ガルーラ4・ファイアロー2・ニューラ2",
+      "total": 60,
+      "unique": 30
+    },
+    {
+      "name": "ドラパルトex＋ヨノワール型（固定検証相手）",
+      "total": 60,
+      "unique": 26
+    }
+  ],
+  "uniqueCardNames": 45,
+  "registryPrints": 22,
+  "registryCoveredNames": 11,
+  "embeddedImageNames": [
+    "ドラメシヤ",
+    "ドロンチ",
+    "ドラパルトex"
+  ],
+  "notInRegistryOrEmbedded": [
+    "ファイアローex",
+    "ハイパーボール",
+    "夜のタンカ",
+    "エネルギーつけかえ",
+    "ポケモンいれかえ",
+    "スペシャルレッドカード",
+    "むしよけスプレー",
+    "アカマツ",
+    "シアノ",
+    "トウコ",
+    "ボスの指令",
+    "リーリエの決心",
+    "ジャッジマン",
+    "たけしのスカウト",
+    "ハンディサーキュレーター",
+    "ヒーローマント",
+    "ロケット団の監視塔",
+    "夜の鉱山",
+    "危ない廃墟",
+    "ロケット団のエネルギー",
+    "イグニッションエネルギー",
+    "基本悪エネルギー",
+    "基本超エネルギー",
+    "ノココッチ",
+    "ノココッチex",
+    "なかよしポフィン",
+    "クラッシュハンマー",
+    "ポケパッド",
+    "アンフェアスタンプ",
+    "メイのはげまし",
+    "ジャミングタワー",
+    "基本炎エネルギー"
+  ],
+  "registeredMultiplePrintNames": [
+    "ロケット団のニューラ",
+    "ドラメシヤ",
+    "スボミー"
+  ],
+  "notes": [
+    "Name-only coverage is not proof of exact print identity.",
+    "Do not auto-adopt print IDs into game state.",
+    "Official image URLs may fail to load in browser.",
+    "Other image fallback sources are not counted here."
+  ]
+}
