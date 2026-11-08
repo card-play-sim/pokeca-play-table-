@@ -1,0 +1,36 @@
+name: Official image real browser load
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/official-image-registry.json'
+      - 'tests/image-browser-load.mjs'
+      - '.github/workflows/image-browser-load.yml'
+  pull_request:
+    paths:
+      - 'tests/image-browser-load.mjs'
+      - 'data/official-image-registry.json'
+      - '.github/workflows/image-browser-load.yml'
+  workflow_dispatch:
+jobs:
+  chromium-official-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runner
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Load every registered real official image URL in Chromium
+        run: node tests/image-browser-load.mjs
+      - name: Preserve per-card image loading results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-image-browser-load-report
+          path: artifacts/image-browser-load-report.json
+          if-no-files-found: warn

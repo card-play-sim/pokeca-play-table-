@@ -12,7 +12,7 @@ async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args())
   device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
-  context=await browser.new_context(**device);page=await context.new_page()
+  context=await browser.new_context(**device,service_workers='block');page=await context.new_page()
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:responses.update({r.url:{'status':r.status,'type':r.headers.get('content-type','')}}))
   async def snapshot():return await page.evaluate('PokecaMobile.port.getSnapshot()')
@@ -34,7 +34,7 @@ async def main():
   async def end_turn():
    old=(await snapshot())['turnPlayer'];await page.locator('#end-turn').tap();await page.locator('#confirm-ok').tap()
    await page.wait_for_function('old=>PokecaMobile.port.getSnapshot().turnPlayer!==old',arg=old);await page.wait_for_timeout(750)
-  await page.goto('http://127.0.0.1:8765/',wait_until='domcontentloaded')
+  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
   await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"');await saved()
   await page.evaluate('''()=>{let seed=6;Math.random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}''')
   await page.locator('#menu-open').tap();await page.get_by_text('固定2デッキで操作練習（公式効果未接続）',exact=True).tap()
@@ -138,7 +138,7 @@ async def main():
   assert await failed.count()==1
   operations.append('failed image retains touch target and fallback')
   await page.unroute(expected,abort_image)
-  report={'schemaVersion':1,'device':'Chromium Pixel 5 Android emulation','physicalAndroidVerified':False,'previewBoardUsed':False,
+  report={'schemaVersion':1,'device':'Chromium Pixel 5 Android emulation','physicalAndroidVerified':False,'previewBoardUsed':False,'url':page.url,'serviceWorkersBlocked':True,
    'fixedDeckPracticeLoaded':True,'livePhysicalCards':120,'compositionImagesDisplayed':displayed,'adoptedPrintCopies':0,
    'officialEffectsConnected':False,'operations':operations,'identityConservation':True,'saveReloadExact':True,
    'javascriptErrors':errors,'imageFilesSaved':False,'observations':observations,'imageAndBasicOperationPass':all(r['passed'] for r in observations) and not errors,
