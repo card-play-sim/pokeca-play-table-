@@ -102,7 +102,7 @@
       return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
     }
     const url=imageURL(card);
-    if(!url)return fallbackArt(card);
+    if(!url)return `<img src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false">`;
     const bundled=window.PokecaArt?.[card.name]||'';
     const fallback=bundled&&bundled!==url
       ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
