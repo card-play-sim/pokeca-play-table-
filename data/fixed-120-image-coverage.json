@@ -7,9 +7,9 @@
   ],
   "totalPhysicalCards": 120,
   "uniqueCardNames": 45,
-  "uniquePreviewNames": 11,
+  "uniquePreviewNames": 12,
   "ambiguousNames": 3,
-  "missingNames": 31,
+  "missingNames": 30,
   "officialPrintsApproved": 0,
   "cards": [
     {
@@ -228,8 +228,10 @@
     {
       "name": "ドロンチ",
       "count": 4,
-      "previewStatus": "MISSING",
-      "candidateOfficialCardIds": []
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "45771"
+      ]
     },
     {
       "name": "ドラパルトex",
