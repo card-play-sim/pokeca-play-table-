@@ -687,6 +687,14 @@
       const status=document.createElement('p');
       status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
       $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
+      const diagnostics=button('画像診断を一括保存（JSON）',()=>{
+        const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({deck:deck.name,name:card.name,count:card.count})));
+        const unique=[...new Set(cards.map(card=>card.name))];
+        const report={schemaVersion:1,createdAt:new Date().toISOString(),decks:data.decks.map(deck=>({name:deck.name,total:deck.total})),physicalCards:cards.reduce((sum,card)=>sum+card.count,0),uniqueNames:unique.length,registeredImages:window.PokecaImageResolver?.count()||0,unresolvedEngineNames:unresolved,missingPreviewNames:unique.filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])),loadFailures:window.PokecaImageFailures||[],cards};
+        const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
+        const link=document.createElement('a');link.href=url;link.download='pokeca-image-diagnostics.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      });
+      $('sheet-content').insertBefore(diagnostics,status.nextSibling);
       if(unresolved.length===0){
         const start=button('固定120枚で対戦開始',async()=>{
           try{
