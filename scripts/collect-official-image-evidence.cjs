@@ -7,9 +7,9 @@ const {setTimeout:delay}=require('node:timers/promises');
 const origin='https://www.pokemon-card.com';
 function parseDetail(html,id,name){
   const text=String(html);
-  const urls=[...text.matchAll(/(?:https?:\\/\\/www\\.pokemon-card\\.com)?\\/assets\\/images\\/card_images\\/large\\/[A-Za-z0-9_.%/-]+\\.(?:jpg|png|webp)/gi)]
+  const urls=[...text.matchAll(/(?:https?:\/\/www\.pokemon-card\.com)?\/assets\/images\/card_images\/large\/[A-Za-z0-9_.%/-]+\.(?:jpg|png|webp)/gi)]
     .map(x=>x[0].startsWith('http')?x[0]:origin+x[0]);
-  const matches=[...new Set(urls.filter(u=>new RegExp('/0*'+id+'_[A-Za-z0-9_]+\\.(?:jpg|png|webp)$','i').test(u)))];
+  const matches=[...new Set(urls.filter(u=>new RegExp('/0*'+id+'_[A-Za-z0-9_]+\.(?:jpg|png|webp)$','i').test(u)))];
   // Exact ID embedded in official image filename is required; ambiguous images are held.
   if(matches.length!==1)return {status:'HOLD',reason:matches.length?'AMBIGUOUS_IMAGE':'NO_ID_MATCHED_IMAGE'};
   // A name must be visible in official detail HTML, not inferred from candidate data.
@@ -21,7 +21,7 @@ async function collect(candidates,fetcher=fetch){
   const seen=new Set();
   for(const card of candidates){
     const id=String(card.officialCardId||''),name=card.name;
-    if(!/^\\d+$/.test(id)||typeof name!=='string'||!name.trim()||seen.has(id)){holds.push({officialCardId:id,reason:'INVALID_OR_DUPLICATE_ID'});continue}
+    if(!/^\d+$/.test(id)||typeof name!=='string'||!name.trim()||seen.has(id)){holds.push({officialCardId:id,reason:'INVALID_OR_DUPLICATE_ID'});continue}
     seen.add(id);
     const officialPageUrl=origin+'/card-search/details.php/card/'+id+'/regu/XY';
     try{
