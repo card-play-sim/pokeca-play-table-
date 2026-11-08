@@ -624,13 +624,32 @@
     if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
     try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
   };
+  // Source-backed, image-only representative prints for the fixed-deck list.
+  // These IDs are NOT adopted card identities and must never enter the game state.
+  const fixedDeckImageOnlyPreview=Object.freeze({
+    'キチキギスex':'SV6a/045913_P_KICHIKIGISUEX.jpg',
+    'シェイミ':'SV9a/047301_P_SHIEIMI.jpg',
+    'スボミー':'SV8a/046662_P_SUBOMI.jpg',
+    'ドラメシヤ':'SV6/045770_P_DORAMESHIYA.jpg',
+    'ニャースex':'M3/049694_P_NIXYASUEX.jpg',
+    'ノコッチ':'SV5K/045202_P_NOKOTCHI.jpg',
+    'マシマシラ':'SV6/045746_P_MASHIMASHIRA.jpg',
+    'メガガルーラex':'M1S/047847_P_MGARURAEX.jpg',
+    'ラティアスex':'SV7a/046248_P_RATEIASUEX.jpg',
+    'リーリエのピッピex':'SV9/047041_P_RIRIENOPIPPIEX.jpg',
+    'ロケット団のニューラ':'SV10/047465_P_ROKETTODANNONIXYURA.jpg'
+  });
+  function fixedDeckPreview(name){
+    const path=fixedDeckImageOnlyPreview[name];
+    return path?'https://www.pokemon-card.com/assets/images/card_images/large/'+path:'';
+  }
   async function fixedDeckMenu(){
     try{
       const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
       if(!response.ok)throw Error('HTTP '+response.status);
       const data=await response.json();
       if(!Array.isArray(data.decks)||data.decks.length!==2||data.decks.some(d=>d.cards.reduce((sum,c)=>sum+c.count,0)!==60))throw Error('60枚検証に失敗');
-      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="${esc(window.PokecaArt?.[c.name]||'')}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="if(!this.dataset.fallbackTried && this.dataset.bundled){this.dataset.fallbackTried=1;this.src=this.dataset.bundled;return;}this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
+      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=fixedDeckPreview(c.name)||window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="${esc(window.PokecaArt?.[c.name]||'')}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="if(!this.dataset.fallbackTried && this.dataset.bundled){this.dataset.fallbackTried=1;this.src=this.dataset.bundled;return;}this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
       openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p><p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
       // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
@@ -683,7 +702,7 @@
       // Lazy loading previously left the diagnostics permanently incomplete.
       const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
       let loaded=0,failed=0;
-      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
+      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
       for(const img of imgs){
         let settled=false;const onLoad=()=>{if(settled)return;settled=true;loaded++;update();},onError=()=>{if(settled)return;if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;settled=true;failed++;update();};
         if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
