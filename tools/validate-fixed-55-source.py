@@ -24,6 +24,8 @@ def main(candidate_path, archive_path):
         catalog = json.loads(archive.read(CATALOG))
     source = {str(c["officialCardId"]): c for c in catalog["cards"]}
     images = {str(i["officialCardId"]): i for i in catalog["images"]}
+    if len(catalog["cards"]) != 1945:
+        raise ValueError("Formal source catalog is not the frozen 1945-record edition")
     if len(images) != len(catalog["images"]):
         raise ValueError("Duplicate image official IDs")
     if len(source) != len(catalog["cards"]):
@@ -46,7 +48,7 @@ def main(candidate_path, archive_path):
         if card["pokemonStage"] != "たね" or card["regulationMark"] not in "HIJ":
             raise ValueError("Invalid source scope")
         image = images.get(str(card["officialCardId"]))
-        if image is None or image.get("sourceUrl") != card["imageSourceUrl"] or image.get("cardNumber") != card["cardNumber"]:
+        if image is None or image.get("sourceUrl") != card["imageSourceUrl"] or image.get("cardNumber") != card["cardNumber"] or image.get("officialPageUrl") != card["officialPageUrl"] or image.get("rightsStatus") != card["imageRightsStatus"]:
             raise ValueError("Official image reference mismatch: " + str(card["officialCardId"]))
         if not card["imageSourceUrl"].startswith("https://www.pokemon-card.com/assets/images/card_images/"):
             raise ValueError("Image URL not from official source")
