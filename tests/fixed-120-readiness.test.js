@@ -78,3 +78,12 @@ console.log('Malformed deck and mismatched card identity guards: PASS');
 
 assert.throws(()=>adapter.createMatch(manifest,fakeRecords,capture),/試験用カードを本番対戦/);
 console.log('Production synthetic card rejection: PASS');
+
+// The caller must not replace validated decks or setup safeguards via options.
+const spoofed=adapter.createMatch(manifest,fakeRecords,capture,{testOnlyAllowSynthetic:true,you:[],ai:[],maxOpeningAttempts:1,autoBenchBasics:false});
+assert.equal(spoofed.fixtureOnly,true);
+assert.equal(received.you.length,60);
+assert.equal(received.ai.length,60);
+assert.equal(received.maxOpeningAttempts,100);
+assert.equal(received.autoBenchBasics,true);
+console.log('Validated match options cannot be overridden: PASS');
