@@ -1,0 +1,21 @@
+name: Fixed 120 readiness
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/fixed-test-decks.json'
+      - 'ui/fixed-120-match-adapter.js'
+      - 'tests/fixed-120-readiness.test.js'
+      - '.github/workflows/fixed-120-readiness.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate fixed decks and safety gate
+        run: node tests/fixed-120-readiness.test.js
