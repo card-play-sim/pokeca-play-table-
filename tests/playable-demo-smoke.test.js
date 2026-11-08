@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const sandbox={};sandbox.window=sandbox;
+const sandbox={performance:{now:()=>Number(process.hrtime.bigint())/1e6},setTimeout};sandbox.window=sandbox;
 vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),sandbox);
 const engine=sandbox.Pokeca;
 let seed=123;
@@ -34,8 +34,7 @@ assert.ok(aiActions.actions.length>0);
   assert.equal(game.turnPlayer,'you');
   assert.equal(game.turnNumber,3);
   console.log('Demo engine: setup, first-turn lock, legal moves, real AI turn PASS (synthetic demo only)');
-  // Multi-turn smoke: two AI-controlled sides exercise actual action dispatch.
-  // Full-match completion is not guaranteed with the current baseline policy.
+  // AI-vs-AI smoke uses actual actions and must reach a finished state.
   let full=engine.createDemoMatch({rng});
   assert.equal(full.ok,true);
   let fullGame=full.game;
@@ -53,4 +52,21 @@ assert.ok(aiActions.actions.length>0);
   assert.equal(fullGame.status,'finished','Demo did not reach a game result');
   assert.ok(seen.has('attack_turn'),'No attack action was performed');
   console.log('Demo AI-vs-AI full match FINISHED in '+completedTurns+' actions cycles (synthetic demo only)');
+  // Regression: prize owner can differ from turn owner after a knockout.
+  // Run several reproducible games, covering prize selection and winner resolution.
+  for(let trial=1;trial<=8;trial++){
+    let trialSeed=trial;
+    const trialRng=()=>{trialSeed=(Math.imul(trialSeed,1664525)+1013904223)>>>0;return trialSeed/4294967296;};
+    let trialGame=engine.createDemoMatch({rng:trialRng}).game;
+    const trialPort=engine.createUIPort({getGame:()=>trialGame,setGame:next=>{trialGame=next;}});
+    let steps=0;
+    while(trialGame.status==='active'&&steps<60){
+      const actor=trialGame.pendingPrizeSelection?.playerId||trialGame.turnPlayer;
+      const result=await engine.runAITurn(trialPort,actor,{maxActions:30});
+      assert.equal(result.ok,true,'seed '+trial+' step '+steps+': '+JSON.stringify(result.errors));
+      steps++;
+    }
+    assert.equal(trialGame.status,'finished','seed '+trial+' failed to finish');
+  }
+  console.log('Eight deterministic AI-vs-AI games finished (synthetic demo only)');
 })().catch(error=>{console.error(error);process.exitCode=1;});
