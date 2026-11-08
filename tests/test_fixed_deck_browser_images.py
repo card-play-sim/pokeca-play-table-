@@ -35,7 +35,11 @@ async def main():
         print(f"Deck card types displayed: {entry_count}")
         assert entry_count == 56, f"Expected 56 deck entries (30 + 26), got {entry_count}"
         candidate_summary = await page.locator("#sheet details summary").all_inner_texts()
-        assert any("11/16種類・55印刷版（未採用）" in item for item in candidate_summary), f"Candidate audit not shown: {candidate_summary}"
+        source=json.loads((Path(__file__).resolve().parents[1]/'data/fixed-deck-formal-1945-pokemon-candidates.json').read_text())['candidates']
+        names=sum(bool(c['officialCardIds']) for c in source)
+        prints=sum(len(c['officialCardIds']) for c in source)
+        expected=f"{names}/{len(source)}種類・{prints}印刷版（未採用）"
+        assert any(expected in item for item in candidate_summary), f"Candidate audit not shown: {candidate_summary}"
         images = await page.locator(".deck-manifest-list img").count()
         loaded = await page.locator(".deck-manifest-list img").evaluate_all(
             "(els) => els.filter(x => x.complete && x.naturalWidth > 0).length"
