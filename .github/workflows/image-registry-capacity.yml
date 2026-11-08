@@ -5,6 +5,7 @@ on:
       - 'tools/import-image-registry.mjs'
       - 'tests/image-registry-import.test.mjs'
       - 'tests/image-registry-existing.test.mjs'
+      - 'tests/image-registry-invalid.test.mjs'
       - '.github/workflows/image-registry-capacity.yml'
   workflow_dispatch:
 jobs:
@@ -30,3 +31,5 @@ jobs:
             .image-registry-output/official-image-registry.json
             .image-registry-output/import-report.json
           if-no-files-found: error
+      - name: Verify invalid reference quarantine and recovery
+        run: node tests/image-registry-invalid.test.mjs
