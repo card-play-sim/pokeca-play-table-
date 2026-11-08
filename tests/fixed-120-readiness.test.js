@@ -40,7 +40,7 @@ for(const card of manifest.decks.flatMap(d=>d.cards)){
 }
 let received;
 const capture={createMatchFromVerifiedDecks(payload){received=payload;return {ok:true,fixtureOnly:true};}};
-const fixtureResult=adapter.createMatch(manifest,fakeRecords,capture);
+const fixtureResult=adapter.createMatch(manifest,fakeRecords,capture,{testOnlyAllowSynthetic:true});
 assert.equal(fixtureResult.fixtureOnly,true);
 assert.equal(received.you.length,60);
 assert.equal(received.ai.length,60);
@@ -54,7 +54,7 @@ vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),browser);
 assert.equal(typeof browser.Pokeca.createMatchFromVerifiedDecks,'function');
 let seed=123456789;
 const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
-const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng});
+const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng,testOnlyAllowSynthetic:true});
 assert.equal(match.ok,true);
 assert.equal(match.game.players.length,2);
 for(const player of match.game.players){
@@ -67,11 +67,14 @@ console.log('Real bundled engine initial match: PASS (synthetic cards only; game
 
  // Reject category mismatches even if a record is otherwise marked verified.
 const badKind={...fakeRecords, [manifest.decks[0].cards[0].name]:{...fakeRecords[manifest.decks[0].cards[0].name],kind:'trainer'}};
-assert.throws(()=>adapter.createMatch(manifest,badKind,capture),/分類が不一致/);
+assert.throws(()=>adapter.createMatch(manifest,badKind,capture,{testOnlyAllowSynthetic:true}),/分類が不一致/);
 const badCount=JSON.parse(JSON.stringify(manifest));
 badCount.decks[0].cards[0].count=1.5;
-assert.throws(()=>adapter.createMatch(badCount,fakeRecords,capture),/枚数不正/);
+assert.throws(()=>adapter.createMatch(badCount,fakeRecords,capture,{testOnlyAllowSynthetic:true}),/枚数不正/);
 const duplicate=JSON.parse(JSON.stringify(manifest));
 duplicate.decks[0].cards.push({...duplicate.decks[0].cards[0]});
-assert.throws(()=>adapter.createMatch(duplicate,fakeRecords,capture),/重複行/);
+assert.throws(()=>adapter.createMatch(duplicate,fakeRecords,capture,{testOnlyAllowSynthetic:true}),/重複行/);
 console.log('Malformed deck and mismatched card identity guards: PASS');
+
+assert.throws(()=>adapter.createMatch(manifest,fakeRecords,capture),/試験用カードを本番対戦/);
+console.log('Production synthetic card rejection: PASS');
