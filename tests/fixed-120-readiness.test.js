@@ -55,15 +55,10 @@ assert.equal(typeof browser.Pokeca.createMatchFromVerifiedDecks,'function');
 let seed=123456789;
 const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng,testOnlyAllowSynthetic:true});
-assert.equal(match.ok,true);
-assert.equal(match.game.players.length,2);
-for(const player of match.game.players){
-  assert.ok(player.active&&player.active.kind==='pokemon');
-  assert.ok(Array.isArray(player.prizeCards)&&player.prizeCards.length===6);
-  assert.ok(Array.isArray(player.hand));
-  assert.equal(player.deck.length+player.hand.length+player.prizeCards.length+player.bench.length+1,60);
-}
-console.log('Real bundled engine initial match: PASS (synthetic cards only; gameplay effects not certified)');
+assert.equal(match.ok,false);
+assert.equal(match.stage,'effect_catalog_unregistered');
+assert.match(match.errors.join(' / '),/Card identity mismatch/);
+console.log('Bundled engine effect-catalog mismatch: safely BLOCKED (synthetic cards only)');
 
  // Reject category mismatches even if a record is otherwise marked verified.
 const badKind={...fakeRecords, [manifest.decks[0].cards[0].name]:{...fakeRecords[manifest.decks[0].cards[0].name],kind:'trainer'}};
