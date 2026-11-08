@@ -23,3 +23,28 @@ assert.throws(()=>adapter.createMatch(manifest,{},engine),/公式カード未接
 assert.equal(called,false);
 const unconfirmed=manifest.decks.flatMap(d=>d.cards).filter(c=>c.officialCardId==null||c.identityStatus!=='CONFIRMED');
 console.log(JSON.stringify({physicalCards:120,uniqueNames:45,unconfirmedEntries:unconfirmed.length,engineLaunch:'BLOCKED_BY_VERIFICATION',adapterGuard:'PASS'},null,2));
+
+ // Synthetic fixture verifies 120 physical instances cross the adapter boundary.
+ // Fixture identifiers are NOT real official IDs and must never be published as card data.
+const fakeRecords={};
+let serial=0;
+for(const card of manifest.decks.flatMap(d=>d.cards)){
+  if(fakeRecords[card.name])continue;
+  const isPokemon=card.category==='pokemon';
+  const kind=isPokemon?'pokemon':card.category==='energy'?'energy':card.category==='tool'?'tool':card.category==='stadium'?'stadium':'trainer';
+  fakeRecords[card.name]={
+    name:card.name,kind,verified:true,officialCardId:'SYNTHETIC_TEST_'+(++serial),
+    sourceEvidence:'TEST_ONLY_NOT_OFFICIAL',effectStatus:'verified',engineReadable:true,
+    ...(isPokemon?{hp:100,basic:true,attacks:[]}:{}),
+  };
+}
+let received;
+const capture={createMatchFromVerifiedDecks(payload){received=payload;return {ok:true,fixtureOnly:true};}};
+const fixtureResult=adapter.createMatch(manifest,fakeRecords,capture);
+assert.equal(fixtureResult.fixtureOnly,true);
+assert.equal(received.you.length,60);
+assert.equal(received.ai.length,60);
+assert.equal(new Set([...received.you,...received.ai].map(c=>c.id)).size,120);
+assert.equal(received.maxOpeningAttempts,100);
+assert.equal(received.autoBenchBasics,true);
+console.log('Synthetic adapter expansion: PASS (not an official-card or playable-match validation)');
