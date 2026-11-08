@@ -157,8 +157,17 @@ function getLegalActions(game,playerId,{maxCandidates=2000}={}){
  const p=game.players.find(p=>p.id===playerId),actions=[],seen=new Set();let truncated=false;
  if(!p)return {actions,complete:false,truncated:false,coverage:'implemented actions only'};
  // No actions may be proposed for a player whose turn has not started or a finished game.
- if(game.status!=='active'||game.turnPlayer!==playerId)return {actions,complete:false,truncated:false,coverage:'implemented actions only',playerId};
+ if(game.status!=='active'||(game.turnPlayer!==playerId&&game.pendingPrizeSelection?.playerId!==playerId))return {actions,complete:false,truncated:false,coverage:'implemented actions only',playerId};
  const add=action=>{const key=JSON.stringify(action);if(seen.has(key))return;seen.add(key);if(actions.length>=maxCandidates){truncated=true;return;}if(Adapter.accepts(game,playerId,action))actions.push(clone(action));};
+ if(game.pendingPrizeSelection){
+  if(game.pendingPrizeSelection.playerId===playerId){
+   const count=game.pendingPrizeSelection.count;
+   const slots=(p.prizeSlots||[]).map((id,i)=>id?i:null).filter(i=>i!==null);
+   const choose=(start,picked)=>{if(picked.length===count){add({type:'take_prizes',slots:picked});return;}for(let i=start;i<slots.length;i++)choose(i+1,[...picked,slots[i]]);};
+   choose(0,[]);
+  }
+  return {actions,complete:false,truncated,coverage:'pending prize selection',playerId};
+ }
  for(const card of p.hand){for(const option of Adapter.handActions(game,playerId,idOf(card)))add(option.action);if(card.cardType==='SUPPORTER')add({type:'play_supporter',cardId:idOf(card)});}
  for(const pokemon of [p.active,...p.bench].filter(Boolean))for(const option of Adapter.pokemonActions(game,playerId,idOf(pokemon))){
   if(!option.enabled)continue;
@@ -208,14 +217,14 @@ const {chooseBaseline} = require('./pokeca_ai_baseline_policy');
 async function runAITurn(port, playerId='ai', {policy=chooseBaseline,maxActions=20}={}) {
   if (!Number.isInteger(maxActions) || maxActions<1 || maxActions>200) throw Error('maxActions must be 1..200');
   const initial=port.getSnapshot();
-  if(initial.status!=='active' || initial.turnPlayer!==playerId) return {ok:false,stage:'not_turn',actions:0};
+  if(initial.status!=='active' || (initial.turnPlayer!==playerId&&initial.pendingPrizeSelection?.playerId!==playerId)) return {ok:false,stage:'not_turn',actions:0};
   const results=[];
   let slowestActionMs=0;
   let slowestActionType='none';
   const phaseTotals={searchMs:0,decisionMs:0,dispatchMs:0,maxCandidates:0,truncated:false};
   for(let i=0;i<maxActions;i++){
     const snapshot=port.getSnapshot();
-    if(snapshot.status!=='active' || snapshot.turnPlayer!==playerId) return {ok:true,actions:results.length,results,slowestActionMs:Math.round(slowestActionMs),slowestActionType,phaseTotals};
+    if(snapshot.status!=='active' || (snapshot.turnPlayer!==playerId&&snapshot.pendingPrizeSelection?.playerId!==playerId) || (snapshot.pendingPrizeSelection&&snapshot.pendingPrizeSelection.playerId!==playerId)) return {ok:true,actions:results.length,results,slowestActionMs:Math.round(slowestActionMs),slowestActionType,phaseTotals};
     let result;
     const actionStarted=performance.now();
     try {result=await chooseAndDispatch(port,playerId,policy);}
@@ -1217,7 +1226,7 @@ function checkAction(game, playerId, action) {
   const errors = [];
   if (!game || game.status !== 'active') errors.push('Game is not active');
   if (!game || !Array.isArray(game.players) || game.players.length !== 2) errors.push('Game must have exactly two players');
-  if (game && game.turnPlayer !== playerId) errors.push('Action player is not the current turn player');
+  if (game && game.turnPlayer !== playerId && !(action?.type==='take_prizes' && game.pendingPrizeSelection?.playerId===playerId)) errors.push('Action player is not the current turn player');
   const p = findPlayer(game, playerId);
   if (!p) errors.push('Action player does not exist');
   if (!action || typeof action.type !== 'string') return result([...errors, 'Action type is required']);
