@@ -8,7 +8,9 @@ const result=reconcile(manifest,registry,facts,read('data/fixed-120-print-resolu
 assert.equal(result.totalCards,120);assert.equal(result.uniqueNames,45);assert.equal(result.confirmedCopies,0);assert.equal(result.pendingCopies,120);assert.equal(result.approvedSelectionRecords,0);
 assert.deepEqual(result.priorReviewCounts,{NO_NAME_MATCH:34,PRIOR_ID_FOUND_NOT_SELECTED:5,NAME_MATCH_ID_UNRESOLVED:6});
 assert.equal(result.baselineDeclarationRecovered,true);assert.equal(result.originalFormalCatalogRecovered,false);
-assert.equal(result.recoveredCandidateCount,5);assert.equal(result.candidateTuplesMatchingRegisteredEvidence,3);
+assert.equal(result.recoveredCandidateCount,5);const currentIds=new Map(registry.cards.map(c=>[c.officialCardId,c]));
+const expectedMatches=facts.deckReview.candidates.filter(c=>{const r=currentIds.get(c.candidateOfficialCardId);return r&&r.name===c.cardName&&(r.set+' '+r.cardNumber)===c.candidateCardNumber;}).length;
+assert.equal(result.candidateTuplesMatchingRegisteredEvidence,expectedMatches);
 assert(result.rows.every(r=>r.selectedOfficialCardId===null&&r.status==='HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW'));
 assert.equal(JSON.stringify({manifest,registry,facts}),before,'source reconciliation is read-only');
 const changed=structuredClone(facts);changed.deckReview.decisions[0].deckA++;

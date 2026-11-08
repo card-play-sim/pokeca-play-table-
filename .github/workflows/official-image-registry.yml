@@ -41,6 +41,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_mobile_header_layout.py' -v
           python -m unittest discover -s tests -p 'test_card_reflection_wiring.py' -v
           python -m unittest discover -s tests -p 'test_official_image_workflow.py' -v
+          python -m unittest discover -s tests -p 'test_formal_zip_reconciliation.py' -v
           node scripts/verify-fixed-deck-image-registry.mjs
       - name: Install browser test runtime
         run: |
