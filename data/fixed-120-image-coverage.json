@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "purpose": "image coverage inventory only; candidate IDs are not approved deck identities",
+  "source": [
+    "data/fixed-test-decks.json",
+    "data/official-image-registry.json"
+  ],
+  "totalPhysicalCards": 120,
+  "uniqueCardNames": 45,
+  "uniquePreviewNames": 11,
+  "ambiguousNames": 3,
+  "missingNames": 31,
+  "officialPrintsApproved": 0,
+  "cards": [
+    {
+      "name": "メガガルーラex",
+      "count": 4,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "47847"
+      ]
+    },
+    {
+      "name": "ファイアローex",
+      "count": 2,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "50400"
+      ]
+    },
+    {
+      "name": "ラティアスex",
+      "count": 1,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "49028"
+      ]
+    },
+    {
+      "name": "リーリエのピッピex",
+      "count": 1,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "49003"
+      ]
+    },
+    {
+      "name": "マシマシラ",
+      "count": 5,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "49074"
+      ]
+    },
+    {
+      "name": "ロケット団のニューラ",
+      "count": 2,
+      "previewStatus": "MULTIPLE_PRINTS",
+      "candidateOfficialCardIds": [
+        "47465",
+        "49164"
+      ]
+    },
+    {
+      "name": "シェイミ",
+      "count": 1,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "47301"
+      ]
+    },
+    {
+      "name": "ニャースex",
+      "count": 2,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "49694"
+      ]
+    },
+    {
+      "name": "ハイパーボール",
+      "count": 8,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "46588"
+      ]
+    },
+    {
+      "name": "夜のタンカ",
+      "count": 4,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "48277"
+      ]
+    },
+    {
+      "name": "エネルギーつけかえ",
+      "count": 3,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ポケモンいれかえ",
+      "count": 3,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "スペシャルレッドカード",
+      "count": 3,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "むしよけスプレー",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "アカマツ",
+      "count": 5,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "シアノ",
+      "count": 2,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "トウコ",
+      "count": 2,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ボスの指令",
+      "count": 6,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "リーリエの決心",
+      "count": 5,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ジャッジマン",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "たけしのスカウト",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ハンディサーキュレーター",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ヒーローマント",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ロケット団の監視塔",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "夜の鉱山",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "危ない廃墟",
+      "count": 2,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ロケット団のエネルギー",
+      "count": 2,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "イグニッションエネルギー",
+      "count": 2,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "基本悪エネルギー",
+      "count": 6,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "基本超エネルギー",
+      "count": 7,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ドラメシヤ",
+      "count": 4,
+      "previewStatus": "MULTIPLE_PRINTS",
+      "candidateOfficialCardIds": [
+        "45770",
+        "46779",
+        "48654",
+        "49262",
+        "49971"
+      ]
+    },
+    {
+      "name": "ドロンチ",
+      "count": 4,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ドラパルトex",
+      "count": 3,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "スボミー",
+      "count": 2,
+      "previewStatus": "MULTIPLE_PRINTS",
+      "candidateOfficialCardIds": [
+        "46662",
+        "48533"
+      ]
+    },
+    {
+      "name": "キチキギスex",
+      "count": 1,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "45913"
+      ]
+    },
+    {
+      "name": "ノココッチ",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ノココッチex",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ノコッチ",
+      "count": 1,
+      "previewStatus": "UNIQUE_PREVIEW",
+      "candidateOfficialCardIds": [
+        "45202"
+      ]
+    },
+    {
+      "name": "なかよしポフィン",
+      "count": 4,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "クラッシュハンマー",
+      "count": 4,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ポケパッド",
+      "count": 4,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "アンフェアスタンプ",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "メイのはげまし",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "ジャミングタワー",
+      "count": 1,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    },
+    {
+      "name": "基本炎エネルギー",
+      "count": 3,
+      "previewStatus": "MISSING",
+      "candidateOfficialCardIds": []
+    }
+  ]
+}
