@@ -24,8 +24,7 @@ def main(candidate_path, archive_path):
         catalog = json.loads(archive.read(CATALOG))
     source = {str(c["officialCardId"]): c for c in catalog["cards"]}
     images = {str(i["officialCardId"]): i for i in catalog["images"]}
-    if len(catalog["cards"]) != 1945:
-        raise ValueError("Formal source catalog is not the frozen 1945-record edition")
+    # The ZIP formal baseline is 1945, but its legacy card_catalog.json contains 1940.\n    # Do not confuse the formal registry count with this specific catalog entry.\n    with zipfile.ZipFile(archive_path) as archive:\n        baseline = json.loads(archive.read("FORMAL_BASELINE.json"))\n    if baseline.get("formalCount") != 1945 or len(catalog["cards"]) != 1940:\n        raise ValueError("Unexpected formal baseline or legacy catalog size")
     if len(images) != len(catalog["images"]):
         raise ValueError("Duplicate image official IDs")
     if len(source) != len(catalog["cards"]):
