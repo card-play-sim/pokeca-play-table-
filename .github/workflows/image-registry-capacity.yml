@@ -1,0 +1,43 @@
+name: Image registry importer capacity
+on:
+  pull_request:
+    paths:
+      - 'tools/import-image-registry.mjs'
+      - 'tests/image-registry-import.test.mjs'
+      - 'tests/image-registry-existing.test.mjs'
+      - 'tests/image-registry-invalid.test.mjs'
+      - 'tests/image-resolver-capacity.test.mjs'
+      - 'tests/image-resolver-existing.test.mjs'
+      - 'data/official-image-registry.json'
+      - 'ui/card-image-resolver.js'
+      - '.github/workflows/image-registry-capacity.yml'
+  workflow_dispatch:
+jobs:
+  capacity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify 5001 record capacity and safe resume
+        run: node tests/image-registry-import.test.mjs
+
+      - name: Verify existing official image registry import
+        run: node tests/image-registry-existing.test.mjs
+      - name: Build verified registry candidate (no deployment)
+        run: node tools/import-image-registry.mjs data/official-image-registry.json .image-registry-output
+      - name: Upload candidate registry and report for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-image-registry-candidate
+          path: |
+            .image-registry-output/official-image-registry.json
+            .image-registry-output/import-report.json
+          if-no-files-found: error
+      - name: Verify invalid reference quarantine and recovery
+        run: node tests/image-registry-invalid.test.mjs
+      - name: Verify 5001-entry browser resolver behavior
+        run: node tests/image-resolver-capacity.test.mjs
+      - name: Verify real registry resolves exact official image URLs
+        run: node tests/image-resolver-existing.test.mjs

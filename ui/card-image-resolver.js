@@ -2,6 +2,7 @@
 (function(global){
   'use strict';
   const entries=new Map();
+  const byName=new Map(); // null means multiple verified prints: never guess a print
   function register(records){
     const source=records?.imageByOfficialCardId||records;
     if(!source||typeof source!=='object'||Array.isArray(source))return 0;
@@ -14,9 +15,16 @@
       if(entries.has(id)){
         const existing=entries.get(id);
         if(existing.name!==record.name||existing.sourceUrl!==record.sourceUrl)throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
+      }else if(pending.some(([key])=>key===id)){
+        const earlier=pending.find(([key])=>key===id)[1];
+        if(earlier.name!==record.name||earlier.sourceUrl!==record.sourceUrl)throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
       }else pending.push([id,{name:record.name,sourceUrl:record.sourceUrl}]);
     }
-    for(const [id,record] of pending)entries.set(id,record);
+    for(const [id,record] of pending){
+      entries.set(id,record);
+      if(!byName.has(record.name))byName.set(record.name,record.sourceUrl);
+      else byName.set(record.name,null);
+    }
     return pending.length;
   }
   function resolve(card){
@@ -35,8 +43,7 @@
     if(!card||typeof card!=='object')return '';
     const print=Array.isArray(card.evolutionCards)&&card.evolutionCards.length?card.evolutionCards.at(-1):card;
     if(print.officialCardId!=null||print.catalogCardId!=null||card.officialCardId!=null||card.catalogCardId!=null)return '';
-    const matches=[...entries.values()].filter(r=>r.name===print.name);
-    return matches.length===1?matches[0].sourceUrl:'';
+    return byName.get(print.name)||'';
   }
   function coverage(cards){
     const missing=[],resolved=[];
