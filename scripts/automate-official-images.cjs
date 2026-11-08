@@ -2,6 +2,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path');
 const {collect,atomic,hash,parseDetail}=require('./collect-official-image-evidence.cjs');
+const rules=require('../ui/official-image-validation.js');
 const {importEvidence}=require('./import-verified-image-evidence.cjs');
 const root=path.resolve(__dirname,'..'),state=path.join(root,'data/image-automation');
 async function run(){
@@ -22,20 +23,20 @@ async function run(){
   // Register independently compared print references only, never deck identities.
   // The importer remains the existing implementation; candidate reviewStatus is
   // preserved in the checkpoint, not turned into an APPROVED formal card.
+  const verifiedBatch=[];
   for(const record of collected.cards){
    const candidate=candidates.find(c=>String(c.officialCardId)===record.officialCardId);
    if(!candidate?.set||!candidate?.cardNumber||!record.printExpected)continue;
    const checkpoint=JSON.parse(fs.readFileSync(path.join(state,'records',record.officialCardId+'.json')));
    const verified=parseDetail(checkpoint.html,record.officialCardId,record.name,candidate);
-   if(verified.status!=='CANDIDATE'||verified.imageSourceUrl!==record.imageSourceUrl||hash(checkpoint.html)!==record.detailSha256)throw Error('OFFICIAL_REPLAY_MISMATCH');
-   const evidence={cards:[{...record,verified:true}]};
-   const imported=importEvidence(evidence,registry,decks);
-   const added=imported.registry.cards.find(c=>String(c.officialCardId)===record.officialCardId);
-   Object.assign(added,{cardNumber:record.cardNumber,set:record.set,officialPageUrl:record.officialPageUrl,detailSha256:record.detailSha256,verificationStatus:'OFFICIAL_ID_NAME_PRINT_MATCH',deckPrintAdopted:false});
-   atomic(registryFile,imported.registry);
-   registry.cards=imported.registry.cards;
-   report.imageReferencesAdded+=imported.added;
+   if(verified.status!=='CANDIDATE'||!rules.matches(verified,record)||hash(checkpoint.html)!==record.detailSha256)throw Error('OFFICIAL_REPLAY_MISMATCH');
+   verifiedBatch.push({...record,verified:true,verificationStatus:'OFFICIAL_ID_NAME_PRINT_MATCH',deckPrintAdopted:false});
   }
+  // The shared importer validates every print and all evidence before one atomic write.
+  const imported=importEvidence({cards:verifiedBatch},registry,decks);
+  atomic(registryFile,imported.registry);
+  registry.cards=imported.registry.cards;
+  report.imageReferencesAdded=imported.added;
   report.coverage=require('./check-fixed-120-images.cjs').audit(decks,registry);
   report.referenceCoverageReady=report.coverage.registryCoveragePass&&collected.holds.length===0;
   // Only the separate real-browser measurement can establish image-display PASS.

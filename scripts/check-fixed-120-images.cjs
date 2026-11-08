@@ -1,24 +1,38 @@
 #!/usr/bin/env node
 'use strict';
-const fs=require('node:fs');
-const path=require('node:path');
+const fs=require('node:fs'),path=require('node:path');
+const rules=require('../ui/official-image-validation.js');
 const root=path.resolve(__dirname,'..');
-function audit(source, data){
-const decks=source.decks,registry=data.cards;
-const map=new Map(registry.map(c=>[String(c.officialCardId),c]));
-const names=new Map();
-for(const deck of decks)for(const card of deck.cards){const x=names.get(card.name)||{name:card.name,count:0,ids:new Set(),unconfirmed:0};x.count+=card.count;if(card.officialCardId==null||card.identityStatus!=='CONFIRMED')x.unconfirmed+=card.count;else x.ids.add(String(card.officialCardId));names.set(card.name,x);}
-const results=[...names.values()].map(x=>{const ids=[...x.ids],matched=ids.filter(id=>map.get(id)?.name===x.name);return {name:x.name,count:x.count,officialPrintIds:ids,matchedOfficialPrintIds:matched,unconfirmedCount:x.unconfirmed,status:x.unconfirmed?'IDENTITY_UNCONFIRMED':matched.length===ids.length?'REGISTRY_READY':'IMAGE_REFERENCE_MISSING'};});
-const total=decks.reduce((n,d)=>n+d.cards.reduce((m,c)=>m+c.count,0),0);
-const ready=results.filter(x=>x.status==='REGISTRY_READY').length;
-const report={totalCards:total,uniqueNames:results.length,registeredOfficialPrints:registry.length,readyNames:ready,blockedNames:results.length-ready,remoteImageLoadVerified:false,androidChromeVerified:false,pass:false,registryCoveragePass:total===120&&results.length===45&&ready===45,results};
-return report;
+// Offline registration coverage only. This never claims browser/device success.
+function audit(source,data){
+  const map=rules.index(data.cards),names=new Map();
+  if(!Array.isArray(source?.decks)||source.decks.length!==2)throw Error('FIXED_DECK_SCHEMA');
+  const deckTotals=[];
+  for(const deck of source.decks){
+    let total=0;
+    for(const card of deck.cards){
+      if(!Number.isInteger(card.count)||card.count<=0||typeof card.name!=='string'||!card.name.trim())throw Error('FIXED_CARD_SCHEMA');
+      total+=card.count;
+      const x=names.get(card.name)||{name:card.name,count:0,ids:new Set(),matched:new Set(),unconfirmed:0,missing:0};
+      x.count+=card.count;
+      if(card.officialCardId==null||card.identityStatus!=='CONFIRMED')x.unconfirmed+=card.count;
+      else{
+        const id=String(card.officialCardId);x.ids.add(id);
+        if(rules.matches(map.get(id),card))x.matched.add(id);else x.missing+=card.count;
+      }
+      names.set(card.name,x);
+    }
+    deckTotals.push(total);
+  }
+  const results=[...names.values()].map(x=>({name:x.name,count:x.count,officialPrintIds:[...x.ids],matchedOfficialPrintIds:[...x.matched],unconfirmedCount:x.unconfirmed,missingReferenceCount:x.missing,status:x.unconfirmed?'IDENTITY_UNCONFIRMED':x.missing?'IMAGE_REFERENCE_MISSING':'REGISTRY_READY'}));
+  const total=deckTotals.reduce((a,b)=>a+b,0),ready=results.filter(x=>x.status==='REGISTRY_READY').length;
+  const pass=deckTotals.every(n=>n===60)&&total===120&&results.length===45&&ready===45;
+  return {inspection:'STATIC_REGISTRY_COVERAGE',totalCards:total,uniqueNames:results.length,registeredOfficialPrints:map.size,readyNames:ready,blockedNames:results.length-ready,remoteImageLoadVerified:false,androidChromeVerified:false,imageDisplayStatus:'NOT_VERIFIED',productionPass:false,pass,registryCoveragePass:pass,results};
 }
 if(require.main===module){
-const report=audit(JSON.parse(fs.readFileSync(path.join(root,'data/fixed-test-decks.json'),'utf8')),JSON.parse(fs.readFileSync(path.join(root,'data/official-image-registry.json'),'utf8')));
-console.log(JSON.stringify({...report,results:undefined},null,2));
-if(process.env.REPORT_PATH)fs.writeFileSync(process.env.REPORT_PATH,JSON.stringify(report,null,2)+'\n');
-if(!report.pass){console.error('FAIL: 120 official card images are not verified in Android Chrome; identity and image registry must be completed.');process.exitCode=1;}
-
+  const report=audit(JSON.parse(fs.readFileSync(path.join(root,'data/fixed-test-decks.json'),'utf8')),JSON.parse(fs.readFileSync(path.join(root,'data/official-image-registry.json'),'utf8')));
+  console.log(JSON.stringify({...report,results:undefined},null,2));
+  if(process.env.REPORT_PATH)fs.writeFileSync(process.env.REPORT_PATH,JSON.stringify(report,null,2)+'\n');
+  if(!report.pass){console.error('FAIL: static registry coverage incomplete; browser image display is a separate inspection.');process.exitCode=1;}
 }
 module.exports={audit};

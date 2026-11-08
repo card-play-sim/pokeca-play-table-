@@ -23,6 +23,8 @@ with sync_playwright() as p:
         page.route('**/*',route)
         page.goto('http://pokeca.test/')
         page.wait_for_function('window.PokecaMobile && PokecaImageRegistryStatus.state==="ready"')
+        # Registry loading and session restoration are independent async operations.
+        page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
         # Late dynamic registry is connected to the real mobile render path.
         snapshot=page.evaluate('PokecaMobile.port.getSnapshot()')
         page.locator('#menu-open').click();page.get_by_text('固定2デッキ（各60枚）を確認',exact=True).click()
@@ -35,6 +37,8 @@ with sync_playwright() as p:
         before=page.evaluate('Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage[k]]))')
         page.reload()
         page.wait_for_function('window.PokecaMobile && PokecaImageRegistryStatus.state==="ready"')
+        # Registry loading and session restoration are independent async operations.
+        page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
         assert page.evaluate('PokecaMobile.port.getSnapshot()')==snapshot
         # An invalid/failed refresh cannot clear the prior resolver batch.
         page.evaluate("window.fetch=async()=>({ok:false,status:503})")

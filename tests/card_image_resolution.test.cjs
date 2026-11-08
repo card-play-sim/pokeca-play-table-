@@ -8,6 +8,7 @@ const mobile=fs.readFileSync(path.join(root,'ui/mobile.js'),'utf8');
 const registry=fs.readFileSync(path.join(root,'ui/verified-card-art.js'),'utf8');
 const context={window:{PokecaArt:{'架空たね':'data:image/png;base64,example'}}};
 vm.runInNewContext(registry,context);
+vm.runInNewContext(fs.readFileSync(path.join(root,'ui/official-image-validation.js'),'utf8'),context);
 vm.runInNewContext(fs.readFileSync(path.join(root,'ui/card-image-resolver.js'),'utf8'),context);
 const start=mobile.indexOf('function imageURL(card){');
 const end=mobile.indexOf('  function fallbackArt(',start);
@@ -21,6 +22,8 @@ assert.equal(resolve({name:'架空たね',officialCardId:'99999'}),'','unknown o
 assert.equal(resolve({name:'架空たね',evolutionCards:[{name:'架空進化'}]}),'','evolved print without art must not show basic art');
 assert.equal(resolve({name:'架空たね',evolutionCards:[{name:'メガガルーラex',officialCardId:'47847'}]}),resolve(official),'evolved print with verified ID uses evolved art');
 assert.equal(resolve({name:'架空たね',imageUrl:'http://insecure.invalid/x.jpg'}),'','reject non-HTTPS explicit URL');
+assert.equal(resolve({name:'架空たね',set:'OTHER'}),'','a print constraint must not fall back to name artwork');
+assert.equal(resolve({name:'架空たね',cardNumber:'001/100'}),'','a card number must not fall back to name artwork');
 assert(mobile.includes("fallback.hidden=false"),'image failure fallback handler remains');
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');

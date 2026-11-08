@@ -8,27 +8,23 @@ const root=path.resolve(__dirname,'..');
 const registryPath=path.join(root,'data/official-image-registry.json');
 const deckPath=path.join(root,'data/fixed-test-decks.json');
 const coveragePath=path.join(root,'data/fixed-120-image-coverage.json');
+const rules=require('../ui/official-image-validation.js');
 function fail(msg){throw Error(msg)}
 function importEvidence(evidence,registry,decks){
   if(!Array.isArray(evidence.cards)||!Array.isArray(registry.cards)||!Array.isArray(decks.decks))fail('SCHEMA');
-  const official=/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/[A-Za-z0-9_./%-]+\.(?:jpg|jpeg|png|webp)$/i;
-  const existing=new Map(),batch=new Map();
-  for(const c of registry.cards){if(existing.has(String(c.officialCardId)))fail('EXISTING_DUPLICATE_'+c.officialCardId);existing.set(String(c.officialCardId),c)}
+  const existing=rules.index(registry.cards);
   const deckNames=new Set(decks.decks.flatMap(d=>d.cards.map(c=>c.name)));
-  for(const c of evidence.cards){
-    const id=String(c.officialCardId??'');
-    if(!/^\d+$/.test(id)||!deckNames.has(c.name)||c.verified!==true||
-      !official.test(c.imageSourceUrl)||typeof c.officialPageUrl!=='string'||
-      !/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d+(?:\/|$)/.test(c.officialPageUrl)||
-      !new RegExp('/card/'+id+'(?:/|$)').test(c.officialPageUrl))fail('UNVERIFIED_'+id);
-    const value={officialCardId:id,name:c.name,imageSourceUrl:c.imageSourceUrl};
-    const old=batch.get(id)||existing.get(id);
-    if(old&&(old.name!==value.name||old.imageSourceUrl!==value.imageSourceUrl))fail('CONFLICT_'+id);
-    batch.set(id,value);
+  let added=0;
+  for(const raw of evidence.cards){
+    const id=String(raw?.officialCardId??'');
+    let c;
+    try{c=rules.validate(raw);}catch(error){throw Error('UNVERIFIED_'+id+': '+error.message);}
+    if(!deckNames.has(c.name)||c.verified!==true||(!c.officialPageUrl&&!c.officialCardPageUrl))fail('UNVERIFIED_'+id);
+    const old=existing.get(id);
+    existing.set(id,old?rules.merge(old,c):c);
+    if(!old)added++;
   }
   const cards=[...existing.values()];
-  let added=0;
-  for(const [id,value] of batch)if(!existing.has(id)){cards.push(value);added++}
   cards.sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId));
   const byName=new Map();
   for(const c of cards){const a=byName.get(c.name)||[];a.push(c.officialCardId);byName.set(c.name,a)}
@@ -48,8 +44,9 @@ function fromCollectorStaging(staging){
        !/^[a-f0-9]{64}$/i.test(evidence.detailSha256||'')||
        !/^[a-f0-9]{64}$/i.test(evidence.imageReferenceSha256||''))
       fail('COLLECTOR_EVIDENCE_NOT_APPROVED_'+String(record.officialCardId||''));
-    return {officialCardId:record.officialCardId,name:record.cardName,
-      imageSourceUrl:record.imageUrl,officialPageUrl:record.officialPageUrl,verified:true};
+    return {...record,officialCardId:record.officialCardId,name:record.cardName,
+      imageSourceUrl:record.imageUrl,officialPageUrl:record.officialPageUrl,
+      set:record.set,cardNumber:record.cardNumber,evidence:{...evidence},verified:true};
   })};
 }
 function main(){

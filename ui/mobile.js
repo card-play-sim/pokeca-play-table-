@@ -75,7 +75,7 @@
     if(explicit)return ''; // Unverified state URLs cannot override the ID registry.
     // Never substitute a different official print for an identified card.
     // Unidentified practice cards may use name-based artwork only as a preview.
-    if(cardId)return '';
+    if(cardId||currentPrint.set!=null||currentPrint.setCode!=null||currentPrint.cardNumber!=null)return '';
     return window.PokecaArt?.[currentPrint.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
@@ -96,7 +96,8 @@
   }
   function cardArt(card){
     const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};
-    const energyUrl=card.kind==='energy'&&officialBasicEnergy[card.energyType]?officialBasicEnergy[card.energyType]:energyArt(card);
+    const identifiedPrint=card.officialCardId!=null||card.catalogCardId!=null||card.set!=null||card.setCode!=null||card.cardNumber!=null;
+    const energyUrl=card.kind==='energy'?(imageURL(card)||(identifiedPrint?energyArt(card):(officialBasicEnergy[card.energyType]||energyArt(card)))):'';
     if(energyUrl){
       const energyFallback=energyArt(card);
       const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;

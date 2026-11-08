@@ -1,6 +1,7 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const ctx={window:{},fetch:async()=>({ok:true,json:async()=>({cards:[]})})};
+vm.runInNewContext(fs.readFileSync('ui/official-image-validation.js','utf8'),ctx);
 vm.runInNewContext(fs.readFileSync('ui/card-image-resolver.js','utf8'),ctx);
 const r=ctx.window.PokecaImageResolver,url='https://www.pokemon-card.com/assets/images/card_images/large/TEST/000001_P_TEST.jpg';
 r.register({'1':{name:'TEST',sourceUrl:url}});
