@@ -5,6 +5,8 @@ on:
     paths:
       - 'data/official-image-candidates-reviewed.json'
       - 'scripts/merge-official-images.cjs'
+      - 'scripts/check-*.mjs'
+      - 'scripts/check-fixed-120-images.cjs'
       - '.github/workflows/official-image-registry.yml'
 permissions:
   contents: read
@@ -22,6 +24,8 @@ jobs:
         env:
           REPORT_PATH: data/fixed-120-image-gate-report.json
         run: node scripts/check-fixed-120-images.cjs
+      - name: Verify exact official detail page image evidence
+        run: node scripts/check-official-page-evidence.mjs
       - name: Verify remote official image bytes
         run: node scripts/check-official-image-http.mjs
       - name: Show proposed registry changes
@@ -36,3 +40,4 @@ jobs:
             data/official-image-registry-audit.json
             data/fixed-120-image-gate-report.json
             data/official-image-http-check.json
+            data/official-image-page-evidence.json
