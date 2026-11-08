@@ -1,21 +1,29 @@
-name: Official image registry validation
+name: Official image reference collection and registration
 on:
   workflow_dispatch:
   push:
     branches: [feature/official-image-registry-automation]
-    paths: ['scripts/**', 'tools/parse-official-image.py', 'ui/**', 'tests/**', 'data/official-image-candidates-reviewed.json', 'data/fixed-deck-official-image-candidates.json', '.github/workflows/official-image-registry.yml']
+    paths:
+      - 'scripts/**'
+      - 'tools/parse-official-image.py'
+      - 'ui/**'
+      - 'tests/**'
+      - 'data/official-image-registry.json'
+      - 'data/fixed-test-decks.json'
+      - 'data/official-image-candidates-reviewed.json'
+      - 'data/fixed-deck-official-image-candidates.json'
+      - '.github/workflows/official-image-registry.yml'
 concurrency:
-  group: official-image-registry-pr1
+  group: official-image-registry-${{ github.repository }}
   cancel-in-progress: false
 permissions:
   contents: read
 jobs:
-  validate:
+  validate-and-register:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,73 +34,48 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Collect exact official ID-name-print references (not deck adoption)
-        id: collect
-        if: always()
-        continue-on-error: true
-        run: node scripts/automate-official-images.cjs
-      - name: Offline regression tests
+      - name: Offline regression and pipeline transaction tests
         id: offline
         run: |
           node scripts/run-offline-tests.cjs
           python -m unittest discover -s tests -p 'test_mobile_header_layout.py' -v
           python -m unittest discover -s tests -p 'test_card_reflection_wiring.py' -v
+          python -m unittest discover -s tests -p 'test_official_image_workflow.py' -v
           node scripts/verify-fixed-deck-image-registry.mjs
       - name: Install browser test runtime
-        if: always()
         run: |
           pip install playwright==1.56.0
           python -m playwright install --with-deps chromium
-      - name: Android-sized reload and error regression
+      - name: Android-sized reload and error regression (synthetic images)
         id: functional
-        if: always()
         run: python tests/test_image_automation_browser.py
-      - name: Measure actual browser image loading for fixed 120
-        id: live
-        if: always()
-        continue-on-error: true
+      - name: Collect, verify, register and reread each approved candidate
+        id: collect
+        run: node scripts/automate-official-images.cjs --refresh
+      - name: Persist safe per-record checkpoints, registrations and audit
+        # A blocked batch may retain independently verified records; collect remains a failed step.
+        if: ${{ always() && steps.offline.outcome == 'success' && steps.functional.outcome == 'success' && steps.collect.outcome != 'skipped' && !cancelled() }}
         run: |
-          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-server.log 2>&1 &
-          python tests/test_fixed_deck_browser_images.py
-      - name: Persist reference checkpoints and measured audit to existing PR branch
-        if: always()
-        env:
-          OFFLINE: ${{ steps.offline.outcome }}
-          BROWSER: ${{ steps.functional.outcome }}
-        run: |
-          test "$(git branch --show-current)" = feature/official-image-registry-automation
-          python - <<'PY'
-          import json,os
-          from pathlib import Path
-          summary=Path('data/image-automation/status.md');summary.parent.mkdir(parents=True,exist_ok=True)
-          p=Path('data/image-automation/latest.json')
-          report=json.loads(p.read_text()) if p.exists() else {'productionPass':False,'error':'COLLECTOR_NOT_RUN'}
-          live=Path('artifacts/official-fixed-120-result.json')
-          measured=json.loads(live.read_text()) if live.exists() else {'productionPass':False,'status':'NOT_MEASURED'}
-          summary.write_text('Official images: '+('PASS' if measured.get('productionPass') else 'BLOCKED')+'\n\nRun: https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+'\n\nCollector:\n```json\n'+json.dumps(report,ensure_ascii=False,indent=2)+'\n```\n\nBrowser measurement:\n```json\n'+json.dumps(measured,ensure_ascii=False,indent=2)+'\n```\n\nTests: '+os.environ['OFFLINE']+' / '+os.environ['BROWSER']+'; Physical Android: NOT_VERIFIED\n')
-          Path('data/image-automation/browser-result.json').write_text(json.dumps(measured,ensure_ascii=False,indent=2))
-          PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/image-automation
-          if test "$OFFLINE" = success && test "$BROWSER" = success; then git add data/official-image-registry.json; fi
-          if ! git diff --cached --quiet; then
-            git commit -m 'chore: persist official image references and measured evidence'
-            git push origin HEAD:feature/official-image-registry-automation
-          fi
-      - name: Update PR 1 evidence
+          node scripts/persist-official-image-results.cjs
+      - name: Report registration and fixed-deck display separately
         if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh pr comment 1 --repo "$GITHUB_REPOSITORY" --body-file data/image-automation/status.md
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs');
+          const file='data/image-automation/latest.json';
+          if(!fs.existsSync(file))process.exit(1);
+          const report=JSON.parse(fs.readFileSync(file));
+          const current=report.runId===process.env.GITHUB_RUN_ID;
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            'Image reference registration: '+(current&&report.registrationPass?'PASS':'BLOCKED / NOT RUN')+'\n\n'+
+            'Fixed 120 official image display: NOT_VERIFIED (separate inspection).\n');
+          if(!current||!report.registrationPass)process.exit(2);
+          JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: official-images-inspection-${{ github.run_id }}
-          path: |
-            artifacts/
-            data/image-automation/
+          name: official-image-evidence-${{ github.run_id }}
+          path: data/image-automation/
           retention-days: 30
-      - name: Enforce measured production gate
-        if: always()
-        run: python -c "import json; d=json.load(open('data/image-automation/browser-result.json')); raise SystemExit(0 if d.get('productionPass') else 2)"

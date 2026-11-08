@@ -1,0 +1,482 @@
+{
+  "schemaVersion": 2,
+  "runId": null,
+  "checkedAt": "2026-11-08T11:44:32.228Z",
+  "registrationPass": true,
+  "productionPass": false,
+  "imageDisplayStatus": "NOT_VERIFIED",
+  "safeToPersist": true,
+  "refresh": true,
+  "requestsAttempted": 2,
+  "officialPagesVerified": 2,
+  "imageReferencesAdded": 0,
+  "replayed": 0,
+  "deckPrintsAdopted": 0,
+  "holds": [],
+  "processed": [
+    {
+      "officialCardId": "50400",
+      "status": "REGISTERED_READBACK_VERIFIED",
+      "added": false
+    },
+    {
+      "officialCardId": "50537",
+      "status": "REGISTERED_READBACK_VERIFIED",
+      "added": false
+    }
+  ],
+  "protectedSha256": {
+    "data/fixed-120-engine-connection-matrix.json": "401300f2961f1a801b13834667719fe726f5ab19d06004ff69cdeb13bd404f43",
+    "data/fixed-120-image-coverage-audit.md": "3832c449cf90082d0623b5260ef6f6c0e382bee88af0b05a2cd16c7f8baae0dd",
+    "data/fixed-120-image-coverage.json": "c2d21b220f8f31b16df5a4303bf1be8387f36050106201552625656becffa990",
+    "data/fixed-deck-formal-1945-pokemon-candidates.json": "51895cf1cbf2c7aa1171205bc393dd238f4ed06d5f610d8956978ffd3adbabae",
+    "data/fixed-deck-identity-audit.json": "536df07a0101e8f2b0136a26bca892f9c6c0e4af3459eb5fba113b1933163d0c",
+    "data/fixed-deck-image-source-audit.json": "d71e61d62b833374d316ec7731748be2da06dd9a3e5f6ffd76c0f0669d7687d0",
+    "data/fixed-deck-official-image-candidates.json": "6bf65e2e5ff8646d0c09aa90f41467480f379262701a1ac98580f8e9a9c26027",
+    "data/fixed-deck-print-text-equivalence-audit.json": "b79701030b7cf34293b52e12c040e0b548f93f61a07c8b46263966d825b56273",
+    "data/fixed-deck-shaymin-ability-filter.json": "e851f2916b977c85f10a0e6c8978e908e0519efc574da974d7edcafbd5d22276",
+    "data/fixed-test-decks.json": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e",
+    "data/official-image-candidates-reviewed.json": "947054dc346d95cf9b9ef26a75bbf22da31c1cf5bda5e8dbe1286663dd28114c",
+    "data/verified-basic-pokemon-candidate-coverage.js": "e10d97ab2b816f7d63d7d2fcf60c6e224fdd26c950b82766408e1543b3e53dfb",
+    "engine/proofs/kangaskhan-effects.cjs": "9884e01845bf07817335633ee11e3f36d8a9429735facfc4a6840c5311f47c2c",
+    "ui/engine.bundle.js": "b9c52b726a4eb8a84f9f05fdb295c16a4bbaccc1d66f914b5c4cc213087e796e",
+    "ui/session-storage.js": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+  },
+  "baselineRegistrySha256": "c45ba1338761a7726407720998d8cb4768e717616866a329c60cd0bce02530dd",
+  "sources": [
+    "data/fixed-deck-official-image-candidates.json",
+    "data/official-image-candidates-reviewed.json"
+  ],
+  "planSha256": "78ff0a16460a41e0f7d31e54c6377307a3a1ccbb5193d41d6cb0db5e9444fce3",
+  "candidateCount": 2,
+  "batchSize": 50,
+  "maxRequests": 50,
+  "startCursor": 0,
+  "nextCursor": 2,
+  "remaining": 0,
+  "coverage": {
+    "inspection": "STATIC_REGISTRY_COVERAGE",
+    "totalCards": 120,
+    "uniqueNames": 45,
+    "registeredOfficialPrints": 27,
+    "readyNames": 0,
+    "blockedNames": 45,
+    "remoteImageLoadVerified": false,
+    "androidChromeVerified": false,
+    "imageDisplayStatus": "NOT_VERIFIED",
+    "productionPass": false,
+    "pass": false,
+    "registryCoveragePass": false,
+    "results": [
+      {
+        "name": "メガガルーラex",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ファイアローex",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ラティアスex",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "リーリエのピッピex",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "マシマシラ",
+        "count": 5,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 5,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ロケット団のニューラ",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "シェイミ",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ニャースex",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ハイパーボール",
+        "count": 8,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 8,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "夜のタンカ",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "エネルギーつけかえ",
+        "count": 3,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 3,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ポケモンいれかえ",
+        "count": 3,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 3,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "スペシャルレッドカード",
+        "count": 3,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 3,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "むしよけスプレー",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "アカマツ",
+        "count": 5,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 5,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "シアノ",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "トウコ",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ボスの指令",
+        "count": 6,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 6,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "リーリエの決心",
+        "count": 5,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 5,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ジャッジマン",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "たけしのスカウト",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ハンディサーキュレーター",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ヒーローマント",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ロケット団の監視塔",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "夜の鉱山",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "危ない廃墟",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ロケット団のエネルギー",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "イグニッションエネルギー",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "基本悪エネルギー",
+        "count": 6,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 6,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "基本超エネルギー",
+        "count": 7,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 7,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ドラメシヤ",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ドロンチ",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ドラパルトex",
+        "count": 3,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 3,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "スボミー",
+        "count": 2,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 2,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "キチキギスex",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ノココッチ",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ノココッチex",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ノコッチ",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "なかよしポフィン",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "クラッシュハンマー",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ポケパッド",
+        "count": 4,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 4,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "アンフェアスタンプ",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "メイのはげまし",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "ジャミングタワー",
+        "count": 1,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 1,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      },
+      {
+        "name": "基本炎エネルギー",
+        "count": 3,
+        "officialPrintIds": [],
+        "matchedOfficialPrintIds": [],
+        "unconfirmedCount": 3,
+        "missingReferenceCount": 0,
+        "status": "IDENTITY_UNCONFIRMED"
+      }
+    ]
+  },
+  "scopeReferencesMatched": 2,
+  "protectedUnchanged": true,
+  "existingRecordsPreserved": true,
+  "status": "REFERENCES_REGISTERED"
+}
