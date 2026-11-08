@@ -47,7 +47,7 @@ assert.ok(aiActions.actions.length>0);
     assert.equal(result.ok,true,'AI turn '+t+': '+JSON.stringify(result.errors));
     assert.ok(result.actions>0,'No actions on turn '+t);
     completedTurns++;
-    for(const action of result.results||[])if(action?.value?.type)seen.add(action.value.type);
+    for(const action of result.results||[])if(action?.aiDiagnostic?.actionType)seen.add(action.aiDiagnostic.actionType);
   }
   assert.equal(fullGame.status,'finished','Demo did not reach a game result');
   assert.ok(seen.has('attack_turn'),'No attack action was performed');
