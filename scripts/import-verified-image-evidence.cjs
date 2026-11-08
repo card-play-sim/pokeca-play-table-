@@ -38,9 +38,24 @@ function importEvidence(evidence,registry,decks){
   const coverage={schemaVersion:1,purpose:'image coverage inventory only; candidate IDs are not approved deck identities',source:['data/fixed-test-decks.json','data/official-image-registry.json'],totalPhysicalCards:[...counts.values()].reduce((a,b)=>a+b,0),uniqueCardNames:counts.size,uniquePreviewNames:rows.filter(x=>x.previewStatus==='UNIQUE_PREVIEW').length,ambiguousNames:rows.filter(x=>x.previewStatus==='MULTIPLE_PRINTS').length,missingNames:rows.filter(x=>x.previewStatus==='MISSING').length,officialPrintsApproved:0,cards:rows};
   return {registry:{...registry,cards},coverage,added};
 }
+// Only independently reviewed collector staging records may enter the registry.
+function fromCollectorStaging(staging){
+  if(!Array.isArray(staging.records))fail('COLLECTOR_STAGING_SCHEMA');
+  return {cards:staging.records.map(record=>{
+    const evidence=record.evidence||{};
+    if(record.reviewStatus!=='APPROVED'||
+       evidence.officialDetailVerified!==true||evidence.imageUrlVerified!==true||
+       !/^[a-f0-9]{64}$/i.test(evidence.detailSha256||'')||
+       !/^[a-f0-9]{64}$/i.test(evidence.imageReferenceSha256||''))
+      fail('COLLECTOR_EVIDENCE_NOT_APPROVED_'+String(record.officialCardId||''));
+    return {officialCardId:record.officialCardId,name:record.cardName,
+      imageSourceUrl:record.imageUrl,officialPageUrl:record.officialPageUrl,verified:true};
+  })};
+}
 function main(){
   if(process.argv.length!==3)fail('USAGE: node scripts/import-verified-image-evidence.cjs evidence.json');
-  const evidence=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+  const source=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+  const evidence=Array.isArray(source.records)?fromCollectorStaging(source):source;
   const registry=JSON.parse(fs.readFileSync(registryPath,'utf8'));
   const decks=JSON.parse(fs.readFileSync(deckPath,'utf8'));
   const result=importEvidence(evidence,registry,decks);
@@ -54,4 +69,4 @@ function main(){
   process.stdout.write(JSON.stringify({added:result.added,total:result.registry.cards.length,coverage:result.coverage.uniquePreviewNames,missing:result.coverage.missingNames})+'\n');
 }
 if(require.main===module)main();
-module.exports={importEvidence};
+module.exports={importEvidence,fromCollectorStaging};
