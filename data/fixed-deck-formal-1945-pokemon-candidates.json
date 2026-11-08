@@ -4,7 +4,7 @@
   "scope": "fixed-deck pokemon names only, formal basic-Pokemon catalog",
   "status": "CANDIDATES_ONLY_NOT_ADOPTED",
   "adoptedOfficialPrintIds": 0,
-  "notes": "Official ID candidates are exact name matches in the 1945-record formal basic Pokemon catalog. Name matches do not prove correct print, abilities, effect integration or permission to display images. Zero candidates for evolution cards or absent cards does not prove nonexistence.",
+  "notes": "Official ID candidates are exact name matches in the 1945-record formal basic Pokemon catalog. Name matches do not prove correct print, abilities, effect integration or permission to display images. Zero candidates for evolution cards or absent cards does not prove nonexistence. ドロンチ45771は2026-11-08に公式カード詳細ページで別途確認した追加候補であり、1945件原本からの抽出ではない。",
   "candidates": [
     {
       "name": "メガガルーラex",
@@ -100,8 +100,10 @@
     },
     {
       "name": "ドロンチ",
-      "officialCardIds": [],
-      "matchCount": 0
+      "officialCardIds": [
+        "45771"
+      ],
+      "matchCount": 1
     },
     {
       "name": "ドラパルトex",
@@ -151,6 +153,20 @@
         "45202"
       ],
       "matchCount": 4
+    }
+  ],
+  "additionalOfficialDetailEvidence": [
+    {
+      "name": "ドロンチ",
+      "officialCardId": "45771",
+      "setCode": "SV6",
+      "cardNumber": "080/101",
+      "stage": "1進化",
+      "hp": 90,
+      "abilityName": "ていさつしれい",
+      "officialDetailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45771/regu/XY",
+      "status": "OFFICIAL_DETAIL_CANDIDATE_NOT_ADOPTED",
+      "source": "official card detail; not 1945 basic Pokemon catalog"
     }
   ]
 }
