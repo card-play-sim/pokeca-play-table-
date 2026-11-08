@@ -11,7 +11,7 @@ for(const deck of decks)for(const card of deck.cards){const x=names.get(card.nam
 const results=[...names.values()].map(x=>{const ids=[...x.ids],matched=ids.filter(id=>map.get(id)?.name===x.name);return {name:x.name,count:x.count,officialPrintIds:ids,matchedOfficialPrintIds:matched,unconfirmedCount:x.unconfirmed,status:x.unconfirmed?'IDENTITY_UNCONFIRMED':matched.length===ids.length?'REGISTRY_READY':'IMAGE_REFERENCE_MISSING'};});
 const total=decks.reduce((n,d)=>n+d.cards.reduce((m,c)=>m+c.count,0),0);
 const ready=results.filter(x=>x.status==='REGISTRY_READY').length;
-const report={totalCards:total,uniqueNames:results.length,registeredOfficialPrints:registry.length,readyNames:ready,blockedNames:results.length-ready,remoteImageLoadVerified:false,androidChromeVerified:false,pass:total===120&&results.length===45&&ready===45&&false,results};
+const report={totalCards:total,uniqueNames:results.length,registeredOfficialPrints:registry.length,readyNames:ready,blockedNames:results.length-ready,remoteImageLoadVerified:false,androidChromeVerified:false,pass:false,registryCoveragePass:total===120&&results.length===45&&ready===45,results};
 console.log(JSON.stringify({...report,results:undefined},null,2));
 if(process.env.REPORT_PATH)fs.writeFileSync(process.env.REPORT_PATH,JSON.stringify(report,null,2)+'\n');
 if(!report.pass){console.error('FAIL: 120 official card images are not verified in Android Chrome; identity and image registry must be completed.');process.exitCode=1;}
