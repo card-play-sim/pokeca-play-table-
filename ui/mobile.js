@@ -744,6 +744,16 @@
   };
   port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
+  // Import all evidence-backed print images in one operation, independent of deck size.
+  // Never modifies cards, saved matches, or print identities.
+  window.PokecaImageRegistryStatus={state:'loading'};
+  window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(result=>{
+    window.PokecaImageRegistryStatus={state:'ready',...result};
+    render();
+  }).catch(error=>{
+    window.PokecaImageRegistryStatus={state:'error',message:String(error.message||error)};
+    console.error('Official image registry load failed',error);
+  });
   let restored=false,recoveryWarning='';
   (async()=>{
   try{store=PokecaStorage.createIndexedMatchStore(window.localStorage);const saves=await store.list();if(saves.length){const valid=saves.filter(entry=>entry.valid);if(!valid.length)throw Error('保存データを確認できません（既存データは削除しません）');let failures=[];for(const entry of valid){try{const result=port.restoreSession(await store.read(entry.matchId));if(!result.ok)throw Error(result.errors.join(' / '));restored=true;break;}catch(error){failures.push(entry.matchId+': '+String(error?.message||error));}}if(!restored)throw Error('保存データの再開に失敗：'+failures.join(' / '));}}
