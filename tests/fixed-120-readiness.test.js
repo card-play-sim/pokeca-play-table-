@@ -48,3 +48,17 @@ assert.equal(new Set([...received.you,...received.ai].map(c=>c.id)).size,120);
 assert.equal(received.maxOpeningAttempts,100);
 assert.equal(received.autoBenchBasics,true);
 console.log('Synthetic adapter expansion: PASS (not an official-card or playable-match validation)');
+
+const browser={};browser.window=browser;
+vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),browser);
+assert.equal(typeof browser.Pokeca.createMatchFromVerifiedDecks,'function');
+const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng:()=>0.5});
+assert.equal(match.ok,true);
+assert.equal(match.game.players.length,2);
+for(const player of match.game.players){
+  assert.ok(player.active&&player.active.kind==='pokemon');
+  assert.ok(Array.isArray(player.prizeCards)&&player.prizeCards.length===6);
+  assert.ok(Array.isArray(player.hand));
+  assert.equal(player.deck.length+player.hand.length+player.prizeCards.length+player.bench.length+1,60);
+}
+console.log('Real bundled engine initial match: PASS (synthetic cards only; gameplay effects not certified)');
