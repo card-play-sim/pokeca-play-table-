@@ -52,7 +52,9 @@ console.log('Synthetic adapter expansion: PASS (not an official-card or playable
 const browser={};browser.window=browser;
 vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),browser);
 assert.equal(typeof browser.Pokeca.createMatchFromVerifiedDecks,'function');
-const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng:()=>0.5});
+let seed=123456789;
+const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+const match=adapter.createMatch(manifest,fakeRecords,browser.Pokeca,{rng});
 assert.equal(match.ok,true);
 assert.equal(match.game.players.length,2);
 for(const player of match.game.players){
