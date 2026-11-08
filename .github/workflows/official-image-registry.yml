@@ -23,6 +23,9 @@ jobs:
         env:
           REPORT_PATH: data/fixed-120-image-gate-report.json
         run: node scripts/check-fixed-120-images.cjs
+      - name: Verify remote official image bytes
+        continue-on-error: true
+        run: node scripts/check-official-image-http.mjs
       - name: Show proposed registry changes
         run: git diff -- data/official-image-registry.json
       - name: Upload proposed registry and audit
@@ -33,3 +36,4 @@ jobs:
             data/official-image-registry.json
             data/official-image-registry-audit.json
             data/fixed-120-image-gate-report.json
+            data/official-image-http-check.json
