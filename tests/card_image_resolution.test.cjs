@@ -21,7 +21,7 @@ assert.equal(resolve({name:'架空たね',officialCardId:'99999'}),'','unknown o
 assert.equal(resolve({name:'架空たね',evolutionCards:[{name:'架空進化'}]}),'','evolved print without art must not show basic art');
 assert.equal(resolve({name:'架空たね',evolutionCards:[{name:'メガガルーラex',officialCardId:'47847'}]}),resolve(official),'evolved print with verified ID uses evolved art');
 assert.equal(resolve({name:'架空たね',imageUrl:'http://insecure.invalid/x.jpg'}),'','reject non-HTTPS explicit URL');
-assert(mobile.includes("img.nextElementSibling.hidden=false"),'image failure fallback handler remains');
+assert(mobile.includes("fallback.hidden=false"),'image failure fallback handler remains');
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
 const version=index.match(/ui\/verified-card-art\.js\?build=(\d+)/)?.[1];

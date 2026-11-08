@@ -35,17 +35,21 @@ jobs:
           node scripts/verify-fixed-deck-image-registry.mjs
       - name: Collect exact official ID-name-print references (not deck adoption)
         id: collect
+        if: always()
         continue-on-error: true
         run: node scripts/automate-official-images.cjs
       - name: Install browser test runtime
+        if: always()
         run: |
           pip install playwright==1.56.0
           python -m playwright install --with-deps chromium
       - name: Android-sized reload and error regression
         id: functional
+        if: always()
         run: python tests/test_image_automation_browser.py
       - name: Measure actual browser image loading for fixed 120
         id: live
+        if: always()
         continue-on-error: true
         run: |
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-server.log 2>&1 &

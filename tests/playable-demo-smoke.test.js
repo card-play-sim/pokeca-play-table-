@@ -55,6 +55,7 @@ assert.ok(aiActions.actions.length>0);
   // Regression: prize owner can differ from turn owner after a knockout.
   // Run several reproducible games, covering prize selection and winner resolution.
   for(let trial=1;trial<=8;trial++){
+    console.log('AI regression seed '+trial+' of 8');
     let trialSeed=trial;
     const trialRng=()=>{trialSeed=(Math.imul(trialSeed,1664525)+1013904223)>>>0;return trialSeed/4294967296;};
     let trialGame=engine.createDemoMatch({rng:trialRng}).game;

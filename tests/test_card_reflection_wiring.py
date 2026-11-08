@@ -21,7 +21,7 @@ class CardReflectionWiringTests(unittest.TestCase):
 
     def test_attached_energy_uses_card_instance_state(self):
         self.assertIn("card.energyCards?.length", UI)
-        self.assertIn("card.energyCards.map(e=>", UI)
+        self.assertIn("for(const energy of card.energyCards)", UI)
 
     def test_failed_dispatch_does_not_claim_success(self):
         self.assertIn("if(!result.ok){toast(", UI)
