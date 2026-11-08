@@ -43,6 +43,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_official_image_workflow.py' -v
           python -m unittest discover -s tests -p 'test_formal_zip_reconciliation.py' -v
           python -m unittest discover -s tests -p 'test_fixed_preview_evidence.py' -v
+          python -m unittest discover -s tests -p 'test_fixed_practice_facts.py' -v
           node scripts/verify-fixed-deck-image-registry.mjs
       - name: Install browser test runtime
         run: |

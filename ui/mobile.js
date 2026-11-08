@@ -40,7 +40,8 @@
     return msg;
   }
   function toast(text){$('toast').textContent=japaneseError(text);$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
-  function closeSheet(){if(sheet.open)sheet.close();if(typeof prizeDialogOpen!=='undefined')prizeDialogOpen=false;}
+  let refreshImageSheet=null;
+  function closeSheet(){refreshImageSheet=null;if(sheet.open)sheet.close();if(typeof prizeDialogOpen!=='undefined')prizeDialogOpen=false;}
   // A tap on the dimmed backdrop closes information sheets, but not confirmation dialogs.
   // Require pointer down and up to both be outside to avoid dismissing during a swipe.
   let sheetBackdropDown=false;
@@ -55,7 +56,7 @@
     sheetBackdropDown=false;
   });
   sheet.addEventListener('pointercancel',()=>{sheetBackdropDown=false;});
-  function openSheet(title,html){$('sheet-title').textContent=title;$('sheet-content').innerHTML=html;if(!sheet.open)sheet.showModal();}
+  function openSheet(title,html){refreshImageSheet=null;$('sheet-title').textContent=title;$('sheet-content').innerHTML=html;if(!sheet.open)sheet.showModal();}
   function button(label,callback,options={}){const b=document.createElement('button');b.textContent=label;b.disabled=options.disabled || false;if(options.className)b.className=options.className;b.onclick=callback;return b;}
   let confirmTouchGuardUntil=0;
   function confirmAction(message){return new Promise(resolve=>{const d=$('confirm-dialog');$('confirm-message').textContent=message;let settled=false;
@@ -137,6 +138,18 @@
     }
     fallback.hidden=false;
   },true);
+  // Image decode repaints the existing node; never replace touch targets during gestures.
+  document.addEventListener('load',event=>{
+    if(event.target?.tagName==='IMG')event.target.dataset.imageLoad='loaded';
+  },true);
+  function redrawImagesWhenIdle(){
+    if(drag||$('confirm-dialog').open){setTimeout(redrawImagesWhenIdle,80);return;}
+    render();
+  }
+  function refreshCurrentImageSheet(){
+    if(!sheet.open||!refreshImageSheet)return;
+    const update=refreshImageSheet,scroll=$('sheet-content').scrollTop;update();$('sheet-content').scrollTop=scroll;
+  }
     function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
   function badges(card,snapshot,owner){let html='';
     if(card.damage)html+=`<span class="badge damage">${esc(card.damage)}</span>`;
@@ -154,13 +167,13 @@
     const chips=[...counts].map(([type,n])=>`<span class="attached-energy-chip" title="${esc(type)}エネルギー ${n}枚">${esc(symbols[type]||'◆')}<b>${n}</b></span>`).join('');
     return `<span class="attached-energy-strip" aria-label="装着エネルギー ${card.energyCards.length}枚">${chips}</span>`;
   }
-  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
+  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
   function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
     if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning&&!aiPrizeAutoAttempted){aiPrizeAutoAttempted=true;queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});}
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
-    $('game-note').textContent=s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
+    $('game-note').textContent=s.fixedDeckPractice?'固定デッキ操作練習・暫定画像／公式効果未接続':s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
     $('opponent-hand').innerHTML=Array.from({length:Math.min(opp.handCount,14)},()=>'<i class="card-back"></i>').join('');$('opponent-hand-count').textContent=opp.handCount+'枚';
     for(const [prefix,p] of [['opponent',opp],['self',you]]){
       $(prefix+'-bench').innerHTML=Array.from({length:5},(_,i)=>`<div class="bench-slot${p.bench[i]?'':' empty'}" ${prefix==='self'?'data-drop-zone="bench"':''}>${p.bench[i]?cardHTML(p.bench[i],s,p):''}</div>`).join('');
@@ -194,6 +207,7 @@
     $('stadium').classList.toggle('has-stadium',!!s.stadium);
     for(const [prefix,p] of [['self',you],['opponent',opp]]){const states=scopedStates(p.id);$(prefix+'-effects').replaceChildren(...states.map(state=>button(state.short,()=>scopedStateDetail(p.id),{className:'scope-chip'})));}
     bindCards();highlight();
+    refreshCurrentImageSheet();
     if(s.practiceScenario?.focusInstanceId)document.querySelectorAll('[data-card-id]').forEach(el=>el.classList.toggle('scenario-focus',el.dataset.cardId===s.practiceScenario.focusInstanceId));
   }
   function getCard(id){for(const p of view().players){const c=[...p.hand,p.active,...p.bench,...p.discard].find(c=>idOf(c)===id);if(c)return {card:c,player:p};}return null;}
@@ -207,7 +221,6 @@
     el.onpointermove=e=>pointerMove(e);
     el.onpointerup=e=>pointerEnd(e);
     el.onpointercancel=()=>clearGesture();
-    el.querySelectorAll('img').forEach(img=>img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'card-fallback',textContent:img.alt}));});
   });
     document.querySelectorAll('[data-state-card]').forEach(el=>{el.onclick=e=>{e.stopPropagation();stateDetail(el.dataset.stateCard);};});
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
@@ -263,12 +276,14 @@
     clearGesture();if(tapTarget){tapTarget.click();suppressClick=Date.now()+500;}if(active)suppressClick=Date.now()+500;
   }
   function clearGesture(){clearTimeout(longTimer);suppressClick=Math.min(suppressClick,Date.now()+120);if(drag?.ghost)drag.ghost.remove();drag=null;document.querySelectorAll('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));}
-  function detail(id){const entry=getCard(id);if(!entry)return;const {card,player}=entry,s=view();
+  function detail(id){const entry=getCard(id);if(!entry){closeSheet();return;}const {card,player}=entry,s=view();
     const info=port.getCardInfo(player.id,id);const declared=card.abilities || [],registry=port.getEffects(player.id).find(x=>x.instanceId===id)?.effects || [];
     const attacks=registry.filter(e=>e.source.type==='ATTACK').map(e=>e.source.name).concat((card.attacks || []).map(a=>a.name));
     const abilities=declared.map(a=>a.name+': '+(a.text || '')).concat(registry.filter(e=>e.source.type==='ABILITY').map(e=>e.source.name));
     const stateHTML=statesFor(s,id).map(effectRow).join('');
     openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card)}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc((card.energyCards || []).map(c=>c.energyType).join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
+    refreshImageSheet=()=>detail(id);
+    if(card.energyCards?.length){const attached=document.createElement('div');attached.className='discard-grid attached-image-gallery';attached.innerHTML=card.energyCards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}">${cardArt(c)}</div>`).join('');$('sheet-content').append(attached);}
     if(player.id==='you'&&player.hand.some(c=>idOf(c)===id))addHandActions(id,$('detail-actions'));
   }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
@@ -501,10 +516,17 @@
     paint();
   }
   function zoneMenu(owner,zone){if(fixedImageBoard){showFixedImageZone(owner,zone);return;}const p=view().players.find(p=>p.id===owner);
-    if(zone==='discard'){openSheet((owner==='you'?'自分':'相手')+'のトラッシュ',p.discard.length?`<p>${p.discard.length}枚 · カードを一覧表示</p><div class="discard-grid">${p.discard.map(c=>`<div class="discard-card" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`:'<p>カードはありません</p>');return;}
+    if(zone==='discard'){openSheet((owner==='you'?'自分':'相手')+'のトラッシュ',p.discard.length?`<p>${p.discard.length}枚 · カードを一覧表示</p><div class="discard-grid">${p.discard.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`:'<p>カードはありません</p>');refreshImageSheet=()=>zoneMenu(owner,zone);return;}
     if(zone==='prize'){if(owner==='you'&&view().pendingPrizeSelection){prizeDialogOpen=false;showPrizeChoice();return;}openSheet('サイド',`<p>残り ${p.prizeCount}枚。サイド内容は非公開です。取得はエンジンのきぜつ処理に従います。</p>`);return;}
     openSheet((owner==='you'?'自分':'相手')+'の山札',`<p>${p.deckCount}枚 · 通常時の内容は非公開です。ワザの検索時に専用画面を開きます。</p><div id="deck-actions" class="menu-list"></div>`);
+    if(owner==='you'&&view().mode==='practice')$('deck-actions').append(button('練習操作：山札一覧（公開）',()=>practiceDeckList(owner)));
     if(owner==='you'&&view().mode==='practice')$('deck-actions').append(button('練習操作：シャッフル',()=>{dispatch('you',{type:'shuffle'});closeSheet();},{disabled:!port.canDispatch('you',{type:'shuffle'})}));
+  }
+  function practiceDeckList(owner){
+    if(owner!=='you'||view().mode!=='practice')return;
+    const cards=port.getSnapshot().players.find(p=>p.id===owner).deck;
+    openSheet('操作練習・自分の山札一覧',`<p>操作練習でのみ公開。暫定画像は正式採用版ではありません。</p><div class="discard-grid">${cards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`);
+    refreshImageSheet=()=>practiceDeckList(owner);
   }
   // A touch-end may open an overlay before Chrome emits its compatibility click.
   // Suppress only that follow-up click; a genuine new pointer-down clears the guard.
@@ -658,6 +680,27 @@
       return window.PokecaImageResolver?.resolvePreview(card)||'';
     }
     return window.PokecaImageResolver?.resolvePreview({name:card})||'';
+  }
+  async function fixedPracticeMenu(){
+    await imageRegistryReady;
+    if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('画像証跡を読み込めません');
+    const responses=await Promise.all(['./data/fixed-test-decks.json','./data/fixed-deck-practice-facts.json'].map(url=>fetch(url,{cache:'no-store'})));
+    if(responses.some(r=>!r.ok))throw Error('操作練習データを読み込めません');
+    const [manifest,facts]=await Promise.all(responses.map(r=>r.json()));
+    openSheet('固定2デッキ・操作練習','<p>暫定画像と参照版の基本情報を使用します。正式採用版は未確定。公式ワザ・特性・トレーナー効果・特殊エネルギー効果は未接続です。既存エンジンの配置・手張り・進化・移動・ターン更新・保存を使う操作練習です。</p><div class="menu-list" id="fixed-practice-choices"></div>');
+    manifest.decks.forEach((deck,firstDeck)=>$('fixed-practice-choices').append(button(deck.name+'を自分側で操作練習',async()=>{
+      try{
+      if(aiPracticeRunning){toast('AI操作完了後に開始してください');return;}
+      const candidate=window.PokecaFixedDeckPractice.create(manifest,facts,Pokeca,{firstDeck});
+      if(!await confirmAction('現在の対戦を保存し、暫定画像の固定デッキ操作練習を開始しますか？ 公式効果は未接続です。'))return;
+      if(!await protectBeforeNewMatch())return;
+      fixedImageBoard=null;$('app').classList.remove('fixed-image-board');$('fixed-image-controls')?.remove();$('demo-open').disabled=false;
+      aiAutoMode=false;selected=null;clearGesture();
+      const loaded=port.loadGame(candidate);
+      if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+      closeSheet();toast('固定デッキ操作練習・公式効果は未接続です');
+      }catch(error){toast('固定デッキ操作練習を開始できません：'+error.message);}
+    })));
   }
   async function openFixedImageBoard(){
     if(aiPracticeRunning)throw Error('AI操作完了後に画像確認を開始してください');
@@ -817,6 +860,7 @@
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('固定2デッキで操作練習（公式効果未接続）',()=>{void fixedPracticeMenu().catch(error=>toast(error.message));}));
     list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
     list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
     list.append(button(animationsEnabled?'アニメーション：オン（タップでオフ）':'アニメーション：オフ（タップでオン）',()=>{animationsEnabled=!animationsEnabled;closeSheet();}));
@@ -848,7 +892,7 @@
     list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
     Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
-  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
+  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){if(view().fixedDeckPractice)aiAutoMode=false;selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
   // Import all evidence-backed print images in one operation, independent of deck size.
   // Never modifies cards, saved matches, or print identities.
@@ -857,7 +901,7 @@
     const previewCount=await window.PokecaImageResolver.loadPreviews('./data/fixed-deck-preview-bindings.json');
     result.previewBindings=previewCount;
     window.PokecaImageRegistryStatus={state:'ready',...result};
-    render();
+    redrawImagesWhenIdle();
   }).catch(error=>{
     window.PokecaImageRegistryStatus={state:'error',message:String(error.message||error)};
     console.error('Official image registry load failed',error);
@@ -868,6 +912,7 @@
   catch(error){recoveryWarning=error.message;storageUnavailable=true;}
   if(!restored){const loaded=port.loadGame(game);if(!loaded.ok)toast(loaded.errors.join(' / '));}
   persistenceReady=true;
+  if(restored&&view().fixedDeckPractice)aiAutoMode=false;
   if(restored&&aiAutoMode&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   if(recoveryWarning){$('save-status').textContent=storageUnavailable?'端末保存不可・JSON書出し':'保存の確認が必要';$('save-status').classList.add('save-error');toast('自動再開できませんでした：'+recoveryWarning+'。必要なら再開用JSONを書き出してください');}
   else{saveSafely();if(restored)toast('前回の対戦を再開しました');}

@@ -1,0 +1,62 @@
+{
+  "baselineCommit": "ca42890",
+  "protectedFiles": [
+    {
+      "path": "ui/engine.bundle.js",
+      "sha256": "b9c52b726a4eb8a84f9f05fdb295c16a4bbaccc1d66f914b5c4cc213087e796e",
+      "unchanged": true
+    },
+    {
+      "path": "ui/fixed-120-match-adapter.js",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657",
+      "unchanged": true
+    },
+    {
+      "path": "ui/session-storage.js",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553",
+      "unchanged": true
+    },
+    {
+      "path": "data/official-image-registry.json",
+      "sha256": "192fca95077602581c813eebc1a37914489656d098ac3750b74ef7f98376ef97",
+      "unchanged": true
+    },
+    {
+      "path": "data/fixed-test-decks.json",
+      "sha256": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e",
+      "unchanged": true
+    },
+    {
+      "path": "data/fixed-deck-preview-bindings.json",
+      "sha256": "597f65bae19b12e2222b207f697ad2658b6e8604e01997919c550fd548f7c854",
+      "unchanged": true
+    }
+  ],
+  "previousEvidenceByteIdentical": true,
+  "originalSourceZipSha256": "d1ec033f245d84e9d1e12eeb2b60b537051109608100d81183d3f4f2c14c9ab2",
+  "sourceFilesByteIdentical": 29,
+  "formalCount": 1945,
+  "originalRegistryPrintsPreserved": 93,
+  "original27EvidencePreserved": true,
+  "adoptedPrints": 0,
+  "officialMatchPass": false,
+  "localOfflineRegression": "PASS, including 8 deterministic AI games",
+  "freshRealBrowserResult": "browser-result.json",
+  "observationsByZone": {
+    "deck-composition": 56,
+    "active-opening": 2,
+    "hand-opening": 6,
+    "live-draw-pile": 47,
+    "bench-after-placement": 1,
+    "bench-after-energy": 1,
+    "bench-after-evolution": 1,
+    "evolved-detail": 1,
+    "attached-energy-detail": 1,
+    "live-discard": 1,
+    "returned-to-live-draw-pile": 1,
+    "evolved-after-reload": 1,
+    "delayed-registry-detail-refresh": 1
+  },
+  "physicalAndroidVerified": false,
+  "imageFilesSaved": false
+}
