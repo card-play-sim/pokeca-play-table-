@@ -21,3 +21,10 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Load every registered real official image URL in Chromium
         run: node tests/image-browser-load.mjs
+      - name: Preserve per-card image loading results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-image-browser-load-report
+          path: artifacts/image-browser-load-report.json
+          if-no-files-found: warn
