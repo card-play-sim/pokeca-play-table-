@@ -15,7 +15,9 @@
       if(!record||record.verified!==true||!record.officialCardId||record.name!==item.name)
         throw Error('公式カード未接続: '+item.name);
       const categoryKind={pokemon:'pokemon',energy:'energy',goods:'trainer',support:'trainer',supporter:'trainer',item:'trainer',tool:'tool',stadium:'stadium'};
-      if(categoryKind[item.category]&&record.kind!==categoryKind[item.category])
+      if(!Object.prototype.hasOwnProperty.call(categoryKind,item.category))
+        throw Error('デッキのカード分類が不正: '+item.name);
+      if(record.kind!==categoryKind[item.category])
         throw Error('デッキ分類と公式カード分類が不一致: '+item.name);
       if(!['pokemon','energy','trainer','tool','stadium'].includes(record.kind))
         throw Error('カード分類未接続: '+item.name);
