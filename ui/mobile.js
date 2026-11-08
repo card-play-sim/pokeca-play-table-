@@ -633,6 +633,32 @@
       const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="${esc(window.PokecaArt?.[c.name]||'')}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="if(!this.dataset.fallbackTried && this.dataset.bundled){this.dataset.fallbackTried=1;this.src=this.dataset.bundled;return;}this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
       openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p><p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
+      // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
+      try{
+        const candidatesResponse=await fetch('./data/fixed-deck-formal-1945-pokemon-candidates.json',{cache:'no-store'});
+        if(candidatesResponse.ok){
+          const candidateData=await candidatesResponse.json();
+          if(candidateData.status==='CANDIDATES_ONLY_NOT_ADOPTED'&&candidateData.adoptedOfficialPrintIds===0&&Array.isArray(candidateData.candidates)){
+            const byName=new Map(candidateData.candidates.map(c=>[c.name,c]));
+            const names=missing.filter(name=>byName.has(name));
+            const matched=names.filter(name=>byName.get(name).matchCount>0);
+            const count=matched.reduce((sum,name)=>sum+byName.get(name).matchCount,0);
+            const detail=document.createElement('details');
+            const heading=document.createElement('summary');
+            heading.textContent=`正式1945件のポケモン識別候補：${matched.length}/${names.length}種類・${count}印刷版（未採用）`;
+            detail.append(heading);
+            const list=document.createElement('div');
+            for(const name of names){
+              const item=byName.get(name);
+              const line=document.createElement('p');
+              line.textContent=`${name}：${item.matchCount}候補${item.matchCount?' / 公式ID '+item.officialCardIds.join(', '):' / 該当候補なし'}`;
+              list.append(line);
+            }
+            detail.append(list);
+            $('sheet-content').insertBefore(detail,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
+          }
+        }
+      }catch(error){console.warn('Candidate reference unavailable',error);}
       const availableRecords=window.PokecaFixed120VerifiedRecords||{};
       const unresolved=missing.filter(name=>!(availableRecords[name]?.verified===true&&availableRecords[name]?.officialCardId&&availableRecords[name]?.engineReadable===true&&availableRecords[name]?.effectStatus==='verified'&&availableRecords[name]?.sourceEvidence));
       const status=document.createElement('p');
