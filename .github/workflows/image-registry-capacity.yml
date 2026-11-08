@@ -4,6 +4,7 @@ on:
     paths:
       - 'tools/import-image-registry.mjs'
       - 'tests/image-registry-import.test.mjs'
+      - 'tests/image-registry-existing.test.mjs'
       - '.github/workflows/image-registry-capacity.yml'
   workflow_dispatch:
 jobs:
@@ -16,3 +17,6 @@ jobs:
           node-version: '22'
       - name: Verify 5001 record capacity and safe resume
         run: node tests/image-registry-import.test.mjs
+
+      - name: Verify existing official image registry import
+        run: node tests/image-registry-existing.test.mjs
