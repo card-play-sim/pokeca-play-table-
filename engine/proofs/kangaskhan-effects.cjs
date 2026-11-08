@@ -29,7 +29,9 @@ function machineGunCombo(input,playerId,coinFlips) {
   const game=clone(input),p=getPlayer(game,playerId),card=p.active;
   verify(card);
   if(game.status!=='active'||game.attackUsed||game.firstPlayer===playerId&&game.turnNumber===1) throw Error('ATTACK_NOT_ALLOWED');
-  // Energy costs require the canonical Rule Engine's type/contribution calculation.\n  // Three attached entries alone do not establish that the printed cost is payable.\n  throw Error('ATTACK_COST_RULE_ENGINE_NOT_CONNECTED');
+  // Energy costs require the canonical Rule Engine's type/contribution calculation.
+  // Three attached entries alone do not establish that the printed cost is payable.
+  throw Error('ATTACK_COST_RULE_ENGINE_NOT_CONNECTED');
   if(!Array.isArray(coinFlips)||!coinFlips.includes(false)||coinFlips.some(x=>typeof x!=='boolean')) throw Error('COIN_SEQUENCE_MUST_END_WITH_TAILS');
   const tails=coinFlips.indexOf(false);
   if(tails!==coinFlips.length-1) throw Error('COIN_SEQUENCE_AFTER_TAILS');
