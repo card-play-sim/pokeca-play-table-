@@ -33,6 +33,29 @@
     const matches=[...entries.values()].filter(r=>r.name===print.name);
     return matches.length===1?matches[0].sourceUrl:'';
   }
-  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,count:()=>entries.size});
+  function coverage(cards){
+    const missing=[],resolved=[];
+    for(const card of cards||[]){
+      const url=resolve(card);
+      (url?resolved:missing).push({name:card?.name||'',officialCardId:card?.officialCardId??card?.catalogCardId??null,...(url?{sourceUrl:url}:{})});
+    }
+    return {total:resolved.length+missing.length,resolved:resolved.length,missing};
+  }
+  async function loadRegistry(url){
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok)throw Error('IMAGE_REGISTRY_HTTP_'+response.status);
+    const data=await response.json();
+    if(!data||!Array.isArray(data.cards))throw Error('IMAGE_REGISTRY_SCHEMA');
+    const map=Object.create(null);
+    for(const c of data.cards){
+      const id=String(c?.officialCardId??'');
+      if(!/^\\d+$/.test(id)||typeof c.name!=='string'||typeof c.imageSourceUrl!=='string'||
+         !/^https:\\/\\/www\\.pokemon-card\\.com\\/assets\\/images\\/card_images\\//.test(c.imageSourceUrl))throw Error('IMAGE_REGISTRY_INVALID_CARD_'+id);
+      if(map[id]&&map[id].sourceUrl!==c.imageSourceUrl)throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
+      map[id]={name:c.name,sourceUrl:c.imageSourceUrl};
+    }
+    return {received:data.cards.length,registered:register(map),total:entries.size};
+  }
+  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,coverage,loadRegistry,count:()=>entries.size});
   register(global.PokecaVerifiedArt||{});
 })(window);
