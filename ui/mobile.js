@@ -636,7 +636,7 @@
       // Lazy loading previously left the diagnostics permanently incomplete.
       const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
       let loaded=0,failed=0;
-      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${data.decks.reduce((n,d)=>n+d.cards.filter(c=>!(window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name])).length,0)}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
+      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
       for(const img of imgs){
         const onLoad=()=>{loaded++;update();},onError=()=>{failed++;update();};
         if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
