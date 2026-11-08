@@ -73,8 +73,9 @@
     // A verified official print takes precedence over unverified runtime URLs.
     if(verifiedUrl)return verifiedUrl;
     if(explicit)return /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//i.test(explicit)?explicit:'';
-    // Existing bundled artwork is a visual fallback, not proof of print identity.
-    // It must remain available even when the gameplay instance has an official ID.
+    // Never substitute a different official print for an identified card.
+    // Unidentified practice cards may use name-based artwork only as a preview.
+    if(cardId)return '';
     return window.PokecaArt?.[currentPrint.name] || window.PokecaArt?.[card.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
@@ -103,7 +104,8 @@
     }
     const url=imageURL(card);
     if(!url)return `<img src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false">`;
-    const bundled=window.PokecaArt?.[card.name]||'';
+    const identified=card.officialCardId!=null||card.catalogCardId!=null||card.evolutionCards?.some(p=>p.officialCardId!=null||p.catalogCardId!=null);
+    const bundled=identified?'':(window.PokecaArt?.[card.name]||'');
     const fallback=bundled&&bundled!==url
       ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
       :`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
