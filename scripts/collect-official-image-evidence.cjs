@@ -48,8 +48,8 @@ async function collect(candidates,fetcher=fetch,{state=null,interval=3000,maxNew
   if(fetched)await delay(interval);
   let result,record,html='';
   try{
-   const response=await fetcher(officialPageUrl,{redirect:'error',signal:AbortSignal.timeout(20000),headers:{Accept:'text/html','User-Agent':'PokecaOfficialImageEvidence/1.0'}});
    fetched++;
+   const response=await fetcher(officialPageUrl,{redirect:'error',signal:AbortSignal.timeout(20000),headers:{Accept:'text/html','User-Agent':'PokecaOfficialImageEvidence/1.0'}});
    if(!response.ok||!String(response.headers.get('content-type')).includes('text/html'))throw Error('HTTP_OR_CONTENT_TYPE_'+response.status);
    const reader=response.body?.getReader();
    if(reader){let bytes=0,chunks=[];while(true){const {done,value}=await reader.read();if(done)break;bytes+=value.length;if(bytes>4000000){await reader.cancel();throw Error('RESPONSE_SIZE_LIMIT');}chunks.push(value);}html=Buffer.concat(chunks).toString('utf8');}

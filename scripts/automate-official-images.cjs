@@ -37,7 +37,9 @@ async function run(){
    report.imageReferencesAdded+=imported.added;
   }
   report.coverage=require('./check-fixed-120-images.cjs').audit(decks,registry);
-  report.productionPass=report.coverage.registryCoveragePass&&collected.holds.length===0;
+  report.referenceCoverageReady=report.coverage.registryCoveragePass&&collected.holds.length===0;
+  // Only the separate real-browser measurement can establish image-display PASS.
+  report.productionPass=false;
  }catch(error){report.error=String(error.message);}
  finally{
   report.protectedUnchanged=Object.entries(before).every(([f,sha])=>hash(fs.readFileSync(path.join(root,f)))===sha);
