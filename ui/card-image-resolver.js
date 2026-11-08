@@ -5,18 +5,19 @@
   function register(records){
     const source=records?.imageByOfficialCardId||records;
     if(!source||typeof source!=='object'||Array.isArray(source))return 0;
-    let added=0;
+    // Validate the entire batch before mutating the live registry.
+    // A late collision must not leave an earlier part of the batch installed.
+    const pending=[];
     for(const [id,record] of Object.entries(source)){
       if(!/^\d+$/.test(id)||!record||typeof record.name!=='string'||typeof record.sourceUrl!=='string')continue;
       if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(record.sourceUrl))continue;
       if(entries.has(id)){
         const existing=entries.get(id);
         if(existing.name!==record.name||existing.sourceUrl!==record.sourceUrl)throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
-        continue;
-      }
-      entries.set(id,{name:record.name,sourceUrl:record.sourceUrl});added++;
+      }else pending.push([id,{name:record.name,sourceUrl:record.sourceUrl}]);
     }
-    return added;
+    for(const [id,record] of pending)entries.set(id,record);
+    return pending.length;
   }
   function resolve(card){
     if(!card||typeof card!=='object')return '';
