@@ -74,7 +74,12 @@ async def main():
         # Decoding original placeholders or name previews is NOT official print success.
         official_rows = {row['name']: row for row in coverage if row['decoded'] and (row['source'] or '').startswith('https://www.pokemon-card.com/assets/images/card_images/')}
         manifest = json.loads((Path(__file__).resolve().parents[1]/'data/fixed-test-decks.json').read_text())
-        exact_copies = sum(c['count'] for d in manifest['decks'] for c in d['cards'] if c.get('officialCardId') and c.get('identityStatus')=='CONFIRMED' and c['name'] in official_rows)
+        registry=json.loads((Path(__file__).resolve().parents[1]/'data/official-image-registry.json').read_text())['cards']
+        by_id={str(c['officialCardId']):c for c in registry}
+        def exact(c):
+            r=by_id.get(str(c.get('officialCardId')), {})
+            return c.get('identityStatus')=='CONFIRMED' and r.get('name')==c['name'] and official_rows.get(c['name'],{}).get('source')==r.get('imageSourceUrl') and (not c.get('cardNumber') or c['cardNumber']==r.get('cardNumber')) and (not c.get('set') or c['set']==r.get('set'))
+        exact_copies = sum(c['count'] for d in manifest['decks'] for c in d['cards'] if exact(c))
         Path('artifacts').mkdir(exist_ok=True)
         Path('artifacts/official-fixed-120-result.json').write_text(json.dumps(dict(physicalCards=120,uniqueNames=len(unique_names),decodedTemplateCopies=expanded_success,decodedOfficialPreviewNames=len(official_rows),verifiedDeckPrintCopies=exact_copies,productionPass=exact_copies==120,androidPhysicalDeviceVerified=False),ensure_ascii=False,indent=2))
         print(f"Fixed 120 card copies covered by decoded image template: {expanded_success}/120")

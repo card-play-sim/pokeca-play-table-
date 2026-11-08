@@ -70,7 +70,7 @@ jobs:
           live=Path('artifacts/official-fixed-120-result.json')
           measured=json.loads(live.read_text()) if live.exists() else {'productionPass':False,'status':'NOT_MEASURED'}
           summary.write_text('Official images: '+('PASS' if measured.get('productionPass') else 'BLOCKED')+'\n\nRun: https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+'\n\nCollector:\n```json\n'+json.dumps(report,ensure_ascii=False,indent=2)+'\n```\n\nBrowser measurement:\n```json\n'+json.dumps(measured,ensure_ascii=False,indent=2)+'\n```\n\nTests: '+os.environ['OFFLINE']+' / '+os.environ['BROWSER']+'; Physical Android: NOT_VERIFIED\n')
-          if live.exists():Path('data/image-automation/browser-result.json').write_text(live.read_text())
+          Path('data/image-automation/browser-result.json').write_text(json.dumps(measured,ensure_ascii=False,indent=2))
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
