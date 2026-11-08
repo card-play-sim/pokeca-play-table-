@@ -1,0 +1,1665 @@
+{
+  "schemaVersion": 1,
+  "totalCards": 120,
+  "uniqueNames": 45,
+  "confirmedCopies": 0,
+  "pendingCopies": 120,
+  "priorReviewCounts": {
+    "NO_NAME_MATCH": 34,
+    "PRIOR_ID_FOUND_NOT_SELECTED": 5,
+    "NAME_MATCH_ID_UNRESOLVED": 6
+  },
+  "recoveredCandidateCount": 5,
+  "candidateTuplesMatchingRegisteredEvidence": 3,
+  "approvedSelectionRecords": 0,
+  "originalFormalCatalogRecovered": false,
+  "originalImageRegistryRecovered": false,
+  "baselineDeclarationRecovered": true,
+  "registrationOrEngineChangesApplied": false,
+  "pass": false,
+  "rows": [
+    {
+      "name": "メガガルーラex",
+      "copies": 4,
+      "deckA": 4,
+      "deckB": 0,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "47847",
+          "set": "M1S",
+          "cardNumber": "051/063",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047847_P_MGARURAEX.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47847",
+          "detailSha256": "ee31211135c88a0bb9c7a88a76293bd7f2a3b556cdf1e1eac91219c22c795b9a",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "メガガルーラex",
+          "deckA": 4,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ファイアローex",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "50400",
+          "set": "M6",
+          "cardNumber": "062/076",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050400_P_FUAIAROIEKKUSU.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50400",
+          "detailSha256": "6117196ac167767a71643fbc50bd274e9008a7643b272a2e1a7aac9da5ee28d0",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "50537",
+          "set": "M6",
+          "cardNumber": "096/076",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050537_P_FUAIAROIEKKUSU.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50537",
+          "detailSha256": "ab25c73e223611d70b9b47ea4a3a91ff5b50101805a9cb8cdc024881b680c044",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ファイアローex",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ラティアスex",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "PRIOR_ID_FOUND_NOT_SELECTED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": {
+        "officialCardId": "49028",
+        "name": "ラティアスex",
+        "set": "MC",
+        "cardNumber": "312/742",
+        "deckPrintingConfirmed": false,
+        "selectedOfficialCardId": null,
+        "registeredReferenceMatches": true,
+        "evidence": {
+          "repository": "card-play-sim/pokeca-card-simulator",
+          "branch": "feature/first-playable-fixed-decks",
+          "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+          "path": "data/deck45_identity_v04_staging.json",
+          "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+          "bytes": 2076,
+          "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+        }
+      },
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "49028",
+          "set": "MC",
+          "cardNumber": "312/742",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049028_P_RATEIASUEX.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49028",
+          "detailSha256": "930fea7637365236581d4dbd1a63b51b6776e0028ac6050fa29d136f86857993",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ラティアスex",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "リーリエのピッピex",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "PRIOR_ID_FOUND_NOT_SELECTED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": {
+        "officialCardId": "49003",
+        "name": "リーリエのピッピex",
+        "set": "MC",
+        "cardNumber": "287/742",
+        "deckPrintingConfirmed": false,
+        "selectedOfficialCardId": null,
+        "registeredReferenceMatches": true,
+        "evidence": {
+          "repository": "card-play-sim/pokeca-card-simulator",
+          "branch": "feature/first-playable-fixed-decks",
+          "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+          "path": "data/deck45_identity_v04_staging.json",
+          "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+          "bytes": 2076,
+          "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+        }
+      },
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "49003",
+          "set": "MC",
+          "cardNumber": "287/742",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049003_P_RIRIENOPIPPIEX.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49003",
+          "detailSha256": "cc9720544569e7ac6bb886171577e7ee3cac41403e4fd972107b030a2832190f",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "リーリエのピッピex",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "マシマシラ",
+      "copies": 5,
+      "deckA": 3,
+      "deckB": 2,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "49074",
+          "set": "MC",
+          "cardNumber": "358/742",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049074_P_MASHIMASHIRA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49074",
+          "detailSha256": "7e299b4351c9db08a18a9d79033bdfa3b5e711eed4e506603c7274aefac374a2",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "マシマシラ",
+          "deckA": 3,
+          "deckB": 2,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ロケット団のニューラ",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "47465",
+          "set": "SV10",
+          "cardNumber": "072/098",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047465_P_ROKETTODANNONIXYURA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47465",
+          "detailSha256": "488ab38dd0f7d478c2fcdcb0cea39c22e14505de68a83e1ebd7289e9e2730f6f",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "49164",
+          "set": "MC",
+          "cardNumber": "448/742",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049164_P_ROKETTODANNONIXYURA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49164",
+          "detailSha256": "b6769721a53c5ec0f2b55f762b753c15b0bbea5d66fcf569375e7e43696f0e77",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ロケット団のニューラ",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "シェイミ",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "47301",
+          "set": "SV9a",
+          "cardNumber": "006/063",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047301_P_SHIEIMI.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47301",
+          "detailSha256": "8ffae79f57730c68019d7ab0150b5a2ef10a0c35333208bafb8f639687284465",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "シェイミ",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ニャースex",
+      "copies": 2,
+      "deckA": 1,
+      "deckB": 1,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "49694",
+          "set": "M3",
+          "cardNumber": "061/080",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049694_P_NIXYASUEX.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49694",
+          "detailSha256": "54bb0fb718611f3f8686a8c5eb669869e37a118f919ac0d14029311b882dd2b1",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ニャースex",
+          "deckA": 1,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ハイパーボール",
+      "copies": 8,
+      "deckA": 4,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "46588",
+          "set": "SVM",
+          "cardNumber": "134/175",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046588_T_HAIPABORU.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46588",
+          "detailSha256": "57ea7b27ca9e070ac5a76b04bb4ff4b9525031a5030a5159761cf97e470d2f1c",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ハイパーボール",
+          "deckA": 4,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "夜のタンカ",
+      "copies": 4,
+      "deckA": 2,
+      "deckB": 2,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "48277",
+          "set": "MBG",
+          "cardNumber": "016/021",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBG/048277_T_YORUNOTANKA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48277",
+          "detailSha256": "f379027c314d465e5e6f44267fe476c2ed3ec8c53da36195fa8dc3b77a2839ba",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "夜のタンカ",
+          "deckA": 2,
+          "deckB": 2,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "エネルギーつけかえ",
+      "copies": 3,
+      "deckA": 3,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "エネルギーつけかえ",
+          "deckA": 3,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ポケモンいれかえ",
+      "copies": 3,
+      "deckA": 3,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ポケモンいれかえ",
+          "deckA": 3,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "スペシャルレッドカード",
+      "copies": 3,
+      "deckA": 2,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "スペシャルレッドカード",
+          "deckA": 2,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "むしよけスプレー",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "むしよけスプレー",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "アカマツ",
+      "copies": 5,
+      "deckA": 3,
+      "deckB": 2,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "アカマツ",
+          "deckA": 3,
+          "deckB": 2,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "シアノ",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "シアノ",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "トウコ",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "トウコ",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ボスの指令",
+      "copies": 6,
+      "deckA": 3,
+      "deckB": 3,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ボスの指令",
+          "deckA": 3,
+          "deckB": 3,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "リーリエの決心",
+      "copies": 5,
+      "deckA": 1,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "リーリエの決心",
+          "deckA": 1,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ジャッジマン",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ジャッジマン",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "たけしのスカウト",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "たけしのスカウト",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": true
+      }
+    },
+    {
+      "name": "ハンディサーキュレーター",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "45786",
+          "set": "SV6",
+          "cardNumber": "095/101",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045786_T_HANDEISAKIXYURETA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45786",
+          "detailSha256": "64a796a60e7e83fb389b5862a1972264f6b13235fc14c24f555f72ce5146ef5f",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ハンディサーキュレーター",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ヒーローマント",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ヒーローマント",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ロケット団の監視塔",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ロケット団の監視塔",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "夜の鉱山",
+      "copies": 1,
+      "deckA": 1,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "48710",
+          "set": "M2a",
+          "cardNumber": "188/193",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048710_T_YORUNOKOUZAN.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48710",
+          "detailSha256": "7aa3fa999849e97a4fdfa0bc507d4dab591f74f8c9e78c1e289d6c8f12e7fa6a",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "夜の鉱山",
+          "deckA": 1,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "危ない廃墟",
+      "copies": 2,
+      "deckA": 1,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "47796",
+          "set": "M1L",
+          "cardNumber": "063/063",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047796_T_ABUNAIHAIKIXYO.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47796",
+          "detailSha256": "2aa2091c3d5db6e43f93932b5f460eebacc0dee267047951a6024cedfcf62a0c",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "危ない廃墟",
+          "deckA": 1,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ロケット団のエネルギー",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ロケット団のエネルギー",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": true
+      }
+    },
+    {
+      "name": "イグニッションエネルギー",
+      "copies": 2,
+      "deckA": 2,
+      "deckB": 0,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "イグニッションエネルギー",
+          "deckA": 2,
+          "deckB": 0,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "基本悪エネルギー",
+      "copies": 6,
+      "deckA": 4,
+      "deckB": 2,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "基本悪エネルギー",
+          "deckA": 4,
+          "deckB": 2,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "基本超エネルギー",
+      "copies": 7,
+      "deckA": 4,
+      "deckB": 3,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "基本超エネルギー",
+          "deckA": 4,
+          "deckB": 3,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ドラメシヤ",
+      "copies": 4,
+      "deckA": 0,
+      "deckB": 4,
+      "priorDecision": "PRIOR_ID_FOUND_NOT_SELECTED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": {
+        "officialCardId": "49262",
+        "name": "ドラメシヤ",
+        "set": "MC",
+        "cardNumber": "546/742",
+        "deckPrintingConfirmed": false,
+        "selectedOfficialCardId": null,
+        "registeredReferenceMatches": true,
+        "evidence": {
+          "repository": "card-play-sim/pokeca-card-simulator",
+          "branch": "feature/first-playable-fixed-decks",
+          "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+          "path": "data/deck45_identity_v04_staging.json",
+          "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+          "bytes": 2076,
+          "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+        }
+      },
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "45770",
+          "set": "SV6",
+          "cardNumber": "079/101",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45770",
+          "detailSha256": "e4ef2c8b2f1cdb108cb7976cd97593a913c77decf56da921d6931b2619b3d505",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "46779",
+          "set": "SV8a",
+          "cardNumber": "118/187",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046779_P_DORAMESHIYA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46779",
+          "detailSha256": "e312aa54a331ca3d2420adf1b057b6f2247990b16ea6f363743ee39bf15f070a",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "48654",
+          "set": "M2a",
+          "cardNumber": "132/193",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048654_P_DORAMESHIYA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48654",
+          "detailSha256": "6cdf2868c5ef9525039bdfb171309ee23962c549fae8f743e0f88ac143196c72",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "49262",
+          "set": "MC",
+          "cardNumber": "546/742",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049262_P_DORAMESHIYA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49262",
+          "detailSha256": "aef1c2398ee108952eec50a04216b476bdd98c6ef7dddc611983348b41c37a42",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "49971",
+          "set": "M2a",
+          "cardNumber": "211/193",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049971_P_DORAMESHIYA.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49971",
+          "detailSha256": "5a91e123bd5dcb3ce261f3c861889a82c5de8009259ede7c575be2cb634fd110",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ドラメシヤ",
+          "deckA": 0,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ドロンチ",
+      "copies": 4,
+      "deckA": 0,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "45771",
+          "set": "SV6",
+          "cardNumber": "080/101",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045771_P_DORONCHI.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45771",
+          "detailSha256": "ada387a1a8e908b90afbc6223c12ba7b8f2f4b3c59361fdb357ef183aea83393",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ドロンチ",
+          "deckA": 0,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ドラパルトex",
+      "copies": 3,
+      "deckA": 0,
+      "deckB": 3,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ドラパルトex",
+          "deckA": 0,
+          "deckB": 3,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "スボミー",
+      "copies": 2,
+      "deckA": 0,
+      "deckB": 2,
+      "priorDecision": "NAME_MATCH_ID_UNRESOLVED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "46662",
+          "set": "SV8a",
+          "cardNumber": "001/187",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046662_P_SUBOMI.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46662",
+          "detailSha256": "6e4133d3ecabf560081d869db56e2aeb0f4a6208e4bb1404d2d58591643bd219",
+          "deckAdopted": false
+        },
+        {
+          "officialCardId": "48533",
+          "set": "M2a",
+          "cardNumber": "011/193",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048533_P_SUBOMI.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48533",
+          "detailSha256": "03808a89d5c4b02bdc86758466f56f56d8a6f30dbc6f6fc4da24276a7d8b2e4a",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "スボミー",
+          "deckA": 0,
+          "deckB": 2,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "キチキギスex",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "PRIOR_ID_FOUND_NOT_SELECTED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": {
+        "officialCardId": "49205",
+        "name": "キチキギスex",
+        "set": "MC",
+        "cardNumber": "489/742",
+        "deckPrintingConfirmed": false,
+        "selectedOfficialCardId": null,
+        "registeredReferenceMatches": null,
+        "evidence": {
+          "repository": "card-play-sim/pokeca-card-simulator",
+          "branch": "feature/first-playable-fixed-decks",
+          "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+          "path": "data/deck45_identity_v04_staging.json",
+          "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+          "bytes": 2076,
+          "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+        }
+      },
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "45913",
+          "set": "SV6a",
+          "cardNumber": "038/064",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045913_P_KICHIKIGISUEX.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45913",
+          "detailSha256": "8436b697c9b2d2d237a3aec2cf552347a5cbf6f37ab3c185e358f93d4d5a8c7b",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "キチキギスex",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": {
+          "officialCardId": "49205",
+          "set": "MC",
+          "cardNumber": "489/742",
+          "required": "original catalog row plus saved official detail/image reference; a prior candidate number is insufficient"
+        },
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ノココッチ",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ノココッチ",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ノココッチex",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ノココッチex",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ノコッチ",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "PRIOR_ID_FOUND_NOT_SELECTED",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": {
+        "officialCardId": "49290",
+        "name": "ノコッチ",
+        "set": "MC",
+        "cardNumber": "574/742",
+        "deckPrintingConfirmed": false,
+        "selectedOfficialCardId": null,
+        "registeredReferenceMatches": null,
+        "evidence": {
+          "repository": "card-play-sim/pokeca-card-simulator",
+          "branch": "feature/first-playable-fixed-decks",
+          "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+          "path": "data/deck45_identity_v04_staging.json",
+          "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+          "bytes": 2076,
+          "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+        }
+      },
+      "verifiedReferencePrints": [
+        {
+          "officialCardId": "45202",
+          "set": "SV5K",
+          "cardNumber": "056/071",
+          "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045202_P_NOKOTCHI.jpg",
+          "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45202",
+          "detailSha256": "5b7e891977687cba36b38e6534d1e34ce97a4107671935ac8958029c99c1b147",
+          "deckAdopted": false
+        }
+      ],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ノコッチ",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": {
+          "officialCardId": "49290",
+          "set": "MC",
+          "cardNumber": "574/742",
+          "required": "original catalog row plus saved official detail/image reference; a prior candidate number is insufficient"
+        },
+        "originalOfficialReferenceRequired": false,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "なかよしポフィン",
+      "copies": 4,
+      "deckA": 0,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "なかよしポフィン",
+          "deckA": 0,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "クラッシュハンマー",
+      "copies": 4,
+      "deckA": 0,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "クラッシュハンマー",
+          "deckA": 0,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ポケパッド",
+      "copies": 4,
+      "deckA": 0,
+      "deckB": 4,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ポケパッド",
+          "deckA": 0,
+          "deckB": 4,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "アンフェアスタンプ",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "アンフェアスタンプ",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "メイのはげまし",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "メイのはげまし",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "ジャミングタワー",
+      "copies": 1,
+      "deckA": 0,
+      "deckB": 1,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "ジャミングタワー",
+          "deckA": 0,
+          "deckB": 1,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    },
+    {
+      "name": "基本炎エネルギー",
+      "copies": 3,
+      "deckA": 0,
+      "deckB": 3,
+      "priorDecision": "NO_NAME_MATCH",
+      "selectedOfficialCardId": null,
+      "recoveredCandidate": null,
+      "verifiedReferencePrints": [],
+      "status": "HOLD_NOT_SELECTED_IN_RECOVERED_REVIEW",
+      "confirmedCopies": 0,
+      "requiredEvidence": {
+        "deckSelection": {
+          "name": "基本炎エネルギー",
+          "deckA": 0,
+          "deckB": 3,
+          "fields": [
+            "selectedOfficialCardId",
+            "set",
+            "cardNumber",
+            "source deck/edition binding",
+            "explicit selection approval"
+          ]
+        },
+        "candidateOfficialEvidence": null,
+        "originalOfficialReferenceRequired": true,
+        "exactOfficialNameOrApprovedCorrectionRequired": false
+      }
+    }
+  ]
+}

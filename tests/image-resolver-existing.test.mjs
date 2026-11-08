@@ -6,6 +6,7 @@ const context={window:{},fetch:async url=>{
  assert.equal(url,'./data/official-image-registry.json');
  return {ok:true,json:async()=>registry};
 }};
+vm.runInNewContext(fs.readFileSync('ui/official-image-validation.js','utf8'),context);
 vm.runInNewContext(fs.readFileSync('ui/card-image-resolver.js','utf8'),context);
 const resolver=context.window.PokecaImageResolver;
 const result=await resolver.loadRegistry('./data/official-image-registry.json');

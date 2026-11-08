@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const {audit}=require('../scripts/audit-fixed-deck-prints.cjs');
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const manifest=read('data/fixed-test-decks.json'),registry=read('data/official-image-registry.json'),formal=read('data/fixed-deck-formal-1945-pokemon-candidates.json');
+const searches=fs.readdirSync('data/fixed-deck-search-evidence').map(f=>read('data/fixed-deck-search-evidence/'+f));
+assert.equal(searches.length,45);
+const report=audit(manifest,registry,searches,formal);
+assert.equal(report.totalCards,120);assert.equal(report.uniqueNames,45);
+assert.equal(report.confirmedCopies,0);assert.equal(report.pendingCopies,120);assert.equal(report.pass,false);
+assert(report.rows.every(r=>r.status==='HOLD_DECK_PRINT_SOURCE_MISSING'));
+const unique=report.rows.find(r=>r.name==='ハンディサーキュレーター');
+assert.equal(unique.officialSearch.firstPageExactIds.length,1);
+assert.equal(unique.status,'HOLD_DECK_PRINT_SOURCE_MISSING','a unique name-search match still cannot select a deck edition');
+const typo=report.rows.find(r=>r.name==='ロケット団のエネルギー');assert.equal(typo.sourceNameMatched,false);
+assert.equal(manifest.officialPrintIdsConfirmed,0);
+assert.equal(report.formalDatabase.originalAvailable,false);
+console.log('PASS all 45 names audited; unique search matches, equivalent text and image registration never invent a deck print');

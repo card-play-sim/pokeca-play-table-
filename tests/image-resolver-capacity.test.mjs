@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const context={window:{},fetch:async()=>({ok:true,json:async()=>({cards:[]})})};
+vm.runInNewContext(fs.readFileSync('ui/official-image-validation.js','utf8'),context);
 vm.runInNewContext(fs.readFileSync('ui/card-image-resolver.js','utf8'),context);
 const resolver=context.window.PokecaImageResolver;
 const prefix='https://www.pokemon-card.com/assets/images/card_images/large/TEST/';

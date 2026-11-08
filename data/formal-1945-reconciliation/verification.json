@@ -1,0 +1,136 @@
+{
+  "checkedAt": "2026-11-08T22:59:25.209538+00:00",
+  "sourceZipSha256": "d1ec033f245d84e9d1e12eeb2b60b537051109608100d81183d3f4f2c14c9ab2",
+  "sourceZipUnchanged": true,
+  "sourceEntriesUnchanged": 29,
+  "sourceEntryDigests": [
+    {
+      "path": "48247_ADMISSION_STEPS.json",
+      "sha256": "6be8048cab60e6e5ea2d33bbbe17ad1d1d166c6bada1788b09174f77242bd32e"
+    },
+    {
+      "path": "CURRENT_ROLE_STATE.json",
+      "sha256": "93f09d77bb6542fb262820ba59a4abdb904d623ed0c8ec3abbd3a84ff52ecc6a"
+    },
+    {
+      "path": "DELIVERY_MANIFEST.json",
+      "sha256": "d3136fcf3fbb8cd41bcf17d072b999dc9f3199dae6f5365c9e069c5516d46c57"
+    },
+    {
+      "path": "FORMAL_BASELINE.json",
+      "sha256": "a5ebb1860ed65579cbe0acc10897a002beb8ceaad48ad441d328af1dca3f7ff7"
+    },
+    {
+      "path": "IDENTITY_HOLDS_SEPARATE.json",
+      "sha256": "eb6e2c12c0a5916ac0f0a8f6d408a2fcb522e02c066491b271a316b19d63b877"
+    },
+    {
+      "path": "README_FIRST.md",
+      "sha256": "9f03d35207f6f784ff0d1f0116711ed6a44759a22dccf3c0f36d00f49ea0ed59"
+    },
+    {
+      "path": "SAVED2_ACCEPTANCE_CHECKS.json",
+      "sha256": "a7f2a9629e9042fca098b1896df241a6d6b595034956d255f1fac3ac6b1772c9"
+    },
+    {
+      "path": "UNREGISTERED_48247_EVIDENCE_REVIEW.json",
+      "sha256": "1215224f403e240ae8f1b1314a463e3de631006b515788b92c44b0514f3a0d68"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/card_catalog.json",
+      "sha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/collection/image_status.jsonl",
+      "sha256": "d6ab0f7f0ccb95562c38dfdc1172d9d0346baefc0d84ca5176c83f4a28128f0b"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/identity_holds.json",
+      "sha256": "eb6e2c12c0a5916ac0f0a8f6d408a2fcb522e02c066491b271a316b19d63b877"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/identity_skip_authorization.json",
+      "sha256": "5b737e25ce943f99a5e326d07ffffba065cc7aca6a3a165937e225c9ee39174d"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/adoption_validation.json",
+      "sha256": "ca1add8612c54ffbb7cb49aa9c513e16432b7469a274f62281c7389352b7b91a"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/adoption_validation_current.json",
+      "sha256": "e21fb71458fe5f822e2470c3c210b1001f552c582cfa4cda52a7f936375bcd0b"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/adoption_validation_v3.json",
+      "sha256": "a3744cf8f76de3d52f06ae8ad8690efd3cef9bc39e5cb49700c461c1030dec93"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/completion_from1769_validation.json",
+      "sha256": "225a033a09fb471e3ee5077cf5dbd7f65ee5dc10ce7149cb745158a88f1f7b40"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/completion_from1837_validation.json",
+      "sha256": "e2e9ce38d981cf9bf2eb1470140188f800b99045da8e8f7150dbc70c7975abd1"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/completion_from1887_validation.json",
+      "sha256": "e8511b50a99fd73f37f9116979fc5cdd3528457a1eac87a4871733fcba33af6e"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/identity_hold_skip_ledger.jsonl",
+      "sha256": "aa99657255b2435f797aa23d65fdadd2aca40fafc150ae5e3c4d22b226d391d3"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/image_registry.json",
+      "sha256": "0a9746f8084a1569ce149a2616e9c5086c72951b1eed2b1bed430f842a89831f"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/image_registry.jsonl",
+      "sha256": "36595d9b734e246c7cdc402b27422b2fdd1822a9fed2efe9800722871c6e26c4"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/promotion_1719_to1769_validation.json",
+      "sha256": "7c497a2eb48b975e554b94ecfad245943777b3c16022c00f21422f8e64546e0f"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/promotion_1819_to1837_validation.json",
+      "sha256": "56eab2817b777cb242cb7242d535074212b6f7a49bcde7dfcf084d919e9406cf"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/promotion_1937_to1942_validation.json",
+      "sha256": "691cdbc3945c66c04f8859cb90b66f92a410b890a89c4d6af747df770e6457c6"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/promotion_1942_to1943_validation.json",
+      "sha256": "ee3498d5bc3320662a3d1300d742e1553e1672e01c25b12b9bf114820f8ef789"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/promotion_1943_to1945_validation.json",
+      "sha256": "4bd53028917da7e03169e2eb67e845df4da07a6ac25cbd0f220a6d43f79270d7"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/image_registry/validation_report.json",
+      "sha256": "d13004073be5d449f7b4a8215f06411a2736faa13c308e5c257d2398067cbcac"
+    },
+    {
+      "path": "pokeca_card_catalog_HIJ/registration_ledger.jsonl",
+      "sha256": "3e9e07628023a492de7a9815ab4b7041998db56d493bc58c14a36db80fd71fb8"
+    }
+  ],
+  "engineAndFixedDeckUnchanged": true,
+  "automaticDeckAdoptions": 0,
+  "imageBinaryFilesWritten": 0,
+  "tests": {
+    "pythonFormalZip": 4,
+    "pythonWorkflow": 4,
+    "pythonMobileHeader": 4,
+    "pythonCardReflection": 6,
+    "formalImportIdempotenceAndConflict": "PASS",
+    "officialDetailCheckpointTampering": "PASS",
+    "singleWriterLock": "PASS",
+    "syntheticExactWrongPrintFailureBrowser": "PASS",
+    "fixedDeckRealImageInspection": "BLOCKED_IDENTITY_UNCONFIRMED",
+    "formalCandidateImages": "57/57 (completed evidence carried forward; receipt hashes unchanged)",
+    "additionalCandidateImages": "27/27"
+  }
+}

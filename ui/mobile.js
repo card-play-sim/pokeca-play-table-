@@ -40,7 +40,8 @@
     return msg;
   }
   function toast(text){$('toast').textContent=japaneseError(text);$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
-  function closeSheet(){if(sheet.open)sheet.close();if(typeof prizeDialogOpen!=='undefined')prizeDialogOpen=false;}
+  let refreshImageSheet=null;
+  function closeSheet(){refreshImageSheet=null;if(sheet.open)sheet.close();if(typeof prizeDialogOpen!=='undefined')prizeDialogOpen=false;}
   // A tap on the dimmed backdrop closes information sheets, but not confirmation dialogs.
   // Require pointer down and up to both be outside to avoid dismissing during a swipe.
   let sheetBackdropDown=false;
@@ -55,7 +56,7 @@
     sheetBackdropDown=false;
   });
   sheet.addEventListener('pointercancel',()=>{sheetBackdropDown=false;});
-  function openSheet(title,html){$('sheet-title').textContent=title;$('sheet-content').innerHTML=html;if(!sheet.open)sheet.showModal();}
+  function openSheet(title,html){refreshImageSheet=null;$('sheet-title').textContent=title;$('sheet-content').innerHTML=html;if(!sheet.open)sheet.showModal();}
   function button(label,callback,options={}){const b=document.createElement('button');b.textContent=label;b.disabled=options.disabled || false;if(options.className)b.className=options.className;b.onclick=callback;return b;}
   let confirmTouchGuardUntil=0;
   function confirmAction(message){return new Promise(resolve=>{const d=$('confirm-dialog');$('confirm-message').textContent=message;let settled=false;
@@ -72,11 +73,11 @@
     const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
     // A verified official print takes precedence over unverified runtime URLs.
     if(verifiedUrl)return verifiedUrl;
-    if(explicit)return /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//i.test(explicit)?explicit:'';
+    if(explicit)return ''; // Unverified state URLs cannot override the ID registry.
     // Never substitute a different official print for an identified card.
     // Unidentified practice cards may use name-based artwork only as a preview.
-    if(cardId)return '';
-    return window.PokecaArt?.[currentPrint.name] || window.PokecaArt?.[card.name] || '';
+    if(cardId||currentPrint.set!=null||currentPrint.setCode!=null||currentPrint.cardNumber!=null)return '';
+    return window.PokecaArt?.[currentPrint.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
   // Original energy-card illustration for the practice deck (not an official print).
@@ -95,12 +96,15 @@
     return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
   }
   function cardArt(card){
+    const display=window.PokecaImageResolver?.resolveDisplay(card);
+    const displayAttrs=`data-image-mode="${esc(display?.mode||'missing')}" data-preview-reference-id="${esc(display?.referenceOfficialCardId||'')}" title="${display?.mode==='provisional-preview'?'暫定画像・正式採用版未確定':'カード画像'}"`;
     const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};
-    const energyUrl=card.kind==='energy'&&officialBasicEnergy[card.energyType]?officialBasicEnergy[card.energyType]:energyArt(card);
+    const identifiedPrint=card.officialCardId!=null||card.catalogCardId!=null||card.set!=null||card.setCode!=null||card.cardNumber!=null;
+    const energyUrl=card.kind==='energy'?(imageURL(card)||(identifiedPrint?energyArt(card):(officialBasicEnergy[card.energyType]||energyArt(card)))):'';
     if(energyUrl){
       const energyFallback=energyArt(card);
       const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
-      return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
+      return `<img ${displayAttrs} src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
     }
     const url=imageURL(card);
     if(!url)return `<img src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false">`;
@@ -109,7 +113,7 @@
     const fallback=bundled&&bundled!==url
       ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
       :`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
-    return `<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
+    return `<img ${displayAttrs} src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
   }
     // Image hosts can reject hotlinks or fail offline; keep the card operable.
   document.addEventListener('error',event=>{
@@ -134,6 +138,18 @@
     }
     fallback.hidden=false;
   },true);
+  // Image decode repaints the existing node; never replace touch targets during gestures.
+  document.addEventListener('load',event=>{
+    if(event.target?.tagName==='IMG')event.target.dataset.imageLoad='loaded';
+  },true);
+  function redrawImagesWhenIdle(){
+    if(drag||$('confirm-dialog').open){setTimeout(redrawImagesWhenIdle,80);return;}
+    render();
+  }
+  function refreshCurrentImageSheet(){
+    if(!sheet.open||!refreshImageSheet)return;
+    const update=refreshImageSheet,scroll=$('sheet-content').scrollTop;update();$('sheet-content').scrollTop=scroll;
+  }
     function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
   function badges(card,snapshot,owner){let html='';
     if(card.damage)html+=`<span class="badge damage">${esc(card.damage)}</span>`;
@@ -151,13 +167,13 @@
     const chips=[...counts].map(([type,n])=>`<span class="attached-energy-chip" title="${esc(type)}エネルギー ${n}枚">${esc(symbols[type]||'◆')}<b>${n}</b></span>`).join('');
     return `<span class="attached-energy-strip" aria-label="装着エネルギー ${card.energyCards.length}枚">${chips}</span>`;
   }
-  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
+  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
-  function render(){const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
+  function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
     if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning&&!aiPrizeAutoAttempted){aiPrizeAutoAttempted=true;queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});}
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
-    $('game-note').textContent=s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
+    $('game-note').textContent=s.fixedDeckPractice?'固定デッキ操作練習・暫定画像／公式効果未接続':s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
     $('opponent-hand').innerHTML=Array.from({length:Math.min(opp.handCount,14)},()=>'<i class="card-back"></i>').join('');$('opponent-hand-count').textContent=opp.handCount+'枚';
     for(const [prefix,p] of [['opponent',opp],['self',you]]){
       $(prefix+'-bench').innerHTML=Array.from({length:5},(_,i)=>`<div class="bench-slot${p.bench[i]?'':' empty'}" ${prefix==='self'?'data-drop-zone="bench"':''}>${p.bench[i]?cardHTML(p.bench[i],s,p):''}</div>`).join('');
@@ -191,6 +207,7 @@
     $('stadium').classList.toggle('has-stadium',!!s.stadium);
     for(const [prefix,p] of [['self',you],['opponent',opp]]){const states=scopedStates(p.id);$(prefix+'-effects').replaceChildren(...states.map(state=>button(state.short,()=>scopedStateDetail(p.id),{className:'scope-chip'})));}
     bindCards();highlight();
+    refreshCurrentImageSheet();
     if(s.practiceScenario?.focusInstanceId)document.querySelectorAll('[data-card-id]').forEach(el=>el.classList.toggle('scenario-focus',el.dataset.cardId===s.practiceScenario.focusInstanceId));
   }
   function getCard(id){for(const p of view().players){const c=[...p.hand,p.active,...p.bench,...p.discard].find(c=>idOf(c)===id);if(c)return {card:c,player:p};}return null;}
@@ -204,7 +221,6 @@
     el.onpointermove=e=>pointerMove(e);
     el.onpointerup=e=>pointerEnd(e);
     el.onpointercancel=()=>clearGesture();
-    el.querySelectorAll('img').forEach(img=>img.onerror=()=>{img.replaceWith(Object.assign(document.createElement('span'),{className:'card-fallback',textContent:img.alt}));});
   });
     document.querySelectorAll('[data-state-card]').forEach(el=>{el.onclick=e=>{e.stopPropagation();stateDetail(el.dataset.stateCard);};});
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
@@ -260,12 +276,14 @@
     clearGesture();if(tapTarget){tapTarget.click();suppressClick=Date.now()+500;}if(active)suppressClick=Date.now()+500;
   }
   function clearGesture(){clearTimeout(longTimer);suppressClick=Math.min(suppressClick,Date.now()+120);if(drag?.ghost)drag.ghost.remove();drag=null;document.querySelectorAll('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));}
-  function detail(id){const entry=getCard(id);if(!entry)return;const {card,player}=entry,s=view();
+  function detail(id){const entry=getCard(id);if(!entry){closeSheet();return;}const {card,player}=entry,s=view();
     const info=port.getCardInfo(player.id,id);const declared=card.abilities || [],registry=port.getEffects(player.id).find(x=>x.instanceId===id)?.effects || [];
     const attacks=registry.filter(e=>e.source.type==='ATTACK').map(e=>e.source.name).concat((card.attacks || []).map(a=>a.name));
     const abilities=declared.map(a=>a.name+': '+(a.text || '')).concat(registry.filter(e=>e.source.type==='ABILITY').map(e=>e.source.name));
     const stateHTML=statesFor(s,id).map(effectRow).join('');
     openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card)}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc((card.energyCards || []).map(c=>c.energyType).join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
+    refreshImageSheet=()=>detail(id);
+    if(card.energyCards?.length){const attached=document.createElement('div');attached.className='discard-grid attached-image-gallery';attached.innerHTML=card.energyCards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}">${cardArt(c)}</div>`).join('');$('sheet-content').append(attached);}
     if(player.id==='you'&&player.hand.some(c=>idOf(c)===id))addHandActions(id,$('detail-actions'));
   }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
@@ -401,7 +419,7 @@
       $('selection-confirm').onclick=()=>done([...selectedIds]);
     });
   }
-  function dispatch(playerId,action){const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
+  function dispatch(playerId,action){if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
     if(!result.ok){toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
@@ -497,11 +515,18 @@
     };
     paint();
   }
-  function zoneMenu(owner,zone){const p=view().players.find(p=>p.id===owner);
-    if(zone==='discard'){openSheet((owner==='you'?'自分':'相手')+'のトラッシュ',p.discard.length?`<p>${p.discard.length}枚 · カードを一覧表示</p><div class="discard-grid">${p.discard.map(c=>`<div class="discard-card" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`:'<p>カードはありません</p>');return;}
+  function zoneMenu(owner,zone){if(fixedImageBoard){showFixedImageZone(owner,zone);return;}const p=view().players.find(p=>p.id===owner);
+    if(zone==='discard'){openSheet((owner==='you'?'自分':'相手')+'のトラッシュ',p.discard.length?`<p>${p.discard.length}枚 · カードを一覧表示</p><div class="discard-grid">${p.discard.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`:'<p>カードはありません</p>');refreshImageSheet=()=>zoneMenu(owner,zone);return;}
     if(zone==='prize'){if(owner==='you'&&view().pendingPrizeSelection){prizeDialogOpen=false;showPrizeChoice();return;}openSheet('サイド',`<p>残り ${p.prizeCount}枚。サイド内容は非公開です。取得はエンジンのきぜつ処理に従います。</p>`);return;}
     openSheet((owner==='you'?'自分':'相手')+'の山札',`<p>${p.deckCount}枚 · 通常時の内容は非公開です。ワザの検索時に専用画面を開きます。</p><div id="deck-actions" class="menu-list"></div>`);
+    if(owner==='you'&&view().mode==='practice')$('deck-actions').append(button('練習操作：山札一覧（公開）',()=>practiceDeckList(owner)));
     if(owner==='you'&&view().mode==='practice')$('deck-actions').append(button('練習操作：シャッフル',()=>{dispatch('you',{type:'shuffle'});closeSheet();},{disabled:!port.canDispatch('you',{type:'shuffle'})}));
+  }
+  function practiceDeckList(owner){
+    if(owner!=='you'||view().mode!=='practice')return;
+    const cards=port.getSnapshot().players.find(p=>p.id===owner).deck;
+    openSheet('操作練習・自分の山札一覧',`<p>操作練習でのみ公開。暫定画像は正式採用版ではありません。</p><div class="discard-grid">${cards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`);
+    refreshImageSheet=()=>practiceDeckList(owner);
   }
   // A touch-end may open an overlay before Chrome emits its compatibility click.
   // Suppress only that follow-up click; a genuine new pointer-down clears the guard.
@@ -644,12 +669,76 @@
     if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
     try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
   };
+  let fixedImageBoard=null;
   // Source-backed, image-only representative prints for the fixed-deck list.
   // These IDs are NOT adopted card identities and must never enter the game state.
-  // Image previews come only from the shared official-ID registry.
-  // Multiple prints must remain ambiguous until the deck print is identified.
-  function fixedDeckPreview(name){
-    return window.PokecaImageResolver?.resolvePreview({name})||'';
+  // Visual-only bindings may choose an evidenced representative without adopting its identity.
+  // Numberless energies and name aliases stay outside the strict official-ID registry.
+  function fixedDeckPreview(card){
+    if(typeof card==='object'&&card){
+      if(card.officialCardId!=null)return window.PokecaImageResolver?.resolve(card)||'';
+      return window.PokecaImageResolver?.resolvePreview(card)||'';
+    }
+    return window.PokecaImageResolver?.resolvePreview({name:card})||'';
+  }
+  async function fixedPracticeMenu(){
+    await imageRegistryReady;
+    if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('画像証跡を読み込めません');
+    const responses=await Promise.all(['./data/fixed-test-decks.json','./data/fixed-deck-practice-facts.json'].map(url=>fetch(url,{cache:'no-store'})));
+    if(responses.some(r=>!r.ok))throw Error('操作練習データを読み込めません');
+    const [manifest,facts]=await Promise.all(responses.map(r=>r.json()));
+    openSheet('固定2デッキ・操作練習','<p>暫定画像と参照版の基本情報を使用します。正式採用版は未確定。公式ワザ・特性・トレーナー効果・特殊エネルギー効果は未接続です。既存エンジンの配置・手張り・進化・移動・ターン更新・保存を使う操作練習です。</p><div class="menu-list" id="fixed-practice-choices"></div>');
+    manifest.decks.forEach((deck,firstDeck)=>$('fixed-practice-choices').append(button(deck.name+'を自分側で操作練習',async()=>{
+      try{
+      if(aiPracticeRunning){toast('AI操作完了後に開始してください');return;}
+      const candidate=window.PokecaFixedDeckPractice.create(manifest,facts,Pokeca,{firstDeck});
+      if(!await confirmAction('現在の対戦を保存し、暫定画像の固定デッキ操作練習を開始しますか？ 公式効果は未接続です。'))return;
+      if(!await protectBeforeNewMatch())return;
+      fixedImageBoard=null;$('app').classList.remove('fixed-image-board');$('fixed-image-controls')?.remove();$('demo-open').disabled=false;
+      aiAutoMode=false;selected=null;clearGesture();
+      const loaded=port.loadGame(candidate);
+      if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+      closeSheet();toast('固定デッキ操作練習・公式効果は未接続です');
+      }catch(error){toast('固定デッキ操作練習を開始できません：'+error.message);}
+    })));
+  }
+  async function openFixedImageBoard(){
+    if(aiPracticeRunning)throw Error('AI操作完了後に画像確認を開始してください');
+    await imageRegistryReady;
+    if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('画像証跡を読み込めません');
+    const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
+    if(!response.ok)throw Error('FIXED_DECK_HTTP_'+response.status);
+    const data=await response.json();
+    if(data.decks?.length!==2||data.decks.some(d=>d.cards.reduce((n,c)=>n+c.count,0)!==60))throw Error('FIXED_DECK_COUNT');
+    fixedImageBoard={offset:0,decks:data.decks.map((d,i)=>({name:d.name,id:i?'ai':'you',cards:d.cards.flatMap((c,j)=>Array.from({length:c.count},(_,k)=>({...c,id:`preview-${i}-${j}-${k}`})))}))};
+    closeSheet();$('app').classList.add('fixed-image-board');render();
+  }
+  function fixedImageCards(deck){const n=fixedImageBoard.offset;return [...deck.cards.slice(n),...deck.cards.slice(0,n)];}
+  function renderFixedImageBoard(){
+    $('turn-label').textContent='固定120枚・画像確認';$('game-note').textContent='暫定画像・正式採用版未確定';
+    $('opponent-hand').innerHTML='';$('opponent-hand-count').textContent='7枚';
+    const imageCard=(c,zone)=>`<div class="card fixed-image-card" data-preview-card="${esc(c.id)}" data-preview-zone="${zone}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`;
+    for(const [prefix,deck] of [['self',fixedImageBoard.decks[0]],['opponent',fixedImageBoard.decks[1]]]){
+      const cards=fixedImageCards(deck);
+      $(prefix+'-active').innerHTML=imageCard(cards[0],'active');
+      $(prefix+'-bench').innerHTML=cards.slice(1,6).map(c=>`<div class="bench-slot">${imageCard(c,'bench')}</div>`).join('');
+      $(prefix+'-left').innerHTML='';
+      $(prefix+'-right').innerHTML=zoneHTML({id:deck.id,deckCount:60,discardCount:47},'deck','画像一覧','▤')+zoneHTML({id:deck.id,discardCount:47},'discard','トラッシュ','↘');
+      $(prefix+'-effects').innerHTML='';
+    }
+    const cards=fixedImageCards(fixedImageBoard.decks[0]);
+    $('self-hand').innerHTML=cards.slice(6,13).map(c=>imageCard(c,'hand')).join('');$('hand-count').textContent='7枚';
+    $('limits').textContent='画像確認専用・対戦操作なし';$('stadium-art').innerHTML='';$('stadium-name').textContent='画像確認専用';
+    for(const id of ['attack-button','ability-button','draw-button','end-turn','demo-open'])$(id).disabled=true;
+    $('interaction-hint').textContent='暫定画像・採用版と効果は未確定';
+    let controls=$('fixed-image-controls');
+    if(!controls){controls=document.createElement('div');controls.id='fixed-image-controls';document.querySelector('.actionbar').append(controls);}
+    controls.replaceChildren(button('次の配置で画像確認',()=>{fixedImageBoard.offset=(fixedImageBoard.offset+1)%60;render();}),button('試験対戦に戻る',()=>{fixedImageBoard=null;$('app').classList.remove('fixed-image-board');controls.remove();$('demo-open').disabled=false;render();}));
+    document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>showFixedImageZone(el.dataset.zoneOwner,el.dataset.zone));
+  }
+  function showFixedImageZone(owner,zone){
+    const deck=fixedImageBoard.decks.find(d=>d.id===owner),cards=zone==='discard'?fixedImageCards(deck).slice(13):deck.cards;
+    openSheet(zone==='discard'?'画像確認・トラッシュ':'画像確認・デッキ一覧',`<p>暫定画像・正式採用版未確定。画像確認用の配置であり、対戦状態には保存されません。</p><div class="discard-grid">${cards.map(c=>`<div class="discard-card" data-preview-card="${esc(c.id)}" data-preview-zone="${zone}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`);
   }
   // Original, clearly marked placeholder art for fixed-deck cards without a usable image.
   // No official image, text, print ID, HP, or effects are inferred.
@@ -664,6 +753,7 @@
   }
   async function fixedDeckMenu(){
     try{
+      await imageRegistryReady;
       const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
       if(!response.ok)throw Error('HTTP '+response.status);
       const data=await response.json();
@@ -674,8 +764,13 @@
       const imageCandidates=uniqueNames.filter(name=>fixedDeckPreview(name));
       const noImageNames=uniqueNames.filter(name=>!imageCandidates.includes(name));
       const imageStatus='<p>画像候補 '+imageCandidates.length+'/45種類・未登録 '+noImageNames.length+'種類 / 登録済み公式印刷版 '+imageRegistryCount+'件。画像候補は実際の読み込み成功・利用許諾・印刷版確定を意味しません。</p>';
-      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=fixedDeckPreview(c.name)||fixedDeckPlaceholder(c.name);const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
-      openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+      const summary=data.decks.map(deck=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類</p><div class="deck-manifest-list">${deck.cards.map((c,i)=>{
+        const source=fixedDeckPreview(c),url=source||fixedDeckPlaceholder(c.name);
+        const kind=source?(c.identityStatus==='CONFIRMED'&&c.set&&c.cardNumber?'official':'candidate'):'placeholder';
+        const fallback=source?`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(c.name))}" alt="${esc(c.name)}（オリジナル仮画像）" style="width:56px;height:76px;object-fit:contain" draggable="false" hidden>`:'';
+        return `<div data-deck-id="${esc(deck.id)}" data-entry-index="${i}" data-card-name="${esc(c.name)}" data-official-card-id="${esc(c.officialCardId||'')}" data-image-kind="${kind}" style="display:flex;align-items:center;gap:8px;min-height:78px"><span class="deck-art" style="display:inline-flex;width:56px;height:76px;flex-shrink:0"><img data-image-primary="true" src="${esc(url)}" alt="${esc(c.name)}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain">${fallback}</span><span><b>${c.count}枚</b> ${esc(c.name)}<small>${kind==='official'?'印刷版確定':kind==='candidate'?'候補プレビュー・印刷版未確定':'仮画像・印刷版未確定'}</small></span></div>`;
+      }).join('')}</div></section>`).join('');
+      openSheet('固定2デッキ・構成確認',`<p>印刷版ID未確定の画像は候補プレビュー／仮画像です。公式120枚表示合格とは扱いません。</p><p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
       // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
       try{
@@ -720,9 +815,9 @@
       status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
       $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
       const diagnostics=button('画像診断を一括保存（JSON）',()=>{
-        const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({deck:deck.name,name:card.name,count:card.count})));
+        const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({...card,deck:deck.name,deckId:deck.id})));
         const unique=[...new Set(cards.map(card=>card.name))];
-        const report={schemaVersion:1,createdAt:new Date().toISOString(),decks:data.decks.map(deck=>({name:deck.name,total:deck.total})),physicalCards:cards.reduce((sum,card)=>sum+card.count,0),uniqueNames:unique.length,registeredImages:window.PokecaImageResolver?.count()||0,unresolvedEngineNames:unresolved,missingPreviewNames:unique.filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])),loadFailures:window.PokecaImageFailures||[],cards};
+        const report={schemaVersion:2,printDisplay:window.PokecaFixedDeckImageStatus||null,createdAt:new Date().toISOString(),decks:data.decks.map(deck=>({name:deck.name,total:deck.total})),physicalCards:cards.reduce((sum,card)=>sum+card.count,0),uniqueNames:unique.length,registeredImages:window.PokecaImageResolver?.count()||0,unresolvedEngineNames:unresolved,missingPreviewNames:unique.filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])),loadFailures:window.PokecaImageFailures||[],cards};
         const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
         const link=document.createElement('a');link.href=url;link.download='pokeca-image-diagnostics.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
       });
@@ -744,18 +839,29 @@
       }
       // Force all image checks to start even for cards below the mobile viewport.
       // Lazy loading previously left the diagnostics permanently incomplete.
-      const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
-      let loaded=0,failed=0;
-      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
-      for(const img of imgs){
-        let settled=false;const onLoad=()=>{if(settled)return;settled=true;loaded++;update();},onError=()=>{if(settled)return;if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;settled=true;failed++;update();};
-        if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}
-        else{img.addEventListener('load',onLoad,{once:true});img.addEventListener('error',onError);}
-      }
-      update();
+      const rows=[...$('sheet-content').querySelectorAll('.deck-manifest-list > div')];
+      const imgs=rows.map(row=>row.querySelector('[data-image-primary]'));
+      const cards=data.decks.flatMap(deck=>deck.cards);
+      const update=()=>{
+        if(!rows[0]?.isConnected)return;
+        const measured=rows.map((row,i)=>{
+          const img=imgs[i],card=cards[i],exact=window.PokecaImageResolver.resolve(card);
+          const observation={sourceUrl:img.currentSrc||img.src,decoded:img.complete&&img.naturalWidth>0,visible:!img.hidden&&getComputedStyle(img).display!=='none'};
+          return {...window.PokecaFixedDeckImageAudit.entry(card,exact?{...card,imageSourceUrl:exact}:null,observation),deckId:row.dataset.deckId,entryIndex:Number(row.dataset.entryIndex),imageKind:row.dataset.imageKind};
+        });
+        window.PokecaFixedDeckImageStatus=window.PokecaFixedDeckImageAudit.summarize(measured);
+        const settled=imgs.filter(img=>img.complete).length,failed=imgs.filter(img=>img.complete&&!img.naturalWidth).length;
+        const node=$('deck-image-check');
+        if(node)node.textContent=`公式印刷版の表示成功 ${window.PokecaFixedDeckImageStatus.officialDisplayedCopies}/120枚 / 未完了 ${window.PokecaFixedDeckImageStatus.pendingCopies}枚 / 候補プレビュー ${window.PokecaFixedDeckImageStatus.candidatePreviewCopies}枚（確定数に含めません） / 画像読込失敗 ${failed} / 検査済 ${settled}/${imgs.length}`;
+      };
+      for(const img of imgs){img.addEventListener('load',update);img.addEventListener('error',()=>queueMicrotask(update));}
+      requestAnimationFrame(update);
+
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('固定2デッキで操作練習（公式効果未接続）',()=>{void fixedPracticeMenu().catch(error=>toast(error.message));}));
+    list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
     list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
     list.append(button(animationsEnabled?'アニメーション：オン（タップでオフ）':'アニメーション：オフ（タップでオン）',()=>{animationsEnabled=!animationsEnabled;closeSheet();}));
     list.append(button('中断・再開／保存データ',savesMenu));
@@ -786,14 +892,16 @@
     list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
     Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
-  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
+  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){if(view().fixedDeckPractice)aiAutoMode=false;selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
   window.PokecaMobile={port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
   // Import all evidence-backed print images in one operation, independent of deck size.
   // Never modifies cards, saved matches, or print identities.
   window.PokecaImageRegistryStatus={state:'loading'};
-  window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(result=>{
+  const imageRegistryReady=window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(async result=>{
+    const previewCount=await window.PokecaImageResolver.loadPreviews('./data/fixed-deck-preview-bindings.json');
+    result.previewBindings=previewCount;
     window.PokecaImageRegistryStatus={state:'ready',...result};
-    render();
+    redrawImagesWhenIdle();
   }).catch(error=>{
     window.PokecaImageRegistryStatus={state:'error',message:String(error.message||error)};
     console.error('Official image registry load failed',error);
@@ -804,6 +912,7 @@
   catch(error){recoveryWarning=error.message;storageUnavailable=true;}
   if(!restored){const loaded=port.loadGame(game);if(!loaded.ok)toast(loaded.errors.join(' / '));}
   persistenceReady=true;
+  if(restored&&view().fixedDeckPractice)aiAutoMode=false;
   if(restored&&aiAutoMode&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   if(recoveryWarning){$('save-status').textContent=storageUnavailable?'端末保存不可・JSON書出し':'保存の確認が必要';$('save-status').classList.add('save-error');toast('自動再開できませんでした：'+recoveryWarning+'。必要なら再開用JSONを書き出してください');}
   else{saveSafely();if(restored)toast('前回の対戦を再開しました');}

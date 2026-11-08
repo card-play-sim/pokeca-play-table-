@@ -1,0 +1,86 @@
+name: Official image reference collection and registration
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/official-image-registry-automation]
+    paths:
+      - 'scripts/**'
+      - 'tools/parse-official-image.py'
+      - 'ui/**'
+      - 'tests/**'
+      - 'data/official-image-registry.json'
+      - 'data/fixed-test-decks.json'
+      - 'data/official-image-candidates-reviewed.json'
+      - 'data/fixed-deck-official-image-candidates.json'
+      - '.github/workflows/official-image-registry.yml'
+concurrency:
+  group: official-image-registry-${{ github.repository }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  validate-and-register:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/official-image-registry-automation
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline regression and pipeline transaction tests
+        id: offline
+        run: |
+          node scripts/run-offline-tests.cjs
+          python -m unittest discover -s tests -p 'test_mobile_header_layout.py' -v
+          python -m unittest discover -s tests -p 'test_card_reflection_wiring.py' -v
+          python -m unittest discover -s tests -p 'test_official_image_workflow.py' -v
+          python -m unittest discover -s tests -p 'test_formal_zip_reconciliation.py' -v
+          python -m unittest discover -s tests -p 'test_fixed_preview_evidence.py' -v
+          python -m unittest discover -s tests -p 'test_fixed_practice_facts.py' -v
+          node scripts/verify-fixed-deck-image-registry.mjs
+      - name: Install browser test runtime
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Android-sized reload and error regression (synthetic images)
+        id: functional
+        run: |
+          python tests/test_image_automation_browser.py
+          python tests/test_fixed_deck_image_accounting_browser.py
+      - name: Collect, verify, register and reread each approved candidate
+        id: collect
+        run: node scripts/automate-official-images.cjs --refresh
+      - name: Persist safe per-record checkpoints, registrations and audit
+        # A blocked batch may retain independently verified records; collect remains a failed step.
+        if: ${{ always() && steps.offline.outcome == 'success' && steps.functional.outcome == 'success' && steps.collect.outcome != 'skipped' && !cancelled() }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          node scripts/persist-official-image-results.cjs
+      - name: Report registration and fixed-deck display separately
+        if: always()
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs');
+          const file='data/image-automation/latest.json';
+          if(!fs.existsSync(file))process.exit(1);
+          const report=JSON.parse(fs.readFileSync(file));
+          const current=report.runId===process.env.GITHUB_RUN_ID;
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            'Image reference registration: '+(current&&report.registrationPass?'PASS':'BLOCKED / NOT RUN')+'\n\n'+
+            'Fixed 120 official image display: NOT_VERIFIED (separate inspection).\n');
+          if(!current||!report.registrationPass)process.exit(2);
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-image-evidence-${{ github.run_id }}
+          path: data/image-automation/
+          retention-days: 30

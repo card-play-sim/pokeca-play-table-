@@ -1,0 +1,34 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const context={window:{},performance,console};
+for(const p of ['engine.bundle.js','fixed-deck-practice.js','official-image-validation.js','card-image-resolver.js'])vm.runInNewContext(fs.readFileSync('ui/'+p,'utf8'),context);
+const {Pokeca:engine,PokecaFixedDeckPractice:practice,PokecaImageResolver:images}=context.window;
+const manifest=JSON.parse(fs.readFileSync('data/fixed-test-decks.json')),facts=JSON.parse(fs.readFileSync('data/fixed-deck-practice-facts.json'));
+const registry=JSON.parse(fs.readFileSync('data/official-image-registry.json'));images.register(Object.fromEntries(registry.cards.map(c=>[c.officialCardId,c])));images.registerPreviews(JSON.parse(fs.readFileSync('data/fixed-deck-preview-bindings.json')));
+let seed=6;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+let game=practice.create(manifest,facts,engine,{rng,firstDeck:1});
+const port=engine.createUIPort({getGame:()=>game,setGame:g=>game=g});assert.equal(port.loadGame(game).ok,true);
+const all=g=>g.players.flatMap(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards,...p.discard].filter(Boolean).flatMap(c=>[c,...(c.evolutionCards||[]),...(c.energyCards||[]),...(c.tools||[])]));
+const ids=all(game).map(c=>c.id).sort();assert.equal(ids.length,120);assert.equal(new Set(ids).size,120);
+for(const c of all(game)){assert(!c.officialCardId&&!c.catalogCardId&&!c.verified);assert.equal(c.effectStatus,'UNIMPLEMENTED');assert.equal(images.resolveDisplay(c).mode,'provisional-preview');assert.equal(images.resolve(c),'');}
+const perform=(actor,action)=>{const result=port.dispatch(actor,action);assert.equal(result.ok,true,JSON.stringify({action,result}));};
+while(game.players[0].deck.length)perform('you',{type:'draw',count:1});
+let you=game.players[0];const base=you.hand.find(c=>c.name==='ドラメシヤ');assert(base);perform('you',{type:'bench_basic',cardId:base.id});
+const energy=game.players[0].hand.find(c=>c.kind==='energy'&&!c.isSpecial);assert(energy);
+perform('you',{type:'attach_energy',cardIndex:game.players[0].hand.findIndex(c=>c.id===energy.id),target:0});
+assert.equal(game.players[0].bench[0].energyCards[0].id,energy.id);
+// An invalid second attachment must roll back completely.
+const before=JSON.stringify(port.getSnapshot());const second=game.players[0].hand.findIndex(c=>c.kind==='energy'&&!c.isSpecial);
+assert(second>=0);assert.equal(port.dispatch('you',{type:'attach_energy',cardIndex:second,target:0}).ok,false);assert.equal(JSON.stringify(port.getSnapshot()),before);
+perform('you',{type:'end_turn'});perform('ai',{type:'end_turn'});
+const evolution=game.players[0].hand.find(c=>c.name==='ドロンチ');assert(evolution);perform('you',{type:'evolve',cardId:evolution.id,targetInstanceId:base.id});
+const evolved=game.players[0].bench[0];assert.equal(evolved.name,'ドロンチ');assert.equal(evolved.energyCards[0].id,energy.id);assert.equal(images.resolvePreview(evolved),images.resolvePreview(evolution));
+const discard=game.players[0].hand.find(c=>c.kind==='trainer');perform('you',{type:'discard_card',cardId:discard.id});assert(images.resolvePreview(game.players[0].discard[0]));
+const returned=game.players[0].hand[0];perform('you',{type:'return_hand_to_deck',cardId:returned.id});assert.equal(game.players[0].deck.at(-1).id,returned.id);
+assert.deepEqual(all(game).map(c=>c.id).sort(),ids);
+const saved=port.getResumeSnapshot();assert.equal(port.restoreSession(saved).ok,true);assert.equal(JSON.stringify(port.getSnapshot()),JSON.stringify(saved.game));
+const fake=structuredClone(facts);fake.records[0].officialCardId='1';assert.throws(()=>practice.create(manifest,fake,engine,{rng}),/FACTS/);
+const confirmed=structuredClone(manifest);confirmed.decks[0].cards[0].officialCardId='47847';assert.throws(()=>practice.create(confirmed,facts,engine,{rng}),/CONFIRMED_ENTRY/);
+const first=practice.create(manifest,facts,engine,{rng,firstDeck:0});assert.equal(first.fixedDeckPractice.sourceDeckIds[0],manifest.decks[0].id);assert.equal(all(first).length,120);
+assert.equal(port.dispatch('you',{type:'attack_turn',attackIndex:0}).ok,false,'no fabricated official attacks');
+console.log('PASS real bundled engine fixed120 practice: images, placement, energy, rejection rollback, evolution, movement, turns, identity conservation, save/restore; official effects unimplemented');

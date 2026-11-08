@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
+import rules from '../ui/official-image-validation.js';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const decks=read('data/fixed-test-decks.json').decks;
 const registry=read('data/official-image-registry.json').cards;
@@ -8,6 +9,7 @@ for(const deck of decks)assert.equal(deck.cards.reduce((s,c)=>s+c.count,0),60,de
 const names=new Set(decks.flatMap(d=>d.cards.map(c=>c.name)));
 const ids=new Set(), byName=new Map();
 for(const c of registry){
+  rules.validate(c);
   const id=String(c.officialCardId);
   assert.match(id,/^\d+$/,'Invalid official card ID');
   assert(!ids.has(id),'Duplicate official ID '+id);

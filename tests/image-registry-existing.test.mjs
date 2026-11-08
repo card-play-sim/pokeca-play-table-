@@ -16,6 +16,7 @@ try {
  assert.equal(report.added,expected);
  const registry=JSON.parse(fs.readFileSync(path.join(output,'official-image-registry.json')));
  assert.equal(registry.cards.length,expected);
+ for(const original of raw.cards){const saved=registry.cards.find(c=>c.officialCardId===original.officialCardId);assert.deepEqual(saved,original,'all existing print metadata and evidence must survive import');}
  result=run(); assert.equal(result.status,0,result.stderr);
  report=JSON.parse(fs.readFileSync(path.join(output,'import-report.json')));
  assert.equal(report.unchanged,expected);

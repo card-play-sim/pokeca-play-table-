@@ -13,8 +13,10 @@ const engine={createMatchFromVerifiedDecks:({you,ai})=>{
   return {ok:true};
 }};
 assert.throws(()=>api.createMatch(manifest,{},engine),/公式カード未接続/);
+const kinds={pokemon:'pokemon',energy:'energy',goods:'trainer',support:'trainer',supporter:'trainer',item:'trainer',tool:'tool',stadium:'stadium'};
+const categories=Object.fromEntries(manifest.decks.flatMap(d=>d.cards.map(c=>[c.name,c.category])));
 const records=Object.fromEntries(all.map((name,i)=>[name,{
-  name,verified:true,officialCardId:String(i+1),kind:'trainer',
+  name,verified:true,officialCardId:String(i+1),kind:kinds[categories[name]],hp:120,basic:true,attacks:[],
   effectStatus:'verified',engineReadable:true,sourceEvidence:'test-only'
 }]));
 assert.equal(api.createMatch(manifest,records,engine).ok,true);
