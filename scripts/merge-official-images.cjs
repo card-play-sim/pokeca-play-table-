@@ -27,8 +27,8 @@ for(const raw of registry.cards){
 const seen=new Map();let added=0;
 for(const raw of candidates.cards){
   const c=validate(raw,'reviewed candidates');
-  if(typeof raw.officialCardPageUrl!=='string'||!/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\?card_id=\d+/.test(raw.officialCardPageUrl))throw Error('Missing official card page evidence '+c.officialCardId);
-  const pageId=new URL(raw.officialCardPageUrl).searchParams.get('card_id');
+  if(typeof raw.officialCardPageUrl!=='string'||!/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php(?:\/card\/\d+|\?card_id=\d+)$/.test(raw.officialCardPageUrl))throw Error('Missing official card page evidence '+c.officialCardId);
+  const pageUrl=new URL(raw.officialCardPageUrl);const pageId=pageUrl.searchParams.get('card_id')||pageUrl.pathname.match(/\/card\/(\d+)$/)?.[1];
   if(pageId!==c.officialCardId)throw Error('Card page ID mismatch '+c.officialCardId);
   const prev=seen.get(c.officialCardId)||existing.get(c.officialCardId);
   if(prev&&(prev.name!==c.name||prev.imageSourceUrl!==c.imageSourceUrl))throw Error('Image identity conflict '+c.officialCardId);
