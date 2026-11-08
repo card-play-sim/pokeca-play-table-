@@ -5,6 +5,10 @@ on:
     paths:
       - 'data/fixed-test-decks.json'
       - 'ui/fixed-120-match-adapter.js'
+      - 'ui/mobile.js'
+      - 'ui/engine.bundle.js'
+      - 'index.html'
+      - 'sw.js'
       - 'tests/fixed-120-readiness.test.js'
       - '.github/workflows/fixed-120-readiness.yml'
   workflow_dispatch:
@@ -17,5 +21,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Check deployed JavaScript syntax
+        run: |
+          node --check ui/mobile.js
+          node --check ui/engine.bundle.js
+          node --check ui/fixed-120-match-adapter.js
+          node --check sw.js
       - name: Validate fixed decks and safety gate
         run: node tests/fixed-120-readiness.test.js
