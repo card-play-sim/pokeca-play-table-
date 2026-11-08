@@ -49,8 +49,8 @@
     const map=Object.create(null);
     for(const c of data.cards){
       const id=String(c?.officialCardId??'');
-      if(!/^\\d+$/.test(id)||typeof c.name!=='string'||typeof c.imageSourceUrl!=='string'||
-         !/^https:\\/\\/www\\.pokemon-card\\.com\\/assets\\/images\\/card_images\\//.test(c.imageSourceUrl))throw Error('IMAGE_REGISTRY_INVALID_CARD_'+id);
+      if(!/^\d+$/.test(id)||typeof c.name!=='string'||typeof c.imageSourceUrl!=='string'||
+         !c.imageSourceUrl.startsWith('https://www.pokemon-card.com/assets/images/card_images/'))throw Error('IMAGE_REGISTRY_INVALID_CARD_'+id);
       if(map[id]&&map[id].sourceUrl!==c.imageSourceUrl)throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
       map[id]={name:c.name,sourceUrl:c.imageSourceUrl};
     }
