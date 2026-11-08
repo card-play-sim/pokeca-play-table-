@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+'use strict';
+// Offline, evidence-only batch importer. Does not fetch/scrape, guess URLs, or edit the formal catalog.
+// Usage: node scripts/import-verified-image-evidence.cjs evidence.json
+// Evidence: {"cards":[{"officialCardId":"...","name":"...","imageSourceUrl":"...","officialPageUrl":"...","verified":true}]}
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const registryPath=path.join(root,'data/official-image-registry.json');
+const deckPath=path.join(root,'data/fixed-test-decks.json');
+const coveragePath=path.join(root,'data/fixed-120-image-coverage.json');
+function fail(msg){throw Error(msg)}
+function importEvidence(evidence,registry,decks){
+  if(!Array.isArray(evidence.cards)||!Array.isArray(registry.cards)||!Array.isArray(decks.decks))fail('SCHEMA');
+  const official=/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/[A-Za-z0-9_./%-]+\.(?:jpg|jpeg|png|webp)$/i;
+  const existing=new Map(),batch=new Map();
+  for(const c of registry.cards){if(existing.has(String(c.officialCardId)))fail('EXISTING_DUPLICATE_'+c.officialCardId);existing.set(String(c.officialCardId),c)}
+  const deckNames=new Set(decks.decks.flatMap(d=>d.cards.map(c=>c.name)));
+  for(const c of evidence.cards){
+    const id=String(c.officialCardId??'');
+    if(!/^\d+$/.test(id)||!deckNames.has(c.name)||c.verified!==true||
+      !official.test(c.imageSourceUrl)||typeof c.officialPageUrl!=='string'||
+      !/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d+(?:\/|$)/.test(c.officialPageUrl)||
+      !new RegExp('/card/'+id+'(?:/|$)').test(c.officialPageUrl))fail('UNVERIFIED_'+id);
+    const value={officialCardId:id,name:c.name,imageSourceUrl:c.imageSourceUrl};
+    const old=batch.get(id)||existing.get(id);
+    if(old&&(old.name!==value.name||old.imageSourceUrl!==value.imageSourceUrl))fail('CONFLICT_'+id);
+    batch.set(id,value);
+  }
+  const cards=[...existing.values()];
+  let added=0;
+  for(const [id,value] of batch)if(!existing.has(id)){cards.push(value);added++}
+  cards.sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId));
+  const byName=new Map();
+  for(const c of cards){const a=byName.get(c.name)||[];a.push(c.officialCardId);byName.set(c.name,a)}
+  const counts=new Map();
+  for(const d of decks.decks)for(const c of d.cards)counts.set(c.name,(counts.get(c.name)||0)+c.count);
+  const rows=[...counts].map(([name,count])=>{const ids=byName.get(name)||[];return {name,count,previewStatus:ids.length===0?'MISSING':ids.length===1?'UNIQUE_PREVIEW':'MULTIPLE_PRINTS',candidateOfficialCardIds:ids}});
+  const coverage={schemaVersion:1,purpose:'image coverage inventory only; candidate IDs are not approved deck identities',source:['data/fixed-test-decks.json','data/official-image-registry.json'],totalPhysicalCards:[...counts.values()].reduce((a,b)=>a+b,0),uniqueCardNames:counts.size,uniquePreviewNames:rows.filter(x=>x.previewStatus==='UNIQUE_PREVIEW').length,ambiguousNames:rows.filter(x=>x.previewStatus==='MULTIPLE_PRINTS').length,missingNames:rows.filter(x=>x.previewStatus==='MISSING').length,officialPrintsApproved:0,cards:rows};
+  return {registry:{...registry,cards},coverage,added};
+}
+function main(){
+  if(process.argv.length!==3)fail('USAGE: node scripts/import-verified-image-evidence.cjs evidence.json');
+  const evidence=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+  const registry=JSON.parse(fs.readFileSync(registryPath,'utf8'));
+  const decks=JSON.parse(fs.readFileSync(deckPath,'utf8'));
+  const result=importEvidence(evidence,registry,decks);
+  // Full-batch validation before either output is changed. No partial append on collision.
+  const updates=[[registryPath,result.registry],[coveragePath,result.coverage]];
+  const tmp=[];
+  try{
+    for(const [dest,data] of updates){const temp=dest+'.new';fs.writeFileSync(temp,JSON.stringify(data,null,2)+'\n',{flag:'w'});JSON.parse(fs.readFileSync(temp,'utf8'));tmp.push([temp,dest])}
+    for(const [temp,dest] of tmp)fs.renameSync(temp,dest);
+  }finally{for(const [temp] of tmp)if(fs.existsSync(temp))fs.unlinkSync(temp)}
+  process.stdout.write(JSON.stringify({added:result.added,total:result.registry.cards.length,coverage:result.coverage.uniquePreviewNames,missing:result.coverage.missingNames})+'\n');
+}
+if(require.main===module)main();
+module.exports={importEvidence};
