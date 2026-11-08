@@ -38,7 +38,7 @@
     if(typeof engine?.createMatchFromVerifiedDecks!=='function')throw Error('対戦エンジン未接続');
     const you=expand(manifest.decks[0],records,'you',options);
     const ai=expand(manifest.decks[1],records,'ai',options);
-    return engine.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,autoBenchBasics:true,...options});
+    return engine.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,autoBenchBasics:true,...(options.rng?{rng:options.rng}:{}),...(options.firstPlayer?{firstPlayer:options.firstPlayer}:{})});
   }
   root.PokecaFixed120={expand,createMatch};
 })(typeof window==='undefined'?globalThis:window);
