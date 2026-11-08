@@ -7,7 +7,7 @@ function audit(source, data){
 const decks=source.decks,registry=data.cards;
 const map=new Map(registry.map(c=>[String(c.officialCardId),c]));
 const names=new Map();
-for(const deck of decks)for(const card of deck.cards){const x=names.get(card.name)||{name:card.name,count:0,ids:new Set(),unconfirmed:0};x.count+=card.count;if(card.officialCardId==null)x.unconfirmed+=card.count;else x.ids.add(String(card.officialCardId));names.set(card.name,x);}
+for(const deck of decks)for(const card of deck.cards){const x=names.get(card.name)||{name:card.name,count:0,ids:new Set(),unconfirmed:0};x.count+=card.count;if(card.officialCardId==null||card.identityStatus!=='CONFIRMED')x.unconfirmed+=card.count;else x.ids.add(String(card.officialCardId));names.set(card.name,x);}
 const results=[...names.values()].map(x=>{const ids=[...x.ids],matched=ids.filter(id=>map.get(id)?.name===x.name);return {name:x.name,count:x.count,officialPrintIds:ids,matchedOfficialPrintIds:matched,unconfirmedCount:x.unconfirmed,status:x.unconfirmed?'IDENTITY_UNCONFIRMED':matched.length===ids.length?'REGISTRY_READY':'IMAGE_REFERENCE_MISSING'};});
 const total=decks.reduce((n,d)=>n+d.cards.reduce((m,c)=>m+c.count,0),0);
 const ready=results.filter(x=>x.status==='REGISTRY_READY').length;

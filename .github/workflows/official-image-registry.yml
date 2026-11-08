@@ -26,6 +26,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Collect exact official ID-name-print references (not deck adoption)
+        id: collect
+        if: always()
+        continue-on-error: true
+        run: node scripts/automate-official-images.cjs
       - name: Offline regression tests
         id: offline
         run: |
@@ -33,11 +38,6 @@ jobs:
           python -m unittest discover -s tests -p 'test_mobile_header_layout.py' -v
           python -m unittest discover -s tests -p 'test_card_reflection_wiring.py' -v
           node scripts/verify-fixed-deck-image-registry.mjs
-      - name: Collect exact official ID-name-print references (not deck adoption)
-        id: collect
-        if: always()
-        continue-on-error: true
-        run: node scripts/automate-official-images.cjs
       - name: Install browser test runtime
         if: always()
         run: |

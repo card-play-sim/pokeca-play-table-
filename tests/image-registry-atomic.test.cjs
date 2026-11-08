@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const ctx={window:{},fetch:async()=>({ok:true,json:async()=>({cards:[]})})};
+vm.runInNewContext(fs.readFileSync('ui/card-image-resolver.js','utf8'),ctx);
+const r=ctx.window.PokecaImageResolver,url='https://www.pokemon-card.com/assets/images/card_images/large/TEST/000001_P_TEST.jpg';
+r.register({'1':{name:'TEST',sourceUrl:url}});
+r.register({'1':{name:'TEST',sourceUrl:url,set:'TEST',cardNumber:'001/100'}});
+assert.equal(r.resolve({officialCardId:'1',name:'TEST',set:'TEST',cardNumber:'001/100'}),url);
+assert.equal(r.resolve({officialCardId:'1',name:'TEST',set:'OTHER'}),'');
+assert.equal(r.resolve({officialCardId:'1',name:'TEST',cardNumber:'002/100'}),'');
+assert.throws(()=>r.register({'2':{name:'NEW',sourceUrl:url},'1':{name:'COLLISION',sourceUrl:url}}),/CONFLICT/);
+assert.equal(r.count(),1,'late collision does not register earlier rows');
+assert.throws(()=>r.register({'2':{name:'TEST',sourceUrl:'https://www.pokemon-card.com/assets/images/card_images/../../x.jpg'}}),/INVALID_URL/);
+ctx.fetch=async()=>({ok:true,json:async()=>({cards:[{officialCardId:'1',name:'TEST',imageSourceUrl:url},{officialCardId:'1',name:'TEST',imageSourceUrl:url}]})});
+r.loadRegistry('/').then(()=>{throw Error('duplicate accepted');},e=>{assert.match(e.message,/DUPLICATE/);assert.equal(r.count(),1);console.log('PASS registry atomicity, duplicate rejection, exact printing and metadata enrichment');}).catch(e=>{console.error(e);process.exitCode=1;});

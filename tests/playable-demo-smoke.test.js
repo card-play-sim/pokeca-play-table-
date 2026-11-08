@@ -2,7 +2,9 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const sandbox={performance:{now:()=>Number(process.hrtime.bigint())/1e6},setTimeout:(callback)=>setTimeout(callback,0)};sandbox.window=sandbox;
+let effectSeed=20261108;
+const seededMath=Object.create(Math);seededMath.random=()=>{effectSeed=(Math.imul(effectSeed,1664525)+1013904223)>>>0;return effectSeed/4294967296;};
+const sandbox={Math:seededMath,performance:{now:()=>Number(process.hrtime.bigint())/1e6},setTimeout:(callback)=>setTimeout(callback,0)};sandbox.window=sandbox;
 vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),sandbox);
 const engine=sandbox.Pokeca;
 let seed=123;
@@ -56,7 +58,7 @@ assert.ok(aiActions.actions.length>0);
   // Run several reproducible games, covering prize selection and winner resolution.
   for(let trial=1;trial<=8;trial++){
     console.log('AI regression seed '+trial+' of 8');
-    let trialSeed=trial;
+    let trialSeed=trial;effectSeed=20261108+trial;
     const trialRng=()=>{trialSeed=(Math.imul(trialSeed,1664525)+1013904223)>>>0;return trialSeed/4294967296;};
     let trialGame=engine.createDemoMatch({rng:trialRng}).game;
     const trialPort=engine.createUIPort({getGame:()=>trialGame,setGame:next=>{trialGame=next;}});

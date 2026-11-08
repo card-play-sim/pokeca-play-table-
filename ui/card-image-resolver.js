@@ -15,7 +15,8 @@
       if(!validURL(record.sourceUrl))throw Error('IMAGE_REGISTRY_INVALID_URL_'+id);
       if(entries.has(id)){
         const existing=entries.get(id);
-        if(existing.name!==record.name||existing.sourceUrl!==record.sourceUrl)throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
+        if(existing.name!==record.name||existing.sourceUrl!==record.sourceUrl||(existing.cardNumber&&record.cardNumber&&existing.cardNumber!==record.cardNumber)||(existing.set&&record.set&&existing.set!==record.set))throw Error('IMAGE_REGISTRY_CONFLICT_'+id);
+        if((record.cardNumber&&!existing.cardNumber)||(record.set&&!existing.set))pending.push([id,{...existing,...record}]);
       }else pending.push([id,{name:record.name,sourceUrl:record.sourceUrl,cardNumber:record.cardNumber,set:record.set}]);
     }
     for(const [id,record] of pending)entries.set(id,record);
@@ -58,7 +59,7 @@
       const id=String(c?.officialCardId??'');
       if(!/^\d+$/.test(id)||typeof c.name!=='string'||typeof c.imageSourceUrl!=='string'||
          !validURL(c.imageSourceUrl))throw Error('IMAGE_REGISTRY_INVALID_CARD_'+id);
-      if(map[id]&&(map[id].sourceUrl!==c.imageSourceUrl||map[id].name!==c.name))throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
+      if(map[id])throw Error('IMAGE_REGISTRY_DUPLICATE_'+id);
       map[id]={name:c.name,sourceUrl:c.imageSourceUrl,cardNumber:c.cardNumber,set:c.set};
     }
     return {received:data.cards.length,registered:register(map),total:entries.size};
