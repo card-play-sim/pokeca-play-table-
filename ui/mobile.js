@@ -117,8 +117,20 @@
     const report=window.PokecaImageFailures||(window.PokecaImageFailures=[]);
     const entry={name:img.alt||'',officialCardId:id,sourceUrl:img.currentSrc||img.src||'',reason:'IMAGE_LOAD_ERROR'};
     if(!report.some(item=>item.sourceUrl===entry.sourceUrl&&item.officialCardId===entry.officialCardId))report.push(entry);
+    const fallback=img.nextElementSibling;
     img.hidden=true;
-    img.nextElementSibling.hidden=false;
+    if(fallback.tagName==='IMG'){
+      // If the bundled art also fails, retain an operable, labelled card.
+      let textFallback=fallback.nextElementSibling;
+      if(!textFallback||!textFallback.classList.contains('art-load-fallback')){
+        textFallback=document.createElement('span');
+        textFallback.className='art-load-fallback';
+        textFallback.textContent=img.alt||'カード画像なし';
+        fallback.insertAdjacentElement('afterend',textFallback);
+      }
+      textFallback.hidden=true;
+    }
+    fallback.hidden=false;
   },true);
     function statesFor(snapshot,id){return port.getStatusView().filter(s=>s.targetInstanceId===id);}
   function badges(card,snapshot,owner){let html='';
