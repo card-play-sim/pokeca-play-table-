@@ -6,7 +6,7 @@ async def main():
         browser = await p.chromium.launch()
         page = await browser.new_page(viewport={"width": 393, "height": 852}, device_scale_factor=2)
         errors = []
-        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("pageerror", lambda error: errors.append(str(error) + " STACK: " + (error.stack or "")))
         await page.goto("http://127.0.0.1:8765/", wait_until="domcontentloaded")
         await page.locator("#menu-open").click()
         await page.get_by_text("固定2デッキ（各60枚）を確認").click()
