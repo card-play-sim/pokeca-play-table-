@@ -794,7 +794,7 @@
               list.append(line);
             }
             detail.append(list);
-            $('sheet-content').insertBefore(detail,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
+            $('sheet-content').append(detail);
           }
         }
       }catch(error){console.warn('Candidate reference unavailable',error);}
@@ -813,7 +813,7 @@
       });
       const status=document.createElement('p');
       status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
-      $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
+      $('sheet-content').append(status);
       const diagnostics=button('画像診断を一括保存（JSON）',()=>{
         const cards=data.decks.flatMap(deck=>deck.cards.map(card=>({...card,deck:deck.name,deckId:deck.id})));
         const unique=[...new Set(cards.map(card=>card.name))];

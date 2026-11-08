@@ -223,3 +223,6 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .card:has(>img[data-image-mode="provisional-preview"]):after{content:'暫定';position:absolute;top:1px;left:1px;background:#fff3c9;color:#493e18;font-size:8px;line-height:12px;padding:0 2px;pointer-events:none}
 /* Keep zone controls inside their grid row on narrow Android viewports. */
 .active-row{height:100%}.zone-rail{flex-wrap:nowrap}.zone-rail .zone{min-width:0;flex:1;padding:3px 1px}
+
+/* Keep async diagnostic updates from moving a card under the reader’s finger. */
+#deck-image-check{display:block;min-height:8em}
