@@ -10,6 +10,15 @@ async def main():
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error) + " STACK: " + (error.stack or "")))
         await page.goto("http://127.0.0.1:8765/", wait_until="domcontentloaded")
+        await page.locator("#self-hand").wait_for()
+        await page.wait_for_function("() => document.querySelectorAll('#self-hand .card, #self-active .card, #self-bench .card').length > 0",timeout=15000)
+        board = await page.evaluate("""() => {
+          const cards=[...document.querySelectorAll('#self-hand .card, #self-active .card, #self-bench .card')];
+          return {total:cards.length,withImage:cards.filter(c=>!!c.querySelector('img')).length,
+            withoutImage:cards.filter(c=>!c.querySelector('img')).map(c=>c.getAttribute('aria-label'))};
+        }""")
+        print("Gameplay board image nodes: "+json.dumps(board,ensure_ascii=False))
+        assert board["withImage"] == board["total"], "Some gameplay cards have no image element"
         await page.locator("#menu-open").click()
         await page.get_by_text("固定2デッキ（各60枚）を確認").click()
         await page.locator("#deck-image-check").wait_for()
