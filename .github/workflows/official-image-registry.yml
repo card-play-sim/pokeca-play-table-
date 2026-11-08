@@ -2,42 +2,93 @@ name: Official image registry validation
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'data/official-image-candidates-reviewed.json'
-      - 'scripts/merge-official-images.cjs'
-      - 'scripts/check-*.mjs'
-      - 'scripts/check-fixed-120-images.cjs'
-      - '.github/workflows/official-image-registry.yml'
+    branches: [feature/official-image-registry-automation]
+    paths: ['scripts/**', 'tools/parse-official-image.py', 'ui/**', 'tests/**', 'data/official-image-candidates-reviewed.json', 'data/fixed-deck-official-image-candidates.json', '.github/workflows/official-image-registry.yml']
+concurrency:
+  group: official-image-registry-pr1
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: feature/official-image-registry-automation
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate and merge verified references (dry run)
-        run: node scripts/merge-official-images.cjs
-      - name: Check fixed 120 official image coverage (strict, expected to fail until verified)
-        env:
-          REPORT_PATH: data/fixed-120-image-gate-report.json
-        run: node scripts/check-fixed-120-images.cjs
-      - name: Verify exact official detail page image evidence
-        run: node scripts/check-official-page-evidence.mjs
-      - name: Verify remote official image bytes
-        run: node scripts/check-official-image-http.mjs
-      - name: Show proposed registry changes
-        run: git diff -- data/official-image-registry.json
-      - name: Upload proposed registry and audit
-        if: always()
-        uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: proposed-official-image-registry
+          python-version: '3.12'
+      - name: Offline regression tests
+        id: offline
+        run: |
+          node scripts/run-offline-tests.cjs
+          python -m unittest discover -s tests -p 'test_mobile_header_layout.py' -v
+          python -m unittest discover -s tests -p 'test_card_reflection_wiring.py' -v
+          node scripts/verify-fixed-deck-image-registry.mjs
+      - name: Collect exact official ID-name-print references (not deck adoption)
+        id: collect
+        continue-on-error: true
+        run: node scripts/automate-official-images.cjs
+      - name: Install browser test runtime
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Android-sized reload and error regression
+        id: functional
+        run: python tests/test_image_automation_browser.py
+      - name: Measure actual browser image loading for fixed 120
+        id: live
+        continue-on-error: true
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-server.log 2>&1 &
+          python tests/test_fixed_deck_browser_images.py
+      - name: Persist reference checkpoints and measured audit to existing PR branch
+        if: always()
+        env:
+          OFFLINE: ${{ steps.offline.outcome }}
+          BROWSER: ${{ steps.functional.outcome }}
+        run: |
+          test "$(git branch --show-current)" = feature/official-image-registry-automation
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          summary=Path('data/image-automation/status.md');summary.parent.mkdir(parents=True,exist_ok=True)
+          p=Path('data/image-automation/latest.json')
+          report=json.loads(p.read_text()) if p.exists() else {'productionPass':False,'error':'COLLECTOR_NOT_RUN'}
+          live=Path('artifacts/official-fixed-120-result.json')
+          measured=json.loads(live.read_text()) if live.exists() else {'productionPass':False,'status':'NOT_MEASURED'}
+          summary.write_text('Official images: '+('PASS' if measured.get('productionPass') else 'BLOCKED')+'\n\nRun: https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID']+'\n\nCollector:\n```json\n'+json.dumps(report,ensure_ascii=False,indent=2)+'\n```\n\nBrowser measurement:\n```json\n'+json.dumps(measured,ensure_ascii=False,indent=2)+'\n```\n\nTests: '+os.environ['OFFLINE']+' / '+os.environ['BROWSER']+'; Physical Android: NOT_VERIFIED\n')
+          if live.exists():Path('data/image-automation/browser-result.json').write_text(live.read_text())
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/image-automation
+          if test "$OFFLINE" = success && test "$BROWSER" = success; then git add data/official-image-registry.json; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: persist official image references and measured evidence'
+            git push origin HEAD:feature/official-image-registry-automation
+          fi
+      - name: Update PR 1 evidence
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 1 --repo "$GITHUB_REPOSITORY" --body-file data/image-automation/status.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-images-inspection-${{ github.run_id }}
           path: |
-            data/official-image-registry.json
-            data/official-image-registry-audit.json
-            data/fixed-120-image-gate-report.json
-            data/official-image-http-check.json
-            data/official-image-page-evidence.json
+            artifacts/
+            data/image-automation/
+          retention-days: 30
+      - name: Enforce measured production gate
+        if: always()
+        run: python -c "import json; d=json.load(open('data/image-automation/browser-result.json')); raise SystemExit(0 if d.get('productionPass') else 2)"

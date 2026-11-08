@@ -72,11 +72,11 @@
     const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
     // A verified official print takes precedence over unverified runtime URLs.
     if(verifiedUrl)return verifiedUrl;
-    if(explicit)return /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//i.test(explicit)?explicit:'';
+    if(explicit)return ''; // Unverified state URLs cannot override the ID registry.
     // Never substitute a different official print for an identified card.
     // Unidentified practice cards may use name-based artwork only as a preview.
     if(cardId)return '';
-    return window.PokecaArt?.[currentPrint.name] || window.PokecaArt?.[card.name] || '';
+    return window.PokecaArt?.[currentPrint.name] || '';
   }
   function fallbackArt(card){return `<span class="card-fallback"><span class="symbol">${esc(symbols[card.energyType] || (card.kind==='tool'?'⌘':card.cardType==='SUPPORTER'?'♧':'◈'))}</span><strong>${esc(card.name || 'カード')}</strong><small>${card.kind==='energy'?'エネルギー':card.kind==='tool'?'どうぐ':card.basic===false?'進化':card.kind==='pokemon'?'HP '+card.hp:'カード'}</small></span>`;}
   // Original energy-card illustration for the practice deck (not an official print).
@@ -675,7 +675,7 @@
       const noImageNames=uniqueNames.filter(name=>!imageCandidates.includes(name));
       const imageStatus='<p>画像候補 '+imageCandidates.length+'/45種類・未登録 '+noImageNames.length+'種類 / 登録済み公式印刷版 '+imageRegistryCount+'件。画像候補は実際の読み込み成功・利用許諾・印刷版確定を意味しません。</p>';
       const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=fixedDeckPreview(c.name)||fixedDeckPlaceholder(c.name);const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
-      openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+      openSheet('固定2デッキ・構成確認',`<p>印刷版ID未確定の画像は候補プレビュー／仮画像です。公式120枚表示合格とは扱いません。</p><p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
       // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
       try{
@@ -746,7 +746,7 @@
       // Lazy loading previously left the diagnostics permanently incomplete.
       const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
       let loaded=0,failed=0;
-      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
+      const update=()=>{const node=$('deck-image-check');if(node)node.textContent=`候補／仮画像の表示成功 ${loaded} / 画像読込失敗 ${failed} / 画像未登録 ${[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))].filter(name=>!(fixedDeckPreview(name)||window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name])).length}種類 / 検査済 ${loaded+failed}/${imgs.length}`;};
       for(const img of imgs){
         let settled=false;const onLoad=()=>{if(settled)return;settled=true;loaded++;update();},onError=()=>{if(settled)return;if(img.dataset.fallbackTried==='1'&&img.dataset.bundled&&img.src===img.dataset.bundled&&!img.complete)return;settled=true;failed++;update();};
         if(img.complete){if(img.naturalWidth>0)onLoad();else onError();}

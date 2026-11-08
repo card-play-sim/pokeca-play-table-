@@ -8,6 +8,7 @@ const mobile=fs.readFileSync(path.join(root,'ui/mobile.js'),'utf8');
 const registry=fs.readFileSync(path.join(root,'ui/verified-card-art.js'),'utf8');
 const context={window:{PokecaArt:{'架空たね':'data:image/png;base64,example'}}};
 vm.runInNewContext(registry,context);
+vm.runInNewContext(fs.readFileSync(path.join(root,'ui/card-image-resolver.js'),'utf8'),context);
 const start=mobile.indexOf('function imageURL(card){');
 const end=mobile.indexOf('  function fallbackArt(',start);
 assert(start>=0 && end>start,'imageURL function exists');
@@ -23,8 +24,8 @@ assert.equal(resolve({name:'架空たね',imageUrl:'http://insecure.invalid/x.jp
 assert(mobile.includes("img.nextElementSibling.hidden=false"),'image failure fallback handler remains');
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
-assert(index.includes('ui/verified-card-art.js?build=189'));
-assert(sw.includes('ui/verified-card-art.js?build=189'));
+const version=index.match(/ui\/verified-card-art\.js\?build=(\d+)/)?.[1];
+assert(version);assert(sw.includes('ui/verified-card-art.js?build='+version));
 assert(mobile.includes("画像診断を一括保存（JSON）"),'fixed deck bulk diagnostics export exists');
 assert(mobile.includes("pokeca-image-diagnostics.json"),'fixed deck bulk diagnostics download filename exists');
 assert(mobile.includes("window.PokecaImageFailures"),'real image load failures are recorded');

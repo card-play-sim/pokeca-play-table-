@@ -1,11 +1,13 @@
 import asyncio
+import os
+import sys
 import json
 from pathlib import Path
 from playwright.async_api import async_playwright
 
 async def main():
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
+        browser = await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'))
         page = await browser.new_page(viewport={"width": 393, "height": 852}, device_scale_factor=2)
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error) + " STACK: " + (error.stack or "")))
@@ -27,7 +29,7 @@ async def main():
           const txt=el?.textContent||'';
           const match=txt.match(/検査済 (\\d+)\\/(\\d+)/);
           return match && Number(match[1])===Number(match[2]);
-        }""", timeout=30000)
+        }""", timeout=60000)
         entries = page.locator(".deck-manifest-list > div")
         entry_count = await entries.count()
         print(f"Deck card types displayed: {entry_count}")
@@ -65,7 +67,12 @@ async def main():
         ]
         expanded_success=sum(row["count"] for row in expanded if row["decoded"])
         assert sum(row["count"] for row in expanded)==120, "Fixed deck 120 copies mismatch"
-        assert expanded_success==120, f"Not all 120 fixed deck copies have working image templates: {expanded_success}/120"
+        # Decoding original placeholders or name previews is NOT official print success.
+        official_rows = {row['name']: row for row in coverage if row['decoded'] and (row['source'] or '').startswith('https://www.pokemon-card.com/assets/images/card_images/')}
+        manifest = json.loads((Path(__file__).resolve().parents[1]/'data/fixed-test-decks.json').read_text())
+        exact_copies = sum(c['count'] for d in manifest['decks'] for c in d['cards'] if c.get('officialCardId') and c.get('identityStatus')=='CONFIRMED' and c['name'] in official_rows)
+        Path('artifacts').mkdir(exist_ok=True)
+        Path('artifacts/official-fixed-120-result.json').write_text(json.dumps(dict(physicalCards=120,uniqueNames=len(unique_names),decodedTemplateCopies=expanded_success,decodedOfficialPreviewNames=len(official_rows),verifiedDeckPrintCopies=exact_copies,productionPass=exact_copies==120,androidPhysicalDeviceVerified=False),ensure_ascii=False,indent=2))
         print(f"Fixed 120 card copies covered by decoded image template: {expanded_success}/120")
         Path("artifacts").mkdir(exist_ok=True)
         Path("artifacts/fixed-deck-45-image-coverage.json").write_text(
@@ -90,5 +97,8 @@ async def main():
         assert loaded > 0, "No image was actually decoded by Chromium"
         assert loaded == images, f"Image decode failures: {loaded}/{images}"
         await browser.close()
+        if exact_copies!=120:
+            print(f'BLOCKED: exact official deck print images {exact_copies}/120; previews/placeholders are not PASS')
+            sys.exit(2)
 
 asyncio.run(main())

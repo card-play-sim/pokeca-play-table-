@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const sandbox={performance:{now:()=>Number(process.hrtime.bigint())/1e6},setTimeout};sandbox.window=sandbox;
+const sandbox={performance:{now:()=>Number(process.hrtime.bigint())/1e6},setTimeout:(callback)=>setTimeout(callback,0)};sandbox.window=sandbox;
 vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),sandbox);
 const engine=sandbox.Pokeca;
 let seed=123;
