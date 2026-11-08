@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "EVIDENCE_ONLY_NOT_ADOPTED",
+  "purpose": "Verified official detail-page candidates for missing fixed-deck image prints. Image URL is not yet verified; do not auto-register.",
+  "candidates": [
+    {
+      "name": "ファイアローex",
+      "officialCardId": "50400",
+      "cardNumber": "062/076",
+      "set": "M6",
+      "officialDetailsUrl": "https://www.pokemon-card.com/card-search/details.php/card/50400",
+      "imageSourceUrl": null,
+      "verification": "OFFICIAL_DETAIL_PAGE_CONFIRMED_IMAGE_URL_PENDING"
+    },
+    {
+      "name": "ファイアローex",
+      "officialCardId": "50537",
+      "cardNumber": "096/076",
+      "set": "M6",
+      "officialDetailsUrl": "https://www.pokemon-card.com/card-search/details.php/card/50537",
+      "imageSourceUrl": null,
+      "verification": "OFFICIAL_DETAIL_PAGE_CONFIRMED_IMAGE_URL_PENDING"
+    }
+  ],
+  "rules": [
+    "Candidate is not an adopted deck print identity.",
+    "Never guess image URLs from card IDs or filenames.",
+    "Do not mutate formal 1945-card DB.",
+    "Register image only after exact source URL is independently verified."
+  ]
+}
