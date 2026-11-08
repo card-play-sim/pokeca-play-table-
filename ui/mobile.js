@@ -647,6 +647,17 @@
     const path=fixedDeckImageOnlyPreview[name];
     return path?'https://www.pokemon-card.com/assets/images/card_images/large/'+path:'';
   }
+  // Original, clearly marked placeholder art for fixed-deck cards without a usable image.
+  // No official image, text, print ID, HP, or effects are inferred.
+  function fixedDeckPlaceholder(name){
+    const safe=String(name||'カード');
+    const kind=/エネルギー/.test(safe)?'エネルギー':/ex$/.test(safe)?'ポケモン（仮）':'カード（仮）';
+    const escaped=safe.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+    const lines=Array.from(escaped.matchAll(/.{1,9}/gu),m=>m[0]).slice(0,4);
+    const labels=lines.map((line,i)=>'<text x="110" y="'+(140+i*26)+'" font-size="18" font-weight="bold" text-anchor="middle" fill="#152a39">'+line+'</text>').join('');
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="220" height="308" viewBox="0 0 220 308"><rect width="220" height="308" rx="12" fill="#edf1f5"/><rect x="8" y="8" width="204" height="292" rx="9" fill="#fff" stroke="#60798c" stroke-width="3"/><rect x="14" y="14" width="192" height="38" rx="5" fill="#27465c"/><text x="110" y="39" font-size="15" font-weight="bold" text-anchor="middle" fill="#fff">オリジナル仮カード</text><rect x="23" y="69" width="174" height="157" rx="8" fill="#dce7ee"/>'+labels+'<text x="110" y="256" font-size="14" text-anchor="middle" fill="#27465c">'+kind+'</text><text x="110" y="283" font-size="12" text-anchor="middle" fill="#536b7c">公式画像ではありません</text></svg>';
+    return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  }
   async function fixedDeckMenu(){
     try{
       const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
@@ -659,7 +670,7 @@
       const imageCandidates=uniqueNames.filter(name=>window.PokecaImageResolver?.resolvePreview({name})||window.PokecaArt?.[name]||fixedDeckPreview(name));
       const noImageNames=uniqueNames.filter(name=>!imageCandidates.includes(name));
       const imageStatus='<p>画像候補 '+imageCandidates.length+'/45種類・未登録 '+noImageNames.length+'種類 / 登録済み公式印刷版 '+imageRegistryCount+'件。画像候補は実際の読み込み成功・利用許諾・印刷版確定を意味しません。</p>';
-      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||fixedDeckPreview(c.name)||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="${esc(window.PokecaArt?.[c.name]||'')}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="if(!this.dataset.fallbackTried && this.dataset.bundled){this.dataset.fallbackTried=1;this.src=this.dataset.bundled;return;}this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
+      const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||fixedDeckPreview(c.name)||fixedDeckPlaceholder(c.name);const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" data-bundled="${esc(window.PokecaArt?.[c.name]||'')}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="if(!this.dataset.fallbackTried && this.dataset.bundled){this.dataset.fallbackTried=1;this.src=this.dataset.bundled;return;}this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
       openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p>${imageStatus}<p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
       const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
       // Read-only formal-catalog candidates: never used as adopted print IDs or engine effects.
