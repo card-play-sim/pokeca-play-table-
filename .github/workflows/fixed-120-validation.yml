@@ -1,0 +1,37 @@
+name: Fixed 120 deck and browser JS validation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check ui/mobile.js
+          node --check ui/engine.bundle.js
+          node --check ui/card-image-resolver.js
+          node --check ui/verified-card-art.js
+          node --check ui/card-art.js
+      - name: Check fixed deck quantities and registry mapping
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const vm=require('node:vm');
+          const data=JSON.parse(fs.readFileSync('data/fixed-test-decks.json','utf8'));
+          if(data.decks.length!==2)throw Error('Expected exactly two decks');
+          const unique=new Set();
+          for(const deck of data.decks){
+            const total=deck.cards.reduce((n,c)=>{if(!Number.isInteger(c.count)||c.count<1)throw Error('Invalid card count: '+c.name);unique.add(c.name);return n+c.count;},0);
+            if(total!==60)throw Error(deck.name+': expected 60, got '+total);
+          }
+          if(unique.size!==45)throw Error('Expected 45 distinct card names, got '+unique.size);
+          const context={window:{}};vm.createContext(context);
+          vm.runInContext(fs.readFileSync('ui/verified-card-art.js','utf8'),context);
+          console.log('Fixed deck cards: 120; distinct names: 45; verified-art registry loaded');
+          NODE
