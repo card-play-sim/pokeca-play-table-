@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 1,
+  "sourceRefs": {
+    "formalInventory": {
+      "repository": "card-play-sim/pokeca-card-simulator",
+      "branch": "data/formal-1945-readonly",
+      "commit": "ea0ed176514ffffa1a3457ea60a21293e52f7af1",
+      "path": "source-inventory/formal-1945-upload-inventory.json",
+      "sha256": "d73afd27f6ce7a1a3c7929c50bc6b1a82908128712c380f85c85b5597d441789",
+      "bytes": 1559,
+      "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/ea0ed176514ffffa1a3457ea60a21293e52f7af1/source-inventory/formal-1945-upload-inventory.json"
+    },
+    "formalBaseline": {
+      "repository": "card-play-sim/pokeca-card-simulator",
+      "branch": "feature/card-collector",
+      "commit": "977d629ee65473f42fccf3d0c87c5c2beacde33f",
+      "path": "collector/evidence/official_handoff/FORMAL_BASELINE.json",
+      "sha256": "a5ebb1860ed65579cbe0acc10897a002beb8ceaad48ad441d328af1dca3f7ff7",
+      "bytes": 567,
+      "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/977d629ee65473f42fccf3d0c87c5c2beacde33f/collector/evidence/official_handoff/FORMAL_BASELINE.json"
+    },
+    "deck45Staging": {
+      "repository": "card-play-sim/pokeca-card-simulator",
+      "branch": "feature/first-playable-fixed-decks",
+      "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+      "path": "data/deck45_identity_v04_staging.json",
+      "sha256": "467a7150b97ad46875bacbaf17e6bdbade45276000e2fe136bcd9ebc17d503a2",
+      "bytes": 2076,
+      "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_v04_staging.json"
+    },
+    "deck45Decisions": {
+      "repository": "card-play-sim/pokeca-card-simulator",
+      "branch": "feature/first-playable-fixed-decks",
+      "commit": "f468d91b01902e478634fa5b1cf1927be26e3fce",
+      "path": "data/deck45_identity_blockers.json",
+      "sha256": "b7fd4b6308ffa85a5e07adf044f1026b86890ab74d62ec0d3a9355adb71dacd3",
+      "bytes": 13536,
+      "url": "https://github.com/card-play-sim/pokeca-card-simulator/blob/f468d91b01902e478634fa5b1cf1927be26e3fce/data/deck45_identity_blockers.json"
+    }
+  },
+  "formal": {
+    "archive": {
+      "filename": "pokeca_image_registry_work3_checkpoint_1945_formal-1(5)(1).zip",
+      "sha256": "181388bf2912f0e96cac3f98b559dd330f1b77451b537460427a211744dd759c",
+      "entryCount": 6172,
+      "uploadedToGitHub": false
+    },
+    "verifiedMembers": [
+      {
+        "path": "FORMAL_BASELINE.json",
+        "sha256": "a5ebb1860ed65579cbe0acc10897a002beb8ceaad48ad441d328af1dca3f7ff7",
+        "bytes": 567,
+        "role": "baseline-declaration-only"
+      },
+      {
+        "path": "pokeca_card_catalog_HIJ/card_catalog.json",
+        "sha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+        "bytes": 5059408,
+        "role": "catalog-candidate-not-certified-membership"
+      },
+      {
+        "path": "pokeca_card_catalog_HIJ/image_registry/image_registry.json",
+        "sha256": "0a9746f8084a1569ce149a2616e9c5086c72951b1eed2b1bed430f842a89831f",
+        "bytes": 3671126,
+        "role": "registry-candidate-not-approved-image-permissions"
+      }
+    ],
+    "fullFormalMembershipVerified": false,
+    "declarationCount": 1945,
+    "declarationSha256": "a5ebb1860ed65579cbe0acc10897a002beb8ceaad48ad441d328af1dca3f7ff7"
+  },
+  "deckReview": {
+    "sourceStatus": "PASS_STAGING_ONLY_PRODUCTION_BLOCKED",
+    "selectedForDeckCount": 0,
+    "counts": {
+      "NO_NAME_MATCH": 34,
+      "PRIOR_ID_FOUND_NOT_SELECTED": 5,
+      "NAME_MATCH_ID_UNRESOLVED": 6
+    },
+    "productionAllowed": false,
+    "candidates": [
+      {
+        "cardName": "キチキギスex",
+        "candidateOfficialCardId": "49205",
+        "selectedOfficialCardId": null,
+        "deckPrintingConfirmed": false,
+        "candidateCardNumber": "MC 489/742",
+        "candidateRegulationMark": "H"
+      },
+      {
+        "cardName": "ドラメシヤ",
+        "candidateOfficialCardId": "49262",
+        "selectedOfficialCardId": null,
+        "deckPrintingConfirmed": false,
+        "candidateCardNumber": "MC 546/742",
+        "candidateRegulationMark": "H"
+      },
+      {
+        "cardName": "ノコッチ",
+        "candidateOfficialCardId": "49290",
+        "selectedOfficialCardId": null,
+        "deckPrintingConfirmed": false,
+        "candidateCardNumber": "MC 574/742",
+        "candidateRegulationMark": "I"
+      },
+      {
+        "cardName": "ラティアスex",
+        "candidateOfficialCardId": "49028",
+        "selectedOfficialCardId": null,
+        "deckPrintingConfirmed": false,
+        "candidateCardNumber": "MC 312/742",
+        "candidateRegulationMark": "H"
+      },
+      {
+        "cardName": "リーリエのピッピex",
+        "candidateOfficialCardId": "49003",
+        "selectedOfficialCardId": null,
+        "deckPrintingConfirmed": false,
+        "candidateCardNumber": "MC 287/742",
+        "candidateRegulationMark": "I"
+      }
+    ],
+    "decisions": [
+      {
+        "cardName": "アカマツ",
+        "deckA": 3,
+        "deckB": 2,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "アンフェアスタンプ",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "イグニッションエネルギー",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "エネルギーつけかえ",
+        "deckA": 3,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "キチキギスex",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "PRIOR_ID_FOUND_NOT_SELECTED",
+        "priorCandidateOfficialCardId": "49205",
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "クラッシュハンマー",
+        "deckA": 0,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "シアノ",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "シェイミ",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ジャッジマン",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ジャミングタワー",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "スペシャルレッドカード",
+        "deckA": 2,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "スボミー",
+        "deckA": 0,
+        "deckB": 2,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "たけしのスカウト",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "トウコ",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ドラパルトex",
+        "deckA": 0,
+        "deckB": 3,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ドラメシヤ",
+        "deckA": 0,
+        "deckB": 4,
+        "identityStatus": "PRIOR_ID_FOUND_NOT_SELECTED",
+        "priorCandidateOfficialCardId": "49262",
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ドロンチ",
+        "deckA": 0,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "なかよしポフィン",
+        "deckA": 0,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ニャースex",
+        "deckA": 1,
+        "deckB": 1,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ノココッチ",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ノココッチex",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ノコッチ",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "PRIOR_ID_FOUND_NOT_SELECTED",
+        "priorCandidateOfficialCardId": "49290",
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ハイパーボール",
+        "deckA": 4,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ハンディサーキュレーター",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ヒーローマント",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ファイアローex",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ポケパッド",
+        "deckA": 0,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ポケモンいれかえ",
+        "deckA": 3,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ボスの指令",
+        "deckA": 3,
+        "deckB": 3,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "マシマシラ",
+        "deckA": 3,
+        "deckB": 2,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "むしよけスプレー",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "メイのはげまし",
+        "deckA": 0,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "メガガルーラex",
+        "deckA": 4,
+        "deckB": 0,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ラティアスex",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "PRIOR_ID_FOUND_NOT_SELECTED",
+        "priorCandidateOfficialCardId": "49028",
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "リーリエのピッピex",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "PRIOR_ID_FOUND_NOT_SELECTED",
+        "priorCandidateOfficialCardId": "49003",
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "リーリエの決心",
+        "deckA": 1,
+        "deckB": 4,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ロケット団のエネルギー",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ロケット団のニューラ",
+        "deckA": 2,
+        "deckB": 0,
+        "identityStatus": "NAME_MATCH_ID_UNRESOLVED",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "ロケット団の監視塔",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "危ない廃墟",
+        "deckA": 1,
+        "deckB": 1,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "基本悪エネルギー",
+        "deckA": 4,
+        "deckB": 2,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "基本炎エネルギー",
+        "deckA": 0,
+        "deckB": 3,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "基本超エネルギー",
+        "deckA": 4,
+        "deckB": 3,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "夜のタンカ",
+        "deckA": 2,
+        "deckB": 2,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      },
+      {
+        "cardName": "夜の鉱山",
+        "deckA": 1,
+        "deckB": 0,
+        "identityStatus": "NO_NAME_MATCH",
+        "priorCandidateOfficialCardId": null,
+        "selectedOfficialCardId": null,
+        "productionReady": false
+      }
+    ]
+  }
+}
