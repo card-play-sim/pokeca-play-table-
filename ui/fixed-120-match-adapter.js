@@ -40,7 +40,18 @@
     if(typeof engine?.createMatchFromVerifiedDecks!=='function')throw Error('対戦エンジン未接続');
     const you=expand(manifest.decks[0],records,'you',options);
     const ai=expand(manifest.decks[1],records,'ai',options);
-    return engine.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,autoBenchBasics:true,...(options.rng?{rng:options.rng}:{}),...(options.firstPlayer?{firstPlayer:options.firstPlayer}:{})});
+    const result=engine.createMatchFromVerifiedDecks({you,ai,maxOpeningAttempts:100,autoBenchBasics:true,...(options.rng?{rng:options.rng}:{}),...(options.firstPlayer?{firstPlayer:options.firstPlayer}:{})});
+    // An opening board can be valid even when the effect catalog cannot read its
+    // official print IDs. Verify the first actionable turn before exposing it to UI.
+    if(result?.ok&&typeof engine.getLegalActions==='function'){
+      try{
+        const legal=engine.getLegalActions(result.game,result.game.turnPlayer);
+        if(!Array.isArray(legal?.actions))throw Error('合法操作候補がありません');
+      }catch(error){
+        return {ok:false,stage:'effect_catalog_unregistered',errors:[String(error?.message||error)]};
+      }
+    }
+    return result;
   }
   root.PokecaFixed120={expand,createMatch};
 })(typeof window==='undefined'?globalThis:window);
