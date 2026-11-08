@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {useDash,machineGunCombo}=require('../engine/proofs/kangaskhan-effects.cjs');
+const mk=()=>({status:'active',phase:'main',turnPlayer:'you',firstPlayer:'ai',turnNumber:2,attackUsed:false,players:[{id:'you',active:{name:'メガガルーラex',officialCardId:'47847',energies:[1,2,3]},hand:[],deck:[{id:'a'},{id:'b'},{id:'c'}],turnLimits:{}},{id:'ai',active:{name:'target',damage:0}}]});
+const original=mk();
+const drawn=useDash(original,'you');
+assert.deepEqual(drawn.drawn,['a','b']);
+assert.equal(drawn.game.players[0].hand.length,2);
+assert.equal(original.players[0].hand.length,0);
+assert.throws(()=>useDash(drawn.game,'you'),/SHARED_ABILITY_ALREADY_USED/);
+const attacked=machineGunCombo(mk(),'you',[true,true,false]);
+assert.equal(attacked.damage,300);
+assert.equal(attacked.game.players[1].active.damage,300);
+const first=mk();first.firstPlayer='you';first.turnNumber=1;
+assert.throws(()=>machineGunCombo(first,'you',[false]),/ATTACK_NOT_ALLOWED/);
+assert.throws(()=>machineGunCombo(mk(),'you',[true]),/COIN_SEQUENCE_MUST_END_WITH_TAILS/);
+console.log('PASS: isolated Kangaskhan proof (not registered in live engine)');
