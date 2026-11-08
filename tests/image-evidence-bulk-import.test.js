@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {importEvidence}=require('../scripts/import-verified-image-evidence.cjs');
+const {importEvidence,fromCollectorStaging}=require('../scripts/import-verified-image-evidence.cjs');
 const prefix='https://www.pokemon-card.com/assets/images/card_images/large/SV6/';
 const page=id=>'https://www.pokemon-card.com/card-search/details.php/card/'+id+'/regu/XY';
 const decks={decks:[{cards:[{name:'ドロンチ',count:4},{name:'ドラパルトex',count:3}]}]};
@@ -16,4 +16,10 @@ assert.equal(importEvidence({cards:[valid('45771')]},result.registry,decks).adde
 assert.throws(()=>importEvidence({cards:[valid('45771'),{...valid('45771'),name:'ドラパルトex'}]},registry,decks),/CONFLICT/);
 assert.throws(()=>importEvidence({cards:[valid('45771'),{...valid('45772'),imageSourceUrl:'https://example.com/fake.jpg'}]},registry,decks),/UNVERIFIED/);
 assert.equal(registry.cards.length,0,'failed batch never changes source');
+const approved={officialCardId:'45771',cardName:'ドロンチ',imageUrl:prefix+'045771_P_DORONCHI.jpg',
+ officialPageUrl:page('45771'),reviewStatus:'APPROVED',
+ evidence:{officialDetailVerified:true,imageUrlVerified:true,detailSha256:'a'.repeat(64),imageReferenceSha256:'b'.repeat(64)}};
+assert.throws(()=>fromCollectorStaging({records:[{...approved,reviewStatus:'PENDING'}]}),/NOT_APPROVED/);
+assert.throws(()=>fromCollectorStaging({records:[{...approved,evidence:{...approved.evidence,detailSha256:''}}]}),/NOT_APPROVED/);
+assert.equal(importEvidence(fromCollectorStaging({records:[approved]}),registry,decks).added,1);
 console.log('image evidence bulk import: PASS');
