@@ -25,6 +25,8 @@ def main(candidate_path, archive_path):
     source = {str(c["officialCardId"]): c for c in catalog["cards"]}
     if len(source) != len(catalog["cards"]):
         raise ValueError("Duplicate source official IDs")
+    if data.get("status") != "VERIFIED_SOURCE_CANDIDATES_NOT_ADOPTED":
+        raise ValueError("Unexpected candidate status")
     cards = data["cards"]
     if len(cards) != 55 or data["candidateCount"] != 55:
         raise ValueError("Unexpected candidate count")
