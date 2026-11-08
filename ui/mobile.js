@@ -632,6 +632,27 @@
       if(!Array.isArray(data.decks)||data.decks.length!==2||data.decks.some(d=>d.cards.reduce((sum,c)=>sum+c.count,0)!==60))throw Error('60枚検証に失敗');
       const summary=data.decks.map((deck,i)=>`<section class="effect-row"><h3>${esc(deck.name)}</h3><p>登録 ${deck.total}枚・${deck.cards.length}種類 / 印刷版ID未確定</p><div class="deck-manifest-list">${deck.cards.map(c=>{const url=window.PokecaImageResolver?.resolvePreview({name:c.name})||window.PokecaArt?.[c.name]||'';const art=url?`<img src="${esc(url)}" alt="${esc(c.name)}" loading="eager" decoding="async" style="width:56px;height:76px;object-fit:contain;flex-shrink:0" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden>画像未表示</span>`:'<span>画像未登録</span>';return `<div style="display:flex;align-items:center;gap:8px;min-height:78px">${art}<span><b>${c.count}枚</b> ${esc(c.name)}</span></div>`;}).join('')}</div></section>`).join('');
       openSheet('固定2デッキ・構成確認',`<p>固定120枚・画像表示検査 <strong id="deck-image-check">検査中</strong></p><p>実対戦への読み込み・公式効果は未接続です。既存の試験対戦セーブは変更しません。</p>${summary}`);
+      const missing=[...new Set(data.decks.flatMap(d=>d.cards.map(c=>c.name)))];
+      const availableRecords=window.PokecaFixed120VerifiedRecords||{};
+      const unresolved=missing.filter(name=>!(availableRecords[name]?.verified===true&&availableRecords[name]?.officialCardId&&availableRecords[name]?.engineReadable===true&&availableRecords[name]?.effectStatus==='verified'&&availableRecords[name]?.sourceEvidence));
+      const status=document.createElement('p');
+      status.textContent=`対戦データ接続：${missing.length-unresolved.length}/${missing.length}種類 / 未接続 ${unresolved.length}種類。未接続カードは公式効果を推測して使用しません。`;
+      $('sheet-content').insertBefore(status,$('sheet-content').querySelector('.deck-manifest-list')?.parentElement||null);
+      if(unresolved.length===0){
+        const start=button('固定120枚で対戦開始',async()=>{
+          try{
+            const result=window.PokecaFixed120.createMatch(data,availableRecords,Pokeca);
+            if(!result.ok)throw Error('初期配置不可：'+result.stage);
+            if(!await confirmAction('固定120枚の対戦を開始しますか？ 現在の対戦は自動保存されます。'))return;
+            if(!await protectBeforeNewMatch())return;
+            const loaded=port.loadGame(result.game);
+            if(!loaded.ok)throw Error(loaded.errors.join(' / '));
+            selected=null;closeSheet();toast('固定120枚の対戦を開始しました');
+            if(view().turnPlayer==='ai'&&aiAutoMode)void runOpponentPracticeTurn();
+          }catch(error){toast('固定対戦開始不可：'+error.message);}
+        });
+        $('sheet-content').insertBefore(start,status.nextSibling);
+      }
       // Force all image checks to start even for cards below the mobile viewport.
       // Lazy loading previously left the diagnostics permanently incomplete.
       const imgs=[...$('sheet-content').querySelectorAll('.deck-manifest-list img')];
