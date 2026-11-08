@@ -95,13 +95,15 @@
     return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
   }
   function cardArt(card){
+    const display=window.PokecaImageResolver?.resolveDisplay(card);
+    const displayAttrs=`data-image-mode="${esc(display?.mode||'missing')}" data-preview-reference-id="${esc(display?.referenceOfficialCardId||'')}" title="${display?.mode==='provisional-preview'?'暫定画像・正式採用版未確定':'カード画像'}"`;
     const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};
     const identifiedPrint=card.officialCardId!=null||card.catalogCardId!=null||card.set!=null||card.setCode!=null||card.cardNumber!=null;
     const energyUrl=card.kind==='energy'?(imageURL(card)||(identifiedPrint?energyArt(card):(officialBasicEnergy[card.energyType]||energyArt(card)))):'';
     if(energyUrl){
       const energyFallback=energyArt(card);
       const fallback=energyFallback&&energyFallback!==energyUrl?`<img class="art-load-fallback" src="${esc(energyFallback)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false" hidden>`:`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
-      return `<img src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
+      return `<img ${displayAttrs} src="${esc(energyUrl)}" alt="${esc(card.energyType||'')}エネルギー" draggable="false">${fallback}`;
     }
     const url=imageURL(card);
     if(!url)return `<img src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false">`;
@@ -110,7 +112,7 @@
     const fallback=bundled&&bundled!==url
       ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
       :`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
-    return `<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
+    return `<img ${displayAttrs} src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
   }
     // Image hosts can reject hotlinks or fail offline; keep the card operable.
   document.addEventListener('error',event=>{
@@ -154,7 +156,7 @@
   }
   function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
-  function render(){const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
+  function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
     if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning&&!aiPrizeAutoAttempted){aiPrizeAutoAttempted=true;queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});}
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
@@ -402,7 +404,7 @@
       $('selection-confirm').onclick=()=>done([...selectedIds]);
     });
   }
-  function dispatch(playerId,action){const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
+  function dispatch(playerId,action){if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
     if(!result.ok){toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
@@ -498,7 +500,7 @@
     };
     paint();
   }
-  function zoneMenu(owner,zone){const p=view().players.find(p=>p.id===owner);
+  function zoneMenu(owner,zone){if(fixedImageBoard){showFixedImageZone(owner,zone);return;}const p=view().players.find(p=>p.id===owner);
     if(zone==='discard'){openSheet((owner==='you'?'自分':'相手')+'のトラッシュ',p.discard.length?`<p>${p.discard.length}枚 · カードを一覧表示</p><div class="discard-grid">${p.discard.map(c=>`<div class="discard-card" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`:'<p>カードはありません</p>');return;}
     if(zone==='prize'){if(owner==='you'&&view().pendingPrizeSelection){prizeDialogOpen=false;showPrizeChoice();return;}openSheet('サイド',`<p>残り ${p.prizeCount}枚。サイド内容は非公開です。取得はエンジンのきぜつ処理に従います。</p>`);return;}
     openSheet((owner==='you'?'自分':'相手')+'の山札',`<p>${p.deckCount}枚 · 通常時の内容は非公開です。ワザの検索時に専用画面を開きます。</p><div id="deck-actions" class="menu-list"></div>`);
@@ -645,16 +647,55 @@
     if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
     try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
   };
+  let fixedImageBoard=null;
   // Source-backed, image-only representative prints for the fixed-deck list.
   // These IDs are NOT adopted card identities and must never enter the game state.
-  // Image previews come only from the shared official-ID registry.
-  // Multiple prints must remain ambiguous until the deck print is identified.
+  // Visual-only bindings may choose an evidenced representative without adopting its identity.
+  // Numberless energies and name aliases stay outside the strict official-ID registry.
   function fixedDeckPreview(card){
     if(typeof card==='object'&&card){
       if(card.officialCardId!=null)return window.PokecaImageResolver?.resolve(card)||'';
       return window.PokecaImageResolver?.resolvePreview(card)||'';
     }
     return window.PokecaImageResolver?.resolvePreview({name:card})||'';
+  }
+  async function openFixedImageBoard(){
+    if(aiPracticeRunning)throw Error('AI操作完了後に画像確認を開始してください');
+    await imageRegistryReady;
+    if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('画像証跡を読み込めません');
+    const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});
+    if(!response.ok)throw Error('FIXED_DECK_HTTP_'+response.status);
+    const data=await response.json();
+    if(data.decks?.length!==2||data.decks.some(d=>d.cards.reduce((n,c)=>n+c.count,0)!==60))throw Error('FIXED_DECK_COUNT');
+    fixedImageBoard={offset:0,decks:data.decks.map((d,i)=>({name:d.name,id:i?'ai':'you',cards:d.cards.flatMap((c,j)=>Array.from({length:c.count},(_,k)=>({...c,id:`preview-${i}-${j}-${k}`})))}))};
+    closeSheet();$('app').classList.add('fixed-image-board');render();
+  }
+  function fixedImageCards(deck){const n=fixedImageBoard.offset;return [...deck.cards.slice(n),...deck.cards.slice(0,n)];}
+  function renderFixedImageBoard(){
+    $('turn-label').textContent='固定120枚・画像確認';$('game-note').textContent='暫定画像・正式採用版未確定';
+    $('opponent-hand').innerHTML='';$('opponent-hand-count').textContent='7枚';
+    const imageCard=(c,zone)=>`<div class="card fixed-image-card" data-preview-card="${esc(c.id)}" data-preview-zone="${zone}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`;
+    for(const [prefix,deck] of [['self',fixedImageBoard.decks[0]],['opponent',fixedImageBoard.decks[1]]]){
+      const cards=fixedImageCards(deck);
+      $(prefix+'-active').innerHTML=imageCard(cards[0],'active');
+      $(prefix+'-bench').innerHTML=cards.slice(1,6).map(c=>`<div class="bench-slot">${imageCard(c,'bench')}</div>`).join('');
+      $(prefix+'-left').innerHTML='';
+      $(prefix+'-right').innerHTML=zoneHTML({id:deck.id,deckCount:60,discardCount:47},'deck','画像一覧','▤')+zoneHTML({id:deck.id,discardCount:47},'discard','トラッシュ','↘');
+      $(prefix+'-effects').innerHTML='';
+    }
+    const cards=fixedImageCards(fixedImageBoard.decks[0]);
+    $('self-hand').innerHTML=cards.slice(6,13).map(c=>imageCard(c,'hand')).join('');$('hand-count').textContent='7枚';
+    $('limits').textContent='画像確認専用・対戦操作なし';$('stadium-art').innerHTML='';$('stadium-name').textContent='画像確認専用';
+    for(const id of ['attack-button','ability-button','draw-button','end-turn','demo-open'])$(id).disabled=true;
+    $('interaction-hint').textContent='暫定画像・採用版と効果は未確定';
+    let controls=$('fixed-image-controls');
+    if(!controls){controls=document.createElement('div');controls.id='fixed-image-controls';document.querySelector('.actionbar').append(controls);}
+    controls.replaceChildren(button('次の配置で画像確認',()=>{fixedImageBoard.offset=(fixedImageBoard.offset+1)%60;render();}),button('試験対戦に戻る',()=>{fixedImageBoard=null;$('app').classList.remove('fixed-image-board');controls.remove();$('demo-open').disabled=false;render();}));
+    document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>showFixedImageZone(el.dataset.zoneOwner,el.dataset.zone));
+  }
+  function showFixedImageZone(owner,zone){
+    const deck=fixedImageBoard.decks.find(d=>d.id===owner),cards=zone==='discard'?fixedImageCards(deck).slice(13):deck.cards;
+    openSheet(zone==='discard'?'画像確認・トラッシュ':'画像確認・デッキ一覧',`<p>暫定画像・正式採用版未確定。画像確認用の配置であり、対戦状態には保存されません。</p><div class="discard-grid">${cards.map(c=>`<div class="discard-card" data-preview-card="${esc(c.id)}" data-preview-zone="${zone}" aria-label="${esc(c.name)}">${cardArt(c)}</div>`).join('')}</div>`);
   }
   // Original, clearly marked placeholder art for fixed-deck cards without a usable image.
   // No official image, text, print ID, HP, or effects are inferred.
@@ -776,6 +817,7 @@
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
     list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
     list.append(button(animationsEnabled?'アニメーション：オン（タップでオフ）':'アニメーション：オフ（タップでオン）',()=>{animationsEnabled=!animationsEnabled;closeSheet();}));
     list.append(button('中断・再開／保存データ',savesMenu));
@@ -811,7 +853,9 @@
   // Import all evidence-backed print images in one operation, independent of deck size.
   // Never modifies cards, saved matches, or print identities.
   window.PokecaImageRegistryStatus={state:'loading'};
-  const imageRegistryReady=window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(result=>{
+  const imageRegistryReady=window.PokecaImageResolver.loadRegistry('./data/official-image-registry.json').then(async result=>{
+    const previewCount=await window.PokecaImageResolver.loadPreviews('./data/fixed-deck-preview-bindings.json');
+    result.previewBindings=previewCount;
     window.PokecaImageRegistryStatus={state:'ready',...result};
     render();
   }).catch(error=>{

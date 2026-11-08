@@ -1,0 +1,50 @@
+{
+  "A_displayedCopies": 120,
+  "B_confirmedPrintCopies": 0,
+  "C_undisplayedCopies": 0,
+  "displayMode": "provisional-preview; visual-only fixed-deck board",
+  "physicalAndroidVerified": false,
+  "gameSnapshotUnchanged": true,
+  "formalRegistryUnchanged": true,
+  "source1945ReadOnly": true,
+  "original27EvidenceUnchanged": true,
+  "tests": {
+    "offlineRegression": "PASS (including 8 deterministic AI games)",
+    "previewSafety": "PASS",
+    "evidenceReplay": 3,
+    "mobileHeader": 4,
+    "reflectionWiring": 6,
+    "workflow": 4,
+    "syntheticMobileReloadAndFailure": "PASS (393x852, 412x915)",
+    "syntheticIdentityAccounting": "PASS (exact 4, wrong-print 0, failure 0)",
+    "realMobileBoard": {
+      "active": {
+        "inspections": 120,
+        "displayedPhysicalCards": 120
+      },
+      "bench": {
+        "inspections": 120,
+        "displayedPhysicalCards": 120
+      },
+      "hand": {
+        "inspections": 60,
+        "displayedPhysicalCards": 60
+      },
+      "deck": {
+        "inspections": 120,
+        "displayedPhysicalCards": 120
+      },
+      "discard": {
+        "inspections": 188,
+        "displayedPhysicalCards": 120
+      }
+    },
+    "realDeckListPreviewCopies": 120,
+    "formalDeckCompletion": "BLOCKED_IDENTITY_UNCONFIRMED"
+  },
+  "remaining": [
+    "All 120 adopted print identities unresolved; visual bindings do not promote them.",
+    "Official fixed-deck effects/playable match remain unconnected; image-only board disables game actions.",
+    "Physical Android device not tested."
+  ]
+}

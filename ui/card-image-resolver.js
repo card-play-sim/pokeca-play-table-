@@ -1,7 +1,7 @@
 /* Generic official image resolver. Read-only, no print inference by name. */
 (function(global){
   'use strict';
-  const entries=new Map();
+  const entries=new Map(),previews=new Map();
   const rules=global.PokecaImageValidation;
   if(!rules)throw Error('IMAGE_VALIDATION_NOT_LOADED');
   function register(records){
@@ -27,16 +27,51 @@
     const record=entries.get(String(id));
     return record&&rules.matches(record,print)?record.imageSourceUrl:'';
   }
-  function resolvePreview(card){
-    const exact=resolve(card);
-    if(exact)return exact;
-    // For identity-free practice cards only, use a uniquely registered visual preview.
-    // Never infer a print when an official ID was supplied.
-    if(!card||typeof card!=='object')return '';
+  function resolveDisplay(card){
+    if(!card||typeof card!=='object')return {mode:'missing',url:''};
     const print=Array.isArray(card.evolutionCards)&&card.evolutionCards.length?card.evolutionCards.at(-1):card;
-    if(print.officialCardId!=null||print.catalogCardId!=null||card.officialCardId!=null||card.catalogCardId!=null)return '';
+    const identified=[card,print].some(c=>c.officialCardId!=null||c.catalogCardId!=null);
+    const exact=resolve(card);
+    if(identified)return {mode:exact?'verified-print':'missing',url:exact,adopted:card.identityStatus==='CONFIRMED'&&!!exact};
+    const binding=previews.get(print.name);
+    if(binding){
+      const r=binding.preview;
+      // Runtime constraints must agree, including aliases; preview IDs never enter cards.
+      try{const c=rules.canonical(print);
+        if(['set','cardNumber','imageSourceUrl'].some(k=>c[k]!=null&&c[k]!==r[k]))return {mode:'missing',url:''};
+      }catch{return {mode:'missing',url:''};}
+      return {mode:'provisional-preview',url:r.imageSourceUrl,referenceOfficialCardId:r.officialCardId,
+        officialName:r.name,adopted:false,nameAlias:binding.nameAlias,numberlessEnergy:binding.numberlessEnergy};
+    }
     const matches=[...entries.values()].filter(r=>rules.matches(r,print,{requireId:false}));
-    return matches.length===1?matches[0].imageSourceUrl:'';
+    return matches.length===1?{mode:'provisional-preview',url:matches[0].imageSourceUrl,referenceOfficialCardId:matches[0].officialCardId,adopted:false}:{mode:'missing',url:''};
+  }
+  function resolvePreview(card){return resolveDisplay(card).url;}
+  function registerPreviews(data){
+    if(data?.schemaVersion!==1||data.deckPrintAdopted!==false||!Array.isArray(data.bindings))throw Error('PREVIEW_SCHEMA');
+    const pending=new Map();
+    const aliases={'たけしのスカウト':'タケシのスカウト','ロケット団のエネルギー':'ロケット団エネルギー'};
+    for(const b of data.bindings){
+      if(b.mode!=='provisional-preview'||b.adoptedOfficialCardId!==null||pending.has(b.deckName)||!b.evidence?.sha256?.match(/^[a-f0-9]{64}$/))throw Error('PREVIEW_IDENTITY');
+      const r=b.preview;
+      const {cardNumber,...withoutNumber}=r;
+      rules.validate(b.numberlessEnergy?withoutNumber:r);
+      const imageId=r.imageSourceUrl.split('/').at(-1).match(/^0*(\d+)_/);
+      if(!imageId||imageId[1]!==r.officialCardId)throw Error('PREVIEW_IMAGE_ID');
+      if(b.numberlessEnergy&&(!/^基本(?:炎|悪|超)エネルギー$/.test(r.name)||cardNumber!==null||!r.set))throw Error('PREVIEW_NUMBERLESS_NOT_ENERGY');
+      if(b.nameAlias?aliases[b.deckName]!==r.name:b.deckName!==r.name)throw Error('PREVIEW_NAME');
+      if(!b.numberlessEnergy&&(!r.set||!r.cardNumber))throw Error('PREVIEW_PRINT_EMPTY');
+      const registered=entries.get(r.officialCardId);
+      if(registered&&!rules.matches(registered,r))throw Error('PREVIEW_REGISTRY_CONFLICT');
+      if(!registered&&!b.nameAlias&&!b.numberlessEnergy)throw Error('PREVIEW_UNREGISTERED');
+      pending.set(b.deckName,JSON.parse(JSON.stringify(b)));
+    }
+    previews.clear();for(const [key,value] of pending)previews.set(key,value);
+    return previews.size;
+  }
+  async function loadPreviews(url){
+    const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error('PREVIEW_HTTP_'+response.status);
+    return registerPreviews(await response.json());
   }
   function coverage(cards){
     const missing=[],resolved=[];
@@ -55,6 +90,6 @@
     for(const [id,c] of validated)map[id]=c;
     return {received:data.cards.length,registered:register(map),total:entries.size};
   }
-  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,coverage,loadRegistry,count:()=>entries.size});
+  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,resolveDisplay,registerPreviews,loadPreviews,coverage,loadRegistry,count:()=>entries.size});
   register(global.PokecaVerifiedArt||{});
 })(window);

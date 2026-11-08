@@ -216,3 +216,6 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 
 .detail:has(.detail-art-large){grid-template-columns:minmax(0,1fr)}
 .detail-art-large{grid-column:1/-1}
+
+.fixed-image-board .actionbar > :not(#fixed-image-controls){display:none}#fixed-image-controls{display:flex;gap:6px;justify-content:space-between;width:100%}#fixed-image-controls button{font-size:11px;min-height:36px}.fixed-image-card:after{content:'暫定';position:absolute;top:1px;left:1px;background:#fff3c9;color:#493e18;font-size:8px;line-height:12px;padding:0 2px;pointer-events:none}
+.fixed-image-board .zone-rail{flex-wrap:nowrap}.fixed-image-board .zone{min-width:0;flex:1;padding:3px 1px}.fixed-image-board .active-slot .card{height:min(12dvh,90px)}
