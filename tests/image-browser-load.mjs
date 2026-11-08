@@ -29,7 +29,10 @@ try {
     return output;
   },cards);
   const failures=results.filter(r=>r.status!=='loaded');
-  console.log(JSON.stringify({tested:results.length,loaded:results.length-failures.length,failed:failures.length,results},null,2));
+  const report={tested:results.length,loaded:results.length-failures.length,failed:failures.length,results};
+  fs.mkdirSync('artifacts',{recursive:true});
+  fs.writeFileSync('artifacts/image-browser-load-report.json',JSON.stringify(report,null,2)+'\n');
+  console.log(JSON.stringify(report,null,2));
   if(failures.length)process.exitCode=1;
 } finally {
   await browser.close();
