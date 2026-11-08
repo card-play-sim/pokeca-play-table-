@@ -5,7 +5,12 @@
     if(!deck||!Array.isArray(deck.cards))throw Error('Fixed deck missing');
     if(!records||typeof records!=='object')throw Error('Verified card records missing');
     const out=[];
+    const seenNames=new Set();
     for(const item of deck.cards){
+      if(!item||typeof item.name!=='string'||!item.name.trim()||!Number.isInteger(item.count)||item.count<1||item.count>60)
+        throw Error('カード名・枚数不正');
+      if(seenNames.has(item.name))throw Error('同名カードの重複行: '+item.name);
+      seenNames.add(item.name);
       const record=records[item.name];
       if(!record||record.verified!==true||!record.officialCardId||record.name!==item.name)
         throw Error('公式カード未接続: '+item.name);
