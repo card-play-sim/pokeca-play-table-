@@ -106,7 +106,7 @@
     const bundled=window.PokecaArt?.[card.name]||'';
     const fallback=bundled&&bundled!==url
       ?`<img class="art-load-fallback" src="${esc(bundled)}" alt="${esc(card.name)}" draggable="false" hidden>`
-      :`<span class="art-load-fallback" hidden>${fallbackArt(card)}</span>`;
+      :`<img class="art-load-fallback" src="${esc(fixedDeckPlaceholder(card.name))}" alt="${esc(card.name)}（オリジナル仮画像）" draggable="false" hidden>`;
     return `<img src="${esc(url)}" alt="${esc(card.name)}" draggable="false">${fallback}`;
   }
     // Image hosts can reject hotlinks or fail offline; keep the card operable.
