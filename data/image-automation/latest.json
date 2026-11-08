@@ -1,140 +1,36 @@
 {
   "schemaVersion": 2,
-  "runId": null,
-  "checkedAt": "2026-11-08T12:05:04.655Z",
+  "runId": "42479522178",
+  "checkedAt": "2026-11-08T12:21:21.080Z",
   "registrationPass": true,
   "productionPass": false,
   "imageDisplayStatus": "NOT_VERIFIED",
   "safeToPersist": true,
-  "refresh": false,
-  "requestsAttempted": 3,
-  "officialPagesVerified": 23,
-  "imageReferencesAdded": 3,
-  "replayed": 20,
+  "refresh": true,
+  "requestsAttempted": 2,
+  "officialPagesVerified": 2,
+  "imageReferencesAdded": 0,
+  "replayed": 0,
   "deckPrintsAdopted": 0,
   "holds": [],
   "processed": [
     {
-      "officialCardId": "45202",
+      "officialCardId": "50400",
       "status": "REGISTERED_READBACK_VERIFIED",
       "added": false
     },
     {
-      "officialCardId": "45770",
+      "officialCardId": "50537",
       "status": "REGISTERED_READBACK_VERIFIED",
       "added": false
-    },
-    {
-      "officialCardId": "45771",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "45913",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "46588",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "46662",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "46779",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "47301",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "47465",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "47847",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "48277",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "48533",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "48654",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49003",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49028",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49074",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49164",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49262",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49694",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "49971",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": false
-    },
-    {
-      "officialCardId": "45786",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": true
-    },
-    {
-      "officialCardId": "47796",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": true
-    },
-    {
-      "officialCardId": "48710",
-      "status": "REGISTERED_READBACK_VERIFIED",
-      "added": true
     }
   ],
   "protectedSha256": {
+    "data/fixed-120-display-inspection.json": "bec9f83551c76ac1f074661bbd6106cdd5a3083f3b04067155c4675f4fa2ca35",
     "data/fixed-120-engine-connection-matrix.json": "401300f2961f1a801b13834667719fe726f5ab19d06004ff69cdeb13bd404f43",
     "data/fixed-120-image-coverage-audit.md": "3832c449cf90082d0623b5260ef6f6c0e382bee88af0b05a2cd16c7f8baae0dd",
     "data/fixed-120-image-coverage.json": "c2d21b220f8f31b16df5a4303bf1be8387f36050106201552625656becffa990",
-    "data/fixed-120-print-resolution.json": "9eef582a77883710db29f7314ada3d46885fb976d9954a25eb3dd533d85ba1f8",
+    "data/fixed-120-print-resolution.json": "4819a3a617ba67e1586d7a77ddeb9d4ab45cff8831108dcf6d1791d3d65ea925",
     "data/fixed-deck-formal-1945-pokemon-candidates.json": "51895cf1cbf2c7aa1171205bc393dd238f4ed06d5f610d8956978ffd3adbabae",
     "data/fixed-deck-identity-audit.json": "536df07a0101e8f2b0136a26bca892f9c6c0e4af3459eb5fba113b1933163d0c",
     "data/fixed-deck-image-source-audit.json": "d71e61d62b833374d316ec7731748be2da06dd9a3e5f6ffd76c0f0669d7687d0",
@@ -165,7 +61,7 @@
     "data/fixed-deck-reference-evidence/49262.json": "a2509c07afeb74b5684e101c95f7fb7f8953bc08d46c1e61f677d44c06805add",
     "data/fixed-deck-reference-evidence/49694.json": "eed65fa94cf0266ccd3538bfd5d081e955a3d2a51d919e3ebaabac501f4f885f",
     "data/fixed-deck-reference-evidence/49971.json": "13e08b6f37badbb7996f5db2b062c19cedc9b1f0af72f7f07478ec3f38c4b384",
-    "data/fixed-deck-reference-registration.json": "e013e565d2e7bc37d3d3c015ca974aa83b8d53ec9b22eadab07fcc3e86feb007",
+    "data/fixed-deck-reference-registration.json": "86b73b4628a524dc4e6c2a0bd79ea456d0a4790956346caa335dd3b3fdbb96bf",
     "data/fixed-deck-search-evidence/06033760258b4a7fd8a1c5f444b9330350ad86dad0d809d8f9e4367b33be5810.json": "09a4516e4ec8ecb793338f13d5afe5bac91af2d13588420118855301ef800b34",
     "data/fixed-deck-search-evidence/0b3bd39c111cb2627f18cc32d6b5ed94c1f380a2596369670dde630de4c54238.json": "fb4f11cb4d787c100a7947e4933fb3dc50abd7dcff21cbed7240eb6ab01d7cf8",
     "data/fixed-deck-search-evidence/0c460dd516e77d9834e91839f2baa6ca36ca38ad95e8c0a2d227f7b7ec181ae7.json": "f71dcd956bdbf14c771d83c4629bea170218cb83b0bde4575598bd4ce4e9b695",
@@ -219,16 +115,17 @@
     "ui/engine.bundle.js": "b9c52b726a4eb8a84f9f05fdb295c16a4bbaccc1d66f914b5c4cc213087e796e",
     "ui/session-storage.js": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
   },
-  "baselineRegistrySha256": "2421b9f32acfbae148ec8198a27956b2d8f58e0f03ad0a6c8b2e287c30f7a574",
+  "baselineRegistrySha256": "ef783ae363b8816fbfcc3c8b3cef594c6627dfacea33e727ec32c8b18282775b",
   "sources": [
-    "data/fixed-deck-reference-candidates.json"
+    "data/fixed-deck-official-image-candidates.json",
+    "data/official-image-candidates-reviewed.json"
   ],
-  "planSha256": "9098f0678ea4c3e46de8a778941db41fa670f2bb15fda7ecb7bc2a95699ff6c2",
-  "candidateCount": 23,
+  "planSha256": "78ff0a16460a41e0f7d31e54c6377307a3a1ccbb5193d41d6cb0db5e9444fce3",
+  "candidateCount": 2,
   "batchSize": 50,
   "maxRequests": 50,
   "startCursor": 0,
-  "nextCursor": 23,
+  "nextCursor": 2,
   "remaining": 0,
   "coverage": {
     "inspection": "STATIC_REGISTRY_COVERAGE",
@@ -651,7 +548,7 @@
       }
     ]
   },
-  "scopeReferencesMatched": 23,
+  "scopeReferencesMatched": 2,
   "protectedUnchanged": true,
   "existingRecordsPreserved": true,
   "status": "REFERENCES_REGISTERED"
