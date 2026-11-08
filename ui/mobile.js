@@ -739,7 +739,7 @@
         const start=button('固定120枚で対戦開始',async()=>{
           try{
             const result=window.PokecaFixed120.createMatch(data,availableRecords,Pokeca);
-            if(!result.ok)throw Error('初期配置不可：'+result.stage);
+            if(!result.ok)throw Error('対戦準備不可：'+result.stage+(result.errors?.length?' / '+result.errors.join(' / '):''));
             if(!await confirmAction('固定120枚の対戦を開始しますか？ 現在の対戦は自動保存されます。'))return;
             if(!await protectBeforeNewMatch())return;
             const loaded=port.loadGame(result.game);
