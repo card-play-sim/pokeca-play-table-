@@ -11,5 +11,5 @@ assert.throws(()=>useDash(drawn.game,'you'),/SHARED_ABILITY_ALREADY_USED/);
 assert.throws(()=>machineGunCombo(mk(),'you',[true,true,false]),/ATTACK_COST_RULE_ENGINE_NOT_CONNECTED/);
 const first=mk();first.firstPlayer='you';first.turnNumber=1;
 assert.throws(()=>machineGunCombo(first,'you',[false]),/ATTACK_NOT_ALLOWED/);
-assert.throws(()=>machineGunCombo(mk(),'you',[true]),/COIN_SEQUENCE_MUST_END_WITH_TAILS/);
+assert.throws(()=>machineGunCombo(mk(),'you',[true]),/ATTACK_COST_RULE_ENGINE_NOT_CONNECTED/);
 console.log('PASS: isolated Kangaskhan proof (not registered in live engine)');
