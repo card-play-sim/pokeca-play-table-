@@ -20,3 +20,13 @@ jobs:
 
       - name: Verify existing official image registry import
         run: node tests/image-registry-existing.test.mjs
+      - name: Build verified registry candidate (no deployment)
+        run: node tools/import-image-registry.mjs data/official-image-registry.json .image-registry-output
+      - name: Upload candidate registry and report for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-image-registry-candidate
+          path: |
+            .image-registry-output/official-image-registry.json
+            .image-registry-output/import-report.json
+          if-no-files-found: error
