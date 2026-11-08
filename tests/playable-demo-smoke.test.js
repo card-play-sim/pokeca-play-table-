@@ -62,6 +62,11 @@ assert.ok(aiActions.actions.length>0);
     let steps=0;
     while(trialGame.status==='active'&&steps<60){
       const actor=trialGame.pendingPrizeSelection?.playerId||trialGame.turnPlayer;
+      if(trialGame.pendingPrizeSelection){
+        const legal=engine.getLegalActions(trialGame,actor).actions;
+        assert.ok(legal.length>0,'Prize selection has no legal actions, seed '+trial);
+        assert.ok(legal.every(a=>a.type==='take_prizes'),'Non-prize action permitted during pending selection');
+      }
       const result=await engine.runAITurn(trialPort,actor,{maxActions:30});
       assert.equal(result.ok,true,'seed '+trial+' step '+steps+': '+JSON.stringify(result.errors));
       steps++;
