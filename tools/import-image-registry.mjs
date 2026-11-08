@@ -29,7 +29,12 @@ fs.mkdirSync(quarantineDir, { recursive: true });
 let added = 0, unchanged = 0, conflicts = 0, invalid = 0;
 for (let index = 0; index < records.length; index++) {
   const item = records[index];
-  if (!valid(item)) {\n    invalid++;\n    const fingerprint = crypto.createHash('sha256').update(JSON.stringify(item)).digest('hex').slice(0,16);\n    atomicWrite(path.join(quarantineDir, 'invalid-' + index + '-' + fingerprint + '.json'), JSON.stringify({index,reason:'INVALID_VERIFIED_REFERENCE',record:item},null,2) + '\\n');\n    continue;\n  } // invalid records are never accepted
+  if (!valid(item)) {
+    invalid++;
+    const fingerprint = crypto.createHash('sha256').update(JSON.stringify(item)).digest('hex').slice(0,16);
+    atomicWrite(path.join(quarantineDir, 'invalid-' + index + '-' + fingerprint + '.json'), JSON.stringify({index,reason:'INVALID_VERIFIED_REFERENCE',record:item},null,2) + '\n');
+    continue;
+  } // invalid records are never accepted
   const id = String(item.officialCardId);
   const canonical = {officialCardId:id,name:item.name,imageSourceUrl:item.imageSourceUrl ?? item.sourceUrl};
   const serialized = JSON.stringify(canonical) + '\n';
