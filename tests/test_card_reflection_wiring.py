@@ -24,7 +24,10 @@ class CardReflectionWiringTests(unittest.TestCase):
         self.assertIn("for(const energy of card.energyCards)", UI)
 
     def test_failed_dispatch_does_not_claim_success(self):
-        self.assertIn("if(!result.ok){toast(", UI)
+        failure = UI.split("const result=port.dispatch(playerId,action);", 1)[1].split("selected=null;highlight();", 1)[0]
+        self.assertIn("if(!result.ok){", failure)
+        self.assertIn("toast(", failure)
+        self.assertIn("return result;", failure)
         self.assertIn("if(result.viewError)toast(", UI)
 
     def test_restore_uses_port_and_rerender_hook(self):
