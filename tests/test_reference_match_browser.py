@@ -45,7 +45,7 @@ async def main():
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
    await page.reload(wait_until='domcontentloaded');await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
    restored=await page.evaluate('PokecaMobile.port.getSnapshot()')
-   assert restored==final,{'changedKeys':[k for k in set(final)|set(restored) if final.get(k)!=restored.get(k)],'ui':await page.locator('body').inner_text(),'stored':await page.evaluate('async()=>{const store=PokecaStorage.createIndexedMatchStore(localStorage);const rows=await store.list();return await Promise.all(rows.map(async r=>{const e=await store.read(r.matchId);const test=PokecaMobile.port.restoreSession(e);return {id:r.matchId,turn:e.game.turnNumber,mode:e.game.mode,ok:test.ok,errors:test.errors};}));}')} 
+   assert restored==final,{'changedKeys':[k for k in set(final)|set(restored) if final.get(k)!=restored.get(k)]}
    assert not errors,errors
    report={'seed':seed,'finished':True,'winner':final['winner'],'turn':final['turnNumber'],'humanTurns':human_turns,'choiceDialogs':choices,'visibleImagesDecoded':len(images),'saveReloadExact':True,'adoptedPrints':0,'physicalAndroidVerified':False,'errors':errors}
    reports.append(report);print(json.dumps(report),flush=True);await context.close()
