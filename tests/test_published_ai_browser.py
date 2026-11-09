@@ -17,7 +17,7 @@ async def main():
    await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
    await page.locator('#menu-open').tap();await page.get_by_text('AI自動応答：オン（タップでオフ）',exact=True).tap()
    await page.evaluate('seed=>{let first=true,state=20261108;Math.random=()=>{if(first){first=false;return seed/4294967296;}state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}',123+trial-1)
-   await page.locator('#demo-open').tap();await page.locator('#confirm-ok').tap();await page.wait_for_timeout(750)
+   await page.locator('#menu-open').tap();await page.get_by_text('開発用：架空カードのAI試験対戦',exact=True).tap();await page.locator('#confirm-ok').tap();await page.wait_for_timeout(750)
    await page.locator('#opening-choices button').first.tap()
    for index in range(1,min(6,await page.locator('#opening-choices button').count())):await page.locator('#opening-choices button').nth(index).tap()
    await page.locator('#opening-start').tap()

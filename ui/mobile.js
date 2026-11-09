@@ -171,7 +171,7 @@
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
   function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
-    if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='you'&&!$('reference-choice'))queueMicrotask(showReferenceChoice);
+    if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='you'&&(!sheet.open||!$('reference-choice')))queueMicrotask(showReferenceChoice);
     if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning)queueMicrotask(()=>{if(view().pendingReferenceChoice?.playerId==='ai'&&!aiPracticeRunning)void runOpponentPracticeTurn();});
     if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning&&!aiPrizeAutoAttempted){aiPrizeAutoAttempted=true;queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});}
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
@@ -508,7 +508,7 @@
   function saveSafely(){void saveSession().catch(error=>{toast('保存失敗：'+error.message+'。再開用JSONを書き出してください');});}
   async function protectBeforeNewMatch(){try{await saveSession(true);return true;}catch(error){toast('前の対戦を保存できないため切替を中止しました。再開用JSONを書き出してください：'+error.message);return false;}}
   let prizeDialogOpen=false;
-  sheet.addEventListener('close',()=>{prizeDialogOpen=false;});
+  sheet.addEventListener('close',()=>{prizeDialogOpen=false;if(view().referenceEffectValidation&&(view().pendingReferenceChoice?.playerId==='you'||view().pendingPrizeSelection?.playerId==='you'))queueMicrotask(()=>{if(!sheet.open)render();});});
   function showPrizeChoice(){
     const state=view(),pending=state.pendingPrizeSelection;
     if(!pending||pending.playerId!=='you'||prizeDialogOpen)return;
@@ -530,7 +530,7 @@
       submit.innerHTML='';
       const confirm=button('選んだサイドを手札に加える',()=>{
         const result=dispatch('you',{type:'take_prizes',slots:[...chosen]});
-        if(result.ok){prizeDialogOpen=false;closeSheet();}
+        if(result.ok){prizeDialogOpen=false;closeSheet();render();}
         else{const error=(result.errors||['サイドを取得できません']).join(' / ');counter.textContent='取得できません：'+error;}
       },{disabled:chosen.size!==pending.count});
       confirm.className='primary';confirm.style.cssText='width:100%;min-height:48px;font-weight:700;';submit.append(confirm);
@@ -688,10 +688,11 @@
       }catch(error){toast('対戦準備エラー：'+error.message);}
     };
   }
-  $('demo-open').onclick=async()=>{
+  async function startDeveloperDemo(){
     if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
     try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
-  };
+  }
+  $('demo-open').onclick=()=>{void referenceValidationMenu({fixedPair:true}).catch(error=>toast('固定デッキを読み込めません：'+error.message));};
   let fixedImageBoard=null;
   // Source-backed, image-only representative prints for the fixed-deck list.
   // These IDs are NOT adopted card identities and must never enter the game state.
@@ -704,13 +705,13 @@
     }
     return window.PokecaImageResolver?.resolvePreview({name:card})||'';
   }
-  async function referenceValidationMenu(){
+  async function referenceValidationMenu({fixedPair=false}={}){
     await imageRegistryReady;
     const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});if(!response.ok)throw Error('FIXED_DECK_HTTP');
     const manifest=await response.json(),coverage=Pokeca.getReferenceEffectCoverage();
     const pending=coverage.defaults.filter(r=>r.unconnected.length||!r.mainConnected);
-    openSheet('公式効果の検証対戦',`<p>固定120枚の参照版を使用します。正式採用版の確定数は0枚のままです。印刷版IDで照合した効果だけを実行し、未接続のカード効果が必要なら停止します。</p><p>参照台帳 ${coverage.prints}印刷版 / 未接続を含む ${pending.length}/45種類</p><div class="menu-list" id="reference-match-choices"></div><details><summary>未接続の効果</summary>${pending.map(r=>'<p>'+esc(r.name)+' / '+esc(r.officialCardId)+' / '+esc(r.unconnected.join('・')||'カード固有効果')+'</p>').join('')}</details>`);
-    manifest.decks.forEach((deck,firstDeck)=>$('reference-match-choices').append(button(deck.name+'で効果を検証',async()=>{
+    openSheet(fixedPair?'固定デッキでAI対戦（検証用）':'公式効果の検証対戦',`${fixedPair?'<p>自分：ガルーラ4・ファイアロー2・ニューラ2型60枚 ／ AI：ドラパルトex型60枚。画像は公式証跡のある暫定プレビューです。</p>':''}<p>固定120枚の参照版を使用します。正式採用版の確定数は0枚のままです。印刷版IDで照合した効果だけを実行し、未接続のカード効果が必要なら停止します。</p><p>参照台帳 ${coverage.prints}印刷版 / 未接続を含む ${pending.length}/45種類</p><div class="menu-list" id="reference-match-choices"></div><details><summary>未接続の効果</summary>${pending.map(r=>'<p>'+esc(r.name)+' / '+esc(r.officialCardId)+' / '+esc(r.unconnected.join('・')||'カード固有効果')+'</p>').join('')}</details>`);
+    manifest.decks.forEach((deck,firstDeck)=>{if(fixedPair&&firstDeck!==0)return;$('reference-match-choices').append(button(fixedPair?'この固定デッキでAI対戦を開始（検証用）':deck.name+'で効果を検証',async()=>{
       try{
         if(aiPracticeRunning)throw Error('AI操作が完了するまで待ってください');
         const candidate=Pokeca.createReferenceValidationMatch(manifest,{firstDeck});if(!candidate.ok)throw Error(candidate.stage);
@@ -720,14 +721,14 @@
         selected=null;clearGesture();window.PokecaReferenceValidationStop=null;
         const result=port.loadGame(candidate.game);if(!result.ok)throw Error(result.errors.join(' / '));aiAutoMode=true;closeSheet();render();resumeReferenceAI();
       }catch(e){toast('効果検証を開始できません：'+e.message);}
-    })));
+    }));});
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
     const p=state.players.find(p=>p.id==='you');
     openSheet('自分が選ぶ効果の対象','<p>相手や自分が使った効果に対して、自分が選ぶ対象です。</p><div class="menu-list" id="reference-choice"></div>');
     for(const value of choice.options){const label=choice.kind==='MULLIGAN'?'引き直しにより追加で'+value+'枚引く':choice.kind==='CIRCULATOR'?(state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId)?.name||value.energyId)+' を '+(state.players.flatMap(p=>p.bench).find(c=>idOf(c)===value.benchInstanceId)?.name||value.benchInstanceId)+' へ移す':p.bench.find(c=>idOf(c)===value)?.name||value;
-      $('reference-choice').append(button(label,()=>{const result=dispatch('you',{type:'resolve_reference_choice',...(choice.kind==='MULLIGAN'?{drawCount:value}:choice.kind==='CIRCULATOR'?value:{benchInstanceId:value})});if(result.ok)closeSheet();}));}
+      $('reference-choice').append(button(label,()=>{const result=dispatch('you',{type:'resolve_reference_choice',...(choice.kind==='MULLIGAN'?{drawCount:value}:choice.kind==='CIRCULATOR'?value:{benchInstanceId:value})});if(result.ok){closeSheet();render();}}));}
   }
   function selectReferenceCounters(request){return new Promise(resolve=>{
     const allocation=Object.fromEntries(request.candidates.map(c=>[c.id,0]));
@@ -917,6 +918,7 @@
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('固定デッキでAI対戦（検証用）',()=>{void referenceValidationMenu({fixedPair:true}).catch(e=>toast(e.message));}));
     list.append(button('公式効果の検証対戦（参照版・未接続効果で停止）',()=>{void referenceValidationMenu().catch(e=>toast(e.message));}));
     list.append(button('固定2デッキで操作練習（公式効果未接続）',()=>{void fixedPracticeMenu().catch(error=>toast(error.message));}));
     list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
@@ -928,10 +930,7 @@
       if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
     }));
     list.append(button('相手AIの番を実行（練習版）',()=>{closeSheet();void runOpponentPracticeTurn();},{disabled:view().turnPlayer!=='ai'||aiPracticeRunning}));
-    list.append(button('対戦準備から始める：架空カードのAI試験対戦',async()=>{
-      if(!await confirmAction('架空カード60枚の対戦準備を開始します。最初のたねポケモンは自分で選びます。'))return;
-      try{await chooseDemoOpening();}catch(error){toast('対戦準備を開始できません：'+error.message);}
-    }));
+    list.append(button('開発用：架空カードのAI試験対戦',()=>{void startDeveloperDemo();}));
     list.append(button('60枚デッキJSONで試験対戦開始',()=>{
       openSheet('60枚デッキの試験対戦',`<p>各カードに verified:true を持つ60枚JSONを入力できます。ただしJSONの自己申告フラグだけでは公式証跡を確認できません。この機能は試験用であり、公式デッキ・本番検証済みとは認定しません。固定2デッキ45種類の本番カード識別は未完了です。</p><label>自分のデッキJSON<input id="match-deck-you" type="file" accept="application/json,.json"></label><label>AIのデッキJSON<input id="match-deck-ai" type="file" accept="application/json,.json"></label><label>先攻プレイヤー<select id="match-first-player"><option value="you">自分が先攻</option><option value="ai">AIが先攻</option></select></label><label><input id="match-auto-bench" type="checkbox" checked> 試験用：初期手札のたねをベンチへ自動配置（最大5匹）</label><div class="menu-list"><button id="match-start-verified">検証して対戦開始</button></div>`);
       $('match-start-verified').onclick=async()=>{
