@@ -25,3 +25,5 @@
 全ての公式ルール・あらゆるカード組合せへの適合を宣言するものではない。参照台帳中の既定以外の印刷版で未解析の公式文は停止する。弱点を書き換える特性と「相手にかかっている効果を計算しない」の追加組合せは、個別裁定不足時に `OFFICIAL_WEAKNESS_MODIFICATION_RULING_REQUIRED` で停止（既定の無色ノココッチexには該当しない）。物理Android実機検査は別途必要。
 
 再検査：`node scripts/run-offline-tests.cjs`、`node tests/reference-provenance.test.cjs`、`CHROMIUM_EXECUTABLE=/usr/bin/chromium python tests/test_reference_match_browser.py`。公開版には `POKECA_TEST_URL` を設定。生成物同期は `node scripts/sync-reference-effects.cjs --check`。
+
+公開v239でも同じ2戦が11/41ターンで終局し、画像読込・完全復元・PWAオフライン/オンライン復元が合格（`public-results.json`）。既存の正式画像ゲートは採用版0枚によりexit2のまま。画像収集Actionsは既存証跡の再取得を避けるため明示的に中止し、対戦・回帰検査とは区別した。CIで見つかった「エラーブロック直後にtoastがある」という文字列依存の検査は、停止診断の挿入を許容しつつ、失敗通知と早期returnの両方を必須にして修正。Python全6検査群24件が合格。
