@@ -1,0 +1,72 @@
+{
+  "url": "https://card-play-sim.github.io/pokeca-play-table-/",
+  "build": 240,
+  "testedAppCommit": "85437c9904e8b0c207aa9f1a8d3e50357018096a",
+  "matches": [
+    {
+      "seed": 2,
+      "primaryFixedDeckEntry": true,
+      "youDeck": "kangaskhan-meowth-fixed",
+      "aiDeck": "dragapult-fixed",
+      "finished": true,
+      "winner": "you",
+      "turn": 11,
+      "humanTurns": 8,
+      "touchBenchPlacements": 2,
+      "choiceDialogs": 1,
+      "visibleImagesDecoded": 15,
+      "openingImagesDecoded": 7,
+      "compositionPreviewCopies": 120,
+      "trashImagesDecoded": 5,
+      "saveReloadExact": true,
+      "adoptedPrints": 0,
+      "physicalAndroidVerified": false,
+      "errors": []
+    },
+    {
+      "seed": 7,
+      "primaryFixedDeckEntry": true,
+      "youDeck": "kangaskhan-meowth-fixed",
+      "aiDeck": "dragapult-fixed",
+      "finished": true,
+      "winner": "you",
+      "turn": 33,
+      "humanTurns": 24,
+      "touchBenchPlacements": 6,
+      "choiceDialogs": 6,
+      "visibleImagesDecoded": 14,
+      "openingImagesDecoded": 7,
+      "compositionPreviewCopies": 120,
+      "trashImagesDecoded": 30,
+      "saveReloadExact": true,
+      "adoptedPrints": 0,
+      "physicalAndroidVerified": false,
+      "errors": []
+    }
+  ],
+  "pwa": {
+    "url": "https://card-play-sim.github.io/pokeca-play-table-/",
+    "serviceWorkerController": "https://card-play-sim.github.io/pokeca-play-table-/sw.js",
+    "serviceWorkersBlocked": false,
+    "offlineSessionReloadPass": true,
+    "onlineRestorePass": true,
+    "offlineOfficialImagesVerified": false,
+    "physicalAndroidVerified": false,
+    "officialMatchPass": false,
+    "javascriptErrors": []
+  },
+  "offlineCI": {
+    "runId": 42562580948,
+    "conclusion": "success"
+  },
+  "officialAdoptionGate": {
+    "runId": 42562580982,
+    "conclusion": "failure",
+    "reason": "Formal adopted prints remain 0/120; preview display is not formal adoption"
+  },
+  "collector": {
+    "runId": 42562581033,
+    "conclusion": "cancelled",
+    "reason": "Existing registry/evidence protected; recollection not required"
+  }
+}

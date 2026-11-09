@@ -15,3 +15,5 @@
 実行：`CHROMIUM_EXECUTABLE=/usr/bin/chromium python tests/test_reference_match_browser.py`。公開版には `POKECA_TEST_URL=https://card-play-sim.github.io/pokeca-play-table-/` を指定。旧架空カードの検査は `tests/test_published_ai_browser.py`。全オフライン回帰は `node scripts/run-offline-tests.cjs`。
 
 ローカル最終結果：固定デッキ2戦が11/33ターンで終局。タッチによるベンチ配置2/6回、選択ダイアログ1/6回、構成プレビュー120/120枚、初期手札・場の画像各7件、終局時の場・手札画像15/14件、トラッシュ画像5/30件を確認。両戦とも保存・再読込一致、JS例外なし。全オフラインNode回帰（既存AI8戦・参照版AI2戦・効果41検査等）合格。画像解決・保存キュー・89印刷版証跡・Pythonヘッダ4件と表示配線6件も合格。
+
+公開v240の同一入口でも2戦が11/33ターンで終局。両戦の120枚プレビュー・手札/場/トラッシュ画像・タッチ配置・ターン更新・完全復元が合格。PWAのオフライン/オンライン復元も合格。GitHub ActionsのComplete offline regression（42562580948）はsuccess。正式採用版必須の旧画像ゲート（42562580982）は確定0/120枚のためfailureを維持。検査詳細はpublic-results.json。
