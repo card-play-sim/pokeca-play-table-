@@ -1,0 +1,30 @@
+{
+  "status": "BLOCKED_EXTERNAL_DECK_PRINT_EVIDENCE",
+  "appComplete": false,
+  "publicUrl": "https://card-play-sim.github.io/pokeca-play-table-/",
+  "testedRuntimeCommit": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+  "mergedPr": 1,
+  "mergeCommit": "22e8e9738f31534dbc21d818f1055953724d5136",
+  "displayedPreviewCopies": 120,
+  "undisplayedPreviewCopies": 0,
+  "adoptedPrintCopies": 0,
+  "pendingAdoptedCopies": 120,
+  "officialFixedDeckAIMatchesCompleted": 0,
+  "syntheticBrowserAIMatchesCompleted": 2,
+  "syntheticAttackCounts": [
+    13,
+    9
+  ],
+  "syntheticSaveReloadExact": true,
+  "publicPwaOfflineSessionRestore": true,
+  "allOfflineRegressionRun": 42538639715,
+  "allOfflineRegressionConclusion": "success",
+  "strictOfficialFixed120Gate": "FAIL (identity unconfirmed; retained, not ignored)",
+  "physicalAndroidVerified": false,
+  "source1945FilesUnchanged": 29,
+  "allPriorRegistryFieldsPreserved": true,
+  "registryPrintReferences": 186,
+  "externalBlocker": "45 fixed-deck names have no source-backed selected official print ID/set/number mapping. Candidate official references are not source-deck adoption evidence. Existing five verified official Effect Command records cover other cards.",
+  "resume": "docs/CONTINUOUS_EXECUTION_CHECKPOINT.md",
+  "requiredEvidence": "data/continuous-completion/adoption-required.json"
+}

@@ -1,0 +1,63 @@
+{
+  "testedRuntimeCommit": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+  "runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 42538652594,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "Fixed 120 deck and browser JS validation"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42538649637,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "Card reflection runtime checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42538646152,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "Mobile header layout checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42538642993,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "Image registry importer capacity"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42538639715,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "Complete offline regression"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 42538627055,
+      "headSha": "9904214dc8d9f3d3673a00b170deec4c6d3935db",
+      "status": "completed",
+      "workflowName": "pages-build-deployment"
+    }
+  ],
+  "officialFixed120Gate": "BLOCKED_IDENTITY_UNCONFIRMED (not converted to PASS)",
+  "physicalAndroidVerified": false,
+  "all186ReferenceBrowserCheck": {
+    "runId": 42537365433,
+    "status": "success",
+    "registrySha256": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41",
+    "registryUnchangedSinceTest": true
+  },
+  "preservedFailedOfficialMatchGate": {
+    "runId": 42537436648,
+    "exitCode": 2,
+    "adoptedPrintImages": 0,
+    "pendingCopies": 120,
+    "previewCopies": 120,
+    "reason": "Adopted print identities missing; not ignored or converted to PASS"
+  }
+}

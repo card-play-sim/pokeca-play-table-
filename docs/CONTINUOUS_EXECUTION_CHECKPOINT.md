@@ -37,3 +37,11 @@ PR #1はmainへ統合済み。GitHub Pages: https://card-play-sim.github.io/poke
 正式画像検査`tests/test_fixed_deck_browser_images.py`の終了2と、静的検査`node scripts/check-fixed-120-images.cjs`の失敗は現在の正式採用版未確定を表す。無視・無効化してPASSにしない。
 
 最新の公開検査とCIの結果は`data/continuous-completion/`に保存する。物理Android実機は未検査。
+
+## 最新の完了検査
+
+検査対象ランタイムは`9904214`（build238）。公開版で暫定画像120/120枚と基本操作・保存復元に合格。公開版の架空カードAI対戦2本は27/19ターンで完走し、攻撃13/9回ときぜつ3/1回、保存後の復元一致を確認。service worker有効のPWAもオフライン再読込とオンライン復帰で状態が一致。物理Android実機は未検査。
+
+全Node/Pythonオフライン回帰はGitHub Actions `42538639715`でsuccess（既存AI回帰8本を含む）。容量・ヘッダー・reflection・固定デッキ構成の4検査もsuccess。公式固定120枚ゲートの終了2は保持し、全45種類の採用版保留をPASS扱いにしない。正式AI対戦の完走数は0。
+
+結果保存後の最後のコミットは報告・証跡のみ。アプリのコード・台帳は上記検査ランタイムと同一で、公開後にハッシュ一致を再検査する。次回は45種類の採用印刷版資料の回収・照合から続け、統合・120枚プレビュー・完了済み回帰を最初から繰り返さない。
