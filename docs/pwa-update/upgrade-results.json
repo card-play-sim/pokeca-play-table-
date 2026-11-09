@@ -1,0 +1,483 @@
+{
+  "origin": "http://127.0.0.1:43717/",
+  "physicalAndroidVerified": false,
+  "oldLabel": "v240",
+  "oldActualUI": "AI試験対戦",
+  "mixedReleaseRejected": true,
+  "existingSessionPreserved": "match-mw8u46s6-oe11v7muuo",
+  "loadedRelease": {
+    "htmlBuild": "241",
+    "mobileBuild": "241",
+    "controllerBuild": "241",
+    "state": "ready",
+    "releaseFiles": {
+      "./": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1",
+      "./index.html": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1",
+      "./ui/mobile.css?build=241": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6",
+      "./ui/engine.bundle.js?build=241": "e7a39033376c4d1c6d7cec7efe1fcb6b38d03a97f2fc656fe748bf2db854ae26",
+      "./ui/card-art.js?build=241": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121",
+      "./ui/verified-card-art.js?build=241": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e",
+      "./ui/official-image-validation.js?build=241": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53",
+      "./ui/card-image-resolver.js?build=241": "661ec6c8f4aba207e330de1c2ca07af6484221069853197830680c4c74bc659d",
+      "./ui/session-storage.js?build=241": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553",
+      "./ui/fixed-120-match-adapter.js?build=241": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657",
+      "./ui/fixed-deck-image-audit.js?build=241": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de",
+      "./ui/fixed-deck-practice.js?build=241": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac",
+      "./ui/mobile.js?build=241": "92de28f838f99fc29a765bf4f166f60c1e1da3e3bf9845bb5601e7e3dff597d0",
+      "./ui/app-update.js?build=241": "a17eb574e5f27a3e06f54736cd019413fcca0e46fc3249e37de8e4315a2ef028",
+      "./data/fixed-test-decks.json": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e",
+      "./data/official-image-registry.json": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41",
+      "./data/fixed-deck-preview-bindings.json": "e9c745337ac150012f74c44ba89ea9d174bd07dabe9b063c88f28c114d241e83",
+      "./data/fixed-deck-practice-facts.json": "d25fa734df0d55075e91d2c8bbe4fd8b8f820f34f5617abea8599aef9ac5f0d4",
+      "./manifest.webmanifest": "a28d04d371688e1650f8b7cbcfbc4149b521e81c77d2d69282a30eb8caef80c4",
+      "./icon.svg": "d7d4c44c04748dcad32865fc2beddd7a47f0a63fab3a08d4e5bcf0fa14f72ca1"
+    },
+    "cacheName": "pokeca-first-playable-v241-62d1eed396299cae"
+  },
+  "cacheHashes": {
+    "./index.html": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1",
+    "./ui/mobile.js?build=241": "92de28f838f99fc29a765bf4f166f60c1e1da3e3bf9845bb5601e7e3dff597d0",
+    "./ui/app-update.js?build=241": "a17eb574e5f27a3e06f54736cd019413fcca0e46fc3249e37de8e4315a2ef028"
+  },
+  "fixedDeckStarted": true,
+  "previewImages": 7,
+  "offlineRestoreExact": true,
+  "javascriptErrors": [],
+  "requests": [
+    {
+      "phase": "old",
+      "url": "/",
+      "sha256": "f3283fc39ce570ccffac84fb7f143a579675794139da38b661de625512e4ce92"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-image-resolver.js?build=240",
+      "sha256": "19d9eef64cf0582545d1e8ff60b5da28d5b545931945ed193574bdc08e280d5a"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.css?build=240",
+      "sha256": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/session-storage.js?build=240",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/verified-card-art.js?build=240",
+      "sha256": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/official-image-validation.js?build=240",
+      "sha256": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/engine.bundle.js?build=240",
+      "sha256": "df5d5dcba1f0640cdbff9a4e01762850b3576ff0fd9c6edb7afbde3b27d256a0"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-120-match-adapter.js?build=240",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-image-audit.js?build=240",
+      "sha256": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-practice.js?build=240",
+      "sha256": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-art.js?build=240",
+      "sha256": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.js?build=240",
+      "sha256": "b794c85212dfb76d60a8a84a237f19138c89b35de8272a9ed2f648bf26b191ed"
+    },
+    {
+      "phase": "old",
+      "url": "/data/official-image-registry.json",
+      "sha256": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41"
+    },
+    {
+      "phase": "old",
+      "url": "/data/fixed-deck-preview-bindings.json",
+      "sha256": "e9c745337ac150012f74c44ba89ea9d174bd07dabe9b063c88f28c114d241e83"
+    },
+    {
+      "phase": "old",
+      "url": "/icon.svg",
+      "sha256": "d7d4c44c04748dcad32865fc2beddd7a47f0a63fab3a08d4e5bcf0fa14f72ca1"
+    },
+    {
+      "phase": "old",
+      "url": "/sw.js",
+      "sha256": "bb654fb7b874a77fc91b3f449380a68711de4644906e3974a2a94c1063733c58"
+    },
+    {
+      "phase": "old",
+      "url": "/",
+      "sha256": "f3283fc39ce570ccffac84fb7f143a579675794139da38b661de625512e4ce92"
+    },
+    {
+      "phase": "old",
+      "url": "/index.html",
+      "sha256": "f3283fc39ce570ccffac84fb7f143a579675794139da38b661de625512e4ce92"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.css?build=240",
+      "sha256": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/engine.bundle.js?build=240",
+      "sha256": "df5d5dcba1f0640cdbff9a4e01762850b3576ff0fd9c6edb7afbde3b27d256a0"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/verified-card-art.js?build=240",
+      "sha256": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-art.js?build=240",
+      "sha256": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-image-resolver.js?build=240",
+      "sha256": "19d9eef64cf0582545d1e8ff60b5da28d5b545931945ed193574bdc08e280d5a"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/official-image-validation.js?build=240",
+      "sha256": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53"
+    },
+    {
+      "phase": "old",
+      "url": "/data/fixed-deck-preview-bindings.json",
+      "sha256": "e9c745337ac150012f74c44ba89ea9d174bd07dabe9b063c88f28c114d241e83"
+    },
+    {
+      "phase": "old",
+      "url": "/data/fixed-test-decks.json",
+      "sha256": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e"
+    },
+    {
+      "phase": "old",
+      "url": "/data/official-image-registry.json",
+      "sha256": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/session-storage.js?build=240",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-120-match-adapter.js?build=240",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-image-audit.js?build=240",
+      "sha256": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.js?build=240",
+      "sha256": "b794c85212dfb76d60a8a84a237f19138c89b35de8272a9ed2f648bf26b191ed"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-practice.js?build=240",
+      "sha256": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac"
+    },
+    {
+      "phase": "old",
+      "url": "/icon.svg",
+      "sha256": "d7d4c44c04748dcad32865fc2beddd7a47f0a63fab3a08d4e5bcf0fa14f72ca1"
+    },
+    {
+      "phase": "old",
+      "url": "/data/fixed-deck-practice-facts.json",
+      "sha256": "d25fa734df0d55075e91d2c8bbe4fd8b8f820f34f5617abea8599aef9ac5f0d4"
+    },
+    {
+      "phase": "old",
+      "url": "/manifest.webmanifest",
+      "sha256": "a28d04d371688e1650f8b7cbcfbc4149b521e81c77d2d69282a30eb8caef80c4"
+    },
+    {
+      "phase": "old",
+      "url": "/",
+      "sha256": "f3283fc39ce570ccffac84fb7f143a579675794139da38b661de625512e4ce92"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.css?build=240",
+      "sha256": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/engine.bundle.js?build=240",
+      "sha256": "df5d5dcba1f0640cdbff9a4e01762850b3576ff0fd9c6edb7afbde3b27d256a0"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-art.js?build=240",
+      "sha256": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/verified-card-art.js?build=240",
+      "sha256": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/official-image-validation.js?build=240",
+      "sha256": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/card-image-resolver.js?build=240",
+      "sha256": "19d9eef64cf0582545d1e8ff60b5da28d5b545931945ed193574bdc08e280d5a"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/session-storage.js?build=240",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-image-audit.js?build=240",
+      "sha256": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-120-match-adapter.js?build=240",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/fixed-deck-practice.js?build=240",
+      "sha256": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac"
+    },
+    {
+      "phase": "old",
+      "url": "/ui/mobile.js?build=240",
+      "sha256": "b794c85212dfb76d60a8a84a237f19138c89b35de8272a9ed2f648bf26b191ed"
+    },
+    {
+      "phase": "old",
+      "url": "/data/official-image-registry.json",
+      "sha256": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41"
+    },
+    {
+      "phase": "old",
+      "url": "/icon.svg",
+      "sha256": "d7d4c44c04748dcad32865fc2beddd7a47f0a63fab3a08d4e5bcf0fa14f72ca1"
+    },
+    {
+      "phase": "old",
+      "url": "/data/fixed-deck-preview-bindings.json",
+      "sha256": "e9c745337ac150012f74c44ba89ea9d174bd07dabe9b063c88f28c114d241e83"
+    },
+    {
+      "phase": "mixed",
+      "url": "/sw.js",
+      "sha256": "4a6477281a2ae47162a2170b9666d6fca95a85dcd12e5d080dbb05620cde8599"
+    },
+    {
+      "phase": "mixed",
+      "url": "/",
+      "sha256": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1"
+    },
+    {
+      "phase": "mixed",
+      "url": "/index.html",
+      "sha256": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/mobile.css?build=241",
+      "sha256": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/engine.bundle.js?build=241",
+      "sha256": "e7a39033376c4d1c6d7cec7efe1fcb6b38d03a97f2fc656fe748bf2db854ae26"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/card-art.js?build=241",
+      "sha256": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/verified-card-art.js?build=241",
+      "sha256": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/official-image-validation.js?build=241",
+      "sha256": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/card-image-resolver.js?build=241",
+      "sha256": "661ec6c8f4aba207e330de1c2ca07af6484221069853197830680c4c74bc659d"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/session-storage.js?build=241",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/fixed-120-match-adapter.js?build=241",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/fixed-deck-image-audit.js?build=241",
+      "sha256": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/fixed-deck-practice.js?build=241",
+      "sha256": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/mobile.js?build=241",
+      "sha256": "b794c85212dfb76d60a8a84a237f19138c89b35de8272a9ed2f648bf26b191ed"
+    },
+    {
+      "phase": "mixed",
+      "url": "/sw.js",
+      "sha256": "4a6477281a2ae47162a2170b9666d6fca95a85dcd12e5d080dbb05620cde8599"
+    },
+    {
+      "phase": "mixed",
+      "url": "/",
+      "sha256": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1"
+    },
+    {
+      "phase": "mixed",
+      "url": "/index.html",
+      "sha256": "f65ef31e38ed628a626fd5f1b7129f74a6992c68cae52acf75828f544720f0a1"
+    },
+    {
+      "phase": "mixed",
+      "url": "/ui/mobile.css?build=241",
+      "sha256": "8080864fbe2856551b820180ffd8dae1581597938ba5d1232b283def284f22d6"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/engine.bundle.js?build=241",
+      "sha256": "e7a39033376c4d1c6d7cec7efe1fcb6b38d03a97f2fc656fe748bf2db854ae26"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/card-art.js?build=241",
+      "sha256": "d9599831f1b7992594e6f88a3a2d1cc9a73f5f9869fe0d1fed98ba7fb0923121"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/verified-card-art.js?build=241",
+      "sha256": "d6002f952654f1f218c4658244c003cb0e85d49319af90634d484f5a2fadd35e"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/official-image-validation.js?build=241",
+      "sha256": "18b646dfef5d033908790c5fe3c5857b74fe7a503b02d3b6762db9f3d2a71c53"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/card-image-resolver.js?build=241",
+      "sha256": "661ec6c8f4aba207e330de1c2ca07af6484221069853197830680c4c74bc659d"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/session-storage.js?build=241",
+      "sha256": "682d8027b571ed973c8ed13b86627a546598697106cc84082763f10227e59553"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/fixed-120-match-adapter.js?build=241",
+      "sha256": "a18ef34668521422f4d7c8311a1d70b82d1f3cd0413a37e684c8e3a558117657"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/fixed-deck-image-audit.js?build=241",
+      "sha256": "4e8d4564107c3abaad818e476b5e203bcc3df5198b237df7a1b3f9c0b79825de"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/fixed-deck-practice.js?build=241",
+      "sha256": "9d3b7b8da8a289c1ab8cbcada2b197219d930319e6883eed85dd4db9cb1599ac"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/mobile.js?build=241",
+      "sha256": "92de28f838f99fc29a765bf4f166f60c1e1da3e3bf9845bb5601e7e3dff597d0"
+    },
+    {
+      "phase": "new",
+      "url": "/ui/app-update.js?build=241",
+      "sha256": "a17eb574e5f27a3e06f54736cd019413fcca0e46fc3249e37de8e4315a2ef028"
+    },
+    {
+      "phase": "new",
+      "url": "/data/fixed-test-decks.json",
+      "sha256": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e"
+    },
+    {
+      "phase": "new",
+      "url": "/data/official-image-registry.json",
+      "sha256": "c75d3fc80ba69a83f848309f44ba7eb4cfa348e85c175f32c68ec584dd5dfa41"
+    },
+    {
+      "phase": "new",
+      "url": "/data/fixed-deck-preview-bindings.json",
+      "sha256": "e9c745337ac150012f74c44ba89ea9d174bd07dabe9b063c88f28c114d241e83"
+    },
+    {
+      "phase": "new",
+      "url": "/data/fixed-deck-practice-facts.json",
+      "sha256": "d25fa734df0d55075e91d2c8bbe4fd8b8f820f34f5617abea8599aef9ac5f0d4"
+    },
+    {
+      "phase": "new",
+      "url": "/manifest.webmanifest",
+      "sha256": "a28d04d371688e1650f8b7cbcfbc4149b521e81c77d2d69282a30eb8caef80c4"
+    },
+    {
+      "phase": "new",
+      "url": "/icon.svg",
+      "sha256": "d7d4c44c04748dcad32865fc2beddd7a47f0a63fab3a08d4e5bcf0fa14f72ca1"
+    },
+    {
+      "phase": "new",
+      "url": "/sw.js",
+      "sha256": "4a6477281a2ae47162a2170b9666d6fca95a85dcd12e5d080dbb05620cde8599"
+    },
+    {
+      "phase": "new",
+      "url": "/sw.js",
+      "sha256": "4a6477281a2ae47162a2170b9666d6fca95a85dcd12e5d080dbb05620cde8599"
+    }
+  ]
+}
