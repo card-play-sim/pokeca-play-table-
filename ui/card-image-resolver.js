@@ -32,7 +32,18 @@
     const print=Array.isArray(card.evolutionCards)&&card.evolutionCards.length?card.evolutionCards.at(-1):card;
     const identified=[card,print].some(c=>c.officialCardId!=null||c.catalogCardId!=null);
     const exact=resolve(card);
+    if(identified&&print.validationReference)return {mode:'missing',url:''};
     if(identified)return {mode:exact?'verified-print':'missing',url:exact,adopted:card.identityStatus==='CONFIRMED'&&!!exact};
+    if(print.validationReference){
+      const ref=print.validationReference,aliases={'たけしのスカウト':'タケシのスカウト','ロケット団のエネルギー':'ロケット団エネルギー'};
+      if(print.name!==ref.officialName&&aliases[print.name]!==ref.officialName)return {mode:'missing',url:''};
+      const r=entries.get(String(ref.officialCardId)),known=previews.get(print.name)?.preview;
+      const query={officialCardId:ref.officialCardId,name:ref.officialName,set:ref.set,cardNumber:ref.cardNumber,imageSourceUrl:ref.imageSourceUrl};
+      const registered=r&&rules.matches(r,query);
+      const isolated=known&&['officialCardId','name','set','cardNumber','imageSourceUrl'].every(k=>String(known[k]??'')===String(query[k]??''));
+      if(ref.adopted!==false||(!registered&&!isolated))return {mode:'missing',url:''};
+      return {mode:'provisional-preview',url:query.imageSourceUrl,referenceOfficialCardId:String(ref.officialCardId),officialName:ref.officialName,adopted:false};
+    }
     const binding=previews.get(print.name);
     if(binding){
       const r=binding.preview;

@@ -171,9 +171,11 @@
   function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
   function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
+    if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='you'&&!$('reference-choice'))queueMicrotask(showReferenceChoice);
+    if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning)queueMicrotask(()=>{if(view().pendingReferenceChoice?.playerId==='ai'&&!aiPracticeRunning)void runOpponentPracticeTurn();});
     if(s.pendingPrizeSelection?.playerId==='ai'&&aiAutoMode&&!aiPracticeRunning&&!aiPrizeAutoAttempted){aiPrizeAutoAttempted=true;queueMicrotask(()=>{if(!aiPracticeRunning&&view().pendingPrizeSelection?.playerId==='ai')void runOpponentPracticeTurn();});}
     $('turn-label').textContent=s.status==='finished'?'対戦終了 · '+(s.winner==='you'?'自分の勝ち':'相手の勝ち'):`TURN ${s.turnNumber} · ${s.turnPlayer==='you'?'自分の番':'相手の番'}`;
-    $('game-note').textContent=s.fixedDeckPractice?'固定デッキ操作練習・暫定画像／公式効果未接続':s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
+    $('game-note').textContent=s.referenceEffectValidation?'公式効果の検証対戦・参照版／採用未確定':s.fixedDeckPractice?'固定デッキ操作練習・暫定画像／公式効果未接続':s.practiceScenario?`実証${s.practiceScenario.index+1} · ${s.practiceScenario.label}`:s.mode==='practice'?'操作練習・仮HP':s.demo?'架空カードの試験対戦・公式データではありません':'JSON試験対戦・公式検証未完了';
     $('opponent-hand').innerHTML=Array.from({length:Math.min(opp.handCount,14)},()=>'<i class="card-back"></i>').join('');$('opponent-hand-count').textContent=opp.handCount+'枚';
     for(const [prefix,p] of [['opponent',opp],['self',you]]){
       $(prefix+'-bench').innerHTML=Array.from({length:5},(_,i)=>`<div class="bench-slot${p.bench[i]?'':' empty'}" ${prefix==='self'?'data-drop-zone="bench"':''}>${p.bench[i]?cardHTML(p.bench[i],s,p):''}</div>`).join('');
@@ -207,6 +209,7 @@
     $('stadium').classList.toggle('has-stadium',!!s.stadium);
     for(const [prefix,p] of [['self',you],['opponent',opp]]){const states=scopedStates(p.id);$(prefix+'-effects').replaceChildren(...states.map(state=>button(state.short,()=>scopedStateDetail(p.id),{className:'scope-chip'})));}
     bindCards();highlight();
+    if(referenceStopped()){for(const key of ['attack-button','ability-button','draw-button','end-turn'])$(key).disabled=true;$('interaction-hint').textContent='未接続効果で検証停止・保存状態は保持';}
     refreshCurrentImageSheet();
     if(s.practiceScenario?.focusInstanceId)document.querySelectorAll('[data-card-id]').forEach(el=>el.classList.toggle('scenario-focus',el.dataset.cardId===s.practiceScenario.focusInstanceId));
   }
@@ -282,16 +285,18 @@
     const abilities=declared.map(a=>a.name+': '+(a.text || '')).concat(registry.filter(e=>e.source.type==='ABILITY').map(e=>e.source.name));
     const stateHTML=statesFor(s,id).map(effectRow).join('');
     openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card)}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc((card.energyCards || []).map(c=>c.energyType).join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
+    if(view().referenceEffectValidation){const ref=Pokeca.getReferenceEffectRecord(card);if(ref){const source=document.createElement('p');source.className='reference-print-source';source.innerHTML='効果検証の参照版：'+esc(ref.officialCardId)+' / '+esc(ref.set)+' / '+esc(ref.cardNumber||'番号無印字')+'（正式採用未確定） <a target="_blank" rel="noopener" href="'+esc(ref.officialPageUrl)+'">公式出典</a>';$('sheet-content').prepend(source);}}
     refreshImageSheet=()=>detail(id);
     if(card.energyCards?.length){const attached=document.createElement('div');attached.className='discard-grid attached-image-gallery';attached.innerHTML=card.energyCards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}">${cardArt(c)}</div>`).join('');$('sheet-content').append(attached);}
     if(player.id==='you'&&player.hand.some(c=>idOf(c)===id))addHandActions(id,$('detail-actions'));
   }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
-  function ruleRow(entry){return `<section class="effect-row rule-explanation"><strong>${entry.type==='ABILITY'?'特性':'ワザ'} · ${esc(entry.name)}${entry.active===null?'':entry.active?'（現在有効）':'（現在無効／使用済み・条件不成立）'}</strong><p>${esc(entry.description)}</p>${entry.inactiveReasons?.length?'<p>'+esc(entry.inactiveReasons.join(' / '))+'</p>':''}${entry.officialText!==null?'<small>保存済みofficialTextを表示（原文は変更しません）</small>':''}<dl class="effect-metadata"><dt>発動条件</dt><dd>${esc(entry.condition)}</dd><dt>対象</dt><dd>${esc(entry.target)}</dd><dt>使用回数制限</dt><dd>${esc(entry.usage)}</dd><dt>解除条件</dt><dd>${esc(entry.removal)}</dd><dt>処理順（表示用）</dt><dd>${esc(entry.resolution)}</dd></dl></section>`;}
+  function ruleRow(entry){return `<section class="effect-row rule-explanation"><strong>${entry.type==='ABILITY'?'特性':entry.type==='ATTACK'?'ワザ':'カード効果'} · ${esc(entry.name)}${entry.active===null?'':entry.active?'（現在有効）':'（現在無効／使用済み・条件不成立）'}</strong><p>${esc(entry.description)}</p>${entry.inactiveReasons?.length?'<p>'+esc(entry.inactiveReasons.join(' / '))+'</p>':''}${entry.officialText!==null?'<small>保存済みofficialTextを表示（原文は変更しません）</small>':''}<dl class="effect-metadata"><dt>発動条件</dt><dd>${esc(entry.condition)}</dd><dt>対象</dt><dd>${esc(entry.target)}</dd><dt>使用回数制限</dt><dd>${esc(entry.usage)}</dd><dt>解除条件</dt><dd>${esc(entry.removal)}</dd><dt>処理順（表示用）</dt><dd>${esc(entry.resolution)}</dd></dl></section>`;}
   function stateDetail(id){const found=getCard(id),info=found?port.getCardInfo(found.player.id,id):null;const states=statesFor(view(),id);openSheet('継続効果・期限',states.map(effectRow).join('')+(info?.specialStatus?effectRow(info.specialStatus):'') || '<p>現在有効な継続効果はありません。</p>');}
   function scopedStates(playerId){return port.getStatusView().filter(s=>s.scope==='PLAYER'?s.playerId===playerId:s.scope==='FIELD'&&(!s.playerIds || s.playerIds.includes(playerId)));}
   function scopedStateDetail(playerId){openSheet((playerId==='you'?'自分':'相手')+'側・場の制限',scopedStates(playerId).map(effectRow).join('') || '<p>現在有効な制限はありません。</p>');}
   function addHandActions(id,container){const card=getCard(id)?.card;
+    if(view().referenceEffectValidation){for(const option of port.getHandOptions('you',id)){const check=option.ok;container.append(button(option.label,()=>{void resolveOption(option);},{disabled:!check}));if(!check)container.append(button('停止・使用制限の理由',()=>openSheet('効果の検証結果',(option.errors||[]).map(e=>'<p>'+esc(e)+'</p>').join(''))));}return;}
     if(card?.cardType==='SUPPORTER'){
       const a={type:'play_supporter',cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
       if(search){
@@ -368,7 +373,12 @@
     if(option.targets){const id=await selectCards({title:'特性の対象を選ぶ',min:1,max:1,candidates:option.targets.map(id=>{const state=view();const owner=state.players.find(p=>idOf(p.active)===id||p.bench.some(b=>idOf(b)===id));const index=owner?.bench.findIndex(b=>idOf(b)===id)??-1;const mon=owner?.active&&idOf(owner.active)===id?owner.active:owner?.bench[index];return {id,name:(owner?.id==='you'?'自分':'相手')+' '+(index>=0?'ベンチ'+(index+1):'バトル場')+' · '+(mon?.name||getCard(id)?.card.name||id)+(mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'')};})});if(!id)return;action.targetIds=id;}
     // All bench targeting goes through the engine-provided legal candidate list.
     // Never permit free-form damage or counter placement from the UI.
-    for(const request of option.requests || []) {
+    for(const originalRequest of option.requests || []) {
+      const request=clone(originalRequest);
+      if(request.kind==='COUNTERS'){const allocation=await selectReferenceCounters(request);if(!allocation)return;action.selections||={};action.selections[request.key]=allocation;continue;}
+      if(request.kind==='COUNT'){const sourceId=action.selections?.source?.[0],source=getCard(sourceId)?.card;const max=Math.min(request.max,Math.floor((source?.damage||0)/10));const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:max+1},(_,n)=>({id:String(n),name:n+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
+      if(request.key==='toHand'&&action.selections?.cards){request.candidates=request.candidates.filter(c=>action.selections.cards.includes(idOf(c)));request.min=request.max=Math.min(1,request.candidates.length);}
+      if(request.key==='attachTo'&&option.requests.some(r=>r.key==='toHand'))request.min=request.max=(action.selections?.cards?.length||0)>1?1:0;
       const choices=await selectCards({title:request.kind==='CARD'?'山札からサポートを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD')return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
@@ -377,7 +387,7 @@
     if(option.kind==='attack'&&!await confirmAction('「'+option.label+'」を使います。解決後に番が進みます。よろしいですか？')){closeSheet();return;}
     if(option.kind==='ability'&&!await confirmAction('特性「'+option.label+'」を使います。よろしいですか？')){closeSheet();return;}
     closeSheet();const used=dispatch('you',action);
-    if(used.ok&&option.kind==='attack'&&view().status==='active'&&view().turnPlayer==='you'){
+    if(used.ok&&option.kind==='attack'&&view().status==='active'&&view().turnPlayer==='you'&&!view().pendingPrizeSelection&&!view().pendingReferenceChoice){
       const ended=dispatch('you',{type:'end_turn'});
       if(!ended.ok)toast('ワザは使用済みです。番の終了を確認してください');
       else if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
@@ -419,12 +429,24 @@
       $('selection-confirm').onclick=()=>done([...selectedIds]);
     });
   }
-  function dispatch(playerId,action){if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
-    if(!result.ok){toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
+  function referenceStopped(){return view().referenceEffectValidation&&window.PokecaReferenceValidationStop?.matchId===port.getSessionId();}
+  function referenceStop(errors,blockedEffects=[]){
+    if(!view().referenceEffectValidation)return;
+    for(const error of errors||[])if(error.startsWith('UNCONNECTED_EFFECT:')){try{blockedEffects.push(JSON.parse(error.slice('UNCONNECTED_EFFECT:'.length)));}catch{}}
+    if(!blockedEffects.length)return;
+    const report={matchId:port.getSessionId(),stage:'UNCONNECTED_EFFECT',blockedEffects};window.PokecaReferenceValidationStop=report;aiAutoMode=false;
+    try{localStorage.setItem('pokeca-reference-stop:'+report.matchId,JSON.stringify(report));}catch{}
+    openSheet('未接続の公式効果で検証停止',`<p>未確認の効果を仮実装せず、この検証を停止しました。対戦状態と履歴は保持しています。</p>${blockedEffects.map(b=>'<p>'+esc(b.cardName)+' / 公式参照ID '+esc(b.officialCardId)+' / '+esc(b.effectName)+'<br>'+esc(b.reason)+'</p>').join('')}`);
+    render();
+  }
+  function resumeReferenceAI(){queueMicrotask(()=>{const state=view(),actor=state.pendingPrizeSelection?.playerId||state.pendingReferenceChoice?.playerId||state.turnPlayer;if(state.referenceEffectValidation&&state.status==='active'&&actor==='ai'&&aiAutoMode&&!aiPracticeRunning&&!referenceStopped())void runOpponentPracticeTurn();});}
+  function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
+    if(!result.ok){referenceStop(result.errors);toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
     if(result.viewError)toast('処理は確定しました。表示を再読み込みしてください');
     try{animateEvents(before,view());}catch(_){metrics.animationErrors++;}
+    resumeReferenceAI();
     return result;
   }
   function anchor(owner,zone){return document.querySelector(`[data-zone-owner="${owner}"][data-zone="${zone}"]`) || (owner==='you'?$('self-hand'):$('opponent-hand'));}
@@ -583,8 +605,9 @@
   }
   let aiPrizeAutoAttempted=false;
   async function runOpponentPracticeTurn(){
+    if(referenceStopped())return;
     if(aiPracticeRunning)return;
-    if(view().turnPlayer!=='ai'&&view().pendingPrizeSelection?.playerId!=='ai'){toast('相手の番になってから実行してください');return;}
+    if(view().turnPlayer!=='ai'&&view().pendingPrizeSelection?.playerId!=='ai'&&view().pendingReferenceChoice?.playerId!=='ai'){toast('相手の番になってから実行してください');return;}
     aiPracticeRunning=true;
     const aiStartedAt=performance.now();
     render();
@@ -592,9 +615,9 @@
     await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
     try{
       const result=await Pokeca.runAITurn(port,'ai',{
-        policy:({legalActions})=>{
+        policy:({legalActions,observation})=>{
           const candidates=legalActions.filter(action=>action.type!=='draw');
-          return Pokeca.chooseBaseline({legalActions:candidates});
+          return Pokeca.chooseBaseline({legalActions:candidates,observation});
         }
       });
       const elapsedSeconds=((performance.now()-aiStartedAt)/1000).toFixed(1);
@@ -606,7 +629,7 @@
         const recent=view().history.filter(e=>e.player==='ai'&&!['end_turn','draw'].includes(e.type)).slice(-1)[0];
         toast((recent?'相手：'+eventText(recent):'AIの番が終了しました')+' · '+elapsedSeconds+'秒 / '+result.actions+'手 / 最長'+result.slowestActionMs+'ms'+phaseLabel);
       }
-      else {const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
+      else {if(result.stage==='unconnected_effect')referenceStop(result.errors,result.blockedEffects||[]);const reason=(result.errors||[result.stage]).join(' / ');toast('AI停止（'+elapsedSeconds+'秒）：'+reason+'。右下の「AIの番を再開」で再試行できます');}
     }catch(error){
       showAiPerformance('AI停止：'+((performance.now()-aiStartedAt)/1000).toFixed(1)+'秒 / '+String(error?.message||error));
       toast('AI停止：'+error.message);
@@ -681,6 +704,40 @@
     }
     return window.PokecaImageResolver?.resolvePreview({name:card})||'';
   }
+  async function referenceValidationMenu(){
+    await imageRegistryReady;
+    const response=await fetch('./data/fixed-test-decks.json',{cache:'no-store'});if(!response.ok)throw Error('FIXED_DECK_HTTP');
+    const manifest=await response.json(),coverage=Pokeca.getReferenceEffectCoverage();
+    const pending=coverage.defaults.filter(r=>r.unconnected.length||!r.mainConnected);
+    openSheet('公式効果の検証対戦',`<p>固定120枚の参照版を使用します。正式採用版の確定数は0枚のままです。印刷版IDで照合した効果だけを実行し、未接続のカード効果が必要なら停止します。</p><p>参照台帳 ${coverage.prints}印刷版 / 未接続を含む ${pending.length}/45種類</p><div class="menu-list" id="reference-match-choices"></div><details><summary>未接続の効果</summary>${pending.map(r=>'<p>'+esc(r.name)+' / '+esc(r.officialCardId)+' / '+esc(r.unconnected.join('・')||'カード固有効果')+'</p>').join('')}</details>`);
+    manifest.decks.forEach((deck,firstDeck)=>$('reference-match-choices').append(button(deck.name+'で効果を検証',async()=>{
+      try{
+        if(aiPracticeRunning)throw Error('AI操作が完了するまで待ってください');
+        const candidate=Pokeca.createReferenceValidationMatch(manifest,{firstDeck});if(!candidate.ok)throw Error(candidate.stage);
+        if(!await confirmAction('現在の対戦を保存して、参照版の公式効果検証を開始しますか？ 正式採用版の確定ではありません。'))return;
+        if(!await protectBeforeNewMatch())return;
+        fixedImageBoard=null;$('app').classList.remove('fixed-image-board');$('fixed-image-controls')?.remove();$('demo-open').disabled=false;
+        selected=null;clearGesture();window.PokecaReferenceValidationStop=null;
+        const result=port.loadGame(candidate.game);if(!result.ok)throw Error(result.errors.join(' / '));aiAutoMode=true;closeSheet();render();resumeReferenceAI();
+      }catch(e){toast('効果検証を開始できません：'+e.message);}
+    })));
+  }
+  function showReferenceChoice(){
+    const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
+    const p=state.players.find(p=>p.id==='you');
+    openSheet('自分が選ぶ効果の対象','<p>相手や自分が使った効果に対して、自分が選ぶ対象です。</p><div class="menu-list" id="reference-choice"></div>');
+    for(const value of choice.options){const label=choice.kind==='MULLIGAN'?'引き直しにより追加で'+value+'枚引く':choice.kind==='CIRCULATOR'?(state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId)?.name||value.energyId)+' を '+(state.players.flatMap(p=>p.bench).find(c=>idOf(c)===value.benchInstanceId)?.name||value.benchInstanceId)+' へ移す':p.bench.find(c=>idOf(c)===value)?.name||value;
+      $('reference-choice').append(button(label,()=>{const result=dispatch('you',{type:'resolve_reference_choice',...(choice.kind==='MULLIGAN'?{drawCount:value}:choice.kind==='CIRCULATOR'?value:{benchInstanceId:value})});if(result.ok)closeSheet();}));}
+  }
+  function selectReferenceCounters(request){return new Promise(resolve=>{
+    const allocation=Object.fromEntries(request.candidates.map(c=>[c.id,0]));
+    openSheet('ダメカン6個をベンチにのせる','<p>合計6個を指定してください。対象はエンジンが許可した相手のベンチだけです。</p><div id="reference-counter-choices"></div><div id="reference-counter-submit"></div>');
+    const paint=()=>{
+      const total=Object.values(allocation).reduce((a,b)=>a+b,0);$('reference-counter-choices').replaceChildren();
+      for(const c of request.candidates){const row=document.createElement('div');row.textContent=c.name+'：'+allocation[c.id]+'個 ';row.append(button('−',()=>{allocation[c.id]--;paint();},{disabled:allocation[c.id]===0}),button('＋',()=>{allocation[c.id]++;paint();},{disabled:total===6}));$('reference-counter-choices').append(row);}
+      $('reference-counter-submit').replaceChildren(button('この配分で決定',()=>{closeSheet();resolve(allocation);},{disabled:total!==6}),button('キャンセル',()=>{closeSheet();resolve(null);}));
+    };paint();
+  });}
   async function fixedPracticeMenu(){
     await imageRegistryReady;
     if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('画像証跡を読み込めません');
@@ -860,6 +917,7 @@
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
+    list.append(button('公式効果の検証対戦（参照版・未接続効果で停止）',()=>{void referenceValidationMenu().catch(e=>toast(e.message));}));
     list.append(button('固定2デッキで操作練習（公式効果未接続）',()=>{void fixedPracticeMenu().catch(error=>toast(error.message));}));
     list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
     list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
@@ -913,6 +971,7 @@
   if(!restored){const loaded=port.loadGame(game);if(!loaded.ok)toast(loaded.errors.join(' / '));}
   persistenceReady=true;
   if(restored&&view().fixedDeckPractice)aiAutoMode=false;
+  if(view().referenceEffectValidation){try{window.PokecaReferenceValidationStop=JSON.parse(localStorage.getItem('pokeca-reference-stop:'+port.getSessionId())||'null');}catch{}if(referenceStopped()){aiAutoMode=false;render();}}
   if(restored&&aiAutoMode&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   if(recoveryWarning){$('save-status').textContent=storageUnavailable?'端末保存不可・JSON書出し':'保存の確認が必要';$('save-status').classList.add('save-error');toast('自動再開できませんでした：'+recoveryWarning+'。必要なら再開用JSONを書き出してください');}
   else{saveSafely();if(restored)toast('前回の対戦を再開しました');}
