@@ -18,3 +18,7 @@ HTML識別子、実際のmobile.js識別子、制御中SWの識別子を別に�
 再生成：`node scripts/build-pwa-release.cjs`。以後、index.html・同梱JS/CSS/JSONを変更した場合はバージョンを更新して再生成する。`--check`は収録内容の変更を検出する。
 
 再検査：`node tests/pwa-release.test.cjs`、`CHROMIUM_EXECUTABLE=/usr/bin/chromium python tests/test_pwa_upgrade_browser.py`、`python tests/test_release_delivery_browser.py`。公開版検査には`POKECA_TEST_URL`を指定する。Android物理実機での修正版確認は未実施。
+
+公開v241でも、Service Workerを通さない別ブラウザコンテキストから取得したHTML・mobile.js・更新JS・SWのSHA-256が原本と一致し、実際に制御中のSW内の全収録ファイルもリリース台帳と一致した。固定デッキ開始、初期画像7件、オフライン完全復元、従来のPWAオフライン/オンライン復元が合格。実v240コミット41e9d60の固定デッキ保存対戦も、新SWへ更新した後に完全一致した（actual-v240-upgrade-results.json）。
+
+GitHub Actions Complete offline regression（42569052536）はsuccess。正式印刷版未確定の旧画像ゲートは従来どおり別判定であり、暫定プレビューを正式採用としていない。画像の再収集は不要のため画像収集Actions（42569052322）は中止し、既存証跡を保持した。

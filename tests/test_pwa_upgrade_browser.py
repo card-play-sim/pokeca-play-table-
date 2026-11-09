@@ -9,9 +9,10 @@ from urllib.parse import urlsplit,unquote
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
 ROOT=Path(__file__).resolve().parents[1]
+BASE=os.environ.get('POKECA_UPGRADE_BASE','f040d35')
 phase={'value':'old'};old={};requests=[]
 def prior(path):
- if path not in old:old[path]=subprocess.check_output(['git','show','f040d35:'+path],cwd=ROOT)
+ if path not in old:old[path]=subprocess.check_output(['git','show',BASE+':'+path],cwd=ROOT)
  return old[path]
 class Handler(BaseHTTPRequestHandler):
  def log_message(self,*args):pass
@@ -35,15 +36,18 @@ async def main():
   browser=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   context=await browser.new_context(**device);page=await context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   await page.goto(base);await page.wait_for_function('navigator.serviceWorker.controller&&window.PokecaMobile&&document.getElementById("save-status").textContent==="自動保存済"')
-  assert await page.locator('#demo-open').inner_text()=='AI試験対戦'
+  assert await page.locator('#demo-open').inner_text()==('AI試験対戦' if BASE=='f040d35' else '固定デッキ対戦')
   assert 'v240' in await page.locator('#build-revision').inner_text()
+  if BASE!='f040d35':
+   await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap()
+   await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation&&document.getElementById("save-status").textContent==="自動保存済"')
   saved=await page.evaluate('PokecaMobile.port.getSnapshot()');session=await page.evaluate('PokecaMobile.port.getResumeSnapshot().matchId')
   await page.evaluate("async()=>{localStorage.setItem('upgrade-preserve','yes');const c=await caches.open('other-app');await c.put('./sentinel',new Response('keep'));}")
   # Mismatched CDN bytes must never activate the new worker or discard the old cache.
   phase['value']='mixed'
   await page.evaluate('async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update();}')
   await page.wait_for_function('async()=>{const r=await navigator.serviceWorker.getRegistration();return !r.installing}')
-  assert await page.locator('#demo-open').inner_text()=='AI試験対戦'
+  assert await page.locator('#demo-open').inner_text()==('AI試験対戦' if BASE=='f040d35' else '固定デッキ対戦')
   assert 'pokeca-first-playable-v240' in await page.evaluate('caches.keys()')
   phase['value']='new'
   await page.evaluate('async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update();}')
@@ -65,7 +69,7 @@ async def main():
   assert await page.evaluate('PokecaMobile.port.getSnapshot()')==initial
   assert await page.locator('#demo-open').inner_text()=='固定デッキ対戦'
   assert not errors,errors
-  report={'origin':base,'physicalAndroidVerified':False,'oldLabel':'v240','oldActualUI':'AI試験対戦','mixedReleaseRejected':True,'existingSessionPreserved':session,'loadedRelease':status,'cacheHashes':cache_hashes,'fixedDeckStarted':True,'previewImages':len(images),'offlineRestoreExact':True,'javascriptErrors':errors,'requests':requests}
+  report={'origin':base,'physicalAndroidVerified':False,'oldLabel':'v240','oldActualUI':'AI試験対戦' if BASE=='f040d35' else '固定デッキ対戦','baseCommit':BASE,'existingFixedDeckSessionPreserved':bool(saved.get('referenceEffectValidation')),'mixedReleaseRejected':True,'existingSessionPreserved':session,'loadedRelease':status,'cacheHashes':cache_hashes,'fixedDeckStarted':True,'previewImages':len(images),'offlineRestoreExact':True,'javascriptErrors':errors,'requests':requests}
   (ROOT/'artifacts/pwa-upgrade-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k not in ('loadedRelease','requests')},ensure_ascii=False),flush=True)
   await browser.close()
  server.shutdown()
