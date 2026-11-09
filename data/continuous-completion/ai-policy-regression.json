@@ -1,0 +1,30 @@
+{
+  "before": {
+    "sourceCommit": "22e8e9738f31534dbc21d818f1055953724d5136",
+    "setupSeed": 123,
+    "attackCount": 0,
+    "turnNumber": 19,
+    "outcome": "deck_out",
+    "diagnosis": "first legal energy chosen without attack-cost matching; draws and evolution precede available attack"
+  },
+  "after": {
+    "syntheticCardsOnly": true,
+    "matches": [
+      {
+        "trial": 1,
+        "attackCount": 13,
+        "turnNumber": 27,
+        "finished": true,
+        "saveReloadExact": true
+      },
+      {
+        "trial": 2,
+        "attackCount": 9,
+        "turnNumber": 19,
+        "finished": true,
+        "saveReloadExact": true
+      }
+    ]
+  },
+  "officialFixedDeckMatchPass": false
+}

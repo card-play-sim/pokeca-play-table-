@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+const {chooseBaseline}=require('../engine/pokeca_ai_baseline_policy.cjs');
+const water={type:'attach_energy',cardIndex:0,target:'active'},grass={type:'attach_energy',cardIndex:1,target:'active'},dark={type:'attach_energy',cardIndex:2,target:'active'};
+const observation={turnPlayer:'you',players:[{id:'you',active:{attacks:[{cost:['草','C']}],energyCards:[]},bench:[],hand:[{kind:'energy',energyType:'水'},{kind:'energy',energyType:'草'},{kind:'energy',energyType:'悪'}]}]};
+assert.equal(chooseBaseline({legalActions:[water,grass,dark],observation}),grass);
+observation.players[0].active.energyCards=[{energyType:'草'}];assert.equal(chooseBaseline({legalActions:[water,grass,dark],observation}),water);
+observation.players[0].active={attacks:[{cost:['悪','C']}],energyCards:[]};assert.equal(chooseBaseline({legalActions:[water,grass,dark],observation}),dark);
+const attack={type:'attack_turn',attackIndex:0},evolve={type:'evolve',cardId:'evolution'};
+assert.equal(chooseBaseline({legalActions:[evolve,water,attack],observation}),attack);
+observation.players[0].active.attacks=[{cost:['UNKNOWN']}];assert.equal(chooseBaseline({legalActions:[water,dark],observation}),water,'unknown costs cannot be guessed');
+observation.players[0].hand[2].isSpecial=true;observation.players[0].active.attacks=[{cost:['悪']}];assert.equal(chooseBaseline({legalActions:[water,dark],observation}),water,'unknown special-energy contributions must not be inferred');
+assert.throws(()=>chooseBaseline({legalActions:[]}),/No legal/);
+execFileSync(process.execPath,['scripts/sync-ai-policy.cjs','--check']);
+console.log('PASS AI policy: known attack costs, matching basic energy, available attack, unknown/special energy safety and bundle synchronization');

@@ -1,0 +1,2313 @@
+{
+  "schemaVersion": 1,
+  "device": "Chromium Pixel 5 Android emulation",
+  "physicalAndroidVerified": false,
+  "previewBoardUsed": false,
+  "url": "https://card-play-sim.github.io/pokeca-play-table-/",
+  "serviceWorkersBlocked": true,
+  "fixedDeckPracticeLoaded": true,
+  "livePhysicalCards": 120,
+  "compositionImagesDisplayed": 120,
+  "adoptedPrintCopies": 0,
+  "officialEffectsConnected": false,
+  "operations": [
+    "touch bench placement",
+    "touch drag energy attachment",
+    "both players turn updates",
+    "touch evolution",
+    "hand to discard",
+    "hand to draw pile",
+    "persisted reload exact snapshot",
+    "late registry refresh of open card detail without state changes",
+    "failed image retains touch target and fallback"
+  ],
+  "identityConservation": true,
+  "saveReloadExact": true,
+  "javascriptErrors": [],
+  "imageFilesSaved": false,
+  "observations": [
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "メガガルーラex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047847_P_MGARURAEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ファイアローex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050400_P_FUAIAROIEKKUSU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ラティアスex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046248_P_RATEIASUEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "リーリエのピッピex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047041_P_RIRIENOPIPPIEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "マシマシラ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045746_P_MASHIMASHIRA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ロケット団のニューラ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047465_P_ROKETTODANNONIXYURA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "シェイミ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045152_P_SHIEIMI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ニャースex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049694_P_NIXYASUEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ハイパーボール",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "夜のタンカ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049386_T_YORUNOTANKA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "エネルギーつけかえ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050323_T_ENERUGITSUKEKAE.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ポケモンいれかえ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050847_T_POKEMONIREKAE.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "スペシャルレッドカード",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050156_T_SUPESHIXYARUREDDOKADO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "むしよけスプレー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049384_T_MUSHIYOKESUPURE.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "アカマツ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049412_T_AKAMATSU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "シアノ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046442_T_SHIANO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "トウコ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049434_T_TOUKO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ボスの指令",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050853_T_BOSUNOSHIREI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "リーリエの決心",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ジャッジマン",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050851_T_JIXYAJJIMAN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "たけしのスカウト",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050605_T_TAKESHINOSUKAUTO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ハンディサーキュレーター",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045786_T_HANDEISAKIXYURETA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ヒーローマント",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048300_T_HIROMANTO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ロケット団の監視塔",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048711_T_ROKETTODANNOKANSHITOU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "夜の鉱山",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048710_T_YORUNOKOUZAN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "危ない廃墟",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047796_T_ABUNAIHAIKIXYO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ロケット団のエネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049458_E_ROKETTODANENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "イグニッションエネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049452_E_IGUNISSHIXYONENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "基本悪エネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049465_E_KIHONAKUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "基本超エネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049463_E_KIHONCHIXYOUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ドラメシヤ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ドロンチ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ドラパルトex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049264_P_DORAPARUTOEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "スボミー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046662_P_SUBOMI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "マシマシラ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045746_P_MASHIMASHIRA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "キチキギスex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045913_P_KICHIKIGISUEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ニャースex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049694_P_NIXYASUEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ノココッチ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046791_P_NOKOKOTCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ノココッチex",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049291_P_NOKOKOTCHIEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ノコッチ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045202_P_NOKOTCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "なかよしポフィン",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045209_T_NAKAYOSHIPOFUIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "クラッシュハンマー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ハイパーボール",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ポケパッド",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050846_T_POKEPADDO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "夜のタンカ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049386_T_YORUNOTANKA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "アンフェアスタンプ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049349_T_ANFUEASUTANPU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "スペシャルレッドカード",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050156_T_SUPESHIXYARUREDDOKADO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "リーリエの決心",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ボスの指令",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050853_T_BOSUNOSHIREI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "アカマツ",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049412_T_AKAMATSU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "メイのはげまし",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050854_T_MEINOHAGEMASHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "ジャミングタワー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049982_T_JIXYAMINGUTAWA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "危ない廃墟",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047796_T_ABUNAIHAIKIXYO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "基本炎エネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049460_E_KIHONHONOOENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "基本超エネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049463_E_KIHONCHIXYOUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "deck-composition",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": "基本悪エネルギー",
+        "mode": "candidate",
+        "referenceId": null,
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049465_E_KIHONAKUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "active-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-3",
+        "name": "ドラメシヤ",
+        "mode": "provisional-preview",
+        "referenceId": "45770",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "active-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-1-1",
+        "name": "メガガルーラex",
+        "mode": "provisional-preview",
+        "referenceId": "47847",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047847_P_MGARURAEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-10",
+        "name": "ドラパルトex",
+        "mode": "provisional-preview",
+        "referenceId": "49264",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049264_P_DORAPARUTOEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-18",
+        "name": "ノココッチex",
+        "mode": "provisional-preview",
+        "referenceId": "49291",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049291_P_NOKOKOTCHIEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-54",
+        "name": "基本炎エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49460",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049460_E_KIHONHONOOENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-13",
+        "name": "マシマシラ",
+        "mode": "provisional-preview",
+        "referenceId": "45746",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045746_P_MASHIMASHIRA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-24",
+        "name": "クラッシュハンマー",
+        "mode": "provisional-preview",
+        "referenceId": "50596",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "hand-opening",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-33",
+        "name": "ポケパッド",
+        "mode": "provisional-preview",
+        "referenceId": "50846",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050846_T_POKEPADDO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-6",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-37",
+        "name": "夜のタンカ",
+        "mode": "provisional-preview",
+        "referenceId": "49386",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049386_T_YORUNOTANKA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-11",
+        "name": "スボミー",
+        "mode": "provisional-preview",
+        "referenceId": "46662",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046662_P_SUBOMI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-57",
+        "name": "基本超エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49463",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049463_E_KIHONCHIXYOUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-23",
+        "name": "なかよしポフィン",
+        "mode": "provisional-preview",
+        "referenceId": "45209",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045209_T_NAKAYOSHIPOFUIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-55",
+        "name": "基本超エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49463",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049463_E_KIHONCHIXYOUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-12",
+        "name": "スボミー",
+        "mode": "provisional-preview",
+        "referenceId": "46662",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046662_P_SUBOMI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-30",
+        "name": "ハイパーボール",
+        "mode": "provisional-preview",
+        "referenceId": "50843",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-8",
+        "name": "ドラパルトex",
+        "mode": "provisional-preview",
+        "referenceId": "49264",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049264_P_DORAPARUTOEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-2",
+        "name": "ドラメシヤ",
+        "mode": "provisional-preview",
+        "referenceId": "45770",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-42",
+        "name": "リーリエの決心",
+        "mode": "provisional-preview",
+        "referenceId": "50855",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-46",
+        "name": "ボスの指令",
+        "mode": "provisional-preview",
+        "referenceId": "50853",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050853_T_BOSUNOSHIREI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-31",
+        "name": "ハイパーボール",
+        "mode": "provisional-preview",
+        "referenceId": "50843",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-0",
+        "name": "ドラメシヤ",
+        "mode": "provisional-preview",
+        "referenceId": "45770",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-4",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-43",
+        "name": "リーリエの決心",
+        "mode": "provisional-preview",
+        "referenceId": "50855",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-40",
+        "name": "リーリエの決心",
+        "mode": "provisional-preview",
+        "referenceId": "50855",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-38",
+        "name": "アンフェアスタンプ",
+        "mode": "provisional-preview",
+        "referenceId": "49349",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049349_T_ANFUEASUTANPU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-9",
+        "name": "ドラパルトex",
+        "mode": "provisional-preview",
+        "referenceId": "49264",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049264_P_DORAPARUTOEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-58",
+        "name": "基本悪エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49465",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049465_E_KIHONAKUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-19",
+        "name": "ノコッチ",
+        "mode": "provisional-preview",
+        "referenceId": "45202",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045202_P_NOKOTCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-32",
+        "name": "ポケパッド",
+        "mode": "provisional-preview",
+        "referenceId": "50846",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050846_T_POKEPADDO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-36",
+        "name": "夜のタンカ",
+        "mode": "provisional-preview",
+        "referenceId": "49386",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049386_T_YORUNOTANKA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-49",
+        "name": "メイのはげまし",
+        "mode": "provisional-preview",
+        "referenceId": "50854",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050854_T_MEINOHAGEMASHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-16",
+        "name": "ニャースex",
+        "mode": "provisional-preview",
+        "referenceId": "49694",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049694_P_NIXYASUEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-35",
+        "name": "ポケパッド",
+        "mode": "provisional-preview",
+        "referenceId": "50846",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050846_T_POKEPADDO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-26",
+        "name": "クラッシュハンマー",
+        "mode": "provisional-preview",
+        "referenceId": "50596",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-39",
+        "name": "スペシャルレッドカード",
+        "mode": "provisional-preview",
+        "referenceId": "50156",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050156_T_SUPESHIXYARUREDDOKADO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-52",
+        "name": "基本炎エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49460",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049460_E_KIHONHONOOENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-45",
+        "name": "ボスの指令",
+        "mode": "provisional-preview",
+        "referenceId": "50853",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050853_T_BOSUNOSHIREI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-27",
+        "name": "クラッシュハンマー",
+        "mode": "provisional-preview",
+        "referenceId": "50596",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-59",
+        "name": "基本悪エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49465",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049465_E_KIHONAKUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-17",
+        "name": "ノココッチ",
+        "mode": "provisional-preview",
+        "referenceId": "46791",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046791_P_NOKOKOTCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-28",
+        "name": "ハイパーボール",
+        "mode": "provisional-preview",
+        "referenceId": "50843",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-22",
+        "name": "なかよしポフィン",
+        "mode": "provisional-preview",
+        "referenceId": "45209",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045209_T_NAKAYOSHIPOFUIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-41",
+        "name": "リーリエの決心",
+        "mode": "provisional-preview",
+        "referenceId": "50855",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050855_T_RIRIENOKESSHIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-25",
+        "name": "クラッシュハンマー",
+        "mode": "provisional-preview",
+        "referenceId": "50596",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-47",
+        "name": "アカマツ",
+        "mode": "provisional-preview",
+        "referenceId": "49412",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049412_T_AKAMATSU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-29",
+        "name": "ハイパーボール",
+        "mode": "provisional-preview",
+        "referenceId": "50843",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050843_T_HAIPABORU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-7",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-56",
+        "name": "基本超エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49463",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049463_E_KIHONCHIXYOUENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-5",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-21",
+        "name": "なかよしポフィン",
+        "mode": "provisional-preview",
+        "referenceId": "45209",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045209_T_NAKAYOSHIPOFUIN.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-50",
+        "name": "ジャミングタワー",
+        "mode": "provisional-preview",
+        "referenceId": "49982",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049982_T_JIXYAMINGUTAWA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-53",
+        "name": "基本炎エネルギー",
+        "mode": "provisional-preview",
+        "referenceId": "49460",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049460_E_KIHONHONOOENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-48",
+        "name": "アカマツ",
+        "mode": "provisional-preview",
+        "referenceId": "49412",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049412_T_AKAMATSU.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-14",
+        "name": "マシマシラ",
+        "mode": "provisional-preview",
+        "referenceId": "45746",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045746_P_MASHIMASHIRA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "bench-after-placement",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-2",
+        "name": "ドラメシヤ",
+        "mode": "provisional-preview",
+        "referenceId": "45770",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "bench-after-energy",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-2",
+        "name": "ドラメシヤ",
+        "mode": "provisional-preview",
+        "referenceId": "45770",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045770_P_DORAMESHIYA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "bench-after-evolution",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-2",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "evolved-detail",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": null,
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "attached-energy-detail",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-54",
+        "name": null,
+        "mode": "provisional-preview",
+        "referenceId": "49460",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049460_E_KIHONHONOOENERUGI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "live-discard",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-24",
+        "name": "クラッシュハンマー",
+        "mode": "provisional-preview",
+        "referenceId": "50596",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050596_T_KURASSHIXYUHANMA.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "returned-to-live-draw-pile",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-33",
+        "name": "ポケパッド",
+        "mode": "provisional-preview",
+        "referenceId": "50846",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050846_T_POKEPADDO.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "evolved-after-reload",
+      "passed": true,
+      "observation": {
+        "id": "fixed-practice-0-2",
+        "name": "ドロンチ",
+        "mode": "provisional-preview",
+        "referenceId": "49263",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049263_P_DORONCHI.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    },
+    {
+      "zone": "delayed-registry-detail-refresh",
+      "passed": true,
+      "observation": {
+        "id": null,
+        "name": null,
+        "mode": "provisional-preview",
+        "referenceId": "49264",
+        "sourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049264_P_DORAPARUTOEX.jpg",
+        "decoded": true,
+        "width": 868,
+        "height": 1212,
+        "painted": true
+      },
+      "http": {
+        "status": 200,
+        "type": "image/jpeg"
+      }
+    }
+  ],
+  "imageAndBasicOperationPass": true,
+  "officialMatchPass": false,
+  "limitation": "Manual practice in the app uses reference facts; official card effects and adopted editions are not connected."
+}

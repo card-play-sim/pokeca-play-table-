@@ -1,0 +1,9 @@
+'use strict';
+const fs=require('node:fs');
+const file='ui/engine.bundle.js',source=fs.readFileSync('engine/pokeca_ai_baseline_policy.cjs','utf8').trimEnd();
+const bundle=fs.readFileSync(file,'utf8'),marker='},"pokeca_ai_baseline_policy":function(require,module,exports){\n';
+const start=bundle.indexOf(marker)+marker.length,end=bundle.indexOf('\n},"pokeca_ai_port":function',start);
+if(start<marker.length||end<start)throw Error('AI_POLICY_BUNDLE_BOUNDARY');
+const updated=bundle.slice(0,start)+source+'\n'+bundle.slice(end);
+if(process.argv.includes('--check')){if(updated!==bundle)throw Error('AI_POLICY_BUNDLE_STALE');}
+else if(updated!==bundle)fs.writeFileSync(file,updated);

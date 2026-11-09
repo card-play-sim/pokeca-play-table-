@@ -1,0 +1,29 @@
+name: Complete offline regression
+on:
+  push:
+    branches: [main]
+    paths: ['ui/**', 'engine/**', 'scripts/**', 'tools/**', 'tests/**', 'data/**', '.github/workflows/offline-regression.yml']
+  pull_request:
+    paths: ['ui/**', 'engine/**', 'scripts/**', 'tools/**', 'tests/**', 'data/**', '.github/workflows/offline-regression.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: All offline Node regression, metadata preservation and AI games
+        run: node scripts/run-offline-tests.cjs
+      - name: All offline Python checks
+        run: |
+          for pattern in test_formal_zip_reconciliation.py test_fixed_preview_evidence.py test_fixed_practice_facts.py test_mobile_header_layout.py test_card_reflection_wiring.py test_official_image_workflow.py; do
+            python -m unittest discover -s tests -p "$pattern" -v
+          done

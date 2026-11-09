@@ -4,16 +4,16 @@
   const idOf=c=>c?.id || c?.cardId;
   const esc=x=>String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const symbols={'水':'💧','炎':'🔥','草':'✦','超':'◉','悪':'◐','雷':'ϟ','闘':'◆','鋼':'⬡'};
-  let store=null,persistenceReady=false,storageUnavailable=false,saveQueue=Promise.resolve();
+  let store=null,persistenceReady=false,storageUnavailable=false,saveQueue=Promise.resolve(),saveSequence=0;
   function saveSession(force=false){
     if(!persistenceReady||!store||(!force&&storageUnavailable))return saveQueue;
-    const snapshot=port.getResumeSnapshot();
+    const snapshot=port.getResumeSnapshot(),sequence=++saveSequence;
     $('save-status').textContent='保存中';
     const pending=saveQueue.catch(()=>{}).then(()=>store.save(snapshot)).then(()=>{
-      storageUnavailable=false;$('save-status').textContent='自動保存済';$('save-status').title='';$('save-status').classList.remove('save-error');
+      if(sequence===saveSequence){storageUnavailable=false;$('save-status').textContent='自動保存済';$('save-status').title='';$('save-status').classList.remove('save-error');}
     },error=>{
-      storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';
-      $('save-status').title='保存失敗：'+String(error?.message||error);$('save-status').classList.add('save-error');
+      if(sequence===saveSequence){storageUnavailable=true;$('save-status').textContent='端末保存不可・JSON書出し';
+      $('save-status').title='保存失敗：'+String(error?.message||error);$('save-status').classList.add('save-error');}
       throw error;
     });
     saveQueue=pending;
