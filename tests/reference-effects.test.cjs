@@ -65,6 +65,20 @@ test('shared any-target damage reaches opponent bench for both Cruel Arrow print
   assert.equal(t.g.players[0].active.damage,0);
  }
 });
+test('shared Flower Curtain protects non-rule bench but not rule Pokemon on four prints',()=>{
+ for(const officialCardId of ['47301','47367','47860','48534']){
+  for(const [targetName,expectedDamage] of [['マシマシラ',0],['メガガルーラex',100]]){
+   const t=setup({active:['ロケット団のニューラ','キチキギスex'],
+    bench:{0:['シェイミ','マシマシラ','メガガルーラex']},
+    energy:{1:{active:['基本炎エネルギー','基本超エネルギー','基本悪エネルギー']}},
+    referenceIds:{'シェイミ':officialCardId}});
+   const target=t.g.players[0].bench.find(c=>c.name===targetName).id;
+   t.do('you',{type:'end_turn'});
+   t.do('ai',{type:'attack_turn',attackIndex:0,targetIds:[target]});
+   assert.equal(t.g.players[0].bench.find(c=>c.name===targetName).damage,expectedDamage);
+  }
+ }
+});
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
