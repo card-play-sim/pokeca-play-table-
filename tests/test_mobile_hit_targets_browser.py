@@ -35,6 +35,8 @@ async def main():
    print(json.dumps({'layoutGeometry':geometry,'appChildren':children},ensure_ascii=False))
    (ROOT/'artifacts/mobile-hit-targets.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
    await page.screenshot(path=str(ROOT/'artifacts/mobile-hit-targets.png'),full_page=True)
+   assert len(children)==6,'gameplay grid gained a seventh child: '+repr(children)
+   assert geometry['.table']['height']>=150,'gameplay board collapsed: '+repr(geometry)
    assert all(x.get('hittable') for x in result),result
    print(json.dumps({'mobileHitTargetsPass':True,'physicalAndroidVerified':False,'targets':result},ensure_ascii=False))
   finally:
