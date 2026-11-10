@@ -31,7 +31,7 @@ jobs:
       - name: Test failure-path triage and safe Codex instructions
         run: node tests/effect-triage-failure-path.test.cjs
       - name: Inventory all 45 fixed-deck reference effects and unresolved blockers
-        run: node tests/fixed-deck-effect-coverage.cjs
+        run: node tests/fixed-deck-effect-coverage.test.cjs
       - name: Run both suites and write structured diagnosis
         id: regression
         continue-on-error: true
