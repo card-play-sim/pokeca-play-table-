@@ -28,7 +28,10 @@ async def main():
      return {selector,x,y,width:r.width,height:r.height,top:top?.outerHTML?.slice(0,140),
        hittable:!!top&&(el===top||el.contains(top))};
    })""",selectors)
+   geometry=await page.evaluate("""()=>Object.fromEntries(['.app','.table','.table .opponent','.table .self','.table .self .active-row','#self-right','#self-bench','.actionbar'].map(selector=>{const el=document.querySelector(selector),r=el.getBoundingClientRect(),s=getComputedStyle(el);return [selector,{x:r.x,y:r.y,width:r.width,height:r.height,gridTemplateRows:s.gridTemplateRows,overflow:s.overflow}]}))""")
    (ROOT/'artifacts').mkdir(exist_ok=True)
+   (ROOT/'artifacts/mobile-layout-geometry.json').write_text(json.dumps(geometry,ensure_ascii=False,indent=2)+'\\n')
+   print(json.dumps({'layoutGeometry':geometry},ensure_ascii=False))
    (ROOT/'artifacts/mobile-hit-targets.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
    await page.screenshot(path=str(ROOT/'artifacts/mobile-hit-targets.png'),full_page=True)
    assert all(x.get('hittable') for x in result),result
