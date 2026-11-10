@@ -31,7 +31,10 @@ try {
     ['invalid official URL', d => { d.records[0].officialPageUrl = 'https://example.com'; }],
     ['missing provenance', d => { delete d.records[0].source.sha256; }],
     ['missing reference', d => { d.defaultValidationReferences['メガガルーラex'] = '999999999'; }],
-    ['incorrect scope', d => { d.scope = 'ADOPTED'; }]
+    ['incorrect scope', d => { d.scope = 'ADOPTED'; }],
+    ['unknown evidence type', d => { d.records[0].source.kind = 'untrusted'; }],
+    ['malformed provenance digest', d => { d.records[0].source.sha256 = 'not-a-sha256'; }],
+    ['unsafe evidence path', d => { d.records[0].source.path = '../outside.json'; }]
   ];
   for (const [label, mutate] of cases) {
     const value = structuredClone(source);
