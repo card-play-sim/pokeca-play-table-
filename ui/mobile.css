@@ -248,3 +248,12 @@ html,body{height:100%;max-height:100%;overflow:hidden}
   .table .zone-rail .zone strong{font-size:11px;line-height:12px}
   .table .zone-rail .zone-icon{font-size:10px;line-height:11px}
 }
+
+/* Right-side deck and discard share a narrow active-row rail. Keep both
+   buttons vertically inside that rail instead of wrapping below the board. */
+@media(max-width:600px){
+  .table .active-row .zone-rail{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:stretch;gap:2px;min-height:0;max-height:100%;overflow:hidden}
+  .table .active-row .zone-rail .zone{display:flex;flex:1 1 0;width:100%;height:auto;min-height:0;max-height:none;min-width:0;padding:1px 2px;flex-direction:row;justify-content:space-around;align-items:center;gap:1px;font-size:8px;line-height:10px}
+  .table .active-row .zone-rail .zone strong{font-size:10px;line-height:10px}
+  .table .active-row .zone-rail .zone-icon{font-size:10px;line-height:10px}
+}
