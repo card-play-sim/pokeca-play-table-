@@ -21,7 +21,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check fixed-deck cross-category references and adoption guard
-        run: node tests/cross-category-effect-gate.test.cjs
-      - name: Run executable cross-category effect scenarios
-        run: node tests/reference-effects.test.cjs
+      - name: Run both suites and write structured diagnosis
+        run: node tests/cross-category-report.cjs
+      - name: Preserve machine-readable diagnosis on pass or failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-category-effect-diagnostics
+          path: test-results/cross-category-effects.json
+          if-no-files-found: error
+          retention-days: 30
