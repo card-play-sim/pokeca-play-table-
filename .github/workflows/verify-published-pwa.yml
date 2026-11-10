@@ -1,0 +1,38 @@
+name: Verify published PWA bytes
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'sw.js'
+      - 'ui/**'
+      - 'data/reference-effects/plans.json'
+      - 'scripts/verify-published-pwa.cjs'
+      - '.github/workflows/verify-published-pwa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  published-byte-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate local atomic release manifest
+        run: node scripts/build-pwa-release.cjs --check
+      - name: Compare live GitHub Pages bytes against main assets
+        env:
+          RELEASE_VERIFY_ATTEMPTS: '24'
+          RELEASE_VERIFY_INTERVAL_MS: '30000'
+        run: node scripts/verify-published-pwa.cjs
+      - name: Preserve live byte comparison and Android verification status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-pwa-byte-verification
+          path: test-results/published-pwa-verification.json
+          if-no-files-found: warn
+          retention-days: 30
