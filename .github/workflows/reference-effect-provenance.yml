@@ -46,6 +46,16 @@ permissions:
   contents: read
 
 jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fast reference effect runtime smoke test
+        run: node tests/reference-effect-runtime-smoke.test.cjs
   provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -68,8 +78,6 @@ jobs:
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
         run: node scripts/build-pwa-release.cjs --check
-      - name: Fast reference effect runtime smoke test
-        run: node tests/reference-effect-runtime-smoke.test.cjs
       - name: Verify reference effect runtime in published browser engine bundle
         run: node tests/reference-effect-runtime-bundle.test.cjs
       - name: Upload effect coverage inventory
