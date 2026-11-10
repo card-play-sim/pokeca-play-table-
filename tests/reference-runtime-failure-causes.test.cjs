@@ -1,0 +1,31 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
+const {spawnSync}=require('node:child_process');
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'pokeca-runtime-causes-'));
+const script=path.resolve(__dirname,'../scripts/report-reference-runtime-failures.cjs');
+try{
+ const log=path.join(dir,'runtime.log'),output=path.join(dir,'handoff.json');
+ const invoke=()=>spawnSync(process.execPath,[script,log,output],{encoding:'utf8'});
+ const failure=(causeId,command,test,officialCardId)=>'REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify({causeId,command,test,officialCardId,error:'failed'});
+ fs.writeFileSync(log,[failure('INVALID_TARGET','MOVE_DAMAGE_COUNTERS','test-a','48248'),failure('INVALID_TARGET','MOVE_DAMAGE_COUNTERS','test-b','48249'),failure('INVALID_TARGET','DRAW','test-c','48250'),'ordinary output'].join('\n'));
+ assert.equal(invoke().status,0);
+ const first=fs.readFileSync(output,'utf8');
+ assert.equal(invoke().status,0);
+ assert.equal(fs.readFileSync(output,'utf8'),first,'report must be deterministic');
+ const report=JSON.parse(first);
+ assert.equal(report.structuredFailures,3);
+ assert.equal(report.issues.length,2,'same cause and command must be grouped');
+ assert.equal(report.issues[0].occurrences,2);
+ assert.deepEqual(report.issues[0].affectedTests,['test-a','test-b']);
+ assert.equal(report.safetyStopRequired,true);
+ fs.writeFileSync(log,'REFERENCE_RUNTIME_FAILURE_JSON:{bad json}\n');
+ assert.equal(invoke().status,2,'malformed records must cause safety stop');
+ assert.equal(JSON.parse(fs.readFileSync(output,'utf8')).malformedRecords,1);
+ fs.writeFileSync(log,'ordinary output only\n');
+ assert.equal(invoke().status,0);
+ const empty=JSON.parse(fs.readFileSync(output,'utf8'));
+ assert.equal(empty.structuredFailures,0);
+ assert.equal(empty.safetyStopRequired,false);
+ assert.ok(empty.limits.includes('NO_FAILURES_OBSERVED_IS_NOT_EXECUTION_VERIFIED'));
+ console.log('REFERENCE_RUNTIME_FAILURE_CAUSE_GATE PASS');
+}finally{fs.rmSync(dir,{recursive:true,force:true});}
