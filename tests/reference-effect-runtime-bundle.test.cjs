@@ -436,6 +436,21 @@ assert.equal(resumedA.actionsDone, 28, 'saved match must continue through 28 leg
 assert.equal(JSON.stringify(resumedA.game), JSON.stringify(resumedB.game), 'serialized match replay must reproduce complete later game');
 assert.notEqual(resumedA.game.referenceRngState, continuationSnapshot.referenceRngState, 'continued effect shuffles must advance persisted RNG');
 console.log('REFERENCE_SAVED_MATCH_REPLAY PASS: 15 setup actions, 28 resumed actions, deterministic RNG');
+// Reject corrupted persisted RNG state before dispatch; never mutate the game.
+{
+  let state = JSON.parse(JSON.stringify(continuationSnapshot));
+  state.referenceRngState = -1;
+  const port = engine.createUIPort({ getGame: () => state, setGame: next => { state = next; } });
+  assert.equal(port.loadGame(state).ok, true);
+  const { owner, action } = nextContinuationAction(state);
+  assert.ok(action);
+  const before = JSON.stringify(state);
+  const rejected = port.dispatch(owner, action);
+  assert.equal(rejected.ok, false, 'invalid persisted RNG must reject');
+  assert.ok(rejected.errors.includes('INVALID_REFERENCE_RNG_STATE'), 'invalid RNG error must be explicit');
+  assert.equal(JSON.stringify(state), before, 'invalid RNG must not mutate saved game');
+}
+console.log('REFERENCE_RNG_INTEGRITY PASS: corrupt RNG rejected without state mutation');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
