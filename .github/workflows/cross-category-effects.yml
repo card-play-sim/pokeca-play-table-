@@ -1,0 +1,49 @@
+name: Cross-category effect regression
+
+on:
+  pull_request:
+    paths:
+      - 'tests/**'
+      - 'data/fixed-test-decks.json'
+      - 'ui/engine.bundle.js'
+      - '.github/workflows/cross-category-effects.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  effect-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test failure-path triage and safe Codex instructions
+        run: node tests/effect-triage-failure-path.test.cjs
+      - name: Run both suites and write structured diagnosis
+        id: regression
+        continue-on-error: true
+        run: node tests/cross-category-report.cjs
+      - name: Group failures by shared repair ownership
+        if: always()
+        run: node tests/effect-repair-triage.cjs
+      - name: Prepare bounded Codex handoff
+        if: always()
+        run: node tests/codex-repair-handoff.cjs
+      - name: Preserve diagnosis and repair handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-category-effect-diagnostics
+          path: |
+            test-results/cross-category-effects.json
+            test-results/effect-repair-triage.json
+            test-results/codex-repair-task.md
+          if-no-files-found: error
+          retention-days: 30
+      - name: Fail the job when effect regression failed
+        if: steps.regression.outcome == 'failure'
+        run: exit 1
