@@ -29,6 +29,8 @@ jobs:
           RELEASE_VERIFY_ATTEMPTS: '12'
           RELEASE_VERIFY_INTERVAL_MS: '30000'
         run: node scripts/verify-published-pwa.cjs
+      - name: Create persistent browser evidence directory
+        run: mkdir -p artifacts
       - name: Exercise published reference matches in Pixel 5 Chromium emulation
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
