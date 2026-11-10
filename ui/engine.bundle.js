@@ -712,6 +712,7 @@ function handles(action){return ['attack_turn','effect_attack','attack','use_abi
 function preflight(g,actor,action){
  if(!g.referenceEffectValidation)return null;
  try{
+  if(g.referenceRngState!==undefined)assert(Number.isInteger(g.referenceRngState)&&g.referenceRngState>=0&&g.referenceRngState<=0xffffffff,'INVALID_REFERENCE_RNG_STATE');
   if(g.pendingReferenceChoice&&action.type!=='take_prizes'){assert(action.type==='resolve_reference_choice'&&g.pendingReferenceChoice.playerId===actor,'REFERENCE_CHOICE_REQUIRED');assert(g.pendingReferenceChoice.kind==='CIRCULATOR'?g.pendingReferenceChoice.options.some(o=>o.energyId===action.energyId&&o.benchInstanceId===action.benchInstanceId):g.pendingReferenceChoice.options.includes(g.pendingReferenceChoice.kind==='MULLIGAN'?action.drawCount:action.benchInstanceId),'INVALID_REFERENCE_CHOICE');return {handled:true,errors:[]};}
   const automatic=unconnectedAutomatic(g);if(automatic)throw Error('UNCONNECTED_EFFECT:'+JSON.stringify(automatic));
   const p=player(g,actor),o=opponent(g,actor);
