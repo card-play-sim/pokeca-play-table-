@@ -27,6 +27,9 @@ on:
       - 'scripts/report-reference-effect-coverage.cjs'
       - 'scripts/report-reference-effect-failure-causes.cjs'
       - 'tests/reference-effect-failure-causes.test.cjs'
+      - 'scripts/report-reference-runtime-failures.cjs'
+      - 'scripts/run-reference-effect-ci.cjs'
+      - 'tests/reference-runtime-failure-causes.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -53,6 +56,9 @@ on:
       - 'scripts/report-reference-effect-coverage.cjs'
       - 'scripts/report-reference-effect-failure-causes.cjs'
       - 'tests/reference-effect-failure-causes.test.cjs'
+      - 'scripts/report-reference-runtime-failures.cjs'
+      - 'scripts/run-reference-effect-ci.cjs'
+      - 'tests/reference-runtime-failure-causes.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -60,7 +66,19 @@ permissions:
   contents: read
 
 jobs:
-  smoke:
+  smoke:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-smoke
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -69,8 +87,20 @@ jobs:
         with:
           node-version: '22'
       - name: Fast reference effect runtime smoke test
-        run: node tests/reference-effect-runtime-smoke.test.cjs
-  opening-actions:
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-smoke.test.cjs
+  opening-actions:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-opening-actions
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -79,8 +109,20 @@ jobs:
         with:
           node-version: '22'
       - name: Verify opening attack restrictions and action families across seeds
-        run: node tests/reference-effect-opening-actions.test.cjs
-  opening-rejection:
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-actions.test.cjs
+  opening-rejection:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-opening-rejection
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -89,8 +131,20 @@ jobs:
         with:
           node-version: '22'
       - name: Reject illegal first-turn attacks across 200 matches without state mutation
-        run: node tests/reference-effect-opening-rejection.test.cjs
-  multi-turn:
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-rejection.test.cjs
+  multi-turn:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-multi-turn
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -99,8 +153,20 @@ jobs:
         with:
           node-version: '22'
       - name: Verify multi-turn reference gameplay
-        run: node tests/reference-effect-multi-turn.test.cjs
-  extended-gameplay:
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-multi-turn.test.cjs
+  extended-gameplay:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-extended-gameplay
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -109,8 +175,20 @@ jobs:
         with:
           node-version: '22'
       - name: Verify extended-gameplay reference gameplay
-        run: node tests/reference-effect-extended-gameplay.test.cjs
-  cross-category:
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-extended-gameplay.test.cjs
+  cross-category:      - name: Group runtime failure causes for Codex
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
+      - name: Upload runtime failure handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-runtime-causes-cross-category
+          path: |
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -119,7 +197,7 @@ jobs:
         with:
           node-version: '22'
       - name: Verify cross-category reference gameplay
-        run: node tests/reference-effect-cross-category.test.cjs
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-category.test.cjs
   provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -143,12 +221,17 @@ jobs:
         run: node scripts/report-reference-effect-failure-causes.cjs reports/reference-effect-failure-causes.json
       - name: Verify reproducible Codex handoff and safety invariants
         run: node tests/reference-effect-failure-causes.test.cjs
+      - name: Verify runtime failure cause grouping and malformed-record safety stop
+        run: node tests/reference-runtime-failure-causes.test.cjs
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
         run: node scripts/build-pwa-release.cjs --check
       - name: Verify reference effect runtime in published browser engine bundle
-        run: node tests/reference-effect-runtime-bundle.test.cjs
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-bundle.test.cjs
+      - name: Build runtime failure cause handoff
+        if: always()
+        run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload effect coverage inventory
         if: always()
         uses: actions/upload-artifact@v4
@@ -157,4 +240,6 @@ jobs:
           path: |
             reports/reference-effect-coverage.json
             reports/reference-effect-failure-causes.json
+            reports/reference-effect-runtime-causes.json
+            reports/reference-effect-runtime.log
           if-no-files-found: warn
