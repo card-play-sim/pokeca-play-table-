@@ -226,3 +226,13 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 
 /* Keep async diagnostic updates from moving a card under the reader’s finger. */
 #deck-image-check{display:block;min-height:8em}
+
+/* Mobile browser regression: keep the bench hit targets inside the table row.
+   The old 67px + 52px fixed minimums overflowed short grid tracks and
+   placed an empty bench slot behind the actionbar. */
+@media(max-width:600px){
+  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) minmax(0,21px)}
+  .table .opponent{grid-template-rows:minmax(0,21px) minmax(0,.8fr) minmax(0,1fr)}
+  .table .side,.table .bench,.table .active-row{min-height:0;max-height:100%}
+  .table .bench-slot{min-height:0;max-height:100%;box-sizing:border-box}
+}
