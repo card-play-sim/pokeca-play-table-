@@ -28,7 +28,10 @@ jobs:
       - name: Group failures by shared repair ownership
         if: always()
         run: node tests/effect-repair-triage.cjs
-      - name: Preserve diagnosis and repair triage
+      - name: Prepare bounded Codex handoff
+        if: always()
+        run: node tests/codex-repair-handoff.cjs
+      - name: Preserve diagnosis and repair handoff
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -36,6 +39,7 @@ jobs:
           path: |
             test-results/cross-category-effects.json
             test-results/effect-repair-triage.json
+            test-results/codex-repair-task.md
           if-no-files-found: error
           retention-days: 30
       - name: Fail the job when effect regression failed
