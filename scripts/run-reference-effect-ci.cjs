@@ -9,7 +9,10 @@ const result=spawnSync(process.execPath,[test],{encoding:'utf8',maxBuffer:8*1024
 if(result.stdout)process.stdout.write(result.stdout);
 if(result.stderr)process.stderr.write(result.stderr);
 const code=result.status===null?1:result.status;
-const record=code===0?null:{causeId:result.error?'TEST_RUNNER_ERROR':result.signal?'TEST_TERMINATED':'TEST_ASSERTION_OR_RUNTIME_FAILURE',command:'UNKNOWN',test,error:String(result.error?.message||result.stderr||result.signal||'nonzero exit').slice(0,400),exitCode:code};
+const stderr=String(result.error?.message||result.stderr||result.signal||'nonzero exit');
+const codes=[...stderr.matchAll(/(?:UNCONNECTED_EFFECT|INVALID_REFERENCE_RNG_STATE|REFERENCE_[A-Z_]+|FIRST_PLAYER_FIRST_TURN_ATTACK|PWA_RELEASE_STALE|STALE_BUNDLE_MODULE|REFERENCE_PRINT_CONFLICT|INVALID_REFERENCE_CHOICE)/g)].map(x=>x[0]);
+const causeId=result.error?'TEST_RUNNER_ERROR':result.signal?'TEST_TERMINATED':codes[0]||'TEST_ASSERTION_OR_RUNTIME_FAILURE';
+const record=code===0?null:{causeId,command:'UNKNOWN',test,error:stderr.slice(0,400),exitCode:code};
 const line=record?'REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify(record)+'\n':'';
 if(line)process.stdout.write(line);
 const log=process.env.REFERENCE_RUNTIME_LOG||'reports/reference-effect-runtime.log';
