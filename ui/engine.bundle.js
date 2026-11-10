@@ -546,15 +546,23 @@ function pays(mon,cost){
  return match(0,units);
 }
 function cost(g,mon,attack){const c=[...attack.cost];if(stadium(g)==='NIGHT_MINE'&&record(mon).facts.teraBenchProtection)c.push('無色');return c;}
+// Optional deterministic match-owned random stream. Persist referenceRngState
+// with the game snapshot; do not consume the AI policy's random stream.
+function referenceRandom(g){
+ if(g.referenceRngState===undefined)return Math.random();
+ assert(Number.isInteger(g.referenceRngState)&&g.referenceRngState>=0&&g.referenceRngState<=0xffffffff,'INVALID_REFERENCE_RNG_STATE');
+ g.referenceRngState=(Math.imul(g.referenceRngState,1664525)+1013904223)>>>0;
+ return g.referenceRngState/4294967296;
+}
 function shuffle(g,p){
  if(g.referenceEffectPreview){event(g,p.id,'SHUFFLE_DECK');return;}
- for(let i=p.deck.length-1;i>0;i--){const n=Math.random();assert(n>=0&&n<1,'INVALID_RNG');const j=Math.floor(n*(i+1));[p.deck[i],p.deck[j]]=[p.deck[j],p.deck[i]];}
+ for(let i=p.deck.length-1;i>0;i--){const n=referenceRandom(g);assert(n>=0&&n<1,'INVALID_RNG');const j=Math.floor(n*(i+1));[p.deck[i],p.deck[j]]=[p.deck[j],p.deck[i]];}
  event(g,p.id,'SHUFFLE_DECK');
 }
 function draw(g,p,n){const before=g.history.length;command(g,p.id,{command:'DRAW',amount:n});for(const e of g.history.slice(before))e.details.privateTo=p.id;}
 function resetHand(g,p,n,bottomOnly=false){
  const cards=p.hand.splice(0);
- if(bottomOnly){for(let i=cards.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}p.deck.push(...cards);}
+ if(bottomOnly){for(let i=cards.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(referenceRandom(g)*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}p.deck.push(...cards);}
  else {p.deck.push(...cards);shuffle(g,p);}
  event(g,p.id,'RETURN_TO_DECK',{cardIds:cards.map(id),bottomOnly});draw(g,p,n);
 }
@@ -622,7 +630,7 @@ function damage(g,actor,mon,amount,options={}){
  }
 }
 function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
-function coin(g,actor){if(g.referenceEffectPreview)return false;const n=Math.random();assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
+function coin(g,actor){if(g.referenceEffectPreview)return false;const n=referenceRandom(g);assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
 function requirePlan(card,effect){if(!connected(effect?.plan))stop(card,effect);return effect.plan;}
 function itemLocked(g,actor){return !!g.referenceItemLock?.some(x=>x.playerId===actor&&x.turnNumber===g.turnNumber);}
 function requests(g,actor,card,effect){
@@ -1011,7 +1019,6 @@ function cardInfo(g,actor,ident){
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
 module.exports={reduced,catalog,record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages};
-
 },"pokeca_reference_validation_adapter":function(require,module,exports){
 'use strict';
 const R=require('./pokeca_reference_effect_runtime');
