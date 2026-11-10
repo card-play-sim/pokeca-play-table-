@@ -23,7 +23,7 @@ function scan(record, kind, index, effect, original) {
     const text = original.text || '';
     const damage = original.damage || '';
     unresolved.push({ officialCardId: record.officialCardId, name: record.name, category, kind, index, text, damage });
-    const signature = JSON.stringify([kind, String(text).replace(/\\s+/g, ''), String(damage)]);
+    const signature = JSON.stringify([kind, String(text).replace(/\s+/g, ''), String(damage)]);
     const group = unresolvedGroups.get(signature) || { kind, text, damage, occurrences: 0, examples: [] };
     group.occurrences++;
     group.examples.push({ officialCardId: record.officialCardId, name: record.name, category });
