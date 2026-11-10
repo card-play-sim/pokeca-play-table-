@@ -217,6 +217,36 @@ for (const family of ['play_item', 'attach_energy', 'attach_tool', 'use_ability'
   assert.ok(exercised.has(family), 'unexercised common action family: ' + family);
 }
 console.log('REFERENCE_MULTI_ACTION_GATE PASS:', [...exercised].join(', '));
+// Stateful multi-turn smoke test: legal actions must remain executable after prior effects.
+let multiTurnActions = 0, multiTurnEnds = 0;
+const multiTurnTypes = new Set();
+for (let initialSeed = 1; initialSeed <= 40; initialSeed++) {
+  let state = initialSeed;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const created = engine.createReferenceValidationMatch(manifest, {
+    rng: random, firstDeck: initialSeed % 2, firstPlayer: initialSeed % 2 ? 'you' : 'ai'
+  });
+  assert.equal(created.ok, true);
+  let game = created.game;
+  const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+  assert.equal(gateway.loadGame(game).ok, true);
+  for (let step = 0; step < 35 && game.status === 'active'; step++) {
+    const owner = game.pendingReferenceChoice?.playerId || game.turnPlayer;
+    const actions = engine.getLegalActions(game, owner).actions;
+    const preferred = ['resolve_reference_choice', 'attach_energy', 'play_item', 'play_stadium', 'use_ability', 'attack_turn', 'end_turn'];
+    const action = preferred.map(type => actions.find(a => a.type === type)).find(Boolean);
+    if (!action) break;
+    const result = gateway.dispatch(owner, action);
+    assert.equal(result.ok, true, 'multi-turn action failed seed=' + initialSeed + ' step=' + step + ' type=' + action.type + ': ' + JSON.stringify(result.errors || result.stage || 'unknown'));
+    assert.equal(result.transitionAudit?.conservation?.ok, true, 'multi-turn conservation failed seed=' + initialSeed + ' step=' + step);
+    multiTurnActions++;
+    multiTurnTypes.add(action.type);
+    if (action.type === 'end_turn') multiTurnEnds++;
+  }
+}
+assert.ok(multiTurnActions >= 1000, 'insufficient stateful multi-turn exercise');
+assert.ok(multiTurnEnds >= 400, 'insufficient real turn transitions');
+console.log('REFERENCE_MULTI_TURN_GATE PASS:', multiTurnActions, 'actions;', multiTurnEnds, 'turn transitions;', [...multiTurnTypes].join(', '));
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
