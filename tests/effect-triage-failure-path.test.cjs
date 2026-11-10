@@ -33,7 +33,10 @@ try{
   {...report,success:false,results:[{id:'effect-execution',status:'PASS'}]},
   {...report,success:true},
   {...report,success:true,results:[{id:'effect-execution',status:'SKIPPED'}]},
-  {...report,results:[]}
+  {...report,results:[]},
+  {...report,success:true,results:[{id:'reference-identity',status:'PASS'}]},
+  {...report,success:true,results:[{id:'reference-identity',status:'PASS'},{id:'reference-identity',status:'PASS'}]},
+  {...report,success:true,results:[{id:'reference-identity',status:'PASS'},{id:'unknown-suite',status:'PASS'}]}
  ]){
   fs.writeFileSync(source,JSON.stringify(invalid));
   const r=run(triageScript,[source]);
