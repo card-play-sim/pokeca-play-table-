@@ -9,6 +9,7 @@ on:
       - 'tests/reference-effect-provenance.test.cjs'
       - 'tests/reference-effect-compiler-gate.test.cjs'
       - 'engine/reference-effect-plans.cjs'
+      - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - 'tests/reference-effect-provenance.test.cjs'
       - 'tests/reference-effect-compiler-gate.test.cjs'
       - 'engine/reference-effect-plans.cjs'
+      - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -38,3 +40,12 @@ jobs:
         run: node tests/reference-effect-provenance.test.cjs
       - name: Verify generalized effect compiler preserves source and reference scope
         run: node tests/reference-effect-compiler-gate.test.cjs
+      - name: Inventory recognized and blocked effects across all card categories
+        run: node scripts/report-reference-effect-coverage.cjs reports/reference-effect-coverage.json
+      - name: Upload effect coverage inventory
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-effect-coverage
+          path: reports/reference-effect-coverage.json
+          if-no-files-found: warn
