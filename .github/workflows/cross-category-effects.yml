@@ -1,0 +1,27 @@
+name: Cross-category effect regression
+
+on:
+  pull_request:
+    paths:
+      - 'tests/**'
+      - 'data/fixed-test-decks.json'
+      - 'ui/engine.bundle.js'
+      - '.github/workflows/cross-category-effects.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  effect-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check fixed-deck cross-category references and adoption guard
+        run: node tests/cross-category-effect-gate.test.cjs
+      - name: Run executable cross-category effect scenarios
+        run: node tests/reference-effects.test.cjs
