@@ -11,7 +11,8 @@ assert.equal(catalog.records.length,89);
 assert.equal(catalog.adoptedDeckPrints,0);
 const byMechanic=new Map();
 for(const record of catalog.records){
- assert(record.source?.recordSha256,'missing evidence for '+record.officialCardId);
+ assert(/^[a-f0-9]{64}$/.test(record.source?.sha256||''),'missing catalog evidence for '+record.officialCardId);
+ assert(record.source?.path,'missing source path for '+record.officialCardId);
  for(const effect of [...(record.attacks||[]),...(record.abilities||[])]){
   assert(effect.plan,'unconnected effect '+record.officialCardId+':'+effect.name);
   assert.equal(typeof effect.plan.mechanic,'string');
