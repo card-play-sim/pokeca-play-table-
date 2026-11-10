@@ -21,6 +21,11 @@ try{
  fs.writeFileSync(log,'REFERENCE_RUNTIME_FAILURE_JSON:{bad json}\n');
  assert.equal(invoke().status,2,'malformed records must cause safety stop');
  assert.equal(JSON.parse(fs.readFileSync(output,'utf8')).malformedRecords,1);
+ fs.rmSync(log);
+ assert.equal(invoke().status,2,'missing log must fail closed');
+ const missing=JSON.parse(fs.readFileSync(output,'utf8'));
+ assert.equal(missing.safetyStopRequired,true);
+ assert.equal(missing.malformed[0].reason,'MISSING_RUNTIME_LOG');
  fs.writeFileSync(log,'ordinary output only\n');
  assert.equal(invoke().status,0);
  const empty=JSON.parse(fs.readFileSync(output,'utf8'));
