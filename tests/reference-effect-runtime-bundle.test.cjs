@@ -250,6 +250,7 @@ console.log('REFERENCE_MULTI_TURN_GATE PASS:', multiTurnActions, 'actions;', mul
 // Exercise stateful attacks, evolutions, bench placement and prize-taking across both decks.
 const extendedTypes = new Map();
 let extendedActions = 0;
+let extendedPrize = false, extendedFinish = false;
 for (let initialSeed = 1; initialSeed <= 80; initialSeed++) {
   let state = initialSeed;
   const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
@@ -264,50 +265,26 @@ for (let initialSeed = 1; initialSeed <= 80; initialSeed++) {
     const preferred = ['resolve_reference_choice', 'bench_basic', 'play_active_basic', 'evolve', 'attach_energy', 'play_item', 'play_stadium', 'use_ability', 'attack_turn', 'take_prizes', 'end_turn'];
     const action = preferred.map(type => actions.find(a => a.type === type)).find(Boolean);
     if (!action) break;
+    const prizeBefore = game.players.find(p => p.id === owner).prizeCards.length;
     const result = gateway.dispatch(owner, action);
     assert.equal(result.ok, true, 'extended match failed seed=' + initialSeed + ' step=' + step + ' action=' + action.type + ': ' + JSON.stringify(result.errors || result.stage || 'unknown'));
     assert.equal(result.transitionAudit?.conservation?.ok, true, 'card conservation failed seed=' + initialSeed + ' step=' + step + ' action=' + action.type);
+    if (action.type === 'take_prizes') {
+      assert.equal(game.players.find(p => p.id === owner).prizeCards.length, prizeBefore - action.slots.length, 'prize movement must match chosen slots');
+      extendedPrize = true;
+    }
+    if (game.status === 'finished') extendedFinish = true;
     extendedTypes.set(action.type, (extendedTypes.get(action.type) || 0) + 1);
     extendedActions++;
   }
 }
+assert.ok(extendedPrize, 'expected prize taking across seeded matches');
+assert.ok(extendedFinish, 'expected terminal match across seeded matches');
 assert.ok(extendedActions >= 3000, 'extended matches did not reach expected coverage');
 for (const type of ['evolve', 'attack_turn', 'bench_basic', 'take_prizes']) {
   assert.ok(extendedTypes.get(type) > 0, 'missing extended action coverage: ' + type);
 }
 console.log('REFERENCE_EXTENDED_GAMEPLAY PASS:', extendedActions, 'actions;', Object.fromEntries(extendedTypes));
-// A seeded sweep verifies prize movement without relying on one brittle opening.
-let observedPrize = false, observedFinish = false, observedAttack = false;
-for (let initialSeed = 1; initialSeed <= 80; initialSeed++) {
-  let state = initialSeed;
-  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
-  const created = engine.createReferenceValidationMatch(manifest, { rng: random, firstPlayer: 'you', firstDeck: initialSeed % 2 });
-  assert.equal(created.ok, true);
-  let game = created.game;
-  const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
-  assert.equal(gateway.loadGame(game).ok, true);
-  for (let step = 0; step < 60 && game.status === 'active'; step++) {
-    const owner = game.pendingReferenceChoice?.playerId || game.turnPlayer;
-    const actions = engine.getLegalActions(game, owner).actions;
-    const preference = ['resolve_reference_choice', 'bench_basic', 'play_active_basic', 'evolve', 'attach_energy', 'play_item', 'play_stadium', 'use_ability', 'attack_turn', 'take_prizes', 'end_turn'];
-    const action = preference.map(type => actions.find(a => a.type === type)).find(Boolean);
-    if (!action) break;
-    const prizeBefore = game.players.find(p => p.id === owner).prizeCards.length;
-    const result = gateway.dispatch(owner, action);
-    assert.equal(result.ok, true, 'knockout sweep failed seed=' + initialSeed + ' step=' + step);
-    assert.equal(result.transitionAudit?.conservation?.ok, true);
-    if (action.type === 'attack_turn') observedAttack = true;
-    if (action.type === 'take_prizes') {
-      assert.equal(game.players.find(p => p.id === owner).prizeCards.length, prizeBefore - action.slots.length, 'prize slots must match cards taken');
-      observedPrize = true;
-    }
-    if (game.status === 'finished') observedFinish = true;
-  }
-}
-assert.ok(observedAttack, 'knockout sweep must execute attacks');
-assert.ok(observedPrize, 'knockout sweep must take a prize');
-assert.ok(observedFinish, 'knockout sweep must finish a match');
-console.log('REFERENCE_KNOCKOUT_PRIZE_WIN PASS: attack, prize movement, terminal game');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
