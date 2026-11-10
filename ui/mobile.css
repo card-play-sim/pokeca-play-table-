@@ -227,33 +227,3 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 /* Keep async diagnostic updates from moving a card under the reader’s finger. */
 #deck-image-check{display:block;min-height:8em}
 
-/* Mobile browser regression: keep the bench hit targets inside the table row.
-   The old 67px + 52px fixed minimums overflowed short grid tracks and
-   placed an empty bench slot behind the actionbar. */
-@media(max-width:600px){
-  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) minmax(0,21px)}
-  .table .opponent{grid-template-rows:minmax(0,21px) minmax(0,.8fr) minmax(0,1fr)}
-  .table .side,.table .bench,.table .active-row{min-height:0;max-height:100%}
-  .table .bench-slot{min-height:0;max-height:100%;box-sizing:border-box}
-}
-
-/* Keep discard, deck and prize tap targets within the self-side grid row.
-   Their former 42px minimum height exceeded the 21px row and overlapped
-   the next actionbar, making the visible trash button untappable. */
-@media(max-width:600px){
-  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) 34px}
-  .table .opponent{grid-template-rows:34px minmax(0,.8fr) minmax(0,1fr)}
-  .table .zone-rail{min-height:0;max-height:100%;overflow:hidden;flex-wrap:nowrap;align-items:stretch}
-  .table .zone-rail .zone{box-sizing:border-box;min-height:0;height:100%;max-height:100%;padding:2px 3px;gap:0;justify-content:center}
-  .table .zone-rail .zone strong{font-size:11px;line-height:12px}
-  .table .zone-rail .zone-icon{font-size:10px;line-height:11px}
-}
-
-/* Right-side deck and discard share a narrow active-row rail. Keep both
-   buttons vertically inside that rail instead of wrapping below the board. */
-@media(max-width:600px){
-  .table .active-row .zone-rail{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:stretch;gap:2px;min-height:0;max-height:100%;overflow:hidden}
-  .table .active-row .zone-rail .zone{display:flex;flex:1 1 0;width:100%;height:auto;min-height:0;max-height:none;min-width:0;padding:1px 2px;flex-direction:row;justify-content:space-around;align-items:center;gap:1px;font-size:8px;line-height:10px}
-  .table .active-row .zone-rail .zone strong{font-size:10px;line-height:10px}
-  .table .active-row .zone-rail .zone-icon{font-size:10px;line-height:10px}
-}
