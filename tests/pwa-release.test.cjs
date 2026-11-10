@@ -17,11 +17,11 @@ async function worker({bad=false}={}){
 
 async function updateClient(){
  const handlers={},timers=[],events=[];let fail=true;
- const node={textContent:'',setAttribute(){}},doc={querySelector:()=>({content:'241'}),getElementById:id=>id==='app'?{prepend(){}}:null,createElement:()=>node,addEventListener(){}};
+ const node={textContent:'',setAttribute(){}},doc={body:{append(el){assert.equal(el,node);events.push('notice-outside-grid');}},querySelector:()=>({content:'241'}),getElementById:id=>id==='app'?{prepend(){throw Error('UPDATE_NOTICE_MUST_NOT_SHIFT_GRID')}}:null,createElement:()=>node,addEventListener(){}};
  const sw={controller:{postMessage(){}},addEventListener:(k,f)=>handlers[k]=f,register:async()=>({update:async()=>{}})};
  const win={PokecaMobileBuild:'241',PokecaMobile:{prepareForUpdate:async()=>{events.push('save');if(fail)throw Error('disk failure')}}};
  vm.runInNewContext(fs.readFileSync('ui/app-update.js','utf8'),{window:win,document:doc,navigator:{serviceWorker:sw},isSecureContext:true,location:{reload:()=>events.push('reload')},MessageChannel:class{constructor(){this.port1={};this.port2={}}},setTimeout:f=>timers.push(f)});
- handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,['save']);assert.equal(win.PokecaUpdateStatus.state,'save-pending');assert.equal(timers.length,1);
- fail=false;await timers[0]();assert.deepEqual(events,['save','save','reload']);console.log('PASS update waits for successful session persistence before reloading');
+ handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,['save','notice-outside-grid']);assert.equal(win.PokecaUpdateStatus.state,'save-pending');assert.equal(timers.length,1);
+ fail=false;await timers[0]();assert.deepEqual(events,['save','notice-outside-grid','save','reload']);console.log('PASS update waits for successful session persistence before reloading');
 }
 updateClient().catch(e=>{console.error(e);process.exitCode=1});
