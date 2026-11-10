@@ -9,6 +9,8 @@ on:
       - 'tests/reference-effect-provenance.test.cjs'
       - 'tests/reference-effect-compiler-gate.test.cjs'
       - 'tests/reference-effect-coverage.test.cjs'
+      - 'tests/reference-effect-runtime-bundle.test.cjs'
+      - 'ui/engine.bundle.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -19,6 +21,8 @@ on:
       - 'tests/reference-effect-provenance.test.cjs'
       - 'tests/reference-effect-compiler-gate.test.cjs'
       - 'tests/reference-effect-coverage.test.cjs'
+      - 'tests/reference-effect-runtime-bundle.test.cjs'
+      - 'ui/engine.bundle.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -46,6 +50,8 @@ jobs:
         run: node scripts/report-reference-effect-coverage.cjs reports/reference-effect-coverage.json
       - name: Verify effect coverage accounting and blocked pattern grouping
         run: node tests/reference-effect-coverage.test.cjs
+      - name: Verify reference effect runtime in published browser engine bundle
+        run: node tests/reference-effect-runtime-bundle.test.cjs
       - name: Upload effect coverage inventory
         if: always()
         uses: actions/upload-artifact@v4
