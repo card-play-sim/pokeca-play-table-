@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'ui/engine.bundle.js'
+      - 'ui/mobile.css'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'engine/reference-effect-plans.cjs'
       - 'tests/reference-runtime-source-parity.test.cjs'
