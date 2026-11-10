@@ -25,6 +25,8 @@ on:
       - 'sw.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
+      - 'scripts/report-reference-effect-failure-causes.cjs'
+      - 'tests/reference-effect-failure-causes.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -49,6 +51,8 @@ on:
       - 'sw.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
+      - 'scripts/report-reference-effect-failure-causes.cjs'
+      - 'tests/reference-effect-failure-causes.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -134,6 +138,11 @@ jobs:
         run: node scripts/report-reference-effect-coverage.cjs reports/reference-effect-coverage.json
       - name: Verify effect coverage accounting and blocked pattern grouping
         run: node tests/reference-effect-coverage.test.cjs
+      - name: Write grouped failure causes for Codex handoff
+        if: always()
+        run: node scripts/report-reference-effect-failure-causes.cjs reports/reference-effect-failure-causes.json
+      - name: Verify reproducible Codex handoff and safety invariants
+        run: node tests/reference-effect-failure-causes.test.cjs
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
@@ -145,5 +154,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reference-effect-coverage
-          path: reports/reference-effect-coverage.json
+          path: |
+            reports/reference-effect-coverage.json
+            reports/reference-effect-failure-causes.json
           if-no-files-found: warn
