@@ -88,6 +88,19 @@ test('shared active-plus-bench attack exposes one bench target and rejects missi
  assert(attack.requests.some(x=>x.kind==='POKEMON'&&x.candidates.length===1));
  t.reject('you',{type:'attack_turn',attackIndex:0,targetIds:[t.g.players[1].bench[0].id]},/ENERGY/);
 });
+test('energy reflect damages active and transfers exactly one selected energy to bench',()=>{
+ const t=setup({active:['シェイミ','ドラメシヤ'],bench:{0:['マシマシラ']},
+  energy:{0:{active:['基本悪エネルギー','基本超エネルギー']}},
+  referenceIds:{'シェイミ':'46559'}});
+ const source=t.g.players[0].active,target=t.g.players[0].bench[0];
+ const energyId=source.energyCards[0].id;
+ t.reject('you',{type:'attack_turn',attackIndex:0},/INVALID_REFERENCE_SELECTION/);
+ t.do('you',{type:'attack_turn',attackIndex:0,selections:{energy:[energyId],attachTo:[target.id]}});
+ assert.equal(t.g.players[1].active.damage,60);
+ assert.equal(source.energyCards.length,1);
+ assert.equal(target.energyCards.length,1);
+ assert.equal(target.energyCards[0].id,energyId);
+});
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
