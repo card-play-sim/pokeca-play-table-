@@ -126,6 +126,42 @@ assert.equal(itemPlayer.deck.length, itemBefore.deck - 1, 'search removes exactl
 assert.equal(itemPlayer.discard.length, itemBefore.discard + 3, 'two discard costs and item enter discard');
 assert.equal(itemResult.transitionAudit?.conservation?.ok, true, 'item effect must preserve physical cards');
 console.log('REFERENCE_SEARCH_DISCARD_ITEM PASS: hand/deck/discard conserved');
+// Cross-card rule regression: energy attachment is once per turn, stadium is a real shared zone.
+function openSeededReferenceMatch(initialSeed) {
+  let state = initialSeed;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const created = engine.createReferenceValidationMatch(manifest, { rng: random, firstPlayer: 'you' });
+  assert.equal(created.ok, true);
+  let game = created.game;
+  const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+  assert.equal(gateway.loadGame(game).ok, true);
+  for (let i = 0; i < 4 && game.pendingReferenceChoice; i++) {
+    const owner = game.pendingReferenceChoice.playerId;
+    const action = engine.getLegalActions(game, owner).actions.find(a => a.type === 'resolve_reference_choice');
+    assert.ok(action);
+    assert.equal(gateway.dispatch(owner, action).ok, true);
+  }
+  assert.equal(game.pendingReferenceChoice, undefined);
+  return { game, gateway };
+}
+const energyCase = openSeededReferenceMatch(2);
+const energyAction = engine.getLegalActions(energyCase.game, 'you').actions.find(a => a.type === 'attach_energy');
+assert.ok(energyAction, 'legal energy attachment must exist');
+const energyBefore = energyCase.game.players[0].active.energyCards.length;
+const energyResult = energyCase.gateway.dispatch('you', energyAction);
+assert.equal(energyResult.ok, true);
+assert.equal(energyCase.game.players[0].active.energyCards.length, energyBefore + 1);
+assert.equal(energyResult.transitionAudit?.conservation?.ok, true);
+assert.equal(engine.getLegalActions(energyCase.game, 'you').actions.some(a => a.type === 'attach_energy'), false, 'second hand attachment must not be legal');
+assert.equal(energyCase.gateway.dispatch('you', energyAction).ok, false, 'replaying energy attachment must be rejected');
+const stadiumCase = openSeededReferenceMatch(8);
+const stadiumAction = engine.getLegalActions(stadiumCase.game, 'you').actions.find(a => a.type === 'play_stadium');
+assert.ok(stadiumAction, 'stadium play must be legal');
+const stadiumResult = stadiumCase.gateway.dispatch('you', stadiumAction);
+assert.equal(stadiumResult.ok, true);
+assert.equal(stadiumCase.game.stadium?.name, '夜の鉱山');
+assert.equal(stadiumResult.transitionAudit?.conservation?.ok, true);
+console.log('REFERENCE_RULE_FAMILIES PASS: once-per-turn energy; stadium zone; conservation');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
