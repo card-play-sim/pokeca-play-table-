@@ -22,12 +22,22 @@ jobs:
         with:
           node-version: '22'
       - name: Run both suites and write structured diagnosis
+        id: regression
+        continue-on-error: true
         run: node tests/cross-category-report.cjs
-      - name: Preserve machine-readable diagnosis on pass or failure
+      - name: Group failures by shared repair ownership
+        if: always()
+        run: node tests/effect-repair-triage.cjs
+      - name: Preserve diagnosis and repair triage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cross-category-effect-diagnostics
-          path: test-results/cross-category-effects.json
+          path: |
+            test-results/cross-category-effects.json
+            test-results/effect-repair-triage.json
           if-no-files-found: error
           retention-days: 30
+      - name: Fail the job when effect regression failed
+        if: steps.regression.outcome == 'failure'
+        run: exit 1
