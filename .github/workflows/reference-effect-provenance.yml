@@ -66,7 +66,8 @@ permissions:
   contents: read
 
 jobs:
-  smoke:      - name: Group runtime failure causes for Codex
+  smoke:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
@@ -88,7 +89,8 @@ jobs:
           node-version: '22'
       - name: Fast reference effect runtime smoke test
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-smoke.test.cjs
-  opening-actions:      - name: Group runtime failure causes for Codex
+  opening-actions:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
@@ -110,7 +112,8 @@ jobs:
           node-version: '22'
       - name: Verify opening attack restrictions and action families across seeds
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-actions.test.cjs
-  opening-rejection:      - name: Group runtime failure causes for Codex
+  opening-rejection:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
@@ -132,7 +135,8 @@ jobs:
           node-version: '22'
       - name: Reject illegal first-turn attacks across 200 matches without state mutation
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-rejection.test.cjs
-  multi-turn:      - name: Group runtime failure causes for Codex
+  multi-turn:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
@@ -154,7 +158,8 @@ jobs:
           node-version: '22'
       - name: Verify multi-turn reference gameplay
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-multi-turn.test.cjs
-  extended-gameplay:      - name: Group runtime failure causes for Codex
+  extended-gameplay:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
@@ -176,7 +181,8 @@ jobs:
           node-version: '22'
       - name: Verify extended-gameplay reference gameplay
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-extended-gameplay.test.cjs
-  cross-category:      - name: Group runtime failure causes for Codex
+  cross-category:
+      - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
       - name: Upload runtime failure handoff
