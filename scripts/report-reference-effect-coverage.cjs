@@ -1,0 +1,51 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const { compile } = require('../engine/reference-effect-plans.cjs');
+const catalog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/reference-effects/plans.json'), 'utf8'));
+const compiled = compile(catalog);
+const categories = {};
+const unresolved = [];
+const commands = {};
+let recognized = 0, total = 0;
+function scan(record, kind, index, effect, original) {
+  total++;
+  const category = record.category;
+  const stats = categories[category] ||= { prints: 0, effects: 0, recognized: 0, blocked: 0 };
+  stats.effects++;
+  if (effect?.plan) {
+    recognized++;
+    stats.recognized++;
+    for (const command of effect.plan.commands) commands[command] = (commands[command] || 0) + 1;
+  } else {
+    stats.blocked++;
+    unresolved.push({ officialCardId: record.officialCardId, name: record.name, category, kind, index, text: original.text || '', damage: original.damage || '' });
+  }
+}
+for (let i = 0; i < compiled.records.length; i++) {
+  const record = compiled.records[i], original = catalog.records[i];
+  (categories[record.category] ||= { prints: 0, effects: 0, recognized: 0, blocked: 0 }).prints++;
+  record.attacks.forEach((effect, j) => scan(record, 'attack', j, effect, original.attacks[j]));
+  record.abilities.forEach((effect, j) => scan(record, 'ability', j, effect, original.abilities[j]));
+  if (record.category !== 'pokemon') scan(record, 'main', 0, { plan: record.mainPlan }, original);
+}
+const report = {
+  schemaVersion: 1,
+  scope: catalog.scope,
+  adoptedDeckPrints: catalog.adoptedDeckPrints,
+  referencePrints: catalog.records.length,
+  totalEffects: total,
+  recognized,
+  blocked: unresolved.length,
+  categories,
+  commands,
+  unresolved
+};
+if (recognized + unresolved.length !== total) throw new Error('Effect coverage accounting mismatch');
+const output = process.argv[2];
+if (output) {
+  fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
+  fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
+}
+console.log('REFERENCE_EFFECT_COVERAGE:', JSON.stringify({ prints: report.referencePrints, total, recognized, blocked: report.blocked, categories }));
+module.exports = { report };
