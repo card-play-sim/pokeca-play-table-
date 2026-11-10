@@ -102,7 +102,7 @@ test('energy reflect damages active and transfers exactly one selected energy to
  assert.equal(target.energyCards[0].id,energyId);
 });
 test('flower delivery only offers deck energy and grass bench and rejects unpayable grass attack',()=>{
- const t=setup({active:['シェイミ','ドラメシヤ'],bench:{0:['シェイミ']},
+ const t=setup({active:['シェイミ','ドラメシヤ'],bench:{0:['マシマシラ']},
   referenceIds:{'シェイミ':'49636'}});
  const choices=t.port.getPokemonActions('you',t.g.players[0].active.id);
  const attack=choices.find(x=>x.kind==='attack'&&x.action.attackIndex===0);
@@ -110,8 +110,7 @@ test('flower delivery only offers deck energy and grass bench and rejects unpaya
  const energy=attack.requests.find(x=>x.key==='energy');
  const attachTo=attack.requests.find(x=>x.key==='attachTo');
  assert(energy&&energy.candidates.every(c=>c.kind==='energy'));
- assert(attachTo&&attachTo.candidates.length===1);
- assert.equal(attachTo.candidates[0].name,'シェイミ');
+ assert(attachTo&&attachTo.candidates.length===0,'non-grass bench must not be eligible');
  t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);
 });
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
