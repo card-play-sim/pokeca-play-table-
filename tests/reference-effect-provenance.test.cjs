@@ -12,6 +12,13 @@ try {
   fs.mkdirSync(path.join(temp, 'scripts'));
   fs.mkdirSync(path.join(temp, 'data/reference-effects'), { recursive: true });
   fs.writeFileSync(path.join(temp, 'scripts/validate-reference-effect-provenance.cjs'), gate);
+  for (const record of source.records) {
+    if (record.source?.kind !== 'saved-official-html') continue;
+    const from = path.resolve(root, record.source.path);
+    const to = path.resolve(temp, record.source.path);
+    fs.mkdirSync(path.dirname(to), { recursive: true });
+    fs.copyFileSync(from, to);
+  }
   const run = (value) => {
     fs.writeFileSync(path.join(temp, 'data/reference-effects/plans.json'), JSON.stringify(value));
     return spawnSync(process.execPath, [path.join(temp, 'scripts/validate-reference-effect-provenance.cjs')], { encoding: 'utf8' });
