@@ -180,6 +180,8 @@ for (const setup of [{ firstDeck: 0, firstPlayer: 'you' }, { firstDeck: 1, first
     }
     assert.equal(game.pendingReferenceChoice, undefined, 'unresolved opening choice for seed ' + initialSeed);
     const actor = game.turnPlayer;
+    const openingActions = engine.getLegalActions(game, actor).actions;
+    assert.equal(openingActions.some(a => a.type === 'attack_turn'), false, 'first player must not attack on opening turn seed=' + initialSeed);
     const end = engine.getLegalActions(game, actor).actions.find(a => a.type === 'end_turn');
     assert.ok(end, 'end_turn missing for seed ' + initialSeed);
     const outcome = gateway.dispatch(actor, end);
