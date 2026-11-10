@@ -29,6 +29,8 @@ try {
     ['adopted print flag', d => { d.records[0].deckPrintAdopted = true; }],
     ['duplicate official ID', d => { d.records[1].officialCardId = d.records[0].officialCardId; }],
     ['invalid official URL', d => { d.records[0].officialPageUrl = 'https://example.com'; }],
+    ['lookalike official host', d => { d.records[0].officialPageUrl = 'https://www.pokemon-card.com.evil.example/card-search/details.php/card/' + d.records[0].officialCardId; }],
+    ['official URL wrong card ID', d => { d.records[0].officialPageUrl = 'https://www.pokemon-card.com/card-search/details.php/card/999999'; }],
     ['missing provenance', d => { delete d.records[0].source.sha256; }],
     ['missing reference', d => { d.defaultValidationReferences['メガガルーラex'] = '999999999'; }],
     ['incorrect scope', d => { d.scope = 'ADOPTED'; }],
