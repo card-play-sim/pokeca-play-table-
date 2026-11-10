@@ -9,6 +9,8 @@ const unresolved = [];
 const commands = {};
 const unresolvedGroups = new Map();
 let recognized = 0, total = 0;
+// Text recognition is not proof of runtime execution or rule-engine integration.
+const executionVerified = 0;
 function scan(record, kind, index, effect, original) {
   total++;
   const category = record.category;
@@ -44,13 +46,17 @@ const report = {
   referencePrints: catalog.records.length,
   totalEffects: total,
   recognized,
+  executionVerified,
+  executionUnverified: total,
   blocked: unresolved.length,
   categories,
   commands,
+  integrationStatus: 'NOT_VERIFIED_BY_COVERAGE_INVENTORY',
   unresolvedPatterns: [...unresolvedGroups.values()].sort((a, b) => b.occurrences - a.occurrences || a.kind.localeCompare(b.kind)),
   unresolved
 };
 if (recognized + unresolved.length !== total) throw new Error('Effect coverage accounting mismatch');
+if (executionVerified + total !== report.executionUnverified) throw new Error('Execution accounting mismatch');
 const output = process.argv[2];
 if (output) {
   fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
