@@ -291,6 +291,35 @@ for (const type of ['evolve', 'attack_turn', 'bench_basic', 'take_prizes']) {
   assert.ok(extendedTypes.get(type) > 0, 'missing extended action coverage: ' + type);
 }
 console.log('REFERENCE_EXTENDED_GAMEPLAY PASS:', extendedActions, 'actions;', Object.fromEntries(extendedTypes));
+// Additional cross-category smoke: supporters, tools and retreat in the same
+// stateful gateway used for item/attack/ability/prize actions.
+const categoryCounts = new Map();
+for (let initialSeed = 1; initialSeed <= 12; initialSeed++) {
+  let state = initialSeed;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const created = engine.createReferenceValidationMatch(manifest, {
+    rng: random, firstDeck: initialSeed % 2, firstPlayer: initialSeed % 2 ? 'you' : 'ai'
+  });
+  assert.equal(created.ok, true);
+  let game = created.game;
+  const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+  assert.equal(gateway.loadGame(game).ok, true);
+  for (let step = 0; step < 60 && game.status === 'active'; step++) {
+    const owner = game.pendingReferenceChoice?.playerId || game.turnPlayer;
+    const actions = engine.getLegalActions(game, owner).actions;
+    const preferred = ['resolve_reference_choice', 'bench_basic', 'play_active_basic', 'evolve', 'attach_energy', 'play_item', 'play_supporter', 'play_stadium', 'attach_tool', 'use_ability', 'attack_turn', 'take_prizes', 'retreat', 'end_turn'];
+    const action = preferred.map(type => actions.find(a => a.type === type)).find(Boolean);
+    if (!action) break;
+    const outcome = gateway.dispatch(owner, action);
+    assert.equal(outcome.ok, true, 'cross-category gateway failure seed=' + initialSeed + ' step=' + step + ' type=' + action.type);
+    assert.equal(outcome.transitionAudit?.conservation?.ok, true, 'cross-category conservation failure seed=' + initialSeed + ' step=' + step);
+    categoryCounts.set(action.type, (categoryCounts.get(action.type) || 0) + 1);
+  }
+}
+for (const type of ['play_supporter', 'attach_tool', 'retreat', 'attack_turn', 'evolve']) {
+  assert.ok(categoryCounts.get(type) > 0, 'cross-category action not exercised: ' + type);
+}
+console.log('REFERENCE_CROSS_CATEGORY_GATE PASS:', Object.fromEntries(categoryCounts));
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
