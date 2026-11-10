@@ -236,3 +236,15 @@ html,body{height:100%;max-height:100%;overflow:hidden}
   .table .side,.table .bench,.table .active-row{min-height:0;max-height:100%}
   .table .bench-slot{min-height:0;max-height:100%;box-sizing:border-box}
 }
+
+/* Keep discard, deck and prize tap targets within the self-side grid row.
+   Their former 42px minimum height exceeded the 21px row and overlapped
+   the next actionbar, making the visible trash button untappable. */
+@media(max-width:600px){
+  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) 34px}
+  .table .opponent{grid-template-rows:34px minmax(0,.8fr) minmax(0,1fr)}
+  .table .zone-rail{min-height:0;max-height:100%;overflow:hidden;flex-wrap:nowrap;align-items:stretch}
+  .table .zone-rail .zone{box-sizing:border-box;min-height:0;height:100%;max-height:100%;padding:2px 3px;gap:0;justify-content:center}
+  .table .zone-rail .zone strong{font-size:11px;line-height:12px}
+  .table .zone-rail .zone-icon{font-size:10px;line-height:11px}
+}
