@@ -15,6 +15,9 @@ try {
   assert.equal(report.adoptedDeckPrints, 0);
   assert.equal(report.referencePrints, 89);
   assert.equal(report.totalEffects, report.recognized + report.blocked);
+  assert.equal(report.integrationStatus, 'NOT_VERIFIED_BY_COVERAGE_INVENTORY');
+  assert.equal(report.executionVerified, 0, 'do not misrepresent recognition as runtime verification');
+  assert.equal(report.executionUnverified, report.totalEffects);
   assert.equal(report.blocked, report.unresolved.length);
   assert.equal(report.blocked, report.unresolvedPatterns.reduce((n, p) => n + p.occurrences, 0));
   assert.equal(report.totalEffects, Object.values(report.categories).reduce((n, c) => n + c.effects, 0));
