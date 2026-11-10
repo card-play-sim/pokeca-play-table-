@@ -18,6 +18,12 @@ for (const [index, record] of data.records.entries()) {
   if (record.deckPrintAdopted !== false) fail('reference marked as adopted ' + id);
   if (!record.officialPageUrl || !record.officialPageUrl.startsWith('https://www.pokemon-card.com/')) fail('missing official URL ' + id);
   if (!record.source || !record.source.path || !record.source.sha256 || !(record.source.recordSha256 || record.source.htmlSha256)) fail('missing provenance ' + id);
+  if (!['formal1945-readonly', 'saved-official-html'].includes(record.source.kind)) fail('unsupported provenance kind ' + id);
+  const digests = record.source.kind === 'saved-official-html'
+    ? [record.source.sha256, record.source.htmlSha256]
+    : [record.source.sha256, record.source.recordSha256];
+  if (!digests.every(digest => typeof digest === 'string' && /^[a-f0-9]{64}$/.test(digest))) fail('invalid provenance digest ' + id);
+  if (path.isAbsolute(record.source.path) || record.source.path.split(/[\\/]+/).includes('..')) fail('unsafe evidence path ' + id);
   if (record.source.kind === 'saved-official-html') {
     const evidencePath = path.resolve(__dirname, '..', record.source.path);
     const repoRoot = path.resolve(__dirname, '..') + path.sep;
