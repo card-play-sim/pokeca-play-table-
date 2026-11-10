@@ -60,16 +60,32 @@ const allPrintGaps=catalog.records.flatMap(record=>{
  return gaps.length?[{name:record.deckName,officialCardId:record.officialCardId,
   category:record.category,defaultReference:String(catalog.defaultValidationReferences[record.deckName])===String(record.officialCardId),unconnected:gaps}]:[];
 });
+const sharedGaps=new Map();
+for(const record of catalog.records){
+ for(const effect of [...(record.attacks||[]),...(record.abilities||[])]){
+  if(effect.plan)continue;
+  const normalizedText=String(effect.text||'').replace(/\\s+/g,' ').trim();
+  const key=JSON.stringify([effect.name,normalizedText]);
+  if(!sharedGaps.has(key))sharedGaps.set(key,{effectName:effect.name,officialText:normalizedText,
+   printIds:[],deckNames:[],status:'BLOCKED_UNCONNECTED'});
+  const group=sharedGaps.get(key);
+  group.printIds.push(record.officialCardId);
+  if(!group.deckNames.includes(record.deckName))group.deckNames.push(record.deckName);
+ }
+}
+const sharedEffectGaps=[...sharedGaps.values()].sort((a,b)=>b.printIds.length-a.printIds.length||a.effectName.localeCompare(b.effectName));
 const report={schemaVersion:1,kind:'fixed-deck-effect-coverage',scope:'reference-only-not-official-adoption',
  physicalCards:entries.reduce((sum,c)=>sum+c.count,0),uniqueNames:unique.length,
  categories:counts,referencePrints:coverage.prints,officialPrintsAdopted:0,
  namesWithUnconnectedEffects:blocked.length,blocked,
  referencePrintsWithUnconnectedEffects:allPrintGaps.length,allPrintGaps,
- provenanceKinds,evidenceProblems};
+ provenanceKinds,evidenceProblems,sharedEffectGaps};
 fs.mkdirSync('test-results',{recursive:true});
 fs.writeFileSync('test-results/fixed-deck-effect-coverage.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({physicalCards:report.physicalCards,uniqueNames:report.uniqueNames,
- referencePrints:report.referencePrints,unconnectedNames:blocked.length,categories:counts}));
+ referencePrints:report.referencePrints,unconnectedNames:blocked.length,sharedEffectGaps:sharedEffectGaps.length,categories:counts}));
 assert.equal(evidenceProblems.length,0,'missing source evidence metadata');
 assert(allPrintGaps.length<=11,'new unconnected reference effects exceed known baseline of 11');
+assert.equal(sharedEffectGaps.reduce((n,g)=>n+g.printIds.length,0),
+ allPrintGaps.reduce((n,g)=>n+g.unconnected.length,0),'shared gap grouping lost an effect');
 if(allPrintGaps.length)console.log('Unconnected non-default reference effects retained as BLOCKED, not silently passed');
