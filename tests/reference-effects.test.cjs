@@ -79,6 +79,15 @@ test('shared Flower Curtain protects non-rule bench but not rule Pokemon on four
   }
  }
 });
+test('shared active-plus-bench attack exposes one bench target and rejects missing grass energy',()=>{
+ const t=setup({active:['シェイミ','ドラメシヤ'],bench:{1:['スボミー']},
+  referenceIds:{'シェイミ':'50452'}});
+ const choices=t.port.getPokemonActions('you',t.g.players[0].active.id);
+ const attack=choices.find(x=>x.kind==='attack'&&x.action.attackIndex===0);
+ assert(attack,'verified Shaymin attack missing');
+ assert(attack.requests.some(x=>x.kind==='POKEMON'&&x.candidates.length===1));
+ t.reject('you',{type:'attack_turn',attackIndex:0,targetIds:[t.g.players[1].bench[0].id]},/ENERGY/);
+});
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
