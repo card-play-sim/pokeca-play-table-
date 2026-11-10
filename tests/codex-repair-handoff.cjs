@@ -36,7 +36,7 @@ if(fs.existsSync(coverageFile)){
   if(gap.status!=='BLOCKED_UNCONNECTED'||!Array.isArray(gap.printIds)||!gap.printIds.length)
    throw Error('Invalid unresolved effect family');
   lines.push('','### '+gap.effectName,'Print references: '+gap.printIds.join(', '),
-   'Shared effect text: '+String(gap.officialText||'').replace(/\\r?\\n/g,' '),
+   'Shared effect text: '+String(gap.officialText||'').replace(/\r?\n/g,' '),
    'Next: confirm source evidence, implement one shared command family, add positive and negative tests.');
  }
 }else lines.push('','Coverage inventory not present: effect completeness UNKNOWN; do not treat passing suites as complete.');
