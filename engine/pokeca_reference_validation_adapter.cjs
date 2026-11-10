@@ -25,6 +25,10 @@ function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlaye
  const result=require('./pokeca_match_setup').createMatchFromVerifiedDecks({you:decks[0],ai:decks[1],rng,firstPlayer,maxOpeningAttempts:100,autoBenchBasics:true});
  if(!result.ok)return result;
  const g=result.game;g.referenceEffectValidation={schemaVersion:1,sourceDeckIds:order.map(i=>manifest.decks[i].id),adoptedPrints:0,referenceIds:copy({...R.catalog.defaultValidationReferences,...referenceIds}),coverageComplete:false};
+ // Seed the persisted effect RNG once after opening setup, independently of AI decisions.
+ const effectSeedSample=rng();
+ if(!Number.isFinite(effectSeedSample)||effectSeedSample<0||effectSeedSample>=1)throw Error('INVALID_REFERENCE_EFFECT_SEED');
+ g.referenceRngState=Math.floor(effectSeedSample*4294967296)>>>0;
  g.manualPrizeSelection=true;g.referenceActionSequence=0;
  const difference=result.mulligans.you-result.mulligans.ai;if(difference){const actor=difference>0?'ai':'you';g.pendingReferenceChoice={kind:'MULLIGAN',playerId:actor,options:Array.from({length:Math.min(Math.abs(difference),g.players.find(p=>p.id===actor).deck.length)+1},(_,i)=>i)};}
  R.refresh(g);
