@@ -970,6 +970,7 @@ function blockers(g,actor){
  return out;
 }
 function validateGame(g){
+ if(g.referenceEffectValidation&&g.referenceRngState!==undefined)assert(Number.isInteger(g.referenceRngState)&&g.referenceRngState>=0&&g.referenceRngState<=0xffffffff,'INVALID_REFERENCE_RNG_STATE');
  const cards=g.players.flatMap(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.discard,...(p.prizeCards||[])].filter(Boolean));
  if(g.stadium)cards.push(g.stadium);
  const nested=cards.flatMap(c=>[c,...(c.evolutionCards||[]),...(c.energyCards||[]),...(c.tools||[])]);
