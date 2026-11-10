@@ -17,6 +17,12 @@ if(report.schemaVersion!==1||!Array.isArray(report.results)||report.results.leng
  (report.success===false&&!report.results.some(x=>x.status==='FAIL'))||
  (report.success===true&&report.results.some(x=>x.status==='FAIL')))
  throw Error('Invalid or inconsistent diagnostics: fail closed');
+const expectedSuites=new Set(['reference-identity','effect-execution']);
+const observed=report.results.map(x=>x.id);
+if(observed.length!==expectedSuites.size||new Set(observed).size!==observed.length||
+ observed.some(id=>!expectedSuites.has(id))||
+ report.success!==report.results.every(x=>x.status==='PASS'))
+ throw Error('Missing, duplicated or inconsistent effect suites: fail closed');
 const failures=report.results.filter(x=>x.status==='FAIL');
 const groups={};
 for(const failure of failures){
