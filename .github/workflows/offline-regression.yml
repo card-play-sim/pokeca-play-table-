@@ -22,6 +22,14 @@ jobs:
           python-version: '3.12'
       - name: All offline Node regression, metadata preservation and AI games
         run: node scripts/run-offline-tests.cjs
+      - name: Preserve per-test durations for diagnosis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-node-test-timings
+          path: test-results/offline-node-test-timings.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: All offline Python checks
         run: |
           for pattern in test_formal_zip_reconciliation.py test_fixed_preview_evidence.py test_fixed_practice_facts.py test_mobile_header_layout.py test_card_reflection_wiring.py test_official_image_workflow.py; do
