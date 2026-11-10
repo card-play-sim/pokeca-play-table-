@@ -5,6 +5,7 @@ on:
     paths:
       - 'ui/engine.bundle.js'
       - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'engine/reference-effect-plans.cjs'
       - 'tests/reference-runtime-source-parity.test.cjs'
       - '.github/workflows/refresh-pwa-release.yml'
   workflow_dispatch:
@@ -24,16 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Recompile canonical reference effect plans and runtime bundle
+        run: node scripts/sync-reference-effects.cjs
       - name: Rebuild byte-verified service worker manifest
         run: node scripts/build-pwa-release.cjs
-      - name: Verify generated release manifest
-        run: node scripts/build-pwa-release.cjs --check
+      - name: Verify canonical reference bundle and release manifest
+        run: |
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
       - name: Commit manifest only if changed
         run: |
-          if ! git diff --quiet -- sw.js; then
+          if ! git diff --quiet -- sw.js ui/engine.bundle.js data/reference-effects/plans.json; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -- sw.js
-            git commit -m "build: synchronize verified PWA manifest with engine changes"
+            git add -- sw.js ui/engine.bundle.js data/reference-effects/plans.json
+            git commit -m "build: synchronize canonical effect plans, bundle and PWA release"
             git push
           fi
