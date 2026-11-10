@@ -16,7 +16,9 @@ for (const [index, record] of data.records.entries()) {
   if (!/^\d+$/.test(id)) fail('invalid officialCardId at ' + index);
   if (byId.has(id)) fail('duplicate officialCardId ' + id);
   if (record.deckPrintAdopted !== false) fail('reference marked as adopted ' + id);
-  if (!record.officialPageUrl || !record.officialPageUrl.startsWith('https://www.pokemon-card.com/')) fail('missing official URL ' + id);
+  const officialUrl = /^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/(\d+)(?:\/regu\/[A-Za-z0-9_-]+)?\/?$/;
+  const officialMatch = typeof record.officialPageUrl === 'string' && record.officialPageUrl.match(officialUrl);
+  if (!officialMatch || officialMatch[1] !== id) fail('invalid official card URL ' + id);
   if (!record.source || !record.source.path || !record.source.sha256 || !(record.source.recordSha256 || record.source.htmlSha256)) fail('missing provenance ' + id);
   if (!['formal1945-readonly', 'saved-official-html'].includes(record.source.kind)) fail('unsupported provenance kind ' + id);
   const digests = record.source.kind === 'saved-official-html'
