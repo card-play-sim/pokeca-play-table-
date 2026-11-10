@@ -11,6 +11,7 @@ on:
       - 'tests/reference-effect-coverage.test.cjs'
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'tests/reference-effect-runtime-smoke.test.cjs'
+      - 'tests/reference-effect-opening-actions.test.cjs'
       - 'ui/engine.bundle.js'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'engine/pokeca_reference_validation_adapter.cjs'
@@ -30,6 +31,7 @@ on:
       - 'tests/reference-effect-coverage.test.cjs'
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'tests/reference-effect-runtime-smoke.test.cjs'
+      - 'tests/reference-effect-opening-actions.test.cjs'
       - 'ui/engine.bundle.js'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'engine/pokeca_reference_validation_adapter.cjs'
@@ -56,6 +58,16 @@ jobs:
           node-version: '22'
       - name: Fast reference effect runtime smoke test
         run: node tests/reference-effect-runtime-smoke.test.cjs
+  opening-actions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify opening attack restrictions and action families across seeds
+        run: node tests/reference-effect-opening-actions.test.cjs
   provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
