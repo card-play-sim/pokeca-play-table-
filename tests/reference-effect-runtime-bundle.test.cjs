@@ -182,6 +182,10 @@ for (const setup of [{ firstDeck: 0, firstPlayer: 'you' }, { firstDeck: 1, first
     const actor = game.turnPlayer;
     const openingActions = engine.getLegalActions(game, actor).actions;
     assert.equal(openingActions.some(a => a.type === 'attack_turn'), false, 'first player must not attack on opening turn seed=' + initialSeed);
+    const openingSnapshot = JSON.stringify(game);
+    const forcedOpeningAttack = gateway.dispatch(actor, { type: 'attack_turn', attackIndex: 0 });
+    assert.equal(forcedOpeningAttack.ok, false, 'gateway must reject forced opening attack seed=' + initialSeed);
+    assert.equal(JSON.stringify(game), openingSnapshot, 'rejected opening attack must not mutate state seed=' + initialSeed);
     const end = engine.getLegalActions(game, actor).actions.find(a => a.type === 'end_turn');
     assert.ok(end, 'end_turn missing for seed ' + initialSeed);
     const outcome = gateway.dispatch(actor, end);
