@@ -9,10 +9,19 @@ const engine=context.window.Pokeca;
 const catalog=engine.getReferenceEffectCatalog();
 assert.equal(catalog.records.length,89);
 assert.equal(catalog.adoptedDeckPrints,0);
+const canonicalPlans=JSON.parse(fs.readFileSync('data/reference-effects/plans.json','utf8'));
+assert.equal(canonicalPlans.records.length,catalog.records.length,'canonical plans and bundle print count differ');
+const canonicalById=new Map(canonicalPlans.records.map(r=>[String(r.officialCardId),r]));
 const byMechanic=new Map();
 for(const record of catalog.records){
  assert(/^[a-f0-9]{64}$/.test(record.source?.sha256||''),'missing catalog evidence for '+record.officialCardId);
  assert(record.source?.path,'missing source path for '+record.officialCardId);
+ const canonical=canonicalById.get(String(record.officialCardId));
+ assert(canonical,'missing canonical plan for '+record.officialCardId);
+ assert.deepEqual(JSON.stringify(canonical.attacks.map(a=>a.plan)),JSON.stringify(record.attacks.map(a=>a.plan)),
+  'canonical attack plan mismatch: '+record.officialCardId);
+ assert.deepEqual(JSON.stringify(canonical.abilities.map(a=>a.plan)),JSON.stringify(record.abilities.map(a=>a.plan)),
+  'canonical ability plan mismatch: '+record.officialCardId);
  for(const effect of [...(record.attacks||[]),...(record.abilities||[])]){
   assert(effect.plan,'unconnected effect '+record.officialCardId+':'+effect.name);
   assert.equal(typeof effect.plan.mechanic,'string');
