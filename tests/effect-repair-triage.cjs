@@ -12,7 +12,11 @@ const allowed={
   RUNNER_OR_UNKNOWN:{owner:'test-infrastructure',next:'Inspect runner error, dependencies and full CI logs before touching effect code.',scope:['test runner','CI configuration']}
 };
 const report=JSON.parse(fs.readFileSync(source,'utf8'));
-if(report.schemaVersion!==1||!Array.isArray(report.results))throw Error('Invalid diagnostics schema');
+if(report.schemaVersion!==1||!Array.isArray(report.results)||report.results.length===0||
+ report.results.some(x=>!x||typeof x.id!=='string'||!['PASS','FAIL'].includes(x.status))||
+ (report.success===false&&!report.results.some(x=>x.status==='FAIL'))||
+ (report.success===true&&report.results.some(x=>x.status==='FAIL')))
+ throw Error('Invalid or inconsistent diagnostics: fail closed');
 const failures=report.results.filter(x=>x.status==='FAIL');
 const groups={};
 for(const failure of failures){
@@ -22,9 +26,9 @@ for(const failure of failures){
  if(failure.excerpt)group.excerpts.push(String(failure.excerpt).slice(-1500));
 }
 const triage={schemaVersion:1,kind:'effect-repair-triage',source,
-  safeToAutoMerge:false,officialCardDataEditable:false,
-  status:failures.length?'REVIEW_REQUIRED':'NO_FAILURES',
-  groups:Object.values(groups)};
+ safeToAutoMerge:false,officialCardDataEditable:false,
+ status:failures.length?'REVIEW_REQUIRED':'NO_FAILURES',
+ groups:Object.values(groups)};
 fs.mkdirSync(path.dirname(target),{recursive:true});
 fs.writeFileSync(target,JSON.stringify(triage,null,2)+'\n');
 console.log('Triage: '+target+' ('+triage.status+')');
