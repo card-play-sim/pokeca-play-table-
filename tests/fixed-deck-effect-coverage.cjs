@@ -22,14 +22,17 @@ for(const name of unique){
  const item=entries.find(x=>x.name===name);
  const info=byName.get(name);
  assert(info,'missing effect coverage for '+name);
+ assert.equal(String(info.officialCardId),String(catalog.defaultValidationReferences[name]),'coverage print mismatch: '+name);
  assert.equal(info.deckPrintAdopted,false,'unexpected print adoption: '+name);
  assert.equal(item.identityStatus,'UNCONFIRMED','unapproved identity: '+name);
  assert.equal(item.officialCardId,null,'unapproved official ID: '+name);
+ assert(catalog.records.some(r=>r.deckName===name&&String(r.officialCardId)===String(info.officialCardId)),'untraceable reference: '+name);
  counts[item.category]=(counts[item.category]||0)+1;
  const problems=[...(info.unconnected||[])];
  if(info.mainConnected===false)problems.push('[main card effect]');
  if(problems.length)blocked.push({name,category:item.category,referenceOfficialCardId:info.officialCardId,unconnected:problems});
 }
+assert.equal(entries.reduce((sum,c)=>sum+c.count,0),120);
 const report={schemaVersion:1,kind:'fixed-deck-effect-coverage',scope:'reference-only-not-official-adoption',
  physicalCards:entries.reduce((sum,c)=>sum+c.count,0),uniqueNames:unique.length,
  categories:counts,referencePrints:coverage.prints,officialPrintsAdopted:0,
