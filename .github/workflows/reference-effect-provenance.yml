@@ -11,6 +11,12 @@ on:
       - 'tests/reference-effect-coverage.test.cjs'
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'ui/engine.bundle.js'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'engine/pokeca_reference_validation_adapter.cjs'
+      - 'scripts/check-reference-bundle-sync.cjs'
+      - 'scripts/build-pwa-release.cjs'
+      - 'scripts/pwa-worker-template.js'
+      - 'sw.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -23,6 +29,12 @@ on:
       - 'tests/reference-effect-coverage.test.cjs'
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'ui/engine.bundle.js'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'engine/pokeca_reference_validation_adapter.cjs'
+      - 'scripts/check-reference-bundle-sync.cjs'
+      - 'scripts/build-pwa-release.cjs'
+      - 'scripts/pwa-worker-template.js'
+      - 'sw.js'
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/report-reference-effect-coverage.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -50,6 +62,10 @@ jobs:
         run: node scripts/report-reference-effect-coverage.cjs reports/reference-effect-coverage.json
       - name: Verify effect coverage accounting and blocked pattern grouping
         run: node tests/reference-effect-coverage.test.cjs
+      - name: Ensure shipped engine bundle matches source modules
+        run: node scripts/check-reference-bundle-sync.cjs
+      - name: Ensure verified PWA release includes current engine hashes
+        run: node scripts/build-pwa-release.cjs --check
       - name: Verify reference effect runtime in published browser engine bundle
         run: node tests/reference-effect-runtime-bundle.test.cjs
       - name: Upload effect coverage inventory
