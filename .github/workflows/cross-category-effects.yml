@@ -30,6 +30,8 @@ jobs:
           node-version: '22'
       - name: Test failure-path triage and safe Codex instructions
         run: node tests/effect-triage-failure-path.test.cjs
+      - name: Inventory all 45 fixed-deck reference effects and unresolved blockers
+        run: node tests/fixed-deck-effect-coverage.cjs
       - name: Run both suites and write structured diagnosis
         id: regression
         continue-on-error: true
@@ -46,6 +48,7 @@ jobs:
         with:
           name: cross-category-effect-diagnostics
           path: |
+            test-results/fixed-deck-effect-coverage.json
             test-results/cross-category-effects.json
             test-results/effect-repair-triage.json
             test-results/codex-repair-task.md
