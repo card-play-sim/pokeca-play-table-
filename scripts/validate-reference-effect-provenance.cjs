@@ -16,7 +16,7 @@ for (const [index, record] of data.records.entries()) {
   if (byId.has(id)) fail('duplicate officialCardId ' + id);
   if (record.deckPrintAdopted !== false) fail('reference marked as adopted ' + id);
   if (!record.officialPageUrl || !record.officialPageUrl.startsWith('https://www.pokemon-card.com/')) fail('missing official URL ' + id);
-  if (!record.source || !record.source.path || !record.source.sha256 || !record.source.recordSha256) fail('missing provenance ' + id);
+  if (!record.source || !record.source.path || !record.source.sha256 || !(record.source.recordSha256 || record.source.htmlSha256)) fail('missing provenance ' + id);
   byId.set(id, record);
 }
 for (const [name, id] of Object.entries(data.defaultValidationReferences)) {
