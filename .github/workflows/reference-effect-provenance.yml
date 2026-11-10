@@ -12,6 +12,9 @@ on:
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'tests/reference-effect-runtime-smoke.test.cjs'
       - 'tests/reference-effect-opening-actions.test.cjs'
+      - 'tests/reference-effect-cross-category.test.cjs'
+      - 'tests/reference-effect-extended-gameplay.test.cjs'
+      - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'engine/pokeca_reference_validation_adapter.cjs'
@@ -32,6 +35,9 @@ on:
       - 'tests/reference-effect-runtime-bundle.test.cjs'
       - 'tests/reference-effect-runtime-smoke.test.cjs'
       - 'tests/reference-effect-opening-actions.test.cjs'
+      - 'tests/reference-effect-cross-category.test.cjs'
+      - 'tests/reference-effect-extended-gameplay.test.cjs'
+      - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'engine/pokeca_reference_validation_adapter.cjs'
@@ -68,6 +74,36 @@ jobs:
           node-version: '22'
       - name: Verify opening attack restrictions and action families across seeds
         run: node tests/reference-effect-opening-actions.test.cjs
+  multi-turn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify multi-turn reference gameplay
+        run: node tests/reference-effect-multi-turn.test.cjs
+  extended-gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify extended-gameplay reference gameplay
+        run: node tests/reference-effect-extended-gameplay.test.cjs
+  cross-category:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify cross-category reference gameplay
+        run: node tests/reference-effect-cross-category.test.cjs
   provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
