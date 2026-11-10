@@ -39,6 +39,19 @@ test('supporter once per turn and printed Lillie draw eight at six prizes',()=>{
 test('judge resets both exact hands to four, not synthetic demo effect',()=>{const t=setup({hand:{0:['ジャッジマン','基本悪エネルギー'],1:['基本炎エネルギー']}});t.do('you',actionFor(t,'you','ジャッジマン','play_supporter'));assert.equal(t.g.players[0].hand.length,4);assert.equal(t.g.players[1].hand.length,4);});
 test('boss caster choice and repellent defender choice are distinct',()=>{let t=setup({hand:{0:['ボスの指令']},bench:{1:['スボミー']}});const target=t.g.players[1].bench[0].id;t.do('you',actionFor(t,'you','ボスの指令','play_supporter'));assert.equal(t.g.players[1].active.id,target);t=setup({hand:{0:['むしよけスプレー']},bench:{1:['スボミー','ノコッチ']}});t.do('you',actionFor(t,'you','むしよけスプレー','play_item'));assert.equal(t.g.pendingReferenceChoice.playerId,'ai');t.reject('you',{type:'resolve_reference_choice',benchInstanceId:t.g.players[1].bench[0].id},/turn|CHOICE/);const chosen=t.g.players[1].bench[1].id;t.do('ai',{type:'resolve_reference_choice',benchInstanceId:chosen});assert.equal(t.g.players[1].active.id,chosen);});
 test('unconnected effect stops on its exact alternate print and rolls back',()=>{const r=catalog.records.find(r=>r.category==='pokemon'&&r.deckName==='シェイミ'&&r.attacks.some(a=>!a.plan));assert(r,'must retain an actual unresolved print-specific effect');const t=setup({active:['シェイミ','ドラメシヤ'],referenceIds:{シェイミ:r.officialCardId}});const index=r.attacks.findIndex(a=>!a.plan);t.reject('you',{type:'attack_turn',attackIndex:index},new RegExp('UNCONNECTED_EFFECT.*'+r.officialCardId));});
+test('shared self-switch attack uses selected bench target on both verified print variants',()=>{
+ for(const officialCardId of ['47086','49290']){
+  const t=setup({active:['ロケット団のニューラ','ノコッチ'],bench:{1:['ドラメシヤ']},
+   energy:{1:{active:['基本超エネルギー']}},referenceIds:{'ノコッチ':officialCardId}});
+  const selected=t.g.players[1].bench[0].id;
+  t.do('you',{type:'end_turn'});
+  t.reject('ai',{type:'attack_turn',attackIndex:0},/INVALID_REFERENCE_SELECTION/);
+  t.do('ai',{type:'attack_turn',attackIndex:0,targetIds:[selected]});
+  assert.equal(t.g.players[1].active.name,'ドラメシヤ');
+  assert(t.g.players[1].bench.some(c=>c.name==='ノコッチ'));
+  assert.equal(t.g.players[0].active.damage,0);
+ }
+});
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
