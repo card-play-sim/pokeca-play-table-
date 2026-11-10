@@ -67,6 +67,15 @@ permissions:
 
 jobs:
   smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fast reference effect runtime smoke test
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-smoke.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -79,7 +88,7 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
+  opening-actions:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -87,9 +96,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Fast reference effect runtime smoke test
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-smoke.test.cjs
-  opening-actions:
+      - name: Verify opening attack restrictions and action families across seeds
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-actions.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -102,7 +110,7 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
+  opening-rejection:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -110,9 +118,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify opening attack restrictions and action families across seeds
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-actions.test.cjs
-  opening-rejection:
+      - name: Reject illegal first-turn attacks across 200 matches without state mutation
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-rejection.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -125,17 +132,16 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
+  multi-turn:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Reject illegal first-turn attacks across 200 matches without state mutation
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-opening-rejection.test.cjs
-  multi-turn:
+      - name: Verify multi-turn reference gameplay
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-multi-turn.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -148,7 +154,7 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
+  extended-gameplay:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -156,9 +162,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify multi-turn reference gameplay
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-multi-turn.test.cjs
-  extended-gameplay:
+      - name: Verify extended-gameplay reference gameplay
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-extended-gameplay.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -171,7 +176,7 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
+  cross-category:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -179,9 +184,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify extended-gameplay reference gameplay
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-extended-gameplay.test.cjs
-  cross-category:
+      - name: Verify cross-category reference gameplay
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-category.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
@@ -194,16 +198,6 @@ jobs:
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
           if-no-files-found: warn
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Verify cross-category reference gameplay
-        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-category.test.cjs
   provenance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
