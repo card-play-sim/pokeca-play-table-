@@ -9,27 +9,39 @@ on:
 permissions:
   contents: read
 jobs:
-  offline:
+  offline-node:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: All offline Node regression, metadata preservation and AI games
+      - name: Offline Node tests (shard ${{ matrix.shard }})
+        env:
+          OFFLINE_SHARD_COUNT: '4'
+          OFFLINE_SHARD_INDEX: ${{ matrix.shard }}
         run: node scripts/run-offline-tests.cjs
-      - name: Preserve per-test durations for diagnosis
+      - name: Preserve test durations and partial progress
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: offline-node-test-timings
-          path: test-results/offline-node-test-timings.json
+          name: offline-node-timings-${{ matrix.shard }}
+          path: test-results/offline-node-test-timings-${{ matrix.shard }}.json
           if-no-files-found: warn
           retention-days: 14
+  offline-python:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: All offline Python checks
         run: |
           for pattern in test_formal_zip_reconciliation.py test_fixed_preview_evidence.py test_fixed_practice_facts.py test_mobile_header_layout.py test_card_reflection_wiring.py test_official_image_workflow.py; do
