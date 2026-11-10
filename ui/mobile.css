@@ -227,24 +227,6 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 /* Keep async diagnostic updates from moving a card under the reader’s finger. */
 #deck-image-check{display:block;min-height:8em}
 
-/* Mobile browser regression: keep the bench hit targets inside the table row.
-   The old 67px + 52px fixed minimums overflowed short grid tracks and
-   placed an empty bench slot behind the actionbar. */
-@media(max-width:600px){
-  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) minmax(0,21px)}
-  .table .opponent{grid-template-rows:minmax(0,21px) minmax(0,.8fr) minmax(0,1fr)}
-  .table .side,.table .bench,.table .active-row{min-height:0;max-height:100%}
-  .table .bench-slot{min-height:0;max-height:100%;box-sizing:border-box}
-}
 
-/* Keep discard, deck and prize tap targets within the self-side grid row.
-   Their former 42px minimum height exceeded the 21px row and overlapped
-   the next actionbar, making the visible trash button untappable. */
-@media(max-width:600px){
-  .table .self{grid-template-rows:minmax(0,1fr) minmax(0,.8fr) 34px}
-  .table .opponent{grid-template-rows:34px minmax(0,.8fr) minmax(0,1fr)}
-  .table .zone-rail{min-height:0;max-height:100%;overflow:hidden;flex-wrap:nowrap;align-items:stretch}
-  .table .zone-rail .zone{box-sizing:border-box;min-height:0;height:100%;max-height:100%;padding:2px 3px;gap:0;justify-content:center}
-  .table .zone-rail .zone strong{font-size:11px;line-height:12px}
-  .table .zone-rail .zone-icon{font-size:10px;line-height:11px}
-}
+/* Update notices must never become a seventh child of the six-row game grid. */
+#app-update-status{position:fixed;top:calc(env(safe-area-inset-top) + 78px);left:50%;transform:translateX(-50%);z-index:30;box-sizing:border-box;width:max-content;max-width:92vw;margin:0;padding:8px 12px;border-radius:10px;background:#203e39;color:white;font-size:12px;line-height:1.5;box-shadow:0 3px 12px #0004;pointer-events:none;text-align:center}

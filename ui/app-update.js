@@ -2,7 +2,7 @@
 (()=>{
  'use strict';
  const status=window.PokecaUpdateStatus={htmlBuild:document.querySelector('meta[name="pokeca-build"]')?.content,mobileBuild:window.PokecaMobileBuild,controllerBuild:null,state:'checking'};
- function notice(text){let el=document.getElementById('app-update-status');if(!el){el=document.createElement('p');el.id='app-update-status';el.setAttribute('role','status');document.getElementById('app').prepend(el);}el.textContent=text;}
+ function notice(text){let el=document.getElementById('app-update-status');if(!el){el=document.createElement('p');el.id='app-update-status';el.setAttribute('role','status');document.body.append(el);}el.textContent=text;}
  async function controllerInfo(){
   if(!navigator.serviceWorker.controller)return;
   const channel=new MessageChannel();

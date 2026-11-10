@@ -1,0 +1,41 @@
+name: Mobile hit-target browser regression
+on:
+  pull_request:
+    paths:
+      - 'ui/mobile.css'
+      - 'ui/mobile.js'
+      - 'index.html'
+      - 'tests/test_mobile_hit_targets_browser.py'
+      - '.github/workflows/mobile-hit-targets.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ui/mobile.css'
+      - 'ui/mobile.js'
+      - 'tests/test_mobile_hit_targets_browser.py'
+      - '.github/workflows/mobile-hit-targets.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mobile-hit-targets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Check real mobile touch hit-testing against local candidate
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-mobile-server.log 2>&1 &
+          python tests/test_mobile_hit_targets_browser.py
+      - name: Preserve target geometry and screenshot even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-hit-target-evidence
+          path: artifacts/mobile-hit-targets.*
+          if-no-files-found: warn
