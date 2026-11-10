@@ -30,7 +30,11 @@ jobs:
           node-version: '22'
       - name: Test failure-path triage and safe Codex instructions
         run: node tests/effect-triage-failure-path.test.cjs
+      - name: Verify unresolved effects remain in Codex handoff
+        run: node tests/shared-effect-handoff.test.cjs
       - name: Inventory all 45 fixed-deck reference effects and unresolved blockers
+        id: coverage
+        continue-on-error: true
         run: node tests/fixed-deck-effect-coverage.test.cjs
       - name: Run both suites and write structured diagnosis
         id: regression
@@ -54,6 +58,6 @@ jobs:
             test-results/codex-repair-task.md
           if-no-files-found: error
           retention-days: 30
-      - name: Fail the job when effect regression failed
-        if: steps.regression.outcome == 'failure'
+      - name: Fail the job when effect regression or coverage failed
+        if: steps.regression.outcome == 'failure' || steps.coverage.outcome == 'failure'
         run: exit 1
