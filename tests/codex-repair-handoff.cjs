@@ -23,9 +23,27 @@ for(const g of t.groups){
     'Next action: '+g.next,'Scope: '+g.scope.join(', '));
   for(const excerpt of g.excerpts||[])lines.push('','```text',excerpt.replace(/```/g,'[fence removed]'),'```');
 }
+const coverageFile='test-results/fixed-deck-effect-coverage.json';
+if(fs.existsSync(coverageFile)){
+ const coverage=JSON.parse(fs.readFileSync(coverageFile,'utf8'));
+ if(coverage.schemaVersion!==1||coverage.kind!=='fixed-deck-effect-coverage'||
+  !Array.isArray(coverage.sharedEffectGaps)||coverage.officialPrintsAdopted!==0)
+  throw Error('Invalid reference effect coverage: fail closed');
+ lines.push('','## Unconnected official-reference effects (not deck-print adoption)',
+  'These gaps remain BLOCKED even when all runnable regression suites pass.',
+  'Implement shared mechanics only after verifying official evidence and Rule Engine contracts.');
+ for(const gap of coverage.sharedEffectGaps){
+  if(gap.status!=='BLOCKED_UNCONNECTED'||!Array.isArray(gap.printIds)||!gap.printIds.length)
+   throw Error('Invalid unresolved effect family');
+  lines.push('','### '+gap.effectName,'Print references: '+gap.printIds.join(', '),
+   'Shared effect text: '+String(gap.officialText||'').replace(/\\r?\\n/g,' '),
+   'Next: confirm source evidence, implement one shared command family, add positive and negative tests.');
+ }
+}else lines.push('','Coverage inventory not present: effect completeness UNKNOWN; do not treat passing suites as complete.');
 lines.push('','## Required verification',
 '- node tests/cross-category-report.cjs',
 '- node tests/effect-repair-triage.cjs',
+'- node tests/fixed-deck-effect-coverage.test.cjs',
 '- Run the repository complete offline regression and inspect its status.',
 '- Include actual failing and passing cases in the PR description.','');
 fs.mkdirSync('test-results',{recursive:true});
