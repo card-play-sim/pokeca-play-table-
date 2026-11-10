@@ -12,6 +12,22 @@ assert.equal(typeof engine?.getReferenceEffectCoverage, 'function', 'reference e
 assert.equal(typeof engine?.getReferenceEffectRecord, 'function', 'print-specific runtime lookup must be bundled');
 const catalog = engine.getReferenceEffectCatalog();
 const coverage = engine.getReferenceEffectCoverage();
+const sourceCatalog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/reference-effects/plans.json'), 'utf8'));
+const { compile } = require('../engine/reference-effect-plans.cjs');
+const expected = compile(sourceCatalog);
+assert.equal(catalog.records.length, expected.records.length, 'published runtime catalog must include every verified reference print');
+const bundledById = new Map(catalog.records.map(r => [String(r.officialCardId), r]));
+assert.equal(bundledById.size, catalog.records.length, 'published runtime must not duplicate print IDs');
+for (const record of expected.records) {
+  const actual = bundledById.get(String(record.officialCardId));
+  assert.ok(actual, 'missing published reference print ' + record.officialCardId);
+  assert.equal(actual.name, record.name);
+  assert.equal(actual.source.sha256, record.source.sha256, 'reference source hash mismatch for ' + record.officialCardId);
+  assert.equal(actual.deckPrintAdopted, false);
+  assert.equal(JSON.stringify(actual.attacks.map(a => a.plan)), JSON.stringify(record.attacks.map(a => a.plan)), 'published attack plan mismatch for ' + record.officialCardId);
+  assert.equal(JSON.stringify(actual.abilities.map(a => a.plan)), JSON.stringify(record.abilities.map(a => a.plan)), 'published ability plan mismatch for ' + record.officialCardId);
+  assert.equal(JSON.stringify(actual.mainPlan), JSON.stringify(record.mainPlan), 'published main plan mismatch for ' + record.officialCardId);
+}
 assert.equal(catalog.adoptedDeckPrints, 0);
 assert.equal(coverage.prints, catalog.records.length);
 assert.equal(coverage.defaults.length, Object.keys(catalog.defaultValidationReferences).length);
