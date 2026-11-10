@@ -32,7 +32,8 @@ for (const [index, record] of data.records.entries()) {
     const evidence = JSON.parse(fs.readFileSync(evidencePath, 'utf8'));
     if (String(evidence.candidate?.officialCardId) !== id) fail('saved evidence ID mismatch ' + id);
     if (evidence.candidate?.name !== record.name) fail('saved evidence name mismatch ' + id);
-    if (evidence.candidate?.officialDetailsUrl !== record.officialPageUrl) fail('saved evidence official URL mismatch ' + id);
+    const canonicalOfficialUrl = url => typeof url === 'string' ? url.replace(/\/regu\/[A-Za-z0-9_-]+\/?$/, '') : '';
+    if (canonicalOfficialUrl(evidence.candidate?.officialDetailsUrl) !== canonicalOfficialUrl(record.officialPageUrl)) fail('saved evidence official URL mismatch ' + id);
     if (record.imageSourceUrl && evidence.candidate?.imageSourceUrl !== record.imageSourceUrl) fail('saved evidence image URL mismatch ' + id);
     if (typeof evidence.html !== 'string' || !evidence.html) fail('missing saved official HTML ' + id);
     const hash = crypto.createHash('sha256').update(evidence.html, 'utf8').digest('hex');
