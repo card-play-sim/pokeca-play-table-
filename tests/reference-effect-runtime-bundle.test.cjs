@@ -101,6 +101,31 @@ assert.equal(abilityGame.players.reduce((n, p) => n + p.deck.length + p.hand.len
 const secondUse = abilityPort.dispatch('you', ability);
 assert.equal(secondUse.ok, false, 'once-per-turn ability must reject repeated use');
 console.log('REFERENCE_DRAW_ABILITY PASS: 2 cards drawn; repeat blocked');
+// A reusable search/discard item effect must preserve all physical cards.
+let itemSeed = 1;
+const itemRng = () => { itemSeed = (Math.imul(itemSeed, 1664525) + 1013904223) >>> 0; return itemSeed / 4294967296; };
+const itemMatch = engine.createReferenceValidationMatch(manifest, { rng: itemRng, firstPlayer: 'you' });
+assert.equal(itemMatch.ok, true);
+let itemGame = itemMatch.game;
+const itemPort = engine.createUIPort({ getGame: () => itemGame, setGame: value => { itemGame = value; } });
+assert.equal(itemPort.loadGame(itemGame).ok, true);
+for (let i = 0; i < 4 && itemGame.pendingReferenceChoice; i++) {
+  const owner = itemGame.pendingReferenceChoice.playerId;
+  const choice = engine.getLegalActions(itemGame, owner).actions.find(a => a.type === 'resolve_reference_choice');
+  assert.ok(choice);
+  assert.equal(itemPort.dispatch(owner, choice).ok, true);
+}
+const item = engine.getLegalActions(itemGame, 'you').actions.find(a => a.type === 'play_item' && itemGame.players[0].hand.some(c => c.id === a.cardId && c.name === 'ハイパーボール'));
+assert.ok(item, 'search/discard item action must be generated');
+const itemPlayer = itemGame.players[0];
+const itemBefore = { hand: itemPlayer.hand.length, deck: itemPlayer.deck.length, discard: itemPlayer.discard.length };
+const itemResult = itemPort.dispatch('you', item);
+assert.equal(itemResult.ok, true, 'search/discard item must execute: ' + JSON.stringify(itemResult.errors || itemResult.stage || 'unknown'));
+assert.equal(itemPlayer.hand.length, itemBefore.hand - 2, 'two discards and item consumption offset one searched card');
+assert.equal(itemPlayer.deck.length, itemBefore.deck - 1, 'search removes exactly one card from deck');
+assert.equal(itemPlayer.discard.length, itemBefore.discard + 3, 'two discard costs and item enter discard');
+assert.equal(itemResult.transitionAudit?.conservation?.ok, true, 'item effect must preserve physical cards');
+console.log('REFERENCE_SEARCH_DISCARD_ITEM PASS: hand/deck/discard conserved');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
