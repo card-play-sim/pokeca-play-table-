@@ -1,6 +1,13 @@
 name: Cross-category effect regression
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/**'
+      - 'data/fixed-test-decks.json'
+      - 'ui/engine.bundle.js'
+      - '.github/workflows/cross-category-effects.yml'
   pull_request:
     paths:
       - 'tests/**'
