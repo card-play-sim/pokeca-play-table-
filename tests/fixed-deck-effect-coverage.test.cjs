@@ -64,7 +64,7 @@ const sharedGaps=new Map();
 for(const record of catalog.records){
  for(const effect of [...(record.attacks||[]),...(record.abilities||[])]){
   if(effect.plan)continue;
-  const normalizedText=String(effect.text||'').replace(/\\s+/g,' ').trim();
+  const normalizedText=String(effect.text||'').replace(/\s+/g,' ').trim();
   const key=JSON.stringify([effect.name,normalizedText]);
   if(!sharedGaps.has(key))sharedGaps.set(key,{effectName:effect.name,officialText:normalizedText,
    printIds:[],deckNames:[],status:'BLOCKED_UNCONNECTED'});
