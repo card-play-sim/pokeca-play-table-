@@ -11,11 +11,11 @@ permissions:
 jobs:
   offline-node:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +23,7 @@ jobs:
           node-version: '22'
       - name: Offline Node tests (shard ${{ matrix.shard }})
         env:
-          OFFLINE_SHARD_COUNT: '4'
+          OFFLINE_SHARD_COUNT: '8'
           OFFLINE_SHARD_INDEX: ${{ matrix.shard }}
         run: node scripts/run-offline-tests.cjs
       - name: Preserve test durations and partial progress
