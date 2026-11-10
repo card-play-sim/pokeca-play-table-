@@ -80,6 +80,13 @@ try {
   } finally {
     fs.writeFileSync(evidenceFile, originalEvidence);
   }
+  const suffixVariant = structuredClone(source);
+  const target = suffixVariant.records.find(r => r.officialCardId === '46662');
+  if (target) {
+    const original = target.officialPageUrl;
+    target.officialPageUrl = original.endsWith('/regu/XY') ? original.replace(/\/regu\/XY$/, '') : original + '/regu/XY';
+    assert.equal(run(suffixVariant).status, 0, 'official regulation URL suffix must not change identity');
+  }
   fs.rmSync(evidenceFile);
   const missing = run(source);
   assert.notEqual(missing.status, 0, 'missing saved evidence must fail closed');
