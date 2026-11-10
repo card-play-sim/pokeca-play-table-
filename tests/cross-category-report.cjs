@@ -4,21 +4,23 @@
 const {spawnSync} = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const timeoutMs=Number(process.env.EFFECT_SUITE_TIMEOUT_MS||120000);
+if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>600000) throw Error('Invalid EFFECT_SUITE_TIMEOUT_MS');
 const suites = [
   {id:'reference-identity', file:'tests/cross-category-effect-gate.test.cjs'},
   {id:'effect-execution', file:'tests/reference-effects.test.cjs'}
 ];
 const results = suites.map(({id,file})=>{
-  const p = spawnSync(process.execPath,[file],{encoding:'utf8',maxBuffer:8*1024*1024});
+  const p = spawnSync(process.execPath,[file],{encoding:'utf8',maxBuffer:8*1024*1024,timeout:timeoutMs});
   const output = [p.stdout||'',p.stderr||''].join('\n');
-  const failed = p.status !== 0 || p.error;
+  const failed = p.status !== 0 || Boolean(p.error);
   const category = !failed ? 'PASS'
     : /UNCONNECTED_EFFECT|unconnected effect/i.test(output) ? 'UNCONNECTED_EFFECT'
     : /reference|print|identity|adopt/i.test(output) ? 'REFERENCE_IDENTITY'
     : /AssertionError|ERR_ASSERTION/i.test(output) ? 'EFFECT_ASSERTION'
     : 'RUNNER_OR_UNKNOWN';
   process.stdout.write(output);
-  return {id,file,status:failed?'FAIL':'PASS',failureCategory:category,
+  return {id,file,status:failed?'FAIL':'PASS',failureCategory:category,timeoutMs,
     exitCode:p.status,signal:p.signal||null,error:p.error?.message||null,
     excerpt:failed?output.slice(-6000):null};
 });
