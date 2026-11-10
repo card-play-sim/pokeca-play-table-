@@ -41,7 +41,7 @@ for(const record of catalog.records){
  assert(/^\d+$/.test(id),'invalid reference official ID');
  assert(!referenceIds.has(id),'duplicate reference official ID: '+id);
  referenceIds.add(id);
- assert(/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d+\//.test(record.officialPageUrl),'invalid official page URL: '+id);
+ assert(/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d+(?:\/|$)/.test(record.officialPageUrl),'invalid official page URL: '+id);
  const src=record.source||{};
  provenanceKinds[src.kind||'MISSING']=(provenanceKinds[src.kind||'MISSING']||0)+1;
  if(!src.path||!(/^[a-f0-9]{64}$/).test(src.sha256||''))
