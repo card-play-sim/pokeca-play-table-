@@ -7,12 +7,12 @@ on:
       - 'data/reference-effects/**'
       - 'scripts/validate-reference-effect-provenance.cjs'
       - 'tests/reference-effect-provenance.test.cjs'
-      - 'tests/reference-effect-provenance.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
       - 'data/reference-effects/**'
       - 'scripts/validate-reference-effect-provenance.cjs'
+      - 'tests/reference-effect-provenance.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
