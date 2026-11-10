@@ -631,8 +631,8 @@ function requests(g,actor,card,effect){
  const own=field(p),opp=field(o),cardRequest=(key,list,min,max)=>add(key,'CARD',list,min,max);
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
- if(m==='ACTIVE_AND_BENCH_DAMAGE')add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,p.bench.length),Math.min(1,p.bench.length));
+ if(m==='ACTIVE_AND_BENCH_DAMAGE')add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DECK_ENERGY_TO_GRASS_BENCH'){
   const energies=p.deck.filter(c=>c.kind==='energy'),targets=p.bench.filter(c=>record(c).facts.types.includes('草'));

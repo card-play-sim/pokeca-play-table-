@@ -5,7 +5,7 @@ const records=new Map(catalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -105,6 +105,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false}={}){
  if(amount===0)return 0;
  if(!ignore){
   if(bench&&record(mon).facts.teraBenchProtection)return 0;
+  if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
  }
  if(!bench){
@@ -135,6 +136,14 @@ function requests(g,actor,card,effect){
  const own=field(p),opp=field(o),cardRequest=(key,list,min,max)=>add(key,'CARD',list,min,max);
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
+ if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,p.bench.length),Math.min(1,p.bench.length));
+ if(m==='ACTIVE_AND_BENCH_DAMAGE')add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
+ if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
+ if(m==='DECK_ENERGY_TO_GRASS_BENCH'){
+  const energies=p.deck.filter(c=>c.kind==='energy'),targets=p.bench.filter(c=>record(c).facts.types.includes('草'));
+  const count=energies.length&&targets.length?1:0;
+  cardRequest('energy',energies,count,count);cardRequest('attachTo',targets,count,count);
+ }
  if(m==='PHANTOM'&&o.bench.length)add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),6,6);
  if(m==='HUNT')cardRequest('cards',p.deck,0,2);
  if(m==='ADRENA_BRAIN'){
@@ -286,6 +295,28 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='COIN_PROTECT'&&coin(g,actor))card.referenceProtection={opponentTurn:g.turnNumber+1};
    break;
   }
+  case 'ACTIVE_AND_BENCH_DAMAGE':damage(g,actor,o.active,Number.parseInt(effect.damage,10)||0);if(action.targetIds?.length)damage(g,actor,target(),Number.parseInt(effect.damage,10)||0,{bench:true});break;
+  case 'DECK_ENERGY_TO_GRASS_BENCH':{
+   if(ids('energy').length){const energyId=ids('energy')[0],benchId=ids('attachTo')[0];
+    const target=p.bench.find(c=>id(c)===benchId&&record(c).facts.types.includes('草'));
+    const index=p.deck.findIndex(c=>id(c)===energyId&&c.kind==='energy');
+    assert(target&&index>=0,'DECK_ENERGY_SELECTION_CHANGED');
+    target.energyCards||=[];target.energyCards.push(p.deck.splice(index,1)[0]);
+    event(g,actor,'ATTACH_ENERGY',{energyId,targetInstanceId:benchId,fromZone:'deck'});
+   }
+   shuffle(g,p);break;
+  }
+  case 'ATTACK_DAMAGE_MOVE_ENERGY':{
+   damage(g,actor,o.active,Number.parseInt(effect.damage,10)||0);
+   if(p.bench.length){const energyId=ids('energy')[0],benchId=ids('attachTo')[0];
+    const target=p.bench.find(c=>id(c)===benchId),index=card.energyCards.findIndex(e=>id(e)===energyId);
+    assert(target&&index>=0,'ENERGY_MOVE_SELECTION_CHANGED');
+    target.energyCards.push(card.energyCards.splice(index,1)[0]);
+    event(g,actor,'MOVE_ENERGY',{energyId,targetInstanceId:benchId});
+   }
+   break;
+  }
+  case 'SWITCH_SELF_ATTACK':if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);break;
   case 'DASH':draw(g,p,2);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.DASH=true;break;
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;
   case 'EXCITE_DIVE':bench(g,p,card,true);break;

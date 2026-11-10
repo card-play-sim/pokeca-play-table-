@@ -583,7 +583,12 @@
           "damage": null,
           "text": "相手のポケモン1匹に、100ダメージ。ベンチは弱点・抵抗力を計算しない。",
           "effectId": "reference-46058-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "ANY_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
         }
       ],
       "abilities": [
@@ -650,7 +655,12 @@
           "damage": null,
           "text": "相手のポケモン1匹に、100ダメージ。ベンチは弱点・抵抗力を計算しない。",
           "effectId": "reference-46066-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "ANY_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
         }
       ],
       "abilities": [
@@ -985,7 +995,13 @@
           "damage": "60",
           "text": "このポケモンについているエネルギーを1個選び、ベンチポケモンにつけ替える。",
           "effectId": "reference-46559-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "ATTACK_DAMAGE_MOVE_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ]
+          }
         }
       ],
       "abilities": [],
@@ -1539,7 +1555,12 @@
           "damage": null,
           "text": "このポケモンをベンチポケモンと入れ替える。",
           "effectId": "reference-47086-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "SWITCH_SELF_ATTACK",
+            "commands": [
+              "SWITCH"
+            ]
+          }
         },
         {
           "name": "ぶつかる",
@@ -1836,7 +1857,12 @@
           "name": "はなのカーテン",
           "text": "このポケモンがいるかぎり、自分のベンチポケモン（「ルールを持つポケモン」をのぞく）全員は、相手のワザのダメージを受けない。",
           "effectId": "reference-47301-ability-0",
-          "plan": null
+          "plan": {
+            "mechanic": "BENCH_NON_RULE_PROTECTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ]
+          }
         }
       ],
       "rulesText": "",
@@ -1902,7 +1928,12 @@
           "name": "はなのカーテン",
           "text": "このポケモンがいるかぎり、自分のベンチポケモン（「ルールを持つポケモン」をのぞく）全員は、相手のワザのダメージを受けない。",
           "effectId": "reference-47367-ability-0",
-          "plan": null
+          "plan": {
+            "mechanic": "BENCH_NON_RULE_PROTECTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ]
+          }
         }
       ],
       "rulesText": "",
@@ -2147,7 +2178,12 @@
           "name": "はなのカーテン",
           "text": "このポケモンがいるかぎり、自分のベンチポケモン（「ルールを持つポケモン」をのぞく）全員は、相手のワザのダメージを受けない。",
           "effectId": "reference-47860-ability-0",
-          "plan": null
+          "plan": {
+            "mechanic": "BENCH_NON_RULE_PROTECTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ]
+          }
         }
       ],
       "rulesText": "",
@@ -2522,7 +2558,12 @@
           "name": "はなのカーテン",
           "text": "このポケモンがいるかぎり、自分のベンチポケモン（「ルールを持つポケモン」をのぞく）全員は、相手のワザのダメージを受けない。",
           "effectId": "reference-48534-ability-0",
-          "plan": null
+          "plan": {
+            "mechanic": "BENCH_NON_RULE_PROTECTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ]
+          }
         }
       ],
       "rulesText": "",
@@ -3732,7 +3773,12 @@
           "damage": null,
           "text": "このポケモンをベンチポケモンと入れ替える。",
           "effectId": "reference-49290-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "SWITCH_SELF_ATTACK",
+            "commands": [
+              "SWITCH"
+            ]
+          }
         },
         {
           "name": "ぶつかる",
@@ -4208,7 +4254,13 @@
           "damage": null,
           "text": "自分の山札からエネルギーを1枚選び、ベンチの草ポケモンにつける。そして山札を切る。",
           "effectId": "reference-49636-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "DECK_ENERGY_TO_GRASS_BENCH",
+            "commands": [
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ]
+          }
         },
         {
           "name": "リーフステップ",
@@ -4947,7 +4999,12 @@
           "damage": "20",
           "text": "相手のベンチポケモン1匹にも、20ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
           "effectId": "reference-50452-attack-0",
-          "plan": null
+          "plan": {
+            "mechanic": "ACTIVE_AND_BENCH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
         }
       ],
       "abilities": [],
