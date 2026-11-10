@@ -320,6 +320,34 @@ for (const type of ['play_supporter', 'attach_tool', 'retreat', 'attack_turn', '
   assert.ok(categoryCounts.get(type) > 0, 'cross-category action not exercised: ' + type);
 }
 console.log('REFERENCE_CROSS_CATEGORY_GATE PASS:', Object.fromEntries(categoryCounts));
+// Supporter effects: Judge must reset both players' hands to four cards
+// while preserving all physical cards through the canonical action gateway.
+let judgeSeed = 1;
+const judgeRandom = () => { judgeSeed = (Math.imul(judgeSeed, 1664525) + 1013904223) >>> 0; return judgeSeed / 4294967296; };
+const judgeCreated = engine.createReferenceValidationMatch(manifest, { rng: judgeRandom, firstDeck: 1, firstPlayer: 'ai' });
+assert.equal(judgeCreated.ok, true);
+let judgeGame = judgeCreated.game;
+const judgePort = engine.createUIPort({ getGame: () => judgeGame, setGame: next => { judgeGame = next; } });
+assert.equal(judgePort.loadGame(judgeGame).ok, true);
+let judgeSeen = false;
+for (let step = 0; step < 65 && judgeGame.status === 'active'; step++) {
+  const owner = judgeGame.pendingReferenceChoice?.playerId || judgeGame.turnPlayer;
+  const actions = engine.getLegalActions(judgeGame, owner).actions;
+  const preferred = ['resolve_reference_choice', 'bench_basic', 'evolve', 'attach_energy', 'play_item', 'play_supporter', 'play_stadium', 'attach_tool', 'use_ability', 'attack_turn', 'take_prizes', 'retreat', 'end_turn'];
+  const action = preferred.map(type => actions.find(a => a.type === type)).find(Boolean);
+  if (!action) break;
+  const supporter = action.type === 'play_supporter' ? judgeGame.players.find(p => p.id === owner).hand.find(c => c.id === action.cardId)?.name : null;
+  const result = judgePort.dispatch(owner, action);
+  assert.equal(result.ok, true, 'supporter scenario failed step=' + step);
+  assert.equal(result.transitionAudit?.conservation?.ok, true);
+  if (supporter === 'ジャッジマン') {
+    assert.ok(judgeGame.players.every(p => p.hand.length === 4), 'Judge must leave both players with four cards');
+    judgeSeen = true;
+    break;
+  }
+}
+assert.ok(judgeSeen, 'Judge supporter was not reached in seeded scenario');
+console.log('REFERENCE_JUDGE_HAND_RESET PASS: both hands four; card conservation');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
