@@ -162,6 +162,33 @@ assert.equal(stadiumResult.ok, true);
 assert.equal(stadiumCase.game.stadium?.name, '夜の鉱山');
 assert.equal(stadiumResult.transitionAudit?.conservation?.ok, true);
 console.log('REFERENCE_RULE_FAMILIES PASS: once-per-turn energy; stadium zone; conservation');
+// Deterministic multi-seed regression across both deck orders and starting players.
+for (const setup of [{ firstDeck: 0, firstPlayer: 'you' }, { firstDeck: 1, firstPlayer: 'ai' }]) {
+  for (let initialSeed = 1; initialSeed <= 100; initialSeed++) {
+    let state = initialSeed;
+    const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+    const created = engine.createReferenceValidationMatch(manifest, { rng: random, ...setup });
+    assert.equal(created.ok, true, 'match generation failed for seed ' + initialSeed);
+    let game = created.game;
+    const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+    assert.equal(gateway.loadGame(game).ok, true, 'canonical load failed for seed ' + initialSeed);
+    for (let i = 0; i < 4 && game.pendingReferenceChoice; i++) {
+      const owner = game.pendingReferenceChoice.playerId;
+      const choice = engine.getLegalActions(game, owner).actions.find(a => a.type === 'resolve_reference_choice');
+      assert.ok(choice, 'opening choice missing for seed ' + initialSeed);
+      assert.equal(gateway.dispatch(owner, choice).ok, true, 'opening choice failed for seed ' + initialSeed);
+    }
+    assert.equal(game.pendingReferenceChoice, undefined, 'unresolved opening choice for seed ' + initialSeed);
+    const actor = game.turnPlayer;
+    const end = engine.getLegalActions(game, actor).actions.find(a => a.type === 'end_turn');
+    assert.ok(end, 'end_turn missing for seed ' + initialSeed);
+    const outcome = gateway.dispatch(actor, end);
+    assert.equal(outcome.ok, true, 'end_turn failed for seed ' + initialSeed);
+    assert.notEqual(game.turnPlayer, actor, 'turn did not change for seed ' + initialSeed);
+    assert.equal(outcome.transitionAudit?.conservation?.ok, true, 'card conservation failed for seed ' + initialSeed);
+  }
+}
+console.log('REFERENCE_MULTI_SEED_GATE PASS: 200 match setups, opening choices, turn transitions');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
