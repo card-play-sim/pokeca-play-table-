@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.resolve(__dirname, '../ui/engine.bundle.js'), 'utf8');
-const sandbox = { window: {} };
+const sandbox = { window: {}, performance: require('node:perf_hooks').performance, setTimeout };
 vm.runInNewContext(source, sandbox, { filename: 'engine.bundle.js', timeout: 10000 });
 const engine = sandbox.window.Pokeca;
 assert.equal(typeof engine?.createReferenceValidationMatch, 'function', 'reference validation adapter must be bundled');
@@ -49,4 +49,10 @@ else assert.equal(currentGame.pendingReferenceChoice?.kind === 'MULLIGAN', false
 assert.ok(currentGame.turnNumber >= beforeTurn, 'turn counter must not move backward');
 console.log('REFERENCE_GATEWAY_DISPATCH PASS:', actor, '->', currentGame.turnPlayer);
 console.log('REFERENCE_MATCH_BOOT_GATE PASS:', match.game.players.map(p => p.id).join(','), 'legal actions:', legal.actions.length);
+// Invalid actions must never mutate the authoritative game state.
+const snapshot = JSON.stringify(currentGame);
+const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
+assert.equal(rejected.ok, false, 'unknown action must be rejected');
+assert.equal(JSON.stringify(currentGame), snapshot, 'rejected action must not mutate the game');
+console.log('REFERENCE_GATEWAY_ROLLBACK PASS');
 console.log('REFERENCE_RUNTIME_BUNDLE_GATE PASS:', coverage.prints, 'prints;', coverage.defaults.length, 'default print references; no adoption');
