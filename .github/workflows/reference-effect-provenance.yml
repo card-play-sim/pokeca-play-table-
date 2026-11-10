@@ -30,6 +30,7 @@ on:
       - 'scripts/report-reference-runtime-failures.cjs'
       - 'scripts/run-reference-effect-ci.cjs'
       - 'tests/reference-runtime-failure-causes.test.cjs'
+      - 'tests/reference-ci-runner-cause.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -59,6 +60,7 @@ on:
       - 'scripts/report-reference-runtime-failures.cjs'
       - 'scripts/run-reference-effect-ci.cjs'
       - 'tests/reference-runtime-failure-causes.test.cjs'
+      - 'tests/reference-ci-runner-cause.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -223,6 +225,8 @@ jobs:
         run: node tests/reference-effect-failure-causes.test.cjs
       - name: Verify runtime failure cause grouping and malformed-record safety stop
         run: node tests/reference-runtime-failure-causes.test.cjs
+      - name: Verify CI runner preserves shared error codes and failure status
+        run: node tests/reference-ci-runner-cause.test.cjs
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
