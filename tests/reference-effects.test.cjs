@@ -52,6 +52,19 @@ test('shared self-switch attack uses selected bench target on both verified prin
   assert.equal(t.g.players[0].active.damage,0);
  }
 });
+test('shared any-target damage reaches opponent bench for both Cruel Arrow prints',()=>{
+ for(const officialCardId of ['46058','46066']){
+  const t=setup({active:['ロケット団のニューラ','キチキギスex'],bench:{0:['マシマシラ']},
+   energy:{1:{active:['基本炎エネルギー','基本超エネルギー','基本悪エネルギー']}},
+   referenceIds:{'キチキギスex':officialCardId}});
+  const target=t.g.players[0].bench[0].id;
+  t.do('you',{type:'end_turn'});
+  t.reject('ai',{type:'attack_turn',attackIndex:0},/INVALID_REFERENCE_SELECTION/);
+  t.do('ai',{type:'attack_turn',attackIndex:0,targetIds:[target]});
+  assert.equal(t.g.players[0].bench[0].damage,100);
+  assert.equal(t.g.players[0].active.damage,0);
+ }
+});
 test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),g=JSON.parse(JSON.stringify(t.g));delete g.referenceEffectValidation;assert.equal(t.port.loadGame(g).ok,false);const bad=JSON.parse(JSON.stringify(t.g));bad.players[0].active.validationReference.set='WRONG';assert.equal(t.port.loadGame(bad).ok,false);});
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
