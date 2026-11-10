@@ -5,7 +5,9 @@ const fs=require('node:fs'),path=require('node:path');
 const input=process.argv[2]||'reports/reference-effect-runtime.log';
 const output=process.argv[3]||'reports/reference-effect-runtime-causes.json';
 const groups=new Map(),malformed=[];
-const lines=fs.existsSync(input)?fs.readFileSync(input,'utf8').split(/\r?\n/):[];
+const inputPresent=fs.existsSync(input);
+const lines=inputPresent?fs.readFileSync(input,'utf8').split(/\r?\n/):[];
+if(!inputPresent)malformed.push({line:0,reason:'MISSING_RUNTIME_LOG'});
 const prefix='REFERENCE_RUNTIME_FAILURE_JSON:';
 for(let i=0;i<lines.length;i++){
  const pos=lines[i].indexOf(prefix);if(pos<0)continue;
