@@ -276,6 +276,37 @@ for (const type of ['evolve', 'attack_turn', 'bench_basic', 'take_prizes']) {
   assert.ok(extendedTypes.get(type) > 0, 'missing extended action coverage: ' + type);
 }
 console.log('REFERENCE_EXTENDED_GAMEPLAY PASS:', extendedActions, 'actions;', Object.fromEntries(extendedTypes));
+// Knockout must create a prize-taking choice, move exactly one prize,
+// and a later knockout with no replacement must finish the match.
+let koSeed = 1;
+const koRandom = () => { koSeed = (Math.imul(koSeed, 1664525) + 1013904223) >>> 0; return koSeed / 4294967296; };
+const koCreated = engine.createReferenceValidationMatch(manifest, { rng: koRandom, firstPlayer: 'you', firstDeck: 1 });
+assert.equal(koCreated.ok, true);
+let koGame = koCreated.game;
+const koPort = engine.createUIPort({ getGame: () => koGame, setGame: next => { koGame = next; } });
+assert.equal(koPort.loadGame(koGame).ok, true);
+let observedPrize = false, observedFinish = false, observedAttack = false;
+for (let step = 0; step < 40 && koGame.status === 'active'; step++) {
+  const owner = koGame.pendingReferenceChoice?.playerId || koGame.turnPlayer;
+  const actions = engine.getLegalActions(koGame, owner).actions;
+  const preference = ['resolve_reference_choice', 'bench_basic', 'play_active_basic', 'evolve', 'attach_energy', 'play_item', 'play_stadium', 'use_ability', 'attack_turn', 'take_prizes', 'end_turn'];
+  const action = preference.map(type => actions.find(a => a.type === type)).find(Boolean);
+  assert.ok(action, 'no legal action at knockout scenario step ' + step);
+  const prizeBefore = koGame.players[0].prizeCards.length;
+  const result = koPort.dispatch(owner, action);
+  assert.equal(result.ok, true, 'knockout scenario failed step=' + step + ': ' + JSON.stringify(result.errors || result.stage || 'unknown'));
+  assert.equal(result.transitionAudit?.conservation?.ok, true);
+  if (action.type === 'attack_turn') observedAttack = true;
+  if (action.type === 'take_prizes') {
+    assert.equal(koGame.players[0].prizeCards.length, prizeBefore - 1, 'one-prize knockout must take exactly one prize');
+    observedPrize = true;
+  }
+  if (koGame.status === 'finished') observedFinish = true;
+}
+assert.ok(observedAttack, 'knockout scenario must execute attacks');
+assert.ok(observedPrize, 'knockout scenario must take a prize');
+assert.ok(observedFinish, 'knockout scenario must finish the match');
+console.log('REFERENCE_KNOCKOUT_PRIZE_WIN PASS: attack, prize movement, terminal game');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
