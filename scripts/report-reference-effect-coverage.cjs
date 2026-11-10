@@ -47,7 +47,7 @@ const report = {
   totalEffects: total,
   recognized,
   executionVerified,
-  executionUnverified: total,
+  executionUnverified: total - executionVerified,
   blocked: unresolved.length,
   categories,
   commands,
@@ -56,7 +56,7 @@ const report = {
   unresolved
 };
 if (recognized + unresolved.length !== total) throw new Error('Effect coverage accounting mismatch');
-if (executionVerified + total !== report.executionUnverified) throw new Error('Execution accounting mismatch');
+if (executionVerified + report.executionUnverified !== total) throw new Error('Execution accounting mismatch');
 const output = process.argv[2];
 if (output) {
   fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
