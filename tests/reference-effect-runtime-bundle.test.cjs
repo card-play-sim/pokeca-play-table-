@@ -354,6 +354,14 @@ let deterministicSeed = 1;
 const deterministicRandom = () => { deterministicSeed = (Math.imul(deterministicSeed, 1664525) + 1013904223) >>> 0; return deterministicSeed / 4294967296; };
 const deterministicCreated = engine.createReferenceValidationMatch(manifest, { rng: deterministicRandom, firstDeck: 1, firstPlayer: 'ai' });
 assert.equal(deterministicCreated.ok, true);
+assert.ok(Number.isInteger(deterministicCreated.game.referenceRngState), 'reference match must automatically seed persisted effect RNG');
+assert.ok(deterministicCreated.game.referenceRngState >= 0 && deterministicCreated.game.referenceRngState <= 0xffffffff, 'effect seed must be uint32');
+let repeatSeed = 1;
+const repeatRandom = () => { repeatSeed = (Math.imul(repeatSeed, 1664525) + 1013904223) >>> 0; return repeatSeed / 4294967296; };
+const repeatCreated = engine.createReferenceValidationMatch(manifest, { rng: repeatRandom, firstDeck: 1, firstPlayer: 'ai' });
+assert.equal(repeatCreated.ok, true);
+assert.equal(JSON.stringify(repeatCreated.game), JSON.stringify(deterministicCreated.game), 'same setup seed must reproduce the entire opening game and effect seed');
+
 let deterministicGame = deterministicCreated.game;
 const deterministicPort = engine.createUIPort({ getGame: () => deterministicGame, setGame: next => { deterministicGame = next; } });
 assert.equal(deterministicPort.loadGame(deterministicGame).ok, true);
