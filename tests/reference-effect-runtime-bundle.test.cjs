@@ -348,6 +348,46 @@ for (let step = 0; step < 65 && judgeGame.status === 'active'; step++) {
 }
 assert.ok(judgeSeen, 'Judge supporter was not reached in seeded scenario');
 console.log('REFERENCE_JUDGE_HAND_RESET PASS: both hands four; card conservation');
+// Match-owned RNG must survive serialization and reproduce shuffle-dependent
+// supporter effects without consuming the AI policy's independent randomness.
+let deterministicSeed = 1;
+const deterministicRandom = () => { deterministicSeed = (Math.imul(deterministicSeed, 1664525) + 1013904223) >>> 0; return deterministicSeed / 4294967296; };
+const deterministicCreated = engine.createReferenceValidationMatch(manifest, { rng: deterministicRandom, firstDeck: 1, firstPlayer: 'ai' });
+assert.equal(deterministicCreated.ok, true);
+let deterministicGame = deterministicCreated.game;
+const deterministicPort = engine.createUIPort({ getGame: () => deterministicGame, setGame: next => { deterministicGame = next; } });
+assert.equal(deterministicPort.loadGame(deterministicGame).ok, true);
+let replayedShuffle = false;
+for (let step = 0; step < 65 && deterministicGame.status === 'active'; step++) {
+  const owner = deterministicGame.pendingReferenceChoice?.playerId || deterministicGame.turnPlayer;
+  const actions = engine.getLegalActions(deterministicGame, owner).actions;
+  const preferred = ['resolve_reference_choice', 'bench_basic', 'evolve', 'attach_energy', 'play_item', 'play_supporter', 'play_stadium', 'attach_tool', 'use_ability', 'attack_turn', 'take_prizes', 'retreat', 'end_turn'];
+  const action = preferred.map(type => actions.find(a => a.type === type)).find(Boolean);
+  if (!action) break;
+  const supporter = action.type === 'play_supporter' ? deterministicGame.players.find(p => p.id === owner).hand.find(c => c.id === action.cardId)?.name : null;
+  if (supporter === 'ジャッジマン') {
+    const snapshot = JSON.parse(JSON.stringify(deterministicGame));
+    snapshot.referenceRngState = 123456;
+    const replay = () => {
+      let game = JSON.parse(JSON.stringify(snapshot));
+      const port = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+      assert.equal(port.loadGame(game).ok, true);
+      const outcome = port.dispatch(owner, action);
+      assert.equal(outcome.ok, true);
+      assert.equal(outcome.transitionAudit?.conservation?.ok, true);
+      return game;
+    };
+    const first = replay(), second = replay();
+    assert.equal(JSON.stringify(first), JSON.stringify(second), 'saved RNG state must reproduce shuffle and resulting game');
+    assert.notEqual(first.referenceRngState, snapshot.referenceRngState, 'shuffle must advance persisted RNG');
+    assert.ok(first.players.every(p => p.hand.length === 4), 'Judge must draw four for both players');
+    replayedShuffle = true;
+    break;
+  }
+  assert.equal(deterministicPort.dispatch(owner, action).ok, true, 'RNG scenario step failed ' + step);
+}
+assert.ok(replayedShuffle, 'deterministic RNG scenario did not reach a shuffle');
+console.log('REFERENCE_DETERMINISTIC_RNG PASS: serialized match replay, shuffle and Judge hands');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
