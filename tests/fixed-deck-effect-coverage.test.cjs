@@ -33,10 +33,17 @@ for(const name of unique){
  if(problems.length)blocked.push({name,category:item.category,referenceOfficialCardId:info.officialCardId,unconnected:problems});
 }
 assert.equal(entries.reduce((sum,c)=>sum+c.count,0),120);
+const allPrintGaps=catalog.records.flatMap(record=>{
+ const gaps=[...(record.attacks||[]),...(record.abilities||[])].filter(effect=>!effect.plan).map(effect=>effect.name);
+ if(record.category!=='pokemon'&&!record.mainPlan)gaps.push('[main card effect]');
+ return gaps.length?[{name:record.deckName,officialCardId:record.officialCardId,
+  category:record.category,defaultReference:String(catalog.defaultValidationReferences[record.deckName])===String(record.officialCardId),unconnected:gaps}]:[];
+});
 const report={schemaVersion:1,kind:'fixed-deck-effect-coverage',scope:'reference-only-not-official-adoption',
  physicalCards:entries.reduce((sum,c)=>sum+c.count,0),uniqueNames:unique.length,
  categories:counts,referencePrints:coverage.prints,officialPrintsAdopted:0,
- namesWithUnconnectedEffects:blocked.length,blocked};
+ namesWithUnconnectedEffects:blocked.length,blocked,
+ referencePrintsWithUnconnectedEffects:allPrintGaps.length,allPrintGaps};
 fs.mkdirSync('test-results',{recursive:true});
 fs.writeFileSync('test-results/fixed-deck-effect-coverage.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({physicalCards:report.physicalCards,uniqueNames:report.uniqueNames,
