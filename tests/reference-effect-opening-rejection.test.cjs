@@ -29,6 +29,7 @@ for (const firstDeck of [0, 1]) {
     const before = JSON.stringify(game);
     const forbidden = gateway.dispatch(actor, { type: 'attack_turn', attackIndex: 0 });
     assert.equal(forbidden.ok, false, 'first turn attack accepted seed=' + initialSeed);
+    assert.ok(forbidden.errors?.some(error => error.includes('FIRST_PLAYER_FIRST_TURN_ATTACK')), 'attack must be rejected for the actual first-turn rule, not for a different reason: ' + JSON.stringify(forbidden.errors));
     assert.equal(JSON.stringify(game), before, 'rejected attack mutated state seed=' + initialSeed);
     const end = engine.getLegalActions(game, actor).actions.find(a => a.type === 'end_turn');
     assert.ok(end);
