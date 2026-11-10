@@ -40,7 +40,21 @@ try {
     assert.notEqual(result.status, 0, label + ' must fail closed');
     assert.match(result.stderr, /REFERENCE_EFFECT_GATE/, label + ' must explain rejection');
   }
-  console.log('PROVENANCE_NEGATIVE_TESTS PASS:', cases.length, 'fail-closed cases');
+  const htmlRecord = source.records.find(r => r.source?.kind === 'saved-official-html');
+  assert.ok(htmlRecord, 'saved official HTML fixture required');
+  const evidenceFile = path.resolve(temp, htmlRecord.source.path);
+  const originalEvidence = fs.readFileSync(evidenceFile, 'utf8');
+  try {
+    const corrupted = JSON.parse(originalEvidence);
+    corrupted.html += 'tampered';
+    fs.writeFileSync(evidenceFile, JSON.stringify(corrupted));
+    const result = run(source);
+    assert.notEqual(result.status, 0, 'tampered HTML must fail closed');
+    assert.match(result.stderr, /saved official HTML hash mismatch/);
+  } finally {
+    fs.writeFileSync(evidenceFile, originalEvidence);
+  }
+  console.log('PROVENANCE_NEGATIVE_TESTS PASS:', cases.length + 1, 'fail-closed cases');
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
 }
