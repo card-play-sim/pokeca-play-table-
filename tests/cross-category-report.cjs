@@ -16,8 +16,8 @@ const results = suites.map(({id,file})=>{
   const failed = p.status !== 0 || Boolean(p.error);
   const category = !failed ? 'PASS'
     : /UNCONNECTED_EFFECT|unconnected effect/i.test(output) ? 'UNCONNECTED_EFFECT'
-    : /reference|print|identity|adopt/i.test(output) ? 'REFERENCE_IDENTITY'
     : /AssertionError|ERR_ASSERTION/i.test(output) ? 'EFFECT_ASSERTION'
+    : /unverified print|unapproved printing|identityStatus|officialCardId|reference is not traceable|no default reference|adoptedDeckPrints/i.test(output) ? 'REFERENCE_IDENTITY'
     : 'RUNNER_OR_UNKNOWN';
   process.stdout.write(output);
   return {id,file,status:failed?'FAIL':'PASS',failureCategory:category,timeoutMs,
