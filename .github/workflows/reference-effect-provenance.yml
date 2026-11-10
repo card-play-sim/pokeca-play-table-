@@ -7,12 +7,16 @@ on:
       - 'data/reference-effects/**'
       - 'scripts/validate-reference-effect-provenance.cjs'
       - 'tests/reference-effect-provenance.test.cjs'
+      - 'tests/reference-effect-compiler-gate.test.cjs'
+      - 'engine/reference-effect-plans.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
       - 'data/reference-effects/**'
       - 'scripts/validate-reference-effect-provenance.cjs'
       - 'tests/reference-effect-provenance.test.cjs'
+      - 'tests/reference-effect-compiler-gate.test.cjs'
+      - 'engine/reference-effect-plans.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -32,3 +36,5 @@ jobs:
         run: node scripts/validate-reference-effect-provenance.cjs
       - name: Verify invalid reference data is rejected
         run: node tests/reference-effect-provenance.test.cjs
+      - name: Verify generalized effect compiler preserves source and reference scope
+        run: node tests/reference-effect-compiler-gate.test.cjs
