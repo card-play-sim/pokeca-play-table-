@@ -85,9 +85,9 @@ fs.writeFileSync('test-results/fixed-deck-effect-coverage.json',JSON.stringify(r
 console.log(JSON.stringify({physicalCards:report.physicalCards,uniqueNames:report.uniqueNames,
  referencePrints:report.referencePrints,unconnectedNames:blocked.length,sharedEffectGaps:sharedEffectGaps.length,categories:counts}));
 assert.equal(evidenceProblems.length,0,'missing source evidence metadata');
-assert(allPrintGaps.length<=11,'new unconnected reference effects exceed known baseline of 11');
+assert.equal(allPrintGaps.length,0,'reference print effects remain unconnected');
 assert.equal(blocked.length,0,'default fixed-deck references contain unconnected effects');
-assert(sharedEffectGaps.length<=6,'new unresolved shared effect families exceed baseline');
+assert.equal(sharedEffectGaps.length,0,'unconnected shared effect families remain');
 assert.equal(sharedEffectGaps.reduce((n,g)=>n+g.printIds.length,0),
  allPrintGaps.reduce((n,g)=>n+g.unconnected.length,0),'shared gap grouping lost an effect');
 if(allPrintGaps.length)console.log('Unconnected non-default reference effects retained as BLOCKED, not silently passed');
