@@ -1,5 +1,5 @@
 'use strict';
-// Run only test entrypoints; shard deterministic sorted tests to locate slow cases.
+// Deterministic sharded runner with a bounded per-test timeout and durable progress.
 const {spawnSync}=require('node:child_process');
 const fs=require('node:fs');
 const path=require('node:path');
@@ -15,13 +15,16 @@ let failed=0;
 const results=[];
 const output=path.join('test-results',`offline-node-test-timings-${shardIndex}.json`);
 fs.mkdirSync('test-results',{recursive:true});
+let running=null;
 function save(){
  fs.writeFileSync(output,JSON.stringify({schemaVersion:1,kind:'offline-node-test-timings',
-  shardIndex,shardCount,total:testFiles.length,failed,timeoutMs,results},null,2)+'\n');
+  shardIndex,shardCount,total:testFiles.length,failed,timeoutMs,running,results},null,2)+'\n');
 }
 save();
 for(const file of testFiles){
  const started=Date.now();
+ running={file,startedAt:new Date(started).toISOString()};
+ save(); // retain which test was in flight if job times out
  console.log('START',file,'shard',shardIndex+'/'+shardCount);
  const result=spawnSync(process.execPath,[path.join('tests',file)],{stdio:'inherit',timeout:timeoutMs});
  const durationMs=Date.now()-started;
@@ -29,7 +32,8 @@ for(const file of testFiles){
  const item={file,status:ok?'PASS':'FAIL',durationMs,exitCode:result.status,signal:result.signal||null,error:result.error?.message||null};
  results.push(item);
  if(!ok)failed++;
- save(); // preserve partial progress after every test
+ running=null;
+ save();
  console.log(ok?'PASS':'FAIL',file,JSON.stringify({durationMs,exitCode:item.exitCode,error:item.error}));
 }
 console.log('OFFLINE_NODE_SUMMARY',JSON.stringify({shardIndex,shardCount,total:testFiles.length,failed,timeoutMs}));
