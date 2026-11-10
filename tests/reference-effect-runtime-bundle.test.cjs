@@ -74,6 +74,33 @@ assert.notEqual(currentGame.turnPlayer, actor, 'end_turn must transfer the turn'
 assert.ok(currentGame.turnNumber > beforeTurn, 'turn counter must advance');
 console.log('REFERENCE_GATEWAY_DISPATCH PASS:', actor, '->', currentGame.turnPlayer);
 console.log('REFERENCE_MATCH_BOOT_GATE PASS:', match.game.players.map(p => p.id).join(','), 'legal actions:', legal.actions.length);
+// Execute an actual card effect (DRAW) through the same bundled canonical gateway.
+let abilitySeed = 1;
+const abilityRng = () => { abilitySeed = (Math.imul(abilitySeed, 1664525) + 1013904223) >>> 0; return abilitySeed / 4294967296; };
+const abilityMatch = engine.createReferenceValidationMatch(manifest, { rng: abilityRng, firstPlayer: 'you' });
+assert.equal(abilityMatch.ok, true);
+let abilityGame = abilityMatch.game;
+const abilityPort = engine.createUIPort({ getGame: () => abilityGame, setGame: value => { abilityGame = value; } });
+assert.equal(abilityPort.loadGame(abilityGame).ok, true);
+for (let i = 0; i < 4 && abilityGame.pendingReferenceChoice; i++) {
+  const owner = abilityGame.pendingReferenceChoice.playerId;
+  const choice = engine.getLegalActions(abilityGame, owner).actions.find(a => a.type === 'resolve_reference_choice');
+  assert.ok(choice);
+  assert.equal(abilityPort.dispatch(owner, choice).ok, true);
+}
+assert.equal(abilityGame.players.find(p => p.id === 'you').active.name, 'メガガルーラex', 'deterministic ability fixture changed');
+const ability = engine.getLegalActions(abilityGame, 'you').actions.find(a => a.type === 'use_ability' && a.abilityId === 'reference-47847-ability-0');
+assert.ok(ability, 'おつかいダッシュ must be a legal action');
+const player = abilityGame.players.find(p => p.id === 'you');
+const handBefore = player.hand.length, deckBefore = player.deck.length;
+const abilityResult = abilityPort.dispatch('you', ability);
+assert.equal(abilityResult.ok, true, 'DRAW ability must execute: ' + JSON.stringify(abilityResult.errors || abilityResult.stage || 'unknown'));
+assert.equal(player.hand.length, handBefore + 2, 'DRAW must move two cards into hand');
+assert.equal(player.deck.length, deckBefore - 2, 'DRAW must remove exactly two cards from deck');
+assert.equal(abilityGame.players.reduce((n, p) => n + p.deck.length + p.hand.length + p.discard.length + p.prizeCards.length + (p.active ? 1 : 0) + p.bench.length, 0) >= 120, true, 'cards must not disappear from match');
+const secondUse = abilityPort.dispatch('you', ability);
+assert.equal(secondUse.ok, false, 'once-per-turn ability must reject repeated use');
+console.log('REFERENCE_DRAW_ABILITY PASS: 2 cards drawn; repeat blocked');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
