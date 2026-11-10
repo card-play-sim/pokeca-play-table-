@@ -54,7 +54,22 @@ try {
   } finally {
     fs.writeFileSync(evidenceFile, originalEvidence);
   }
-  console.log('PROVENANCE_NEGATIVE_TESTS PASS:', cases.length + 1, 'fail-closed cases');
+  try {
+    const mismatched = JSON.parse(originalEvidence);
+    mismatched.candidate.officialCardId = '999999';
+    fs.writeFileSync(evidenceFile, JSON.stringify(mismatched));
+    const result = run(source);
+    assert.notEqual(result.status, 0, 'mismatched evidence ID must fail closed');
+    assert.match(result.stderr, /saved evidence ID mismatch/);
+  } finally {
+    fs.writeFileSync(evidenceFile, originalEvidence);
+  }
+  fs.rmSync(evidenceFile);
+  const missing = run(source);
+  assert.notEqual(missing.status, 0, 'missing saved evidence must fail closed');
+  assert.match(missing.stderr, /missing saved official evidence/);
+  fs.writeFileSync(evidenceFile, originalEvidence);
+  console.log('PROVENANCE_NEGATIVE_TESTS PASS:', cases.length + 3, 'fail-closed cases');
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
 }
