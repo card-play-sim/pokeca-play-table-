@@ -396,6 +396,46 @@ for (let step = 0; step < 65 && deterministicGame.status === 'active'; step++) {
 }
 assert.ok(replayedShuffle, 'deterministic RNG scenario did not reach a shuffle');
 console.log('REFERENCE_DETERMINISTIC_RNG PASS: serialized match replay, shuffle and Judge hands');
+// A mid-game JSON snapshot must replay multiple subsequent actions and
+// preserve the match-owned effect RNG stream across a fresh UI port.
+let continuationSeed = 7;
+const continuationRandom = () => { continuationSeed = (Math.imul(continuationSeed, 1664525) + 1013904223) >>> 0; return continuationSeed / 4294967296; };
+const continuationCreated = engine.createReferenceValidationMatch(manifest, { rng: continuationRandom, firstDeck: 1, firstPlayer: 'ai' });
+assert.equal(continuationCreated.ok, true);
+let continuationGame = continuationCreated.game;
+const continuationPort = engine.createUIPort({ getGame: () => continuationGame, setGame: next => { continuationGame = next; } });
+assert.equal(continuationPort.loadGame(continuationGame).ok, true);
+const continuationPreference = ['resolve_reference_choice', 'bench_basic', 'evolve', 'attach_energy', 'play_item', 'play_supporter', 'play_stadium', 'attach_tool', 'use_ability', 'attack_turn', 'take_prizes', 'retreat', 'end_turn'];
+const nextContinuationAction = game => {
+  const owner = game.pendingReferenceChoice?.playerId || game.turnPlayer;
+  const actions = engine.getLegalActions(game, owner).actions;
+  return { owner, action: continuationPreference.map(type => actions.find(a => a.type === type)).find(Boolean) };
+};
+for (let step = 0; step < 15; step++) {
+  const { owner, action } = nextContinuationAction(continuationGame);
+  assert.ok(action, 'midgame setup action ' + step);
+  assert.equal(continuationPort.dispatch(owner, action).ok, true);
+}
+const continuationSnapshot = JSON.parse(JSON.stringify(continuationGame));
+const resumeContinuation = () => {
+  let game = JSON.parse(JSON.stringify(continuationSnapshot));
+  const port = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+  assert.equal(port.loadGame(game).ok, true);
+  let actionsDone = 0;
+  for (; actionsDone < 28 && game.status === 'active'; actionsDone++) {
+    const { owner, action } = nextContinuationAction(game);
+    if (!action) break;
+    const outcome = port.dispatch(owner, action);
+    assert.equal(outcome.ok, true, 'restored action ' + actionsDone);
+    assert.equal(outcome.transitionAudit?.conservation?.ok, true);
+  }
+  return { game, actionsDone };
+};
+const resumedA = resumeContinuation(), resumedB = resumeContinuation();
+assert.equal(resumedA.actionsDone, 28, 'saved match must continue through 28 legal actions');
+assert.equal(JSON.stringify(resumedA.game), JSON.stringify(resumedB.game), 'serialized match replay must reproduce complete later game');
+assert.notEqual(resumedA.game.referenceRngState, continuationSnapshot.referenceRngState, 'continued effect shuffles must advance persisted RNG');
+console.log('REFERENCE_SAVED_MATCH_REPLAY PASS: 15 setup actions, 28 resumed actions, deterministic RNG');
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
