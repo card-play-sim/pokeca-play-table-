@@ -23,4 +23,15 @@ for (const entry of coverage.defaults) {
   assert.equal(entry.mainConnected, record.category === 'pokemon' || Boolean(record.mainPlan));
 }
 assert.equal(engine.getReferenceEffectRecord({name:'unverified'}), null, 'unbound card must not receive an official print');
+const manifest = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/fixed-test-decks.json'), 'utf8'));
+let seed = 0x12345678;
+const rng = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+const match = engine.createReferenceValidationMatch(manifest, { rng, firstPlayer: 'you' });
+assert.equal(match.ok, true, 'reference validation match must initialize: ' + JSON.stringify(match.errors || match.stage || 'unknown'));
+assert.equal(match.game.referenceEffectValidation.adoptedPrints, 0);
+assert.equal(match.game.players.length, 2);
+assert.ok(match.game.players.every(p => p.active && p.hand.length > 0), 'both players need an opening board');
+const legal = engine.getLegalActions(match.game, match.game.turnPlayer);
+assert.ok(Array.isArray(legal.actions), 'reference validation match must expose legal actions');
+console.log('REFERENCE_MATCH_BOOT_GATE PASS:', match.game.players.map(p => p.id).join(','), 'legal actions:', legal.actions.length);
 console.log('REFERENCE_RUNTIME_BUNDLE_GATE PASS:', coverage.prints, 'prints;', coverage.defaults.length, 'default print references; no adoption');
