@@ -189,6 +189,34 @@ for (const setup of [{ firstDeck: 0, firstPlayer: 'you' }, { firstDeck: 1, first
   }
 }
 console.log('REFERENCE_MULTI_SEED_GATE PASS: 200 match setups, opening choices, turn transitions');
+// Execute the first legal non-pass action across 100 different opening boards.
+// This exercises item, energy, tool, ability, stadium and retreat paths, not only turn passing.
+const exercised = new Set();
+for (let initialSeed = 1; initialSeed <= 100; initialSeed++) {
+  let state = initialSeed;
+  const random = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 4294967296; };
+  const created = engine.createReferenceValidationMatch(manifest, { rng: random, firstPlayer: 'you' });
+  assert.equal(created.ok, true);
+  let game = created.game;
+  const gateway = engine.createUIPort({ getGame: () => game, setGame: next => { game = next; } });
+  assert.equal(gateway.loadGame(game).ok, true);
+  for (let i = 0; i < 4 && game.pendingReferenceChoice; i++) {
+    const owner = game.pendingReferenceChoice.playerId;
+    const choice = engine.getLegalActions(game, owner).actions.find(a => a.type === 'resolve_reference_choice');
+    assert.ok(choice);
+    assert.equal(gateway.dispatch(owner, choice).ok, true);
+  }
+  const action = engine.getLegalActions(game, 'you').actions.find(a => a.type !== 'end_turn' && a.type !== 'resolve_reference_choice');
+  if (!action) continue;
+  const result = gateway.dispatch('you', action);
+  assert.equal(result.ok, true, 'legal action ' + action.type + ' failed for seed ' + initialSeed + ': ' + JSON.stringify(result.errors || result.stage || 'unknown'));
+  assert.equal(result.transitionAudit?.conservation?.ok, true, 'card conservation failed for action ' + action.type + ' seed ' + initialSeed);
+  exercised.add(action.type);
+}
+for (const family of ['play_item', 'attach_energy', 'attach_tool', 'use_ability', 'play_stadium', 'retreat']) {
+  assert.ok(exercised.has(family), 'unexercised common action family: ' + family);
+}
+console.log('REFERENCE_MULTI_ACTION_GATE PASS:', [...exercised].join(', '));
 // Invalid actions must never mutate the authoritative game state.
 const snapshot = JSON.stringify(currentGame);
 const rejected = port.dispatch(currentGame.turnPlayer, { type: 'nonexistent_reference_action' });
