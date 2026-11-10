@@ -7,6 +7,7 @@ const compiled = compile(catalog);
 const categories = {};
 const unresolved = [];
 const commands = {};
+const unresolvedGroups = new Map();
 let recognized = 0, total = 0;
 function scan(record, kind, index, effect, original) {
   total++;
@@ -19,7 +20,14 @@ function scan(record, kind, index, effect, original) {
     for (const command of effect.plan.commands) commands[command] = (commands[command] || 0) + 1;
   } else {
     stats.blocked++;
-    unresolved.push({ officialCardId: record.officialCardId, name: record.name, category, kind, index, text: original.text || '', damage: original.damage || '' });
+    const text = original.text || '';
+    const damage = original.damage || '';
+    unresolved.push({ officialCardId: record.officialCardId, name: record.name, category, kind, index, text, damage });
+    const signature = JSON.stringify([kind, String(text).replace(/\\s+/g, ''), String(damage)]);
+    const group = unresolvedGroups.get(signature) || { kind, text, damage, occurrences: 0, examples: [] };
+    group.occurrences++;
+    group.examples.push({ officialCardId: record.officialCardId, name: record.name, category });
+    unresolvedGroups.set(signature, group);
   }
 }
 for (let i = 0; i < compiled.records.length; i++) {
@@ -39,6 +47,7 @@ const report = {
   blocked: unresolved.length,
   categories,
   commands,
+  unresolvedPatterns: [...unresolvedGroups.values()].sort((a, b) => b.occurrences - a.occurrences || a.kind.localeCompare(b.kind)),
   unresolved
 };
 if (recognized + unresolved.length !== total) throw new Error('Effect coverage accounting mismatch');
