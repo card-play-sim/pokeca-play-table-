@@ -34,7 +34,10 @@ try {
     ['incorrect scope', d => { d.scope = 'ADOPTED'; }],
     ['unknown evidence type', d => { d.records[0].source.kind = 'untrusted'; }],
     ['malformed provenance digest', d => { d.records[0].source.sha256 = 'not-a-sha256'; }],
-    ['unsafe evidence path', d => { d.records[0].source.path = '../outside.json'; }]
+    ['unsafe evidence path', d => { d.records[0].source.path = '../outside.json'; }],
+    ['incorrect reference name', d => { d.defaultValidationReferences['メガガルーラex'] = d.defaultValidationReferences['ファイアローex']; }],
+    ['invalid saved HTML digest', d => { const r = d.records.find(x => x.source.kind === 'saved-official-html'); r.source.htmlSha256 = '0'.repeat(64); }],
+    ['missing saved HTML digest', d => { const r = d.records.find(x => x.source.kind === 'saved-official-html'); delete r.source.htmlSha256; }]
   ];
   for (const [label, mutate] of cases) {
     const value = structuredClone(source);
