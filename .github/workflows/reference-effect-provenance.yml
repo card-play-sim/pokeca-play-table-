@@ -39,6 +39,7 @@ on:
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -79,6 +80,7 @@ on:
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -259,6 +261,19 @@ jobs:
         run: node tests/reference-effect-codex-tasks.test.cjs
       - name: Verify official text evidence gating and shared Codex task batching
         run: node tests/official-effect-codex-batch.test.cjs
+      - name: Export provenance-checked reference effects for shared Codex work
+        run: node scripts/export-reference-official-effect-evidence.cjs data/reference-effects/plans.json reports/reference-official-effect-evidence.json
+      - name: Generate reviewable Codex work batches from verified official text
+        run: node scripts/build-official-effect-codex-batch.cjs reports/reference-official-effect-evidence.json reports/official-effect-codex-batch.json
+      - name: Upload verified effect text and shared Codex tasks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-effect-codex-intake
+          path: |
+            reports/reference-official-effect-evidence.json
+            reports/official-effect-codex-batch.json
+          if-no-files-found: warn
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
