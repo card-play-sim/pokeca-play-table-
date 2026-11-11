@@ -29,7 +29,7 @@ function fixture(){
  const result=f.gateway.dispatch(f.own.id,actions[0]);
  assert.equal(result.ok,true,JSON.stringify(result.errors));
  assert.equal(result.transitionAudit?.conservation?.ok,true);
- assert.ok(f.own.discard.some(c=>c.id===f.ignition.id),'SPECIAL_ENERGY_NOT_DISCARDED');
+ assert.ok(f.game.players[0].discard.some(c=>c.id===f.ignition.id),'SPECIAL_ENERGY_NOT_DISCARDED');
 }
 // Two Ignition cards must not both be selected for a three-unit retreat.
 {
