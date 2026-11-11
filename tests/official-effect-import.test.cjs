@@ -31,7 +31,12 @@ try{
  fs.writeFileSync(input,[JSON.stringify(make('48248')),'{broken',JSON.stringify(make('48249'))].join('\n')+'\n');
  const interrupted=cp.spawnSync(process.execPath,[script,input,freshCheckpoint,'--checkpoint'],{encoding:'utf8'});
  assert.equal(interrupted.status,2,'CHECKPOINT_MALFORMED_LINE_MUST_FAIL');
- assert.deepEqual(JSON.parse(fs.readFileSync(freshCheckpoint)).map(x=>x.officialCardId),['48248'],'CHECKPOINT_MUST_SAVE_FIRST_VALID_ROW_BEFORE_FAILURE');
+ assert.equal(fs.existsSync(freshCheckpoint),false,'FAILED_BATCH_MUST_NOT_PUBLISH_PARTIAL_REGISTRY');
+ assert.deepEqual(fs.readFileSync(freshCheckpoint+'.checkpoint.ndjson','utf8').trim().split('\n').map(x=>JSON.parse(x).officialCardId),['48248'],'CHECKPOINT_JOURNAL_MUST_SAVE_FIRST_VALID_ROW_BEFORE_FAILURE');
+ fs.writeFileSync(input,JSON.stringify(make('48249'))+'\n');
+ const freshResume=cp.spawnSync(process.execPath,[script,input,freshCheckpoint,'--checkpoint'],{encoding:'utf8'});
+ assert.equal(freshResume.status,0,freshResume.stderr);
+ assert.deepEqual(JSON.parse(fs.readFileSync(freshCheckpoint)).map(x=>x.officialCardId),['48248','48249'],'JOURNAL_RECOVERY_MUST_PUBLISH_BOTH_ROWS');
  const duplicateExisting=path.join(dir,'duplicate-existing.json');
  fs.writeFileSync(duplicateExisting,JSON.stringify([make('45152'),make('45152')]));
  fs.writeFileSync(input,JSON.stringify(make('45746'))+'\n');
