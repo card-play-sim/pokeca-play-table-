@@ -20,7 +20,7 @@ for(const print of task.prints){
 
 // The hash of the task text is not a substitute for checking source rows.
 for(const e of task.evidence){
- if(!task.prints.includes(e.officialCardId)||typeof e.officialPageUrl!=='string'||!new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+e.officialCardId+'(?:/|$)').test(e.officialPageUrl)||!/^[a-f0-9]{64}$/.test(e.officialTextSha256))throw Error('INVALID_CODEX_EVIDENCE_ROW');
+ if(!task.prints.includes(e.officialCardId)||typeof e.officialPageUrl!=='string'||!new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+e.officialCardId+'(?:/|$)').test(e.officialPageUrl)||typeof e.effectText!=='string'||digest(e.effectText)!==e.officialTextSha256||e.effectText.normalize('NFKC').replace(/\s+/g,' ').trim()!==task.officialText||e.category!==task.category||e.effectKind!==task.effectKind)throw Error('INVALID_CODEX_EVIDENCE_ROW');
 }
 const prompt=[
  'You are working in the existing Pokemon card PWA repository. Follow AGENTS.md.',
