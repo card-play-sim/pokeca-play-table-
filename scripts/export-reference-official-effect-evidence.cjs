@@ -18,7 +18,7 @@ for(const record of data.records){
  if(record.category==='pokemon'){
   for(const [i,attack] of (record.attacks||[]).entries())if(attack.plan&&(attack.text?.trim()||attack.plan.mechanic!=='VANILLA_DAMAGE'))add('attack',attack.name,attack.text,i);
   for(const [i,ability] of (record.abilities||[]).entries())if(ability.plan)add('ability',ability.name,ability.text,i);
- }else if(record.mainPlan)add(record.category,record.name,record.text,0);
+ }else if(record.mainPlan&&(record.text?.trim()||record.mainPlan.mechanic!=='BASIC_ENERGY'))add(record.category,record.name,record.text,0);
 }
 const seen=new Set();
 for(const row of rows){
