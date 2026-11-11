@@ -30,28 +30,41 @@ async function retrieve(url){
  }
 }
 (async()=>{
- const byPage=new Map(),results=[];
+ const results=new Array(rows.length);
+ const pageIds=new Map();
  for(const [index,row] of rows.entries()){
   const id=String(row?.officialCardId||''),url=row?.officialPageUrl;
   const expected='https://www.pokemon-card.com/card-search/details.php/card/'+id;
-  const fail=reason=>results.push({index,officialCardId:id,status:'BLOCKED',reason});
-  if(!/^\d{4,8}$/.test(id)||typeof url!=='string'||!(url===expected||url.startsWith(expected+'/'))){fail('INVALID_OFFICIAL_PAGE');continue;}
+  const fail=reason=>{results[index]={index,officialCardId:id,status:'BLOCKED',reason};};
+  if(!/^\\d{4,8}$/.test(id)||typeof url!=='string'||!(url===expected||url.startsWith(expected+'/'))){fail('INVALID_OFFICIAL_PAGE');continue;}
   if(typeof row.effectText!=='string'||!row.effectText.trim()||sha(row.effectText.trim())!==row.officialTextSha256){fail('INVALID_EFFECT_TEXT_HASH');continue;}
-  if(!byPage.has(id)){
-   const canonical=expected;
-   byPage.set(id,retrieve(canonical).then(plain).catch(e=>({error:String(e.message||e)})));
-   if(byPage.size>1)await sleep(250);
-  }
-  const page=await byPage.get(id);
-  if(typeof page!=='string'){fail('OFFICIAL_PAGE_FETCH_FAILED:'+page.error);continue;}
-  const target=normalize(row.effectText);
-  if(!page.includes(target)){fail('OFFICIAL_PAGE_TEXT_NOT_FOUND');continue;}
-  results.push({index,officialCardId:id,status:'VERIFIED',officialPageUrl:expected,effectTextSha256:row.officialTextSha256});
+  if(!pageIds.has(id))pageIds.set(id,[]);
+  pageIds.get(id).push(index);
  }
+ // Bounded concurrent requests keep thousands of distinct prints tractable without
+ // making one network request for every effect on the same card.
+ const pending=[...pageIds.entries()],workers=Math.min(4,pending.length);
+ let next=0;
+ await Promise.all(Array.from({length:workers},async()=>{
+  while(next<pending.length){
+   const [id,indices]=pending[next++];
+   const expected='https://www.pokemon-card.com/card-search/details.php/card/'+id;
+   let page;
+   try{page=plain(await retrieve(expected));}
+   catch(e){page={error:String(e.message||e)};}
+   for(const index of indices){
+    const row=rows[index];
+    if(typeof page!=='string'){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_FETCH_FAILED:'+page.error};continue;}
+    if(!page.includes(normalize(row.effectText))){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_TEXT_NOT_FOUND'};continue;}
+    results[index]={index,officialCardId:id,status:'VERIFIED',officialPageUrl:expected,effectTextSha256:row.officialTextSha256};
+   }
+   await sleep(200);
+  }
+ }));
  const verified=results.filter(r=>r.status==='VERIFIED').length;
- const result={schemaVersion:1,source:input,total:rows.length,verified,blocked:results.length-verified,results};
+ const result={schemaVersion:1,source:input,total:rows.length,uniquePages:pageIds.size,verified,blocked:results.length-verified,results};
  fs.mkdirSync(require('node:path').dirname(require('node:path').resolve(report)),{recursive:true});
- fs.writeFileSync(report,JSON.stringify(result,null,2)+'\n');
- console.log('OFFICIAL_PAGE_VERIFICATION:',JSON.stringify({total:result.total,verified,blocked:result.blocked,report}));
+ fs.writeFileSync(report,JSON.stringify(result,null,2)+'\\n');
+ console.log('OFFICIAL_PAGE_VERIFICATION:',JSON.stringify({total:result.total,uniquePages:result.uniquePages,verified,blocked:result.blocked,report}));
  if(result.blocked)process.exitCode=2;
 })().catch(e=>{console.error(e);process.exitCode=2;});
