@@ -32,5 +32,11 @@ try{
  const interrupted=cp.spawnSync(process.execPath,[script,input,freshCheckpoint,'--checkpoint'],{encoding:'utf8'});
  assert.equal(interrupted.status,2,'CHECKPOINT_MALFORMED_LINE_MUST_FAIL');
  assert.deepEqual(JSON.parse(fs.readFileSync(freshCheckpoint)).map(x=>x.officialCardId),['48248'],'CHECKPOINT_MUST_SAVE_FIRST_VALID_ROW_BEFORE_FAILURE');
+ const duplicateExisting=path.join(dir,'duplicate-existing.json');
+ fs.writeFileSync(duplicateExisting,JSON.stringify([make('45152'),make('45152')]));
+ fs.writeFileSync(input,JSON.stringify(make('45746'))+'\n');
+ const duplicateAttempt=cp.spawnSync(process.execPath,[script,input,duplicateExisting,'--checkpoint'],{encoding:'utf8'});
+ assert.notEqual(duplicateAttempt.status,0,'DUPLICATE_EXISTING_REGISTRY_MUST_FAIL');
+ assert.equal(JSON.parse(fs.readFileSync(duplicateExisting)).length,2,'INVALID_EXISTING_REGISTRY_MUST_REMAIN_UNTOUCHED');
  console.log('OFFICIAL_EFFECT_IMPORT PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
