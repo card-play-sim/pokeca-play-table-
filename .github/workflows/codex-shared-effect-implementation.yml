@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       task_id:
-        description: 'Exact taskId from verified official-effect-codex-batch.json'
+        description: 'Verified task ID, or AUTO for largest shared-effect group'
         required: true
+        default: AUTO
         type: string
 
 permissions:
