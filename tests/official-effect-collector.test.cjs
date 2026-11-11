@@ -23,6 +23,8 @@ try{
  result=run('<h2>ワザ</h2><h4>なみのり</h4><p></p><h2>特別なルール</h2>',2);
  assert.equal(result.results[0].status,'BLOCKED');
  assert.equal(result.processed,1,'BLOCKED_PRINT_MUST_BE_CHECKPOINTED');
+ const audit=fs.readFileSync(report+'.ndjson','utf8').trim().split('\n').map(JSON.parse);
+ assert.equal(audit[audit.length-1].status,'BLOCKED','PER_PRINT_AUDIT_MUST_PERSIST');
  assert.equal(fs.readFileSync(out,'utf8').trim().split('\n').length,1,'INVALID_PRINT_MUST_NOT_APPEND');
  fs.rmSync(out,{force:true});
  const multiple='<h2>特性</h2><h4>能力A</h4><p>山札を1枚引く。</p><h4>能力B</h4><p>山札を2枚引く。</p><h2>特別なルール</h2>';
