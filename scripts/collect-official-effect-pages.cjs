@@ -36,6 +36,7 @@ function parse(id,html,url){
  for(let i=0;i<found.length;i++){
   const h=found[i],next=found[i+1]?.index??html.length;
   if(/^(ワザ|特性|特別なルール)$/.test(h.label)){section=h.label;continue;}
+  if(/^<h[1-3]\\b/i.test(html.slice(h.index,h.end))){section='';continue;}
   if(section!=='ワザ'&&section!=='特性')continue;
   const body=html.slice(h.end,next);
   // Never include script/style or nested structural headings as an effect.
