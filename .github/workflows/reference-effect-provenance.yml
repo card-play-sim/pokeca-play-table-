@@ -38,6 +38,9 @@ on:
       - 'tests/reference-effect-ci-aggregation.test.cjs'
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
+      - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'tests/official-effect-codex-batch.test.cjs'
+      - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -75,6 +78,9 @@ on:
       - 'tests/reference-effect-ci-aggregation.test.cjs'
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
+      - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'tests/official-effect-codex-batch.test.cjs'
+      - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -251,6 +257,8 @@ jobs:
         run: node tests/reference-effect-ci-aggregation.test.cjs
       - name: Verify bounded Codex task generation
         run: node tests/reference-effect-codex-tasks.test.cjs
+      - name: Verify official text evidence gating and shared Codex task batching
+        run: node tests/official-effect-codex-batch.test.cjs
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
