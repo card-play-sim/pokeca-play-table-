@@ -14,6 +14,7 @@ on:
       - 'tests/reference-effect-opening-actions.test.cjs'
       - 'tests/reference-effect-opening-rejection.test.cjs'
       - 'tests/reference-effect-cross-category.test.cjs'
+      - 'tests/reference-effect-cross-family-seeded.test.cjs'
       - 'tests/reference-effect-extended-gameplay.test.cjs'
       - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
@@ -48,6 +49,7 @@ on:
       - 'tests/reference-effect-opening-actions.test.cjs'
       - 'tests/reference-effect-opening-rejection.test.cjs'
       - 'tests/reference-effect-cross-category.test.cjs'
+      - 'tests/reference-effect-cross-family-seeded.test.cjs'
       - 'tests/reference-effect-extended-gameplay.test.cjs'
       - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
@@ -196,6 +198,8 @@ jobs:
           node-version: '22'
       - name: Verify cross-category reference gameplay
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-category.test.cjs
+      - name: Verify deterministic cross-family gameplay and action invariants
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-family-seeded.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
