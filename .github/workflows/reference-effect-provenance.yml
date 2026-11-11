@@ -50,6 +50,8 @@ on:
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'tests/official-effect-pipeline.test.cjs'
+      - 'tests/official-page-verification.test.cjs'
+      - 'scripts/verify-official-effect-pages.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
@@ -100,6 +102,8 @@ on:
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'tests/official-effect-pipeline.test.cjs'
+      - 'tests/official-page-verification.test.cjs'
+      - 'scripts/verify-official-effect-pages.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
