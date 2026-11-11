@@ -10,6 +10,17 @@ try{
  run('REFERENCE_B',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'REFERENCE_B');
  run('WORK_A',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
  run('AUTO',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
+ const largerReference=make('REFERENCE_B','b');
+ largerReference.tasks[0].prints=['1','2','3'];
+ fs.writeFileSync(b,JSON.stringify(largerReference));
+ run('AUTO',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A','AUTO_MUST_PREFER_WORK_SOURCE');
+ const conflictingWork=make('REFERENCE_B','wrong');
+ fs.writeFileSync(a,JSON.stringify(conflictingWork));
+ const saved=fs.readFileSync(out,'utf8');
+ run('AUTO',1);assert.equal(fs.readFileSync(out,'utf8'),saved,'AUTO_COLLISION_MUST_NOT_OVERWRITE_OUTPUT');
+ fs.writeFileSync(a,JSON.stringify(make('WORK_A','a')));
+ fs.writeFileSync(b,JSON.stringify(make('REFERENCE_B','b')));
+
  const before=fs.readFileSync(out,'utf8');
  run('UNKNOWN',1);assert.equal(fs.readFileSync(out,'utf8'),before);
  fs.writeFileSync(a,JSON.stringify(make('REFERENCE_B','different')));
