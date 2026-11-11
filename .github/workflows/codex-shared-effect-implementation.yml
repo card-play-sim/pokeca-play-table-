@@ -31,10 +31,11 @@ jobs:
       - name: Export verified reference and WORK effect tasks
         run: |
           node scripts/export-reference-official-effect-evidence.cjs data/reference-effects/plans.json reports/reference-official-effect-evidence.json
-          node scripts/build-official-effect-codex-batch.cjs reports/reference-official-effect-evidence.json reports/reference-effect-codex-batch.json
+          node scripts/build-official-effect-codex-batch.cjs reports/reference-official-effect-evidence.json reports/reference-effect-codex-batch.json || test -f reports/reference-effect-codex-batch.json
           if [ -f data/official-effect-evidence.json ]; then
-            node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json
+            node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json || test -f reports/work-effect-codex-batch.json
           fi
+          # A blocked source is never selected; another verified source may still proceed.
       - name: Choose verified task source by requested stable task ID
         env:
           TASK_ID: ${{ inputs.task_id }}
