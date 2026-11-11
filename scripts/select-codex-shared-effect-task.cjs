@@ -18,6 +18,10 @@ for(const print of task.prints){
  if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+print+'(?:/|$)').test(e.officialPageUrl)&&/^[a-f0-9]{64}$/.test(e.officialTextSha256)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
 }
 
+// Every print must have exactly one matching evidence row; duplicates can conceal conflicts.
+const evidenceByPrint=new Map();
+for(const e of task.evidence)evidenceByPrint.set(e.officialCardId,(evidenceByPrint.get(e.officialCardId)||0)+1);
+for(const print of task.prints)if(evidenceByPrint.get(print)!==1)throw Error('INVALID_CODEX_EVIDENCE_CARDINALITY:'+print);
 // The hash of the task text is not a substitute for checking source rows.
 for(const e of task.evidence){
  if(!task.prints.includes(e.officialCardId)||typeof e.officialPageUrl!=='string'||!new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+e.officialCardId+'(?:/|$)').test(e.officialPageUrl)||typeof e.effectText!=='string'||digest(e.effectText)!==e.officialTextSha256||e.effectText.normalize('NFKC').replace(/\s+/g,' ').trim()!==task.officialText.normalize('NFKC').replace(/\s+/g,' ').trim()||e.category!==task.category||e.effectKind!==task.effectKind)throw Error('INVALID_CODEX_EVIDENCE_ROW');
