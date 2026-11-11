@@ -31,7 +31,7 @@ for(const row of rows){
  if(!text)reasons.push('MISSING_OFFICIAL_EFFECT_TEXT');
  if(!/^https:\/\/www\.pokemon-card\.com\//.test(url))reasons.push('INVALID_OFFICIAL_SOURCE_URL');
  if(!/^[a-f0-9]{64}$/.test(sourceHash)||sourceHash!==digest(text))reasons.push('OFFICIAL_TEXT_HASH_MISMATCH');
- const key=ident+':'+kind+':'+String(row?.effectName||'');
+ const key=ident+':'+kind+':'+String(row?.effectName||'')+':'+String(row?.effectIndex??0);
  if(seen.has(key)&&seen.get(key)!==sourceHash)reasons.push('CONFLICTING_EFFECT_EVIDENCE');
  if(seen.has(key)&&seen.get(key)===sourceHash)reasons.push('DUPLICATE_EFFECT_EVIDENCE');
  if(reasons.length){result.blocked.push({officialCardId:ident,effectKind:kind,reasons});continue;}
