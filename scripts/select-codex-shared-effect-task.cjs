@@ -11,11 +11,11 @@ const task=matches[0];
 if(task.status!=='CODEX_REVIEW_REQUIRED'||!Array.isArray(task.evidence)||!task.evidence.length||!Array.isArray(task.prints)||!task.prints.length)throw Error('INVALID_CODEX_TASK_EVIDENCE');
 const digest=t=>crypto.createHash('sha256').update(t).digest('hex');
 if(typeof task.officialText!=='string'||!task.officialText.trim()||!['pokemon','item','supporter','stadium','tool','energy'].includes(task.category)||!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(task.effectKind))throw Error('INVALID_CODEX_TASK_CONTENT');
-if(task.normalizedTextHash!==digest(task.officialText.normalize('NFKC').replace(/\\s+/g,' ').trim()))throw Error('CODEX_TASK_TEXT_HASH_MISMATCH');
+if(task.normalizedTextHash!==digest(task.officialText.normalize('NFKC').replace(/\s+/g,' ').trim()))throw Error('CODEX_TASK_TEXT_HASH_MISMATCH');
 if(new Set(task.prints).size!==task.prints.length||task.evidence.length<task.prints.length)throw Error('INVALID_CODEX_TASK_PRINT_COVERAGE');
 for(const print of task.prints){
- if(!/^\\d{4,8}$/.test(String(print)))throw Error('INVALID_CODEX_PRINT_ID');
- if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&new RegExp('^https://www\\.pokemon-card\\.com/card-search/details\\.php/card/'+print+'(?:/|$)').test(e.officialPageUrl)&&/^[a-f0-9]{64}$/.test(e.officialTextSha256)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
+ if(!/^\d{4,8}$/.test(String(print)))throw Error('INVALID_CODEX_PRINT_ID');
+ if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+print+'(?:/|$)').test(e.officialPageUrl)&&/^[a-f0-9]{64}$/.test(e.officialTextSha256)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
 }
 
 const prompt=[
