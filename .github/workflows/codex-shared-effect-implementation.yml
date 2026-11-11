@@ -55,6 +55,10 @@ jobs:
         run: node scripts/select-codex-shared-effect-task.cjs reports/official-effect-codex-batch.json "$TASK_ID" reports/codex-selected-task.md
       - name: Install Codex CLI
         run: npm install --global @openai/codex
+      - name: Verify Codex CLI is available
+        run: |
+          command -v codex
+          codex --version
       - name: Verify task selector and evidence gates before paid execution
         run: |
           node tests/select-codex-shared-effect-task.test.cjs
@@ -67,7 +71,7 @@ jobs:
           TASK_ID: ${{ inputs.task_id }}
         run: |
           git checkout -b "codex/shared-effect-${{ github.run_id }}"
-          codex exec --full-auto - < reports/codex-selected-task.md
+          codex exec --sandbox workspace-write --ask-for-approval never - < reports/codex-selected-task.md
       - name: Run complete reference effect gates
         run: |
           node tests/reference-official-effect-evidence-export.test.cjs
