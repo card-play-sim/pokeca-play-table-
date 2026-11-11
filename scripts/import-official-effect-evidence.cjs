@@ -7,6 +7,8 @@ if(!input||!fs.existsSync(input))throw Error('MISSING_EFFECT_TEXT_IMPORT');
 const hash=t=>crypto.createHash('sha256').update(t).digest('hex');
 const key=r=>[r.officialCardId,r.effectKind,r.effectName||'',r.effectIndex??0].join(':');
 const existing=fs.existsSync(output)?JSON.parse(fs.readFileSync(output,'utf8')):[];
+const sourceDir=path.dirname(path.resolve(input)),target=path.resolve(output);
+if(path.resolve(input)===target)throw Error('INPUT_OUTPUT_MUST_DIFFER');
 if(!Array.isArray(existing))throw Error('INVALID_EXISTING_EFFECT_EVIDENCE');
 const byKey=new Map(),errors=[];
 function verify(r,line){
@@ -14,6 +16,7 @@ function verify(r,line){
  const id=String(r.officialCardId||''),url=String(r.officialPageUrl||''),text=String(r.effectText||'').trim();
  if(!/^\d{4,8}$/.test(id)||!/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d{4,8}(?:\/|$)/.test(url)||url.match(/\/card\/(\d{4,8})(?:\/|$)/)?.[1]!==id)throw Error('INVALID_PRINT_PROVENANCE:'+line);
  if(!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(r.effectKind)||!['pokemon','item','supporter','stadium','tool','energy'].includes(r.category))throw Error('INVALID_EFFECT_CATEGORY:'+line);
+ if((['attack','ability'].includes(r.effectKind)&&r.category!=='pokemon')||(['item','supporter','stadium','tool','energy'].includes(r.effectKind)&&r.effectKind!==r.category))throw Error('EFFECT_KIND_CATEGORY_MISMATCH:'+line);
  if(!text||r.officialTextSha256!==hash(text))throw Error('INVALID_EFFECT_TEXT_HASH:'+line);
  if(!Number.isInteger(r.effectIndex??0)||(r.effectIndex??0)<0)throw Error('INVALID_EFFECT_INDEX:'+line);
  return {...r,officialCardId:id,effectText:text};
