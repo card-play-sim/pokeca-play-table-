@@ -28,6 +28,8 @@ for(const row of rows){
  if(!/^\d{4,8}$/.test(ident))reasons.push('INVALID_OFFICIAL_CARD_ID');
  if(!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(kind))reasons.push('INVALID_EFFECT_KIND');
  if(!['pokemon','item','supporter','stadium','tool','energy'].includes(category))reasons.push('INVALID_CATEGORY');
+ if((['attack','ability'].includes(kind)&&category!=='pokemon')||(['item','supporter','stadium','tool','energy'].includes(kind)&&kind!==category))reasons.push('EFFECT_KIND_CATEGORY_MISMATCH');
+ if(!Number.isInteger(row?.effectIndex??0)||(row?.effectIndex??0)<0)reasons.push('INVALID_EFFECT_INDEX');
  if(!text)reasons.push('MISSING_OFFICIAL_EFFECT_TEXT');
  if(!/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d{4,8}(?:\/|$)/.test(url))reasons.push('INVALID_OFFICIAL_SOURCE_URL');
  else if(url.match(/\/card\/(\d{4,8})(?:\/|$)/)?.[1]!==ident)reasons.push('OFFICIAL_URL_CARD_ID_MISMATCH');
