@@ -53,6 +53,7 @@ jobs:
           node tests/official-effect-codex-batch.test.cjs
           node tests/official-effect-pipeline.test.cjs
           node tests/official-page-verification.test.cjs
+          node tests/official-effect-collector.test.cjs
           node tests/official-effect-import.test.cjs
       - name: Verify baseline reference engine before paid execution
         run: |
