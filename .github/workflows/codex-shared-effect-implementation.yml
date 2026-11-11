@@ -80,7 +80,7 @@ jobs:
           TASK_ID: ${{ inputs.task_id }}
         run: |
           git checkout -b "codex/shared-effect-${{ github.run_id }}"
-          codex exec --sandbox workspace-write --ask-for-approval never - < reports/codex-selected-task.md
+          codex exec --sandbox workspace-write - < reports/codex-selected-task.md
       - name: Run complete reference effect gates
         run: |
           set -e
