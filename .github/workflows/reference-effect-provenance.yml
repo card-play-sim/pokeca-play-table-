@@ -39,6 +39,8 @@ on:
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'scripts/import-official-effect-evidence.cjs'
+      - 'tests/official-effect-import.test.cjs'
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
@@ -81,6 +83,8 @@ on:
       - 'scripts/build-reference-effect-codex-tasks.cjs'
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
+      - 'scripts/import-official-effect-evidence.cjs'
+      - 'tests/official-effect-import.test.cjs'
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
@@ -261,6 +265,8 @@ jobs:
         run: node tests/reference-effect-ci-aggregation.test.cjs
       - name: Verify bounded Codex task generation
         run: node tests/reference-effect-codex-tasks.test.cjs
+      - name: Verify atomic official text intake and conflict rollback
+        run: node tests/official-effect-import.test.cjs
       - name: Verify official text evidence gating and shared Codex task batching
         run: node tests/official-effect-codex-batch.test.cjs
       - name: Verify end-to-end official reference evidence export and Codex batching
