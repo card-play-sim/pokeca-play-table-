@@ -8,6 +8,8 @@ if(batch.purpose!=='OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BATCH'||batch.status!=
 const matches=taskId==='AUTO'?[...batch.tasks].filter(t=>t.status==='CODEX_REVIEW_REQUIRED'&&Array.isArray(t.prints)&&t.prints.length).sort((a,b)=>b.prints.length-a.prints.length||a.taskId.localeCompare(b.taskId)).slice(0,1):batch.tasks.filter(t=>t.taskId===taskId);
 if(matches.length!==1)throw Error('CODEX_TASK_NOT_UNIQUE_OR_NOT_FOUND');
 const task=matches[0];
+const expectedTaskId='OFFICIAL_SHARED_EFFECT_'+require('node:crypto').createHash('sha256').update(task.category+':'+task.effectKind+':'+task.normalizedTextHash).digest('hex').slice(0,16).toUpperCase();
+if(task.taskId!==expectedTaskId)throw Error('CODEX_TASK_ID_CONTENT_MISMATCH');
 if(task.status!=='CODEX_REVIEW_REQUIRED'||!Array.isArray(task.evidence)||!task.evidence.length||!Array.isArray(task.prints)||!task.prints.length)throw Error('INVALID_CODEX_TASK_EVIDENCE');
 const digest=t=>crypto.createHash('sha256').update(t).digest('hex');
 if(typeof task.officialText!=='string'||!task.officialText.trim()||!['pokemon','item','supporter','stadium','tool','energy'].includes(task.category)||!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(task.effectKind))throw Error('INVALID_CODEX_TASK_CONTENT');
