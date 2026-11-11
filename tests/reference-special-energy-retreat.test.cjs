@@ -31,6 +31,21 @@ function fixture(){
  assert.equal(result.transitionAudit?.conservation?.ok,true);
  assert.ok(f.game.players[0].discard.some(c=>c.id===f.ignition.id),'SPECIAL_ENERGY_NOT_DISCARDED');
 }
+// Even if three single-unit energies precede Ignition, prefer the one-card payment.
+{
+ const f=fixture();
+ const basic=f.own.deck.filter(c=>c.kind==='energy'&&c.name.startsWith('基本')).slice(0,3);
+ assert.equal(basic.length,3);
+ for(const card of basic)f.own.deck.splice(f.own.deck.indexOf(card),1);
+ f.own.active.energyCards.unshift(...basic);
+ const actions=engine.getLegalActions(f.game,f.own.id).actions.filter(a=>a.type==='retreat');
+ assert.ok(actions.length>0);
+ assert.equal(actions[0].energyIds.length,1,'RETREAT_NOT_MINIMUM_PHYSICAL_CARD_COUNT');
+ assert.equal(actions[0].energyIds[0],f.ignition.id,'MULTI_UNIT_ENERGY_NOT_PREFERRED');
+ const result=f.gateway.dispatch(f.own.id,actions[0]);
+ assert.equal(result.ok,true,JSON.stringify(result.errors));
+ assert.equal(result.transitionAudit?.conservation?.ok,true);
+}
 // Two Ignition cards must not both be selected for a three-unit retreat.
 {
  const f=fixture(),other=f.own.deck.find(c=>c.name==='イグニッションエネルギー');
