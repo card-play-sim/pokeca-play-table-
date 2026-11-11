@@ -1,0 +1,19 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+const dir=fs.mkdtempSync(path.join(os.tmpdir(),'official-effect-import-'));
+const script=path.resolve(__dirname,'../scripts/import-official-effect-evidence.cjs');
+const sha=t=>crypto.createHash('sha256').update(t).digest('hex');
+const make=(id,text='山札を2枚引く。')=>({officialCardId:id,category:'pokemon',effectKind:'ability',effectName:'テスト',effectIndex:0,effectText:text,officialPageUrl:'https://www.pokemon-card.com/card-search/details.php/card/'+id+'/regu/XY',officialTextSha256:sha(text)});
+const input=path.join(dir,'new.ndjson'),output=path.join(dir,'registry.json');
+const run=(rows,status)=>{fs.writeFileSync(input,rows.map(x=>typeof x==='string'?x:JSON.stringify(x)).join('\n')+'\n');const r=cp.spawnSync(process.execPath,[script,input,output],{encoding:'utf8'});assert.equal(r.status,status,r.stderr+' '+r.stdout);};
+try{
+ run([make('45152'),make('45746')],0);assert.equal(JSON.parse(fs.readFileSync(output)).length,2);
+ const before=fs.readFileSync(output,'utf8');
+ run([make('45152')],0);assert.equal(fs.readFileSync(output,'utf8'),before,'IDEMPOTENT_IMPORT_CHANGED_OUTPUT');
+ run([make('45152','違う効果')],2);assert.equal(fs.readFileSync(output,'utf8'),before,'CONFLICT_MUTATED_REGISTRY');
+ run([make('49412'),'{not json}'],2);assert.equal(fs.readFileSync(output,'utf8'),before,'INVALID_LINE_PARTIALLY_IMPORTED');
+ run([{...make('49412'),officialPageUrl:'https://www.pokemon-card.com/card-search/details.php/card/45152/regu/XY'}],2);
+ assert.equal(fs.readFileSync(output,'utf8'),before,'INVALID_PRINT_PROVENANCE_MUTATED_REGISTRY');
+ run([make('49412')],0);assert.equal(JSON.parse(fs.readFileSync(output)).length,3);
+ console.log('OFFICIAL_EFFECT_IMPORT PASS');
+}finally{fs.rmSync(dir,{recursive:true,force:true});}
