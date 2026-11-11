@@ -40,6 +40,7 @@ on:
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
       - 'scripts/export-reference-official-effect-evidence.cjs'
+      - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -81,6 +82,7 @@ on:
       - 'tests/reference-effect-codex-tasks.test.cjs'
       - 'scripts/build-official-effect-codex-batch.cjs'
       - 'scripts/export-reference-official-effect-evidence.cjs'
+      - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
@@ -261,6 +263,8 @@ jobs:
         run: node tests/reference-effect-codex-tasks.test.cjs
       - name: Verify official text evidence gating and shared Codex task batching
         run: node tests/official-effect-codex-batch.test.cjs
+      - name: Verify end-to-end official reference evidence export and Codex batching
+        run: node tests/reference-official-effect-evidence-export.test.cjs
       - name: Export provenance-checked reference effects for shared Codex work
         run: node scripts/export-reference-official-effect-evidence.cjs data/reference-effects/plans.json reports/reference-official-effect-evidence.json
       - name: Generate reviewable Codex work batches from verified official text
