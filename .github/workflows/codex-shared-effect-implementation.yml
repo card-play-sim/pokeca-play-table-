@@ -27,14 +27,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify Codex API access is configured
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          if [ -z "$OPENAI_API_KEY" ]; then
-            echo "::error::OPENAI_API_KEY secret is missing; no Codex execution was attempted"
-            exit 2
-          fi
       - name: Export verified reference and WORK effect tasks
         run: |
           node scripts/export-reference-official-effect-evidence.cjs data/reference-effects/plans.json reports/reference-official-effect-evidence.json
@@ -58,6 +50,14 @@ jobs:
           node tests/reference-official-effect-evidence-export.test.cjs
           node tests/official-effect-codex-batch.test.cjs
           node tests/official-effect-import.test.cjs
+      - name: Verify Codex API access is configured
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::OPENAI_API_KEY secret is missing; no Codex execution was attempted"
+            exit 2
+          fi
       - name: Install Codex CLI
         run: npm install --global @openai/codex
       - name: Verify Codex CLI is available
