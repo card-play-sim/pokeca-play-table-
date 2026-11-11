@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='241';
+window.PokecaMobileBuild='242';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -911,7 +911,12 @@ window.PokecaMobileBuild='241';
         window.PokecaFixedDeckImageStatus=window.PokecaFixedDeckImageAudit.summarize(measured);
         const settled=imgs.filter(img=>img.complete).length,failed=imgs.filter(img=>img.complete&&!img.naturalWidth).length;
         const node=$('deck-image-check');
-        if(node)node.textContent=`公式印刷版の表示成功 ${window.PokecaFixedDeckImageStatus.officialDisplayedCopies}/120枚 / 未完了 ${window.PokecaFixedDeckImageStatus.pendingCopies}枚 / 候補プレビュー ${window.PokecaFixedDeckImageStatus.candidatePreviewCopies}枚（確定数に含めません） / 画像読込失敗 ${failed} / 検査済 ${settled}/${imgs.length}`;
+        if(node){
+          const {officialDisplayedCopies,candidatePreviewCopies}=window.PokecaFixedDeckImageStatus;
+          const shown=officialDisplayedCopies+candidatePreviewCopies;
+          const missingNames=new Set(measured.filter(row=>!row.officialDisplayedCopies&&!row.candidatePreview).map(row=>row.name));
+          node.textContent=`公式画像の読み込み ${shown}/120枚・${uniqueNames.length-missingNames.size}/${uniqueNames.length}種類 / 採用版確定の表示 ${officialDisplayedCopies}/120枚 / 画像読込失敗 ${failed} / 検査済 ${settled}/${imgs.length}`;
+        }
       };
       for(const img of imgs){img.addEventListener('load',update);img.addEventListener('error',()=>queueMicrotask(update));}
       requestAnimationFrame(update);

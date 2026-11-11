@@ -56,9 +56,9 @@ async def main():
   assert await page.evaluate('PokecaMobile.port.getSnapshot()')==saved
   assert await page.evaluate('localStorage.getItem("upgrade-preserve")')=='yes'
   assert await page.evaluate("async()=>(await (await caches.open('other-app')).match('./sentinel')).text()")=='keep'
-  status=await page.evaluate('PokecaUpdateStatus');assert {status[k] for k in ('htmlBuild','mobileBuild','controllerBuild')}=={'241'}
+  status=await page.evaluate('PokecaUpdateStatus');assert {status[k] for k in ('htmlBuild','mobileBuild','controllerBuild')}=={'242'}
   # Compare the actual verified responses in the worker's cache, not DOM labels.
-  cache_hashes=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName);const out={};for(const url of ['./index.html','./ui/mobile.js?build=241','./ui/app-update.js?build=241']){const r=await c.match(new URL(url,location.href));out[url]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
+  cache_hashes=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName);const out={};for(const url of ['./index.html','./ui/mobile.js?build=242','./ui/app-update.js?build=242']){const r=await c.match(new URL(url,location.href));out[url]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
   for url,digest in cache_hashes.items():assert digest==hashlib.sha256((ROOT/url.split('?')[0]).read_bytes()).hexdigest()
   await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap()
   await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation&&document.getElementById("save-status").textContent==="自動保存済"')
