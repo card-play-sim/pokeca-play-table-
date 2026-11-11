@@ -16,6 +16,7 @@ on:
       - 'tests/reference-effect-cross-category.test.cjs'
       - 'tests/reference-effect-cross-family-seeded.test.cjs'
       - 'tests/reference-effect-cross-family-rejection.test.cjs'
+      - 'tests/reference-special-energy-retreat.test.cjs'
       - 'tests/reference-effect-extended-gameplay.test.cjs'
       - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
@@ -52,6 +53,7 @@ on:
       - 'tests/reference-effect-cross-category.test.cjs'
       - 'tests/reference-effect-cross-family-seeded.test.cjs'
       - 'tests/reference-effect-cross-family-rejection.test.cjs'
+      - 'tests/reference-special-energy-retreat.test.cjs'
       - 'tests/reference-effect-extended-gameplay.test.cjs'
       - 'tests/reference-effect-multi-turn.test.cjs'
       - 'ui/engine.bundle.js'
@@ -204,6 +206,8 @@ jobs:
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-family-seeded.test.cjs
       - name: Reject invalid effect choices, targets and prize slots without mutation
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-cross-family-rejection.test.cjs
+      - name: Verify minimal special-energy retreat payment
+        run: node scripts/run-reference-effect-ci.cjs tests/reference-special-energy-retreat.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json
