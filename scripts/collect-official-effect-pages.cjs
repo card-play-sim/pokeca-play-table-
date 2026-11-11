@@ -42,9 +42,13 @@ function parse(id,html,url){
   // Never include script/style or nested structural headings as an effect.
   if(/<(?:script|style|h[1-6])\b/i.test(body)){errors.push('AMBIGUOUS_EFFECT_HTML:'+h.label);continue;}
   const effectText=strip(body);
-  if(!effectText){errors.push('MISSING_EFFECT_TEXT:'+h.label);continue;}
+  // Damage-only attacks are legitimate but have no explicit effect text.
+  // Do not invent an effect; record the missing text for separate card-rule handling.
+  if(!effectText){errors.push('MISSING_EXPLICIT_EFFECT_TEXT:'+h.label);continue;}
   const kind=section==='ワザ'?'attack':'ability';
   const index=result.filter(x=>x.effectKind===kind).length;
+  // Printed damage is often suffixed to the attack heading (e.g. なみのり140).
+  // Preserve the original heading; never silently strip digits from a card identity.
   result.push({officialCardId:String(id),category:'pokemon',effectKind:kind,effectName:h.label,effectIndex:index,effectText,officialTextSha256:sha(effectText),officialPageUrl:url,provenance:{kind:'OFFICIAL_HTML_EXTRACTED',officialPageSha256:sha(html)}});
  }
  if(!result.length)errors.push('NO_UNAMBIGUOUS_EFFECT_BLOCKS');
