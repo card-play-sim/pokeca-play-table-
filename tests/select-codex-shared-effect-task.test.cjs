@@ -7,6 +7,17 @@ const run=(id,code)=>{fs.writeFileSync(input,JSON.stringify(batch));const r=cp.s
 try{
  run('OFFICIAL_SHARED_EFFECT_0001',0);
  assert.match(fs.readFileSync(output,'utf8'),/OFFICIAL_EFFECT_TEXT:/);
+ const originalText=batch.tasks[0].officialText;
+ batch.tasks[0].officialText='山札を  2枚引く。';
+ batch.tasks[0].normalizedTextHash=crypto.createHash('sha256').update('山札を 2枚引く。').digest('hex');
+ run('OFFICIAL_SHARED_EFFECT_0001',0);
+ batch.tasks[0].officialText=originalText;
+ batch.tasks[0].normalizedTextHash=crypto.createHash('sha256').update(originalText).digest('hex');
+ batch.tasks[0].prints=['invalid-id'];run('OFFICIAL_SHARED_EFFECT_0001',1);
+ batch.tasks[0].prints=['45152'];
+ batch.tasks[0].evidence[0].officialPageUrl='https://www.pokemon-card.com/card-search/details.php/card/451520';run('OFFICIAL_SHARED_EFFECT_0001',1);
+ batch.tasks[0].evidence[0].officialPageUrl='https://www.pokemon-card.com/card-search/details.php/card/45152';
+ run('OFFICIAL_SHARED_EFFECT_0001',0);
  const before=fs.readFileSync(output,'utf8');
  run('MISSING_TASK',1);assert.equal(fs.readFileSync(output,'utf8'),before);
  batch.tasks[0].normalizedTextHash='0'.repeat(64);run('OFFICIAL_SHARED_EFFECT_0001',1);
