@@ -26,7 +26,7 @@ jobs:
       - name: Select known reference card IDs without changing approved data
         run: |
           mkdir -p reports/official-effect-pilot
-          node -e "const fs=require('fs');const p=require('./data/reference-effects/plans.json');fs.writeFileSync('reports/official-effect-pilot/ids.json',JSON.stringify([...new Set(p.records.map(x=>String(x.officialCardId)))].slice(0,20)));"
+          node -e "const fs=require('fs');const p=require('./data/reference-effects/plans.json');fs.writeFileSync('reports/official-effect-pilot/ids.json',JSON.stringify([...new Set(p.records.filter(x=>x.category==='pokemon'&&((x.attacks||[]).some(a=>a.text?.trim())||(x.abilities||[]).some(a=>a.text?.trim()))).map(x=>String(x.officialCardId)))].slice(0,20)));"
       - name: Fetch official pages and checkpoint only unambiguous effect blocks
         id: collect
         continue-on-error: true
