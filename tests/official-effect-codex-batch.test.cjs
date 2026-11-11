@@ -16,6 +16,12 @@ try{
  batch=run([make('45152'),make('45746')],0);
  assert.equal(batch.status,'READY_FOR_CODEX_REVIEW');assert.equal(batch.tasks.length,1);assert.equal(batch.tasks[0].prints.length,2);
  assert.equal(batch.tasks[0].scope,'ONE_SHARED_EFFECT_PATTERN_ALL_AFFECTED_PRINTS');
+ const stableTaskId=batch.tasks[0].taskId;
+ batch=run([make('45746'),make('45152')],0);
+ assert.equal(batch.tasks[0].taskId,stableTaskId,'TASK_ID_CHANGED_WITH_INPUT_ORDER');
+ batch=run([make('45746'),make('45152'),{...make('49412'),effectText:'別の効果',officialTextSha256:sha('別の効果')}],0);
+ assert.ok(batch.tasks.some(t=>t.taskId===stableTaskId),'TASK_ID_CHANGED_WHEN_OTHER_EVIDENCE_ADDED');
+
  batch=run([make('45152'),{...make('45746'),officialTextSha256:'0'.repeat(64)}],2);
  assert.equal(batch.tasks.length,1);assert.equal(batch.counts.blocked,1);
  batch=run([make('45152'),{...make('45152'),effectText:'違う効果',officialTextSha256:sha('違う効果')}],2);
