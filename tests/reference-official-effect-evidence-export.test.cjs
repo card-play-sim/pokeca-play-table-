@@ -17,6 +17,14 @@ try{
   assert.equal(crypto.createHash('sha256').update(row.effectText).digest('hex'),row.officialTextSha256);
   assert.match(row.officialPageUrl,/^https:\/\/www\.pokemon-card\.com\//);
  }
+ const ndjson=path.join(dir,'intake.ndjson'),registry=path.join(dir,'intake-registry.json');
+ fs.writeFileSync(ndjson,rows.map(x=>JSON.stringify(x)).join('\\n')+'\\n');
+ const imported=cp.spawnSync(process.execPath,[path.resolve(__dirname,'../scripts/import-official-effect-evidence.cjs'),ndjson,registry],{encoding:'utf8'});
+ assert.equal(imported.status,0,imported.stderr+' '+imported.stdout);
+ assert.equal(JSON.parse(fs.readFileSync(registry,'utf8')).length,rows.length);
+ const repeat=cp.spawnSync(process.execPath,[path.resolve(__dirname,'../scripts/import-official-effect-evidence.cjs'),ndjson,registry],{encoding:'utf8'});
+ assert.equal(repeat.status,0,repeat.stderr+' '+repeat.stdout);
+ assert.equal(JSON.parse(fs.readFileSync(registry,'utf8')).length,rows.length);
  const batch=path.join(dir,'batch.json');
  const p=cp.spawnSync(process.execPath,[path.resolve(__dirname,'../scripts/build-official-effect-codex-batch.cjs'),output,batch],{encoding:'utf8'});
  assert.equal(p.status,0,p.stderr+' '+p.stdout);
