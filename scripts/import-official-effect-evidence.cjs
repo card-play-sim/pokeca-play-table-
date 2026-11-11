@@ -8,7 +8,7 @@ if(!input||!fs.existsSync(input))throw Error('MISSING_EFFECT_TEXT_IMPORT');
 const hash=t=>crypto.createHash('sha256').update(t).digest('hex');
 const key=r=>[r.officialCardId,r.effectKind,r.effectName||'',r.effectIndex??0].join(':');
 const existing=fs.existsSync(output)?JSON.parse(fs.readFileSync(output,'utf8')):[];
-const sourceDir=path.dirname(path.resolve(input)),target=path.resolve(output);
+const target=path.resolve(output);
 if(path.resolve(input)===target)throw Error('INPUT_OUTPUT_MUST_DIFFER');
 if(!Array.isArray(existing))throw Error('INVALID_EXISTING_EFFECT_EVIDENCE');
 const byKey=new Map(),errors=[];
@@ -28,6 +28,8 @@ function accept(r,line){
  byKey.set(k,row);return true;
 }
 for(const [i,row] of existing.entries())accept(row,'existing:'+i);
+// The on-disk registry is authoritative; reject duplicate keys with divergent metadata.
+if(byKey.size!==existing.length)throw Error('DUPLICATE_EXISTING_EFFECT_EVIDENCE');
 function persist(){
  const rows=[...byKey.values()].sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId)||key(a).localeCompare(key(b)));
  fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
