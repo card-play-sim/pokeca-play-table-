@@ -107,6 +107,11 @@ jobs:
             echo "::notice::No allowed implementation changes produced"
             exit 0
           fi
-          git commit -m "Codex shared effect implementation: $TASK_ID"
+          SELECTED_TASK_ID="$(sed -n 's/^TASK_ID: //p' reports/codex-selected-task.md | head -n 1)"
+          if ! [[ "$SELECTED_TASK_ID" =~ ^OFFICIAL_SHARED_EFFECT_[A-F0-9]{16}$ ]]; then
+            echo "::error::Missing or invalid selected task ID"
+            exit 2
+          fi
+          git commit -m "Codex shared effect implementation: $SELECTED_TASK_ID"
           git push --set-upstream origin HEAD
-          gh pr create --base main --head "codex/shared-effect-${{ github.run_id }}" --title "Codex review: $TASK_ID" --body "Generated from verified official text. Review-only; no auto-merge. Check full CI, source provenance, Pages deployment and Android verification separately."
+          gh pr create --base main --head "codex/shared-effect-${{ github.run_id }}" --title "Codex review: $SELECTED_TASK_ID" --body "Generated from selected verified effect task $SELECTED_TASK_ID. Review-only; no auto-merge. Check full CI, source provenance, Pages deployment and Android verification separately."
