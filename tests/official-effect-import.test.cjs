@@ -15,5 +15,17 @@ try{
  run([{...make('49412'),officialPageUrl:'https://www.pokemon-card.com/card-search/details.php/card/45152/regu/XY'}],2);
  assert.equal(fs.readFileSync(output,'utf8'),before,'INVALID_PRINT_PROVENANCE_MUTATED_REGISTRY');
  run([make('49412')],0);assert.equal(JSON.parse(fs.readFileSync(output)).length,3);
+ const checkpointOutput=path.join(dir,'checkpoint.json');
+ const checkpointRun=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
+ assert.equal(checkpointRun.status,0,checkpointRun.stderr);
+ assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,1);
+ fs.writeFileSync(input,JSON.stringify(make('45152'))+'\\n'+'{invalid json}\\n'+JSON.stringify(make('45746'))+'\\n');
+ const partial=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
+ assert.equal(partial.status,2);
+ assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,1,'CHECKPOINT_MUST_PRESERVE_PREVIOUS_VALID_RECORD');
+ fs.writeFileSync(input,JSON.stringify(make('45746'))+'\\n');
+ const resumed=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
+ assert.equal(resumed.status,0,resumed.stderr);
+ assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,2,'CHECKPOINT_RESUME_MUST_APPEND');
  console.log('OFFICIAL_EFFECT_IMPORT PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
