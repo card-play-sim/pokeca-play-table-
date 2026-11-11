@@ -1,0 +1,34 @@
+'use strict';
+// Select exactly one verified shared-effect task for Codex. No automatic approval.
+const fs=require('node:fs'),path=require('node:path');
+const input=process.argv[2],taskId=process.argv[3],output=process.argv[4];
+if(!input||!taskId||!output||!fs.existsSync(input))throw Error('MISSING_VERIFIED_CODEX_TASK_INPUT');
+const batch=JSON.parse(fs.readFileSync(input,'utf8'));
+if(batch.purpose!=='OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BATCH'||batch.status!=='READY_FOR_CODEX_REVIEW'||batch.counts?.blocked!==0||!Array.isArray(batch.tasks))throw Error('CODEX_TASK_BATCH_NOT_VERIFIED');
+const matches=batch.tasks.filter(t=>t.taskId===taskId);
+if(matches.length!==1)throw Error('CODEX_TASK_NOT_UNIQUE_OR_NOT_FOUND');
+const task=matches[0];
+if(task.status!=='CODEX_REVIEW_REQUIRED'||!Array.isArray(task.evidence)||!task.evidence.length||!Array.isArray(task.prints)||!task.prints.length)throw Error('INVALID_CODEX_TASK_EVIDENCE');
+const prompt=[
+ 'You are working in the existing Pokemon card PWA repository. Follow AGENTS.md.',
+ 'Implement ONLY the verified shared-effect task below. Do not make print-specific hacks.',
+ 'Do not alter approved 1945 formal data, reference plans, image registry, deck lists, GitHub workflows, sw.js or AGENTS.md.',
+ 'Do not guess any official text, effects or unsupported Rule Engine semantics. If insufficient evidence or contract, stop without edits.',
+ 'Keep source and ui/engine.bundle.js synchronized. Add regression tests for all affected prints.',
+ 'Ensure rejection rollback, legal target selection, deterministic replay and card conservation.',
+ 'Never publish or merge. A review-only PR is created by CI after tests.',
+ '',
+ 'TASK_ID: '+task.taskId,
+ 'EFFECT_CATEGORY: '+task.category,
+ 'EFFECT_KIND: '+task.effectKind,
+ 'PRINT_IDS: '+task.prints.join(', '),
+ 'OFFICIAL_EFFECT_TEXT:',
+ task.officialText,
+ 'VERIFIED_EVIDENCE:',
+ ...task.evidence.map(e=>JSON.stringify(e)),
+ 'ACCEPTANCE:',
+ ...task.acceptance.map(a=>'- '+a)
+].join('\n')+'\n';
+fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
+fs.writeFileSync(output,prompt);
+console.log('CODEX_SELECTED_VERIFIED_TASK:',JSON.stringify({taskId,prints:task.prints.length,output}));
