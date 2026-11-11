@@ -30,6 +30,8 @@ jobs:
           set -e
           node tests/official-effect-import.test.cjs
           node tests/official-effect-codex-batch.test.cjs
+          node tests/select-codex-shared-effect-task.test.cjs
+          node tests/official-effect-pipeline.test.cjs
       - name: Import all submitted records, checkpointing each verified row
         run: |
           set -e
