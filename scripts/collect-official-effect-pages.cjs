@@ -80,14 +80,9 @@ function parse(id,html,url){
  const progressJournal=reportFile+'.ndjson';
  // Recover the last durable per-print statuses after a terminated run.
  // The official effects journal remains the source of truth for collected rows.
- const priorStatuses=fs.existsSync(progressJournal)?fs.readFileSync(progressJournal,'utf8').split(/\r?\n/).filter(Boolean).map(JSON.parse):[];
- const lastStatus=new Map(priorStatuses.map(x=>[String(x.id),x]));
+ // Existing journal is retained for audit; each run rechecks official pages for changed effects.
  for(const id of ids){
   const key=String(id),url='https://www.pokemon-card.com/card-search/details.php/card/'+key;
-  if(lastStatus.get(key)?.status==='COLLECTED' && [...seen.values()].some(x=>x.officialCardId===key)){
-   reports.push({...lastStatus.get(key),resumed:true});
-   continue;
-  }
   try{
    const {html}=await get(key),parsed=parse(key,html,url);
    if(parsed.errors.length){reports.push({id:key,status:'BLOCKED',reasons:parsed.errors});}
