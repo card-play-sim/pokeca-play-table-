@@ -31,13 +31,13 @@ for(const [id,rows] of grouped){
  if(!ref){results.push({id,status:'BLOCKED',reason:'NO_REFERENCE_EFFECTS_FOR_PRINT'});continue;}
  const issues=[];
  for(const row of rows){
-  const matches=ref.filter(x=>x.kind===row.effectKind&&norm(x.text)===norm(row.effectText));
-  if(matches.length!==1)issues.push({effectKind:row.effectKind,effectIndex:row.effectIndex,reason:'EFFECT_TEXT_NOT_UNIQUELY_SUPPORTED_BY_REFERENCE'});
+  const matches=ref.filter(x=>x.kind===row.effectKind&&x.index===row.effectIndex&&norm(x.text)===norm(row.effectText));
+  if(matches.length!==1)issues.push({effectKind:row.effectKind,effectIndex:row.effectIndex,reason:'EFFECT_SLOT_NOT_SUPPORTED_BY_REFERENCE'});
   if(row.officialTextSha256!==sha(row.effectText))issues.push({reason:'INVALID_COLLECTED_EFFECT_HASH'});
  }
- for(const x of ref)if(!rows.some(r=>r.effectKind===x.kind&&norm(r.effectText)===norm(x.text)))issues.push({effectKind:x.kind,effectIndex:x.index,reason:'REFERENCE_EFFECT_MISSING'});
+ for(const x of ref)if(!rows.some(r=>r.effectKind===x.kind&&r.effectIndex===x.index&&norm(r.effectText)===norm(x.text)))issues.push({effectKind:x.kind,effectIndex:x.index,reason:'REFERENCE_EFFECT_MISSING'});
  const seen=new Set();
- for(const row of rows){const key=row.effectKind+':'+norm(row.effectText);if(seen.has(key))issues.push({reason:'DUPLICATE_EXTRACTED_EFFECT_TEXT'});seen.add(key);}
+ for(const row of rows){const key=row.effectKind+':'+row.effectIndex;if(seen.has(key))issues.push({reason:'DUPLICATE_EXTRACTED_EFFECT_TEXT'});seen.add(key);}
  results.push({id,status:issues.length?'BLOCKED':'MATCHED',expected:ref.length,collected:rows.length,issues});
 }
 const blocked=results.filter(x=>x.status==='BLOCKED').length;
