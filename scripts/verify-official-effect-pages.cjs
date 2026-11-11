@@ -36,7 +36,7 @@ async function retrieve(url){
   const id=String(row?.officialCardId||''),url=row?.officialPageUrl;
   const expected='https://www.pokemon-card.com/card-search/details.php/card/'+id;
   const fail=reason=>{results[index]={index,officialCardId:id,status:'BLOCKED',reason};};
-  if(!/^\\d{4,8}$/.test(id)||typeof url!=='string'||!(url===expected||url.startsWith(expected+'/'))){fail('INVALID_OFFICIAL_PAGE');continue;}
+  if(!/^\d{4,8}$/.test(id)||typeof url!=='string'||!(url===expected||url.startsWith(expected+'/'))){fail('INVALID_OFFICIAL_PAGE');continue;}
   if(typeof row.effectText!=='string'||!row.effectText.trim()||sha(row.effectText.trim())!==row.officialTextSha256){fail('INVALID_EFFECT_TEXT_HASH');continue;}
   if(!pageIds.has(id))pageIds.set(id,[]);
   pageIds.get(id).push(index);
@@ -64,7 +64,7 @@ async function retrieve(url){
  const verified=results.filter(r=>r.status==='VERIFIED').length;
  const result={schemaVersion:1,source:input,total:rows.length,uniquePages:pageIds.size,verified,blocked:results.length-verified,results};
  fs.mkdirSync(require('node:path').dirname(require('node:path').resolve(report)),{recursive:true});
- fs.writeFileSync(report,JSON.stringify(result,null,2)+'\\n');
+ fs.writeFileSync(report,JSON.stringify(result,null,2)+'\n');
  console.log('OFFICIAL_PAGE_VERIFICATION:',JSON.stringify({total:result.total,uniquePages:result.uniquePages,verified,blocked:result.blocked,report}));
  if(result.blocked)process.exitCode=2;
 })().catch(e=>{console.error(e);process.exitCode=2;});
