@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('nod
 const script=path.resolve(__dirname,'../scripts/build-reference-effect-codex-tasks.cjs');
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'pokeca-codex-tasks-')),input=path.join(dir,'batch.json'),output=path.join(dir,'tasks.json');
 const run=()=>spawnSync(process.execPath,[script,input,output],{encoding:'utf8'});
-const base={purpose:'CODEX_CROSS_JOB_SHARED_CAUSE_BATCH',expectedJobs:7,gaps:[],issues:[]};
+const base={purpose:'CODEX_CROSS_JOB_SHARED_CAUSE_BATCH',expectedJobs:7,receivedJobs:7,gaps:[],issues:[]};
 try{
  fs.writeFileSync(input,JSON.stringify(base));
  assert.equal(run().status,0);
@@ -16,6 +16,10 @@ try{
  assert.equal(run().status,0);assert.equal(fs.readFileSync(output,'utf8'),first);
  report=JSON.parse(first);
  assert.equal(report.taskCount,1);
+ fs.writeFileSync(input,JSON.stringify({...base,receivedJobs:6,issues:[issue]}));
+ assert.equal(run().status,2,'incomplete CI job set must block Codex edits');
+ assert.equal(JSON.parse(fs.readFileSync(output,'utf8')).blockedByMissingOrInvalidEvidence,true);
+ fs.writeFileSync(input,JSON.stringify({...base,issues:[issue]}));
  assert.equal(report.tasks[0].scope,'SHARED_MECHANIC_NOT_SINGLE_CARD');
  assert.deepEqual(report.tasks[0].affectedPrints,['48248','48249']);
  assert.ok(report.tasks[0].forbiddenMutations.includes('data/reference-effects/plans.json'));
