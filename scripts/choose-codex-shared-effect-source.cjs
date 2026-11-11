@@ -18,7 +18,7 @@ for(const source of sources){
 if(!found.length)throw Error('TASK_ID_NOT_FOUND_IN_VERIFIED_SOURCES:'+id);
 const primary=found[0];
 for(const item of found.slice(1)){
- if(item.task.normalizedTextHash!==primary.task.normalizedTextHash||item.task.category!==primary.task.category||item.task.effectKind!==primary.task.effectKind)throw Error('TASK_ID_SOURCE_COLLISION:'+id);
+ if(item.task.normalizedTextHash!==primary.task.normalizedTextHash||item.task.category!==primary.task.category||item.task.effectKind!==primary.task.effectKind||item.task.officialText!==primary.task.officialText)throw Error('TASK_ID_SOURCE_COLLISION:'+id);
 }
 fs.mkdirSync(path.dirname(path.resolve(out)),{recursive:true});
 fs.writeFileSync(out,JSON.stringify(primary.batch,null,2)+'\n');
