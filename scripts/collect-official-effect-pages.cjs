@@ -77,8 +77,17 @@ function parse(id,html,url){
   seen.set(slot,row);
  }
  const reports=[];let added=0;
+ const progressJournal=reportFile+'.ndjson';
+ // Recover the last durable per-print statuses after a terminated run.
+ // The official effects journal remains the source of truth for collected rows.
+ const priorStatuses=fs.existsSync(progressJournal)?fs.readFileSync(progressJournal,'utf8').split(/\r?\n/).filter(Boolean).map(JSON.parse):[];
+ const lastStatus=new Map(priorStatuses.map(x=>[String(x.id),x]));
  for(const id of ids){
   const key=String(id),url='https://www.pokemon-card.com/card-search/details.php/card/'+key;
+  if(lastStatus.get(key)?.status==='COLLECTED' && [...seen.values()].some(x=>x.officialCardId===key)){
+   reports.push({...lastStatus.get(key),resumed:true});
+   continue;
+  }
   try{
    const {html}=await get(key),parsed=parse(key,html,url);
    if(parsed.errors.length){reports.push({id:key,status:'BLOCKED',reasons:parsed.errors});}
@@ -104,11 +113,15 @@ function parse(id,html,url){
    reports.push({id:key,status:'COLLECTED',effects:parsed.rows.length,added:incoming.length,officialPageSha256:sha(html)});
    }
   }catch(e){reports.push({id:key,status:'BLOCKED',reasons:[String(e.message||e)]});}
-  // Checkpoint the per-print status immediately; restart is safe.
-  fs.writeFileSync(reportFile,JSON.stringify({total:ids.length,processed:reports.length,added,results:reports},null,2)+'\n');
+  // O(1) append-only progress checkpoint with fsync per print.
+  const fd=fs.openSync(progressJournal,'a');
+  try{fs.writeSync(fd,JSON.stringify(reports[reports.length-1])+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
   await sleep(250);
  }
  const blocked=reports.filter(r=>r.status==='BLOCKED').length;
+ const tmp=reportFile+'.tmp-'+process.pid;
+ try{fs.writeFileSync(tmp,JSON.stringify({total:ids.length,processed:reports.length,added,blocked,results:reports},null,2)+'\n',{flag:'wx'});fs.renameSync(tmp,reportFile);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
+
  console.log('OFFICIAL_EFFECT_COLLECTION:',JSON.stringify({prints:ids.length,added,blocked,outFile,reportFile}));
  if(blocked)process.exitCode=2;
 })().catch(e=>{console.error(e);process.exitCode=2;});
