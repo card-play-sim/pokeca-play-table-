@@ -9,6 +9,8 @@ function fixture(){
  const made=engine.createReferenceValidationMatch(manifest,{rng:()=>0.51,firstDeck:0,firstPlayer:'you'});
  assert.equal(made.ok,true);
  let game=made.game;const own=game.players[0],other=game.players[1];
+ // Remove Skyline from this fixture; otherwise it makes basic retreat free.
+ for(let i=own.bench.length-1;i>=0;i--)if(own.bench[i].name==='ラティアスex')own.deck.push(own.bench.splice(i,1)[0]);
  const evolved=other.deck.find(c=>c.kind==='pokemon'&&c.stage>0);
  const ignition=own.deck.find(c=>c.name==='イグニッションエネルギー');
  assert.ok(evolved&&ignition);
