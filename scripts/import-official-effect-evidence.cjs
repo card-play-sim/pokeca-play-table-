@@ -38,7 +38,7 @@ let imported=0,duplicates=0;
 const lines=fs.readFileSync(input,'utf8').split(/\r?\n/);
 for(let i=0;i<lines.length;i++){
  if(!lines[i].trim())continue;
- let row;try{row=JSON.parse(lines[i]);}catch(e){errors.push('INVALID_NDJSON:'+String(i+1));continue;}
+ let row;try{row=JSON.parse(lines[i]);}catch(e){errors.push('INVALID_NDJSON:'+String(i+1));if(checkpoint)break;continue;}
  try{if(accept(row,i+1)){if(checkpoint)persist();imported++;}else duplicates++;}catch(e){errors.push(e.message);if(checkpoint)break;}
 }
 if(errors.length){console.error('EFFECT_IMPORT_BLOCKED:',JSON.stringify({errors:errors.slice(0,50),count:errors.length}));process.exitCode=2;}
