@@ -49,6 +49,7 @@ on:
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
+      - 'tests/official-effect-pipeline.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
@@ -98,6 +99,7 @@ on:
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
+      - 'tests/official-effect-pipeline.test.cjs'
       - 'data/official-effect-evidence.json'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
