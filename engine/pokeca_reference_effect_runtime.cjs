@@ -427,16 +427,17 @@ function pokemonActions(g,actor,ident){
    // A payment is valid only if removing any one selected card makes it insufficient.
    let choices=required===0?[]:null;
    if(required>0){
-    const search=(start,chosen)=>{
-     const units=energyUnits({...mon,energyCards:chosen}).length;
-     if(units>=required){
-      if(chosen.every((_,i)=>energyUnits({...mon,energyCards:chosen.filter((_,j)=>i!==j)}).length<required)){choices=chosen.map(id);return true;}
+    // Enumerate by physical-card count so multi-unit energy is preferred.
+    // A fixed number of attached cards bounds this search; no RNG or state mutation.
+    const search=(start,chosen,remaining)=>{
+     if(remaining===0){
+      if(energyUnits({...mon,energyCards:chosen}).length>=required){choices=chosen.map(id);return true;}
       return false;
      }
-     for(let i=start;i<cards.length;i++)if(search(i+1,[...chosen,cards[i]]))return true;
+     for(let i=start;i<=cards.length-remaining;i++)if(search(i+1,[...chosen,cards[i]],remaining-1))return true;
      return false;
     };
-    search(0,[]);
+    for(let size=1;size<=cards.length&&choices===null;size++)search(0,[],size);
    }
    if(choices!==null)out.push({kind:'retreat',label:'にげる → '+target.name,action:{type:'retreat',benchInstanceId:id(target),energyIds:choices},requests:[]});
   }
