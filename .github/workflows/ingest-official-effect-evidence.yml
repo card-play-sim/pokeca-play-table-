@@ -55,8 +55,20 @@ jobs:
           name: official-effect-evidence-checkpoint
           path: data/official-effect-evidence.json
           if-no-files-found: ignore
+      - name: Corroborate effect text against official card pages
+        id: official
+        if: steps.import.outcome == 'success' && hashFiles('data/official-effect-evidence.json') != ''
+        continue-on-error: true
+        run: node scripts/verify-official-effect-pages.cjs data/official-effect-evidence.json reports/official-page-verification.json
+      - name: Preserve official-page verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-effect-page-verification
+          path: reports/official-page-verification.json
+          if-no-files-found: ignore
       - name: Commit only the verified registry
-        if: steps.import.outcome == 'success'
+        if: steps.import.outcome == 'success' && steps.official.outcome == 'success'
         run: |
           set -e
           if [ ! -f data/official-effect-evidence.json ]; then exit 0; fi
@@ -73,4 +85,9 @@ jobs:
         if: steps.import.outcome == 'failure'
         run: |
           echo "::error::Ingestion failed. Valid rows were preserved as a checkpoint artifact for review, but were not committed."
+          exit 1
+      - name: Fail when official-page corroboration is incomplete
+        if: steps.official.outcome == 'failure'
+        run: |
+          echo "::error::Official-page corroboration failed. Registry was not published."
           exit 1
