@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const [idsFile,outFile,reportFile]=process.argv.slice(2);
 if(!idsFile||!outFile||!reportFile)throw Error('USAGE: collect-official-effect-pages.cjs ids.json output.ndjson report.json');
 const ids=JSON.parse(fs.readFileSync(idsFile,'utf8'));
-if(!Array.isArray(ids)||!ids.length||ids.some(id=>!/^\\d{4,8}$/.test(String(id))))throw Error('INVALID_OFFICIAL_CARD_IDS');
+if(!Array.isArray(ids)||!ids.length||ids.some(id=>!/^\d{4,8}$/.test(String(id))))throw Error('INVALID_OFFICIAL_CARD_IDS');
 if(new Set(ids.map(String)).size!==ids.length)throw Error('DUPLICATE_OFFICIAL_CARD_IDS');
 const sha=t=>crypto.createHash('sha256').update(t).digest('hex');
 const normalize=t=>String(t).normalize('NFKC').replace(/\s+/g,' ').trim();
@@ -36,7 +36,7 @@ function parse(id,html,url){
  for(let i=0;i<found.length;i++){
   const h=found[i],next=found[i+1]?.index??html.length;
   if(/^(ワザ|特性|特別なルール)$/.test(h.label)){section=h.label;continue;}
-  if(/^<h[1-3]\\b/i.test(html.slice(h.index,h.end))){section='';continue;}
+  if(/^<h[1-3]\b/i.test(html.slice(h.index,h.end))){section='';continue;}
   if(section!=='ワザ'&&section!=='特性')continue;
   const body=html.slice(h.end,next);
   // Never include script/style or nested structural headings as an effect.
@@ -60,7 +60,8 @@ function parse(id,html,url){
   const key=String(id),url='https://www.pokemon-card.com/card-search/details.php/card/'+key;
   try{
    const {html}=await get(key),parsed=parse(key,html,url);
-   if(parsed.errors.length){reports.push({id:key,status:'BLOCKED',reasons:parsed.errors});continue;}
+   if(parsed.errors.length){reports.push({id:key,status:'BLOCKED',reasons:parsed.errors});}
+   else {
    const incoming=[];
    for(const row of parsed.rows){
     const slot=[row.officialCardId,row.effectKind,row.effectName,row.effectIndex].join(':');
@@ -77,6 +78,7 @@ function parse(id,html,url){
     added+=incoming.length;
    }
    reports.push({id:key,status:'COLLECTED',effects:parsed.rows.length,added:incoming.length,officialPageSha256:sha(html)});
+   }
   }catch(e){reports.push({id:key,status:'BLOCKED',reasons:[String(e.message||e)]});}
   // Checkpoint the per-print status immediately; restart is safe.
   fs.writeFileSync(reportFile,JSON.stringify({total:ids.length,processed:reports.length,added,results:reports},null,2)+'\n');
