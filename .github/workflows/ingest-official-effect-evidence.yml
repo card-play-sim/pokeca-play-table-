@@ -33,6 +33,8 @@ jobs:
           node tests/select-codex-shared-effect-task.test.cjs
           node tests/official-effect-pipeline.test.cjs
       - name: Import all submitted records, checkpointing each verified row
+        id: import
+        continue-on-error: true
         run: |
           set -e
           shopt -s nullglob
@@ -46,7 +48,15 @@ jobs:
           done
           node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json
           node -e "const b=require('./reports/work-effect-codex-batch.json');if(b.status!=='READY_FOR_CODEX_REVIEW'||b.counts.blocked)throw Error('BLOCKED_EFFECT_EVIDENCE');"
+      - name: Preserve verified registry as a recoverable artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-effect-evidence-checkpoint
+          path: data/official-effect-evidence.json
+          if-no-files-found: ignore
       - name: Commit only the verified registry
+        if: steps.import.outcome == 'success' || steps.import.outcome == 'failure'
         run: |
           set -e
           if [ ! -f data/official-effect-evidence.json ]; then exit 0; fi
@@ -59,3 +69,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Register verified official effect evidence"
           git push origin HEAD:main
+      - name: Report failed ingestion after preserving valid checkpoints
+        if: steps.import.outcome == 'failure'
+        run: |
+          echo "::error::Ingestion failed. Valid rows were preserved in the evidence registry and checkpoint artifact."
+          exit 1
