@@ -284,6 +284,16 @@ jobs:
             reports/reference-official-effect-evidence.json
             reports/official-effect-codex-batch.json
           if-no-files-found: warn
+      - name: Validate imported WORK official effect text and build shared Codex batches
+        if: ${{ hashFiles('data/official-effect-evidence.json') != '' }}
+        run: node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-official-effect-codex-batch.json
+      - name: Upload WORK effect text Codex handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-official-effect-codex-intake
+          path: reports/work-official-effect-codex-batch.json
+          if-no-files-found: ignore
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
