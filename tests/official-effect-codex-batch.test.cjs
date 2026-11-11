@@ -26,6 +26,10 @@ try{
  assert.ok(batch.blocked.some(x=>x.reasons?.includes('OFFICIAL_URL_CARD_ID_MISMATCH')));
  batch=run([make('45152'),{...make('45746'),category:'supporter',effectKind:'supporter'}],0);
  assert.equal(batch.tasks.length,2,'CROSS_CATEGORY_EFFECTS_MUST_NOT_BE_MERGED');
+ batch=run([{...make('45152'),category:'supporter'}],2);
+ assert.ok(batch.blocked.some(x=>x.reasons?.includes('EFFECT_KIND_CATEGORY_MISMATCH')));
+ batch=run([{...make('45152'),effectIndex:-1}],2);
+ assert.ok(batch.blocked.some(x=>x.reasons?.includes('INVALID_EFFECT_INDEX')));
  batch=run([{...make('45152'),officialPageUrl:'https://example.com/fake'}],2);
  assert.equal(batch.counts.verified,0);
  console.log('OFFICIAL_EFFECT_CODEX_BATCH PASS');
