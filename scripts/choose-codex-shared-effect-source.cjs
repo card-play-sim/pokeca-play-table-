@@ -42,7 +42,7 @@ if(id==='AUTO'){
  pool.sort((a,b)=>b.task.prints.length-a.task.prints.length||a.task.taskId.localeCompare(b.task.taskId));
  const selected=pool[0];
  fs.mkdirSync(path.dirname(path.resolve(out)),{recursive:true});
- fs.writeFileSync(out,JSON.stringify(selected.batch,null,2)+'\\n');
+ fs.writeFileSync(out,JSON.stringify(selected.batch,null,2)+'\n');
  console.log('CODEX_TASK_SOURCE_SELECTED:',JSON.stringify({taskId:selected.task.taskId,source:selected.source,auto:true}));
  process.exit(0);
 }
