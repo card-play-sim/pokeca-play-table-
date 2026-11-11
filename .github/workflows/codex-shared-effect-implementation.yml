@@ -42,13 +42,11 @@ jobs:
           if [ -f data/official-effect-evidence.json ]; then
             node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json
           fi
-      - name: Choose verified WORK task source when available
+      - name: Choose verified task source by requested stable task ID
+        env:
+          TASK_ID: ${{ inputs.task_id }}
         run: |
-          if [ -f reports/work-effect-codex-batch.json ]; then
-            cp reports/work-effect-codex-batch.json reports/official-effect-codex-batch.json
-          else
-            cp reports/reference-effect-codex-batch.json reports/official-effect-codex-batch.json
-          fi
+          node scripts/choose-codex-shared-effect-source.cjs "$TASK_ID" reports/official-effect-codex-batch.json reports/work-effect-codex-batch.json reports/reference-effect-codex-batch.json
       - name: Select one verified shared task and create safe prompt
         env:
           TASK_ID: ${{ inputs.task_id }}
