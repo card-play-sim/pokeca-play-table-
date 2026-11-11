@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'scripts/official-effect-task-ledger.cjs'
+      - 'scripts/group-effect-failures-for-codex.cjs'
+      - 'tests/group-effect-failures-for-codex.test.cjs'
       - 'scripts/audit-deck-image-links.cjs'
       - 'tests/official-effect-task-ledger.test.cjs'
       - 'tests/audit-deck-image-links.test.cjs'
@@ -23,6 +25,7 @@ jobs:
         run: |
           set -e
           node tests/official-effect-task-ledger.test.cjs
+          node tests/group-effect-failures-for-codex.test.cjs
           node tests/audit-deck-image-links.test.cjs
       - name: Audit fixed decks against registered official images (read-only)
         run: |
