@@ -31,21 +31,24 @@ async function get(id){
 function parse(id,html,url){
  // Restrict parsing to recognizable official detail headings. No broad free-text guesses.
  const heading=/<h[2-6]\b[^>]*>([\s\S]*?)<\/h[2-6]>/gi;
- const found=[...html.matchAll(heading)].map(m=>({index:m.index,end:m.index+m[0].length,label:strip(m[1])}));
+ const found=[...html.matchAll(heading)].map(m=>({index:m.index,end:m.index+m[0].length,level:Number(m[0][2]),label:strip(m[1])}));
  const result=[],errors=[];
  let section='';
  for(let i=0;i<found.length;i++){
   const h=found[i],next=found[i+1]?.index??html.length;
   if(/^(ワザ|特性|特別なルール)$/.test(h.label)){section=h.label;continue;}
-  if(/^<h[1-3]\b/i.test(html.slice(h.index,h.end))){section='';continue;}
+  if(h.level<=3){section='';continue;}
   if(section!=='ワザ'&&section!=='特性')continue;
   const body=html.slice(h.end,next);
+  if(!h.label||h.label.length>120){errors.push('INVALID_EFFECT_HEADING');continue;}
   // Never include script/style or nested structural headings as an effect.
   if(/<(?:script|style|h[1-6])\b/i.test(body)){errors.push('AMBIGUOUS_EFFECT_HTML:'+h.label);continue;}
+  if(/<(?:img|iframe|object|form|input|button|table|ul|ol)\b/i.test(body)){errors.push('UNSUPPORTED_EFFECT_MARKUP:'+h.label);continue;}
   const effectText=strip(body);
   // Damage-only attacks are legitimate but have no explicit effect text.
   // Do not invent an effect; record the missing text for separate card-rule handling.
   if(!effectText){errors.push('MISSING_EXPLICIT_EFFECT_TEXT:'+h.label);continue;}
+  if(effectText.length>3000){errors.push('EFFECT_TEXT_TOO_LONG:'+h.label);continue;}
   const kind=section==='ワザ'?'attack':'ability';
   const index=result.filter(x=>x.effectKind===kind).length;
   // Printed damage is often suffixed to the attack heading (e.g. なみのり140).
