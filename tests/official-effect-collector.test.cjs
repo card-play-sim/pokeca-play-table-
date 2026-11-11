@@ -18,6 +18,8 @@ try{
  assert.equal(rows[0].effectKind,'attack');
  assert.equal(rows[0].effectText,'このポケモンをベンチポケモンと入れ替える。');
  result=run(valid,0);assert.equal(result.added,0,'RESTART_MUST_BE_IDEMPOTENT');
+ result=run(valid.replace('<html>','<html><meta name="dynamic" content="updated">'),0);
+ assert.equal(result.added,0,'UNCHANGED_EFFECT_WITH_NEW_HTML_HASH_MUST_NOT_DUPLICATE');
  result=run('<h2>ワザ</h2><h4>なみのり</h4><p></p><h2>特別なルール</h2>',2);
  assert.equal(result.results[0].status,'BLOCKED');
  assert.equal(result.processed,1,'BLOCKED_PRINT_MUST_BE_CHECKPOINTED');
