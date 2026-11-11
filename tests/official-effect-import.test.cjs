@@ -19,11 +19,11 @@ try{
  const checkpointRun=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
  assert.equal(checkpointRun.status,0,checkpointRun.stderr);
  assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,1);
- fs.writeFileSync(input,JSON.stringify(make('45152'))+'\\n'+'{invalid json}\\n'+JSON.stringify(make('45746'))+'\\n');
+ fs.writeFileSync(input,[JSON.stringify(make('49412')),'{invalid json}',JSON.stringify(make('45746'))].join('\n')+'\n');
  const partial=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
  assert.equal(partial.status,2);
  assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,1,'CHECKPOINT_MUST_PRESERVE_PREVIOUS_VALID_RECORD');
- fs.writeFileSync(input,JSON.stringify(make('45746'))+'\\n');
+ fs.writeFileSync(input,JSON.stringify(make('45746'))+'\n');
  const resumed=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
  assert.equal(resumed.status,0,resumed.stderr);
  assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,2,'CHECKPOINT_RESUME_MUST_APPEND');
