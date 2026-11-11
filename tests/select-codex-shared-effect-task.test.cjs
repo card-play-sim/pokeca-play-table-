@@ -16,7 +16,7 @@ try{
  batch.tasks[0].normalizedTextHash=crypto.createHash('sha256').update('山札を 2枚引く。').digest('hex');
  batch.tasks[0].evidence[0].effectText='山札を  2枚引く。';
  batch.tasks[0].evidence[0].officialTextSha256=crypto.createHash('sha256').update(batch.tasks[0].evidence[0].effectText).digest('hex');
- run(taskId,0);
+ run(taskId,1); // Content changed without updating stable task ID: reject.
  batch.tasks[0].officialText=originalText;
  batch.tasks[0].normalizedTextHash=crypto.createHash('sha256').update(originalText).digest('hex');
  batch.tasks[0].evidence[0].effectText=originalText;
