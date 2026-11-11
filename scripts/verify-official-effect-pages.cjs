@@ -50,13 +50,13 @@ async function retrieve(url){
    const [id,indices]=pending[next++];
    const expected='https://www.pokemon-card.com/card-search/details.php/card/'+id;
    let page;
-   try{page=plain(await retrieve(expected));}
+   try{const html=await retrieve(expected);page={text:plain(html),pageSha256:sha(html)};}
    catch(e){page={error:String(e.message||e)};}
    for(const index of indices){
     const row=rows[index];
-    if(typeof page!=='string'){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_FETCH_FAILED:'+page.error};continue;}
-    if(!page.includes(normalize(row.effectText))){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_TEXT_NOT_FOUND'};continue;}
-    results[index]={index,officialCardId:id,status:'VERIFIED',officialPageUrl:expected,effectTextSha256:row.officialTextSha256};
+    if(!page.text){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_FETCH_FAILED:'+page.error};continue;}
+    if(!page.text.includes(normalize(row.effectText))){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_TEXT_NOT_FOUND'};continue;}
+    results[index]={index,officialCardId:id,status:'VERIFIED',officialPageUrl:expected,officialPageSha256:page.pageSha256,effectTextSha256:row.officialTextSha256};
    }
    await sleep(200);
   }
