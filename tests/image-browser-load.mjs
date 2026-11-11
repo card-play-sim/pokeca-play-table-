@@ -24,7 +24,27 @@ try {
         try{await node.decode();}catch{return false;}
         return !node.hidden&&node.currentSrc===url&&node.naturalWidth>0&&node.getBoundingClientRect().width>0;
       },card.imageSourceUrl);
-      gallery.push({officialCardId:card.officialCardId,loaded});
+      await page.locator('#official-image-query').fill(card.name);
+      const nameResults=page.locator('#official-image-results [data-official-card-id]');
+      const expectedNameIds=new Set(cards.filter(row=>row.name.includes(card.name)).map(row=>row.officialCardId));
+      const seenNameIds=new Set();
+      const nextNamePage=page.getByRole('button',{name:'次のページ',exact:true});
+      let validNameResults=true;
+      for(let pageNumber=0;pageNumber<Math.ceil(expectedNameIds.size/24);pageNumber++){
+        const ids=await nameResults.evaluateAll(nodes=>nodes.map(node=>node.dataset.officialCardId));
+        for(const id of ids){
+          if(!expectedNameIds.has(id)||seenNameIds.has(id))validNameResults=false;
+          seenNameIds.add(id);
+        }
+        if(!await nextNamePage.isEnabled())break;
+        if(seenNameIds.size>=expectedNameIds.size){
+          validNameResults=false;
+          break;
+        }
+        await nextNamePage.click();
+      }
+      const nameSearch=validNameResults&&seenNameIds.size===expectedNameIds.size&&seenNameIds.has(card.officialCardId);
+      gallery.push({officialCardId:card.officialCardId,loaded,nameSearch});
     }
     await page.locator('#official-image-query').fill('');
   }
@@ -96,7 +116,7 @@ try {
   const failures=results.filter(r=>r.status!=='loaded');
   const {results:individual,...summary}=saveReport();
   console.log(JSON.stringify({...summary,failures}));
-  if(summary.untested||failures.length||errors.length||gallery.some(row=>!row.loaded))process.exitCode=1;
+  if(summary.untested||failures.length||errors.length||gallery.some(row=>!row.loaded||!row.nameSearch))process.exitCode=1;
 } finally {
   await browser.close();
 }

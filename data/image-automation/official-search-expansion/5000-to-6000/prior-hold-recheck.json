@@ -1,0 +1,814 @@
+{
+  "rechecked": 80,
+  "resolved": 0,
+  "remaining": 80,
+  "reasons": {
+    "PRINT_EMPTY": 29,
+    "PRINT_OR_IMAGE_COLLISION": 26,
+    "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS": 22,
+    "CARD_NAME_MISMATCH_OR_AMBIGUOUS": 2,
+    "INVALID_IMAGE_ORIGIN_OR_PATH": 1
+  },
+  "records": [
+    {
+      "officialCardId": "45440",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45440/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "1ec7dcdcc179644f76f371c997bb2963d68d85ffa5e3adf9d37e22750255d373"
+    },
+    {
+      "officialCardId": "45441",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45441/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "ea757a4e1db4cd4dbecf70f86932638e6f307118b7ac1e9de63b7891e75c7302"
+    },
+    {
+      "officialCardId": "45454",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=109",
+      "searchSha256": "85bab940bd838d007248d84751f378dde9fe3959e3cd04e0312f0c66f08a6d48",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45454/regu/XY",
+      "conflictingId": "45430",
+      "checkpointSha256": "81eb1d0ca94c825e522b8bdc935195e4e87e89ccad7b46db08cc2a8084735d9c"
+    },
+    {
+      "officialCardId": "45455",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=109",
+      "searchSha256": "85bab940bd838d007248d84751f378dde9fe3959e3cd04e0312f0c66f08a6d48",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45455/regu/XY",
+      "conflictingId": "45431",
+      "checkpointSha256": "7197f154477db8723c30d40b1795de910afaa88ab235bc6439ea58a7a53dab2e"
+    },
+    {
+      "officialCardId": "45456",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45456/regu/XY",
+      "conflictingId": "45432",
+      "checkpointSha256": "0fc7ed967f5a7e2f44e1fe2cab183543dd3196b7dc50ac0beca9715afd84d2f1"
+    },
+    {
+      "officialCardId": "45457",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45457/regu/XY",
+      "conflictingId": "45433",
+      "checkpointSha256": "3c870dee5ec8070d9b47d0b306f00d8d2a7cb0fc1fea212141e75de05ce012f9"
+    },
+    {
+      "officialCardId": "45458",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45458/regu/XY",
+      "conflictingId": "45434",
+      "checkpointSha256": "5e645204d136e7f3cdd477e1952d2a1e0aef9a89010466bb3b9972ae2fec9b8d"
+    },
+    {
+      "officialCardId": "45459",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45459/regu/XY",
+      "conflictingId": "45435",
+      "checkpointSha256": "29f278ccb84906056154709f351f3315828f80eb78878feb63b9269774bea4c8"
+    },
+    {
+      "officialCardId": "45460",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45460/regu/XY",
+      "conflictingId": "45436",
+      "checkpointSha256": "281acce87d6e1019422136ebfa1075dc26ec7ee331f032a50e9684d2e0a15ac8"
+    },
+    {
+      "officialCardId": "45463",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45463/regu/XY",
+      "conflictingId": "45439",
+      "checkpointSha256": "96cf0caf675f0172a82ca783bfed2d8f6edc3428e32ccc8ed80aa3282b5bf283"
+    },
+    {
+      "officialCardId": "45464",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45464/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "d04bdfcd189003f1d3887550a827f7dcf4151b102f07b80db1fafd457d95d264"
+    },
+    {
+      "officialCardId": "45465",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45465/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "d8398272fa097c410c75c17e8b94a89085df8ecf904266bc36bfa7959d46bb00"
+    },
+    {
+      "officialCardId": "45479",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45479/regu/XY",
+      "conflictingId": "45431",
+      "checkpointSha256": "0b296756e6ab3f03d3ab35b4cf7a69db4e5c4d80ad314c015476d805e929adef"
+    },
+    {
+      "officialCardId": "45481",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45481/regu/XY",
+      "conflictingId": "45432",
+      "checkpointSha256": "2d333d26969c7ccb7757bb7b830d20b8eb400d4125b517d3f34505531c6488b4"
+    },
+    {
+      "officialCardId": "45482",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45482/regu/XY",
+      "conflictingId": "45434",
+      "checkpointSha256": "9ef55a6356b601c9318523fed242589e1ae2eb46677cafd7642747921ae09aa5"
+    },
+    {
+      "officialCardId": "45483",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45483/regu/XY",
+      "conflictingId": "45435",
+      "checkpointSha256": "adfa336eb81d0145a36e72f572b2ea3d038f6800662a6277d82b03dccc664740"
+    },
+    {
+      "officialCardId": "45484",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45484/regu/XY",
+      "conflictingId": "45436",
+      "checkpointSha256": "414b7f0be5434f4a6d00605a7609620e4c33925ba6181835aedb40202efcac6d"
+    },
+    {
+      "officialCardId": "45485",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45485/regu/XY",
+      "conflictingId": "45461",
+      "checkpointSha256": "52b6c2232a2191a98f6724a7d76724a0de52f062bbde327cba60717157cb161f"
+    },
+    {
+      "officialCardId": "45486",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45486/regu/XY",
+      "conflictingId": "45462",
+      "checkpointSha256": "f53a6f374e34caafa08078c7dcca4a6a32d6e9d1331ab229bd2712ed6cd4379a"
+    },
+    {
+      "officialCardId": "45487",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45487/regu/XY",
+      "conflictingId": "45439",
+      "checkpointSha256": "b894a985175a29eca619445ab48ecb2eee811eade7f6a99d1e85dbe19f1a4a5a"
+    },
+    {
+      "officialCardId": "45489",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45489/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "0645062ad0839b027cc193d34e44c289d452093bffae88838c8fe777a680c9d4"
+    },
+    {
+      "officialCardId": "45490",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45490/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "ed8e38f7ef8fa863877ea6fe3e65d6379e8c6370b3562e081cbfd75dd071c3e1"
+    },
+    {
+      "officialCardId": "45503",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45503/regu/XY",
+      "conflictingId": "45431",
+      "checkpointSha256": "729326e0b62c62a51416553ca64b16674e754da7a291bcbd736de6a77713e9ac"
+    },
+    {
+      "officialCardId": "45504",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45504/regu/XY",
+      "conflictingId": "45432",
+      "checkpointSha256": "b6fa538c7a0b121a2ea95d757ad88d5b4aa43d31f9dd74f74003aa19b578e152"
+    },
+    {
+      "officialCardId": "45505",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45505/regu/XY",
+      "conflictingId": "45433",
+      "checkpointSha256": "bef69e964f202e7a28e8a4f4250f1eb6ae11b450edb3f14ae09496eb6da2487f"
+    },
+    {
+      "officialCardId": "45506",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45506/regu/XY",
+      "conflictingId": "45434",
+      "checkpointSha256": "a99df695931a5a9132c629a6477132bf8f927242e9ff5cd0d2e4de962583822f"
+    },
+    {
+      "officialCardId": "45509",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45509/regu/XY",
+      "conflictingId": "45436",
+      "checkpointSha256": "7b2dd13fcd6670c0500b896f997ec55e358689cca268a51379b1642c00721e70"
+    },
+    {
+      "officialCardId": "45510",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45510/regu/XY",
+      "conflictingId": "45437",
+      "checkpointSha256": "9115daa2158bbe492269780511800def99886407aa34b7077c1e61b88c0ca8f3"
+    },
+    {
+      "officialCardId": "45511",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45511/regu/XY",
+      "conflictingId": "45438",
+      "checkpointSha256": "c92198f8d6dd78774daf284cc12e2783b120a458f0fce817517ea59c92dc03b2"
+    },
+    {
+      "officialCardId": "45512",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=110",
+      "searchSha256": "eee068ef68499f0d1816153e2925d93822ee28ff9630e55f57121e7a3b148667",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45512/regu/XY",
+      "conflictingId": "45439",
+      "checkpointSha256": "a4d0c6b8af17f3fe759d1a2ab765de602a0ad61e8e44e5ddd9fdfd90ec24de10"
+    },
+    {
+      "officialCardId": "45513",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45513/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "7e60d8a1ad943b9706c55d8bfc9ec908074072e502c75b22ea991a30270e2ed8"
+    },
+    {
+      "officialCardId": "45514",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45514/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "660089e0aa5bd9573a7126d9efac152b4a099401078caf6614970f481f62823f"
+    },
+    {
+      "officialCardId": "45574",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45574/regu/XY",
+      "conflictingId": "45452",
+      "checkpointSha256": "83b1a7171f5303e546422577f87bec02af1cd5c987619eb8283df52b0c0278aa"
+    },
+    {
+      "officialCardId": "45576",
+      "previousReason": "PRINT_OR_IMAGE_COLLISION",
+      "currentReason": "PRINT_OR_IMAGE_COLLISION",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=111",
+      "searchSha256": "3bfde953b93d8db41e3458a2b11d2ca764d62f0900abe756b11b893d5b3ffb37",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/45576/regu/XY",
+      "conflictingId": "45427",
+      "checkpointSha256": "f090982f74d29bce72a721c98bf30351c3f57461a5aaf4c413b59106b17da1c4"
+    },
+    {
+      "officialCardId": "46116",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46116/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "53643c5299632f1c452f7f450baee47ecd53db1221daf55753abc15bd30eee9b"
+    },
+    {
+      "officialCardId": "46117",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46117/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "19f403c1e231336c3fe8770308d996da24855afad97c81618bcabbc7b4cd92b7"
+    },
+    {
+      "officialCardId": "46118",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46118/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "4a170e41e3a857b66908c3ca08d381cb303c9edf916d88a314ab7fd9dff9013d"
+    },
+    {
+      "officialCardId": "46119",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46119/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "808612cba825c9c1850788b71d7b2c796cc52baba4ebd88366e9bec3e66e6f2d"
+    },
+    {
+      "officialCardId": "46120",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46120/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "04e397f02d3ea65648b4c07828b2da49312389403c5fd78f0a529b7f30224626"
+    },
+    {
+      "officialCardId": "46121",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46121/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "897aee5ece75ac5329d79ba6551e5d6c2decd402c1f021f48f74651ea8e238a7"
+    },
+    {
+      "officialCardId": "46122",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46122/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "6707ae1491c5788812394be534efdcf643af9e2c327ae130f183dc2d79628183"
+    },
+    {
+      "officialCardId": "46123",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=99",
+      "searchSha256": "deb7e8db2110ccce115d15d0fb57990179f18aff2b23df3f8f27d7e890dcb606",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/46123/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "d392c62e2625583caf8dd21b90e43c2232ecfe3de48cdf1c5287bc2a6b4894b4"
+    },
+    {
+      "officialCardId": "47903",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47903/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "a959321bc9ecaeea7b53c6b452477583852128aa6d6ad58f64450c2c8ce35369"
+    },
+    {
+      "officialCardId": "47904",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47904/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "9b15ed065a4d3e1cdb3839224904565fddffb396d68ba46aa5be652b94e7d94a"
+    },
+    {
+      "officialCardId": "47905",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47905/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "5f29cd38ca8eb755201165465c626128abd211a4a2c7942bce6220210709fca0"
+    },
+    {
+      "officialCardId": "47906",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47906/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "8b281d856aa79bade2bcbb6ba20d5cd8e7ea5c5650ea59fd7f59e00fd38bf2a1"
+    },
+    {
+      "officialCardId": "47907",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47907/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "1a68567ce86db6a3842e1e490e1ac17082cf061a2d4104c8a4d5c5e54c191824"
+    },
+    {
+      "officialCardId": "47908",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47908/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "bcb21ac352bbfbfcb8e79d8ed49746eee1910c43123d3bea0c1a16f5dacb9152"
+    },
+    {
+      "officialCardId": "47909",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47909/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "30b65795b35f2d7573299e9f47a87aa95e17eaf819bc9fb69b9d561a76fd0ba1"
+    },
+    {
+      "officialCardId": "47910",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=56",
+      "searchSha256": "a526596ef73a44f9a82f55702698ef04ba3875ff0f50a3dc158faa1d452f25c6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/47910/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "b1095fef4e9e85665a7cde9e5dcadf9f497f1e90a49f9475b54725484cfa8ab7"
+    },
+    {
+      "officialCardId": "48284",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=50",
+      "searchSha256": "46a39af0d805db290e01ba8d527123676c66090f2ff83d0b91ffd984499f79b6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/48284/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "34a3dccb25ff002e66135186dde4672725def48e4f7a2e12277a624e184d2228"
+    },
+    {
+      "officialCardId": "48307",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=50",
+      "searchSha256": "46a39af0d805db290e01ba8d527123676c66090f2ff83d0b91ffd984499f79b6",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/48307/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "6379c11450fc52a7d520894a2cb02967bf919f3309bcfb7f32e8c3b07c9e0c71"
+    },
+    {
+      "officialCardId": "49459",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49459/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "883b1318b3ba4c50437c72cf56a9808f102809e07289244e0261bd600ad0ac84"
+    },
+    {
+      "officialCardId": "49460",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49460/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "d96fb9bfacbafc7dee961f293cfdccd2f46c453bab3fde5ef865c8525ce6b4a1"
+    },
+    {
+      "officialCardId": "49461",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49461/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "2707e87d0f217fee530fb1ba72303f31d491616c9b42675b6828ae47b0efb09f"
+    },
+    {
+      "officialCardId": "49462",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49462/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "8121e77735d100b3c90ff58150942888453b71e2a30b1f28acfefd9cd615351c"
+    },
+    {
+      "officialCardId": "49463",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49463/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "a072770ff8ad29a62a54ef5d32839f98ea71890e655c3f28f05a642a17d7610f"
+    },
+    {
+      "officialCardId": "49464",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49464/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "f333e8f6df8156587b4c0f9a1542887dbfd131123d4f64387bea6ca690df0dee"
+    },
+    {
+      "officialCardId": "49465",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49465/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "782fee968aa578da26db8b5f4449411bb5b0dc0a5176b7506eb82164d4fbedf7"
+    },
+    {
+      "officialCardId": "49466",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=39",
+      "searchSha256": "7c3423f24a2cf9a705f1fbdc48261b5a0cdad4acde81bc8e3c197b10a6226631",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/49466/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "fb0a829aa6bdd8994a020081aca440edfcfc53ab2756736b8cd6b71bec8b49d3"
+    },
+    {
+      "officialCardId": "50409",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=10",
+      "searchSha256": "ba8b0436250c771ab86083f3272ef0866aa527e38a2da39d3954224a7bcb2062",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50409/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "8964c182ad8d9ea53622e5ae2612a099e9d2435141afdb436d8affab2e3862d3"
+    },
+    {
+      "officialCardId": "50410",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=10",
+      "searchSha256": "ba8b0436250c771ab86083f3272ef0866aa527e38a2da39d3954224a7bcb2062",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50410/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "abc037ae396bc8ddf3ff562fb7c71bd23d1823db5038c4a5a473b014f6e9d34a"
+    },
+    {
+      "officialCardId": "50411",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=10",
+      "searchSha256": "ba8b0436250c771ab86083f3272ef0866aa527e38a2da39d3954224a7bcb2062",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50411/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "b258ddfd0acf91285e540a31697bbc4eda8a441cbb4c4139339c016c4c59c701"
+    },
+    {
+      "officialCardId": "50608",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=6",
+      "searchSha256": "89f5a6dc912bf1657f0888cdd91afa58bfbcdc79f389e21b57038f32df64311e",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50608/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "be3cb864e22cc0f1d3ba67683424c3a951dd247032f7573c4334f9b541c63ea7"
+    },
+    {
+      "officialCardId": "50609",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=6",
+      "searchSha256": "89f5a6dc912bf1657f0888cdd91afa58bfbcdc79f389e21b57038f32df64311e",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50609/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "3ab063fd6eacf9db473d6a48c0dddaeb82f1b1797c3f98b610ed47d63b769884"
+    },
+    {
+      "officialCardId": "50610",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=6",
+      "searchSha256": "89f5a6dc912bf1657f0888cdd91afa58bfbcdc79f389e21b57038f32df64311e",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50610/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "121f9ac4b4f707afd705f49d95570214bb51bf2002b64fec8b6741c5b38c7660"
+    },
+    {
+      "officialCardId": "50611",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=6",
+      "searchSha256": "89f5a6dc912bf1657f0888cdd91afa58bfbcdc79f389e21b57038f32df64311e",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50611/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "4f1b6ec44868d358dd3fba33dac40635436992afe1f25bd1f292ceb7b625abe8"
+    },
+    {
+      "officialCardId": "50612",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=6",
+      "searchSha256": "89f5a6dc912bf1657f0888cdd91afa58bfbcdc79f389e21b57038f32df64311e",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50612/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "74cb0434e3119697c5a8976511646d92e7e4d37b4c4e0a251f9fcb260141e13b"
+    },
+    {
+      "officialCardId": "50728",
+      "previousReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "currentReason": "PRINT_EVIDENCE_MISSING_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=4",
+      "searchSha256": "0d0bf8ba21231feaada6676c12806c74987ee561e737f318148bf21ad296ea02",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50728/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "a86fa2591d0a876b705199edeed9261e0e52d1c581d3191a32f3fa5d876c2040"
+    },
+    {
+      "officialCardId": "50732",
+      "previousReason": "CARD_NAME_MISMATCH_OR_AMBIGUOUS",
+      "currentReason": "CARD_NAME_MISMATCH_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=4",
+      "searchSha256": "0d0bf8ba21231feaada6676c12806c74987ee561e737f318148bf21ad296ea02",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50732/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "6d5e6986653ece559d4b7731d379422fbd39bc9d9764b5b2a80ea0d04f6d7a96"
+    },
+    {
+      "officialCardId": "50733",
+      "previousReason": "INVALID_IMAGE_ORIGIN_OR_PATH",
+      "currentReason": "INVALID_IMAGE_ORIGIN_OR_PATH",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50733/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "4b498beb7184518bcbe039b1f943fd8aa9fbe65c94565eec2e0e4e9403a04bd5"
+    },
+    {
+      "officialCardId": "50736",
+      "previousReason": "CARD_NAME_MISMATCH_OR_AMBIGUOUS",
+      "currentReason": "CARD_NAME_MISMATCH_OR_AMBIGUOUS",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50736/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "80c95b279c46161b79209da7d3e96874e2df645cd6833fb0449ec6a1eefb473e"
+    },
+    {
+      "officialCardId": "50745",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50745/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "ea7b208b0bcac296cbcf60fecc934a0196791a5093f507dbade8fff0ce65c0d5"
+    },
+    {
+      "officialCardId": "50746",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50746/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "f7b763c326d691e48cae0c3d2765a359ee6b1f4df0ce061e37c4b75aebe5cc79"
+    },
+    {
+      "officialCardId": "50747",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50747/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "0a4751fad855d9b29b4dd484d94ad2b3b4c653904024514a2a00a60d2444ef99"
+    },
+    {
+      "officialCardId": "50748",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50748/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "da6ca184a84175d8d24fd5b14d7f5daaf20ce9bbc148a9fc6adb4d5a466fddf5"
+    },
+    {
+      "officialCardId": "50749",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50749/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "1e5b944e97a88272c637b1c2f151b2bd84c0b5f8cf89002b045cd24ab5dfbcd9"
+    },
+    {
+      "officialCardId": "50750",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50750/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "b7255d6181b27f04cf49bdd5dfb0b918974eb84a56c7ffac429de96f07838948"
+    },
+    {
+      "officialCardId": "50751",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50751/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "ad5233b4d47b501b5ff71a64c91e25bd4c41757e5a292b4e3199bc1cb59356d0"
+    },
+    {
+      "officialCardId": "50752",
+      "previousReason": "PRINT_EMPTY",
+      "currentReason": "PRINT_EMPTY",
+      "searchUrl": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=all&page=5",
+      "searchSha256": "88ae043cd6834268858b05f0438ca322ba4a48d462cdd2eb74ca2cf451f2e86d",
+      "detailUrl": "https://www.pokemon-card.com/card-search/details.php/card/50752/regu/XY",
+      "conflictingId": null,
+      "checkpointSha256": "d8158b44794c8d3ee67faadb28920ec7cc67323c85ec74d4139f19b41f5d465c"
+    }
+  ]
+}

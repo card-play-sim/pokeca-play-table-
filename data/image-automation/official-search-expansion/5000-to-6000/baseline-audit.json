@@ -1,0 +1,52 @@
+{
+  "count": 5000,
+  "sha256": "8999ca8fd89c0d400acfca2025193f094c36ff4bcd601fbe0c298eee87eca557",
+  "uniqueIds": 5000,
+  "uniqueUrls": 5000,
+  "missing": {
+    "set": 98,
+    "cardNumber": 98,
+    "officialPageUrl": 98
+  },
+  "nameDifferences": [],
+  "urlDifferences": [],
+  "notInSearchSnapshot": [
+    "48247",
+    "48248",
+    "49587",
+    "49588"
+  ],
+  "notInSnapshotDetailAudit": [
+    {
+      "officialCardId": "48247",
+      "url": "https://www.pokemon-card.com/card-search/details.php/card/48247/regu/XY",
+      "detailSha256": "fe63f5fb2536a6668de7f6195a2e8e5a7a212501605a6b82a644f02af6178988",
+      "match": true,
+      "status": "CANDIDATE"
+    },
+    {
+      "officialCardId": "48248",
+      "url": "https://www.pokemon-card.com/card-search/details.php/card/48248/regu/XY",
+      "detailSha256": "c30408d55eab4ed94ad6b16245c991235bf78c6cd5c1a5bfe3eb0f9a10c5ecf2",
+      "match": true,
+      "status": "CANDIDATE"
+    },
+    {
+      "officialCardId": "49587",
+      "url": "https://www.pokemon-card.com/card-search/details.php/card/49587/regu/XY",
+      "detailSha256": "51faafd32f3a09c7d118ff0fe80df0baf94b30b95e61e91db1e148a438893947",
+      "match": true,
+      "status": "CANDIDATE"
+    },
+    {
+      "officialCardId": "49588",
+      "url": "https://www.pokemon-card.com/card-search/details.php/card/49588/regu/XY",
+      "detailSha256": "0734e0cc0a8792ce3ee68d84fd02887ff83013ba4001fdd8fd0285ca9707ff5d",
+      "match": true,
+      "status": "CANDIDATE"
+    }
+  ],
+  "unchangedRecords": 5000,
+  "uniqueKnownPrints": 4902,
+  "officialSearchNameAndUrlMatches": 4996
+}
