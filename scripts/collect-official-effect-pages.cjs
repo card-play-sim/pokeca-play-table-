@@ -87,7 +87,10 @@ function parse(id,html,url){
    for(const row of parsed.rows){
     const slot=[row.officialCardId,row.effectKind,row.effectName,row.effectIndex].join(':');
     if(seen.has(slot)){
-     if(JSON.stringify(seen.get(slot))!==JSON.stringify(row))throw Error('CONFLICTING_OFFICIAL_EFFECT_SLOT:'+slot);
+     const prior=seen.get(slot);
+     if(prior.effectText!==row.effectText||prior.officialTextSha256!==row.officialTextSha256||prior.officialPageUrl!==row.officialPageUrl)throw Error('CONFLICTING_OFFICIAL_EFFECT_SLOT:'+slot);
+     // Dynamic official HTML can change without altering the verified card effect.
+     // Retain the original source hash instead of duplicating an unchanged effect.
     }else incoming.push({slot,row});
    }
    // Append only after all effects from this print have passed the extraction gate.
