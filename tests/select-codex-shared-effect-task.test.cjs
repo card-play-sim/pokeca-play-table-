@@ -33,6 +33,9 @@ try{
  batch.tasks[0].evidence.push({...batch.tasks[0].evidence[0]});
  run(taskId,1);
  batch.tasks[0].evidence.pop();
+ batch.tasks[0].evidence.push({...batch.tasks[0].evidence[0],effectIndex:1});
+ run(taskId,0); // A second distinct effect slot on the same print is valid.
+ batch.tasks[0].evidence.pop();
  const before=fs.readFileSync(output,'utf8');
  run('MISSING_TASK',1);assert.equal(fs.readFileSync(output,'utf8'),before);
  batch.tasks[0].normalizedTextHash='0'.repeat(64);run(taskId,1);
