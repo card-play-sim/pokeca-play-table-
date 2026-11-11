@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='243';
+window.PokecaMobileBuild='244';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;

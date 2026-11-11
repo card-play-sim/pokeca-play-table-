@@ -10,6 +10,7 @@ try {
   const errors=[];
   page.on('pageerror',error=>errors.push(String(error)));
   await page.goto(publishedUrl||'about:blank',{waitUntil:'domcontentloaded'});
+  let galleryPages=0;
   const gallery=[];
   if(publishedUrl){
     await page.waitForFunction(build=>document.querySelector('meta[name="pokeca-build"]')?.content===build&&window.PokecaImageRegistryStatus?.state==='ready',expectedBuild);
@@ -18,49 +19,84 @@ try {
     const additions=cards.filter(card=>card.namePreviewEligible===false);
     for(const card of [additions[0],additions.at(-1)].filter(Boolean)){
       await page.locator('#official-image-query').fill(card.officialCardId);
-      const img=page.locator(`[data-official-card-id="${card.officialCardId}"] img:not([hidden])`);
+      const img=page.locator(`[data-official-card-id="${card.officialCardId}"] img[data-image-mode]`);
       const loaded=await img.evaluate(async (node,url)=>{
         try{await node.decode();}catch{return false;}
-        return node.currentSrc===url&&node.naturalWidth>0&&node.naturalHeight>0&&node.getBoundingClientRect().width>0;
+        return !node.hidden&&node.currentSrc===url&&node.naturalWidth>0&&node.getBoundingClientRect().width>0;
       },card.imageSourceUrl);
       gallery.push({officialCardId:card.officialCardId,loaded});
     }
-    await page.locator('#sheet-close').click();
+    await page.locator('#official-image-query').fill('');
   }
   const results=[];
   fs.mkdirSync('artifacts',{recursive:true});
   function saveReport(){
     const loaded=results.filter(result=>result.status==='loaded').length;
     const report={publishedUrl:publishedUrl||null,expectedBuild,tested:results.length,expected:cards.length,loaded,
-      failed:results.length-loaded,untested:cards.length-results.length,gallery,javascriptErrors:errors,results};
+      failed:results.length-loaded,untested:cards.length-results.length,gallery,galleryPages,javascriptErrors:errors,results};
     fs.writeFileSync('artifacts/image-browser-load-report.json',JSON.stringify(report,null,2)+'\n');
     return report;
   }
-  for(let offset=0;offset<cards.length;offset+=8){
-    const items=cards.slice(offset,offset+8);
-    const measured=await page.evaluate(async ({items,throughApp})=>Promise.all(items.map(card=>new Promise(resolve=>{
-      const url=throughApp?window.PokecaImageResolver.resolve(card):card.imageSourceUrl;
-      if(url!==card.imageSourceUrl){resolve({id:card.officialCardId,status:'resolver-mismatch'});return;}
-      const img=new Image();
-      const finish=(status,width=0)=>{
-        clearTimeout(timer);
-        img.onload=null;
-        img.onerror=null;
-        if(status==='timeout')img.removeAttribute('src');
-        resolve({id:card.officialCardId,status,width});
-      };
-      const timer=setTimeout(()=>finish('timeout'),15000);
-      img.onload=()=>finish(img.naturalWidth>0&&img.naturalHeight>0?'loaded':'empty',img.naturalWidth);
-      img.onerror=()=>finish('image-load-error');
-      img.src=url;
-    }))),{items,throughApp:!!publishedUrl});
-    results.push(...measured);
-    if(results.length%48===0)saveReport();
+  if(publishedUrl){
+    const expected=new Map(cards.map(card=>[card.officialCardId,card.imageSourceUrl]));
+    const seen=new Set();
+    const next=page.getByRole('button',{name:'次のページ',exact:true});
+    const grid=page.locator('#official-image-results [data-official-card-id]');
+    await grid.first().waitFor({state:'visible'});
+    do{
+      const rows=await grid.evaluateAll(async nodes=>Promise.all(nodes.map(async node=>{
+        const id=node.dataset.officialCardId;
+        const img=node.querySelector('img[data-image-mode]');
+        if(!img)return {id,status:'missing-official-element'};
+        let timer;
+        try{
+          const decoded=await Promise.race([
+            img.decode().then(()=>true,()=>false),
+            new Promise(resolve=>{timer=setTimeout(()=>resolve(null),20000);})
+          ]);
+          const loaded=decoded&&!img.hidden&&img.naturalWidth>0&&img.naturalHeight>0&&img.getBoundingClientRect().width>0;
+          return {id,source:img.currentSrc,status:loaded?'loaded':decoded===null?'timeout':'image-load-error',width:img.naturalWidth};
+        }finally{clearTimeout(timer);}
+      })));
+      if(!rows.length)throw Error('EMPTY_GALLERY_PAGE');
+      for(const row of rows){
+        const {id,source,...result}=row;
+        if(!expected.has(id)||seen.has(id))throw Error('UNEXPECTED_GALLERY_ID '+id);
+        if(result.status==='loaded'&&source!==expected.get(id))result.status='wrong-image-url';
+        seen.add(id);
+        results.push({id,...result});
+      }
+      galleryPages++;
+      saveReport();
+      if(!await next.isEnabled())break;
+      if(seen.size>=cards.length)throw Error('UNEXPECTED_GALLERY_CONTINUATION');
+      await next.click();
+    }while(true);
+  }else{
+    for(let offset=0;offset<cards.length;offset+=8){
+      const items=cards.slice(offset,offset+8);
+      const measured=await page.evaluate(async items=>Promise.all(items.map(card=>new Promise(resolve=>{
+        const img=new Image();
+        const finish=(status,width=0)=>{
+          clearTimeout(timer);
+          img.onload=null;
+          img.onerror=null;
+          if(status==='timeout')img.removeAttribute('src');
+          resolve({id:card.officialCardId,status,width});
+        };
+        const timer=setTimeout(()=>finish('timeout'),15000);
+        img.onload=()=>finish(img.naturalWidth>0&&img.naturalHeight>0?'loaded':'empty',img.naturalWidth);
+        img.onerror=()=>finish('image-load-error');
+        img.src=card.imageSourceUrl;
+      }))),items);
+      results.push(...measured);
+      if(results.length%48===0)saveReport();
+    }
   }
   const failures=results.filter(r=>r.status!=='loaded');
   const {results:individual,...summary}=saveReport();
   console.log(JSON.stringify({...summary,failures}));
-  if(failures.length||errors.length||gallery.some(row=>!row.loaded))process.exitCode=1;
+  if(summary.untested||failures.length||errors.length||gallery.some(row=>!row.loaded))process.exitCode=1;
 } finally {
   await browser.close();
 }
