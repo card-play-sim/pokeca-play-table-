@@ -82,7 +82,7 @@ jobs:
           node tests/reference-special-energy-retreat.test.cjs
       - name: Reject edits to protected data
         run: |
-          if git diff --name-only HEAD | grep -E '^(data/|sw.js$|\.github/|AGENTS.md$)'; then
+          if { git diff --name-only HEAD; git ls-files --others --exclude-standard; } | grep -E '^(data/|sw.js$|\.github/|AGENTS.md$)'; then
             echo "::error::Protected data or deployment metadata changed; manual review required"
             exit 2
           fi
