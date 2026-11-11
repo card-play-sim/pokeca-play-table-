@@ -29,7 +29,8 @@ for(const row of rows){
  if(!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(kind))reasons.push('INVALID_EFFECT_KIND');
  if(!['pokemon','item','supporter','stadium','tool','energy'].includes(category))reasons.push('INVALID_CATEGORY');
  if(!text)reasons.push('MISSING_OFFICIAL_EFFECT_TEXT');
- if(!/^https:\/\/www\.pokemon-card\.com\//.test(url))reasons.push('INVALID_OFFICIAL_SOURCE_URL');
+ if(!/^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/\d{4,8}(?:\/|$)/.test(url))reasons.push('INVALID_OFFICIAL_SOURCE_URL');
+ else if(url.match(/\/card\/(\d{4,8})(?:\/|$)/)?.[1]!==ident)reasons.push('OFFICIAL_URL_CARD_ID_MISMATCH');
  if(!/^[a-f0-9]{64}$/.test(sourceHash)||sourceHash!==digest(text))reasons.push('OFFICIAL_TEXT_HASH_MISMATCH');
  const key=ident+':'+kind+':'+String(row?.effectName||'')+':'+String(row?.effectIndex??0);
  if(seen.has(key)&&seen.get(key)!==sourceHash)reasons.push('CONFLICTING_EFFECT_EVIDENCE');
@@ -38,8 +39,8 @@ for(const row of rows){
  seen.set(key,sourceHash);result.counts.verified++;
  // Exact normalized text is a conservative grouping key, not a claim of equivalent semantics.
  const normalized=text.normalize('NFKC').replace(/\s+/g,' ').trim();
- const groupKey=kind+':'+digest(normalized);
- const group=grouped.get(groupKey)||{effectKind:kind,normalizedTextHash:digest(normalized),officialText:normalized,prints:[],evidence:[]};
+ const groupKey=category+':'+kind+':'+digest(normalized);
+ const group=grouped.get(groupKey)||{category,effectKind:kind,normalizedTextHash:digest(normalized),officialText:normalized,prints:[],evidence:[]};
  if(!group.prints.includes(ident))group.prints.push(ident);
  group.evidence.push({officialCardId:ident,officialPageUrl:url,officialTextSha256:sourceHash,category,effectName:String(row.effectName||'')});
  grouped.set(groupKey,group);
