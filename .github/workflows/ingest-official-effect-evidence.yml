@@ -17,7 +17,7 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,8 +41,8 @@ jobs:
           shopt -s nullglob
           inputs=(reports/incoming-effect-evidence/*.ndjson)
           if [ "${#inputs[@]}" -eq 0 ]; then
-            echo "::notice::No incoming evidence files to import"
-            exit 0
+            echo "::error::No incoming evidence files to import; refusing empty success"
+            exit 2
           fi
           for input in "${inputs[@]}"; do
             node scripts/import-official-effect-evidence.cjs "$input" data/official-effect-evidence.json --checkpoint
