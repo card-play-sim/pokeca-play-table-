@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='242';
+window.PokecaMobileBuild='243';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -923,12 +923,38 @@ window.PokecaMobileBuild='242';
 
     }catch(error){toast('デッキ構成を読み込めません：'+error.message);}
   }
+  async function officialImageGallery(){
+    await imageRegistryReady;
+    if(window.PokecaImageRegistryStatus.state!=='ready')throw Error('公式画像台帳を読み込めません');
+    const references=window.PokecaImageResolver.listReferences();
+    const pageSize=24;
+    let page=0;
+    openSheet('公式カード画像一覧','<label>カード名・公式ID <input id="official-image-query" type="search" autocomplete="off"></label><p id="official-image-count" role="status"></p><div id="official-image-pages"></div><div class="discard-grid" id="official-image-results"></div>');
+    const input=$('official-image-query');
+    function show(){
+      const query=input.value.trim();
+      const found=query?references.filter(card=>card.name.includes(query)||card.officialCardId===query):references;
+      const lastPage=Math.max(0,Math.ceil(found.length/pageSize)-1);
+      page=Math.min(page,lastPage);
+      $('official-image-count').textContent=`${found.length}件 / 台帳 ${references.length}件 · ${page+1}/${lastPage+1}ページ`;
+      $('official-image-pages').replaceChildren(
+        button('前のページ',()=>{page--;show();},{disabled:page===0}),
+        button('次のページ',()=>{page++;show();},{disabled:page===lastPage})
+      );
+      $('official-image-results').innerHTML=found.slice(page*pageSize,(page+1)*pageSize).map(card=>
+        `<div><div class="discard-card" data-official-card-id="${esc(card.officialCardId)}">${cardArt(card)}</div><small>${esc(card.name)}<br>${esc([card.set,card.cardNumber].filter(Boolean).join(' '))} · ${esc(card.officialCardId)}</small></div>`
+      ).join('');
+    }
+    input.addEventListener('input',()=>{page=0;show();});
+    show();
+  }
   $('menu-open').onclick=()=>{openSheet('プレイメニュー','<div class="menu-list" id="practice-menu"></div>');const list=$('practice-menu');
     list.append(button('固定デッキでAI対戦（検証用）',()=>{void referenceValidationMenu({fixedPair:true}).catch(e=>toast(e.message));}));
     list.append(button('公式効果の検証対戦（参照版・未接続効果で停止）',()=>{void referenceValidationMenu().catch(e=>toast(e.message));}));
     list.append(button('固定2デッキで操作練習（公式効果未接続）',()=>{void fixedPracticeMenu().catch(error=>toast(error.message));}));
     list.append(button('固定120枚の画像確認盤面',()=>{void openFixedImageBoard().catch(error=>toast(error.message));}));
     list.append(button('固定2デッキ（各60枚）を確認',()=>{void fixedDeckMenu();}));
+    list.append(button('公式カード画像一覧',()=>{void officialImageGallery().catch(error=>toast(error.message));}));
     list.append(button(animationsEnabled?'アニメーション：オン（タップでオフ）':'アニメーション：オフ（タップでオン）',()=>{animationsEnabled=!animationsEnabled;closeSheet();}));
     list.append(button('中断・再開／保存データ',savesMenu));
     list.append(button(aiAutoMode?'AI自動応答：オン（タップでオフ）':'AI自動応答：オフ（タップでオン）',()=>{

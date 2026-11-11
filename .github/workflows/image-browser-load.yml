@@ -15,7 +15,7 @@ on:
 jobs:
   chromium-official-image:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,7 +25,15 @@ jobs:
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
+      - name: Wait for GitHub Pages to serve this app release
+        if: github.event_name != 'pull_request'
+        env:
+          RELEASE_VERIFY_ATTEMPTS: '16'
+          RELEASE_VERIFY_INTERVAL_MS: '10000'
+        run: node scripts/verify-published-pwa.cjs
       - name: Load every registered real official image URL in Chromium
+        env:
+          POKECA_TEST_URL: ${{ github.event_name != 'pull_request' && 'https://card-play-sim.github.io/pokeca-play-table-/' || '' }}
         run: node tests/image-browser-load.mjs
       - name: Preserve per-card image loading results
         if: always()

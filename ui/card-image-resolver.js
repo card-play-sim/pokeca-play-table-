@@ -54,7 +54,7 @@
       return {mode:'provisional-preview',url:r.imageSourceUrl,referenceOfficialCardId:r.officialCardId,
         officialName:r.name,adopted:false,nameAlias:binding.nameAlias,numberlessEnergy:binding.numberlessEnergy};
     }
-    const matches=[...entries.values()].filter(r=>rules.matches(r,print,{requireId:false}));
+    const matches=[...entries.values()].filter(r=>r.namePreviewEligible!==false&&rules.matches(r,print,{requireId:false}));
     return matches.length===1?{mode:'provisional-preview',url:matches[0].imageSourceUrl,referenceOfficialCardId:matches[0].officialCardId,adopted:false}:{mode:'missing',url:''};
   }
   function resolvePreview(card){return resolveDisplay(card).url;}
@@ -101,6 +101,9 @@
     for(const [id,c] of validated)map[id]=c;
     return {received:data.cards.length,registered:register(map),total:entries.size};
   }
-  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,resolveDisplay,registerPreviews,loadPreviews,coverage,loadRegistry,count:()=>entries.size});
+  function listReferences(){
+    return [...entries.values()].map(({officialCardId,name,set,cardNumber})=>({officialCardId,name,set,cardNumber}));
+  }
+  global.PokecaImageResolver=Object.freeze({register,resolve,resolvePreview,resolveDisplay,registerPreviews,loadPreviews,coverage,loadRegistry,listReferences,count:()=>entries.size});
   register(global.PokecaVerifiedArt||{});
 })(window);

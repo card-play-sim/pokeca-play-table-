@@ -18,4 +18,11 @@ assert.equal(resolver.resolvePreview({name:'検証0'}),'','multiple prints must 
 assert.equal(resolver.resolve({officialCardId:'70000',name:'検証0'}),prefix+'70000.jpg');
 assert.throws(()=>resolver.register({'80000':{name:'new',sourceUrl:prefix+'80000.jpg'},'60000':{name:'wrong',sourceUrl:prefix+'60000.jpg'}}),/IMAGE_REGISTRY_CONFLICT/);
 assert.equal(resolver.count(),5002,'collision must not partially mutate registry');
+assert.equal(resolver.register({'70001':{name:'検証1',sourceUrl:prefix+'70001.jpg',namePreviewEligible:false}}),1);
+assert.equal(resolver.resolvePreview({name:'検証1'}),prefix+'60001.jpg');
+assert.equal(resolver.resolve({officialCardId:'70001',name:'検証1'}),prefix+'70001.jpg');
+const listed=resolver.listReferences();
+assert.equal(listed.length,5003);
+listed.find(card=>card.officialCardId==='70001').name='changed outside registry';
+assert.equal(resolver.resolve({officialCardId:'70001',name:'検証1'}),prefix+'70001.jpg');
 console.log('PASS: 5001 indexed resolver entries, strict print identity, ambiguous preview, atomic conflict');
