@@ -31,6 +31,8 @@ on:
       - 'scripts/run-reference-effect-ci.cjs'
       - 'tests/reference-runtime-failure-causes.test.cjs'
       - 'tests/reference-ci-runner-cause.test.cjs'
+      - 'scripts/aggregate-reference-effect-ci-causes.cjs'
+      - 'tests/reference-effect-ci-aggregation.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   pull_request:
     paths:
@@ -61,6 +63,8 @@ on:
       - 'scripts/run-reference-effect-ci.cjs'
       - 'tests/reference-runtime-failure-causes.test.cjs'
       - 'tests/reference-ci-runner-cause.test.cjs'
+      - 'scripts/aggregate-reference-effect-ci-causes.cjs'
+      - 'tests/reference-effect-ci-aggregation.test.cjs'
       - '.github/workflows/reference-effect-provenance.yml'
   workflow_dispatch:
 
@@ -227,6 +231,8 @@ jobs:
         run: node tests/reference-runtime-failure-causes.test.cjs
       - name: Verify CI runner preserves shared error codes and failure status
         run: node tests/reference-ci-runner-cause.test.cjs
+      - name: Verify cross-job cause aggregation and evidence safety stop
+        run: node tests/reference-effect-ci-aggregation.test.cjs
       - name: Ensure shipped engine bundle matches source modules
         run: node scripts/check-reference-bundle-sync.cjs
       - name: Ensure verified PWA release includes current engine hashes
@@ -246,4 +252,29 @@ jobs:
             reports/reference-effect-failure-causes.json
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
+          if-no-files-found: warn
+
+  codex-cause-batch:
+    needs: [smoke, opening-actions, opening-rejection, multi-turn, extended-gameplay, cross-category, provenance]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Retrieve all reference effect CI evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: reference-*
+          path: reports/ci-artifacts
+      - name: Aggregate shared causes and stop on missing evidence or failures
+        run: node scripts/aggregate-reference-effect-ci-causes.cjs reports/ci-artifacts reports/reference-effect-codex-batch.json
+      - name: Archive Codex shared-cause batch even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-effect-codex-batch
+          path: reports/reference-effect-codex-batch.json
           if-no-files-found: warn
