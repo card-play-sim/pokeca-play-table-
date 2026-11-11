@@ -55,5 +55,8 @@ for(let seed=1;seed<=64;seed++){
  }
 }
 assert.ok(executed>=1000,'INSUFFICIENT_CROSS_FAMILY_ACTIONS:'+executed);
-assert.ok(families.size>=5,'INSUFFICIENT_EFFECT_FAMILIES:'+families.size);
+assert.ok(families.size>=12,'INSUFFICIENT_EFFECT_FAMILIES:'+families.size);
+assert.ok(conservation===executed,'MISSING_CARD_CONSERVATION_AUDIT:'+conservation+'/'+executed);
+for(const type of ['attack_turn','use_ability','play_item','play_supporter','play_stadium','attach_energy','evolve','retreat','resolve_reference_choice','take_prizes'])assert.ok(families.has(type),'UNTESTED_EFFECT_FAMILY:'+type);
+assert.ok(prints.size>=12,'INSUFFICIENT_ACTIVE_PRINT_DIVERSITY:'+prints.size);
 console.log('REFERENCE_CROSS_FAMILY_SEEDED PASS',JSON.stringify({seeds:64,actions:executed,conservation,actionFamilies:Object.fromEntries([...families].sort()),activePrints:prints.size}));
