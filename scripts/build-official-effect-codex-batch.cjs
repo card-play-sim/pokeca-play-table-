@@ -47,8 +47,8 @@ for(const row of rows){
  group.evidence.push({officialCardId:ident,officialPageUrl:url,officialTextSha256:sourceHash,category,effectName:String(row.effectName||'')});
  grouped.set(groupKey,group);
 }
-result.tasks=[...grouped.values()].sort((a,b)=>b.prints.length-a.prints.length||a.normalizedTextHash.localeCompare(b.normalizedTextHash)).map((group,index)=>({
- taskId:'OFFICIAL_SHARED_EFFECT_'+String(index+1).padStart(4,'0'),status:'CODEX_REVIEW_REQUIRED',
+result.tasks=[...grouped.values()].sort((a,b)=>b.prints.length-a.prints.length||a.normalizedTextHash.localeCompare(b.normalizedTextHash)).map(group=>({
+ taskId:'OFFICIAL_SHARED_EFFECT_'+digest(group.category+':'+group.effectKind+':'+group.normalizedTextHash).slice(0,16).toUpperCase(),status:'CODEX_REVIEW_REQUIRED',
  scope:'ONE_SHARED_EFFECT_PATTERN_ALL_AFFECTED_PRINTS',...group,
  instructions:['Verify official source and hash for every affected print','Compare with approved Effect Command contract; do not infer missing behavior','Implement or extend a reusable command, not a print-specific branch','Cover attacks, abilities and trainer categories using the same engine boundary','Add positive, invalid-action rollback, deterministic replay and card conservation tests for all affected prints','Synchronize browser bundle and run full CI; publish only after release gates pass'],
  acceptance:['OFFICIAL_EVIDENCE_VERIFIED','NO_UNAPPROVED_COMMAND_SEMANTICS','AFFECTED_PRINTS_REGRESSION_PASS','FULL_REFERENCE_EFFECT_CI_PASS','BROWSER_BUNDLE_SYNCHRONIZED']
