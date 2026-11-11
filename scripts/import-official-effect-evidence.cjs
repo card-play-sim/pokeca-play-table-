@@ -3,6 +3,7 @@
 // Never infer effects from image URLs; never mutate image or formal-card registries.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const input=process.argv[2],output=process.argv[3]||'data/official-effect-evidence.json';
+const checkpoint=process.argv.includes('--checkpoint');
 if(!input||!fs.existsSync(input))throw Error('MISSING_EFFECT_TEXT_IMPORT');
 const hash=t=>crypto.createHash('sha256').update(t).digest('hex');
 const key=r=>[r.officialCardId,r.effectKind,r.effectName||'',r.effectIndex??0].join(':');
@@ -27,18 +28,21 @@ function accept(r,line){
  byKey.set(k,row);return true;
 }
 for(const [i,row] of existing.entries())accept(row,'existing:'+i);
+function persist(){
+ const rows=[...byKey.values()].sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId)||key(a).localeCompare(key(b)));
+ fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
+ const tmp=output+'.tmp-'+process.pid;
+ try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
+}
 let imported=0,duplicates=0;
 const lines=fs.readFileSync(input,'utf8').split(/\r?\n/);
 for(let i=0;i<lines.length;i++){
  if(!lines[i].trim())continue;
  let row;try{row=JSON.parse(lines[i]);}catch(e){errors.push('INVALID_NDJSON:'+String(i+1));continue;}
- try{if(accept(row,i+1))imported++;else duplicates++;}catch(e){errors.push(e.message);}
+ try{if(accept(row,i+1)){if(checkpoint)persist();imported++;}else duplicates++;}catch(e){errors.push(e.message);if(checkpoint)break;}
 }
 if(errors.length){console.error('EFFECT_IMPORT_BLOCKED:',JSON.stringify({errors:errors.slice(0,50),count:errors.length}));process.exitCode=2;}
 else{
- const rows=[...byKey.values()].sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId)||key(a).localeCompare(key(b)));
- fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
- const tmp=output+'.tmp-'+process.pid;
- try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
- console.log('EFFECT_IMPORT_OK:',JSON.stringify({previous:existing.length,imported,duplicates,total:rows.length,output}));
+ if(!checkpoint)persist();
+ console.log('EFFECT_IMPORT_OK:',JSON.stringify({previous:existing.length,imported,duplicates,total:byKey.size,output,checkpoint}));
 }
