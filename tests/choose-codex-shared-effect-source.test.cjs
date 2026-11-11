@@ -9,6 +9,7 @@ try{
  fs.writeFileSync(b,JSON.stringify(make('REFERENCE_B','b')));
  run('REFERENCE_B',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'REFERENCE_B');
  run('WORK_A',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
+ run('AUTO',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
  const before=fs.readFileSync(out,'utf8');
  run('UNKNOWN',1);assert.equal(fs.readFileSync(out,'utf8'),before);
  fs.writeFileSync(a,JSON.stringify(make('REFERENCE_B','different')));
