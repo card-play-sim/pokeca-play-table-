@@ -18,6 +18,10 @@ for(const print of task.prints){
  if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+print+'(?:/|$)').test(e.officialPageUrl)&&/^[a-f0-9]{64}$/.test(e.officialTextSha256)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
 }
 
+// The hash of the task text is not a substitute for checking source rows.
+for(const e of task.evidence){
+ if(!task.prints.includes(e.officialCardId)||typeof e.officialPageUrl!=='string'||!new RegExp('^https://www[.]pokemon-card[.]com/card-search/details[.]php/card/'+e.officialCardId+'(?:/|$)').test(e.officialPageUrl)||!/^[a-f0-9]{64}$/.test(e.officialTextSha256))throw Error('INVALID_CODEX_EVIDENCE_ROW');
+}
 const prompt=[
  'You are working in the existing Pokemon card PWA repository. Follow AGENTS.md.',
  'Implement ONLY the verified shared-effect task below. Do not make print-specific hacks.',
