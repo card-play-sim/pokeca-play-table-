@@ -37,7 +37,8 @@ if(id==='AUTO'){
   if(!other)byId.set(item.task.taskId,item);
  }
  // WORK evidence has priority over reference data, including when it contains fewer prints.
- const preferred=candidates.filter(x=>x.source===sources[0]);
+ const preferredSource=sources.find(source=>candidates.some(x=>x.source===source));
+ const preferred=candidates.filter(x=>x.source===preferredSource);
  const pool=preferred.length?preferred:candidates;
  pool.sort((a,b)=>b.task.prints.length-a.task.prints.length||a.task.taskId.localeCompare(b.task.taskId));
  const selected=pool[0];
