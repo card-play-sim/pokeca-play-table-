@@ -1,0 +1,59 @@
+name: Ingest official effect evidence (durable checkpoints)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'reports/incoming-effect-evidence/*.ndjson'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: official-effect-evidence-registry
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check importer and task-builder regression tests
+        run: |
+          set -e
+          node tests/official-effect-import.test.cjs
+          node tests/official-effect-codex-batch.test.cjs
+      - name: Import all submitted records, checkpointing each verified row
+        run: |
+          set -e
+          shopt -s nullglob
+          inputs=(reports/incoming-effect-evidence/*.ndjson)
+          if [ "${#inputs[@]}" -eq 0 ]; then
+            echo "::notice::No incoming evidence files to import"
+            exit 0
+          fi
+          for input in "${inputs[@]}"; do
+            node scripts/import-official-effect-evidence.cjs "$input" data/official-effect-evidence.json --checkpoint
+          done
+          node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json || true
+          node -e "const b=require('./reports/work-effect-codex-batch.json');if(b.counts.blocked)throw Error('BLOCKED_EFFECT_EVIDENCE');"
+      - name: Commit only the verified registry
+        run: |
+          set -e
+          if [ ! -f data/official-effect-evidence.json ]; then exit 0; fi
+          git add data/official-effect-evidence.json
+          if git diff --cached --quiet; then
+            echo "::notice::All incoming effect records already registered"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Register verified official effect evidence"
+          git push origin HEAD:main
