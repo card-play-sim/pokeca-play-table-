@@ -18,7 +18,7 @@ try{
   assert.match(row.officialPageUrl,/^https:\/\/www\.pokemon-card\.com\//);
  }
  const ndjson=path.join(dir,'intake.ndjson'),registry=path.join(dir,'intake-registry.json');
- fs.writeFileSync(ndjson,rows.map(x=>JSON.stringify(x)).join('\\n')+'\\n');
+ fs.writeFileSync(ndjson,rows.map(x=>JSON.stringify(x)).join('\n')+'\n');
  const imported=cp.spawnSync(process.execPath,[path.resolve(__dirname,'../scripts/import-official-effect-evidence.cjs'),ndjson,registry],{encoding:'utf8'});
  assert.equal(imported.status,0,imported.stderr+' '+imported.stdout);
  assert.equal(JSON.parse(fs.readFileSync(registry,'utf8')).length,rows.length);
