@@ -16,9 +16,10 @@ const record=code===0?null:{causeId,command:'UNKNOWN',test,error:stderr.slice(0,
 // Tests may already emit precise, structured causes. Do not duplicate those
 // records with a generic wrapper failure; preserve their source details.
 const childHasStructuredFailure=String(result.stdout||'').split(/\r?\n/).concat(String(result.stderr||'').split(/\r?\n/)).some(x=>x.startsWith('REFERENCE_RUNTIME_FAILURE_JSON:'));
+const effectiveCode=code===0&&childHasStructuredFailure?2:code;
 const line=record&&!childHasStructuredFailure?'REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify(record)+'\n':'';
 if(line)process.stdout.write(line);
 const log=process.env.REFERENCE_RUNTIME_LOG||'reports/reference-effect-runtime.log';
 fs.mkdirSync(path.dirname(path.resolve(log)),{recursive:true});
 fs.appendFileSync(log,(result.stdout||'')+'\n'+(result.stderr||'')+'\n'+line);
-process.exitCode=code;
+process.exitCode=effectiveCode;
