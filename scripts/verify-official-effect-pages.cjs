@@ -54,7 +54,7 @@ async function retrieve(url){
    catch(e){page={error:String(e.message||e)};}
    for(const index of indices){
     const row=rows[index];
-    if(!page.text){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_FETCH_FAILED:'+page.error};continue;}
+    if(typeof page.text!=='string'){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_FETCH_FAILED:'+page.error};continue;}
     if(!page.text.includes(normalize(row.effectText))){results[index]={index,officialCardId:id,status:'BLOCKED',reason:'OFFICIAL_PAGE_TEXT_NOT_FOUND'};continue;}
     results[index]={index,officialCardId:id,status:'VERIFIED',officialPageUrl:expected,officialPageSha256:page.pageSha256,effectTextSha256:row.officialTextSha256};
    }
