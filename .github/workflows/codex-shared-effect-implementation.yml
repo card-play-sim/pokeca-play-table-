@@ -73,16 +73,13 @@ jobs:
           codex exec --sandbox workspace-write --ask-for-approval never - < reports/codex-selected-task.md
       - name: Run complete reference effect gates
         run: |
-          node tests/reference-official-effect-evidence-export.test.cjs
-          node tests/official-effect-import.test.cjs
-          node tests/official-effect-codex-batch.test.cjs
+          set -e
+          node scripts/validate-reference-effect-provenance.cjs
           node scripts/check-reference-bundle-sync.cjs
           node scripts/build-pwa-release.cjs --check
-          node tests/select-codex-shared-effect-task.test.cjs
-          node tests/reference-effect-runtime-bundle.test.cjs
-          node tests/reference-effect-cross-family-seeded.test.cjs
-          node tests/reference-effect-cross-family-rejection.test.cjs
-          node tests/reference-special-energy-retreat.test.cjs
+          for test in tests/reference-effect-provenance.test.cjs tests/reference-effect-compiler-gate.test.cjs tests/reference-effect-coverage.test.cjs tests/reference-effect-runtime-bundle.test.cjs tests/reference-effect-runtime-smoke.test.cjs tests/reference-effect-opening-actions.test.cjs tests/reference-effect-opening-rejection.test.cjs tests/reference-effect-cross-category.test.cjs tests/reference-effect-cross-family-seeded.test.cjs tests/reference-effect-cross-family-rejection.test.cjs tests/reference-special-energy-retreat.test.cjs tests/reference-effect-extended-gameplay.test.cjs tests/reference-effect-multi-turn.test.cjs tests/reference-effect-failure-causes.test.cjs tests/reference-runtime-failure-causes.test.cjs tests/reference-ci-runner-cause.test.cjs tests/reference-effect-ci-aggregation.test.cjs tests/reference-effect-codex-tasks.test.cjs tests/reference-official-effect-evidence-export.test.cjs tests/official-effect-import.test.cjs tests/official-effect-codex-batch.test.cjs tests/select-codex-shared-effect-task.test.cjs tests/choose-codex-shared-effect-source.test.cjs; do
+            node "$test"
+          done
       - name: Reject edits to protected data
         run: |
           if { git diff --name-only HEAD; git ls-files --others --exclude-standard; } | grep -E '^(data/|sw.js$|\.github/|AGENTS.md$)'; then
