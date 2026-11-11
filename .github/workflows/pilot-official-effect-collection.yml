@@ -1,0 +1,45 @@
+name: Pilot official effect collection (review evidence only)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/collect-official-effect-pages.cjs'
+      - 'tests/official-effect-collector.test.cjs'
+      - '.github/workflows/pilot-official-effect-collection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify collector parser and restart behavior
+        run: node tests/official-effect-collector.test.cjs
+      - name: Select known reference card IDs without changing approved data
+        run: |
+          mkdir -p reports/official-effect-pilot
+          node -e "const fs=require('fs');const p=require('./data/reference-effects/plans.json');fs.writeFileSync('reports/official-effect-pilot/ids.json',JSON.stringify([...new Set(p.records.map(x=>String(x.officialCardId)))].slice(0,20)));"
+      - name: Fetch official pages and checkpoint only unambiguous effect blocks
+        id: collect
+        continue-on-error: true
+        run: |
+          node scripts/collect-official-effect-pages.cjs reports/official-effect-pilot/ids.json reports/official-effect-pilot/effects.ndjson reports/official-effect-pilot/status.json
+      - name: Preserve raw collection evidence for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-effect-collector-pilot
+          path: reports/official-effect-pilot/
+      - name: Fail on blocked or unverified official extraction
+        if: steps.collect.outcome == 'failure'
+        run: |
+          echo "::error::Pilot extraction blocked on one or more official pages; evidence is review-only."
+          exit 1
