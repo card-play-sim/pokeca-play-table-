@@ -1,6 +1,6 @@
 'use strict';
 // Select exactly one verified shared-effect task for Codex. No automatic approval.
-const fs=require('node:fs'),path=require('node:path');
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const input=process.argv[2],taskId=process.argv[3],output=process.argv[4];
 if(!input||!taskId||!output||!fs.existsSync(input))throw Error('MISSING_VERIFIED_CODEX_TASK_INPUT');
 const batch=JSON.parse(fs.readFileSync(input,'utf8'));
@@ -9,6 +9,15 @@ const matches=batch.tasks.filter(t=>t.taskId===taskId);
 if(matches.length!==1)throw Error('CODEX_TASK_NOT_UNIQUE_OR_NOT_FOUND');
 const task=matches[0];
 if(task.status!=='CODEX_REVIEW_REQUIRED'||!Array.isArray(task.evidence)||!task.evidence.length||!Array.isArray(task.prints)||!task.prints.length)throw Error('INVALID_CODEX_TASK_EVIDENCE');
+const digest=t=>crypto.createHash('sha256').update(t).digest('hex');
+if(typeof task.officialText!=='string'||!task.officialText.trim()||!['pokemon','item','supporter','stadium','tool','energy'].includes(task.category)||!['attack','ability','item','supporter','stadium','tool','energy','rule'].includes(task.effectKind))throw Error('INVALID_CODEX_TASK_CONTENT');
+if(task.normalizedTextHash!==digest(task.officialText.normalize('NFKC').replace(/\\s+/g,' ').trim()))throw Error('CODEX_TASK_TEXT_HASH_MISMATCH');
+if(new Set(task.prints).size!==task.prints.length||task.evidence.length<task.prints.length)throw Error('INVALID_CODEX_TASK_PRINT_COVERAGE');
+for(const print of task.prints){
+ if(!/^\\d{4,8}$/.test(String(print)))throw Error('INVALID_CODEX_PRINT_ID');
+ if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&e.officialPageUrl.includes('/card/'+print)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
+}
+
 const prompt=[
  'You are working in the existing Pokemon card PWA repository. Follow AGENTS.md.',
  'Implement ONLY the verified shared-effect task below. Do not make print-specific hacks.',
