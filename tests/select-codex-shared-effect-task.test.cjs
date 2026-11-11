@@ -28,6 +28,9 @@ try{
  batch.tasks[0].evidence[0].effectText='偽の効果';
  run('OFFICIAL_SHARED_EFFECT_0001',1);
  batch.tasks[0].evidence[0].effectText=savedEvidence;
+ batch.tasks[0].evidence.push({...batch.tasks[0].evidence[0]});
+ run('OFFICIAL_SHARED_EFFECT_0001',1);
+ batch.tasks[0].evidence.pop();
  const before=fs.readFileSync(output,'utf8');
  run('MISSING_TASK',1);assert.equal(fs.readFileSync(output,'utf8'),before);
  batch.tasks[0].normalizedTextHash='0'.repeat(64);run('OFFICIAL_SHARED_EFFECT_0001',1);
