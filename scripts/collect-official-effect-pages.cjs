@@ -32,6 +32,9 @@ function parse(id,html,url){
  // Restrict parsing to recognizable official detail headings. No broad free-text guesses.
  const heading=/<h([2-6])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi;
  const found=[...html.matchAll(heading)].map(m=>({index:m.index,end:m.index+m[0].length,level:Number(m[1]),label:strip(m[2])}));
+ // Any malformed heading markup can shift effect boundaries; reject the entire print.
+ const openingHeadings=(html.match(/<h[2-6]\b/gi)||[]).length;
+ if(openingHeadings!==found.length)return {rows:[],errors:['MALFORMED_HEADING_MARKUP']};
  const result=[],errors=[];
  let section='',previousLevel=0;
  for(let i=0;i<found.length;i++){
