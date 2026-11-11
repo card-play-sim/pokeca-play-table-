@@ -972,7 +972,7 @@ function completeAction(g,actor,option){
   const candidates=requests(g,actor,card,effect).find(r=>r.key==='cards').candidates,types=new Set(),chosen=candidates.filter(c=>{if(types.has(c.energyType))return false;types.add(c.energyType);return true;}).slice(0,2);
   action.selections.cards=chosen.map(id);action.selections.toHand=chosen.slice(0,1).map(id);action.selections.attachTo=chosen.length>1?[id(p.active)]:[];
  }
- if(m==='HILDA'){const candidates=p.deck;action.selections.cards=[candidates.find(c=>c.kind==='pokemon'&&!record(c).facts.basic),candidates.find(c=>c.kind==='energy')].filter(Boolean).map(id);}
+ if(m==='HILDA'){const candidates=requests(g,actor,card,effect).find(r=>r.key==='cards').candidates;action.selections.cards=[candidates.find(c=>c.kind==='pokemon'&&!record(c).facts.basic),candidates.find(c=>c.kind==='energy')].filter(Boolean).map(id);}
  if(m==='BROCK'){const basics=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic).slice(0,2);action.selections.cards=basics.length?basics.map(id):p.deck.filter(c=>c.kind==='pokemon').slice(0,1).map(id);}
  if(m==='ENERGY_SWITCH'){
   const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===action.selections.energy[0]));action.selections.attachTo=field(p).filter(c=>c!==source).slice(0,1).map(id);
