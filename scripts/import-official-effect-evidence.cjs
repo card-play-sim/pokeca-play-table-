@@ -9,7 +9,8 @@ const hash=t=>crypto.createHash('sha256').update(t).digest('hex');
 const key=r=>[r.officialCardId,r.effectKind,r.effectName||'',r.effectIndex??0].join(':');
 const existing=fs.existsSync(output)?JSON.parse(fs.readFileSync(output,'utf8')):[];
 const target=path.resolve(output);
-if(path.resolve(input)===target)throw Error('INPUT_OUTPUT_MUST_DIFFER');
+const journal=output+'.checkpoint.ndjson';
+if(path.resolve(input)===target||path.resolve(input)===path.resolve(journal))throw Error('INPUT_OUTPUT_MUST_DIFFER');
 if(!Array.isArray(existing))throw Error('INVALID_EXISTING_EFFECT_EVIDENCE');
 const byKey=new Map(),errors=[];
 function verify(r,line){
@@ -30,6 +31,17 @@ function accept(r,line){
 for(const [i,row] of existing.entries())accept(row,'existing:'+i);
 // The on-disk registry is authoritative; reject duplicate keys with divergent metadata.
 if(byKey.size!==existing.length)throw Error('DUPLICATE_EXISTING_EFFECT_EVIDENCE');
+// Replay durable accepted rows from a previous interrupted import.
+// Reject incomplete journal tails rather than silently discarding evidence.
+let recovered=0;
+if(checkpoint&&fs.existsSync(journal)){
+ const journalText=fs.readFileSync(journal,'utf8');
+ if(journalText&&!journalText.endsWith('\n'))throw Error('INCOMPLETE_EFFECT_CHECKPOINT_JOURNAL');
+ for(const [i,line] of journalText.split(/\r?\n/).entries()){
+  if(!line.trim())continue;
+  if(accept(JSON.parse(line),'journal:'+i))recovered++;
+ }
+}
 function persist(){
  const rows=[...byKey.values()].sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId)||key(a).localeCompare(key(b)));
  fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
@@ -37,14 +49,23 @@ function persist(){
  try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
 }
 let imported=0,duplicates=0;
+const checkpointFd=checkpoint?fs.openSync(journal,'a'):null;
 const lines=fs.readFileSync(input,'utf8').split(/\r?\n/);
 for(let i=0;i<lines.length;i++){
  if(!lines[i].trim())continue;
  let row;try{row=JSON.parse(lines[i]);}catch(e){errors.push('INVALID_NDJSON:'+String(i+1));if(checkpoint)break;continue;}
- try{if(accept(row,i+1)){if(checkpoint)persist();imported++;}else duplicates++;}catch(e){errors.push(e.message);if(checkpoint)break;}
+ try{
+  if(accept(row,i+1)){
+   if(checkpoint){fs.writeSync(checkpointFd,JSON.stringify(byKey.get(key(row)))+'\n');fs.fsyncSync(checkpointFd);}
+   imported++;
+  }else duplicates++;
+ }catch(e){errors.push(e.message);if(checkpoint)break;}
 }
+if(checkpointFd!==null)fs.closeSync(checkpointFd);
+// Compact once per batch rather than rewriting the entire registry for every row.
+// On validation failure retain the journal for inspection and crash recovery.
+if(!errors.length){persist();if(checkpoint&&fs.existsSync(journal))fs.unlinkSync(journal);}
 if(errors.length){console.error('EFFECT_IMPORT_BLOCKED:',JSON.stringify({errors:errors.slice(0,50),count:errors.length}));process.exitCode=2;}
 else{
- if(!checkpoint)persist();
- console.log('EFFECT_IMPORT_OK:',JSON.stringify({previous:existing.length,imported,duplicates,total:byKey.size,output,checkpoint}));
+ console.log('EFFECT_IMPORT_OK:',JSON.stringify({previous:existing.length,recovered,imported,duplicates,total:byKey.size,output,checkpoint}));
 }
