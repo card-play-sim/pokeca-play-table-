@@ -32,6 +32,19 @@ jobs:
         continue-on-error: true
         run: |
           node scripts/collect-official-effect-pages.cjs reports/official-effect-pilot/ids.json reports/official-effect-pilot/effects.ndjson reports/official-effect-pilot/status.json
+      - name: Validate extracted evidence through importer and task grouping
+        id: pipeline
+        if: steps.collect.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -e
+          if [ ! -s reports/official-effect-pilot/effects.ndjson ]; then
+            echo "::error::No effects were extracted; refusing empty success"
+            exit 2
+          fi
+          node scripts/import-official-effect-evidence.cjs reports/official-effect-pilot/effects.ndjson reports/official-effect-pilot/validated.json --checkpoint
+          node scripts/verify-official-effect-pages.cjs reports/official-effect-pilot/validated.json reports/official-effect-pilot/verified-pages.json
+          node scripts/build-official-effect-codex-batch.cjs reports/official-effect-pilot/validated.json reports/official-effect-pilot/tasks.json
       - name: Preserve raw collection evidence for review
         if: always()
         uses: actions/upload-artifact@v4
@@ -39,7 +52,7 @@ jobs:
           name: official-effect-collector-pilot
           path: reports/official-effect-pilot/
       - name: Fail on blocked or unverified official extraction
-        if: steps.collect.outcome == 'failure'
+        if: steps.collect.outcome == 'failure' || steps.pipeline.outcome == 'failure'
         run: |
           echo "::error::Pilot extraction blocked on one or more official pages; evidence is review-only."
           exit 1
