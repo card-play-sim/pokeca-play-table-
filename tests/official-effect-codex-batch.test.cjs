@@ -20,6 +20,8 @@ try{
  assert.equal(batch.tasks.length,1);assert.equal(batch.counts.blocked,1);
  batch=run([make('45152'),{...make('45152'),effectText:'違う効果',officialTextSha256:sha('違う効果')}],2);
  assert.ok(batch.blocked.some(x=>x.reasons?.includes('CONFLICTING_EFFECT_EVIDENCE')));
+ batch=run([make('45152'),make('45152')],2);
+ assert.ok(batch.blocked.some(x=>x.reasons?.includes('DUPLICATE_EFFECT_EVIDENCE')));
  batch=run([{...make('45152'),officialPageUrl:'https://example.com/fake'}],2);
  assert.equal(batch.counts.verified,0);
  console.log('OFFICIAL_EFFECT_CODEX_BATCH PASS');
