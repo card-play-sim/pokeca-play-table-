@@ -10,6 +10,7 @@ try{
  run('REFERENCE_B',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'REFERENCE_B');
  run('WORK_A',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
  run('AUTO',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
+ assert.ok(fs.readFileSync(out,'utf8').endsWith('\n'),'AUTO_OUTPUT_MUST_BE_VALID_NEWLINE_TERMINATED_JSON');
  const largerReference=make('REFERENCE_B','b');
  largerReference.tasks[0].prints=['1','2','3'];
  fs.writeFileSync(b,JSON.stringify(largerReference));
