@@ -11,12 +11,11 @@ const issues=new Map(),gaps=[],jobs=[];
 const conclusionsText=process.env.REFERENCE_CI_JOB_CONCLUSIONS;
 let conclusions=null;
 if(conclusionsText!==undefined){try{conclusions=JSON.parse(conclusionsText);}catch(e){gaps.push({job:'workflow',reason:'INVALID_JOB_CONCLUSIONS_JSON'});}}
-if(conclusionsText!==undefined&&(!conclusions||typeof conclusions!=='object'||Array.isArray(conclusions)))gaps.push({job:'workflow',reason:'INVALID_JOB_CONCLUSIONS_SCHEMA'});
+if(conclusionsText===undefined)gaps.push({job:'workflow',reason:'MISSING_JOB_CONCLUSIONS'});
+else if(!conclusions||typeof conclusions!=='object'||Array.isArray(conclusions))gaps.push({job:'workflow',reason:'INVALID_JOB_CONCLUSIONS_SCHEMA'});
 for(const job of expected){
- if(conclusionsText!==undefined){
-  const conclusion=conclusions?.[job]?.result;
-  if(conclusion!=='success')gaps.push({job,reason:'JOB_NOT_SUCCESSFUL',conclusion:typeof conclusion==='string'?conclusion:'MISSING'});
- }
+ const conclusion=conclusions?.[job]?.result;
+ if(conclusion!=='success')gaps.push({job,reason:'JOB_NOT_SUCCESSFUL',conclusion:typeof conclusion==='string'?conclusion:'MISSING'});
  const dir=job==='provenance'?'reference-effect-coverage':'reference-runtime-causes-'+job;
  const file=path.join(root,dir,'reference-effect-runtime-causes.json');
  if(!fs.existsSync(file)){gaps.push({job,reason:'MISSING_JOB_CAUSE_ARTIFACT'});jobs.push({job,status:'BLOCKED'});continue;}
