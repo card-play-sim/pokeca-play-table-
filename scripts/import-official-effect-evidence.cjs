@@ -32,7 +32,7 @@ function persist(){
  const rows=[...byKey.values()].sort((a,b)=>Number(a.officialCardId)-Number(b.officialCardId)||key(a).localeCompare(key(b)));
  fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
  const tmp=output+'.tmp-'+process.pid;
- try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
+ try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
 }
 let imported=0,duplicates=0;
 const lines=fs.readFileSync(input,'utf8').split(/\r?\n/);
