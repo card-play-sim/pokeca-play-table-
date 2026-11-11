@@ -41,6 +41,9 @@ on:
       - 'scripts/build-official-effect-codex-batch.cjs'
       - 'scripts/import-official-effect-evidence.cjs'
       - 'tests/official-effect-import.test.cjs'
+      - 'scripts/select-codex-shared-effect-task.cjs'
+      - 'tests/select-codex-shared-effect-task.test.cjs'
+      - '.github/workflows/codex-shared-effect-implementation.yml'
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
@@ -85,6 +88,9 @@ on:
       - 'scripts/build-official-effect-codex-batch.cjs'
       - 'scripts/import-official-effect-evidence.cjs'
       - 'tests/official-effect-import.test.cjs'
+      - 'scripts/select-codex-shared-effect-task.cjs'
+      - 'tests/select-codex-shared-effect-task.test.cjs'
+      - '.github/workflows/codex-shared-effect-implementation.yml'
       - 'scripts/export-reference-official-effect-evidence.cjs'
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
@@ -265,6 +271,8 @@ jobs:
         run: node tests/reference-effect-ci-aggregation.test.cjs
       - name: Verify bounded Codex task generation
         run: node tests/reference-effect-codex-tasks.test.cjs
+      - name: Verify verified-task Codex selector refuses missing and blocked work
+        run: node tests/select-codex-shared-effect-task.test.cjs
       - name: Verify atomic official text intake and conflict rollback
         run: node tests/official-effect-import.test.cjs
       - name: Verify official text evidence gating and shared Codex task batching
