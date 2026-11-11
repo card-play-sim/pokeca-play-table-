@@ -27,5 +27,10 @@ try{
  const resumed=cp.spawnSync(process.execPath,[script,input,checkpointOutput,'--checkpoint'],{encoding:'utf8'});
  assert.equal(resumed.status,0,resumed.stderr);
  assert.equal(JSON.parse(fs.readFileSync(checkpointOutput)).length,2,'CHECKPOINT_RESUME_MUST_APPEND');
+ const freshCheckpoint=path.join(dir,'fresh-checkpoint.json');
+ fs.writeFileSync(input,[JSON.stringify(make('48248')),'{broken',JSON.stringify(make('48249'))].join('\n')+'\n');
+ const interrupted=cp.spawnSync(process.execPath,[script,input,freshCheckpoint,'--checkpoint'],{encoding:'utf8'});
+ assert.equal(interrupted.status,2,'CHECKPOINT_MALFORMED_LINE_MUST_FAIL');
+ assert.deepEqual(JSON.parse(fs.readFileSync(freshCheckpoint)).map(x=>x.officialCardId),['48248'],'CHECKPOINT_MUST_SAVE_FIRST_VALID_ROW_BEFORE_FAILURE');
  console.log('OFFICIAL_EFFECT_IMPORT PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
