@@ -15,6 +15,9 @@ function run(html,rows,expectedCode){
 try{
  let result=run('<html><script>偽の効果</script><div>山札を2枚引く。</div></html>',[record],0);
  assert.equal(result.verified,1);
+ result=run('<html><div>山札を2枚引く。</div></html>',[record,{...record,effectIndex:1,effectName:'別の特性'}],0);
+ assert.equal(result.uniquePages,1,'MULTIPLE_EFFECTS_ON_ONE_PRINT_MUST_SHARE_ONE_PAGE_FETCH');
+ assert.equal(result.verified,2);
  result=run('<html><script>山札を2枚引く。</script><div>別の効果</div></html>',[record],2);
  assert.equal(result.blocked,1,'SCRIPT_CONTENT_MUST_NOT_COUNT_AS_EVIDENCE');
  result=run('<html><div>山札を2枚引く。</div></html>',[{...record,officialTextSha256:'0'.repeat(64)}],2);
