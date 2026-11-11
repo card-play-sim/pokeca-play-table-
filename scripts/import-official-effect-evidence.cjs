@@ -10,6 +10,7 @@ const key=r=>[r.officialCardId,r.effectKind,r.effectName||'',r.effectIndex??0].j
 const existing=fs.existsSync(output)?JSON.parse(fs.readFileSync(output,'utf8')):[];
 const target=path.resolve(output);
 const journal=output+'.checkpoint.ndjson';
+const lock=output+'.checkpoint.lock';
 if(path.resolve(input)===target||path.resolve(input)===path.resolve(journal))throw Error('INPUT_OUTPUT_MUST_DIFFER');
 if(!Array.isArray(existing))throw Error('INVALID_EXISTING_EFFECT_EVIDENCE');
 const byKey=new Map(),errors=[];
@@ -49,6 +50,12 @@ function persist(){
  try{fs.writeFileSync(tmp,JSON.stringify(rows,null,2)+'\n',{flag:'wx'});fs.renameSync(tmp,output);}finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
 }
 let imported=0,duplicates=0;
+// Exclusive lock prevents concurrent writers from interleaving records or compaction.
+let lockFd=null;
+if(checkpoint){
+ try{lockFd=fs.openSync(lock,'wx');fs.writeSync(lockFd,JSON.stringify({pid:process.pid,startedAt:new Date().toISOString()})+'\n');}
+ catch(e){if(e.code==='EEXIST')throw Error('EFFECT_IMPORT_ALREADY_RUNNING');throw e;}
+}
 const checkpointFd=checkpoint?fs.openSync(journal,'a'):null;
 const lines=fs.readFileSync(input,'utf8').split(/\r?\n/);
 for(let i=0;i<lines.length;i++){
@@ -65,6 +72,7 @@ if(checkpointFd!==null)fs.closeSync(checkpointFd);
 // Compact once per batch rather than rewriting the entire registry for every row.
 // On validation failure retain the journal for inspection and crash recovery.
 if(!errors.length){persist();if(checkpoint&&fs.existsSync(journal))fs.unlinkSync(journal);}
+if(lockFd!==null){fs.closeSync(lockFd);fs.unlinkSync(lock);}
 if(errors.length){console.error('EFFECT_IMPORT_BLOCKED:',JSON.stringify({errors:errors.slice(0,50),count:errors.length}));process.exitCode=2;}
 else{
  console.log('EFFECT_IMPORT_OK:',JSON.stringify({previous:existing.length,recovered,imported,duplicates,total:byKey.size,output,checkpoint}));
