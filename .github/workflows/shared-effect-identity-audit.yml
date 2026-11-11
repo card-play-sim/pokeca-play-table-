@@ -1,0 +1,37 @@
+name: Shared effect task and print identity audit
+on:
+  pull_request:
+    paths:
+      - 'scripts/official-effect-task-ledger.cjs'
+      - 'scripts/audit-deck-image-links.cjs'
+      - 'tests/official-effect-task-ledger.test.cjs'
+      - 'tests/audit-deck-image-links.test.cjs'
+      - '.github/workflows/shared-effect-identity-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify task lifecycle and identity safety
+        run: |
+          set -e
+          node tests/official-effect-task-ledger.test.cjs
+          node tests/audit-deck-image-links.test.cjs
+      - name: Audit fixed decks against registered official images (read-only)
+        run: |
+          set -e
+          node scripts/audit-deck-image-links.cjs data/fixed-test-decks.json data/official-image-registry.json reports/fixed-deck-image-link-audit.json
+      - name: Preserve audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-deck-image-link-audit
+          path: reports/fixed-deck-image-link-audit.json
+          if-no-files-found: warn
