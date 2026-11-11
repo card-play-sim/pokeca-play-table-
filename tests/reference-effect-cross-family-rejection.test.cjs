@@ -8,7 +8,7 @@ const engine=sandbox.window.Pokeca;
 const manifest=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../data/fixed-test-decks.json'),'utf8'));
 const families=new Map();
 let rejected=0,executed=0;
-for(let seed=1;seed<=32;seed++){
+for(let seed=1;seed<=64;seed++){
  let state=seed;
  const rng=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
  const created=engine.createReferenceValidationMatch(manifest,{rng,firstDeck:seed%2,firstPlayer:seed%2?'you':'ai'});
@@ -44,7 +44,7 @@ for(let seed=1;seed<=32;seed++){
   executed++;
  }
 }
-assert.ok(rejected>=700,'INSUFFICIENT_REJECTED_ACTIONS:'+rejected);
+assert.ok(rejected>=1400,'INSUFFICIENT_REJECTED_ACTIONS:'+rejected);
 assert.ok(families.size>=10,'INSUFFICIENT_REJECTION_FAMILIES:'+families.size);
 assert.ok(families.has('take_prizes'),'PRIZE_SELECTION_REJECTION_NOT_EXERCISED');
-console.log('REFERENCE_CROSS_FAMILY_REJECTION PASS',JSON.stringify({seeds:32,rejected,legalAfterRejection:executed,families:Object.fromEntries([...families].sort())}));
+console.log('REFERENCE_CROSS_FAMILY_REJECTION PASS',JSON.stringify({seeds:64,rejected,legalAfterRejection:executed,families:Object.fromEntries([...families].sort())}));
