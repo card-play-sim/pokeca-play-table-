@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "publicUrl": "https://card-play-sim.github.io/pokeca-play-table-/",
+  "release": "242",
+  "releaseCommit": "93a1091a101e83bbc69cde25789be33aad62d0e3",
+  "browser": "Chrome (cloud desktop)",
+  "physicalAndroidVerified": false,
+  "sourceFilesMatched": {
+    "index.html": "29640a83b0b2ddb5659359a4a4a5c20757cad6baeaa96928c8d54b1bb14e1e5e",
+    "sw.js": "017263dc23e2b14e7f313cb63ffd37893bd89215a55754ae2f25d4886992c230",
+    "ui/mobile.js": "d9ab159a677fa7def029e2050815b5b3261065cf1d0f5764005c02b0781ea143",
+    "data/official-image-registry.json": "77e6df5aebf3ef74e60d7cfc7ef0e32188d134e894ea5884470c0434fb6b0ace",
+    "data/fixed-deck-preview-bindings.json": "cfe64bb1b4981dde5549e5f4ac6ba7129dd238d24cef00ca8ce3f92e42f9a450",
+    "data/image-automation/fixed-45-reference-audit.json": "5160cb801d9e726c71267ada073a5cd7af8f238b7fe803ff41d4eefbaa4dd777"
+  },
+  "deckList": {
+    "totalRows": 56,
+    "loadedOfficialRows": 56,
+    "loadedOfficialImageNames": 45,
+    "loadedOfficialImageCopies": 120,
+    "imageLoadFailures": 0,
+    "adoptedPrintCopies": 0
+  },
+  "liveMatch": {
+    "openingHandOfficialImages": 6,
+    "openingActiveOfficialImages": 2,
+    "benchOfficialImages": 5,
+    "detailOfficialImages": 1,
+    "sameOpeningHandAndActiveAfterReleaseUpdate": true,
+    "savedAfterReleaseUpdate": true
+  },
+  "imageFilesSaved": false
+}

@@ -1,6 +1,7 @@
 """Real Android-sized Chromium inspection. No image mocks or image files are saved.
 
-Exit 2 means the fixed deck is incomplete; it is never converted into PASS.
+By default exit 2 means the adopted-print check is incomplete.
+--require-preview separately gates successful official image loading.
 The optional session CA pin trusts only the inherited proxy's public key.
 """
 import asyncio
@@ -89,14 +90,16 @@ async def main():
                       verifiedDeckPrintCopies=report['officialDisplayedCopies'],
                       actualOfficialPreviewCopies=sum(card['count'] for (_, _, card), obs in zip(entries, observations) if obs['decoded'] and obs['visible'] and obs.get('officialHttpImage')))
         report['productionPass'] = report['productionPass'] and not errors
+        report['previewDisplayPass'] = report['actualOfficialPreviewCopies'] == 120 and not errors
         assert await page.evaluate('PokecaMobile.port.getSnapshot()') == before, 'image inspection changed game state'
         Path('artifacts').mkdir(exist_ok=True)
         Path('artifacts/official-fixed-120-result.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n')
-        print(json.dumps({key: report[key] for key in ['totalCards', 'officialDisplayedCopies', 'pendingCopies', 'actualOfficialPreviewCopies', 'productionPass', 'javascriptErrors']}, ensure_ascii=False))
+        print(json.dumps({key: report[key] for key in ['totalCards', 'officialDisplayedCopies', 'pendingCopies', 'actualOfficialPreviewCopies', 'previewDisplayPass', 'productionPass', 'javascriptErrors']}, ensure_ascii=False))
         await browser.close()
         if errors:
             return 1
-        return 0 if report['productionPass'] else 2
+        required_result = 'previewDisplayPass' if '--require-preview' in sys.argv[1:] else 'productionPass'
+        return 0 if report[required_result] else 2
 
 if __name__ == '__main__':
     sys.exit(asyncio.run(main()))
