@@ -421,7 +421,25 @@ function pokemonActions(g,actor,ident){
  const out=abilityActions(g,actor,mon);
  if(p.active===mon){
   record(mon).attacks.forEach((a,index)=>out.push({kind:'attack',label:a.name,damage:Number.parseInt(a.damage,10)||0,action:{type:'attack_turn',attackIndex:index},requests:requests(g,actor,mon,a),referenceEffect:a}));
-  for(const target of p.bench){const units=mon.energyCards||[],choices=[];let count=0;for(const e of units){if(count>=mon.retreatCost)break;choices.push(id(e));count+=energyUnits({...mon,energyCards:[e]}).length;}out.push({kind:'retreat',label:'にげる → '+target.name,action:{type:'retreat',benchInstanceId:id(target),energyIds:choices},requests:[]});}
+  for(const target of p.bench){
+   const cards=mon.energyCards||[],required=mon.retreatCost;
+   // Search by number of physical cards; a special energy can provide several units.
+   // A payment is valid only if removing any one selected card makes it insufficient.
+   let choices=required===0?[]:null;
+   if(required>0){
+    const search=(start,chosen)=>{
+     const units=energyUnits({...mon,energyCards:chosen}).length;
+     if(units>=required){
+      if(chosen.every((_,i)=>energyUnits({...mon,energyCards:chosen.filter((_,j)=>i!==j)}).length<required)){choices=chosen.map(id);return true;}
+      return false;
+     }
+     for(let i=start;i<cards.length;i++)if(search(i+1,[...chosen,cards[i]]))return true;
+     return false;
+    };
+    search(0,[]);
+   }
+   if(choices!==null)out.push({kind:'retreat',label:'にげる → '+target.name,action:{type:'retreat',benchInstanceId:id(target),energyIds:choices},requests:[]});
+  }
  }
  return out;
 }
