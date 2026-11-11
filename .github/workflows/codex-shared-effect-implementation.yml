@@ -60,6 +60,7 @@ jobs:
       - name: Verify task selector and evidence gates before paid execution
         run: |
           node tests/select-codex-shared-effect-task.test.cjs
+          node tests/choose-codex-shared-effect-source.test.cjs
           node tests/reference-official-effect-evidence-export.test.cjs
           node tests/official-effect-codex-batch.test.cjs
           node tests/official-effect-import.test.cjs
