@@ -31,9 +31,20 @@ jobs:
           RELEASE_VERIFY_ATTEMPTS: '16'
           RELEASE_VERIFY_INTERVAL_MS: '10000'
         run: node scripts/verify-published-pwa.cjs
-      - name: Load every registered real official image URL in Chromium
+      - name: Verify every official image in the candidate gallery
+        if: github.event_name == 'pull_request'
         env:
-          POKECA_TEST_URL: ${{ github.event_name != 'pull_request' && 'https://card-play-sim.github.io/pokeca-play-table-/' || '' }}
+          POKECA_TEST_URL: http://127.0.0.1:8765/
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/pokeca-image-gallery-http.log 2>&1 &
+          gallery_server=$!
+          trap 'kill "$gallery_server" 2>/dev/null || true' EXIT
+          curl --fail --silent --show-error --retry 5 --retry-connrefused "$POKECA_TEST_URL" > /dev/null
+          node tests/image-browser-load.mjs
+      - name: Verify every official image in the published gallery
+        if: github.event_name != 'pull_request'
+        env:
+          POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: node tests/image-browser-load.mjs
       - name: Preserve per-card image loading results
         if: always()
