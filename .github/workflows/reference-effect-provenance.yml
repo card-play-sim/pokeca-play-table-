@@ -270,6 +270,8 @@ jobs:
           pattern: reference-*
           path: reports/ci-artifacts
       - name: Aggregate shared causes and stop on missing evidence or failures
+        env:
+          REFERENCE_CI_JOB_CONCLUSIONS: ${{ toJSON(needs) }}
         run: node scripts/aggregate-reference-effect-ci-causes.cjs reports/ci-artifacts reports/reference-effect-codex-batch.json
       - name: Archive Codex shared-cause batch even on failure
         if: always()
