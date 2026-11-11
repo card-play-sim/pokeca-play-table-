@@ -33,6 +33,7 @@ for(const row of rows){
  if(!/^[a-f0-9]{64}$/.test(sourceHash)||sourceHash!==digest(text))reasons.push('OFFICIAL_TEXT_HASH_MISMATCH');
  const key=ident+':'+kind+':'+String(row?.effectName||'');
  if(seen.has(key)&&seen.get(key)!==sourceHash)reasons.push('CONFLICTING_EFFECT_EVIDENCE');
+ if(seen.has(key)&&seen.get(key)===sourceHash)reasons.push('DUPLICATE_EFFECT_EVIDENCE');
  if(reasons.length){result.blocked.push({officialCardId:ident,effectKind:kind,reasons});continue;}
  seen.set(key,sourceHash);result.counts.verified++;
  // Exact normalized text is a conservative grouping key, not a claim of equivalent semantics.
