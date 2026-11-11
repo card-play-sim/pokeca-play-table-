@@ -15,7 +15,7 @@ if(task.normalizedTextHash!==digest(task.officialText.normalize('NFKC').replace(
 if(new Set(task.prints).size!==task.prints.length||task.evidence.length<task.prints.length)throw Error('INVALID_CODEX_TASK_PRINT_COVERAGE');
 for(const print of task.prints){
  if(!/^\\d{4,8}$/.test(String(print)))throw Error('INVALID_CODEX_PRINT_ID');
- if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&e.officialPageUrl.includes('/card/'+print)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
+ if(!task.evidence.some(e=>e.officialCardId===print&&typeof e.officialPageUrl==='string'&&new RegExp('^https://www\\.pokemon-card\\.com/card-search/details\\.php/card/'+print+'(?:/|$)').test(e.officialPageUrl)&&/^[a-f0-9]{64}$/.test(e.officialTextSha256)))throw Error('MISSING_CODEX_PRINT_PROVENANCE:'+print);
 }
 
 const prompt=[
