@@ -15,6 +15,23 @@ for(const source of sources){
   found.push({source,batch,task:matches[0]});
  }
 }
+if(id==='AUTO'){
+ const candidates=[];
+ for(const source of sources){
+  if(!fs.existsSync(source))continue;
+  const batch=JSON.parse(fs.readFileSync(source,'utf8'));
+  if(batch.purpose!=='OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BATCH'||!Array.isArray(batch.tasks))throw Error('INVALID_TASK_SOURCE:'+source);
+  if(batch.status!=='READY_FOR_CODEX_REVIEW'||batch.counts?.blocked!==0)continue;
+  for(const task of batch.tasks)if(task.status==='CODEX_REVIEW_REQUIRED'&&Array.isArray(task.prints)&&task.prints.length)candidates.push({source,batch,task});
+ }
+ if(!candidates.length)throw Error('NO_VERIFIED_CODEX_TASKS_AVAILABLE');
+ candidates.sort((a,b)=>b.task.prints.length-a.task.prints.length||a.task.taskId.localeCompare(b.task.taskId));
+ const selected=candidates[0];
+ fs.mkdirSync(path.dirname(path.resolve(out)),{recursive:true});
+ fs.writeFileSync(out,JSON.stringify(selected.batch,null,2)+'\\n');
+ console.log('CODEX_TASK_SOURCE_SELECTED:',JSON.stringify({taskId:selected.task.taskId,source:selected.source,auto:true}));
+ process.exit(0);
+}
 if(!found.length)throw Error('TASK_ID_NOT_FOUND_IN_VERIFIED_SOURCES:'+id);
 const primary=found[0];
 for(const item of found.slice(1)){
