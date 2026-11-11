@@ -5,7 +5,7 @@ const input=process.argv[2],taskId=process.argv[3],output=process.argv[4];
 if(!input||!taskId||!output||!fs.existsSync(input))throw Error('MISSING_VERIFIED_CODEX_TASK_INPUT');
 const batch=JSON.parse(fs.readFileSync(input,'utf8'));
 if(batch.purpose!=='OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BATCH'||batch.status!=='READY_FOR_CODEX_REVIEW'||batch.counts?.blocked!==0||!Array.isArray(batch.tasks))throw Error('CODEX_TASK_BATCH_NOT_VERIFIED');
-const matches=batch.tasks.filter(t=>t.taskId===taskId);
+const matches=taskId==='AUTO'?[...batch.tasks].filter(t=>t.status==='CODEX_REVIEW_REQUIRED'&&Array.isArray(t.prints)&&t.prints.length).sort((a,b)=>b.prints.length-a.prints.length||a.taskId.localeCompare(b.taskId)).slice(0,1):batch.tasks.filter(t=>t.taskId===taskId);
 if(matches.length!==1)throw Error('CODEX_TASK_NOT_UNIQUE_OR_NOT_FOUND');
 const task=matches[0];
 if(task.status!=='CODEX_REVIEW_REQUIRED'||!Array.isArray(task.evidence)||!task.evidence.length||!Array.isArray(task.prints)||!task.prints.length)throw Error('INVALID_CODEX_TASK_EVIDENCE');
