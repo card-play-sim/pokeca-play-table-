@@ -4,6 +4,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const [idsFile,outFile,reportFile]=process.argv.slice(2);
 if(!idsFile||!outFile||!reportFile)throw Error('USAGE: collect-official-effect-pages.cjs ids.json output.ndjson report.json');
+if(new Set([idsFile,outFile,reportFile].map(p=>path.resolve(p))).size!==3)throw Error('COLLECTOR_PATHS_MUST_DIFFER');
 const ids=JSON.parse(fs.readFileSync(idsFile,'utf8'));
 if(!Array.isArray(ids)||!ids.length||ids.some(id=>!/^\d{4,8}$/.test(String(id))))throw Error('INVALID_OFFICIAL_CARD_IDS');
 if(new Set(ids.map(String)).size!==ids.length)throw Error('DUPLICATE_OFFICIAL_CARD_IDS');
@@ -58,7 +59,15 @@ function parse(id,html,url){
  fs.mkdirSync(path.dirname(path.resolve(outFile)),{recursive:true});
  fs.mkdirSync(path.dirname(path.resolve(reportFile)),{recursive:true});
  const existing=fs.existsSync(outFile)?fs.readFileSync(outFile,'utf8').split(/\r?\n/).filter(Boolean).map(JSON.parse):[];
- const seen=new Map(existing.map(r=>[[r.officialCardId,r.effectKind,r.effectName,r.effectIndex].join(':'),r]));
+ const seen=new Map();
+ for(const row of existing){
+  const id=String(row.officialCardId||'');
+  const expected='https://www.pokemon-card.com/card-search/details.php/card/'+id;
+  if(!/^\d{4,8}$/.test(id)||row.officialPageUrl!==expected||typeof row.effectText!=='string'||sha(row.effectText)!==row.officialTextSha256)throw Error('INVALID_EXISTING_COLLECTOR_EVIDENCE');
+  const slot=[id,row.effectKind,row.effectName,row.effectIndex].join(':');
+  if(seen.has(slot))throw Error('DUPLICATE_EXISTING_COLLECTOR_SLOT:'+slot);
+  seen.set(slot,row);
+ }
  const reports=[];let added=0;
  for(const id of ids){
   const key=String(id),url='https://www.pokemon-card.com/card-search/details.php/card/'+key;
