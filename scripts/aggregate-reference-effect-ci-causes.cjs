@@ -14,7 +14,7 @@ if(conclusionsText!==undefined){try{conclusions=JSON.parse(conclusionsText);}cat
 if(conclusionsText!==undefined&&(!conclusions||typeof conclusions!=='object'||Array.isArray(conclusions)))gaps.push({job:'workflow',reason:'INVALID_JOB_CONCLUSIONS_SCHEMA'});
 for(const job of expected){
  if(conclusionsText!==undefined){
-  const conclusion=conclusions?.[job];
+  const conclusion=conclusions?.[job]?.result;
   if(conclusion!=='success')gaps.push({job,reason:'JOB_NOT_SUCCESSFUL',conclusion:typeof conclusion==='string'?conclusion:'MISSING'});
  }
  const dir=job==='provenance'?'reference-effect-coverage':'reference-runtime-causes-'+job;
