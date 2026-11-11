@@ -15,6 +15,10 @@ permissions:
 jobs:
   pilot:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -24,9 +28,11 @@ jobs:
       - name: Verify collector parser and restart behavior
         run: node tests/official-effect-collector.test.cjs
       - name: Select known reference card IDs without changing approved data
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           mkdir -p reports/official-effect-pilot
-          node -e "const fs=require('fs');const p=require('./data/reference-effects/plans.json');fs.writeFileSync('reports/official-effect-pilot/ids.json',JSON.stringify([...new Set(p.records.filter(x=>x.category==='pokemon'&&((x.attacks||[]).some(a=>a.text?.trim())||(x.abilities||[]).some(a=>a.text?.trim()))).map(x=>String(x.officialCardId)))].slice(0,20)));"
+          node -e "const fs=require('fs');const p=require('./data/reference-effects/plans.json');fs.writeFileSync('reports/official-effect-pilot/ids.json',JSON.stringify([...new Set(p.records.filter(x=>x.category==='pokemon'&&((x.attacks||[]).some(a=>a.text?.trim())||(x.abilities||[]).some(a=>a.text?.trim()))).map(x=>String(x.officialCardId)))].filter((_,i)=>i%2===Number(process.env.SHARD)).slice(0,30)));"
       - name: Fetch official pages and checkpoint only unambiguous effect blocks
         id: collect
         continue-on-error: true
@@ -49,7 +55,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: official-effect-collector-pilot
+          name: official-effect-collector-pilot-shard-${{ matrix.shard }}
           path: reports/official-effect-pilot/
       - name: Fail on blocked or unverified official extraction
         if: steps.collect.outcome == 'failure' || steps.pipeline.outcome == 'failure'
