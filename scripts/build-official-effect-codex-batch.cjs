@@ -44,7 +44,7 @@ for(const row of rows){
  const groupKey=category+':'+kind+':'+digest(normalized);
  const group=grouped.get(groupKey)||{category,effectKind:kind,normalizedTextHash:digest(normalized),officialText:normalized,prints:[],evidence:[]};
  if(!group.prints.includes(ident))group.prints.push(ident);
- group.evidence.push({officialCardId:ident,officialPageUrl:url,officialTextSha256:sourceHash,category,effectName:String(row.effectName||'')});
+ group.evidence.push({officialCardId:ident,officialPageUrl:url,officialTextSha256:sourceHash,effectText:text,category,effectKind:kind,effectName:String(row.effectName||'')});
  grouped.set(groupKey,group);
 }
 result.tasks=[...grouped.values()].sort((a,b)=>b.prints.length-a.prints.length||a.normalizedTextHash.localeCompare(b.normalizedTextHash)).map(group=>({
