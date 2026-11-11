@@ -42,8 +42,8 @@ jobs:
           for input in "${inputs[@]}"; do
             node scripts/import-official-effect-evidence.cjs "$input" data/official-effect-evidence.json --checkpoint
           done
-          node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json || true
-          node -e "const b=require('./reports/work-effect-codex-batch.json');if(b.counts.blocked)throw Error('BLOCKED_EFFECT_EVIDENCE');"
+          node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json
+          node -e "const b=require('./reports/work-effect-codex-batch.json');if(b.status!=='READY_FOR_CODEX_REVIEW'||b.counts.blocked)throw Error('BLOCKED_EFFECT_EVIDENCE');"
       - name: Commit only the verified registry
         run: |
           set -e
