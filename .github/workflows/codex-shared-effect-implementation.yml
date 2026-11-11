@@ -51,6 +51,14 @@ jobs:
           node tests/reference-official-effect-evidence-export.test.cjs
           node tests/official-effect-codex-batch.test.cjs
           node tests/official-effect-import.test.cjs
+      - name: Verify baseline reference engine before paid execution
+        run: |
+          set -e
+          node scripts/validate-reference-effect-provenance.cjs
+          node scripts/check-reference-bundle-sync.cjs
+          node scripts/build-pwa-release.cjs --check
+          node tests/reference-effect-runtime-smoke.test.cjs
+          node tests/reference-effect-opening-rejection.test.cjs
       - name: Verify Codex API access is configured
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
