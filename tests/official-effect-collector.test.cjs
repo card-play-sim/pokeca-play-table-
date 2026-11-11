@@ -33,5 +33,13 @@ try{
  result=run(multiple.replace('山札を1枚引く。','山札を3枚引く。'),2);
  assert.equal(result.results[0].status,'BLOCKED','CONFLICTING_RESTART_MUST_FAIL');
  assert.equal(fs.readFileSync(out,'utf8'),before,'CONFLICT_MUST_NOT_APPEND_PARTIAL_PRINT');
+ fs.rmSync(out,{force:true});
+ result=run('<h2>ワザ</h2><h4>技A</h4><p>山札を1枚引く。</p><h2>弱点</h2><h4>炎</h4><p>2倍</p>',0);
+ rows=fs.readFileSync(out,'utf8').trim().split('\n').map(JSON.parse);
+ assert.equal(rows.length,1,'UNRELATED_SECTION_MUST_NOT_BE_EXTRACTED_AS_ATTACK');
+ fs.rmSync(out,{force:true});
+ result=run('<h2>特性</h2><h4>能力A</h4><p>山札を1枚引く。</p><table><tr><td>混入</td></tr></table>',2);
+ assert.equal(result.results[0].status,'BLOCKED','UNSUPPORTED_NESTED_MARKUP_MUST_BLOCK');
+ assert.equal(fs.existsSync(out),false,'AMBIGUOUS_HTML_MUST_NOT_CREATE_EVIDENCE');
  console.log('OFFICIAL_EFFECT_COLLECTOR PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
