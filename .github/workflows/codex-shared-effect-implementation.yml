@@ -35,10 +35,20 @@ jobs:
             echo "::error::OPENAI_API_KEY secret is missing; no Codex execution was attempted"
             exit 2
           fi
-      - name: Export official text and verified shared tasks
+      - name: Export verified reference and WORK effect tasks
         run: |
           node scripts/export-reference-official-effect-evidence.cjs data/reference-effects/plans.json reports/reference-official-effect-evidence.json
-          node scripts/build-official-effect-codex-batch.cjs reports/reference-official-effect-evidence.json reports/official-effect-codex-batch.json
+          node scripts/build-official-effect-codex-batch.cjs reports/reference-official-effect-evidence.json reports/reference-effect-codex-batch.json
+          if [ -f data/official-effect-evidence.json ]; then
+            node scripts/build-official-effect-codex-batch.cjs data/official-effect-evidence.json reports/work-effect-codex-batch.json
+          fi
+      - name: Choose verified WORK task source when available
+        run: |
+          if [ -f reports/work-effect-codex-batch.json ]; then
+            cp reports/work-effect-codex-batch.json reports/official-effect-codex-batch.json
+          else
+            cp reports/reference-effect-codex-batch.json reports/official-effect-codex-batch.json
+          fi
       - name: Select one verified shared task and create safe prompt
         env:
           TASK_ID: ${{ inputs.task_id }}
