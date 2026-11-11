@@ -16,7 +16,7 @@ for(const record of data.records){
   rows.push({...common,effectKind:kind,effectName:name||'',effectIndex:index,effectText:text.trim(),officialTextSha256:hash(text.trim())});
  };
  if(record.category==='pokemon'){
-  for(const [i,attack] of (record.attacks||[]).entries())if(attack.plan)add('attack',attack.name,attack.text,i);
+  for(const [i,attack] of (record.attacks||[]).entries())if(attack.plan&&(attack.text?.trim()||attack.plan.mechanic!=='VANILLA_DAMAGE'))add('attack',attack.name,attack.text,i);
   for(const [i,ability] of (record.abilities||[]).entries())if(ability.plan)add('ability',ability.name,ability.text,i);
  }else if(record.mainPlan)add(record.category,record.name,record.text,0);
 }
