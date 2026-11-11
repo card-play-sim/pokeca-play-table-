@@ -34,6 +34,7 @@ jobs:
           node tests/official-effect-pipeline.test.cjs
           node tests/official-page-verification.test.cjs
           node tests/official-effect-collector.test.cjs
+          node tests/official-reference-comparison.test.cjs
       - name: Import all submitted records, checkpointing each verified row
         id: import
         continue-on-error: true
@@ -55,7 +56,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: official-effect-evidence-checkpoint
-          path: data/official-effect-evidence.json
+          path: |
+            data/official-effect-evidence.json
+            data/official-effect-evidence.json.checkpoint.ndjson
           if-no-files-found: ignore
       - name: Corroborate effect text against official card pages
         id: official
