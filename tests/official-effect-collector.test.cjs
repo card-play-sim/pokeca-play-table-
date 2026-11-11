@@ -20,6 +20,7 @@ try{
  result=run(valid,0);assert.equal(result.added,0,'RESTART_MUST_BE_IDEMPOTENT');
  result=run('<h2>ワザ</h2><h4>なみのり</h4><p></p><h2>特別なルール</h2>',2);
  assert.equal(result.results[0].status,'BLOCKED');
+ assert.equal(result.processed,1,'BLOCKED_PRINT_MUST_BE_CHECKPOINTED');
  assert.equal(fs.readFileSync(out,'utf8').trim().split('\n').length,1,'INVALID_PRINT_MUST_NOT_APPEND');
  console.log('OFFICIAL_EFFECT_COLLECTOR PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
