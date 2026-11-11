@@ -11,6 +11,10 @@ try{
  run('WORK_A',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
  run('AUTO',0);assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A');
  assert.ok(fs.readFileSync(out,'utf8').endsWith('\n'),'AUTO_OUTPUT_MUST_BE_VALID_NEWLINE_TERMINATED_JSON');
+ const missingFirst=path.join(dir,'missing.json');
+ const missingRun=cp.spawnSync(process.execPath,[script,'AUTO',out,missingFirst,a,b],{encoding:'utf8'});
+ assert.equal(missingRun.status,0,missingRun.stderr);
+ assert.equal(JSON.parse(fs.readFileSync(out)).tasks[0].taskId,'WORK_A','AUTO_MUST_SKIP_MISSING_PRIORITY_SOURCE');
  const largerReference=make('REFERENCE_B','b');
  largerReference.tasks[0].prints=['1','2','3'];
  fs.writeFileSync(b,JSON.stringify(largerReference));
