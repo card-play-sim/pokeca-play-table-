@@ -22,11 +22,25 @@ if(id==='AUTO'){
   const batch=JSON.parse(fs.readFileSync(source,'utf8'));
   if(batch.purpose!=='OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BATCH'||!Array.isArray(batch.tasks))throw Error('INVALID_TASK_SOURCE:'+source);
   if(batch.status!=='READY_FOR_CODEX_REVIEW'||batch.counts?.blocked!==0)continue;
-  for(const task of batch.tasks)if(task.status==='CODEX_REVIEW_REQUIRED'&&Array.isArray(task.prints)&&task.prints.length)candidates.push({source,batch,task});
+  const seen=new Set();
+  for(const task of batch.tasks){
+   if(seen.has(task.taskId))throw Error('DUPLICATE_TASK_ID_IN_SOURCE:'+source);
+   seen.add(task.taskId);
+   if(task.status==='CODEX_REVIEW_REQUIRED'&&Array.isArray(task.prints)&&task.prints.length)candidates.push({source,batch,task});
+  }
  }
  if(!candidates.length)throw Error('NO_VERIFIED_CODEX_TASKS_AVAILABLE');
- candidates.sort((a,b)=>b.task.prints.length-a.task.prints.length||a.task.taskId.localeCompare(b.task.taskId));
- const selected=candidates[0];
+ const byId=new Map();
+ for(const item of candidates){
+  const other=byId.get(item.task.taskId);
+  if(other&&(other.task.normalizedTextHash!==item.task.normalizedTextHash||other.task.category!==item.task.category||other.task.effectKind!==item.task.effectKind||other.task.officialText!==item.task.officialText))throw Error('TASK_ID_SOURCE_COLLISION:'+item.task.taskId);
+  if(!other)byId.set(item.task.taskId,item);
+ }
+ // WORK evidence has priority over reference data, including when it contains fewer prints.
+ const preferred=candidates.filter(x=>x.source===sources[0]);
+ const pool=preferred.length?preferred:candidates;
+ pool.sort((a,b)=>b.task.prints.length-a.task.prints.length||a.task.taskId.localeCompare(b.task.taskId));
+ const selected=pool[0];
  fs.mkdirSync(path.dirname(path.resolve(out)),{recursive:true});
  fs.writeFileSync(out,JSON.stringify(selected.batch,null,2)+'\\n');
  console.log('CODEX_TASK_SOURCE_SELECTED:',JSON.stringify({taskId:selected.task.taskId,source:selected.source,auto:true}));
