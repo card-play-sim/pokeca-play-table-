@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/collect-official-effect-pages.cjs'
       - 'tests/official-effect-collector.test.cjs'
+      - 'tests/official-reference-comparison.test.cjs'
+      - 'scripts/compare-collected-reference-effects.cjs'
       - '.github/workflows/pilot-official-effect-collection.yml'
   workflow_dispatch:
 
@@ -26,7 +28,9 @@ jobs:
         with:
           node-version: '22'
       - name: Verify collector parser and restart behavior
-        run: node tests/official-effect-collector.test.cjs
+        run: |
+          node tests/official-effect-collector.test.cjs
+          node tests/official-reference-comparison.test.cjs
       - name: Select known reference card IDs without changing approved data
         env:
           SHARD: ${{ matrix.shard }}
@@ -50,6 +54,7 @@ jobs:
           fi
           node scripts/import-official-effect-evidence.cjs reports/official-effect-pilot/effects.ndjson reports/official-effect-pilot/validated.json --checkpoint
           node scripts/verify-official-effect-pages.cjs reports/official-effect-pilot/validated.json reports/official-effect-pilot/verified-pages.json
+          node scripts/compare-collected-reference-effects.cjs data/reference-effects/plans.json reports/official-effect-pilot/validated.json reports/official-effect-pilot/reference-comparison.json
           node scripts/build-official-effect-codex-batch.cjs reports/official-effect-pilot/validated.json reports/official-effect-pilot/tasks.json
       - name: Preserve raw collection evidence for review
         if: always()
