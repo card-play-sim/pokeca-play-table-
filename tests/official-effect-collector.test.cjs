@@ -41,5 +41,11 @@ try{
  result=run('<h2>特性</h2><h4>能力A</h4><p>山札を1枚引く。</p><table><tr><td>混入</td></tr></table>',2);
  assert.equal(result.results[0].status,'BLOCKED','UNSUPPORTED_NESTED_MARKUP_MUST_BLOCK');
  assert.equal(fs.existsSync(out),false,'AMBIGUOUS_HTML_MUST_NOT_CREATE_EVIDENCE');
+ result=run('<h3>ワザ</h3><h5>わざA</h5><p>山札を1枚引く。</p><h3>弱点</h3><h5>炎</h5>',0);
+ rows=fs.readFileSync(out,'utf8').trim().split('\n').map(JSON.parse);
+ assert.equal(rows.length,1,'ALTERNATE_VALID_HEADING_LEVELS_MUST_WORK');
+ fs.rmSync(out,{force:true});
+ result=run('<h2>ワザ</h3><h4>わざA</h4><p>山札を1枚引く。</p>',2);
+ assert.equal(result.results[0].status,'BLOCKED','MISMATCHED_SECTION_HEADING_MUST_NOT_BE_TRUSTED');
  console.log('OFFICIAL_EFFECT_COLLECTOR PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
