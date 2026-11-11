@@ -56,7 +56,7 @@ jobs:
           path: data/official-effect-evidence.json
           if-no-files-found: ignore
       - name: Commit only the verified registry
-        if: steps.import.outcome == 'success' || steps.import.outcome == 'failure'
+        if: steps.import.outcome == 'success'
         run: |
           set -e
           if [ ! -f data/official-effect-evidence.json ]; then exit 0; fi
@@ -72,5 +72,5 @@ jobs:
       - name: Report failed ingestion after preserving valid checkpoints
         if: steps.import.outcome == 'failure'
         run: |
-          echo "::error::Ingestion failed. Valid rows were preserved in the evidence registry and checkpoint artifact."
+          echo "::error::Ingestion failed. Valid rows were preserved as a checkpoint artifact for review, but were not committed."
           exit 1
