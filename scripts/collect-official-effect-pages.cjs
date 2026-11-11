@@ -30,16 +30,18 @@ async function get(id){
 }
 function parse(id,html,url){
  // Restrict parsing to recognizable official detail headings. No broad free-text guesses.
- const heading=/<h[2-6]\b[^>]*>([\s\S]*?)<\/h[2-6]>/gi;
- const found=[...html.matchAll(heading)].map(m=>({index:m.index,end:m.index+m[0].length,level:Number(m[0][2]),label:strip(m[1])}));
+ const heading=/<h([2-6])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi;
+ const found=[...html.matchAll(heading)].map(m=>({index:m.index,end:m.index+m[0].length,level:Number(m[1]),label:strip(m[2])}));
  const result=[],errors=[];
- let section='';
+ let section='',previousLevel=0;
  for(let i=0;i<found.length;i++){
   const h=found[i],next=found[i+1]?.index??html.length;
-  if(/^(ワザ|特性|特別なルール)$/.test(h.label)){section=h.label;continue;}
-  if(h.level<=3){section='';continue;}
+  if(/^(ワザ|特性|特別なルール)$/.test(h.label)){section=h.label;previousLevel=h.level;continue;}
+  if(h.level<=previousLevel){section='';continue;}
   if(section!=='ワザ'&&section!=='特性')continue;
   const body=html.slice(h.end,next);
+  // A nested heading cannot be a sibling effect name; quarantine rather than flatten.
+  if(h.level>previousLevel+2){errors.push('AMBIGUOUS_EFFECT_HEADING_LEVEL:'+h.label);continue;}
   if(!h.label||h.label.length>120){errors.push('INVALID_EFFECT_HEADING');continue;}
   // Never include script/style or nested structural headings as an effect.
   if(/<(?:script|style|h[1-6])\b/i.test(body)){errors.push('AMBIGUOUS_EFFECT_HTML:'+h.label);continue;}
