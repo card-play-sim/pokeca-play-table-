@@ -234,6 +234,19 @@ test('Budew zero cost is observed from the official zero-energy icon; item lock 
 test('bench damage prevention is not counter prevention',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],bench:{1:['ドラパルトex']},energy:{0:{active:['基本悪エネルギー']}},damage:{0:40}});const a=ability(t,'you','マシマシラ');a.selections.target=[t.g.players[1].bench[0].id];t.do('you',a);assert.equal(t.g.players[1].bench[0].damage,30);});
 test('printed confusion is applied; tails deals 30 to the attacker and ends its turn',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],energy:{0:{active:['基本超エネルギー','基本悪エネルギー']},1:{active:['基本超エネルギー']}}});t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.statusCondition,'CONFUSED');const old=t.g.players[0].active.damage,confused=t.g.players[1].active;t.g.referenceRngState=682;t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(confused.damage,90);assert.equal(t.g.players[0].active.damage,old);assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');});
 test('coin protection uses damage/effect prevention only in the next opposing turn',()=>{const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],energy:{0:{active:['基本炎エネルギー','基本超エネルギー']},1:{active:['基本悪エネルギー']}}});t.g.referenceRngState=0;t.do('you',{type:'attack_turn',attackIndex:1});t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].active.damage,0);assert.equal(t.g.turnPlayer,'you');});
+test('shared energy-transfer command preserves card identity for item and attack',()=>{
+ const item=setup({hand:{0:['エネルギーつけかえ']},bench:{0:['メガガルーラex']},energy:{0:{active:['基本悪エネルギー']}}});
+ const energyId=item.g.players[0].active.energyCards[0].id;
+ item.do('you',actionFor(item,'you','エネルギーつけかえ','play_item'));
+ assert.equal(item.g.players[0].bench[0].energyCards[0].id,energyId);
+ assert(!item.g.players[0].active.energyCards.some(e=>e.id===energyId));
+ assert(item.g.history.some(h=>h.details?.command==='MOVE_ENERGY'&&h.details?.energyId===energyId));
+ const attack=setup({active:['シェイミ','ドラメシヤ'],bench:{0:['マシマシラ']},energy:{0:{active:['基本悪エネルギー','基本超エネルギー']}}});
+ const moved=attack.g.players[0].active.energyCards[0].id,target=attack.g.players[0].bench[0].id;
+ attack.do('you',{type:'attack_turn',attackIndex:0,selections:{energy:[moved],attachTo:[target]}});
+ assert(attack.g.players[0].bench[0].energyCards.some(e=>e.id===moved));
+ assert(attack.g.history.some(h=>h.details?.command==='MOVE_ENERGY'&&h.details?.energyId===moved));
+});
 test('energy switch cannot select the same Pokemon and does not consume hand attachment',()=>{const t=setup({hand:{0:['エネルギーつけかえ']},bench:{0:['メガガルーラex']},energy:{0:{active:['基本悪エネルギー']}}});const a=actionFor(t,'you','エネルギーつけかえ','play_item'),bad=JSON.parse(JSON.stringify(a));bad.selections.attachTo=[t.g.players[0].active.id];t.reject('you',bad,/SAME/);t.do('you',a);assert.equal(t.g.players[0].bench[0].energyCards.length,1);assert.equal(t.g.players[0].normalEnergyAttached,false);});
 test('Night Mine adds one Colorless only for a source-verified Tera Pokemon',()=>{const t=setup({firstDeck:1,active:['ドラパルトex','ロケット団のニューラ'],hand:{1:['夜の鉱山']},energy:{0:{active:['基本炎エネルギー','基本超エネルギー']}}});t.do('you',{type:'end_turn'});t.do('ai',actionFor(t,'ai','夜の鉱山','play_stadium'));t.do('ai',{type:'end_turn'});t.reject('you',{type:'attack_turn',attackIndex:1},/ENERGY/);});
 
