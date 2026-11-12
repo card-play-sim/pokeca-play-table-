@@ -76,6 +76,20 @@ test('confusion self-knockout uses Rule Engine prize and promotion order across 
   assert(!t.g.history.some(h=>h.details?.command==='DAMAGE'&&h.player==='you'),'failed attack must not damage opponent');
  }
 });
+test('confusion self-knockout with no bench awards the opponent the game',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー'],hp:80},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'],hp:300}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  t.g.players[0].active.statusCondition='CONFUSED';
+  t.g.players[0].active.damage=fixture.hp-30;
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(t.g.status,'finished',fixture.name+' self-knockout must finish');
+  assert.equal(t.g.winner,'ai',fixture.name+' opponent wins');
+  assert(!t.g.pendingPrizeSelection,'no prize-selection after terminal knockout');
+ }
+});
 test('confusion heads permits attacks and does not place self counters across Pokemon',()=>{
  for(const fixture of [
   {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
