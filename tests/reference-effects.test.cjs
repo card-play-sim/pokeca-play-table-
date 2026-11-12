@@ -212,6 +212,20 @@ test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
 test('Fairy Zone, weakness, bench-count damage and defender promotion choice',()=>{const t=setup({active:['リーリエのピッピex','ドラメシヤ'],bench:{1:['スボミー','ノコッチ']},energy:{0:{active:['基本超エネルギー','基本悪エネルギー']}}});const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,120);assert.equal(t.g.pendingReferenceChoice.playerId,'ai');assert.equal(t.g.pendingPrizeSelection.playerId,'you');t.do('you',{type:'take_prizes',slots:[0]});const target=t.g.players[1].bench[1].id;t.do('ai',{type:'resolve_reference_choice',benchInstanceId:target});assert.equal(t.g.players[1].active.id,target);assert.equal(t.g.turnPlayer,'ai');});
+test('shared damage-counter transfer preserves total counters across multiple targets',()=>{
+ for(const target of ['ドラメシヤ','ドラパルトex']){
+  const t=setup({active:['マシマシラ','ドラメシヤ'],bench:{1:target==='ドラパルトex'?['ドラパルトex']:[]},energy:{0:{active:['基本悪エネルギー']}},damage:{0:50}});
+  const a=ability(t,'you','マシマシラ');
+  if(target==='ドラパルトex')a.selections.target=[t.g.players[1].bench[0].id];
+  const source=t.g.players[0].active,recipient=target==='ドラパルトex'?t.g.players[1].bench[0]:t.g.players[1].active;
+  const before=source.damage+recipient.damage;
+  t.do('you',a);
+  assert.equal(source.damage,20);
+  assert.equal(recipient.damage,30);
+  assert.equal(source.damage+recipient.damage,before,'counter movement must conserve damage');
+  assert(t.g.history.some(h=>h.details?.command==='MOVE_DAMAGE_COUNTERS'));
+ }
+});
 test('Adrena Brain requires Dark, moves up to three, and cannot duplicate counters',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],energy:{0:{active:['基本悪エネルギー']}},damage:{0:50}});const a=ability(t,'you','マシマシラ');t.do('you',a);assert.equal(t.g.players[0].active.damage,20);assert.equal(t.g.players[1].active.damage,30);t.reject('you',a,/USED/);});
 test('hand Excite Dive keeps its real evolution stage and shared entry event',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],hand:{0:['ファイアローex']}});const c=t.g.players[0].hand[0],a=t.port.getHandOptions('you',c.id).find(o=>o.action.type==='use_ability');assert(a?.ok,JSON.stringify(a));t.do('you',a.action);assert.equal(t.g.players[0].bench[0].name,'ファイアローex');assert.equal(t.g.players[0].bench[0].basic,false);assert.equal(t.g.players[0].bench[0].stage,2);});
 test('Meowth trigger is only the immediate from-hand Bench window',()=>{const t=setup({hand:{0:['ニャースex']}});const c=t.g.players[0].hand[0];t.do('you',{type:'bench_basic',cardId:c.id});const a=ability(t,'you','ニャースex');t.do('you',a);assert(t.g.players[0].hand.some(c=>c.cardType==='SUPPORTER'));t.reject('you',a,/USED|ENTRY/);});
