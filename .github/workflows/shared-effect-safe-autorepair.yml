@@ -78,4 +78,9 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- ui/engine.bundle.js data/reference-effects/plans.json
           git commit -m 'fix: regenerate verified reference effect artifacts [automated]'
-          git push origin HEAD:refs/heads/common-foundation-4/task-ledger-20261112
+          if ! git push origin HEAD:refs/heads/common-foundation-4/task-ledger-20261112; then
+            echo 'CONCURRENT_BRANCH_UPDATE: refusing force push or overwrite' >&2
+            git fetch origin common-foundation-4/task-ledger-20261112
+            echo 'Remote changed while repair was running; preserve evidence and stop safely' >&2
+            exit 1
+          fi
