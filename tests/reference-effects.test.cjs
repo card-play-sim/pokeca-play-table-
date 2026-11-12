@@ -304,7 +304,7 @@ test('shared bench-switch target selection works for item and supporter across o
   t.do('you',a);
   assert.equal(owner.active.id,next);
   assert.equal(owner.bench[0].id,old);
-  assert(t.g.history.some(h=>h.details?.command==='SELECT_BENCH_SWITCH'&&h.details?.benchInstanceId===next));
+  assert(t.g.history.some(h=>h.player==='you'&&h.details?.command==='SELECT_BENCH_SWITCH'&&h.details?.playerId===owner.id&&h.details?.benchInstanceId===next),'shared switch audit must preserve actor, owner and selected target');
  }
 });
 test('Goods switch moves the real benched Pokemon and preserves card IDs',()=>{const t=setup({hand:{0:['ポケモンいれかえ']},bench:{0:['マシマシラ']}});const p=t.g.players[0],old=p.active.id,next=p.bench[0].id;const a=actionFor(t,'you','ポケモンいれかえ','play_item');a.selections={bench:[next]};t.do('you',a);assert.equal(p.active.id,next);assert.equal(p.bench[0].id,old);assert(p.discard.some(c=>c.name==='ポケモンいれかえ'));});
