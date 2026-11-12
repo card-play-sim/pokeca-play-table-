@@ -1,6 +1,6 @@
 'use strict';
 // Print-scoped extensions of the canonical gateway.
-// G-BASE-004 disposable E2E marker v5: no behavior change; requires bundle regeneration. Adoption remains a separate concern.
+// G-BASE-004 disposable E2E marker v6: no behavior change; requires bundle regeneration. Adoption remains a separate concern.
 const catalog=require('./pokeca_reference_effect_data');
 const records=new Map(catalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
