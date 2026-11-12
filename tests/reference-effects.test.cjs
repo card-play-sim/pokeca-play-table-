@@ -60,6 +60,22 @@ test('shared confusion flips once, cancels attack and adds 30 self-damage across
   assert(t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
  }
 });
+test('confusion self-knockout uses Rule Engine prize and promotion order across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー'],hp:80,prizes:1},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'],hp:300,prizes:3}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],bench:{0:['マシマシラ']},energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  const attacker=t.g.players[0].active,opponent=t.g.players[1];
+  attacker.statusCondition='CONFUSED';attacker.damage=fixture.hp-30;
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert(!t.g.players[0].active||t.g.players[0].active.id!==attacker.id,fixture.name+' must be knocked out');
+  assert.equal(opponent.prizes,6,'prizes must not change until selected');
+  assert.equal(t.g.pendingPrizeSelection?.playerId,'ai',fixture.name+' opponent takes prizes');
+  assert.equal(t.g.pendingPrizeSelection?.count,fixture.prizes,fixture.name+' prize count');
+  assert(!t.g.history.some(h=>h.details?.command==='DAMAGE'&&h.player==='you'),'failed attack must not damage opponent');
+ }
+});
 test('confusion heads permits attacks and does not place self counters across Pokemon',()=>{
  for(const fixture of [
   {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
