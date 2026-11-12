@@ -60,6 +60,19 @@ test('shared confusion flips once, cancels attack and adds 30 self-damage across
   assert(t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
  }
 });
+test('confusion heads permits attacks and does not place self counters across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:0});
+  const attacker=t.g.players[0].active;
+  attacker.statusCondition='CONFUSED';
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(attacker.damage,0,fixture.name+' successful confusion flip');
+  assert(!t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
+ }
+});
 test('confusion cancels non-damage switch attack without moving active Pokemon',()=>{
  const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['スボミー']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
  const active=t.g.players[0].active,bench=t.g.players[0].bench[0];
