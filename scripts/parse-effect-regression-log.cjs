@@ -8,7 +8,7 @@ const log=fs.readFileSync(logFile,'utf8');
 const failures=[];
 const lines=log.split(/\r?\n/);
 for(let i=0;i<lines.length;i++){
- const m=lines[i].match(/^\s*not ok\s+\d+\s+-\s+(.+)$/);
+ const m=lines[i].match(/^\s*not ok\s+\d+\s+-\s+(.+)$/)||lines[i].match(/^FAIL reference\s+(.+)$/);
  if(!m)continue;
  const title=m[1].trim();
  const normalized=title.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,70)||'UNKNOWN';
