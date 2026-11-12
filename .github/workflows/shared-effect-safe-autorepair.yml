@@ -47,7 +47,7 @@ jobs:
                   if n <= indent:
                       break
                   body.append(following[indent+2:])
-              result = subprocess.run(['bash', '-n'], input='\\n'.join(body), text=True, capture_output=True)
+              result = subprocess.run(['bash', '-n'], input='\n'.join(body), text=True, capture_output=True)
               if result.returncode:
                   raise SystemExit(f'BASH_SYNTAX_ERROR at workflow line {i+1}: {result.stderr}')
               count += 1
