@@ -60,6 +60,15 @@ test('shared confusion flips once, cancels attack and adds 30 self-damage across
   assert(t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
  }
 });
+test('confusion cancels non-damage switch attack without moving active Pokemon',()=>{
+ const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['スボミー']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
+ const active=t.g.players[0].active,bench=t.g.players[0].bench[0];
+ active.statusCondition='CONFUSED';
+ t.do('you',{type:'attack_turn',attackIndex:0,targetIds:[bench.id]});
+ assert.equal(active.damage,30);
+ assert.equal(t.g.players[0].active.id,active.id,'failed switch attack must not change active');
+ assert.equal(t.g.players[0].bench[0].id,bench.id,'failed switch attack must preserve bench');
+});
 test('shared attack lock is independent from status and expires by turn',()=>{
  for(const name of ['ロケット団のニューラ','メガガルーラex']){
   const energy=name==='ロケット団のニューラ'?['基本悪エネルギー']:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'];
