@@ -316,7 +316,7 @@ test('shared conditional deck search preserves private selection and destination
   {name:'なかよしポフィン',type:'play_item',destination:'bench'},
   {name:'シアノ',type:'play_supporter',destination:'hand'}
  ]){
-  const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:[fixture.name]}});
+  const t=setup({firstDeck:fixture.name==='シアノ'?0:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:[fixture.name]}});
   const a=actionFor(t,'you',fixture.name,fixture.type);
   const p=t.g.players[0],request=t.port.getHandOptions('you',a.cardId).find(x=>x.action.type===fixture.type).requests.find(x=>x.key==='cards');
   const chosen=request.candidates[0];
