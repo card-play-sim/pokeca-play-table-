@@ -249,6 +249,19 @@ test('Ruins is two counters on a non-Dark Basic entry, not guessed attack damage
 test('Cyrano, Hilda and Brock cannot mix search categories illegally',()=>{for(const name of ['シアノ','トウコ','たけしのスカウト']){const t=setup({hand:{0:[name]}}),a=actionFor(t,'you',name,'play_supporter');t.do('you',a);assert(t.g.players[0].hand.length>0);assert(t.g.players[0].turnLimits.supporterUsed);}});
 test('Akamatsu chooses different basic types and attaches only the non-hand card',()=>{const t=setup({hand:{0:['アカマツ']}}),a=actionFor(t,'you','アカマツ','play_supporter');assert.equal(a.selections.cards.length,2);t.do('you',a);assert.equal(t.g.players[0].active.energyCards.length,1);assert(t.g.players[0].hand.some(c=>c.kind==='energy'));});
 test('Red Card checks three prizes; Unfair checks previous opponent knockout',()=>{let t=setup({hand:{0:['スペシャルレッドカード']}});t.reject('you',{type:'play_item',cardId:t.g.players[0].hand[0].id},/PRIZES/);t.g.players[1].prizes=3;t.g.players[1].prizeCards.splice(3).forEach(c=>t.g.players[1].hand.push(c));t.do('you',actionFor(t,'you','スペシャルレッドカード','play_item'));assert.equal(t.g.players[1].hand.length,3);t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['アンフェアスタンプ']}});t.reject('you',{type:'play_item',cardId:t.g.players[0].hand[0].id},/KNOCKOUT/);});
+test('shared deck-top inspection preserves identity, privacy and deck size across selections',()=>{
+ for(const selected of [0,1]){
+  const t=setup({firstDeck:1,active:['ドロンチ','ロケット団のニューラ']});
+  const p=t.g.players[0],top=p.deck.slice(0,2).map(c=>c.id),before=p.deck.length;
+  const a=ability(t,'you','ドロンチ');
+  a.selections.cards=[top[selected]];
+  t.do('you',a);
+  assert(p.hand.some(c=>c.id===top[selected]));
+  assert.equal(p.deck.length,before-1);
+  assert.equal(p.deck.at(-1).id,top[1-selected]);
+  assert(t.g.history.some(h=>h.details?.command==='ADD_TO_HAND'&&h.details?.privateTo==='you'));
+ }
+});
 test('Recon looks at exactly two, adds one and returns the other to bottom',()=>{const t=setup({firstDeck:1,active:['ドロンチ','ロケット団のニューラ']});const top=t.g.players[0].deck.slice(0,2).map(c=>c.id),a=ability(t,'you','ドロンチ');t.do('you',a);assert(t.g.players[0].hand.some(c=>c.id===top[0]));assert.equal(t.g.players[0].deck.at(-1).id,top[1]);});
 test('evolution uses exact print effect and once-per-turn state; stack IDs return intact',()=>{const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['ドラメシヤ']},hand:{0:['ノココッチ']}});const base=t.g.players[0].active.id,evo=t.g.players[0].hand[0].id;t.do('you',{type:'evolve',cardId:evo,targetInstanceId:base});assert.equal(t.g.players[0].active.name,'ノココッチ');const a=ability(t,'you','ノココッチ');t.do('you',a);assert(t.g.players[0].deck.some(c=>c.id===base&&c.name==='ノコッチ'));assert(t.g.players[0].deck.some(c=>c.id===evo&&c.name==='ノココッチ'));assert.equal(t.g.players[0].active.name,'ドラメシヤ');});
 test('last remaining Active knockout ends the game without an invalid active-less state',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});t.g.referenceRngState=682;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');assert(!t.g.pendingPrizeSelection);});
