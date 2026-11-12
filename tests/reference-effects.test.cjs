@@ -77,6 +77,20 @@ test('confusion self-knockout uses Rule Engine prize and promotion order across 
   assert(!t.g.history.some(h=>h.details?.command==='DAMAGE'&&h.player==='you'),'failed attack must not damage opponent');
  }
 });
+test('confusion knockout with multiple bench Pokemon defers promotion choice but awards prizes',()=>{
+ const t=setup({active:['ロケット団のニューラ','ドラメシヤ'],bench:{0:['マシマシラ','シェイミ']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
+ const attacker=t.g.players[0].active;
+ attacker.statusCondition='CONFUSED';attacker.damage=50;
+ t.do('you',{type:'attack_turn',attackIndex:0});
+ assert.equal(t.g.players[1].prizes,5,'opponent knockout prize is awarded by canonical Rule Engine');
+ assert.equal(t.g.pendingReferenceChoice?.kind,'PROMOTE','two benches require player selection');
+ assert.equal(t.g.pendingReferenceChoice?.playerId,'you');
+ assert.equal(t.g.players[0].active,null);
+ const next=t.g.players[0].bench[0].id;
+ t.do('you',{type:'resolve_reference_choice',benchInstanceId:next});
+ assert.equal(t.g.players[0].active.id,next);
+ assert(!t.g.pendingReferenceChoice);
+});
 test('confusion self-knockout with no bench awards the opponent the game',()=>{
  for(const fixture of [
   {name:'ロケット団のニューラ',energy:['基本悪エネルギー'],hp:80},
