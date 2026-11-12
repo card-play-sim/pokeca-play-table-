@@ -21,7 +21,7 @@ function setup(options={}){
  });
  // Refresh via load initializes only derived effects. The immutable printed HP/stage stays exact.
  if(options.damage)for(const [i,n] of Object.entries(options.damage))g.players[Number(i)].active.damage=n;
- const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x});const loaded=port.loadGame(g);assert(loaded.ok,JSON.stringify(loaded));
+ if(options.referenceRngState!==undefined)g.referenceRngState=options.referenceRngState;const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x});const loaded=port.loadGame(g);assert(loaded.ok,JSON.stringify(loaded));
  return {port,get g(){return g;},do(actor,a){const result=port.dispatch(actor,a);assert(result.ok,JSON.stringify({action:a,result}));return result;},reject(actor,a,pattern){const before=JSON.stringify(port.getSnapshot());const result=port.dispatch(actor,a);assert(!result.ok,JSON.stringify(a));if(pattern)assert.match(result.errors.join(' '),pattern);assert.equal(JSON.stringify(port.getSnapshot()),before);return result;}};
 }
 function actionFor(t,actor,name,type){const p=t.g.players.find(p=>p.id===actor),card=p.hand.find(c=>c.name===name);assert(card);const choices=t.port.getHandOptions(actor,card.id);const x=choices.find(x=>x.action.type===type);assert(x,JSON.stringify(choices));assert(x.ok,JSON.stringify(x));return x.action;}
@@ -29,10 +29,119 @@ function ability(t,actor,name){const p=t.g.players.find(p=>p.id===actor),c=[p.ac
 let cases=0;function test(name,fn){try{fn();console.log('PASS reference '+name);cases++;}catch(e){console.error('FAIL reference '+name);throw e;}}
 test('89 print-specific references, 45 default names, no adoption',()=>{assert.equal(catalog.records.length,89);assert.equal(Object.keys(catalog.defaultValidationReferences).length,45);assert.equal(catalog.adoptedDeckPrints,0);const t=setup();assert(t.g.players.every(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards].filter(Boolean).every(c=>!c.officialCardId&&!c.catalogCardId&&c.validationReference.adopted===false)));});
 test('fixed 20 damage, real energy, turn draw and identity preservation',()=>{const t=setup({energy:{0:{active:['基本悪エネルギー']}}});const count=t.g.players[1].hand.length;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.damage,20);assert.equal(t.g.turnPlayer,'ai');assert.equal(t.g.players[1].hand.length,count+1);});
+test('shared special conditions: poison and burn permit attacks; sleep and paralysis prohibit attacks across two Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  for(const status of ['POISONED','BURNED']){
+   const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}}});
+   t.g.players[0].active.statusCondition=status;
+   t.do('you',{type:'attack_turn',attackIndex:0});
+  }
+  for(const status of ['ASLEEP','PARALYZED']){
+   const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}}});
+   t.g.players[0].active.statusCondition=status;
+   t.reject('you',{type:'attack_turn',attackIndex:0},/ATTACK_BLOCKED_BY_STATUS/);
+  }
+ }
+});
+test('shared confusion flips once, cancels attack and adds 30 self-damage across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  const attacker=t.g.players[0].active,defender=t.g.players[1].active;
+  attacker.statusCondition='CONFUSED';
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(attacker.damage,30,fixture.name+' confusion self-damage');
+  assert.equal(defender.damage,0,fixture.name+' attack must be cancelled');
+  assert(t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
+ }
+});
+test('confusion self-knockout uses Rule Engine prize and promotion order across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー'],hp:80,prizes:1},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'],hp:300,prizes:3}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],bench:{0:['マシマシラ']},energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  const attacker=t.g.players[0].active,opponent=t.g.players[1];
+  attacker.statusCondition='CONFUSED';attacker.damage=fixture.hp-30;
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert(!t.g.players[0].active||t.g.players[0].active.id!==attacker.id,fixture.name+' must be knocked out');
+  assert.equal(opponent.prizes,6-fixture.prizes,fixture.name+' opponent receives correct knockout prizes');
+  assert(!t.g.pendingPrizeSelection,fixture.name+' canonical auto-award must not leave pending selection');
+  assert.equal(t.g.players[0].active?.name,'マシマシラ',fixture.name+' automatically promotes sole benched Pokemon');
+  assert(!t.g.pendingReferenceChoice,fixture.name+' one bench requires no promotion choice');
+  assert(!t.g.history.some(h=>h.details?.command==='DAMAGE'&&h.player==='you'),'failed attack must not damage opponent');
+ }
+});
+test('confusion knockout with multiple bench Pokemon defers promotion choice but awards prizes',()=>{
+ const t=setup({active:['ロケット団のニューラ','ドラメシヤ'],bench:{0:['マシマシラ','シェイミ']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
+ const attacker=t.g.players[0].active;
+ attacker.statusCondition='CONFUSED';attacker.damage=50;
+ t.do('you',{type:'attack_turn',attackIndex:0});
+ assert.equal(t.g.players[1].prizes,5,'opponent knockout prize is awarded by canonical Rule Engine');
+ assert.equal(t.g.pendingReferenceChoice?.kind,'PROMOTE','two benches require player selection');
+ assert.equal(t.g.pendingReferenceChoice?.playerId,'you');
+ assert.equal(t.g.players[0].active,null);
+ const next=t.g.players[0].bench[0].id;
+ t.do('you',{type:'resolve_reference_choice',benchInstanceId:next});
+ assert.equal(t.g.players[0].active.id,next);
+ assert(!t.g.pendingReferenceChoice);
+});
+test('confusion self-knockout with no bench awards the opponent the game',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー'],hp:80},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'],hp:300}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  t.g.players[0].active.statusCondition='CONFUSED';
+  t.g.players[0].active.damage=fixture.hp-30;
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(t.g.status,'finished',fixture.name+' self-knockout must finish');
+  assert.equal(t.g.winner,'ai',fixture.name+' opponent wins');
+  assert(!t.g.pendingPrizeSelection,'no prize-selection after terminal knockout');
+ }
+});
+test('confusion heads permits attacks and does not place self counters across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:0});
+  const attacker=t.g.players[0].active;
+  attacker.statusCondition='CONFUSED';
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(attacker.damage,0,fixture.name+' successful confusion flip');
+  assert(!t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
+ }
+});
+test('confusion cancels non-damage switch attack without moving active Pokemon',()=>{
+ const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['スボミー']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
+ const active=t.g.players[0].active,bench=t.g.players[0].bench[0];
+ active.statusCondition='CONFUSED';
+ t.do('you',{type:'attack_turn',attackIndex:0,targetIds:[bench.id]});
+ assert.equal(active.damage,30);
+ assert.equal(t.g.players[0].active.id,active.id,'failed switch attack must not change active');
+ assert.equal(t.g.players[0].bench[0].id,bench.id,'failed switch attack must preserve bench');
+});
+test('shared attack lock is independent from status and expires by turn',()=>{
+ for(const name of ['ロケット団のニューラ','メガガルーラex']){
+  const energy=name==='ロケット団のニューラ'?['基本悪エネルギー']:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'];
+  const locked=setup({active:[name,'ドラメシヤ'],energy:{0:{active:energy}}});
+  locked.g.players[0].active.referenceCannotAttackTurn=locked.g.turnNumber;
+  locked.reject('you',{type:'attack_turn',attackIndex:0},/ATTACK_DISABLED_THIS_TURN/);
+  const expired=setup({active:[name,'ドラメシヤ'],energy:{0:{active:energy}}});
+  expired.g.players[0].active.referenceCannotAttackTurn=expired.g.turnNumber-1;
+  expired.do('you',{type:'attack_turn',attackIndex:0});
+ }
+});
 test('reject first turn, wrong Energy and unconnected attack without mutation',()=>{const t=setup();t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);t.g.turnNumber=1;t.reject('you',{type:'attack_turn',attackIndex:0},/first|FIRST/);});
 test('shared active-only dash, two draws and once across copies',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['メガガルーラex']},hand:{0:['ポケモンいれかえ']}});const a=ability(t,'you','メガガルーラex'),n=t.g.players[0].hand.length;t.do('you',a);assert.equal(t.g.players[0].hand.length,n+2);t.reject('you',a,/USED|SHARED/);t.do('you',actionFor(t,'you','ポケモンいれかえ','play_item'));const x=t.port.getPokemonActions('you',t.g.players[0].active.id).find(x=>x.kind==='ability');assert(!x.enabled);});
-test('coin attack uses printed 200+50 and legality inspection consumes no RNG',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});const before=randomCalls;t.port.getPokemonActions('you',t.g.players[0].active.id);assert.equal(randomCalls,before);rolls=[.1,.2,.8];const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,300);assert.equal(t.g.pendingPrizeSelection.count,1);});
-test('prizes and win are canonical; six prizes are not fabricated',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});rolls=[.8];t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].prizes,6);assert.equal(t.g.pendingPrizeSelection.count,1);t.do('you',{type:'take_prizes',slots:[0]});assert.equal(t.g.players[0].prizes,5);assert.equal(t.g.status,'active');assert.equal(t.g.turnPlayer,'ai');});
+test('coin attack uses printed 200+50 and legality inspection consumes no RNG',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});const before=randomCalls;t.port.getPokemonActions('you',t.g.players[0].active.id);assert.equal(randomCalls,before);t.g.referenceRngState=0;const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,300);assert.equal(t.g.pendingPrizeSelection.count,1);});
+test('prizes and win are canonical; six prizes are not fabricated',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});t.g.referenceRngState=682;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].prizes,6);assert.equal(t.g.pendingPrizeSelection.count,1);t.do('you',{type:'take_prizes',slots:[0]});assert.equal(t.g.players[0].prizes,5);assert.equal(t.g.status,'active');assert.equal(t.g.turnPlayer,'ai');});
 test('ultra ball pays exactly two and only searches Pokemon',()=>{const t=setup({hand:{0:['ハイパーボール','基本悪エネルギー','基本超エネルギー']}});const a=actionFor(t,'you','ハイパーボール','play_item'),before=t.g.players[0].hand.length;t.do('you',a);assert.equal(t.g.players[0].discard.length,3);assert.equal(t.g.players[0].hand.length,before-2);const found=t.g.players[0].hand[0];assert.equal(found.kind,'pokemon');});
 test('stretcher only moves real discard target and preserves its ID',()=>{const t=setup({hand:{0:['夜のタンカ']},discard:{0:['基本悪エネルギー']}});const id=t.g.players[0].discard[0].id;t.do('you',actionFor(t,'you','夜のタンカ','play_item'));assert(t.g.players[0].hand.some(c=>c.id===id));});
 test('supporter once per turn and printed Lillie draw eight at six prizes',()=>{const t=setup({hand:{0:['リーリエの決心','ジャッジマン']}});t.do('you',actionFor(t,'you','リーリエの決心','play_supporter'));assert.equal(t.g.players[0].hand.length,8);assert(t.g.players[0].turnLimits.supporterUsed);const c=t.g.players[0].hand.find(c=>c.cardType==='SUPPORTER');if(c)t.reject('you',{type:'play_supporter',cardId:c.id},/SUPPORTER/);});
@@ -117,6 +226,20 @@ test('reference-mode or print tuple tampering is rejected',()=>{const t=setup(),
 
 test('Skyline uses source-verified basic retreat and Watchtower suppresses colorless ability only',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['ラティアスex']},hand:{0:['ロケット団の監視塔']}});assert.equal(t.g.players[0].active.retreatCost,0);t.do('you',actionFor(t,'you','ロケット団の監視塔','play_stadium'));const dash=t.port.getPokemonActions('you',t.g.players[0].active.id).find(a=>a.label==='おつかいダッシュ');assert(!dash.enabled);assert.equal(t.g.players[0].active.retreatCost,0);});
 test('Fairy Zone, weakness, bench-count damage and defender promotion choice',()=>{const t=setup({active:['リーリエのピッピex','ドラメシヤ'],bench:{1:['スボミー','ノコッチ']},energy:{0:{active:['基本超エネルギー','基本悪エネルギー']}}});const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,120);assert.equal(t.g.pendingReferenceChoice.playerId,'ai');assert.equal(t.g.pendingPrizeSelection.playerId,'you');t.do('you',{type:'take_prizes',slots:[0]});const target=t.g.players[1].bench[1].id;t.do('ai',{type:'resolve_reference_choice',benchInstanceId:target});assert.equal(t.g.players[1].active.id,target);assert.equal(t.g.turnPlayer,'ai');});
+test('shared damage-counter transfer preserves total counters across multiple targets',()=>{
+ for(const target of ['ドラメシヤ','ドラパルトex']){
+  const t=setup({active:['マシマシラ','ドラメシヤ'],bench:{1:target==='ドラパルトex'?['ドラパルトex']:[]},energy:{0:{active:['基本悪エネルギー']}},damage:{0:50}});
+  const a=ability(t,'you','マシマシラ');
+  if(target==='ドラパルトex')a.selections.target=[t.g.players[1].bench[0].id];
+  const source=t.g.players[0].active,recipient=target==='ドラパルトex'?t.g.players[1].bench[0]:t.g.players[1].active;
+  const before=source.damage+recipient.damage;
+  t.do('you',a);
+  assert.equal(source.damage,20);
+  assert.equal(recipient.damage,30);
+  assert.equal(source.damage+recipient.damage,before,'counter movement must conserve damage');
+  assert(t.g.history.some(h=>h.details?.command==='MOVE_DAMAGE_COUNTERS'));
+ }
+});
 test('Adrena Brain requires Dark, moves up to three, and cannot duplicate counters',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],energy:{0:{active:['基本悪エネルギー']}},damage:{0:50}});const a=ability(t,'you','マシマシラ');t.do('you',a);assert.equal(t.g.players[0].active.damage,20);assert.equal(t.g.players[1].active.damage,30);t.reject('you',a,/USED/);});
 test('hand Excite Dive keeps its real evolution stage and shared entry event',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],hand:{0:['ファイアローex']}});const c=t.g.players[0].hand[0],a=t.port.getHandOptions('you',c.id).find(o=>o.action.type==='use_ability');assert(a?.ok,JSON.stringify(a));t.do('you',a.action);assert.equal(t.g.players[0].bench[0].name,'ファイアローex');assert.equal(t.g.players[0].bench[0].basic,false);assert.equal(t.g.players[0].bench[0].stage,2);});
 test('Meowth trigger is only the immediate from-hand Bench window',()=>{const t=setup({hand:{0:['ニャースex']}});const c=t.g.players[0].hand[0];t.do('you',{type:'bench_basic',cardId:c.id});const a=ability(t,'you','ニャースex');t.do('you',a);assert(t.g.players[0].hand.some(c=>c.cardType==='SUPPORTER'));t.reject('you',a,/USED|ENTRY/);});
@@ -126,10 +249,23 @@ test('Ruins is two counters on a non-Dark Basic entry, not guessed attack damage
 test('Cyrano, Hilda and Brock cannot mix search categories illegally',()=>{for(const name of ['シアノ','トウコ','たけしのスカウト']){const t=setup({hand:{0:[name]}}),a=actionFor(t,'you',name,'play_supporter');t.do('you',a);assert(t.g.players[0].hand.length>0);assert(t.g.players[0].turnLimits.supporterUsed);}});
 test('Akamatsu chooses different basic types and attaches only the non-hand card',()=>{const t=setup({hand:{0:['アカマツ']}}),a=actionFor(t,'you','アカマツ','play_supporter');assert.equal(a.selections.cards.length,2);t.do('you',a);assert.equal(t.g.players[0].active.energyCards.length,1);assert(t.g.players[0].hand.some(c=>c.kind==='energy'));});
 test('Red Card checks three prizes; Unfair checks previous opponent knockout',()=>{let t=setup({hand:{0:['スペシャルレッドカード']}});t.reject('you',{type:'play_item',cardId:t.g.players[0].hand[0].id},/PRIZES/);t.g.players[1].prizes=3;t.g.players[1].prizeCards.splice(3).forEach(c=>t.g.players[1].hand.push(c));t.do('you',actionFor(t,'you','スペシャルレッドカード','play_item'));assert.equal(t.g.players[1].hand.length,3);t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['アンフェアスタンプ']}});t.reject('you',{type:'play_item',cardId:t.g.players[0].hand[0].id},/KNOCKOUT/);});
+test('shared deck-top inspection preserves identity, privacy and deck size across selections',()=>{
+ for(const selected of [0,1]){
+  const t=setup({firstDeck:1,active:['ドロンチ','ロケット団のニューラ']});
+  const p=t.g.players[0],top=p.deck.slice(0,2).map(c=>c.id),before=p.deck.length;
+  const a=ability(t,'you','ドロンチ');
+  a.selections.cards=[top[selected]];
+  t.do('you',a);
+  assert(p.hand.some(c=>c.id===top[selected]));
+  assert.equal(p.deck.length,before-1);
+  assert.equal(p.deck.at(-1).id,top[1-selected]);
+  assert(t.g.history.some(h=>h.details?.command==='ADD_TO_HAND'&&h.details?.privateTo==='you'));
+ }
+});
 test('Recon looks at exactly two, adds one and returns the other to bottom',()=>{const t=setup({firstDeck:1,active:['ドロンチ','ロケット団のニューラ']});const top=t.g.players[0].deck.slice(0,2).map(c=>c.id),a=ability(t,'you','ドロンチ');t.do('you',a);assert(t.g.players[0].hand.some(c=>c.id===top[0]));assert.equal(t.g.players[0].deck.at(-1).id,top[1]);});
 test('evolution uses exact print effect and once-per-turn state; stack IDs return intact',()=>{const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['ドラメシヤ']},hand:{0:['ノココッチ']}});const base=t.g.players[0].active.id,evo=t.g.players[0].hand[0].id;t.do('you',{type:'evolve',cardId:evo,targetInstanceId:base});assert.equal(t.g.players[0].active.name,'ノココッチ');const a=ability(t,'you','ノココッチ');t.do('you',a);assert(t.g.players[0].deck.some(c=>c.id===base&&c.name==='ノコッチ'));assert(t.g.players[0].deck.some(c=>c.id===evo&&c.name==='ノココッチ'));assert.equal(t.g.players[0].active.name,'ドラメシヤ');});
-test('last remaining Active knockout ends the game without an invalid active-less state',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});rolls=[.8];t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');assert(!t.g.pendingPrizeSelection);});
-test('evolved knockout returns the original Basic print and evolution separately; finished research restores exactly',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','メガガルーラex'],hand:{0:['ドロンチ']},bench:{0:['ノコッチ','スボミー']},energy:{1:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});const base=t.g.players[0].active.id,evo=t.g.players[0].hand[0].id;t.do('you',{type:'evolve',cardId:evo,targetInstanceId:base});t.do('you',{type:'end_turn'});rolls=[.8];t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].discard.find(c=>c.id===base).name,'ドラメシヤ');assert.equal(t.g.players[0].discard.find(c=>c.id===evo).name,'ドロンチ');const saved=t.port.getResumeSnapshot(),result=t.port.restoreSession(saved);assert(result.ok,JSON.stringify(result));assert.equal(JSON.stringify(t.port.getSnapshot()),JSON.stringify(saved.game));});
+test('last remaining Active knockout ends the game without an invalid active-less state',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});t.g.referenceRngState=682;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');assert(!t.g.pendingPrizeSelection);});
+test('evolved knockout returns the original Basic print and evolution separately; finished research restores exactly',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','メガガルーラex'],hand:{0:['ドロンチ']},bench:{0:['ノコッチ','スボミー']},energy:{1:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}},referenceRngState:682});const base=t.g.players[0].active.id,evo=t.g.players[0].hand[0].id;t.do('you',{type:'evolve',cardId:evo,targetInstanceId:base});t.do('you',{type:'end_turn'});t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].discard.find(c=>c.id===base).name,'ドラメシヤ');assert.equal(t.g.players[0].discard.find(c=>c.id===evo).name,'ドロンチ');const saved=t.port.getResumeSnapshot(),result=t.port.restoreSession(saved);assert(result.ok,JSON.stringify(result));assert.equal(JSON.stringify(t.port.getSnapshot()),JSON.stringify(saved.game));});
 test('full fixed120 reference state saves and restores without adoption',()=>{const t=setup({hand:{0:['ジャッジマン']}});t.do('you',actionFor(t,'you','ジャッジマン','play_supporter'));const saved=t.port.getResumeSnapshot();assert(t.port.restoreSession(saved).ok);assert.equal(JSON.stringify(t.port.getSnapshot()),JSON.stringify(saved.game));});
 
 test('Circulator waits for defender choice after damage and moves the actual energy',()=>{const t=setup({hand:{0:['ハンディサーキュレーター']},bench:{1:['ノコッチ']},energy:{1:{active:['基本超エネルギー']}}});t.do('you',{type:'attach_tool',cardId:t.g.players[0].hand[0].id,targetInstanceId:t.g.players[0].active.id});t.do('you',{type:'end_turn'});const energy=t.g.players[1].active.energyCards[0].id;t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.pendingReferenceChoice.kind,'CIRCULATOR');assert.equal(t.g.pendingReferenceChoice.playerId,'you');const target=t.g.players[1].bench[0].id;t.reject('ai',{type:'resolve_reference_choice',energyId:energy,benchInstanceId:target},/turn|CHOICE/);t.do('you',{type:'resolve_reference_choice',energyId:energy,benchInstanceId:target});assert.equal(t.g.players[1].bench[0].energyCards[0].id,energy);assert.equal(t.g.players[1].active.energyCards.length,0);assert.equal(t.g.turnPlayer,'you');});
@@ -138,15 +274,28 @@ test('Circulator cannot move an energy from a replacement for an attacker return
 test('Phantom Dive allocates exactly six counters and rejects a forged distribution',()=>{const t=setup({firstDeck:1,active:['ドラパルトex','ロケット団のニューラ'],bench:{1:['シェイミ','メガガルーラex']},energy:{0:{active:['基本炎エネルギー','基本超エネルギー']}}});const ids=t.g.players[1].bench.map(c=>c.id);t.reject('you',{type:'attack_turn',attackIndex:1,selections:{allocation:{[ids[0]]:5}}},/ALLOCATION/);t.do('you',{type:'attack_turn',attackIndex:1,selections:{allocation:{[ids[0]]:3,[ids[1]]:3}}});assert.equal(t.g.players[1].bench.reduce((s,c)=>s+(c.damage||0),0),60);});
 test('Budew zero cost is observed from the official zero-energy icon; item lock expires',()=>{const t=setup({firstDeck:1,active:['スボミー','ロケット団のニューラ'],hand:{1:['ハイパーボール','基本悪エネルギー','基本超エネルギー']}});assert.deepEqual(Array.from(byName('スボミー').attacks[0].cost),[]);t.do('you',{type:'attack_turn',attackIndex:0});const ball=t.g.players[1].hand.find(c=>c.name==='ハイパーボール');t.reject('ai',{type:'play_item',cardId:ball.id},/ITEM/);t.do('ai',{type:'end_turn'});t.do('you',{type:'end_turn'});assert(t.port.getHandOptions('ai',ball.id).some(o=>o.ok&&o.action.type==='play_item'));});
 test('bench damage prevention is not counter prevention',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],bench:{1:['ドラパルトex']},energy:{0:{active:['基本悪エネルギー']}},damage:{0:40}});const a=ability(t,'you','マシマシラ');a.selections.target=[t.g.players[1].bench[0].id];t.do('you',a);assert.equal(t.g.players[1].bench[0].damage,30);});
-test('printed confusion is applied; tails deals 30 to the attacker and ends its turn',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],energy:{0:{active:['基本超エネルギー','基本悪エネルギー']},1:{active:['基本超エネルギー']}}});t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.statusCondition,'CONFUSED');const old=t.g.players[0].active.damage,confused=t.g.players[1].active;rolls=[.9];t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(confused.damage,90);assert.equal(t.g.players[0].active.damage,old);assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');});
-test('coin protection uses damage/effect prevention only in the next opposing turn',()=>{const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],energy:{0:{active:['基本炎エネルギー','基本超エネルギー']},1:{active:['基本悪エネルギー']}}});rolls=[.1];t.do('you',{type:'attack_turn',attackIndex:1});t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].active.damage,0);assert.equal(t.g.turnPlayer,'you');});
+test('printed confusion is applied; tails deals 30 to the attacker and ends its turn',()=>{const t=setup({active:['マシマシラ','ドラメシヤ'],energy:{0:{active:['基本超エネルギー','基本悪エネルギー']},1:{active:['基本超エネルギー']}}});t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.statusCondition,'CONFUSED');const old=t.g.players[0].active.damage,confused=t.g.players[1].active;t.g.referenceRngState=682;t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(confused.damage,90);assert.equal(t.g.players[0].active.damage,old);assert.equal(t.g.status,'finished');assert.equal(t.g.winner,'you');});
+test('coin protection uses damage/effect prevention only in the next opposing turn',()=>{const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],energy:{0:{active:['基本炎エネルギー','基本超エネルギー']},1:{active:['基本悪エネルギー']}}});t.g.referenceRngState=0;t.do('you',{type:'attack_turn',attackIndex:1});t.do('ai',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[0].active.damage,0);assert.equal(t.g.turnPlayer,'you');});
+test('shared energy-transfer command preserves card identity for item and attack',()=>{
+ const item=setup({hand:{0:['エネルギーつけかえ']},bench:{0:['メガガルーラex']},energy:{0:{active:['基本悪エネルギー']}}});
+ const energyId=item.g.players[0].active.energyCards[0].id;
+ item.do('you',actionFor(item,'you','エネルギーつけかえ','play_item'));
+ assert.equal(item.g.players[0].bench[0].energyCards[0].id,energyId);
+ assert(!item.g.players[0].active.energyCards.some(e=>e.id===energyId));
+ assert(item.g.history.some(h=>h.details?.command==='MOVE_ENERGY'&&h.details?.energyId===energyId));
+ const attack=setup({active:['シェイミ','ドラメシヤ'],referenceIds:{'シェイミ':'46559'},bench:{0:['マシマシラ']},energy:{0:{active:['基本悪エネルギー','基本超エネルギー']}}});
+ const moved=attack.g.players[0].active.energyCards[0].id,target=attack.g.players[0].bench[0].id;
+ attack.do('you',{type:'attack_turn',attackIndex:0,selections:{energy:[moved],attachTo:[target]}});
+ assert(attack.g.players[0].bench[0].energyCards.some(e=>e.id===moved));
+ assert(attack.g.history.some(h=>h.details?.command==='MOVE_ENERGY'&&h.details?.energyId===moved));
+});
 test('energy switch cannot select the same Pokemon and does not consume hand attachment',()=>{const t=setup({hand:{0:['エネルギーつけかえ']},bench:{0:['メガガルーラex']},energy:{0:{active:['基本悪エネルギー']}}});const a=actionFor(t,'you','エネルギーつけかえ','play_item'),bad=JSON.parse(JSON.stringify(a));bad.selections.attachTo=[t.g.players[0].active.id];t.reject('you',bad,/SAME/);t.do('you',a);assert.equal(t.g.players[0].bench[0].energyCards.length,1);assert.equal(t.g.players[0].normalEnergyAttached,false);});
 test('Night Mine adds one Colorless only for a source-verified Tera Pokemon',()=>{const t=setup({firstDeck:1,active:['ドラパルトex','ロケット団のニューラ'],hand:{1:['夜の鉱山']},energy:{0:{active:['基本炎エネルギー','基本超エネルギー']}}});t.do('you',{type:'end_turn'});t.do('ai',actionFor(t,'ai','夜の鉱山','play_stadium'));t.do('ai',{type:'end_turn'});t.reject('you',{type:'attack_turn',attackIndex:1},/ENERGY/);});
 
 test('Goods switch moves the real benched Pokemon and preserves card IDs',()=>{const t=setup({hand:{0:['ポケモンいれかえ']},bench:{0:['マシマシラ']}});const p=t.g.players[0],old=p.active.id,next=p.bench[0].id;const a=actionFor(t,'you','ポケモンいれかえ','play_item');a.selections={bench:[next]};t.do('you',a);assert.equal(p.active.id,next);assert.equal(p.bench[0].id,old);assert(p.discard.some(c=>c.name==='ポケモンいれかえ'));});
 test('Goods Poffin benches selected eligible Basic without creating cards',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['なかよしポフィン']}});const p=t.g.players[0],before=p.deck.length;const a=actionFor(t,'you','なかよしポフィン','play_item');const options=t.port.getHandOptions('you',a.cardId);const req=options.find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req);const c=req.candidates[0];assert(c,'eligible Basic in deck');a.selections={cards:[c.id]};t.do('you',a);assert(p.bench.some(x=>x.id===c.id));assert.equal(p.deck.length,before-1);});
 test('Goods Pokepad retrieves only a non-rule Pokemon from the real deck',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['ポケパッド']}});const p=t.g.players[0],a=actionFor(t,'you','ポケパッド','play_item');const req=t.port.getHandOptions('you',a.cardId).find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req.candidates.length);const c=req.candidates[0];a.selections={cards:[c.id]};t.do('you',a);assert(p.hand.some(x=>x.id===c.id));assert(!p.deck.some(x=>x.id===c.id));});
-test('Goods Hammer discards the selected opposing energy on heads',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['クラッシュハンマー']},energy:{1:{active:['基本悪エネルギー']}}});const p=t.g.players[1],energy=p.active.energyCards[0].id;const a=actionFor(t,'you','クラッシュハンマー','play_item');a.selections={energy:[energy]};rolls.push(.1);t.do('you',a);assert(!p.active.energyCards.some(x=>x.id===energy));assert(p.discard.some(x=>x.id===energy));});
+test('Goods Hammer discards the selected opposing energy on heads',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['クラッシュハンマー']},energy:{1:{active:['基本悪エネルギー']}}});const p=t.g.players[1],energy=p.active.energyCards[0].id;const a=actionFor(t,'you','クラッシュハンマー','play_item');a.selections={energy:[energy]};t.g.referenceRngState=0;t.do('you',a);assert(!p.active.energyCards.some(x=>x.id===energy));assert(p.discard.some(x=>x.id===energy));});
 test('forged card attack commands never bypass source-verified attack cost',()=>{const t=setup({active:['シェイミ','ドラメシヤ']});t.g.players[0].active.attacks=[{name:'forged',cost:[],damage:999,commands:[{command:'DAMAGE',amount:999}]}];t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);assert.equal(t.g.players[1].active.damage,0);});
 console.log('Reference effect scenarios',cases);
 

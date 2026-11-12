@@ -1,6 +1,36 @@
 'use strict';
-// Deterministic cross-family execution in the actual shipped browser engine.
-// Fail with precise action/print evidence, not a one-card-only patch request.
+if(!process.env.POKECA_SEED_BATCH){
+ const assert=require('node:assert/strict');
+ const {spawn}=require('node:child_process');
+ const batches=[0,1,2,3];
+ Promise.all(batches.map(batch=>new Promise((resolve,reject)=>{
+  const child=spawn(process.execPath,[__filename],{env:{...process.env,POKECA_SEED_BATCH:String(batch)},stdio:['ignore','pipe','pipe']});
+  let stdout='',stderr='';
+  child.stdout.on('data',chunk=>{stdout+=chunk;});
+  child.stderr.on('data',chunk=>{stderr+=chunk;});
+  child.on('error',reject);
+  child.on('close',code=>{
+   if(code!==0)return reject(new Error('SEED_BATCH_'+batch+'_FAILED '+stderr.slice(-6000)+' '+stdout.slice(-3000)));
+   const match=stdout.match(/SEED_BATCH_RESULT:(\{[^\n]+\})/);
+   if(!match)return reject(new Error('SEED_BATCH_'+batch+'_MISSING_RESULTS '+stdout.slice(-2000)));
+   resolve(JSON.parse(match[1]));
+  });
+ }))).then(results=>{
+  const families=new Map(),prints=new Set();
+  let executed=0,conservation=0;
+  for(const r of results){
+   executed+=r.executed;conservation+=r.conservation;
+   for(const [key,n] of Object.entries(r.families))families.set(key,(families.get(key)||0)+n);
+   for(const id of r.prints)prints.add(id);
+  }
+  assert.ok(executed>=1000,'INSUFFICIENT_CROSS_FAMILY_ACTIONS:'+executed);
+  assert.ok(families.size>=12,'INSUFFICIENT_EFFECT_FAMILIES:'+families.size);
+  assert.equal(conservation,executed,'MISSING_CARD_CONSERVATION_AUDIT');
+  for(const type of ['attack_turn','use_ability','play_item','play_supporter','play_stadium','attach_energy','evolve','retreat','resolve_reference_choice'])assert.ok(families.has(type),'UNTESTED_EFFECT_FAMILY:'+type);
+  assert.ok(prints.size>=12,'INSUFFICIENT_ACTIVE_PRINT_DIVERSITY:'+prints.size);
+  console.log('REFERENCE_CROSS_FAMILY_SEEDED PASS',JSON.stringify({seeds:64,actions:executed,conservation,actionFamilies:Object.fromEntries([...families].sort()),activePrints:prints.size}));
+ }).catch(error=>{console.error(error);process.exitCode=1;});
+}else{
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const source=fs.readFileSync(path.resolve(__dirname,'../ui/engine.bundle.js'),'utf8');
 const sandbox={window:{},performance:require('node:perf_hooks').performance,setTimeout};
@@ -17,7 +47,7 @@ function failure(seed,step,owner,action,game,error){
  const record={causeId,command:action.type||'UNKNOWN',test:'tests/reference-effect-cross-family-seeded.test.cjs',officialCardId,seed,step,actor:owner,error:String(error?.message||error).slice(0,400)};
  console.error('REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify(record));
 }
-for(let seed=1;seed<=64;seed++){
+for(let seed=1+Number(process.env.POKECA_SEED_BATCH)*16;seed<=16+Number(process.env.POKECA_SEED_BATCH)*16;seed++){
  let state=(seed*2654435761)>>>0;
  const random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};
  const created=engine.createReferenceValidationMatch(manifest,{rng:random,firstDeck:seed%2,firstPlayer:seed%2?'you':'ai'});
@@ -54,10 +84,5 @@ for(let seed=1;seed<=64;seed++){
   assert.notEqual(JSON.stringify(game),before,'legal action must mutate state seed='+seed+' step='+step);
  }
 }
-assert.ok(executed>=1000,'INSUFFICIENT_CROSS_FAMILY_ACTIONS:'+executed);
-assert.ok(families.size>=12,'INSUFFICIENT_EFFECT_FAMILIES:'+families.size);
-assert.ok(conservation===executed,'MISSING_CARD_CONSERVATION_AUDIT:'+conservation+'/'+executed);
-// Prize-taking is verified by the dedicated rejection/rollback test; random legal play may not reach a knockout.
-for(const type of ['attack_turn','use_ability','play_item','play_supporter','play_stadium','attach_energy','evolve','retreat','resolve_reference_choice'])assert.ok(families.has(type),'UNTESTED_EFFECT_FAMILY:'+type);
-assert.ok(prints.size>=12,'INSUFFICIENT_ACTIVE_PRINT_DIVERSITY:'+prints.size);
-console.log('REFERENCE_CROSS_FAMILY_SEEDED PASS',JSON.stringify({seeds:64,actions:executed,conservation,actionFamilies:Object.fromEntries([...families].sort()),activePrints:prints.size}));
+console.log('SEED_BATCH_RESULT:'+JSON.stringify({executed,conservation,families:Object.fromEntries(families),prints:[...prints]}));
+}

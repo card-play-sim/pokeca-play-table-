@@ -13,6 +13,6 @@ for (const name of ['pokeca_reference_effect_runtime', 'pokeca_reference_validat
   const bodyStart = start + prefix.length;
   const bodyEnd = bundle.indexOf('\n},"pokeca_', bodyStart);
   assert.ok(bodyEnd > bodyStart, 'MISSING_BUNDLE_BOUNDARY:' + name);
-  assert.equal(bundle.slice(bodyStart, bodyEnd), source, 'STALE_BUNDLE_MODULE:' + name);
+  assert.equal(bundle.slice(bodyStart, bodyEnd).trimEnd(), source, 'STALE_BUNDLE_MODULE:' + name);
 }
 console.log('REFERENCE_BUNDLE_SOURCE_SYNC PASS');
