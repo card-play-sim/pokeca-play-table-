@@ -70,9 +70,10 @@ test('confusion self-knockout uses Rule Engine prize and promotion order across 
   attacker.statusCondition='CONFUSED';attacker.damage=fixture.hp-30;
   t.do('you',{type:'attack_turn',attackIndex:0});
   assert(!t.g.players[0].active||t.g.players[0].active.id!==attacker.id,fixture.name+' must be knocked out');
-  assert.equal(opponent.prizes,6,'prizes must not change until selected');
-  assert.equal(t.g.pendingPrizeSelection?.playerId,'ai',fixture.name+' opponent takes prizes');
-  assert.equal(t.g.pendingPrizeSelection?.count,fixture.prizes,fixture.name+' prize count');
+  assert.equal(opponent.prizes,6-fixture.prizes,fixture.name+' opponent receives correct knockout prizes');
+  assert(!t.g.pendingPrizeSelection,fixture.name+' canonical auto-award must not leave pending selection');
+  assert.equal(t.g.pendingReferenceChoice?.kind,'PROMOTE',fixture.name+' must promote bench after knockout');
+  assert.equal(t.g.pendingReferenceChoice?.playerId,'you',fixture.name+' owner chooses promotion');
   assert(!t.g.history.some(h=>h.details?.command==='DAMAGE'&&h.player==='you'),'failed attack must not damage opponent');
  }
 });
