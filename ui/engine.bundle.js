@@ -765,6 +765,16 @@ function moveChosen(g,p,zone,ids,destination,reveal=true){
  const moved=[];for(const ident of ids){const i=p[zone].findIndex(c=>id(c)===ident);assert(i>=0,'SELECTED_CARD_MISSING');const c=p[zone].splice(i,1)[0];p[destination].push(c);moved.push(c);}
  if(reveal)event(g,p.id,'REVEAL',{cardIds:ids,toPlayer:opponent(g,p.id).id});event(g,p.id,destination==='hand'?'ADD_TO_HAND':'RETURN_TO_DECK',{cardIds:ids,fromZone:zone,...(!reveal?{privateTo:p.id}:{})});return moved;
 }
+function searchSelectedDeck(g,actor,owner,selectedIds,{destination='hand',reveal=true}={}){
+ assert(Array.isArray(selectedIds)&&new Set(selectedIds).size===selectedIds.length,'DECK_SEARCH_DUPLICATE_SELECTION');
+ const selected=selectedIds.map(ident=>owner.deck.find(c=>id(c)===ident));
+ assert(selected.every(Boolean),'DECK_SEARCH_SELECTION_CHANGED');
+ if(destination==='hand')moveChosen(g,owner,'deck',selectedIds,'hand',reveal);
+ else if(destination==='bench')for(const card of selected)bench(g,owner,card,false);
+ else throw Error('DECK_SEARCH_DESTINATION_INVALID');
+ event(g,actor,'SEARCH_DECK',{selectedCount:selectedIds.length,destination,privateTo:owner.id});
+ shuffle(g,owner);
+}
 function inspectDeckTopToHand(g,p,limit,chosenIds){
  assert(Number.isInteger(limit)&&limit>0,'DECK_INSPECTION_LIMIT_INVALID');
  assert(chosenIds.length<=1,'DECK_INSPECTION_SELECTION_COUNT_INVALID');
@@ -872,8 +882,8 @@ function applyPlan(g,actor,card,effect,action){
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':moveChosen(g,p,'deck',ids('cards'),'hand');shuffle(g,p);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
   case 'ULTRA_BALL':moveChosen(g,p,'hand',ids('discard'),'discard',false);moveChosen(g,p,'deck',ids('cards'),'hand');shuffle(g,p);break;
-  case 'CYRANO':case 'HILDA':case 'BROCK':case 'POKEPAD':moveChosen(g,p,'deck',ids('cards'),'hand');shuffle(g,p);break;
-  case 'POFFIN':for(const ident of ids('cards'))bench(g,p,p.deck.find(c=>id(c)===ident),false);shuffle(g,p);break;
+  case 'CYRANO':case 'HILDA':case 'BROCK':case 'POKEPAD':searchSelectedDeck(g,actor,p,ids('cards'));break;
+  case 'POFFIN':searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});break;
   case 'STRETCHER':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'ENERGY_SWITCH':{
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
