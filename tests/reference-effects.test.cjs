@@ -29,6 +29,23 @@ function ability(t,actor,name){const p=t.g.players.find(p=>p.id===actor),c=[p.ac
 let cases=0;function test(name,fn){try{fn();console.log('PASS reference '+name);cases++;}catch(e){console.error('FAIL reference '+name);throw e;}}
 test('89 print-specific references, 45 default names, no adoption',()=>{assert.equal(catalog.records.length,89);assert.equal(Object.keys(catalog.defaultValidationReferences).length,45);assert.equal(catalog.adoptedDeckPrints,0);const t=setup();assert(t.g.players.every(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards].filter(Boolean).every(c=>!c.officialCardId&&!c.catalogCardId&&c.validationReference.adopted===false)));});
 test('fixed 20 damage, real energy, turn draw and identity preservation',()=>{const t=setup({energy:{0:{active:['基本悪エネルギー']}}});const count=t.g.players[1].hand.length;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.damage,20);assert.equal(t.g.turnPlayer,'ai');assert.equal(t.g.players[1].hand.length,count+1);});
+test('shared special conditions: poison and burn permit attacks; sleep and paralysis prohibit attacks across two Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  for(const status of ['POISONED','BURNED']){
+   const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}}});
+   t.g.players[0].active.statusCondition=status;
+   t.do('you',{type:'attack_turn',attackIndex:0});
+  }
+  for(const status of ['ASLEEP','PARALYZED']){
+   const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}}});
+   t.g.players[0].active.statusCondition=status;
+   t.reject('you',{type:'attack_turn',attackIndex:0},/ATTACK_BLOCKED_BY_STATUS/);
+  }
+ }
+});
 test('reject first turn, wrong Energy and unconnected attack without mutation',()=>{const t=setup();t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);t.g.turnNumber=1;t.reject('you',{type:'attack_turn',attackIndex:0},/first|FIRST/);});
 test('shared active-only dash, two draws and once across copies',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['メガガルーラex']},hand:{0:['ポケモンいれかえ']}});const a=ability(t,'you','メガガルーラex'),n=t.g.players[0].hand.length;t.do('you',a);assert.equal(t.g.players[0].hand.length,n+2);t.reject('you',a,/USED|SHARED/);t.do('you',actionFor(t,'you','ポケモンいれかえ','play_item'));const x=t.port.getPokemonActions('you',t.g.players[0].active.id).find(x=>x.kind==='ability');assert(!x.enabled);});
 test('coin attack uses printed 200+50 and legality inspection consumes no RNG',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});const before=randomCalls;t.port.getPokemonActions('you',t.g.players[0].active.id);assert.equal(randomCalls,before);t.g.referenceRngState=0;const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,300);assert.equal(t.g.pendingPrizeSelection.count,1);});
