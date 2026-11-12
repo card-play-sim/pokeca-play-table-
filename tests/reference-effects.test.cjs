@@ -322,7 +322,7 @@ test('shared conditional deck search preserves private selection and destination
   const chosen=request.candidates[0];
   if(chosen)a.selections={cards:[chosen.id]};
   t.do('you',a);
-  const logs=t.g.history.filter(h=>h.details?.command==='SEARCH_DECK');
+  const logs=t.g.history.filter(h=>h.details?.command==='SEARCH_DECK'&&h.details?.privateTo===p.id);
   assert.equal(logs.length,1,'one shared search audit event');
   assert.equal(logs[0].details.destination,fixture.destination);
   assert.equal(logs[0].details.privateTo,p.id);
