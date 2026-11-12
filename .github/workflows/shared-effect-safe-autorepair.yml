@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - common-foundation-4/task-ledger-20261112
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 permissions:
   contents: write
@@ -11,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   repair-generated-reference-artifacts:
-    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.ref == 'refs/heads/common-foundation-4/task-ledger-20261112'
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && (github.ref == 'refs/heads/common-foundation-4/task-ledger-20261112' || (github.event_name == 'pull_request' && github.head_ref == 'common-foundation-4/task-ledger-20261112' && github.event.pull_request.head.repo.full_name == github.repository))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -19,6 +21,7 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
+          ref: common-foundation-4/task-ledger-20261112
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
