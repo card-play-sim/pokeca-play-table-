@@ -61,7 +61,7 @@ test('shared confusion flips once, cancels attack and adds 30 self-damage across
  }
 });
 test('confusion cancels non-damage switch attack without moving active Pokemon',()=>{
- const t=setup({firstDeck:1,active:['ノコッチ','ロケット団のニューラ'],bench:{0:['スボミー']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
+ const t=setup({firstDeck:1,active:['ノコッチ','ドラメシヤ'],bench:{0:['スボミー']},energy:{0:{active:['基本悪エネルギー']}},referenceRngState:1000});
  const active=t.g.players[0].active,bench=t.g.players[0].bench[0];
  active.statusCondition='CONFUSED';
  t.do('you',{type:'attack_turn',attackIndex:0,targetIds:[bench.id]});
