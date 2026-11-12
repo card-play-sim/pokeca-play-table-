@@ -2,7 +2,7 @@ name: Safe shared-effect generated-artifact auto repair
 on:
   push:
     branches:
-      - common-foundation-4/task-ledger-20261112
+      - common-foundation-4/status-rule-shared-20261112
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   repair-generated-reference-artifacts:
-    if: github.repository == 'card-play-sim/pokeca-play-table-' && (github.ref == 'refs/heads/common-foundation-4/task-ledger-20261112' || (github.event_name == 'pull_request' && github.head_ref == 'common-foundation-4/task-ledger-20261112' && github.event.pull_request.head.repo.full_name == github.repository))
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && (github.ref == 'refs/heads/common-foundation-4/status-rule-shared-20261112' || (github.event_name == 'pull_request' && github.head_ref == 'common-foundation-4/status-rule-shared-20261112' && github.event.pull_request.head.repo.full_name == github.repository))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -21,7 +21,7 @@ jobs:
         with:
           persist-credentials: true
           fetch-depth: 0
-          ref: common-foundation-4/task-ledger-20261112
+          ref: common-foundation-4/status-rule-shared-20261112
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -112,7 +112,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          target=common-foundation-4/task-ledger-20261112
+          target=common-foundation-4/status-rule-shared-20261112
           allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           # At most two recovery attempts after the initial push.
@@ -277,7 +277,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          target=common-foundation-4/task-ledger-20261112
+          target=common-foundation-4/status-rule-shared-20261112
           allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)          git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           # At most two recovery attempts after the initial push.
@@ -550,7 +550,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          target=common-foundation-4/task-ledger-20261112
+          target=common-foundation-4/status-rule-shared-20261112
           allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)          git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           # At most two recovery attempts after the initial push.
