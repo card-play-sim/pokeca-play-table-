@@ -46,6 +46,17 @@ test('shared special conditions: poison and burn permit attacks; sleep and paral
   }
  }
 });
+test('shared attack lock is independent from status and expires by turn',()=>{
+ for(const name of ['ロケット団のニューラ','メガガルーラex']){
+  const energy=name==='ロケット団のニューラ'?['基本悪エネルギー']:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'];
+  const locked=setup({active:[name,'ドラメシヤ'],energy:{0:{active:energy}}});
+  locked.g.players[0].active.referenceCannotAttackTurn=locked.g.turnNumber;
+  locked.reject('you',{type:'attack_turn',attackIndex:0},/ATTACK_DISABLED_THIS_TURN/);
+  const expired=setup({active:[name,'ドラメシヤ'],energy:{0:{active:energy}}});
+  expired.g.players[0].active.referenceCannotAttackTurn=expired.g.turnNumber-1;
+  expired.do('you',{type:'attack_turn',attackIndex:0});
+ }
+});
 test('reject first turn, wrong Energy and unconnected attack without mutation',()=>{const t=setup();t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);t.g.turnNumber=1;t.reject('you',{type:'attack_turn',attackIndex:0},/first|FIRST/);});
 test('shared active-only dash, two draws and once across copies',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{0:['メガガルーラex']},hand:{0:['ポケモンいれかえ']}});const a=ability(t,'you','メガガルーラex'),n=t.g.players[0].hand.length;t.do('you',a);assert.equal(t.g.players[0].hand.length,n+2);t.reject('you',a,/USED|SHARED/);t.do('you',actionFor(t,'you','ポケモンいれかえ','play_item'));const x=t.port.getPokemonActions('you',t.g.players[0].active.id).find(x=>x.kind==='ability');assert(!x.enabled);});
 test('coin attack uses printed 200+50 and legality inspection consumes no RNG',()=>{const t=setup({active:['メガガルーラex','ドラメシヤ'],bench:{1:['スボミー']},energy:{0:{active:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}}});const before=randomCalls;t.port.getPokemonActions('you',t.g.players[0].active.id);assert.equal(randomCalls,before);t.g.referenceRngState=0;const old=t.g.players[1].active;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(old.damage,300);assert.equal(t.g.pendingPrizeSelection.count,1);});
