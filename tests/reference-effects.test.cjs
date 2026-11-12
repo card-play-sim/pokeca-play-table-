@@ -57,7 +57,7 @@ test('shared confusion flips once, cancels attack and adds 30 self-damage across
   t.do('you',{type:'attack_turn',attackIndex:0});
   assert.equal(attacker.damage,30,fixture.name+' confusion self-damage');
   assert.equal(defender.damage,0,fixture.name+' attack must be cancelled');
-  assert(t.g.history.some(h=>h.type==='CONFUSION_ATTACK_FAILED'||h.event==='CONFUSION_ATTACK_FAILED'));
+  assert(t.g.history.some(h=>h.details?.command==='CONFUSION_ATTACK_FAILED'));
  }
 });
 test('shared attack lock is independent from status and expires by turn',()=>{
