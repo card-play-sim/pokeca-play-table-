@@ -9,7 +9,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: shared-effect-autorepair-${{ github.ref }}
+  group: shared-effect-autorepair-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: false
 jobs:
   repair-generated-reference-artifacts:
