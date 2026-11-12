@@ -17,6 +17,19 @@ async def main():
    await page.locator('#reference-match-choices button').first.tap()
    await page.locator('#confirm-ok').tap()
    await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation')
+   # Opening mulligan choices legitimately cover the board. Resolve through the UI
+   # before measuring board targets rather than treating the modal as an overlap bug.
+   for _ in range(10):
+    state=await page.evaluate('PokecaMobile.port.getSnapshot()')
+    choice=state.get('pendingReferenceChoice')
+    if not choice:break
+    assert choice['kind']=='MULLIGAN',choice
+    if choice['playerId']=='you':
+     await page.locator('#reference-choice button').first.tap()
+    else:
+     await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
+   assert not (await page.evaluate('PokecaMobile.port.getSnapshot()')).get('pendingReferenceChoice')
+   await page.wait_for_function('!document.querySelector("#sheet").open')
    selectors=['[data-zone-owner="you"][data-zone="discard"]',
               '[data-zone-owner="you"][data-zone="deck"]',
               '[data-zone-owner="you"][data-zone="prize"]']
