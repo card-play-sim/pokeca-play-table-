@@ -779,9 +779,16 @@ function finishAttack(g,actor){
 }
 function applyPlan(g,actor,card,effect,action){
  const p=player(g,actor),o=opponent(g,actor),plan=effect.plan,m=plan.mechanic,ids=key=>selected(action,key),target=()=>find(g,action.targetIds?.[0])?.card;
+ // Confusion is an attack-wide rule, not a property of one damage mechanic.
+ // Apply it before dispatching any attack Effect Command, including switching
+ // and energy movement attacks. Abilities and Trainers never flip here.
+ if(action.type==='attack_turn'&&card.statusCondition==='CONFUSED'&&!coin(g,actor)){
+  counters(g,actor,card,3);
+  event(g,actor,'CONFUSION_ATTACK_FAILED',{targetInstanceId:id(card)});
+  return;
+ }
  switch(m){
   case 'VANILLA_DAMAGE':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
-   if(card.statusCondition==='CONFUSED'&&!coin(g,actor)){counters(g,actor,card,3);break;}
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='COMBO'){amount=Number.parseInt(effect.damage,10);let flips=0;while(coin(g,actor)){amount+=50;assert(++flips<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');}}
    if(m==='MOON_RONDO')amount=Number.parseInt(effect.damage,10)+20*(p.bench.length+o.bench.length);
