@@ -1,18 +1,14 @@
 name: IMG-LEDGER-002 official ID join audit
 on:
   workflow_dispatch:
-    inputs:
-      formal_catalog_path:
-        description: 'Read-only extracted formal catalog path (1945 records); must exist in checkout'
-        required: true
-        default: 'data/formal-1945-original/card_catalog.json'
   pull_request:
     paths:
       - 'scripts/img-ledger-002-audit.cjs'
+      - 'scripts/img-ledger-003-registry.cjs'
       - 'tests/img-ledger-002-audit.test.cjs'
       - '.github/workflows/img-ledger-002.yml'
 jobs:
-  test-and-audit:
+  registry-and-join:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,28 +18,25 @@ jobs:
         with:
           node-version: '22'
       - run: node --test tests/img-ledger-002-audit.test.cjs
-      - name: Audit source availability
-        id: sources
+      - name: Load immutable v247 candidate sources
+        run: |
+          git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/img-ledger-v247.json
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/image-automation/hij-v247/coverage-manifest.json > /tmp/img-ledger-v247-manifest.json
+      - name: Independently verify all 6248 registry entries
+        run: node scripts/img-ledger-003-registry.cjs /tmp/img-ledger-v247.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-003-registry.json
+      - name: Formal catalog source gate
         shell: bash
         run: |
-          echo 'Formal 1945 source is external and READ-ONLY. Never substitute derived data.'
           if [ -f data/formal-1945-original/card_catalog.json ]; then
-            echo 'available=true' >> "$GITHUB_OUTPUT"
+            node scripts/img-ledger-002-audit.cjs /tmp/img-ledger-v247.json data/formal-1945-original/card_catalog.json reports/img-ledger-003-formal-join.json data/fixed-deck-preview-bindings.json
           else
-            echo 'available=false' >> "$GITHUB_OUTPUT"
-            echo 'BLOCKED: formal 1945 original not present in checkout' | tee formal-source-blocked.txt
+            printf '{"status":"BLOCKED","reason":"FORMAL_1945_ORIGINAL_NOT_IN_CHECKOUT","expectedOriginalSha256":"6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790"}\n' > reports/img-ledger-003-formal-join.json
+            echo 'BLOCKED: original formal 1945 catalog unavailable; not substituting derived candidates'
           fi
-      - name: Audit full official-ID join
-        if: steps.sources.outputs.available == 'true'
-        run: |
-          git fetch origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
-          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/img-ledger-v247.json
-          node scripts/img-ledger-002-audit.cjs /tmp/img-ledger-v247.json data/formal-1945-original/card_catalog.json reports/img-ledger-002.json data/fixed-deck-preview-bindings.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: img-ledger-002-evidence
-          path: |
-            reports/img-ledger-002.json
-            formal-source-blocked.txt
+          name: img-ledger-003-evidence
+          path: reports/img-ledger-003-*.json
           if-no-files-found: warn
