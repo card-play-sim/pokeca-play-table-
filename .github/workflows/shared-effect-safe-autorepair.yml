@@ -1,0 +1,78 @@
+name: Safe shared-effect generated-artifact auto repair
+on:
+  push:
+    branches:
+      - common-foundation-4/task-ledger-20261112
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: shared-effect-autorepair-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  repair-generated-reference-artifacts:
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.ref == 'refs/heads/common-foundation-4/task-ledger-20261112'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture initial reference-effect provenance gate
+        id: before
+        shell: bash
+        run: |
+          mkdir -p reports
+          set +e
+          node scripts/sync-reference-effects.cjs --check > reports/autorepair-before.log 2>&1
+          code=$?
+          set -e
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          printf 'before_exit=%s\n' "$code" > reports/autorepair-result.txt
+      - name: Regenerate only approved derived artifacts when stale
+        if: steps.before.outputs.exit_code != '0'
+        run: node scripts/sync-reference-effects.cjs
+      - name: Reject any change outside approved generated files
+        shell: bash
+        run: |
+          git diff --name-only > reports/autorepair-changed-files.txt
+          if grep -Ev '^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)$' reports/autorepair-changed-files.txt; then
+            echo 'UNSAFE_GENERATED_ARTIFACT_CHANGE' >&2
+            exit 1
+          fi
+          git diff --check
+      - name: Validate generated files and shared effects
+        shell: bash
+        run: |
+          set +e
+          node scripts/sync-reference-effects.cjs --check > reports/autorepair-after.log 2>&1
+          provenance=$?
+          node tests/reference-effects.test.cjs > reports/autorepair-effects.log 2>&1
+          effects=$?
+          set -e
+          printf 'after_exit=%s\neffects_exit=%s\n' "$provenance" "$effects" >> reports/autorepair-result.txt
+          test "$provenance" -eq 0
+          test "$effects" -eq 0
+      - name: Preserve before and after evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-effect-autorepair-evidence
+          path: reports/autorepair-*
+          if-no-files-found: warn
+      - name: Commit verified generated artifacts to isolated branch
+        shell: bash
+        run: |
+          if git diff --quiet -- ui/engine.bundle.js data/reference-effects/plans.json; then
+            echo 'NO_REPAIR_NEEDED'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- ui/engine.bundle.js data/reference-effects/plans.json
+          git commit -m 'fix: regenerate verified reference effect artifacts [automated]'
+          git push origin HEAD:refs/heads/common-foundation-4/task-ledger-20261112
