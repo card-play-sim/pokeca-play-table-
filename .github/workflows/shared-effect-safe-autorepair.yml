@@ -68,6 +68,8 @@ jobs:
             fi
           done
           echo 'GENERATED_FILE_ALLOWLIST_PASS'
+      - name: Verify repair workflow triggers, bash, scope and retry safety
+        run: node scripts/check-shared-autorepair-workflow.cjs
       - name: Capture initial reference-effect provenance gate
         id: before
         shell: bash
