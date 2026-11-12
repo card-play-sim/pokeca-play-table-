@@ -326,6 +326,7 @@ test('shared conditional deck search preserves private selection and destination
   assert.equal(logs.length,1,'one shared search audit event');
   assert.equal(logs[0].details.destination,fixture.destination);
   assert.equal(logs[0].details.privateTo,p.id);
+  assert.equal(Object.hasOwn(logs[0].details,'cardIds'),false,'private search audit must not disclose card identities');
   assert.equal(logs[0].details.selectedCount,chosen?1:0);
   if(chosen)assert((fixture.destination==='hand'?p.hand:p.bench).some(c=>c.id===chosen.id));
  }
