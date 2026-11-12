@@ -227,7 +227,7 @@ function preflight(g,actor,action){
   if(action.type==='attack_turn'){
    const mon=p.active,r=record(mon),a=r?.attacks[action.attackIndex];assert(mon&&a,'ATTACK_MISSING');requirePlan(mon,a);
    assert(g.turnNumber!==1,'FIRST_PLAYER_FIRST_TURN_ATTACK');assert(mon.referenceCannotAttackTurn!==g.turnNumber,'ATTACK_DISABLED_THIS_TURN');
-   assert(!['ASLEEP','PARALYZED','POISONED','BURNED'].includes(mon.statusCondition),'UNCONNECTED_STATUS_RULE');
+   assert(!['ASLEEP','PARALYZED'].includes(mon.statusCondition),'ATTACK_BLOCKED_BY_STATUS');
    if(!a.cost.every(t=>[...basicTypes,'無色'].includes(t)))stop(mon,a,'UNREVIEWED_ENERGY_SYMBOL');
    assert(pays(mon,cost(g,mon,a)),'INSUFFICIENT_VERIFIED_ENERGY');verifyRequests(g,actor,mon,a,action);
 
