@@ -787,6 +787,12 @@ function finishAttack(g,actor){
  if(g.status==='finished'){delete g.referenceAttackTurnPending;delete g.pendingReferenceChoice;return;}
  if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;functions().Core.endTurn(g,actor);}
 }
+function chooseBenchSwitch(g,actor,owner,selectedId){
+ assert(owner&&owner.active,'SWITCH_ACTIVE_REQUIRED');
+ assert(owner.bench.some(c=>id(c)===selectedId),'SWITCH_BENCH_TARGET_INVALID');
+ switchMon(g,owner,selectedId);
+ event(g,actor,'SELECT_BENCH_SWITCH',{playerId:owner.id,benchInstanceId:selectedId});
+}
 function moveDamageCounters(g,actor,source,target,count){
  assert(source&&target&&source!==target,'COUNTER_MOVE_TARGET_INVALID');
  assert(Number.isInteger(count)&&count>=1&&count<=3,'COUNTER_MOVE_COUNT_INVALID');
@@ -872,8 +878,8 @@ function applyPlan(g,actor,card,effect,action){
   case 'ENERGY_SWITCH':{
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
-  case 'SWITCH':switchMon(g,p,ids('bench')[0]);break;
-  case 'BOSS':switchMon(g,o,ids('bench')[0]);break;
+  case 'SWITCH':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
+  case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'REPELLENT':assert(o.bench.length>0,'NO_OPPONENT_BENCH');g.pendingReferenceChoice={kind:'SWITCH',playerId:o.id,options:o.bench.map(id)};break;
   case 'RED_CARD':resetHand(g,o,3,true);break;
   case 'LILLIE':resetHand(g,p,p.prizes===6?8:6);break;
