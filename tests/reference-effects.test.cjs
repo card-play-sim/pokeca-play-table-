@@ -46,6 +46,20 @@ test('shared special conditions: poison and burn permit attacks; sleep and paral
   }
  }
 });
+test('shared confusion flips once, cancels attack and adds 30 self-damage across Pokemon',()=>{
+ for(const fixture of [
+  {name:'ロケット団のニューラ',energy:['基本悪エネルギー']},
+  {name:'メガガルーラex',energy:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー']}
+ ]){
+  const t=setup({active:[fixture.name,'ドラメシヤ'],energy:{0:{active:fixture.energy}},referenceRngState:1000});
+  const attacker=t.g.players[0].active,defender=t.g.players[1].active;
+  attacker.statusCondition='CONFUSED';
+  t.do('you',{type:'attack_turn',attackIndex:0});
+  assert.equal(attacker.damage,30,fixture.name+' confusion self-damage');
+  assert.equal(defender.damage,0,fixture.name+' attack must be cancelled');
+  assert(t.g.history.some(h=>h.type==='CONFUSION_ATTACK_FAILED'||h.event==='CONFUSION_ATTACK_FAILED'));
+ }
+});
 test('shared attack lock is independent from status and expires by turn',()=>{
  for(const name of ['ロケット団のニューラ','メガガルーラex']){
   const energy=name==='ロケット団のニューラ'?['基本悪エネルギー']:['基本悪エネルギー','基本悪エネルギー','基本超エネルギー'];
