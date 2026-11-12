@@ -282,6 +282,14 @@ function finishAttack(g,actor){
  if(g.status==='finished'){delete g.referenceAttackTurnPending;delete g.pendingReferenceChoice;return;}
  if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;functions().Core.endTurn(g,actor);}
 }
+function moveDamageCounters(g,actor,source,target,count){
+ assert(source&&target&&source!==target,'COUNTER_MOVE_TARGET_INVALID');
+ assert(Number.isInteger(count)&&count>=1&&count<=3,'COUNTER_MOVE_COUNT_INVALID');
+ assert((source.damage||0)>=count*10,'COUNTER_MOVE_SOURCE_INSUFFICIENT');
+ source.damage-=count*10;
+ counters(g,actor,target,count);
+ event(g,actor,'MOVE_DAMAGE_COUNTERS',{sourceInstanceId:id(source),targetInstanceId:id(target),counterCount:count});
+}
 function moveAttachedEnergy(g,actor,source,target,energyId){
  assert(source&&target&&source!==target,'ENERGY_MOVE_TARGET_INVALID');
  const attached=source.energyCards||[],index=attached.findIndex(e=>id(e)===energyId);
@@ -345,7 +353,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;
   case 'EXCITE_DIVE':bench(g,p,card,true);break;
   case 'ADRENA_BRAIN':{
-   const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;source.damage-=count*10;counters(g,actor,to,count);break;
+   const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;moveDamageCounters(g,actor,source,to,count);break;
   }
   case 'RECON':{
    const top=p.deck.splice(0,2),chosen=top.find(c=>id(c)===ids('cards')[0]);if(chosen)p.hand.push(chosen);p.deck.push(...top.filter(c=>c!==chosen));event(g,actor,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],privateTo:actor});break;
