@@ -777,6 +777,23 @@ function finishAttack(g,actor){
  if(g.status==='finished'){delete g.referenceAttackTurnPending;delete g.pendingReferenceChoice;return;}
  if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;functions().Core.endTurn(g,actor);}
 }
+function moveDamageCounters(g,actor,source,target,count){
+ assert(source&&target&&source!==target,'COUNTER_MOVE_TARGET_INVALID');
+ assert(Number.isInteger(count)&&count>=1&&count<=3,'COUNTER_MOVE_COUNT_INVALID');
+ assert((source.damage||0)>=count*10,'COUNTER_MOVE_SOURCE_INSUFFICIENT');
+ source.damage-=count*10;
+ counters(g,actor,target,count);
+ event(g,actor,'MOVE_DAMAGE_COUNTERS',{sourceInstanceId:id(source),targetInstanceId:id(target),counterCount:count});
+}
+function moveAttachedEnergy(g,actor,source,target,energyId){
+ assert(source&&target&&source!==target,'ENERGY_MOVE_TARGET_INVALID');
+ const attached=source.energyCards||[],index=attached.findIndex(e=>id(e)===energyId);
+ assert(index>=0,'ENERGY_MOVE_SOURCE_CHANGED');
+ target.energyCards||=[];
+ const [energy]=attached.splice(index,1);
+ target.energyCards.push(energy);
+ event(g,actor,'MOVE_ENERGY',{energyId:id(energy),sourceInstanceId:id(source),targetInstanceId:id(target)});
+}
 function applyPlan(g,actor,card,effect,action){
  const p=player(g,actor),o=opponent(g,actor),plan=effect.plan,m=plan.mechanic,ids=key=>selected(action,key),target=()=>find(g,action.targetIds?.[0])?.card;
  // Confusion is an attack-wide rule, not a property of one damage mechanic.
@@ -822,8 +839,7 @@ function applyPlan(g,actor,card,effect,action){
    if(p.bench.length){const energyId=ids('energy')[0],benchId=ids('attachTo')[0];
     const target=p.bench.find(c=>id(c)===benchId),index=card.energyCards.findIndex(e=>id(e)===energyId);
     assert(target&&index>=0,'ENERGY_MOVE_SELECTION_CHANGED');
-    target.energyCards.push(card.energyCards.splice(index,1)[0]);
-    event(g,actor,'MOVE_ENERGY',{energyId,targetInstanceId:benchId});
+    moveAttachedEnergy(g,actor,card,target,energyId);
    }
    break;
   }
@@ -832,7 +848,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;
   case 'EXCITE_DIVE':bench(g,p,card,true);break;
   case 'ADRENA_BRAIN':{
-   const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;source.damage-=count*10;counters(g,actor,to,count);break;
+   const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;moveDamageCounters(g,actor,source,to,count);break;
   }
   case 'RECON':{
    const top=p.deck.splice(0,2),chosen=top.find(c=>id(c)===ids('cards')[0]);if(chosen)p.hand.push(chosen);p.deck.push(...top.filter(c=>c!==chosen));event(g,actor,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],privateTo:actor});break;
@@ -844,7 +860,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'POFFIN':for(const ident of ids('cards'))bench(g,p,p.deck.find(c=>id(c)===ident),false);shuffle(g,p);break;
   case 'STRETCHER':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'ENERGY_SWITCH':{
-   const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');to.energyCards.push(source.energyCards.splice(source.energyCards.findIndex(e=>id(e)===ids('energy')[0]),1)[0]);break;
+   const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
   case 'SWITCH':switchMon(g,p,ids('bench')[0]);break;
   case 'BOSS':switchMon(g,o,ids('bench')[0]);break;
