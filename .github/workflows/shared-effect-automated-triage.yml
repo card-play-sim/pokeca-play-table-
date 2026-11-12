@@ -1,0 +1,38 @@
+name: Shared effect automated failure triage
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute shared-effect regression tests and capture failures
+        shell: bash
+        run: |
+          mkdir -p reports
+          set +e
+          node --test tests/reference-effects.test.cjs > reports/shared-effect-regression.log 2>&1
+          result=$?
+          set -e
+          printf '{"schemaVersion":1,"testExitCode":%s,"log":"shared-effect-regression.log"}\n' "$result" > reports/shared-effect-regression-result.json
+          cat reports/shared-effect-regression-result.json
+      - name: Preserve regression evidence for root-cause classification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-effect-regression-evidence
+          path: reports/shared-effect-regression*
+          if-no-files-found: error
+      - name: Mark regression failure
+        shell: bash
+        run: |
+          node -e "const r=require('./reports/shared-effect-regression-result.json');process.exit(r.testExitCode===0?0:1)"
