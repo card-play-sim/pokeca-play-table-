@@ -765,6 +765,16 @@ function moveChosen(g,p,zone,ids,destination,reveal=true){
  const moved=[];for(const ident of ids){const i=p[zone].findIndex(c=>id(c)===ident);assert(i>=0,'SELECTED_CARD_MISSING');const c=p[zone].splice(i,1)[0];p[destination].push(c);moved.push(c);}
  if(reveal)event(g,p.id,'REVEAL',{cardIds:ids,toPlayer:opponent(g,p.id).id});event(g,p.id,destination==='hand'?'ADD_TO_HAND':'RETURN_TO_DECK',{cardIds:ids,fromZone:zone,...(!reveal?{privateTo:p.id}:{})});return moved;
 }
+function inspectDeckTopToHand(g,p,limit,chosenIds){
+ assert(Number.isInteger(limit)&&limit>0,'DECK_INSPECTION_LIMIT_INVALID');
+ assert(chosenIds.length<=1,'DECK_INSPECTION_SELECTION_COUNT_INVALID');
+ const top=p.deck.splice(0,limit);
+ const chosen=top.find(c=>id(c)===chosenIds[0]);
+ assert(!chosenIds.length||chosen,'DECK_INSPECTION_SELECTION_CHANGED');
+ if(chosen)p.hand.push(chosen);
+ p.deck.push(...top.filter(c=>c!==chosen));
+ event(g,p.id,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],privateTo:p.id,fromZone:'deck'});
+}
 function finishAttack(g,actor){
  g.attackUsed=true;g.referenceAttackTurnPending=actor;
  while(g.referenceReactions?.length){
@@ -851,7 +861,7 @@ function applyPlan(g,actor,card,effect,action){
    const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;moveDamageCounters(g,actor,source,to,count);break;
   }
   case 'RECON':{
-   const top=p.deck.splice(0,2),chosen=top.find(c=>id(c)===ids('cards')[0]);if(chosen)p.hand.push(chosen);p.deck.push(...top.filter(c=>c!==chosen));event(g,actor,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],privateTo:actor});break;
+   inspectDeckTopToHand(g,p,2,ids('cards'));break;
   }
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':moveChosen(g,p,'deck',ids('cards'),'hand');shuffle(g,p);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
