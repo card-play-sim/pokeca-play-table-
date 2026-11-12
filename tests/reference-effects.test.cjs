@@ -310,6 +310,26 @@ test('shared bench-switch target selection works for item and supporter across o
 test('Goods switch moves the real benched Pokemon and preserves card IDs',()=>{const t=setup({hand:{0:['ポケモンいれかえ']},bench:{0:['マシマシラ']}});const p=t.g.players[0],old=p.active.id,next=p.bench[0].id;const a=actionFor(t,'you','ポケモンいれかえ','play_item');a.selections={bench:[next]};t.do('you',a);assert.equal(p.active.id,next);assert.equal(p.bench[0].id,old);assert(p.discard.some(c=>c.name==='ポケモンいれかえ'));});
 test('Goods Poffin benches selected eligible Basic without creating cards',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['なかよしポフィン']}});const p=t.g.players[0],before=p.deck.length;const a=actionFor(t,'you','なかよしポフィン','play_item');const options=t.port.getHandOptions('you',a.cardId);const req=options.find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req);const c=req.candidates[0];assert(c,'eligible Basic in deck');a.selections={cards:[c.id]};t.do('you',a);assert(p.bench.some(x=>x.id===c.id));assert.equal(p.deck.length,before-1);});
 test('Goods Pokepad retrieves only a non-rule Pokemon from the real deck',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['ポケパッド']}});const p=t.g.players[0],a=actionFor(t,'you','ポケパッド','play_item');const req=t.port.getHandOptions('you',a.cardId).find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req.candidates.length);const c=req.candidates[0];a.selections={cards:[c.id]};t.do('you',a);assert(p.hand.some(x=>x.id===c.id));assert(!p.deck.some(x=>x.id===c.id));});
+test('shared conditional deck search preserves private selection and destination across item and supporter',()=>{
+ for(const fixture of [
+  {name:'ポケパッド',type:'play_item',destination:'hand'},
+  {name:'なかよしポフィン',type:'play_item',destination:'bench'},
+  {name:'シアノ',type:'play_supporter',destination:'hand'}
+ ]){
+  const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:[fixture.name]}});
+  const a=actionFor(t,'you',fixture.name,fixture.type);
+  const p=t.g.players[0],request=t.port.getHandOptions('you',a.cardId).find(x=>x.action.type===fixture.type).requests.find(x=>x.key==='cards');
+  const chosen=request.candidates[0];
+  if(chosen)a.selections={cards:[chosen.id]};
+  t.do('you',a);
+  const logs=t.g.history.filter(h=>h.details?.command==='SEARCH_DECK');
+  assert.equal(logs.length,1,'one shared search audit event');
+  assert.equal(logs[0].details.destination,fixture.destination);
+  assert.equal(logs[0].details.privateTo,p.id);
+  assert.equal(logs[0].details.selectedCount,chosen?1:0);
+  if(chosen)assert((fixture.destination==='hand'?p.hand:p.bench).some(c=>c.id===chosen.id));
+ }
+});
 test('Goods Hammer discards the selected opposing energy on heads',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['クラッシュハンマー']},energy:{1:{active:['基本悪エネルギー']}}});const p=t.g.players[1],energy=p.active.energyCards[0].id;const a=actionFor(t,'you','クラッシュハンマー','play_item');a.selections={energy:[energy]};t.g.referenceRngState=0;t.do('you',a);assert(!p.active.energyCards.some(x=>x.id===energy));assert(p.discard.some(x=>x.id===energy));});
 test('forged card attack commands never bypass source-verified attack cost',()=>{const t=setup({active:['シェイミ','ドラメシヤ']});t.g.players[0].active.attacks=[{name:'forged',cost:[],damage:999,commands:[{command:'DAMAGE',amount:999}]}];t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);assert.equal(t.g.players[1].active.damage,0);});
 console.log('Reference effect scenarios',cases);
