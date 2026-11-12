@@ -418,7 +418,7 @@ window.PokecaMobileBuild='246';
     return new Promise(resolve=>{
       const selectedIds=new Set();let settled=false;
       // A close event is queued: settle after it fires so it cannot cancel the next selector.
-    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
+      const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
       const cancel=()=>done(null);
       openSheet(title,`<p>山札全${deck.length}枚を表示しています。選択できるのは効果の条件を満たすカードだけです。選択 ${minimum}〜${maximum}枚。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${maximum}</span><button id="selection-confirm" class="primary" ${minimum?'disabled':''}>決定</button></div>`);
       sheet.addEventListener('close',cancel);

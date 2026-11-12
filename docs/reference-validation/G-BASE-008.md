@@ -36,3 +36,7 @@ are validation references, not approval of adopted fixed-deck print IDs. Pixel 5
 Chromium emulation is not physical Android verification. Browser profiles are
 isolated; existing user saves and save schema are untouched. Formal 1945-card
 data, fixed deck manifests, image registry and engine contracts are unchanged.
+
+The 64-seed cross-family rejection suite hit the offline runner's 120-second
+budget twice on GitHub-hosted runners. It now shares the existing bounded
+300-second budget for long seeded workloads; seeds and assertions are unchanged.
