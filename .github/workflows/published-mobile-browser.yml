@@ -8,6 +8,8 @@ on:
       - 'sw.js'
       - 'data/reference-effects/plans.json'
       - 'tests/test_reference_match_browser.py'
+      - 'tests/test_g_base_008_browser.py'
+      - 'tests/fixtures/g-base-008-browser.js'
       - 'tests/test_published_pwa_browser.py'
       - '.github/workflows/published-mobile-browser.yml'
   workflow_dispatch:
@@ -34,7 +36,9 @@ jobs:
       - name: Exercise published reference matches in Pixel 5 Chromium emulation
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
-        run: python tests/test_reference_match_browser.py
+        run: |
+          python tests/test_g_base_008_browser.py
+          python tests/test_reference_match_browser.py
       - name: Verify service worker and offline resume on published PWA
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/

@@ -5,6 +5,8 @@ on:
       - 'ui/mobile.js'
       - 'tests/g-base-008-ui-contract.test.cjs'
       - 'tests/test_reference_match_browser.py'
+      - 'tests/test_g_base_008_browser.py'
+      - 'tests/fixtures/g-base-008-browser.js'
       - 'sw.js'
       - '.github/workflows/g-base-008-ui-contract.yml'
   workflow_dispatch:
@@ -42,6 +44,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
           POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
       - name: Preserve candidate gameplay evidence
@@ -50,6 +53,7 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/g-base-008-browser-results.json
             artifacts/reference-browser-results.json
             artifacts/published-pwa-result.json
           if-no-files-found: warn
