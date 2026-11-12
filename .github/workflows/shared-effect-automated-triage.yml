@@ -28,7 +28,7 @@ jobs:
       - name: Convert failures to machine-readable triage and Codex batch
         if: always()
         run: |
-          node scripts/parse-effect-regression-log.cjs reports/shared-effect-regression.log reports/shared-effect-failures.json
+          EFFECT_TEST_EXIT_CODE=$(node -p "require('./reports/shared-effect-regression-result.json').testExitCode") node scripts/parse-effect-regression-log.cjs reports/shared-effect-regression.log reports/shared-effect-failures.json
           node -e "const fs=require('fs');const p='reports/shared-effect-failures.json';const x=JSON.parse(fs.readFileSync(p));fs.writeFileSync('reports/shared-effect-failures-list.json',JSON.stringify(x.failures,null,2))"
           node scripts/group-effect-failures-for-codex.cjs reports/shared-effect-failures-list.json reports/shared-effect-codex-batch.json
           node scripts/official-effect-task-ledger.cjs reports/shared-effect-codex-batch.json reports/shared-effect-ledger.json sync
