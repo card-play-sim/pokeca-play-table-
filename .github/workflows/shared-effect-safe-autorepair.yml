@@ -55,7 +55,18 @@ jobs:
               raise SystemExit('NO_SHELL_STEPS_FOUND')
           print(f'BASH_SYNTAX_PASS scripts={count}')
           PY
-          allowed='^(ui/engine\\.bundle\\.js|data/reference-effects/plans\\.json)
+          allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)$'
+          for file in ui/engine.bundle.js data/reference-effects/plans.json; do
+            printf '%s\n' "$file" | grep -Eq "$allowed" || exit 1
+          done
+          for file in sw.js data/formal-1945.json; do
+            if printf '%s\n' "$file" | grep -Eq "$allowed"; then
+              echo "UNSAFE_ALLOWLIST_ACCEPTED $file" >&2
+              exit 1
+            fi
+          done
+          echo 'GENERATED_FILE_ALLOWLIST_PASS'
+      - name: Capture initial reference-effect provenance gate
         id: before
         shell: bash
         run: |
