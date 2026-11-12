@@ -1,0 +1,22 @@
+name: G-BASE-008 UI effect contract
+on:
+  pull_request:
+    paths:
+      - 'ui/mobile.js'
+      - 'tests/g-base-008-ui-contract.test.cjs'
+      - '.github/workflows/g-base-008-ui-contract.yml'
+  workflow_dispatch:
+jobs:
+  ui-effect-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate browser entry syntax
+        run: node --check ui/mobile.js
+      - name: Validate UI effect and persistence contracts
+        run: node --test tests/g-base-008-ui-contract.test.cjs
