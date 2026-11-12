@@ -10,5 +10,11 @@ try{
  fs.writeFileSync(list,JSON.stringify(p.failures));
  assert.equal(call('scripts/group-effect-failures-for-codex.cjs',[list,batch]).status,0);
  const b=JSON.parse(fs.readFileSync(batch));assert.equal(b.tasks.length,1);assert.equal(b.tasks[0].occurrences,2);assert.equal(b.tasks[0].status,'BLOCKED');
+ fs.writeFileSync(log,'PASS reference good\nFAIL reference attack effect mismatch\n');
+ assert.equal(call('scripts/parse-effect-regression-log.cjs',[log,parsed]).status,0);
+ assert.equal(JSON.parse(fs.readFileSync(parsed)).failures.length,1,'real reference-effect failure format');
+ fs.writeFileSync(log,'Error: process crashed before reporting');
+ const crash=spawnSync(process.execPath,['scripts/parse-effect-regression-log.cjs',log,parsed],{encoding:'utf8',env:{...process.env,EFFECT_TEST_EXIT_CODE:'1'}});
+ assert.equal(crash.status,0);assert.equal(JSON.parse(fs.readFileSync(parsed)).failures[0].causeId,'REGRESSION_UNCLASSIFIED_FAILURE');
  console.log('PASS TAP-to-Codex triage, shared-cause grouping and official-evidence fail-closed gate');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
