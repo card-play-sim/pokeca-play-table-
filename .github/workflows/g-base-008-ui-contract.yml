@@ -1,0 +1,59 @@
+name: G-BASE-008 UI effect contract
+on:
+  pull_request:
+    paths:
+      - 'ui/mobile.js'
+      - 'tests/g-base-008-ui-contract.test.cjs'
+      - 'tests/test_reference_match_browser.py'
+      - 'tests/test_g_base_008_browser.py'
+      - 'tests/fixtures/g-base-008-browser.js'
+      - 'sw.js'
+      - '.github/workflows/g-base-008-ui-contract.yml'
+  workflow_dispatch:
+jobs:
+  ui-effect-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate browser entry syntax
+        run: node --check ui/mobile.js
+      - name: Validate UI effect and persistence contracts
+        run: node --test tests/g-base-008-ui-contract.test.cjs
+      - name: Verify bundle and PWA release hashes
+        run: |
+          node scripts/check-reference-bundle-sync.cjs
+          node scripts/build-pwa-release.cjs --check
+  chromium-gameplay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Exercise candidate gameplay and exact save-resume in Chromium
+        run: |
+          mkdir -p artifacts
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_g_base_008_browser.py
+          python tests/test_reference_match_browser.py
+          POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
+      - name: Preserve candidate gameplay evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-gameplay-evidence
+          path: |
+            artifacts/g-base-008-browser-results.json
+            artifacts/reference-browser-results.json
+            artifacts/published-pwa-result.json
+          if-no-files-found: warn

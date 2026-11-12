@@ -356,7 +356,12 @@ window.PokecaMobileBuild='246';
         if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
       },{disabled:!explanation.ok||!!ability.target}));
-      if(ability.target)container.append(button('特性の対象選択は未対応',()=>toast('この特性の対象選択は未対応です')));
+      if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
+        // Only offer engine-declared legal candidates; never infer targets from card text.
+        const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
+        if(!legal.length){toast('この特性の合法な対象候補がありません');return;}
+        await resolveOption(legal[0]);
+      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
       else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
     }
     const retreatOptions=options.filter(o=>o.kind==='retreat');
@@ -397,7 +402,8 @@ window.PokecaMobileBuild='246';
   function selectCards({title,min,max,candidates}) {return new Promise(resolve=>{
     const unit=/エネルギー|カード|山札|サポート/.test(title)?'枚':'匹';
     const selectedIds=new Set();let settled=false;
-    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open)sheet.close();resolve(value);};
+    // A close event is queued: settle after it fires so it cannot cancel the next selector.
+    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
     const cancel=()=>done(null);
     openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`${min}${unit}選択してください。`:`${min}〜${max}${unit}選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
@@ -411,7 +417,8 @@ window.PokecaMobileBuild='246';
     const minimum=Math.min(search.min||0,eligible.length),maximum=search.max||1;
     return new Promise(resolve=>{
       const selectedIds=new Set();let settled=false;
-      const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open)sheet.close();resolve(value);};
+      // A close event is queued: settle after it fires so it cannot cancel the next selector.
+      const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
       const cancel=()=>done(null);
       openSheet(title,`<p>山札全${deck.length}枚を表示しています。選択できるのは効果の条件を満たすカードだけです。選択 ${minimum}〜${maximum}枚。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${maximum}</span><button id="selection-confirm" class="primary" ${minimum?'disabled':''}>決定</button></div>`);
       sheet.addEventListener('close',cancel);

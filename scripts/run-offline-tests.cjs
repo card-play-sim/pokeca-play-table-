@@ -26,9 +26,9 @@ for(const file of testFiles){
  running={file,startedAt:new Date(started).toISOString()};
  save(); // retain which test was in flight if job times out
  console.log('START',file,'shard',shardIndex+'/'+shardCount);
- // These two seeded full-match suites deliberately cover thousands of audited state transitions.
+ // These seeded full-match and rejection suites cover thousands of audited state transitions.
  // Keep all seeds and assertions; grant only these suites a bounded workload-specific budget.
- const workloadTimeoutMs=['reference-effect-cross-family-seeded.test.cjs','reference-effect-extended-gameplay.test.cjs'].includes(file)
+ const workloadTimeoutMs=['reference-effect-cross-family-seeded.test.cjs','reference-effect-extended-gameplay.test.cjs','reference-effect-cross-family-rejection.test.cjs'].includes(file)
   ? Math.max(timeoutMs,300000):timeoutMs;
  const result=spawnSync(process.execPath,[path.join('tests',file)],{stdio:'inherit',timeout:workloadTimeoutMs});
  const durationMs=Date.now()-started;
