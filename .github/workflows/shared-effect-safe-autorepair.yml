@@ -5,6 +5,8 @@ on:
       - common-foundation-4/autorepair-e2e-20261112
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - common-foundation-4/task-ledger-20261112
   workflow_dispatch:
 permissions:
   contents: write
