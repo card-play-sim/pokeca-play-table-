@@ -356,7 +356,12 @@ window.PokecaMobileBuild='246';
         if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
       },{disabled:!explanation.ok||!!ability.target}));
-      if(ability.target)container.append(button('特性の対象選択は未対応',()=>toast('この特性の対象選択は未対応です')));
+      if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
+        // Only offer engine-declared legal candidates; never infer targets from card text.
+        const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
+        if(!legal.length){toast('この特性の合法な対象候補がありません');return;}
+        await resolveOption(legal[0]);
+      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
       else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
     }
     const retreatOptions=options.filter(o=>o.kind==='retreat');
