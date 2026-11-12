@@ -25,12 +25,19 @@ jobs:
           set -e
           printf '{"schemaVersion":1,"testExitCode":%s,"log":"shared-effect-regression.log"}\n' "$result" > reports/shared-effect-regression-result.json
           cat reports/shared-effect-regression-result.json
+      - name: Convert failures to machine-readable triage and Codex batch
+        if: always()
+        run: |
+          node scripts/parse-effect-regression-log.cjs reports/shared-effect-regression.log reports/shared-effect-failures.json
+          node -e "const fs=require('fs');const p='reports/shared-effect-failures.json';const x=JSON.parse(fs.readFileSync(p));fs.writeFileSync('reports/shared-effect-failures-list.json',JSON.stringify(x.failures,null,2))"
+          node scripts/group-effect-failures-for-codex.cjs reports/shared-effect-failures-list.json reports/shared-effect-codex-batch.json
+          node scripts/official-effect-task-ledger.cjs reports/shared-effect-codex-batch.json reports/shared-effect-ledger.json sync
       - name: Preserve regression evidence for root-cause classification
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: shared-effect-regression-evidence
-          path: reports/shared-effect-regression*
+          path: reports/shared-effect-*
           if-no-files-found: error
       - name: Mark regression failure
         shell: bash
