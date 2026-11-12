@@ -241,7 +241,7 @@ test('shared energy-transfer command preserves card identity for item and attack
  assert.equal(item.g.players[0].bench[0].energyCards[0].id,energyId);
  assert(!item.g.players[0].active.energyCards.some(e=>e.id===energyId));
  assert(item.g.history.some(h=>h.details?.command==='MOVE_ENERGY'&&h.details?.energyId===energyId));
- const attack=setup({active:['シェイミ','ドラメシヤ'],bench:{0:['マシマシラ']},energy:{0:{active:['基本悪エネルギー','基本超エネルギー']}}});
+ const attack=setup({active:['シェイミ','ドラメシヤ'],referenceIds:{'シェイミ':'46559'},bench:{0:['マシマシラ']},energy:{0:{active:['基本悪エネルギー','基本超エネルギー']}}});
  const moved=attack.g.players[0].active.energyCards[0].id,target=attack.g.players[0].bench[0].id;
  attack.do('you',{type:'attack_turn',attackIndex:0,selections:{energy:[moved],attachTo:[target]}});
  assert(attack.g.players[0].bench[0].energyCards.some(e=>e.id===moved));
