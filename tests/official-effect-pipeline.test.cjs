@@ -40,13 +40,13 @@ try{
  assert.equal(fs.readFileSync(registry,'utf8'),before,'CONFLICT_MUST_NOT_CHANGE_REGISTRY');
  const journal=registry+'.checkpoint.ndjson';
  assert.equal(fs.existsSync(journal),true,'FAILED_IMPORT_MUST_RETAIN_CHECKPOINT_JOURNAL');
- fs.writeFileSync(input,JSON.stringify(records[0])+'\\n');
+ fs.writeFileSync(input,JSON.stringify(records[0])+'\n');
  run('import-official-effect-evidence.cjs',[input,registry,'--checkpoint']);
  assert.equal(fs.existsSync(journal),false,'SUCCESSFUL_RECOVERY_MUST_COMPACT_JOURNAL');
  assert.equal(JSON.parse(fs.readFileSync(registry)).length,4);
  const extra=row('48249','ability',0,'山札を3枚引く。','能力C');
- fs.writeFileSync(journal,JSON.stringify(extra)+'\\n');
- fs.writeFileSync(input,JSON.stringify(extra)+'\\n');
+ fs.writeFileSync(journal,JSON.stringify(extra)+'\n');
+ fs.writeFileSync(input,JSON.stringify(extra)+'\n');
  run('import-official-effect-evidence.cjs',[input,registry,'--checkpoint']);
  assert.equal(JSON.parse(fs.readFileSync(registry)).length,5,'RECOVERED_JOURNAL_ROW_MUST_BE_PRESERVED');
  assert.equal(fs.existsSync(journal),false,'RECOVERED_JOURNAL_MUST_BE_REMOVED_AFTER_COMPACTION');
