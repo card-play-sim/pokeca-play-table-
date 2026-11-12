@@ -15,6 +15,7 @@ for(let i=0;i<lines.length;i++){
  const causeId='REGRESSION_'+normalized;
  failures.push({causeId,command:'UNCLASSIFIED',category:'unknown',test:testPath,description:title,logLine:i+1});
 }
+if(failures.length===0&&process.env.EFFECT_TEST_EXIT_CODE&&process.env.EFFECT_TEST_EXIT_CODE!=='0')failures.push({causeId:'REGRESSION_UNCLASSIFIED_FAILURE',command:'UNCLASSIFIED',category:'unknown',test:testPath,description:'Nonzero test exit without recognized failure lines',logLine:0});
 const result={schemaVersion:1,sourceLog:path.basename(logFile),failures,requiresOfficialEvidence:true};
 fs.mkdirSync(path.dirname(path.resolve(outFile)),{recursive:true});
 const tmp=outFile+'.tmp-'+process.pid;
