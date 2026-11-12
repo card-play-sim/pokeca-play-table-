@@ -26,6 +26,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Rebuild preview strictly from saved official evidence and preserve 45 visual mappings
+        run: |
+          cp data/fixed-deck-preview-bindings.json /tmp/preview-before.json
+          python tools/build_fixed_preview.py
+          python - <<'PY'
+          import json
+          before=json.load(open('/tmp/preview-before.json'))
+          after=json.load(open('data/fixed-deck-preview-bindings.json'))
+          assert len(before['bindings'])==len(after['bindings'])==45
+          assert before['deckPrintAdopted'] is after['deckPrintAdopted'] is False
+          for old,new in zip(before['bindings'],after['bindings']):
+              for field in ('deckName','preview','mode','adoptedOfficialCardId','selectionPolicy','reason','nameAlias','numberlessEnergy'):
+                  assert old[field]==new[field],(field,old['deckName'])
+          print('PREVIEW_REBUILD_45_IDENTITIES_UNCHANGED PASS')
+          PY
       - name: Recompile canonical reference effect plans and runtime bundle
         run: node scripts/sync-reference-effects.cjs
       - name: Rebuild byte-verified service worker manifest
@@ -36,7 +51,7 @@ jobs:
           node scripts/build-pwa-release.cjs --check
       - name: Commit manifest only if changed
         run: |
-          if ! git diff --quiet -- sw.js ui/engine.bundle.js data/reference-effects/plans.json; then
+          if ! git diff --quiet -- sw.js ui/engine.bundle.js data/reference-effects/plans.json data/fixed-deck-preview-bindings.json; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -- sw.js ui/engine.bundle.js data/reference-effects/plans.json
