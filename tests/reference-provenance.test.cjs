@@ -19,5 +19,5 @@ for(const r of catalog.records){
  for(const field of ['officialCardId','officialName','set','cardNumber','imageSourceUrl']){const bad=JSON.parse(JSON.stringify(card));bad.validationReference[field]='WRONG';assert.equal(resolver.resolveDisplay(bad).url,'',field);}
  assert.equal(resolver.resolveDisplay({...card,officialCardId:r.officialCardId}).url,'');
 }
-for(const script of ['scripts/sync-reference-effects.cjs','scripts/sync-ai-policy.cjs'])assert.equal(spawnSync(process.execPath,[script,'--check'],{encoding:'utf8'}).status,0,script);
+for(const script of ['scripts/sync-reference-effects.cjs','scripts/sync-ai-policy.cjs']){const result=spawnSync(process.execPath,[script,'--check'],{encoding:'utf8'});assert.equal(result.status,0,script+'\n'+(result.stderr||'')+'\n'+(result.stdout||''));}
 console.log('PASS 89 source fingerprints, exact reference image tuples, contradictory print rejection and generated bundle checks');

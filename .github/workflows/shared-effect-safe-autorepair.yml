@@ -1,0 +1,160 @@
+name: Safe shared-effect generated-artifact auto repair
+on:
+  push:
+    branches:
+      - common-foundation-4/task-ledger-20261112
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - common-foundation-4/task-ledger-20261112
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: shared-effect-autorepair-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  repair-generated-reference-artifacts:
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && (github.ref == 'refs/heads/common-foundation-4/task-ledger-20261112' || (github.event_name == 'pull_request' && github.head_ref == 'common-foundation-4/task-ledger-20261112' && github.event.pull_request.head.repo.full_name == github.repository))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+          ref: common-foundation-4/task-ledger-20261112
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static bash syntax and generated-file allowlist checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess, tempfile
+          lines = Path('.github/workflows/shared-effect-safe-autorepair.yml').read_text().splitlines()
+          count = 0
+          for i, line in enumerate(lines):
+              if line.strip() != 'run: |':
+                  continue
+              indent = len(line) - len(line.lstrip())
+              body = []
+              for following in lines[i+1:]:
+                  if not following.strip():
+                      body.append('')
+                      continue
+                  n = len(following) - len(following.lstrip())
+                  if n <= indent:
+                      break
+                  body.append(following[indent+2:])
+              result = subprocess.run(['bash', '-n'], input='\n'.join(body), text=True, capture_output=True)
+              if result.returncode:
+                  raise SystemExit(f'BASH_SYNTAX_ERROR at workflow line {i+1}: {result.stderr}')
+              count += 1
+          if not count:
+              raise SystemExit('NO_SHELL_STEPS_FOUND')
+          print(f'BASH_SYNTAX_PASS scripts={count}')
+          PY
+          allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)$'
+          for file in ui/engine.bundle.js data/reference-effects/plans.json; do
+            printf '%s\n' "$file" | grep -Eq "$allowed" || exit 1
+          done
+          for file in sw.js data/formal-1945.json; do
+            if printf '%s\n' "$file" | grep -Eq "$allowed"; then
+              echo "UNSAFE_ALLOWLIST_ACCEPTED $file" >&2
+              exit 1
+            fi
+          done
+          echo 'GENERATED_FILE_ALLOWLIST_PASS'
+      - name: Verify repair workflow triggers, bash, scope and retry safety
+        run: node scripts/check-shared-autorepair-workflow.cjs
+      - name: Capture initial reference-effect provenance gate
+        id: before
+        shell: bash
+        run: |
+          mkdir -p reports
+          set +e
+          node scripts/sync-reference-effects.cjs --check > reports/autorepair-before.log 2>&1
+          code=$?
+          set -e
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          printf 'before_exit=%s\n' "$code" > reports/autorepair-result.txt
+      - name: Regenerate only approved derived artifacts when stale
+        if: steps.before.outputs.exit_code != '0'
+        run: node scripts/sync-reference-effects.cjs
+      - name: Reject any change outside approved generated files
+        shell: bash
+        run: |
+          git diff --name-only > reports/autorepair-changed-files.txt
+          if grep -Ev '^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)$' reports/autorepair-changed-files.txt; then
+            echo 'UNSAFE_GENERATED_ARTIFACT_CHANGE' >&2
+            exit 1
+          fi
+          git diff --check
+      - name: Validate generated files and shared effects
+        shell: bash
+        run: |
+          set +e
+          node scripts/sync-reference-effects.cjs --check > reports/autorepair-after.log 2>&1
+          provenance=$?
+          node tests/reference-effects.test.cjs > reports/autorepair-effects.log 2>&1
+          effects=$?
+          set -e
+          printf 'after_exit=%s\neffects_exit=%s\n' "$provenance" "$effects" >> reports/autorepair-result.txt
+          test "$provenance" -eq 0
+          test "$effects" -eq 0
+      - name: Preserve before and after evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-effect-autorepair-evidence
+          path: reports/autorepair-*
+          if-no-files-found: warn
+      - name: Commit verified generated artifacts with bounded conflict recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=common-foundation-4/task-ledger-20261112
+          allowed='^(ui/engine\.bundle\.js|data/reference-effects/plans\.json)$'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 0 1 2; do
+            git fetch origin "$target"
+            remote=$(git rev-parse FETCH_HEAD)
+            local_head=$(git rev-parse HEAD)
+            if [ "$remote" != "$local_head" ]; then
+              if ! git merge-base --is-ancestor "$local_head" "$remote"; then
+                echo DIVERGED_REMOTE_HISTORY >&2
+                exit 1
+              fi
+              git reset --hard "$remote"
+              if ! node scripts/sync-reference-effects.cjs --check; then
+                node scripts/sync-reference-effects.cjs
+              fi
+            fi
+            git diff --name-only > reports/autorepair-changed-files.txt
+            if grep -Ev "$allowed" reports/autorepair-changed-files.txt; then
+              echo UNSAFE_REPAIR_SCOPE >&2
+              exit 1
+            fi
+            git diff --check
+            node scripts/sync-reference-effects.cjs --check
+            node tests/reference-effects.test.cjs
+            if git diff --quiet -- ui/engine.bundle.js data/reference-effects/plans.json; then
+              echo NO_REPAIR_NEEDED_AFTER_LATEST_REMOTE_CHECK
+              exit 0
+            fi
+            git add -- ui/engine.bundle.js data/reference-effects/plans.json
+            git commit -m 'fix: regenerate verified reference effect artifacts [automated]'
+            if git push origin "HEAD:refs/heads/$target"; then
+              echo "AUTO_REPAIR_PUSH_SUCCESS attempt=$attempt"
+              exit 0
+            fi
+            if [ "$attempt" -eq 2 ]; then
+              echo MAX_TWO_RECOVERY_ATTEMPTS_REACHED >&2
+              exit 1
+            fi
+            git reset --hard "$local_head"
+          done

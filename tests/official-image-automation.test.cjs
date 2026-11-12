@@ -25,7 +25,7 @@ function fixture(candidates=[candidate(),candidate('60002')]){
  return dir;
 }
 const opts=root=>({root,interval:0});
-const git=(dir,...args)=>execFileSync('git',args,{cwd:dir,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
+const git=(dir,...args)=>execFileSync('git',args,{cwd:dir,encoding:'utf8',maxBuffer:32*1024*1024,stdio:['ignore','pipe','pipe']}).trim();
 function gitFixture(dir){
  git(dir,'init','-q','-b',branch);git(dir,'config','user.email','test@example.invalid');git(dir,'config','user.name','Pipeline Test');
  git(dir,'add','.');git(dir,'commit','-qm','baseline');
