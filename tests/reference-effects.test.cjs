@@ -292,6 +292,21 @@ test('shared energy-transfer command preserves card identity for item and attack
 test('energy switch cannot select the same Pokemon and does not consume hand attachment',()=>{const t=setup({hand:{0:['エネルギーつけかえ']},bench:{0:['メガガルーラex']},energy:{0:{active:['基本悪エネルギー']}}});const a=actionFor(t,'you','エネルギーつけかえ','play_item'),bad=JSON.parse(JSON.stringify(a));bad.selections.attachTo=[t.g.players[0].active.id];t.reject('you',bad,/SAME/);t.do('you',a);assert.equal(t.g.players[0].bench[0].energyCards.length,1);assert.equal(t.g.players[0].normalEnergyAttached,false);});
 test('Night Mine adds one Colorless only for a source-verified Tera Pokemon',()=>{const t=setup({firstDeck:1,active:['ドラパルトex','ロケット団のニューラ'],hand:{1:['夜の鉱山']},energy:{0:{active:['基本炎エネルギー','基本超エネルギー']}}});t.do('you',{type:'end_turn'});t.do('ai',actionFor(t,'ai','夜の鉱山','play_stadium'));t.do('ai',{type:'end_turn'});t.reject('you',{type:'attack_turn',attackIndex:1},/ENERGY/);});
 
+test('shared bench-switch target selection works for item and supporter across owners',()=>{
+ for(const fixture of [
+  {name:'ポケモンいれかえ',type:'play_item',owner:0},
+  {name:'ボスの指令',type:'play_supporter',owner:1}
+ ]){
+  const t=setup({hand:{0:[fixture.name]},bench:{0:['マシマシラ'],1:['ドロンチ']}});
+  const owner=t.g.players[fixture.owner],old=owner.active.id,next=owner.bench[0].id;
+  const a=actionFor(t,'you',fixture.name,fixture.type);
+  a.selections={bench:[next]};
+  t.do('you',a);
+  assert.equal(owner.active.id,next);
+  assert.equal(owner.bench[0].id,old);
+  assert(t.g.history.some(h=>h.details?.command==='SELECT_BENCH_SWITCH'&&h.details?.benchInstanceId===next));
+ }
+});
 test('Goods switch moves the real benched Pokemon and preserves card IDs',()=>{const t=setup({hand:{0:['ポケモンいれかえ']},bench:{0:['マシマシラ']}});const p=t.g.players[0],old=p.active.id,next=p.bench[0].id;const a=actionFor(t,'you','ポケモンいれかえ','play_item');a.selections={bench:[next]};t.do('you',a);assert.equal(p.active.id,next);assert.equal(p.bench[0].id,old);assert(p.discard.some(c=>c.name==='ポケモンいれかえ'));});
 test('Goods Poffin benches selected eligible Basic without creating cards',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['なかよしポフィン']}});const p=t.g.players[0],before=p.deck.length;const a=actionFor(t,'you','なかよしポフィン','play_item');const options=t.port.getHandOptions('you',a.cardId);const req=options.find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req);const c=req.candidates[0];assert(c,'eligible Basic in deck');a.selections={cards:[c.id]};t.do('you',a);assert(p.bench.some(x=>x.id===c.id));assert.equal(p.deck.length,before-1);});
 test('Goods Pokepad retrieves only a non-rule Pokemon from the real deck',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['ポケパッド']}});const p=t.g.players[0],a=actionFor(t,'you','ポケパッド','play_item');const req=t.port.getHandOptions('you',a.cardId).find(x=>x.action.type==='play_item').requests.find(x=>x.key==='cards');assert(req.candidates.length);const c=req.candidates[0];a.selections={cards:[c.id]};t.do('you',a);assert(p.hand.some(x=>x.id===c.id));assert(!p.deck.some(x=>x.id===c.id));});
