@@ -53,6 +53,11 @@ assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['unknown']}
 assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['a','a']}),/INVALID_DEPENDENT_SELECTION/);
 assert.throws(()=>selections.resolve(dependent[1],dependent,{source:'a'}),/INVALID_DEPENDENT_SELECTION/);
 assert.throws(()=>selections.resolve({...dependent[0],dependencies:[{kind:'subset',key:'target'}]},dependent,{}),/INVALID_SELECTION_DEPENDENCY/);
+assert.equal(selections.allows(null,['a']),false,'malformed candidates must fail closed');
+assert.equal(selections.allows([{id:'a'}],null),false,'malformed ids must fail closed');
+assert.equal(selections.allows([{id:'a'}],[null]),false,'null ids must fail closed');
+assert.equal(selections.allows([{id:'a'}],['a'],[null]),false,'malformed rules must fail closed');
+assert.equal(selections.allows([null,{id:'a'}],['a']),true,'irrelevant null candidate must not crash');
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))
