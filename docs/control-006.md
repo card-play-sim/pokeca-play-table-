@@ -18,6 +18,8 @@ Official effect/command meanings and the approved core, AI policy, formal DB, fi
 - `tests/control-005-effect-matrix.test.cjs`: 63 cases / 60 effect slots / 45 names / 120 physical cards, expected zone/energy/damage/turn transitions, canonical AI action matching and save round trips. 59 effect slots execute; the Grass-cost Shaymin attack remains blocked by energy unavailable in the unchanged fixed decks.
 - `scripts/report-control-006-connections.cjs`: per-slot original text, URL/hash, formal binding, commands, runtime, AI, UI, outcome and causes. `reports/control-006-connections.json` is the controlled candidate snapshot. CI artifacts contain fresh candidate/public evidence, with the tested URL explicitly recorded.
 
+Printed damage-only attacks and basic energies without an effect body are distinguished from missing effect evidence; no effect text is invented for those records.
+
 Formal final status remains **VERIFIED 0 / FAILED 0 / BLOCKED 60 / NOT_IMPLEMENTED 0** because the protected fixed manifest contains no confirmed adopted print IDs. Reference execution is not formal deck verification. Identity must be confirmed by the responsible source/owner; names or artwork cannot authorize adopting a reference print. Remaining full lifecycle/per-effect branch coverage is explicit in each row, so a connected command is never claimed as all-effects completion.
 
 Candidate and published workflows retain the existing complete fixed-deck matches, search/switch/counter/evolution/KO/prize checks, protected v246-save upgrade and offline tests. Public deployment requires byte equality and public Chromium interaction; physical Android remains unverified.

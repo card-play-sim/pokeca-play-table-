@@ -8,12 +8,13 @@ const evidence=JSON.parse(fs.readFileSync('test-results/control-005-node.json'))
 const effects=inventory.map(row=>{
  const cases=evidence.results.filter(r=>r.effectId===row.effectId),causes=[];
  if(row.locations.some(l=>!l.officialCardId||l.identityStatus!=='CONFIRMED'))causes.push('DECK_PRINT_BINDING_UNCONFIRMED');
- if(!row.source||!row.officialPageUrl||!row.text)causes.push('OFFICIAL_TEXT_PROVENANCE_INCOMPLETE');
+ const textEvidenceKind=row.text?'OFFICIAL_EFFECT_TEXT':row.plan?.mechanic==='VANILLA_DAMAGE'&&/^\d+$/.test(row.damage||'')?'PRINTED_DAMAGE_WITHOUT_EFFECT_BODY':row.plan?.mechanic==='BASIC_ENERGY'?'BASIC_ENERGY_WITHOUT_EFFECT_BODY':'MISSING_EFFECT_TEXT';
+ if(!row.source||!row.officialPageUrl||textEvidenceKind==='MISSING_EFFECT_TEXT')causes.push('OFFICIAL_TEXT_PROVENANCE_INCOMPLETE');
  for(const x of cases.filter(r=>r.status==='BLOCKED'))causes.push(x.cause.blocked);
  // Controlled primary-operation tests do not prove complete passive/trigger/AI/DOM coverage.
  const remaining=['CONTINUOUS_AND_TRIGGER_LIFECYCLE_COVERAGE_PENDING','PUBLIC_DOM_PER_EFFECT_COVERAGE_PENDING','AI_UI_PARITY_PER_EFFECT_PENDING'];
  const failed=cases.some(r=>r.status==='FAILED');
- return {...row,officialTextSha256:crypto.createHash('sha256').update(row.text||'').digest('hex'),status:failed?'FAILED':causes.length?'BLOCKED':'NOT_IMPLEMENTED',causes:[...new Set(causes)],remaining,referenceExecution:{scope:'controlled-primary-operation-only',cases},physicalAndroidVerified:false};
+ return {...row,textEvidenceKind,officialTextSha256:crypto.createHash('sha256').update(row.text||'').digest('hex'),status:failed?'FAILED':causes.length?'BLOCKED':'NOT_IMPLEMENTED',causes:[...new Set(causes)],remaining,referenceExecution:{scope:'controlled-primary-operation-only',cases},physicalAndroidVerified:false};
 });
 const counts=Object.fromEntries(['VERIFIED','FAILED','BLOCKED','NOT_IMPLEMENTED'].map(k=>[k,effects.filter(e=>e.status===k).length]));
 const report={schemaVersion:1,scope:'fixed-120-effects',complete:counts.VERIFIED===effects.length,physicalCards:manifest.decks.reduce((n,d)=>n+d.cards.reduce((a,c)=>a+c.count,0),0),names:new Set(effects.map(e=>e.cardName)).size,effectSlots:effects.length,counts,protectedFiles:{'data/fixed-test-decks.json':crypto.createHash('sha256').update(fs.readFileSync('data/fixed-test-decks.json')).digest('hex')},effects};
