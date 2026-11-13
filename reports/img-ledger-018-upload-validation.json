@@ -1,0 +1,57 @@
+{
+  "instruction": "IMG-LEDGER-018",
+  "status": "SHA_MATCH_BUT_1945_CATALOG_VALIDATION_FAILED",
+  "inputArchive": "pokeca_1945_codex_evidence_slim(1).zip",
+  "inputArchiveSha256": "d1ec033f245d84e9d1e12eeb2b60b537051109608100d81183d3f4f2c14c9ab2",
+  "catalog": {
+    "path": "pokeca_card_catalog_HIJ/card_catalog.json",
+    "bytes": 5059408,
+    "sha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+    "shaMatches": true,
+    "cardCount": 1940,
+    "requiredCardCount": 1945,
+    "uniqueOfficialIds": 1940,
+    "duplicateOfficialIds": 0
+  },
+  "includedRegistry": {
+    "count": 1945,
+    "registryOnlyCount": 5,
+    "catalogOnlyCount": 0,
+    "registryOnly": [
+      {
+        "officialCardId": "45209",
+        "name": "なかよしポフィン",
+        "regulationMark": "H"
+      },
+      {
+        "officialCardId": "45214",
+        "name": "ビワ",
+        "regulationMark": "H"
+      },
+      {
+        "officialCardId": "45216",
+        "name": "危険な密林",
+        "regulationMark": "H"
+      },
+      {
+        "officialCardId": "45217",
+        "name": "ネオアッパーエネルギー",
+        "regulationMark": "H"
+      },
+      {
+        "officialCardId": "48300",
+        "name": "ヒーローマント",
+        "regulationMark": "H"
+      }
+    ],
+    "regulationCounts": {
+      "H": 893,
+      "I": 698,
+      "J": 354
+    }
+  },
+  "formalBaselineClaim": 1945,
+  "publicImageRegistry6248Join": "NOT_RUN_FORMAL_CATALOG_COUNT_MISMATCH",
+  "formalAdoptionAllowed": false,
+  "originalBytesModified": false
+}
