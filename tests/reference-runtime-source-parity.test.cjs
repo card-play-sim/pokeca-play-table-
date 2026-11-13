@@ -19,7 +19,8 @@ const contract=[
  "case 'SWITCH_SELF_ATTACK':",
  "case 'ACTIVE_AND_BENCH_DAMAGE':",
  "case 'ATTACK_DAMAGE_MOVE_ENERGY':",
- "case 'DECK_ENERGY_TO_GRASS_BENCH':"
+ "case 'DECK_ENERGY_TO_GRASS_BENCH':",
+ "assert(x===undefined||Array.isArray(x),'INVALID_REFERENCE_SELECTION_TYPE:'+key);"
 ];
 for(const token of contract){
  assert(source.includes(token),'canonical source lacks '+token);
