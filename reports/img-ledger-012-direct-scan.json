@@ -596,5 +596,16 @@
     "evidenceArtifactId": 14038330629,
     "evidenceFile": "img-ledger-011-deep-scan.json",
     "note": "All 583 original runs and one audit run listed; all 173 retained artifact ZIPs downloaded and inspected; no card_catalog.json found."
+  },
+  "additionalSourceAudit": {
+    "branch": "data/formal-1945-readonly",
+    "inventory": "source-inventory/formal-1945-upload-inventory.json",
+    "archive": "pokeca_image_registry_work3_checkpoint_1945_formal-1(5)(1).zip",
+    "archiveSha256": "181388bf2912f0e96cac3f98b559dd330f1b77451b537460427a211744dd759c",
+    "archiveUploadedToGitHub": false,
+    "expectedCatalogPath": "pokeca_card_catalog_HIJ/card_catalog.json",
+    "catalogBytes": 5059408,
+    "catalogSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+    "classification": "INVENTORY_ONLY_ORIGINAL_ARCHIVE_NOT_UPLOADED"
   }
 }
