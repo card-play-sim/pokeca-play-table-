@@ -6,6 +6,7 @@ out=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'reports/img-ledger-008-art
 out.parent.mkdir(parents=True,exist_ok=True)
 token=os.environ.get('GH_TOKEN') or os.environ.get('GITHUB_TOKEN')
 private_token=os.environ.get('DEVELOPMENT_REPO_TOKEN') or token
+private_token_provided=bool(os.environ.get('DEVELOPMENT_REPO_TOKEN'))
 if not token: raise SystemExit('GH_TOKEN required')
 checkpoint=json.loads(out.read_text()) if out.exists() else {'schemaVersion':1,'repositories':{},'candidates':[],'errors':[],'expectedSha256':'6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790'}
 def get(url,auth):
@@ -39,6 +40,9 @@ def inspect_archive(repo,artifact,auth):
 for repo in repos:
  state=checkpoint['repositories'].setdefault(repo,{'nextPage':1,'runsScanned':0,'artifactsScanned':0,'candidateArtifacts':[],'expired':0,'complete':False})
  if state['complete']:continue
+ if repo.endswith('pokeca-card-simulator') and not private_token_provided:
+  checkpoint['errors'].append({'repository':repo,'reason':'DEVELOPMENT_REPO_SECRET_NOT_CONFIGURED','requiredSecret':'DEVELOPMENT_REPO_READ_TOKEN','requiredPermissions':['Actions:read','Metadata:read']})
+  continue
  page=state['nextPage']
  while True:
   try:data=get('https://api.github.com/repos/'+repo+'/actions/artifacts?per_page=100&page='+str(page),private_token if repo.endswith('pokeca-card-simulator') else token)
@@ -65,6 +69,6 @@ for repo in repos:
 checkpoint['status']='INVENTORY_COMPLETE' if all(x['complete'] for x in checkpoint['repositories'].values()) else 'INVENTORY_PARTIAL'
 checkpoint['formalOriginalStatus']='VERIFIED' if any(c.get('verification',{}).get('status')=='VERIFIED_ORIGINAL' for c in checkpoint['candidates']) else 'BLOCKED_UNTIL_EXACT_SHA256_VERIFIED'
 checkpoint['limitations']=['Artifact inventory scans retained artifact metadata, not expired/deleted archives','Artifact names alone cannot prove archive contents','Development repository requires a token with actions:read on that repository','Matching SHA-256 is required before formal catalog admission']
-checkpoint['nextSupplyMethod']='Provide DEVELOPMENT_REPO_TOKEN with actions:read to the workflow or locate original formal catalog in retained external archive'
+checkpoint['nextSupplyMethod']='Configure repository Actions secret DEVELOPMENT_REPO_READ_TOKEN with fine-grained read-only Actions permission on card-play-sim/pokeca-card-simulator; metadata read is implicit. Re-run workflow_dispatch on trusted branch.'
 out.write_text(json.dumps(checkpoint,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps({'status':checkpoint['status'],'repositories':{k:{'artifactsScanned':v['artifactsScanned'],'candidateArtifacts':len(v['candidateArtifacts']),'complete':v['complete']} for k,v in checkpoint['repositories'].items()},'errors':len(checkpoint['errors'])}))
