@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "source": "GitHub connected app direct authenticated API",
+  "repository": "card-play-sim/pokeca-card-simulator",
+  "totalWorkflowRunsAtInspection": 583,
+  "runPagesRetrieved": 6,
+  "runCountsPerPage": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    83
+  ],
+  "directArtifactRunIdsInspected": 54,
+  "artifactDownloadsInspected": [
+    {
+      "runId": 42622360609,
+      "id": 13675144927,
+      "name": "official-effect-evidence-inventory",
+      "catalogFound": false
+    },
+    {
+      "runId": 42622259857,
+      "id": 13675184728,
+      "name": "official-effect-evidence-inventory",
+      "catalogFound": false
+    },
+    {
+      "runId": 42421257844,
+      "id": 13593114517,
+      "name": "effect-audit-diagnostics",
+      "catalogFound": false
+    }
+  ],
+  "expectedSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+  "formalVerified": 0,
+  "status": "PARTIAL_DIRECT_SCAN",
+  "remainingRunInspections": 529,
+  "limitations": [
+    "GitHub connector does not expose repository-wide private artifacts endpoint through generic fetch",
+    "Workflow Actions token lacks development repository permission without configured secret"
+  ],
+  "notes": "Directly downloaded three private repository artifacts and checked ZIP member names; none contain card_catalog.json."
+}
