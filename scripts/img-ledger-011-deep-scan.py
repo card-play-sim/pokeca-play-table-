@@ -7,8 +7,8 @@ DEST=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'reports/img-ledger-011-de
 DEST.parent.mkdir(parents=True,exist_ok=True)
 state=json.loads(DEST.read_text()) if DEST.exists() else {'repository':REPO,'expectedSha256':SHA,'nextRunPage':1,'runIdsProcessed':[],'runsScanned':0,'artifactsScanned':0,'artifactsDownloaded':0,'verified':[],'artifacts':[],'errors':[],'status':'IN_PROGRESS'}
 token=os.environ.get('DEVELOPMENT_REPO_TOKEN') or os.environ.get('GH_TOKEN') or os.environ.get('GITHUB_TOKEN')
-if not token:
- state['status']='BLOCKED_AUTH_NOT_CONFIGURED';DEST.write_text(json.dumps(state,indent=2));sys.exit(0)
+if not os.environ.get('DEVELOPMENT_REPO_TOKEN'):
+ state['status']='BLOCKED_DEVELOPMENT_REPO_SECRET_NOT_CONFIGURED';state['requiredSecret']='DEVELOPMENT_REPO_READ_TOKEN';save_text=json.dumps(state,indent=2);DEST.write_text(save_text+'\n');sys.exit(0)
 def req(url,binary=False):
  request=urllib.request.Request(url,headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
  with urllib.request.urlopen(request,timeout=80) as response:return response.read(100*1024*1024+1) if binary else json.load(response)
