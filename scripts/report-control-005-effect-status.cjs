@@ -17,6 +17,11 @@ const effects=inventory.map(row=>{
  return {...row,textEvidenceKind,officialTextSha256:crypto.createHash('sha256').update(row.text||'').digest('hex'),status:failed?'FAILED':causes.length?'BLOCKED':'NOT_IMPLEMENTED',causes:[...new Set(causes)],remaining,referenceExecution:{scope:'controlled-primary-operation-only',cases},physicalAndroidVerified:false};
 });
 const counts=Object.fromEntries(['VERIFIED','FAILED','BLOCKED','NOT_IMPLEMENTED'].map(k=>[k,effects.filter(e=>e.status===k).length]));
-const report={schemaVersion:1,scope:'fixed-120-effects',complete:counts.VERIFIED===effects.length,physicalCards:manifest.decks.reduce((n,d)=>n+d.cards.reduce((a,c)=>a+c.count,0),0),names:new Set(effects.map(e=>e.cardName)).size,effectSlots:effects.length,counts,protectedFiles:{'data/fixed-test-decks.json':crypto.createHash('sha256').update(fs.readFileSync('data/fixed-test-decks.json')).digest('hex')},effects};
-fs.writeFileSync('test-results/control-005-effect-status.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({physicalCards:report.physicalCards,names:report.names,effectSlots:report.effectSlots,counts,complete:report.complete}));
+// Distinguish print-identity blockers from effect execution failures. A preview
+// image or name match must never be promoted into an adopted official print.
+const blockerCounts={};
+for(const effect of effects)for(const cause of effect.causes)blockerCounts[cause]=(blockerCounts[cause]||0)+1;
+const unconfirmedPrintCopies=manifest.decks.reduce((total,deck)=>total+deck.cards.reduce((n,card)=>n+((card.identityStatus==='CONFIRMED'&&card.officialCardId&&card.set&&card.cardNumber)?0:card.count),0),0);
+const report={blockerCounts,unconfirmedPrintCopies,schemaVersion:1,scope:'fixed-120-effects',complete:counts.VERIFIED===effects.length,physicalCards:manifest.decks.reduce((n,d)=>n+d.cards.reduce((a,c)=>a+c.count,0),0),names:new Set(effects.map(e=>e.cardName)).size,effectSlots:effects.length,counts,protectedFiles:{'data/fixed-test-decks.json':crypto.createHash('sha256').update(fs.readFileSync('data/fixed-test-decks.json')).digest('hex')},effects};
+fs.writeFileSync('test-results/control-005-effect-status.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({physicalCards:report.physicalCards,names:report.names,effectSlots:report.effectSlots,counts,blockerCounts,unconfirmedPrintCopies,complete:report.complete}));
 if(counts.FAILED)process.exitCode=1;
