@@ -16,6 +16,7 @@ on:
       - 'scripts/img-ledger-003-registry.cjs'
       - 'scripts/img-ledger-006-linkage.cjs'
       - 'tests/image-browser-load.mjs'
+      - 'scripts/img-ledger-008-artifact-inventory.py'
       - 'tests/img-ledger-002-audit.test.cjs'
       - '.github/workflows/img-ledger-002.yml'
 jobs:
@@ -113,6 +114,7 @@ jobs:
       - name: Inventory both repositories with checkpoint JSON
         env:
           GH_TOKEN: ${{ github.token }}
+          DEVELOPMENT_REPO_TOKEN: ${{ secrets.DEVELOPMENT_REPO_READ_TOKEN }}
         run: python3 scripts/img-ledger-008-artifact-inventory.py reports/img-ledger-008-artifact-search.json
       - name: Preserve original-source search evidence
         if: always()
