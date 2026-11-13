@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { chromium } from 'playwright';
-const registry=JSON.parse(fs.readFileSync('data/official-image-registry.json','utf8'));
+const registry=JSON.parse(fs.readFileSync(process.env.IMAGE_REGISTRY_PATH||'data/official-image-registry.json','utf8'));
 const cards=registry.cards;
 const publishedUrl=process.env.POKECA_TEST_URL;
 const expectedBuild=fs.readFileSync('index.html','utf8').match(/name="pokeca-build" content="(\d+)"/)?.[1];
@@ -54,7 +54,7 @@ try {
     const loaded=results.filter(result=>result.status==='loaded').length;
     const report={publishedUrl:publishedUrl||null,expectedBuild,tested:results.length,expected:cards.length,loaded,
       failed:results.length-loaded,untested:cards.length-results.length,gallery,galleryPages,javascriptErrors:errors,results};
-    fs.writeFileSync('artifacts/image-browser-load-report.json',JSON.stringify(report,null,2)+'\n');
+    fs.writeFileSync(process.env.IMAGE_BROWSER_REPORT_PATH||'artifacts/image-browser-load-report.json',JSON.stringify(report,null,2)+'\n');
     return report;
   }
   if(publishedUrl){
