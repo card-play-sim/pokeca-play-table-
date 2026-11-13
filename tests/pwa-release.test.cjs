@@ -17,12 +17,14 @@ async function worker({bad=false}={}){
 (async()=>{await worker({bad:true});await worker();console.log('PASS atomic byte-verified PWA install, stale CDN rejection, navigation pinning and scoped cache cleanup');})().catch(e=>{console.error(e);process.exitCode=1});
 
 async function updateClient(){
- const handlers={},timers=[],events=[];let fail=true;
- const node={textContent:'',setAttribute(){}},doc={body:{append(el){assert.equal(el,node);events.push('notice-outside-grid');}},querySelector:()=>({content:BUILD}),getElementById:id=>id==='app'?{prepend(){throw Error('UPDATE_NOTICE_MUST_NOT_SHIFT_GRID')}}:null,createElement:()=>node,addEventListener(){}};
- const sw={controller:{postMessage(){}},addEventListener:(k,f)=>handlers[k]=f,register:async()=>({update:async()=>{}})};
- const win={PokecaMobileBuild:BUILD,PokecaMobile:{prepareForUpdate:async()=>{events.push('save');if(fail)throw Error('disk failure')}}};
- vm.runInNewContext(fs.readFileSync('ui/app-update.js','utf8'),{window:win,document:doc,navigator:{serviceWorker:sw},isSecureContext:true,location:{reload:()=>events.push('reload')},MessageChannel:class{constructor(){this.port1={};this.port2={}}},setTimeout:f=>timers.push(f)});
- handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,['save','notice-outside-grid']);assert.equal(win.PokecaUpdateStatus.state,'save-pending');assert.equal(timers.length,1);
+ const handlers={},timers=[],events=[];let fail=true,controllerBuild=BUILD,appended=false;
+ const node={textContent:'',setAttribute(){}},doc={body:{append(el){assert.equal(el,node);events.push('notice-outside-grid');appended=true;}},querySelector:()=>({content:BUILD}),getElementById:id=>id==='app'?{prepend(){throw Error('UPDATE_NOTICE_MUST_NOT_SHIFT_GRID')}}:id==='app-update-status'&&appended?node:null,createElement:()=>node,addEventListener(){}};
+ const worker={postMessage(data,ports){ports[0].reply({build:controllerBuild,files:{},cacheName:'verified-release'});}};
+ const sw={controller:null,addEventListener:(k,f)=>handlers[k]=f,register:async()=>({update:async()=>{}})};
+ const win={PokecaMobileBuild:BUILD,PokecaMobile:{features:{manualOpening:true},prepareForUpdate:async()=>{events.push('save');if(fail)throw Error('disk failure')}}};
+ vm.runInNewContext(fs.readFileSync('ui/app-update.js','utf8'),{window:win,document:doc,navigator:{serviceWorker:sw},isSecureContext:true,location:{reload:()=>events.push('reload')},MessageChannel:class{constructor(){this.port1={close(){}};this.port2={reply:data=>this.port1.onmessage({data})}}},setTimeout:f=>timers.push(f)});
+ sw.controller=worker;handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,[],'same-build controller claim must not race a manual reload');assert.equal(win.PokecaUpdateStatus.state,'ready');
+ controllerBuild=String(Number(BUILD)+1);handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,['save','notice-outside-grid']);assert.equal(win.PokecaUpdateStatus.state,'save-pending');assert.equal(timers.length,1);
  fail=false;await timers[0]();assert.deepEqual(events,['save','notice-outside-grid','save','reload']);console.log('PASS update waits for successful session persistence before reloading');
 }
 updateClient().catch(e=>{console.error(e);process.exitCode=1});
@@ -43,3 +45,14 @@ async function coherentUpdateClient(){
  console.log('PASS capability/version coherence, visible update failure, bounded retry and offline update guard');
 }
 coherentUpdateClient().catch(e=>{console.error(e);process.exitCode=1;});
+
+async function sameVersionControllerReplacement(){
+ const handlers={},events=[],worker=()=>({postMessage(message,ports){ports[0].reply({build:BUILD,files:{},cacheName:'byte-verified-release'});}});
+ const sw={controller:worker(),addEventListener:(key,fn)=>handlers[key]=fn,register:async()=>({update:async()=>{}})};
+ const win={PokecaMobileBuild:BUILD,PokecaMobile:{features:{manualOpening:true},prepareForUpdate:async()=>events.push('save')}};
+ const doc={querySelector:()=>({content:BUILD}),getElementById:()=>null,addEventListener(){},createElement:()=>({setAttribute(){}}),body:{append(){}}};
+ vm.runInNewContext(fs.readFileSync('ui/app-update.js','utf8'),{window:win,document:doc,navigator:{serviceWorker:sw},isSecureContext:true,location:{reload:()=>events.push('reload')},MessageChannel:class{constructor(){this.port1={close(){}};this.port2={reply:data=>this.port1.onmessage({data})};}},setTimeout(){}});
+ await new Promise(setImmediate);assert.deepEqual(events,[]);sw.controller=worker();handlers.controllerchange();await new Promise(setImmediate);assert.deepEqual(events,['save','reload'],'a replacement release still refreshes even if its visible build number is unchanged');
+ console.log('PASS initial coherent claim skips reload while real worker replacement saves and reloads');
+}
+sameVersionControllerReplacement().catch(e=>{console.error(e);process.exitCode=1;});
