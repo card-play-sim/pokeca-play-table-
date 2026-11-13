@@ -96,10 +96,22 @@
     42010989234,
     42010978332,
     42008383528,
-    41987720047
+    41987720047,
+    42721786968,
+    42721768497,
+    42717656388,
+    42717451605,
+    42717423142,
+    42716496289,
+    42716495983,
+    42716387680,
+    42716387470,
+    42716372788,
+    42716273127,
+    42716272635
   ],
-  "runArtifactListingVerified": 94,
-  "remainingRunCount": 489,
+  "runArtifactListingVerified": 106,
+  "remainingRunCount": 477,
   "verifiedArtifactDownloads": [
     {
       "id": 13675144927,
@@ -130,6 +142,36 @@
         "parser-coverage.json",
         "selection-contracts.json",
         "text-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "id": 13717483901,
+      "runId": 42716495983,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "id": 13718890221,
+      "runId": 42716387470,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "id": 13717039318,
+      "runId": 42716273127,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
       ],
       "catalogFound": false
     }
@@ -164,6 +206,21 @@
       "runId": 42420822645,
       "name": "effect-audit-diagnostics",
       "id": 13594105062
+    },
+    {
+      "id": 13717483901,
+      "runId": 42716495983,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "id": 13718890221,
+      "runId": 42716387470,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "id": 13717039318,
+      "runId": 42716273127,
+      "name": "official-effect-evidence-inventory"
     }
   ],
   "formalOriginalStatus": "NOT_FOUND_IN_VERIFIED_DOWNLOADS",
