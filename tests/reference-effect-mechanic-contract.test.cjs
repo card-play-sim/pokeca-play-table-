@@ -48,6 +48,11 @@ assert.equal(selections.resolve(dependent[1],dependent,{}).max,6,'empty source s
 assert.equal(selections.resolve(dependent[1],dependent,{source:['a']}).max,2,'dependent max must be bounded');
 assert.throws(()=>selections.resolve({...dependent[1],dependencies:[{kind:'maxFromSelection',key:'source',field:'available',divisor:0}]},dependent,{source:['a']}),/INVALID_SELECTION_DIVISOR/);
 assert.throws(()=>selections.resolve(dependent[1],[{key:'source',candidates:[{id:'a',available:-1}]},dependent[1]],{source:['a']}),/INVALID_SELECTION_LIMIT/);
+assert.throws(()=>selections.resolve({key:'missing',dependencies:[]},dependent,{}),/UNKNOWN_SELECTION_REQUEST/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['unknown']}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['a','a']}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:'a'}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve({...dependent[0],dependencies:[{kind:'subset',key:'target'}]},dependent,{}),/INVALID_SELECTION_DEPENDENCY/);
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))
