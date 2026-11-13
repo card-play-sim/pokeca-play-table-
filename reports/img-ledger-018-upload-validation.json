@@ -52,6 +52,15 @@
   },
   "formalBaselineClaim": 1945,
   "publicImageRegistry6248Join": "NOT_RUN_FORMAL_CATALOG_COUNT_MISMATCH",
-  "formalAdoptionAllowed": false,
-  "originalBytesModified": false
+  "formalAdoptionAllowed": "IDENTITY_SET_VERIFIED_FROM_ZIP; LIVE_OFFICIAL_SOURCE_NOT_INDEPENDENTLY_VERIFIED",
+  "originalBytesModified": false,
+  "correctedBy": "IMG-LEDGER-019",
+  "correctedInterpretation": "1940 card data records plus 5 identity-only metadata entries equals 1945 formally registered identities; five are not necessarily missing records",
+  "sourceEvidence": "pokeca_card_catalog_HIJ/image_registry/promotion_1943_to1945_validation.json",
+  "sourceEvidenceFields": {
+    "formalCount": 1945,
+    "cardDataCount": 1940,
+    "identityOnlyMetadataCount": 5,
+    "status": "PASS"
+  }
 }
