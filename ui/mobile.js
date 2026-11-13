@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='249';
+window.PokecaMobileBuild='250';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -75,6 +75,8 @@ window.PokecaMobileBuild='249';
     const explicit=currentPrint.imageUrl || currentPrint.imageSourceUrl || currentPrint.images?.find(x=>x?.sourceUrl)?.sourceUrl || '';
     // A verified official print takes precedence over unverified runtime URLs.
     if(verifiedUrl)return verifiedUrl;
+    const reference=card.validationReference&&Pokeca.getReferenceEffectRecord(card);
+    if(reference?.source.kind==='saved-official-extension')return reference.imageSourceUrl;
     if(explicit)return ''; // Unverified state URLs cannot override the ID registry.
     // Never substitute a different official print for an identified card.
     // Unidentified practice cards may use name-based artwork only as a preview.
@@ -98,7 +100,9 @@ window.PokecaMobileBuild='249';
     return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
   }
   function cardArt(card){
-    const display=window.PokecaImageResolver?.resolveDisplay(card);
+    let display=window.PokecaImageResolver?.resolveDisplay(card);
+    const extra=card.validationReference&&Pokeca.getReferenceEffectRecord(card);
+    if(extra?.source.kind==='saved-official-extension')display={mode:'provisional-preview',referenceOfficialCardId:extra.officialCardId};
     const displayAttrs=`data-image-mode="${esc(display?.mode||'missing')}" data-preview-reference-id="${esc(display?.referenceOfficialCardId||'')}" title="${display?.mode==='provisional-preview'?'暫定画像・正式採用版未確定':'カード画像'}"`;
     const officialBasicEnergy={'水':'https://www.pokemon-card.com/assets/images/card_images/large/ENE/046118_E_KIHONMIZUENERUGI.jpg'};
     const identifiedPrint=card.officialCardId!=null||card.catalogCardId!=null||card.set!=null||card.setCode!=null||card.cardNumber!=null;
@@ -742,11 +746,11 @@ window.PokecaMobileBuild='249';
       }catch(e){toast('効果検証を開始できません：'+e.message);}
     }));});
   }
-  function chooseReferenceOpening(manifest,firstDeck){
+  function chooseReferenceOpening(manifest,firstDeck,referenceIds={}){
     // Recreate from the same private seed so preview and commit share physical IDs,
     // opening seven, mulligans, prizes and the AI's automatic placement.
     const seed=(Math.random()*4294967296)>>>0;
-    const create=choices=>Pokeca.createReferenceValidationMatch(manifest,{rng:setupRng(seed),firstDeck,startingBench:{you:[]},...choices});
+    const create=choices=>Pokeca.createReferenceValidationMatch(manifest,{referenceIds,rng:setupRng(seed),firstDeck,startingBench:{you:[]},...choices});
     const preview=create({});if(!preview.ok)throw Error(preview.stage);
     const player=preview.game.players.find(p=>p.id==='you');
     const hand=[player.active,...player.hand];
@@ -1020,6 +1024,16 @@ window.PokecaMobileBuild='249';
     }));
     list.append(button('相手AIの番を実行（練習版）',()=>{closeSheet();void runOpponentPracticeTurn();},{disabled:view().turnPlayer!=='ai'||aiPracticeRunning}));
     list.append(button('開発用：架空カードのAI試験対戦',()=>{void startDeveloperDemo();}));
+    list.append(button('公式証跡つき参照デッキJSONを開く',()=>{
+      openSheet('公式証跡つき参照デッキ', '<p>取込済みの公式参照版IDを指定した2デッキ各60枚のJSONを選んでください。正式採用版の認定とは別の検証対戦です。未対応の印刷版や効果は開始できません。</p><input id="reference-deck-import" type="file" accept="application/json,.json"><p id="reference-import-status" role="status"></p><div id="reference-import-choices" class="menu-list"></div>');
+      $('reference-deck-import').onchange=async e=>{
+        try{const file=e.target.files?.[0];if(!file)return;if(file.size>1024*1024)throw Error('JSONが大きすぎます');const input=JSON.parse(await file.text()),manifest={decks:input.decks};
+          const check=Pokeca.createReferenceValidationMatch(manifest,{referenceIds:input.referenceIds||{},startingBench:{you:[]}});if(!check.ok)throw Error(check.stage);
+          $('reference-import-status').textContent='取込可能な公式参照版を確認しました。使用するデッキを選んでください。';$('reference-import-choices').replaceChildren();
+          manifest.decks.forEach((deck,i)=>$('reference-import-choices').append(button(deck.name||'デッキ'+(i+1),async()=>{if(!await confirmAction('現在の対戦を保存して、参照デッキの手動準備を始めますか？'))return;chooseReferenceOpening(manifest,i,input.referenceIds||{});})));
+        }catch(error){$('reference-import-status').textContent='開始できません：'+error.message;$('reference-import-choices').replaceChildren();}
+      };
+    }));
     list.append(button('60枚デッキJSONで試験対戦開始',()=>{
       openSheet('60枚デッキの試験対戦',`<p>各カードに verified:true を持つ60枚JSONを入力できます。ただしJSONの自己申告フラグだけでは公式証跡を確認できません。この機能は試験用であり、公式デッキ・本番検証済みとは認定しません。固定2デッキ45種類の本番カード識別は未完了です。</p><label>自分のデッキJSON<input id="match-deck-you" type="file" accept="application/json,.json"></label><label>AIのデッキJSON<input id="match-deck-ai" type="file" accept="application/json,.json"></label><label>先攻プレイヤー<select id="match-first-player"><option value="you">自分が先攻</option><option value="ai">AIが先攻</option></select></label><label><input id="match-auto-bench" type="checkbox" checked> 試験用：初期手札のたねをベンチへ自動配置（最大5匹）</label><div class="menu-list"><button id="match-start-verified">検証して対戦開始</button></div>`);
       $('match-start-verified').onclick=async()=>{

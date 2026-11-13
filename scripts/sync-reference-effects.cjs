@@ -18,12 +18,17 @@ function put(name,source){
  if(i<0){const anchor=bundle.indexOf('},"pokeca_effect_data":function');if(anchor<0)throw Error('BUNDLE_MODULE_ANCHOR');bundle=bundle.slice(0,anchor)+marker+source.trimEnd()+'\n\n'+bundle.slice(anchor);}
  else {const a=i+marker.length,b=bundle.indexOf('\n},"',a);if(b<0)throw Error('BUNDLE_MODULE_END');bundle=bundle.slice(0,a)+source.trimEnd()+'\n'+bundle.slice(b);}
 }
+const extension=require('./build-effect-extensions.cjs').build(JSON.parse(fs.readFileSync('data/effect-extensions/intake.json')));
+if(JSON.stringify(extension)!==JSON.stringify(JSON.parse(fs.readFileSync('data/effect-extensions/compiled.json'))))throw Error('EXTENSION_DATA_STALE');
+put('pokeca_effect_extension_data','module.exports='+JSON.stringify(extension)+';');
+put('pokeca_effect_extensions',fs.readFileSync('engine/pokeca_effect_extensions.cjs','utf8'));
 put('pokeca_reference_effect_data','module.exports='+JSON.stringify(catalog)+';');
 put('pokeca_selection_constraints',fs.readFileSync('engine/pokeca_selection_constraints.cjs','utf8'));
 put('pokeca_reference_effect_runtime',fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8'));
 put('pokeca_reference_validation_adapter',fs.readFileSync('engine/pokeca_reference_validation_adapter.cjs','utf8'));
 if(!bundle.includes('isSelectionAllowed:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={isSelectionAllowed:req("pokeca_selection_constraints").allows,');
 if(!bundle.includes('resolveReferenceRequest:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={resolveReferenceRequest:req("pokeca_selection_constraints").resolve,');
+bundle=bundle.replace('getReferenceEffectCatalog:()=>JSON.parse(JSON.stringify(req(\'pokeca_reference_effect_data\')))',"getReferenceEffectCatalog:(options={})=>JSON.parse(JSON.stringify(options.includeExtensions?req('pokeca_reference_effect_runtime').fullCatalog:req('pokeca_reference_effect_data')))");
 if(process.argv.includes('--check')){
  if(bundle!==fs.readFileSync('ui/engine.bundle.js','utf8')||plans!==fs.readFileSync('data/reference-effects/plans.json','utf8'))throw Error('REFERENCE_BUNDLE_STALE');
 }else{fs.writeFileSync('ui/engine.bundle.js',bundle);fs.writeFileSync('data/reference-effects/plans.json',plans);}

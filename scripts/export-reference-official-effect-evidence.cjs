@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const input=process.argv[2]||'data/reference-effects/plans.json';
 const output=process.argv[3]||'reports/reference-official-effect-evidence.json';
 const data=JSON.parse(fs.readFileSync(input,'utf8'));
-if(!Array.isArray(data.records)||data.scope!=='PRINT_SPECIFIC_EFFECT_REFERENCES_NOT_DECK_ADOPTION')throw Error('INVALID_REFERENCE_EFFECT_SOURCE');
+if(!Array.isArray(data.records)||!['PRINT_SPECIFIC_EFFECT_REFERENCES_NOT_DECK_ADOPTION','SUPPLEMENTAL_OFFICIAL_REFERENCES_NOT_DECK_ADOPTION'].includes(data.scope))throw Error('INVALID_REFERENCE_EFFECT_SOURCE');
 const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
 const rows=[],blocked=[];
 for(const record of data.records){

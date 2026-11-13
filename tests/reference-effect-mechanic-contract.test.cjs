@@ -40,6 +40,30 @@ for(const [mechanic,minPrints] of Object.entries({
  assert(entry&&entry.prints.size>=minPrints,
   'shared mechanic coverage lost: '+mechanic);
 }
+// Shared selection constraints are consumed by Rule Engine, AI legality and UI.
+// Invalid dependent limits must fail closed rather than yield Infinity/NaN.
+const selections=require('../engine/pokeca_selection_constraints.cjs');
+const dependent=[{key:'source',candidates:[{id:'a',available:4}]},{key:'target',candidates:[{id:'b'}],min:0,max:6,dependencies:[{kind:'maxFromSelection',key:'source',field:'available',divisor:2}]}];
+assert.equal(selections.resolve(dependent[1],dependent,{}).max,6,'empty source selection must preserve max');
+assert.equal(selections.resolve(dependent[1],dependent,{source:['a']}).max,2,'dependent max must be bounded');
+assert.throws(()=>selections.resolve({...dependent[1],dependencies:[{kind:'maxFromSelection',key:'source',field:'available',divisor:0}]},dependent,{source:['a']}),/INVALID_SELECTION_DIVISOR/);
+assert.throws(()=>selections.resolve(dependent[1],[{key:'source',candidates:[{id:'a',available:-1}]},dependent[1]],{source:['a']}),/INVALID_SELECTION_LIMIT/);
+assert.throws(()=>selections.resolve({key:'missing',dependencies:[]},dependent,{}),/UNKNOWN_SELECTION_REQUEST/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['unknown']}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:['a','a']}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve(dependent[1],dependent,{source:'a'}),/INVALID_DEPENDENT_SELECTION/);
+assert.throws(()=>selections.resolve({...dependent[0],dependencies:[{kind:'subset',key:'target'}]},dependent,{}),/INVALID_SELECTION_DEPENDENCY/);
+assert.equal(selections.allows(null,['a']),false,'malformed candidates must fail closed');
+assert.equal(selections.allows([{id:'a'}],null),false,'malformed ids must fail closed');
+assert.equal(selections.allows([{id:'a'}],[null]),false,'null ids must fail closed');
+assert.equal(selections.allows([{id:'a'}],['a'],[null]),false,'malformed rules must fail closed');
+assert.equal(selections.allows([null,{id:'a'}],['a']),true,'irrelevant null candidate must not crash');
+const countRequest={key:'count',candidates:[{id:'x'},{id:'y'}],min:0,max:2,dependencies:[{kind:'countFromSelection',key:'source',threshold:1,count:2}]};
+assert.equal(selections.resolve(countRequest,[dependent[0],countRequest],{source:['a']}).min,2,'dependent count must apply');
+assert.throws(()=>selections.resolve({...countRequest,candidates:[{id:'x'}]},[dependent[0],countRequest],{source:['a']}),/IMPOSSIBLE_SELECTION_COUNT/);
+assert.throws(()=>selections.resolve({...countRequest,dependencies:[{kind:'countFromSelection',key:'source',threshold:-1,count:2}]},[dependent[0],countRequest],{source:['a']}),/INVALID_SELECTION_COUNT_RULE/);
+assert.equal(selections.allows([{id:'a',kind:'energy'}],['a'],[{kind:'maxWhen',field:'kind',equals:'energy',max:-1}]),false,'negative conditional max must be rejected');
+assert.equal(selections.allows([{id:'a',kind:'energy'}],['a'],[{kind:'maxWhen',field:'kind',equals:'energy',max:1}]),true,'valid conditional max must remain legal');
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))

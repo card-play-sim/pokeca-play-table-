@@ -65,6 +65,12 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
  const draw=kind==='ATTACK'&&text.match(/^自分の山札を([1-9])枚引く。$/);
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
+ const generic=text.normalize('NFKC');
+ let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
+ match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')return {mechanic:'COIN_FORCE_SWITCH',commands:['COIN_FLIP','FORCE_SWITCH']};
  const p=byText.get(text);return p?{...p}:null;
 }
 function compile(catalog){

@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'ui/mobile.js'
+      - 'data/effect-extensions/**'
+      - 'tests/control-008-extensions.test.cjs'
+      - 'tests/test_control_008_extensions_browser.py'
+      - 'tests/fixtures/control-008-extension-manifest.cjs'
       - 'tests/control-006-abilities.test.cjs'
       - 'tests/test_control_006_browser.py'
       - 'tests/fixtures/control-005-scenarios.js'
@@ -47,6 +51,8 @@ jobs:
           node tests/control-005-effect-matrix.test.cjs
           node tests/control-006-abilities.test.cjs
           node tests/control-006-official-evidence.test.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node tests/control-008-extensions.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Preserve effect-level connection evidence
         if: always()
@@ -74,6 +80,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_control_008_extensions_browser.py
           python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
           python tests/test_control_002_browser.py
@@ -87,6 +94,7 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/control-008-*
             artifacts/control-006-*
             artifacts/ui-control-008-*
             artifacts/control-002-browser-results.json

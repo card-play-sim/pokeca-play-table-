@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const bundle = fs.readFileSync(path.join(root, 'ui/engine.bundle.js'), 'utf8');
-for (const name of ['pokeca_selection_constraints','pokeca_reference_effect_runtime', 'pokeca_reference_validation_adapter']) {
+for (const name of ['pokeca_effect_extensions','pokeca_selection_constraints','pokeca_reference_effect_runtime', 'pokeca_reference_validation_adapter']) {
   const source = fs.readFileSync(path.join(root, 'engine', name + '.cjs'), 'utf8').trimEnd();
   const prefix = '"' + name + '":function(require,module,exports){\n';
   const start = bundle.indexOf(prefix);

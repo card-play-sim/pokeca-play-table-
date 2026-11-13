@@ -4,16 +4,18 @@
  const status=window.PokecaUpdateStatus={htmlBuild:document.querySelector('meta[name="pokeca-build"]')?.content,mobileBuild:window.PokecaMobileBuild,controllerBuild:null,state:'checking'};
  function notice(text){let el=document.getElementById('app-update-status');if(!el){el=document.createElement('p');el.id='app-update-status';el.setAttribute('role','status');document.body.append(el);}el.textContent=text;}
  if(!isSecureContext||!('serviceWorker' in navigator)){status.state='unsupported';return;}
+ let knownController=navigator.serviceWorker.controller;
  let refreshing=false,inFlight=null,registrationPromise=null,retryTimer=null,retries=0,userCheck=false,updateFailed=false;
- function controllerInfo(){
+ function controllerInfo({reloadOnMismatch=false,forceReload=false}={}){
   if(!navigator.serviceWorker.controller)return;
   const channel=new MessageChannel();
   channel.port1.onmessage=e=>{
    channel.port1.close();status.controllerBuild=e.data.build;status.releaseFiles=e.data.files;status.cacheName=e.data.cacheName;
    status.manualOpening=window.PokecaMobile?.features?.manualOpening===true;
    status.coherent=status.htmlBuild===status.mobileBuild&&status.mobileBuild===status.controllerBuild&&status.manualOpening;
-   if(updateFailed)return;
+   if(updateFailed||refreshing||status.state==='save-pending')return;
    status.state=status.coherent?'ready':'mismatch';
+   if(forceReload||(reloadOnMismatch&&!status.coherent)){void refresh();return;}
    if(!status.coherent)notice('更新を確認中です。保存済みの対戦は保持しています。');
    else if(userCheck){notice('v'+status.mobileBuild+'・手動対戦準備に対応しています。保存済みの対戦は保持しています。');userCheck=false;}
   };
@@ -49,7 +51,7 @@
    finally{inFlight=null;}
   })();return inFlight;
  }
- navigator.serviceWorker.addEventListener('controllerchange',()=>{void refresh();});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{const next=navigator.serviceWorker.controller,changed=!!knownController&&knownController!==next;knownController=next;controllerInfo({reloadOnMismatch:true,forceReload:changed});});
  function getRegistration(){
   if(!registrationPromise)registrationPromise=navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{
    watch(reg.installing);reg.addEventListener?.('updatefound',()=>watch(reg.installing));controllerInfo();return reg;
