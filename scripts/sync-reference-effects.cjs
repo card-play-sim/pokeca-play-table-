@@ -23,6 +23,7 @@ put('pokeca_selection_constraints',fs.readFileSync('engine/pokeca_selection_cons
 put('pokeca_reference_effect_runtime',fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8'));
 put('pokeca_reference_validation_adapter',fs.readFileSync('engine/pokeca_reference_validation_adapter.cjs','utf8'));
 if(!bundle.includes('isSelectionAllowed:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={isSelectionAllowed:req("pokeca_selection_constraints").allows,');
+if(!bundle.includes('resolveReferenceRequest:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={resolveReferenceRequest:req("pokeca_selection_constraints").resolve,');
 if(process.argv.includes('--check')){
  if(bundle!==fs.readFileSync('ui/engine.bundle.js','utf8')||plans!==fs.readFileSync('data/reference-effects/plans.json','utf8'))throw Error('REFERENCE_BUNDLE_STALE');
 }else{fs.writeFileSync('ui/engine.bundle.js',bundle);fs.writeFileSync('data/reference-effects/plans.json',plans);}

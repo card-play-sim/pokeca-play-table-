@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const report=JSON.parse(fs.readFileSync('reports/control-006-official-recheck.json')),catalog=JSON.parse(fs.readFileSync('data/reference-effects/plans.json'));
+assert.equal(report.matched,9);assert.equal(report.blocked,0);
+for(const r of report.results){const saved=JSON.parse(fs.readFileSync(r.evidencePath)),ref=catalog.records.find(c=>c.officialCardId===r.referenceOfficialCardId);assert.equal(saved.url,ref.officialPageUrl);assert.equal(crypto.createHash('sha256').update(saved.html).digest('hex'),r.htmlSha256);assert.equal(saved.htmlSha256,r.htmlSha256);assert.equal(r.deckPrintAdopted,false);assert(r.headingMatches);assert(new RegExp('/card/'+r.referenceOfficialCardId+'(?:/regu/[^/]+)?/?$').test(r.canonicalUrl));assert.equal(r.storedSource.sha256,ref.source.sha256);for(const e of r.effects){const a=ref.abilities.find(a=>a.effectId===e.effectId);assert.equal(e.text,a.text);assert.equal(e.name,a.name);assert.equal(e.textSha256,crypto.createHash('sha256').update(a.text).digest('hex'));assert(e.textMatches&&e.nameMatches);}}
+console.log('PASS nine freshly fetched official ability texts, raw page hashes and exact reference identity; no deck adoption');

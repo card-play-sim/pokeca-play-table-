@@ -10,4 +10,19 @@ function allows(candidates,ids,rules=[]){
   return false; // Unknown semantics must fail closed.
  });
 }
-module.exports={allows};
+// Resolve dependent choices against earlier engine-declared candidate lists only.
+function resolve(request,requests,selections={}){
+ const out=JSON.parse(JSON.stringify(request));
+ for(const rule of out.dependencies||[]){
+  const prior=requests.slice(0,requests.findIndex(r=>r.key===request.key)).find(r=>r.key===rule.key);
+  if(!prior)throw Error('INVALID_SELECTION_DEPENDENCY');
+  const ids=selections[rule.key]||[],chosen=prior.candidates.filter(c=>ids.includes(id(c)));
+  if(rule.kind==='subset')out.candidates=out.candidates.filter(c=>ids.includes(id(c)));
+  else if(rule.kind==='countFromSelection')out.min=out.max=ids.length>=rule.threshold?rule.count:0;
+  else if(rule.kind==='excludeSelectedField')out.candidates=out.candidates.filter(c=>!chosen.some(source=>source[rule.field]===id(c)));
+  else if(rule.kind==='maxFromSelection')out.max=Math.min(out.max,...chosen.map(c=>Math.floor(Number(c[rule.field]||0)/rule.divisor)));
+  else throw Error('UNKNOWN_SELECTION_DEPENDENCY');
+ }
+ return out;
+}
+module.exports={allows,resolve};

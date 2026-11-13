@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='248';
+window.PokecaMobileBuild='249';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -180,6 +180,11 @@ window.PokecaMobileBuild='248';
     const art=zone==='prize'?`<span class="prize-map" aria-hidden="true">${slots.map((v,i)=>`<span data-prize-position="${i}" class="prize-position${v?'':' taken'}">${v?back:'✓'}</span>`).join('')}</span>`:zone==='deck'?back:`<span class="zone-icon">${icon}</span>`;
     return `<button class="zone ${zone}${count===0?' zone-empty':''}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${player.id==='you'?'自分':'相手'}の${esc(label)} ${count}枚">${art}<span>${label}</span><strong>${count}</strong></button>`;
   }
+  function abilityChoices(me){
+    const field=[me.active,...me.bench].filter(Boolean).flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind==='ability').map(option=>({mon,position:mon===me.active?'バトル場':'ベンチ'+(me.bench.indexOf(mon)+1),option})));
+    const hand=me.hand.flatMap(mon=>port.getHandOptions('you',idOf(mon)).filter(o=>o.action?.type==='use_ability').map(o=>({mon,position:'手札',option:{...o,enabled:o.ok,disabledReasons:o.errors}})));
+    return [...field,...hand];
+  }
   function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
     if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='you'&&(!sheet.open||!$('reference-choice')))queueMicrotask(showReferenceChoice);
@@ -207,7 +212,7 @@ window.PokecaMobileBuild='248';
     // Action availability is derived from the same legal options as card taps.
     const myTurn=s.status==='active'&&s.turnPlayer==='you';
     const attackOptions=you.active?port.getPokemonActions('you',idOf(you.active)).filter(o=>o.kind==='attack'):[];
-    const abilityOptions=[you.active,...you.bench].filter(Boolean).flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind==='ability'));
+    const abilityOptions=abilityChoices(you).map(c=>c.option);
     $('attack-button').disabled=!myTurn||!attackOptions.some(o=>o.enabled);
     $('ability-button').disabled=!myTurn||!abilityOptions.some(o=>o.enabled);
     $('attack-button').title=attackOptions.length?(attackOptions.some(o=>o.enabled)?'ワザを選択':'現在使えるワザはありません'):'ワザが登録されていません';
@@ -391,11 +396,10 @@ window.PokecaMobileBuild='248';
     // All bench targeting goes through the engine-provided legal candidate list.
     // Never permit free-form damage or counter placement from the UI.
     for(const originalRequest of option.requests || []) {
-      const request=clone(originalRequest);
+      const request=Pokeca.resolveReferenceRequest(originalRequest,option.requests,action.selections);
+      if(request.min===0&&request.max===0){if(request.kind==='POKEMON')action.targetIds=[];else{action.selections||={};action.selections[request.key]=[];}continue;}
       if(request.kind==='COUNTERS'){const allocation=await selectReferenceCounters(request);if(!allocation)return;action.selections||={};action.selections[request.key]=allocation;continue;}
-      if(request.kind==='COUNT'){const sourceId=action.selections?.source?.[0],source=getCard(sourceId)?.card;const max=Math.min(request.max,Math.floor((source?.damage||0)/10));const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:max+1},(_,n)=>({id:String(n),name:n+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
-      if(request.key==='toHand'&&action.selections?.cards){request.candidates=request.candidates.filter(c=>action.selections.cards.includes(idOf(c)));request.min=request.max=Math.min(1,request.candidates.length);}
-      if(request.key==='attachTo'&&option.requests.some(r=>r.key==='toHand'))request.min=request.max=(action.selections?.cards?.length||0)>1?1:0;
+      if(request.kind==='COUNT'){const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:Math.max(0,request.max-request.min+1)},(_,i)=>({id:String(i+request.min),name:(i+request.min)+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
       const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
@@ -579,12 +583,12 @@ window.PokecaMobileBuild='248';
     const state=view(),me=state.players.find(p=>p.id==='you');
     if(state.status!=='active'||state.turnPlayer!=='you'){toast('今は自分の操作ができません');return;}
     const mons=kind==='attack'?[me.active].filter(Boolean):[me.active,...me.bench].filter(Boolean);
-    const actions=mons.flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind===kind).map(o=>({mon,option:o})));
+    const actions=kind==='ability'?abilityChoices(me):mons.flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind===kind).map(o=>({mon,option:o})));
     openSheet(kind==='attack'?'ワザを選ぶ':'特性を選ぶ','<p>使用する'+(kind==='attack'?'ワザ':'特性')+'を選んでください。使用できないものは灰色で表示します。</p><div id="quick-actions" class="menu-list"></div>');
     const list=$('quick-actions');
     if(!actions.length){list.textContent=kind==='attack'?'使えるワザが登録されていません':'手動で使う特性はありません';return;}
-    for(const {mon,option} of actions){
-      const label=(mon.name||'ポケモン')+' · '+option.label+(option.used?'（使用済み）':'');
+    for(const {mon,position,option} of actions){
+      const label=(position?'['+position+'] ':'')+(mon.name||'ポケモン')+' · '+option.label+(option.used?'（使用済み）':'');
       list.append(button(label,()=>resolveOption(option),{disabled:!option.enabled}));
       if(!option.enabled&&option.disabledReasons?.length)list.append(button('使用できない理由',()=>toast(option.disabledReasons.join(' / '))));
     }

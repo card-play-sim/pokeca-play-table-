@@ -158,7 +158,7 @@ function requests(g,actor,card,effect){
  if(m==='ADRENA_BRAIN'){
   add('source','CARD',own.filter(c=>(c.damage||0)>0).map(c=>({id:id(c),name:c.name,damage:c.damage||0})),1,1);
   add('target','CARD',opp.map(c=>({id:id(c),name:c.name})),1,1);
-  add('count','COUNT',[],0,3);
+  add('count','COUNT',[],1,3,{dependencies:[{kind:'maxFromSelection',key:'source',field:'damage',divisor:10}]});
  }
  if(m==='RECON')cardRequest('cards',p.deck.slice(0,2),Math.min(1,p.deck.length),Math.min(1,p.deck.length));
  if(['ULTRA_BALL','CYRANO','HILDA','BROCK','MEOWTH_ENTRY','POKEPAD','POFFIN','AKAMATSU'].includes(m)){
@@ -169,13 +169,13 @@ function requests(g,actor,card,effect){
   const rules={HILDA:{kind:'distinct',field:'kind',error:'HILDA_CATEGORY_SELECTION'},AKAMATSU:{kind:'distinct',field:'energyType',error:'AKAMATSU_DIFFERENT_TYPES'},BROCK:{kind:'maxWhen',field:'basic',equals:false,max:1,error:'BROCK_EVOLUTION_OR_BASIC'}};
   if(rules[m])out.at(-1).constraints=[rules[m]];
   if(m==='AKAMATSU'){
-   cardRequest('toHand',candidates,0,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),0,1);
+   cardRequest('toHand',candidates,0,1);out.at(-1).dependencies=[{kind:'subset',key:'cards'},{kind:'countFromSelection',key:'cards',threshold:1,count:1}];cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),0,1);out.at(-1).dependencies=[{kind:'countFromSelection',key:'cards',threshold:2,count:1}];
   }
  }
  if(m==='STRETCHER')cardRequest('cards',p.discard.filter(c=>c.kind==='pokemon'||basicEnergy(c)),1,1);
  if(['SWITCH','BOSS'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);
  if(m==='ENERGY_SWITCH'){
-  cardRequest('energy',own.flatMap(c=>(c.energyCards||[]).filter(basicEnergy)),1,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),1,1);
+  cardRequest('energy',own.flatMap(c=>(c.energyCards||[]).filter(basicEnergy).map(e=>({...e,containerId:id(c)}))),1,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),1,1);out.at(-1).dependencies=[{kind:'excludeSelectedField',key:'energy',field:'containerId'}];
  }
  if(m==='HAMMER'){const energies=opp.flatMap(c=>c.energyCards||[]);cardRequest('energy',energies,energies.length?1:0,1);}
  if(m==='ROSA'){
@@ -186,7 +186,9 @@ function requests(g,actor,card,effect){
 function selected(action,key){const x=action.selections?.[key];return Array.isArray(x)?x:[];}
 function verifyRequests(g,actor,card,effect,action){
  const req=requests(g,actor,card,effect);
- for(const r of req){
+ if(effect.plan.mechanic==='ENERGY_SWITCH'){const source=field(player(g,actor)).find(c=>(c.energyCards||[]).some(e=>id(e)===selected(action,'energy')[0]));assert(!source||id(source)!==selected(action,'attachTo')[0],'ENERGY_SWITCH_SAME_POKEMON');}
+ for(const original of req){
+  const r=Selection.resolve(original,req,action.selections);
   if(r.kind==='COUNTERS'){
    const allocation=action.selections?.allocation;assert(allocation&&typeof allocation==='object'&&!Array.isArray(allocation),'COUNTER_ALLOCATION_REQUIRED');
    const entries=Object.entries(allocation);assert(entries.every(([key,n])=>r.candidates.some(c=>c.id===key)&&Number.isInteger(n)&&n>=0)&&entries.reduce((s,[,n])=>s+n,0)===6,'INVALID_COUNTER_ALLOCATION');continue;
@@ -515,10 +517,11 @@ function handOptions(g,actor,ident){
 }
 function completeAction(g,actor,option){
  const action=copy(option.action),p=player(g,actor);
- for(const r of option.requests||[]){
+ for(const original of option.requests||[]){
+  const r=Selection.resolve(original,option.requests,action.selections);
   if(r.kind==='POKEMON')action.targetIds=r.candidates.slice(0,r.min).map(c=>c.instanceId);
   else if(r.kind==='COUNTERS'){action.selections||={};action.selections.allocation=r.candidates.length?{[r.candidates[0].id]:6}:{};}
-  else if(r.kind==='COUNT'){action.selections||={};const source=find(g,action.selections.source?.[0])?.card;action.selections.count=Math.min(3,Math.floor((source?.damage||0)/10));}
+  else if(r.kind==='COUNT'){action.selections||={};const source=find(g,action.selections.source?.[0])?.card;action.selections.count=Math.min(r.max,Math.floor((source?.damage||0)/10));}
   else {action.selections||={};const max=r.max;action.selections[r.key]=r.candidates.slice(0,max).map(id);}
  }
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
@@ -591,7 +594,7 @@ function statuses(g){
 }
 function cardInfo(g,actor,ident){
  const p=player(g,actor),card=[...field(p),...p.hand,...p.discard].find(c=>id(c)===ident),r=record(card);if(!r)return null;
- const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:null,description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
+ const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?field(p).includes(card)&&abilityEnabled(g,card):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
  return {instanceId:ident,entries,referenceOfficialCardId:r.officialCardId,officialPageUrl:r.officialPageUrl,deckPrintAdopted:false};
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
