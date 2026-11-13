@@ -8,7 +8,7 @@ function allows(candidates,ids,rules=[]){
  return rules.every(rule=>{
   if(!rule||typeof rule!=='object')return false;
   if(rule.kind==='distinct')return new Set(chosen.map(c=>c[rule.field])).size===chosen.length;
-  if(rule.kind==='maxWhen')return !chosen.some(c=>c[rule.field]===rule.equals)||chosen.length<=rule.max;
+  if(rule.kind==='maxWhen')return Number.isInteger(rule.max)&&rule.max>=0&&(!chosen.some(c=>c[rule.field]===rule.equals)||chosen.length<=rule.max);
   return false; // Unknown semantics must fail closed.
  });
 }
