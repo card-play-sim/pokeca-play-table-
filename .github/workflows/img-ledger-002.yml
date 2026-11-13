@@ -1,6 +1,15 @@
 name: IMG-LEDGER-002 official ID join audit
 on:
   workflow_dispatch:
+    inputs:
+      formal_artifact_run_id:
+        description: 'Optional existing workflow run ID holding the exact original formal catalog'
+        required: false
+        type: string
+      formal_artifact_name:
+        description: 'Optional artifact name containing pokeca_card_catalog_HIJ/card_catalog.json'
+        required: false
+        type: string
   pull_request:
     paths:
       - 'scripts/img-ledger-002-audit.cjs'
@@ -29,6 +38,21 @@ jobs:
         run: node scripts/img-ledger-003-registry.cjs /tmp/img-ledger-v247.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-003-registry.json
       - name: Static app image linkage and H/I/J manifest
         run: node scripts/img-ledger-006-linkage.cjs /tmp/img-ledger-v247.json data/official-image-registry.json data/fixed-deck-preview-bindings.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-006-linkage.json
+      - name: Restore formal source from verified existing artifact when supplied
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORMAL_RUN: ${{ inputs.formal_artifact_run_id }}
+          FORMAL_ARTIFACT: ${{ inputs.formal_artifact_name }}
+        run: |
+          if [ -n "$FORMAL_RUN" ] && [ -n "$FORMAL_ARTIFACT" ]; then
+            mkdir -p /tmp/img-ledger-formal-source
+            gh run download "$FORMAL_RUN" --repo "${{ github.repository }}" --name "$FORMAL_ARTIFACT" --dir /tmp/img-ledger-formal-source
+            SOURCE="$(find /tmp/img-ledger-formal-source -type f -name card_catalog.json -print -quit)"
+            if [ -z "$SOURCE" ]; then echo 'Artifact lacks card_catalog.json'; exit 1; fi
+            printf '%s  %s\n' '6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790' "$SOURCE" | sha256sum -c -
+            mkdir -p data/formal-1945-original
+            cp "$SOURCE" data/formal-1945-original/card_catalog.json
+          fi
       - name: Formal catalog source gate
         shell: bash
         run: |
