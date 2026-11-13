@@ -678,7 +678,11 @@ function requests(g,actor,card,effect){
  }
  return out;
 }
-function selected(action,key){const x=action.selections?.[key];return Array.isArray(x)?x:[];}
+function selected(action,key){
+ const x=action.selections?.[key];
+ assert(x===undefined||Array.isArray(x),'INVALID_REFERENCE_SELECTION_TYPE:'+key);
+ return x||[];
+}
 function verifyRequests(g,actor,card,effect,action){
  const req=requests(g,actor,card,effect);
  if(effect.plan.mechanic==='ENERGY_SWITCH'){const source=field(player(g,actor)).find(c=>(c.energyCards||[]).some(e=>id(e)===selected(action,'energy')[0]));assert(!source||id(source)!==selected(action,'attachTo')[0],'ENERGY_SWITCH_SAME_POKEMON');}
@@ -1094,7 +1098,6 @@ function cardInfo(g,actor,ident){
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
 module.exports={reduced,catalog,record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages};
-
 },"pokeca_reference_validation_adapter":function(require,module,exports){
 'use strict';
 const R=require('./pokeca_reference_effect_runtime');
