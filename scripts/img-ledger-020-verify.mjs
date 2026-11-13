@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const bits=Buffer.from("AAAAAAAAAAAAAAAAAAAAAAAAKNu0Vbmy9DVCn7o2xXfFdCUAih0AAAAAALpBAAAAAAAAAK4WAMwrACwzAKhrALA5E+dq3uAcmtXM3pbLHQAAAMBts0DSS12mJWdlXbqc5QoAAAAAAAAAgN8reFI2KXXW3+wAEC/N0IprLfVJ6noKADQHDy8AAAAAAAAAAAAA8iEGJN0BwNkAwN6nb7qTZwEAAIDWGCGg2SuxfHbz2pmmdd4CAAC0npdiPVx8WtHG3trcc60CAAAAAACAdiehSCplgiOFwnQgIR+dIfqgyl8vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADSpS61LpuuGWlerQAAACSCkg98AABGAAAAAGC0S1ChEgAdAAxrWXqt21M3AKDwDIhsS8tpTU9SS1K7pgAAAMzWAENSt1TYc6llk3QygFTTWdaWklalXBYAAABAmpq763g5GqBsvdJsGe0L0AgAAAAAgOqWCjtLzSZpMhfXrGmW2jJpVeVSE1MAAAAAAAAAAAAAAAAAAAAAAAAAgAFAegCgLxAEAAAAILPsypbaUpNWCyC3MEA0MQYMADtpAGBY6NqltfRy16bkXqczzXJuXu4OAAAAAAAgZZ36VJiabydT94yqzkM1bjYln5pDT1W5ysekv2l5edbxrfTbDKv5n5R6z/J/mp8myX45nf6XZLh+qUrx+t5N9qOZUnL+qn/Vsqfm1tf3BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAANAktZqvG6dkNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAlLQAo5BAo2Q4DAHIADwAz09Sp/NWVNZUFAACAE0IBQHCtmuI2i1c3SQFAUZAB0FxVv722Tpt7AGA+gK0DeBIgAAAAAACA+joBoASw7mz5AQCg/ff///9/P5uxfCZ/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",'base64');
+const formal=[];for(let n=45000;n<51000;n++)if(bits[(n-45000)>>3]&(1<<((n-45000)&7)))formal.push(String(n));
+const cards=JSON.parse(fs.readFileSync(process.env.IMAGE_REGISTRY_PATH||'data/official-image-registry.json','utf8')).cards;
+const ids=new Set(cards.map(c=>String(c.officialCardId)));
+const missing=formal.filter(id=>!ids.has(id));
+const result={formalCount:formal.length,publicCount:cards.length,publicUnique:ids.size,matched:formal.length-missing.length,missing,publicOutsideFormal:cards.length-formal.length+missing.length,identityOnly:['45209','45214','45216','45217','48300'].map(id=>({id,present:ids.has(id)}))};
+console.log(JSON.stringify(result,null,2));
+assert.equal(formal.length,1945);assert.equal(cards.length,6248);assert.equal(ids.size,6248);assert.equal(missing.length,0);assert.equal(cards.filter(c=>!c.imageSourceUrl).length,0);
+const expected=JSON.parse(fs.readFileSync('reports/img-ledger-020-join.json','utf8'));
+assert.equal(expected.join.matchedFormalIds,result.matched);assert.equal(expected.join.publicOutsideFormal,result.publicOutsideFormal);
+const manifest=JSON.parse(fs.readFileSync(process.env.HIJ_MANIFEST_PATH,'utf8'));
+assert.equal(manifest.hijTotal,4357);assert.equal(manifest.hijRegisteredInRecoveryCandidate,4357);assert.equal(manifest.hijMissingFromRecoveryCandidate.length,0);
+fs.mkdirSync('reports/ci',{recursive:true});fs.writeFileSync('reports/ci/img-ledger-020-verified.json',JSON.stringify({...result,hij:manifest.hijByPrintedMark,pass:true},null,2)+'\\n');
