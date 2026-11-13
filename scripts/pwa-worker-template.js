@@ -21,6 +21,7 @@ self.addEventListener('activate',event=>event.waitUntil((async()=>{
  for(const key of await caches.keys())if(key.startsWith('pokeca-first-playable-v')&&key!==CACHE)await caches.delete(key);
 })()));
 self.addEventListener('message',event=>{
+ if(event.data?.type==='ACTIVATE_UPDATE')void self.skipWaiting();
  if(event.data?.type==='RELEASE_INFO')event.ports[0]?.postMessage({build:BUILD,cacheName:CACHE,files:FILES});
 });
 self.addEventListener('fetch',event=>{

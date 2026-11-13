@@ -5,6 +5,8 @@ on:
       - 'ui/mobile.js'
       - 'ui/app-update.js'
       - 'index.html'
+      - 'update.html'
+      - 'ui/pwa-recovery.js'
       - 'tests/test_control_003_update_browser.py'
       - 'tests/pwa-release.test.cjs'
       - 'tests/g-base-008-ui-contract.test.cjs'

@@ -13,7 +13,7 @@ const local=fs.readFileSync('sw.js','utf8');
 const release=local.match(/const CACHE='([^']+)'/)?.[1];
 assert(release,'missing local PWA release id');
 const releaseFiles=JSON.parse(local.match(/const FILES=(\{[\s\S]*?\});/)[1]);
-const paths=[...new Set(['index.html','sw.js','data/reference-effects/plans.json',...Object.keys(releaseFiles).map(url=>url==='./'?'':url.replace(/^\.\//,''))])];
+const paths=[...new Set(['index.html','sw.js','update.html','ui/pwa-recovery.js?build='+build,'data/reference-effects/plans.json',...Object.keys(releaseFiles).map(url=>url==='./'?'':url.replace(/^\.\//,''))])];
 function fetch(url){
  return new Promise((resolve,reject)=>{
   const req=https.get(url,{headers:{'Cache-Control':'no-cache','User-Agent':'pokeca-release-verifier'}},res=>{

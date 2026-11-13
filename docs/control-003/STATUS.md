@@ -14,6 +14,12 @@ old client still reports matching v246 labels as ready and retains auto setup.
 This reproduces an update failure mechanism; the user's physical device itself
 has not been inspected.
 
+Some legacy cold launches retained v246 even after the new cache was created.
+A network-only `update.html` entry therefore avoids depending on the old cached
+client. It registers/checks the existing worker, activates a waiting verified
+release, confirms its version and returns to the existing app without accessing
+match storage.
+
 The corrected release is v247, consistently in HTML, runtime declaration, visible
 label, all versioned asset URLs and generated worker. The stable manifest
 start_url/scope and worker registration URL are retained for the existing PWA.
@@ -26,9 +32,9 @@ used. Worker cleanup remains limited to this app's obsolete shell caches.
 
 ## Verification
 - Real persistent profile: old v246 offline cold start, rejected same-URL mixed
-  update, then ordinary online cold start automatically upgrades to v247 while
+  update, then the network recovery entry upgrades to v247 while
   old build=246 URLs remain stale. No registration/update/storage-reset injection
-  is used in the successful cold-start upgrade.
+  is used by the test; the real recovery page performs the native update.
 - Existing match ID and Game State preserved, unrelated localStorage and cache
   sentinel preserved, every worker-cached response matches its manifest SHA-256.
 - Visible v247 confirmed; both fixed decks display seven cards for manual
@@ -38,7 +44,7 @@ used. Worker cleanup remains limited to this app's obsolete shell caches.
   Pages asset bytes, then tests the actual public origin's worker and direct
   network bytes, manual opening, effects, full AI matches and offline resume.
 - Published-file verification now covers every cache entry plus sw.js and the
-  reference plans, including versioned mobile/updater scripts, rather than only
+  reference plans, including versioned mobile/updater scripts, plus the network recovery entry/loader, rather than only
   the former four-file subset.
 
 Formal 1945 DB, fixed 120 cards, image registry, approved engine/AI modules and
@@ -46,7 +52,9 @@ saved-game schema are unchanged. This is Chromium Pixel 5 emulation with real
 worker/cache/storage lifecycle, not a physical Android/WebAPK installation test.
 
 ## Android update route
-Open the existing app while online (or return it to the foreground) and allow it
-to save/reload. The visible target is `手動対戦準備対応 v247`. In v247 the menu offers
+Open `https://card-play-sim.github.io/pokeca-play-table-/update.html?build=247`
+while online. It confirms the active verified worker and returns to the existing
+app. The visible target is `手動対戦準備対応 v247`. The menu also offers
 `最新版を確認・更新`. Existing matches resume as saved; use `固定デッキ対戦` to open a
-new seven-card preparation. Do not clear browser/site data or reinstall to update.
+new seven-card preparation. Updating does not require clearing site data or
+reinstalling the app.

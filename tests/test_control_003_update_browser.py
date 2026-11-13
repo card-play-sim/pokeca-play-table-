@@ -42,15 +42,15 @@ async def main():
   async with async_playwright() as p:
    device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
    with tempfile.TemporaryDirectory(prefix='pokeca-control003-') as profile:
-    async def launch(offline=False):
+    async def launch(offline=False,recovery=False):
      context=await p.chromium.launch_persistent_context(profile,executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args(),**device)
      await context.set_offline(offline);page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-     await page.goto(base,wait_until='domcontentloaded');return context,page
+     await page.goto(base+('update.html?build='+BUILD if recovery else ''),wait_until='domcontentloaded');return context,page
     async def ready(page,build):
      try:
       await page.wait_for_function('build=>window.PokecaMobile&&PokecaUpdateStatus?.state==="ready"&&PokecaUpdateStatus.controllerBuild===build&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',arg=build,timeout=60000)
      except Exception:
-      diagnostic=await page.evaluate('async()=>({status:window.PokecaUpdateStatus,save:document.getElementById("save-status")?.textContent,notice:document.getElementById("app-update-status")?.textContent,caches:await caches.keys(),reg:(await navigator.serviceWorker.getRegistration())?.active?.scriptURL})')
+      diagnostic=await page.evaluate('async()=>({status:window.PokecaUpdateStatus,save:document.getElementById("save-status")?.textContent,notice:document.getElementById("app-update-status")?.textContent,caches:await caches.keys(),reg:await(async()=>{const r=await navigator.serviceWorker.getRegistration();return {active:r?.active?.state,waiting:r?.waiting?.state,installing:r?.installing?.state,controller:navigator.serviceWorker.controller?.state};})(),cacheSizes:await Promise.all((await caches.keys()).map(async name=>({name,count:(await(await caches.open(name)).keys()).length}))),controller:await new Promise(resolve=>{const c=new MessageChannel();c.port1.onmessage=e=>resolve(e.data);navigator.serviceWorker.controller?.postMessage({type:"RELEASE_INFO"},[c.port2]);setTimeout(()=>resolve(null),1000);})})')
       diagnostic['requests']=requests;diagnostic['phase']=phase['value'];(ROOT/'artifacts/control-003-failure.json').write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2)+'\n');print(json.dumps(diagnostic,ensure_ascii=False),flush=True);raise
     print('START genuine v246 install',flush=True)
     context,page=await launch();await ready(page,'246')
@@ -81,9 +81,10 @@ async def main():
     context,page=await launch(offline=True);await page.wait_for_function('window.PokecaMobile&&navigator.serviceWorker.controller&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"');assert await page.evaluate('PokecaMobile.port.getSnapshot()')==saved;await context.close()
     print('START cold online upgrade to '+BUILD,flush=True)
     phase['value']='new'
-    # Normal online restart runs the old installed updater; no storage/cache clear,
-    # unregister, injected restore or manual registration/update call is used here.
-    context,page=await launch();await ready(page,BUILD)
+    # A cold launch at the network recovery route bypasses the old cached shell.
+    # The real recovery page updates/activates the worker and returns to the app.
+    # No test-injected registration/update/storage-reset or restore call is used.
+    context,page=await launch(recovery=True);await ready(page,BUILD)
     assert 'v'+BUILD in await page.locator('#build-revision').inner_text()
     assert int(BUILD)>246;assert await page.evaluate('PokecaMobile.port.getSnapshot()')==saved
     assert await page.evaluate('PokecaMobile.port.getSessionId()')==session
@@ -122,7 +123,7 @@ async def main():
     assert await page.evaluate('async id=>(await PokecaStorage.createIndexedMatchStore(localStorage).read(id)).game',session)==saved
     assert await page.evaluate('localStorage.getItem("control003-preserve")')=='yes';await context.close()
     assert not errors,errors
-    report={'oldCommit':OLD,'oldBuild':'246','previousCommit':PREVIOUS,'oldSameURLUpdateRejected':outcome,'newBuild':BUILD,'publicSource':PUBLIC,'persistentProfile':True,'serviceWorkersBlocked':False,'onlineColdRestartAutoUpdated':True,'oldOfflineRestartExact':True,'newOfflineRestartExact':True,'existingMatchPreserved':True,'otherStoragePreserved':True,'bothDecksManualOpening':True,'cacheHashesExact':True,'cacheName':status['cacheName'],'javascriptErrors':errors,'physicalAndroidVerified':False,'requests':requests}
+    report={'oldCommit':OLD,'oldBuild':'246','previousCommit':PREVIOUS,'oldSameURLUpdateRejected':outcome,'newBuild':BUILD,'publicSource':PUBLIC,'persistentProfile':True,'serviceWorkersBlocked':False,'onlineRecoveryColdStartUpdated':True,'oldOfflineRestartExact':True,'newOfflineRestartExact':True,'existingMatchPreserved':True,'otherStoragePreserved':True,'bothDecksManualOpening':True,'cacheHashesExact':True,'cacheName':status['cacheName'],'javascriptErrors':errors,'physicalAndroidVerified':False,'requests':requests}
     (ROOT/'artifacts/control-003-update-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='requests'},ensure_ascii=False),flush=True)
  finally:server.shutdown()
 if __name__=='__main__':asyncio.run(main())

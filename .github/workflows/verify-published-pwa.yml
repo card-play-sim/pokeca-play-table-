@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'update.html'
+      - 'ui/pwa-recovery.js'
       - 'sw.js'
       - 'ui/**'
       - 'data/reference-effects/plans.json'

@@ -35,7 +35,7 @@
   const changed=()=>{
    if(worker.state==='activated')activated=true;
    if(worker.state==='redundant'&&!activated)failed('Verified release installation failed');
-   else if(worker.state==='installed'){status.state='updating';notice('最新版を受信しました。対戦を保存して更新します。');}
+   else if(worker.state==='installed'){worker.postMessage({type:'ACTIVATE_UPDATE'});status.state='updating';notice('最新版を受信しました。対戦を保存して更新します。');}
   };
   worker.addEventListener('statechange',changed);
  }
@@ -44,7 +44,7 @@
   if(navigator.onLine===false){status.state='offline';userCheck=false;if(userInitiated)notice('オフラインです。保存対戦は再開できます。更新はオンラインでお試しください。');return {ok:false,state:status.state};}
   if(inFlight)return inFlight;
   inFlight=(async()=>{
-   try{const reg=await getRegistration();updateFailed=false;status.error=null;await reg.update();controllerInfo();return {ok:true};}
+   try{const reg=await getRegistration();updateFailed=false;status.error=null;await reg.update();reg.waiting?.postMessage({type:'ACTIVATE_UPDATE'});controllerInfo();return {ok:true};}
    catch(error){failed(error);return {ok:false,state:status.state};}
    finally{inFlight=null;}
   })();return inFlight;

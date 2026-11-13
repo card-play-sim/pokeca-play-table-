@@ -5,6 +5,8 @@ on:
     paths:
       - 'ui/**'
       - 'index.html'
+      - 'update.html'
+      - 'ui/pwa-recovery.js'
       - 'sw.js'
       - 'data/reference-effects/plans.json'
       - 'tests/test_reference_match_browser.py'
