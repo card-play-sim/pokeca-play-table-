@@ -14,9 +14,11 @@ const effects=inventory.map(row=>{
  // Controlled primary-operation tests do not prove complete passive/trigger/AI/DOM coverage.
  const remaining=['CONTINUOUS_AND_TRIGGER_LIFECYCLE_COVERAGE_PENDING','PUBLIC_DOM_PER_EFFECT_COVERAGE_PENDING','AI_UI_PARITY_PER_EFFECT_PENDING'];
  const failed=cases.some(r=>r.status==='FAILED');
+ // The matrix writes EXECUTED (not PASS/VERIFIED) only after primary-operation
+ // assertions. Require AI legality and exact save/restore for this scoped PASS.
  // Execution is independent of provenance: an unconfirmed print does not
  // erase a passing controlled reference run, and a missing run is not PASS.
- const executionStatus=failed?'FAILED':!cases.length?'NOT_TESTED':cases.some(r=>r.status==='BLOCKED')?'BLOCKED':cases.every(r=>r.status==='VERIFIED'||r.status==='PASS')?'PASSED':'INCOMPLETE';
+ const executionStatus=failed?'FAILED':!cases.length?'NOT_TESTED':cases.some(r=>r.status==='BLOCKED')?'BLOCKED':cases.every(r=>r.status==='EXECUTED'&&r.aiLegalActionMatched===true&&r.saveRestoreExact===true)?'PASSED':'INCOMPLETE';
  return {...row,executionStatus,textEvidenceKind,officialTextSha256:crypto.createHash('sha256').update(row.text||'').digest('hex'),status:failed?'FAILED':causes.length?'BLOCKED':'NOT_IMPLEMENTED',causes:[...new Set(causes)],remaining,referenceExecution:{scope:'controlled-primary-operation-only',cases},physicalAndroidVerified:false};
 });
 const counts=Object.fromEntries(['VERIFIED','FAILED','BLOCKED','NOT_IMPLEMENTED'].map(k=>[k,effects.filter(e=>e.status===k).length]));
@@ -28,4 +30,4 @@ for(const effect of effects)for(const cause of effect.causes)blockerCounts[cause
 const unconfirmedPrintCopies=manifest.decks.reduce((total,deck)=>total+deck.cards.reduce((n,card)=>n+((card.identityStatus==='CONFIRMED'&&card.officialCardId&&card.set&&card.cardNumber)?0:card.count),0),0);
 const report={executionCounts,blockerCounts,unconfirmedPrintCopies,schemaVersion:1,scope:'fixed-120-effects',complete:counts.VERIFIED===effects.length,physicalCards:manifest.decks.reduce((n,d)=>n+d.cards.reduce((a,c)=>a+c.count,0),0),names:new Set(effects.map(e=>e.cardName)).size,effectSlots:effects.length,counts,protectedFiles:{'data/fixed-test-decks.json':crypto.createHash('sha256').update(fs.readFileSync('data/fixed-test-decks.json')).digest('hex')},effects};
 fs.writeFileSync('test-results/control-005-effect-status.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({physicalCards:report.physicalCards,names:report.names,effectSlots:report.effectSlots,counts,executionCounts,blockerCounts,unconfirmedPrintCopies,complete:report.complete}));
-if(counts.FAILED)process.exitCode=1;
+if(counts.FAILED||executionCounts.FAILED)process.exitCode=1;
