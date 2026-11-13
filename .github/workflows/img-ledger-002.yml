@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/img-ledger-002-audit.cjs'
       - 'scripts/img-ledger-003-registry.cjs'
+      - 'scripts/img-ledger-006-linkage.cjs'
       - 'tests/img-ledger-002-audit.test.cjs'
       - '.github/workflows/img-ledger-002.yml'
 jobs:
@@ -25,6 +26,8 @@ jobs:
           git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/image-automation/hij-v247/coverage-manifest.json > /tmp/img-ledger-v247-manifest.json
       - name: Independently verify all 6248 registry entries
         run: node scripts/img-ledger-003-registry.cjs /tmp/img-ledger-v247.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-003-registry.json
+      - name: Static app image linkage and H/I/J manifest
+        run: node scripts/img-ledger-006-linkage.cjs /tmp/img-ledger-v247.json data/official-image-registry.json data/fixed-deck-preview-bindings.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-006-linkage.json
       - name: Formal catalog source gate
         shell: bash
         run: |
