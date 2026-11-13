@@ -15,6 +15,8 @@ on:
       - 'tests/test_ui_control_008_browser.py'
       - 'tests/test_control_006_browser.py'
       - 'tests/test_control_008_extensions_browser.py'
+      - 'tests/shared-operation-origins.test.cjs'
+      - 'tests/test_shared_operation_browser.py'
       - 'tests/fixtures/control-008-extension-manifest.cjs'
       - 'tests/fixtures/control-005-scenarios.js'
       - 'tests/test_control_003_update_browser.py'
@@ -55,6 +57,7 @@ jobs:
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
+          python tests/test_shared_operation_browser.py
           python tests/test_control_008_extensions_browser.py
           python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
@@ -66,6 +69,7 @@ jobs:
         run: |
           node tests/control-005-effect-matrix.test.cjs
           node tests/control-006-abilities.test.cjs
+          node tests/shared-operation-origins.test.cjs
           node tests/control-008-extensions.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Verify service worker and offline resume on published PWA
@@ -79,6 +83,7 @@ jobs:
           name: published-mobile-browser-evidence
           path: |
             artifacts/
+            test-results/shared-operation-origins.json
             test-results/control-00*.json
             test-results/published-pwa-verification.json
           if-no-files-found: warn
