@@ -138,7 +138,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p reports
-          gh run download --repo "${{ github.repository }}" --name img-ledger-011-deep-scan --dir reports || true
+          ARTIFACT_ID="$(gh api "repos/${{ github.repository }}/actions/artifacts?per_page=100" --jq '[.artifacts[] | select(.name=="img-ledger-011-deep-scan" and .expired==false)] | first | .id // empty' || true)"
+          if [ -n "$ARTIFACT_ID" ]; then
+            gh api "repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" > /tmp/img-ledger-011-checkpoint.zip
+            unzip -o /tmp/img-ledger-011-checkpoint.zip -d reports
+          fi
       - name: Scan every development Actions run and inspect retained archives
         env:
           DEVELOPMENT_REPO_TOKEN: ${{ secrets.DEVELOPMENT_REPO_READ_TOKEN }}
