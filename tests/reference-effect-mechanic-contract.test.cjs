@@ -58,6 +58,10 @@ assert.equal(selections.allows([{id:'a'}],null),false,'malformed ids must fail c
 assert.equal(selections.allows([{id:'a'}],[null]),false,'null ids must fail closed');
 assert.equal(selections.allows([{id:'a'}],['a'],[null]),false,'malformed rules must fail closed');
 assert.equal(selections.allows([null,{id:'a'}],['a']),true,'irrelevant null candidate must not crash');
+const countRequest={key:'count',candidates:[{id:'x'},{id:'y'}],min:0,max:2,dependencies:[{kind:'countFromSelection',key:'source',threshold:1,count:2}]};
+assert.equal(selections.resolve(countRequest,[dependent[0],countRequest],{source:['a']}).min,2,'dependent count must apply');
+assert.throws(()=>selections.resolve({...countRequest,candidates:[{id:'x'}]},[dependent[0],countRequest],{source:['a']}),/IMPOSSIBLE_SELECTION_COUNT/);
+assert.throws(()=>selections.resolve({...countRequest,dependencies:[{kind:'countFromSelection',key:'source',threshold:-1,count:2}]},[dependent[0],countRequest],{source:['a']}),/INVALID_SELECTION_COUNT_RULE/);
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))
