@@ -158,8 +158,8 @@
     42622682829,
     42622569699
   ],
-  "runArtifactListingVerified": 154,
-  "remainingRunCount": 429,
+  "runArtifactListingVerified": 584,
+  "remainingRunCount": 0,
   "verifiedArtifactDownloads": [
     {
       "id": 13675144927,
@@ -573,16 +573,28 @@
   ],
   "formalOriginalStatus": "NOT_FOUND_IN_VERIFIED_DOWNLOADS",
   "expectedSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
-  "status": "PARTIAL_RESTARTABLE",
+  "status": "FULL_ACTIONS_ARTIFACT_SCAN_COMPLETE_ORIGINAL_NOT_FOUND",
   "note": "Only listed IDs are verified through per-run artifact API; historical 54 count is superseded by explicit run IDs.",
   "automatedPrivateScan": {
     "repository": "card-play-sim/pokeca-card-simulator",
     "branch": "audit/img-ledger-016-private-history-scan-20261113",
     "workflow": ".github/workflows/img-ledger-016-private-scan.yml",
-    "runId": 43424970348,
-    "authentication": "private repository GITHUB_TOKEN; actions:read; contents:read",
-    "status": "IN_PROGRESS",
-    "evidenceArtifact": "img-ledger-016-private-scan",
-    "note": "Private-repo workflow launched using repository-local token; no external secret required; scan results not yet verified."
+    "runId": 43425733338,
+    "status": "COMPLETE",
+    "authentication": "private repository GITHUB_TOKEN (Actions:read, Contents:read)",
+    "runIdsProcessed": 584,
+    "originalRunsAtStart": 583,
+    "newAuditRunIncluded": 1,
+    "artifactsListed": 173,
+    "archivesDownloaded": 173,
+    "zipInspectionsCompleted": 173,
+    "expired": 0,
+    "downloadErrors": 0,
+    "noCatalog": 173,
+    "verifiedOriginals": 0,
+    "formalOriginalStatus": "NOT_FOUND",
+    "evidenceArtifactId": 14038330629,
+    "evidenceFile": "img-ledger-011-deep-scan.json",
+    "note": "All 583 original runs and one audit run listed; all 173 retained artifact ZIPs downloaded and inspected; no card_catalog.json found."
   }
 }
