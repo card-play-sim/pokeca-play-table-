@@ -40,12 +40,22 @@ def inspect(a):
     return {'status':'HASH_MATCH_STRUCTURE_INVALID','count':len(records),'uniqueIds':len(set(ids))}
    return {'status':'SHA_MISMATCH','catalogFiles':len(matches)}
  except Exception as e:return {'status':'DOWNLOAD_OR_INSPECTION_ERROR',**classify(e)}
+# Import verified direct-connector inspections, so resumed scans do not repeat them.
+prior=pathlib.Path('reports/img-ledger-012-direct-scan.json')
+if prior.exists() and not state.get('directCheckpointImported'):
+ try:
+  direct=json.loads(prior.read_text())
+  for rid in direct.get('inspectedRunIds',[]):
+   if rid not in state['runIdsProcessed']:state['runIdsProcessed'].append(rid)
+  state['runsScanned']=len(state['runIdsProcessed'])
+  state['directCheckpointImported']=True
+ except (ValueError,KeyError) as e:state['errors'].append({'reason':'DIRECT_CHECKPOINT_INVALID','detail':str(e)})
 processed=set(state['runIdsProcessed'])
 try:
  page=state['nextRunPage']
  while True:
   runs=req(f'https://api.github.com/repos/{REPO}/actions/runs?per_page=100&page={page}').get('workflow_runs',[])
-  if not runs:state['status']='COMPLETE';break
+  if not runs:state['status']='COMPLETE' if not state['errors'] else 'COMPLETE_WITH_ERRORS';break
   for run in runs:
    rid=run['id']
    if rid in processed:continue
