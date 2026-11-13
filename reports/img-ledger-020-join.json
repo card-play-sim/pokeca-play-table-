@@ -1,0 +1,64 @@
+{
+  "instruction": "IMG-LEDGER-020",
+  "source": {
+    "formalRegistry": "uploaded pokeca_1945_codex_evidence_slim(1).zip; pokeca_card_catalog_HIJ/image_registry/image_registry.json",
+    "formalCatalogSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+    "formalRegistrySha256": "0a9746f8084a1569ce149a2616e9c5086c72951b1eed2b1bed430f842a89831f",
+    "publicRegistryPr19Head": "9bab9d4b5ce8116e169fed6c4cadce2d5f382b58",
+    "publicRegistryBlob": "8844b23b20a9dadd3b1da085eb702652a62947c8",
+    "hijManifest": "data/image-automation/hij-v247/coverage-manifest.json"
+  },
+  "formal": {
+    "cardDataCount": 1940,
+    "identityOnlyCount": 5,
+    "registeredIds": 1945,
+    "duplicateIds": 0
+  },
+  "public": {
+    "total": 6248,
+    "uniqueIds": 6248,
+    "duplicateIds": 0,
+    "missingOfficialIds": 0,
+    "missingImageSourceUrls": 0
+  },
+  "join": {
+    "matchedFormalIds": 1945,
+    "formalMissingFromPublic": 0,
+    "publicOutsideFormal": 4303,
+    "allPublicRowsClassified": 6248,
+    "classificationNote": "4303 public image entries outside formal 1945 are not necessarily errors: public registry is a broader source population"
+  },
+  "hij": {
+    "H": 1864,
+    "I": 1702,
+    "J": 791,
+    "total": 4357,
+    "registered": 4357,
+    "missing": 0,
+    "source": "PR19 v247 coverage-manifest; individual marks for all 6248 are not stored on public card rows"
+  },
+  "identityOnly": [
+    {
+      "id": "45209",
+      "present": true
+    },
+    {
+      "id": "45214",
+      "present": true
+    },
+    {
+      "id": "45216",
+      "present": true
+    },
+    {
+      "id": "45217",
+      "present": true
+    },
+    {
+      "id": "48300",
+      "present": true
+    }
+  ],
+  "officialIndependentPageVerification": "PENDING",
+  "status": "ID_JOIN_COMPLETE; HIJ_MANIFEST_COVERAGE_CONFIRMED; OFFICIAL_INDEPENDENT_VERIFICATION_PENDING"
+}
