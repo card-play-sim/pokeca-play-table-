@@ -3,6 +3,12 @@ on:
   pull_request:
     paths:
       - 'ui/mobile.js'
+      - 'ui/app-update.js'
+      - 'index.html'
+      - 'update.html'
+      - 'ui/pwa-recovery.js'
+      - 'tests/test_control_003_update_browser.py'
+      - 'tests/pwa-release.test.cjs'
       - 'tests/g-base-008-ui-contract.test.cjs'
       - 'tests/test_reference_match_browser.py'
       - 'tests/test_g_base_008_browser.py'
@@ -54,6 +60,7 @@ jobs:
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
           POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
+          POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_release_delivery_browser.py
       - name: Preserve candidate gameplay evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,4 +72,28 @@ jobs:
             artifacts/g-base-008-browser-results.json
             artifacts/reference-browser-results.json
             artifacts/published-pwa-result.json
+          if-no-files-found: warn
+
+  installed-pwa-upgrade:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Upgrade actual v246 cache with persistent storage and cold restarts
+        run: python tests/test_control_003_update_browser.py
+      - name: Preserve installed PWA upgrade evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: installed-pwa-upgrade-evidence
+          path: artifacts/control-003-*
           if-no-files-found: warn

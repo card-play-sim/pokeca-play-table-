@@ -5,11 +5,14 @@ on:
     paths:
       - 'ui/**'
       - 'index.html'
+      - 'update.html'
+      - 'ui/pwa-recovery.js'
       - 'sw.js'
       - 'data/reference-effects/plans.json'
       - 'tests/test_reference_match_browser.py'
       - 'tests/test_g_base_008_browser.py'
       - 'tests/test_control_002_browser.py'
+      - 'tests/test_control_003_update_browser.py'
       - 'tests/browser_opening.py'
       - 'tests/control-002-opening.test.cjs'
       - 'engine/pokeca_selection_constraints.cjs'
@@ -25,6 +28,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -37,6 +42,10 @@ jobs:
         run: node scripts/verify-published-pwa.cjs
       - name: Create persistent browser evidence directory
         run: mkdir -p artifacts
+      - name: Upgrade installed v246 from actual published assets and cold restart
+        env:
+          POKECA_UPGRADE_PUBLIC_SOURCE: https://card-play-sim.github.io/pokeca-play-table-/
+        run: python tests/test_control_003_update_browser.py
       - name: Exercise published reference matches in Pixel 5 Chromium emulation
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
@@ -44,6 +53,7 @@ jobs:
           python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
+          python tests/test_release_delivery_browser.py
       - name: Verify service worker and offline resume on published PWA
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/

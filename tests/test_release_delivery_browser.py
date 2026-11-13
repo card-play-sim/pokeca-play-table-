@@ -10,16 +10,16 @@ async def main():
  async with async_playwright() as p:
   b=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   c=await b.new_context(**device);page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(url);await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
+  await page.goto(url+'update.html?build=247');await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
   # A reload with an active controller proves that these runtime bytes come from its release.
   await page.reload();await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
-  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]=='246' for k in ('htmlBuild','mobileBuild','controllerBuild'))
+  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]=='247' for k in ('htmlBuild','mobileBuild','controllerBuild'))
   assert await page.locator('#demo-open').inner_text()=='固定デッキ対戦'
   cached=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName),out={};for(const path of Object.keys(PokecaUpdateStatus.releaseFiles)){const r=await c.match(new URL(path,location.href));out[path]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
   assert cached==status['releaseFiles']
   served={}
   direct=await b.new_context(service_workers='block');raw_page=await direct.new_page()
-  for path in ('index.html','ui/mobile.js?build=246','ui/app-update.js?build=246','sw.js'):
+  for path in ('index.html','ui/mobile.js?build=247','ui/app-update.js?build=247','sw.js'):
    r=await raw_page.goto(url+path,wait_until='domcontentloaded');assert r.status==200
    digest=hashlib.sha256(await r.body()).hexdigest();assert digest==hashlib.sha256((ROOT/path.split('?')[0]).read_bytes()).hexdigest(),path
    served[path]={'sha256':digest,'headers':r.headers}
@@ -32,7 +32,7 @@ async def main():
   await c.set_offline(True);await page.reload();await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
   assert await page.evaluate('PokecaMobile.port.getSnapshot()')==initial
   assert not errors,errors
-  report={'url':url,'release':status,'served':served,'cacheHashes':cached,'fixedDeckStarted':True,'imagesDecoded':len(images),'offlineRestoreExact':True,'physicalAndroidVerified':False,'errors':errors}
+  report={'url':url,'networkRecoveryEntry':True,'release':status,'served':served,'cacheHashes':cached,'fixedDeckStarted':True,'imagesDecoded':len(images),'offlineRestoreExact':True,'physicalAndroidVerified':False,'errors':errors}
   (ROOT/'artifacts/release-delivery-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k not in ('release','served','cacheHashes')},ensure_ascii=False),flush=True)
   await b.close()
 if __name__=='__main__':asyncio.run(main())

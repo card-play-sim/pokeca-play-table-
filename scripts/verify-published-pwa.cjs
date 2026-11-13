@@ -12,7 +12,8 @@ assert(build,'missing PWA build');
 const local=fs.readFileSync('sw.js','utf8');
 const release=local.match(/const CACHE='([^']+)'/)?.[1];
 assert(release,'missing local PWA release id');
-const paths=['index.html','sw.js','ui/engine.bundle.js','data/reference-effects/plans.json'];
+const releaseFiles=JSON.parse(local.match(/const FILES=(\{[\s\S]*?\});/)[1]);
+const paths=[...new Set(['index.html','sw.js','update.html','ui/pwa-recovery.js?build='+build,'data/reference-effects/plans.json',...Object.keys(releaseFiles).map(url=>url==='./'?'':url.replace(/^\.\//,''))])];
 function fetch(url){
  return new Promise((resolve,reject)=>{
   const req=https.get(url,{headers:{'Cache-Control':'no-cache','User-Agent':'pokeca-release-verifier'}},res=>{
@@ -25,10 +26,10 @@ const hash=x=>crypto.createHash('sha256').update(x).digest('hex');
 async function verify(){
  const results=[];
  for(const path of paths){
-  const remote=await fetch(base+path+'?release='+encodeURIComponent(release));
-  const expected=fs.readFileSync(path);
+  const remote=await fetch(base+path+(path.includes('?')?'&':'?')+'release='+encodeURIComponent(release));
+  const expected=fs.readFileSync(path.split('?')[0]||'index.html');
   const same=hash(remote)===hash(expected);
-  results.push({path,localSha256:hash(expected),remoteSha256:hash(remote),match:same});
+  results.push({path:path||'./',localSha256:hash(expected),remoteSha256:hash(remote),match:same});
  }
  const success=results.every(r=>r.match);
  return {schemaVersion:1,kind:'published-pwa-byte-verification',build,release,
