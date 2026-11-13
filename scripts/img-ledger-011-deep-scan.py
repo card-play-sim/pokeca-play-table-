@@ -10,8 +10,19 @@ token=os.environ.get('DEVELOPMENT_REPO_TOKEN') or os.environ.get('GH_TOKEN') or 
 if not os.environ.get('DEVELOPMENT_REPO_TOKEN'):
  state['status']='BLOCKED_DEVELOPMENT_REPO_SECRET_NOT_CONFIGURED';state['requiredSecret']='DEVELOPMENT_REPO_READ_TOKEN';save_text=json.dumps(state,indent=2);DEST.write_text(save_text+'\n');sys.exit(0)
 def req(url,binary=False):
- request=urllib.request.Request(url,headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
- with urllib.request.urlopen(request,timeout=80) as response:return response.read(100*1024*1024+1) if binary else json.load(response)
+ for attempt in range(5):
+  try:
+   request=urllib.request.Request(url,headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+   with urllib.request.urlopen(request,timeout=80) as response:
+    return response.read(100*1024*1024+1) if binary else json.load(response)
+  except urllib.error.HTTPError as e:
+   if e.code not in (429,500,502,503,504) and not (e.code==403 and (e.headers.get('Retry-After') or e.headers.get('X-RateLimit-Remaining')=='0')):raise
+   if attempt==4:raise
+   wait=min(60,int(e.headers.get('Retry-After') or 2**attempt))
+   time.sleep(wait)
+  except (TimeoutError,urllib.error.URLError):
+   if attempt==4:raise
+   time.sleep(min(30,2**attempt))
 def save():
  DEST.write_text(json.dumps(state,ensure_ascii=False,indent=2)+'\n')
 def classify(e):
