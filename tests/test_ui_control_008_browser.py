@@ -72,7 +72,7 @@ async def main():
   assert await page.locator('[data-zone-owner="you"].prize .prize-position.taken').count()==2
   before=await snap();await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap();await page.locator('#opening-start').wait_for()
   assert await page.locator('[data-opening-card]').count()==7
-  await zoom('#opening-choices .discard-card:first-child');assert await page.locator('#opening-start').is_disabled();assert await snap()==before
+  await zoom('#opening-choices > :first-child .discard-card');assert await page.locator('#opening-start').is_disabled();assert await snap()==before
   await page.locator('#sheet-close').tap()
   assert not errors,errors
   report={'url':page.url,'cases':reports,'physicalEnergyAttachMoveDiscard':True,'handAbilityDOM':True,'saveReloadExact':True,'galleryZoom':True,'openingZoomNoPlacement':True,'emptyDeckAndTakenPrizes':True,'javascriptErrors':errors,'physicalAndroidVerified':False}
