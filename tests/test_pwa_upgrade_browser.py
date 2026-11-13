@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
+from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 BASE=os.environ.get('POKECA_UPGRADE_BASE','f040d35')
 phase={'value':'old'};old={};requests=[]
@@ -60,7 +61,7 @@ async def main():
   # Compare the actual verified responses in the worker's cache, not DOM labels.
   cache_hashes=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName);const out={};for(const url of ['./index.html','./ui/mobile.js?build=246','./ui/app-update.js?build=246']){const r=await c.match(new URL(url,location.href));out[url]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
   for url,digest in cache_hashes.items():assert digest==hashlib.sha256((ROOT/url.split('?')[0]).read_bytes()).hexdigest()
-  await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap()
+  await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation&&document.getElementById("save-status").textContent==="自動保存済"')
   initial=await page.evaluate('PokecaMobile.port.getSnapshot()');assert initial['referenceEffectValidation']['sourceDeckIds']==['kangaskhan-meowth-fixed','dragapult-fixed']
   images=await page.locator('#self-hand img:not([hidden]),#self-active img:not([hidden]),#self-bench img:not([hidden])').evaluate_all('async els=>{for(const e of els)await e.decode();return els.map(e=>({url:e.currentSrc,ok:e.naturalWidth>0}));}')

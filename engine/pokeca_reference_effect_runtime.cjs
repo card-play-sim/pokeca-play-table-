@@ -1,6 +1,7 @@
 'use strict';
 // Print-scoped extensions of the canonical gateway. Adoption remains a separate concern.
 const catalog=require('./pokeca_reference_effect_data');
+const Selection=require('./pokeca_selection_constraints');
 const records=new Map(catalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
@@ -165,6 +166,8 @@ function requests(g,actor,card,effect){
   if(m==='ULTRA_BALL')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),2,2);
   const max=m==='CYRANO'?3:['HILDA','BROCK','POFFIN','AKAMATSU'].includes(m)?2:1;
   cardRequest('cards',candidates,0,m==='POFFIN'?Math.min(max,5-p.bench.length):max);
+  const rules={HILDA:{kind:'distinct',field:'kind',error:'HILDA_CATEGORY_SELECTION'},AKAMATSU:{kind:'distinct',field:'energyType',error:'AKAMATSU_DIFFERENT_TYPES'},BROCK:{kind:'maxWhen',field:'basic',equals:false,max:1,error:'BROCK_EVOLUTION_OR_BASIC'}};
+  if(rules[m])out.at(-1).constraints=[rules[m]];
   if(m==='AKAMATSU'){
    cardRequest('toHand',candidates,0,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),0,1);
   }
@@ -191,12 +194,10 @@ function verifyRequests(g,actor,card,effect,action){
   if(r.kind==='COUNT'){const n=action.selections?.count;assert(Number.isInteger(n)&&n>=r.min&&n<=r.max,'INVALID_COUNTER_COUNT');continue;}
   const ids=r.kind==='POKEMON'?(action.targetIds||[]):selected(action,r.key);
   assert(ids.length>=r.min&&ids.length<=r.max&&new Set(ids).size===ids.length&&ids.every(i=>r.candidates.some(c=>(c.id||c.instanceId)===i)),'INVALID_REFERENCE_SELECTION:'+r.key);
+  for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
- if(m==='HILDA')assert(cards.filter(c=>c.kind==='energy').length<=1&&cards.filter(c=>c.kind==='pokemon').length<=1,'HILDA_CATEGORY_SELECTION');
- if(m==='BROCK')assert(cards.every(c=>record(c).facts.basic)||cards.length<=1,'BROCK_EVOLUTION_OR_BASIC');
  if(m==='AKAMATSU'){
-  assert(new Set(cards.map(c=>c.energyType)).size===cards.length,'AKAMATSU_DIFFERENT_TYPES');
   const hand=selected(action,'toHand'),target=selected(action,'attachTo');assert(hand.length===Math.min(1,cards.length)&&hand.every(i=>cards.some(c=>id(c)===i)),'AKAMATSU_HAND_CHOICE');assert(target.length===(cards.length>1?1:0),'AKAMATSU_ATTACH_CHOICE');
  }
  if(m==='ENERGY_SWITCH'){const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===selected(action,'energy')[0]));assert(source&&id(source)!==selected(action,'attachTo')[0],'ENERGY_SWITCH_SAME_POKEMON');}

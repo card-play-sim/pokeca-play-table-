@@ -4,12 +4,13 @@ from pathlib import Path
 from collections import Counter
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
+from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 async def main():
  reports=[]
  async with async_playwright() as p:
   browser=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args())
-  for seed in (2,7):
+  for seed,first_deck in ((2,0),(7,1)):
    device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
    context=await browser.new_context(**device,service_workers='block');page=await context.new_page();errors=[]
    page.on('pageerror',lambda e:errors.append(str(e)))
@@ -18,15 +19,15 @@ async def main():
    await page.evaluate('seed=>{let n=seed;Math.random=()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};}',seed)
    await page.get_by_role('button',name='固定デッキで検証用AI対戦を開始',exact=True).tap()
    await page.locator('#reference-match-choices button').first.wait_for()
-   assert await page.locator('#reference-match-choices button').count()==1
-   await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap()
+   assert await page.locator('#reference-match-choices button').count()==2
+   await page.locator('#reference-match-choices button').nth(first_deck).tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
    await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation')
    initial=await page.evaluate('PokecaMobile.port.getSnapshot()')
    manifest=json.loads((ROOT/'data/fixed-test-decks.json').read_text())
    for i,player in enumerate(initial['players']):
     cards=[c for c in [player['active'],*player['bench'],*player['hand'],*player['deck'],*player['prizeCards'],*player['discard']] if c]
     assert len(cards)==60
-    assert Counter(c['name'] for c in cards)==Counter({c['name']:c['count'] for c in manifest['decks'][i]['cards']})
+    assert Counter(c['name'] for c in cards)==Counter({c['name']:c['count'] for c in manifest['decks'][i if first_deck==0 else 1-i]['cards']})
     assert all(c.get('validationReference') and not c.get('officialCardId') for c in cards)
    assert not initial.get('demo')
    assert '採用未確定' in await page.locator('#game-note').inner_text()
@@ -81,7 +82,7 @@ async def main():
    restored=await page.evaluate('PokecaMobile.port.getSnapshot()')
    assert restored==final,{'changedKeys':[k for k in set(final)|set(restored) if final.get(k)!=restored.get(k)]}
    assert not errors,errors
-   report={'seed':seed,'primaryFixedDeckEntry':True,'youDeck':'kangaskhan-meowth-fixed','aiDeck':'dragapult-fixed','finished':True,'winner':final['winner'],'turn':final['turnNumber'],'humanTurns':human_turns,'touchBenchPlacements':touch_bench,'choiceDialogs':choices,'visibleImagesDecoded':len(images),'openingImagesDecoded':opening_images,'compositionPreviewCopies':120,'trashImagesDecoded':trash_images,'saveReloadExact':True,'adoptedPrints':0,'physicalAndroidVerified':False,'errors':errors}
+   report={'seed':seed,'primaryFixedDeckEntry':True,'youDeck':initial['referenceEffectValidation']['sourceDeckIds'][0],'aiDeck':initial['referenceEffectValidation']['sourceDeckIds'][1],'finished':True,'winner':final['winner'],'turn':final['turnNumber'],'humanTurns':human_turns,'touchBenchPlacements':touch_bench,'choiceDialogs':choices,'visibleImagesDecoded':len(images),'openingImagesDecoded':opening_images,'compositionPreviewCopies':120,'trashImagesDecoded':trash_images,'saveReloadExact':True,'adoptedPrints':0,'physicalAndroidVerified':False,'errors':errors}
    reports.append(report);print(json.dumps(report),flush=True);await context.close()
   await browser.close()
  (ROOT/'artifacts/reference-browser-results.json').write_text(json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
