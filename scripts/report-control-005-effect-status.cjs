@@ -5,6 +5,18 @@ const c={window:{},performance,console,Math,setTimeout};vm.runInNewContext(fs.re
 const S=vm.runInNewContext(fs.readFileSync('tests/fixtures/control-005-scenarios.js','utf8'),{console});
 const manifest=JSON.parse(fs.readFileSync('data/fixed-test-decks.json')),inventory=S.inventory(c.window.Pokeca,manifest);
 const evidence=JSON.parse(fs.readFileSync('test-results/control-005-node.json'));
+// Reject stale or malformed matrix output rather than silently reporting a
+// misleading execution PASS against a different reference inventory.
+const knownEffectIds=new Set(inventory.map(row=>row.effectId));
+const seenCases=new Set();
+for(const result of evidence.results){
+ if(!knownEffectIds.has(result.effectId))throw Error('UNKNOWN_REFERENCE_EFFECT:'+result.effectId);
+ const key=[result.effectId,result.variant].join(':');
+ if(seenCases.has(key))throw Error('DUPLICATE_REFERENCE_CASE:'+key);
+ seenCases.add(key);
+ if(result.status==='EXECUTED'&&(!Array.isArray(result.checks)||!result.checks.length||result.aiLegalActionMatched!==true||result.saveRestoreExact!==true))
+  throw Error('INVALID_EXECUTED_EVIDENCE:'+key);
+}
 const effects=inventory.map(row=>{
  const cases=evidence.results.filter(r=>r.effectId===row.effectId),causes=[];
  if(row.locations.some(l=>!l.officialCardId||l.identityStatus!=='CONFIRMED'))causes.push('DECK_PRINT_BINDING_UNCONFIRMED');
