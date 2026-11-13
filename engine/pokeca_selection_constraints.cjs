@@ -24,7 +24,12 @@ function resolve(request,requests,selections={}){
   if(!Array.isArray(ids)||new Set(ids).size!==ids.length||ids.some(value=>!prior.candidates.some(c=>id(c)===value)))throw Error('INVALID_DEPENDENT_SELECTION');
   const chosen=prior.candidates.filter(c=>ids.includes(id(c)));
   if(rule.kind==='subset')out.candidates=out.candidates.filter(c=>ids.includes(id(c)));
-  else if(rule.kind==='countFromSelection')out.min=out.max=ids.length>=rule.threshold?rule.count:0;
+  else if(rule.kind==='countFromSelection'){
+   if(!Number.isInteger(rule.threshold)||rule.threshold<0||!Number.isInteger(rule.count)||rule.count<0)throw Error('INVALID_SELECTION_COUNT_RULE');
+   const count=ids.length>=rule.threshold?rule.count:0;
+   if(count>out.candidates.length)throw Error('IMPOSSIBLE_SELECTION_COUNT');
+   out.min=out.max=count;
+  }
   else if(rule.kind==='excludeSelectedField')out.candidates=out.candidates.filter(c=>!chosen.some(source=>source[rule.field]===id(c)));
   else if(rule.kind==='maxFromSelection'){
    if(!Number.isFinite(rule.divisor)||rule.divisor<=0)throw Error('INVALID_SELECTION_DIVISOR');
