@@ -38,7 +38,9 @@ async def main():
         browser = await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'), args=args)
         device = dict(p.devices['Pixel 5'])
         device.pop('default_browser_type', None)
-        context = await browser.new_context(**device)
+        # Image-only inspection must not race the first worker install/reload.
+        # Dedicated published PWA tests keep workers enabled and verify offline saves.
+        context = await browser.new_context(**device, service_workers='block')
         page = await context.new_page()
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.on('requestfailed', lambda request: failures.append({'url': request.url, 'reason': request.failure}))
@@ -86,7 +88,7 @@ async def main():
           }));return PokecaFixedDeckImageAudit.summarize(rows);
         }''', {'manifest': manifest, 'registry': registry, 'observations': observations})
         report.update(schemaVersion=2, inspectedIn='Chromium Pixel 5 Android emulation', physicalAndroidVerified=False,
-                      sessionProxyCaPinned=bool(args), imageFilesSaved=False, javascriptErrors=errors, requestFailures=failures,
+                      sessionProxyCaPinned=bool(args), serviceWorkersBlocked=True, imageFilesSaved=False, javascriptErrors=errors, requestFailures=failures,
                       verifiedDeckPrintCopies=report['officialDisplayedCopies'],
                       actualOfficialPreviewCopies=sum(card['count'] for (_, _, card), obs in zip(entries, observations) if obs['decoded'] and obs['visible'] and obs.get('officialHttpImage')))
         report['productionPass'] = report['productionPass'] and not errors
