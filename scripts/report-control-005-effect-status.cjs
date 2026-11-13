@@ -17,6 +17,15 @@ for(const result of evidence.results){
  if(result.status==='EXECUTED'&&(!Array.isArray(result.checks)||!result.checks.length||result.aiLegalActionMatched!==true||result.saveRestoreExact!==true))
   throw Error('INVALID_EXECUTED_EVIDENCE:'+key);
 }
+// A partial matrix must not count as a complete effect execution. In
+// particular, both coin outcomes are required for branching mechanics.
+for(const row of inventory){
+ const variants=['COMBO','HAMMER','COIN_PROTECT'].includes(row.plan?.mechanic)?['heads','tails']:['normal'];
+ for(const variant of variants){
+  const key=[row.effectId,variant].join(':');
+  if(!seenCases.has(key))throw Error('MISSING_REFERENCE_CASE:'+key);
+ }
+}
 const effects=inventory.map(row=>{
  const cases=evidence.results.filter(r=>r.effectId===row.effectId),causes=[];
  if(row.locations.some(l=>!l.officialCardId||l.identityStatus!=='CONFIRMED'))causes.push('DECK_PRINT_BINDING_UNCONFIRMED');
