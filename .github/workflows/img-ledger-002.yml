@@ -41,5 +41,7 @@ jobs:
         if: always()
         with:
           name: img-ledger-003-evidence
-          path: reports/img-ledger-003-*.json
+          path: |
+            reports/img-ledger-003-*.json
+            reports/img-ledger-006-*.json
           if-no-files-found: warn
