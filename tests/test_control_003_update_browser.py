@@ -95,10 +95,12 @@ async def main():
     await page.locator('#menu-open').tap();await page.get_by_text('最新版を確認・更新',exact=True).tap();await ready(page,BUILD)
     # Keep SW enabled while exercising real manual setup after upgrade.
     for deck in (0,1):
+     await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',64 if deck==0 else 9)
      before=await page.evaluate('PokecaMobile.port.getSnapshot()');previous_session=await page.evaluate('PokecaMobile.port.getSessionId()')
      await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').nth(deck).tap();await page.locator('#confirm-ok').tap();await page.locator('#opening-start').wait_for()
      assert await page.locator('[data-opening-card]').count()==7;assert await page.locator('#opening-start').is_disabled()
      active_ids=await page.locator('[data-opening-active]:enabled').evaluate_all('els=>els.map(e=>e.dataset.openingActive)')
+     assert len(active_ids)>=2
      active=active_ids[0];await page.locator(f'[data-opening-active="{active}"]').tap()
      if len(active_ids)>1:
       bench=active_ids[1];await page.locator(f'[data-opening-bench="{bench}"]').tap();await page.locator(f'[data-opening-bench="{bench}"]').tap();await page.locator(f'[data-opening-active="{bench}"]').tap();active=bench
