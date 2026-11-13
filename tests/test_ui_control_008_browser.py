@@ -17,7 +17,7 @@ async def main():
   async def snap():return await page.evaluate('PokecaMobile.port.getSnapshot()')
   async def saved():await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
   async def zoom(selector):
-   before=await snap();el=page.locator(selector);await el.scroll_into_view_if_needed();box=await el.bounding_box();cdp=await c.new_cdp_session(page)
+   before=await snap();el=page.locator(selector);await el.scroll_into_view_if_needed();box=await el.evaluate('e=>{const r=e.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);if(!r.width||!r.height||!e.contains(hit))throw Error("ZOOM_TARGET_NOT_HITTABLE:"+hit?.outerHTML);return r.toJSON();}');cdp=await c.new_cdp_session(page)
    await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':box['x']+box['width']/2,'y':box['y']+box['height']/2}]});await page.wait_for_timeout(600)
    await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await cdp.detach()
    await page.wait_for_function('document.getElementById("card-zoom").open');assert await snap()==before
