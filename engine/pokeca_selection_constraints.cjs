@@ -20,7 +20,14 @@ function resolve(request,requests,selections={}){
   if(rule.kind==='subset')out.candidates=out.candidates.filter(c=>ids.includes(id(c)));
   else if(rule.kind==='countFromSelection')out.min=out.max=ids.length>=rule.threshold?rule.count:0;
   else if(rule.kind==='excludeSelectedField')out.candidates=out.candidates.filter(c=>!chosen.some(source=>source[rule.field]===id(c)));
-  else if(rule.kind==='maxFromSelection')out.max=Math.min(out.max,...chosen.map(c=>Math.floor(Number(c[rule.field]||0)/rule.divisor)));
+  else if(rule.kind==='maxFromSelection'){
+   if(!Number.isFinite(rule.divisor)||rule.divisor<=0)throw Error('INVALID_SELECTION_DIVISOR');
+   if(chosen.length){
+    const limits=chosen.map(c=>Number(c[rule.field]));
+    if(limits.some(n=>!Number.isFinite(n)||n<0))throw Error('INVALID_SELECTION_LIMIT');
+    out.max=Math.min(out.max,...limits.map(n=>Math.floor(n/rule.divisor)));
+   }
+  }
   else throw Error('UNKNOWN_SELECTION_DEPENDENCY');
  }
  return out;
