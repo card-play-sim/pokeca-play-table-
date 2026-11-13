@@ -331,6 +331,15 @@ test('shared conditional deck search preserves private selection and destination
   if(chosen)assert((fixture.destination==='hand'?p.hand:p.bench).some(c=>c.id===chosen.id));
  }
 });
+test('shared selection constraints reject forged deck stage hints using official facts',()=>{
+ const t=setup({hand:{0:['たけしのスカウト']}}),p=t.g.players[0];
+ const evolution=p.deck.find(c=>c.kind==='pokemon'&&!E.getReferenceEffectRecord(c).facts.basic),basic=p.deck.find(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).facts.basic);
+ assert(evolution&&basic);evolution.basic=true;
+ const action=actionFor(t,'you','たけしのスカウト','play_supporter');action.selections={cards:[evolution.id,basic.id]};
+ t.reject('you',action,/BROCK_EVOLUTION_OR_BASIC/);
+ const request=t.port.getHandOptions('you',action.cardId).find(o=>o.action.type==='play_supporter').requests.find(r=>r.key==='cards');
+ assert.equal(request.candidates.find(c=>c.id===evolution.id).basic,false,'selector must receive verified stage facts');
+});
 test('Goods Hammer discards the selected opposing energy on heads',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['クラッシュハンマー']},energy:{1:{active:['基本悪エネルギー']}}});const p=t.g.players[1],energy=p.active.energyCards[0].id;const a=actionFor(t,'you','クラッシュハンマー','play_item');a.selections={energy:[energy]};t.g.referenceRngState=0;t.do('you',a);assert(!p.active.energyCards.some(x=>x.id===energy));assert(p.discard.some(x=>x.id===energy));});
 test('forged card attack commands never bypass source-verified attack cost',()=>{const t=setup({active:['シェイミ','ドラメシヤ']});t.g.players[0].active.attacks=[{name:'forged',cost:[],damage:999,commands:[{command:'DAMAGE',amount:999}]}];t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);assert.equal(t.g.players[1].active.damage,0);});
 console.log('Reference effect scenarios',cases);

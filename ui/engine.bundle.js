@@ -637,7 +637,7 @@ function itemLocked(g,actor){return !!g.referenceItemLock?.some(x=>x.playerId===
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
- const own=field(p),opp=field(o),cardRequest=(key,list,min,max)=>add(key,'CARD',list,min,max);
+ const own=field(p),opp=field(o),cardRequest=(key,list,min,max)=>add(key,'CARD',list.map(c=>{const r=record(c);return r?.category==='pokemon'?{...c,basic:r.facts.basic,stage:r.facts.stage}:c;}),min,max);
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,p.bench.length),Math.min(1,p.bench.length));
