@@ -9,6 +9,10 @@ on:
       - 'data/reference-effects/plans.json'
       - 'tests/test_reference_match_browser.py'
       - 'tests/test_g_base_008_browser.py'
+      - 'tests/test_control_002_browser.py'
+      - 'tests/browser_opening.py'
+      - 'tests/control-002-opening.test.cjs'
+      - 'engine/pokeca_selection_constraints.cjs'
       - 'tests/fixtures/g-base-008-browser.js'
       - 'tests/test_published_pwa_browser.py'
       - '.github/workflows/published-mobile-browser.yml'
@@ -37,6 +41,7 @@ jobs:
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
+          python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
       - name: Verify service worker and offline resume on published PWA

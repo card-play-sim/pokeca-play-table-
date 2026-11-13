@@ -3,6 +3,7 @@ import asyncio,json,os
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
+from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 async def main():
  async with async_playwright() as p:
@@ -15,7 +16,7 @@ async def main():
    await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"')
    await page.get_by_role('button',name='固定デッキで検証用AI対戦を開始',exact=True).tap()
    await page.locator('#reference-match-choices button').first.tap()
-   await page.locator('#confirm-ok').tap()
+   await page.locator('#confirm-ok').tap();await finish_opening(page)
    await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation')
    # Opening mulligan choices legitimately cover the board. Resolve through the UI
    # before measuring board targets rather than treating the modal as an overlap bug.

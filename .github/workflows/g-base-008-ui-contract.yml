@@ -6,6 +6,10 @@ on:
       - 'tests/g-base-008-ui-contract.test.cjs'
       - 'tests/test_reference_match_browser.py'
       - 'tests/test_g_base_008_browser.py'
+      - 'tests/test_control_002_browser.py'
+      - 'tests/browser_opening.py'
+      - 'tests/control-002-opening.test.cjs'
+      - 'engine/pokeca_selection_constraints.cjs'
       - 'tests/fixtures/g-base-008-browser.js'
       - 'sw.js'
       - '.github/workflows/g-base-008-ui-contract.yml'
@@ -23,7 +27,9 @@ jobs:
       - name: Validate browser entry syntax
         run: node --check ui/mobile.js
       - name: Validate UI effect and persistence contracts
-        run: node --test tests/g-base-008-ui-contract.test.cjs
+        run: |
+          node --test tests/g-base-008-ui-contract.test.cjs
+          node tests/control-002-opening.test.cjs
       - name: Verify bundle and PWA release hashes
         run: |
           node scripts/check-reference-bundle-sync.cjs
@@ -44,6 +50,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
           POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
@@ -53,6 +60,8 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/control-002-browser-results.json
+            artifacts/control-002-opening-*.png
             artifacts/g-base-008-browser-results.json
             artifacts/reference-browser-results.json
             artifacts/published-pwa-result.json

@@ -15,7 +15,7 @@ async options => {
   for(const [which,names] of Object.entries(options.energy?.[i]||{})){
    const target=which==='active'?p.active:p.bench[Number(which)];target.energyCards=names.map(n=>take(i,n));target.energies=target.energyCards.map(c=>c.energyType).filter(Boolean);
   }
-  p.prizeCards=pools[i].splice(0,6);p.deck=pools[i];
+  p.prizes=options.prizes?.[i]??6;p.prizeCards=pools[i].splice(0,p.prizes);p.deck=pools[i];
  });
  if(options.damage)for(const [i,n] of Object.entries(options.damage))g.players[Number(i)].active.damage=n;
  const loaded=PokecaMobile.port.loadGame(g);if(!loaded.ok||loaded.viewError)throw Error(JSON.stringify(loaded));

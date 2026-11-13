@@ -1,7 +1,7 @@
 'use strict';
 const R=require('./pokeca_reference_effect_runtime');
 const copy=x=>JSON.parse(JSON.stringify(x));
-function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlayer='you'}={}){
+function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlayer='you',startingActive={},startingBench={}}={}){
  if(manifest?.decks?.length!==2||![0,1].includes(firstDeck))throw Error('REFERENCE_DECK_SCHEMA');
  const order=firstDeck?[1,0]:[0,1],used=new Set();
  const decks=order.map((index,i)=>manifest.decks[index].cards.flatMap(entry=>{
@@ -22,7 +22,7 @@ function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlaye
   });
  }));
  if(decks.some(d=>d.length!==60))throw Error('REFERENCE_DECK_COUNT');
- const result=require('./pokeca_match_setup').createMatchFromVerifiedDecks({you:decks[0],ai:decks[1],rng,firstPlayer,maxOpeningAttempts:100,autoBenchBasics:true});
+ const result=require('./pokeca_match_setup').createMatchFromVerifiedDecks({you:decks[0],ai:decks[1],rng,firstPlayer,maxOpeningAttempts:100,autoBenchBasics:true,startingActive,startingBench});
  if(!result.ok)return result;
  const g=result.game;g.referenceEffectValidation={schemaVersion:1,sourceDeckIds:order.map(i=>manifest.decks[i].id),adoptedPrints:0,referenceIds:copy({...R.catalog.defaultValidationReferences,...referenceIds}),coverageComplete:false};
  // Seed the persisted effect RNG once after opening setup, independently of AI decisions.

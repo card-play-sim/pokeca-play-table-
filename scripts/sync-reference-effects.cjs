@@ -19,8 +19,10 @@ function put(name,source){
  else {const a=i+marker.length,b=bundle.indexOf('\n},"',a);if(b<0)throw Error('BUNDLE_MODULE_END');bundle=bundle.slice(0,a)+source.trimEnd()+'\n'+bundle.slice(b);}
 }
 put('pokeca_reference_effect_data','module.exports='+JSON.stringify(catalog)+';');
+put('pokeca_selection_constraints',fs.readFileSync('engine/pokeca_selection_constraints.cjs','utf8'));
 put('pokeca_reference_effect_runtime',fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8'));
 put('pokeca_reference_validation_adapter',fs.readFileSync('engine/pokeca_reference_validation_adapter.cjs','utf8'));
+if(!bundle.includes('isSelectionAllowed:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={isSelectionAllowed:req("pokeca_selection_constraints").allows,');
 if(process.argv.includes('--check')){
  if(bundle!==fs.readFileSync('ui/engine.bundle.js','utf8')||plans!==fs.readFileSync('data/reference-effects/plans.json','utf8'))throw Error('REFERENCE_BUNDLE_STALE');
 }else{fs.writeFileSync('ui/engine.bundle.js',bundle);fs.writeFileSync('data/reference-effects/plans.json',plans);}
