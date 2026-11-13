@@ -25,9 +25,9 @@ rows.forEach((r,i)=>{
 const expected=m.hijByPrintedMark||{};const hijExpected=m.hijTotal;
 const declaredHIJ=marks.H+marks.I+marks.J;
 if(rows.length!==m.recoveryRegistryTotal)issue('REGISTRY_COUNT_MISMATCH',-1,null,{actual:rows.length,expected:m.recoveryRegistryTotal});
-if(declaredHIJ!==hijExpected)issue('HIJ_DECLARED_COUNT_MISMATCH',-1,null,{actual:declaredHIJ,expected:hijExpected});
-for(const k of ['H','I','J'])if(marks[k]!==expected[k])issue('HIJ_MARK_COUNT_MISMATCH',-1,null,{mark:k,actual:marks[k],expected:expected[k]});
-const report={schemaVersion:1,scope:'IMG-LEDGER-003-registry-independent',inputHashes:{registry:{sha256:sha(file),expectedSha256:m.recoveryRegistrySha256},manifest:{sha256:sha(manifest)}},counts:{registry:rows.length,uniqueIds:idIndex.size,uniqueUrls:urlIndex.size,marks,declaredHIJ,expectedHIJ:hijExpected,issues:errors.length},issues:errors,blocked:{formal1945Join:'FORMAL_ORIGINAL_NOT_PROVISIONED',appBrowserValidation:'NOT_RUN_IN_THIS_JOB'},note:'Does not claim formal catalog join or physical browser rendering'};
+// Legacy v246 records lack regulationMark; mark counts are partial and cannot prove full H/I/J coverage.
+for(const k of ['H','I','J'])if(marks[k]>expected[k])issue('HIJ_MARK_EXCEEDS_MANIFEST',-1,null,{mark:k,actual:marks[k],expected:expected[k]});
+const report={schemaVersion:1,scope:'IMG-LEDGER-003-registry-independent',inputHashes:{registry:{sha256:sha(file),expectedSha256:m.recoveryRegistrySha256},manifest:{sha256:sha(manifest)}},counts:{registry:rows.length,uniqueIds:idIndex.size,uniqueUrls:urlIndex.size,marks,declaredHIJ,expectedHIJ:hijExpected,issues:errors.length},issues:errors,blocked:{hijIndependentReconciliation:'LEGACY_6212_RECORDS_HAVE_NO_REGULATION_MARK',formal1945Join:'FORMAL_ORIGINAL_NOT_PROVISIONED',appBrowserValidation:'NOT_RUN_IN_THIS_JOB'},note:'Does not claim formal catalog join or physical browser rendering'};
 if(report.inputHashes.registry.sha256!==m.recoveryRegistrySha256)issue('REGISTRY_SHA_MISMATCH',-1,null,{actual:report.inputHashes.registry.sha256,expected:m.recoveryRegistrySha256});
 report.counts.issues=errors.length;
 fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report.counts));if(errors.length)process.exitCode=1;
