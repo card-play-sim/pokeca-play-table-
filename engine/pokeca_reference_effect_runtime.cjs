@@ -183,7 +183,11 @@ function requests(g,actor,card,effect){
  }
  return out;
 }
-function selected(action,key){const x=action.selections?.[key];return Array.isArray(x)?x:[];}
+function selected(action,key){
+ const x=action.selections?.[key];
+ assert(x===undefined||Array.isArray(x),'INVALID_REFERENCE_SELECTION_TYPE:'+key);
+ return x||[];
+}
 function verifyRequests(g,actor,card,effect,action){
  const req=requests(g,actor,card,effect);
  if(effect.plan.mechanic==='ENERGY_SWITCH'){const source=field(player(g,actor)).find(c=>(c.energyCards||[]).some(e=>id(e)===selected(action,'energy')[0]));assert(!source||id(source)!==selected(action,'attachTo')[0],'ENERGY_SWITCH_SAME_POKEMON');}
