@@ -1,0 +1,32 @@
+{
+  "baseline": "30c94e9e1d1359b255afec4523119a5cbbe5e18b",
+  "scope": "reproduced-baseline-source-and-canonical-gateway-not-physical-Android",
+  "failures": [
+    {
+      "code": "QUICK_ABILITY_HAND_OMITTED",
+      "status": "FAILED",
+      "evidence": "baseline UI collector is field-only; hand UI port reports legal ability",
+      "portHasLegalHandAbility": true,
+      "fieldOnlyQuickCollector": true
+    },
+    {
+      "code": "COUNTER_SELECTOR_OFFERS_REJECTED_ZERO",
+      "status": "FAILED",
+      "declaredMinimum": 0,
+      "zeroRejected": true,
+      "errors": [
+        "COUNTER_MOVE_COUNT_INVALID"
+      ]
+    },
+    {
+      "code": "TRANSFER_SELECTOR_OFFERS_ORIGINAL_HOLDER",
+      "status": "FAILED",
+      "holderOffered": true,
+      "sameHolderRejected": true,
+      "errors": [
+        "ENERGY_SWITCH_SAME_POKEMON"
+      ]
+    }
+  ],
+  "resolution": "Shared hand/field collector and declarative dependent selection resolver; regression artifacts contain resulting state and rollback assertions"
+}

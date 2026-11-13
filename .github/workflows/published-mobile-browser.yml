@@ -13,6 +13,8 @@ on:
       - 'tests/test_g_base_008_browser.py'
       - 'tests/test_control_002_browser.py'
       - 'tests/test_ui_control_008_browser.py'
+      - 'tests/test_control_006_browser.py'
+      - 'tests/fixtures/control-005-scenarios.js'
       - 'tests/test_control_003_update_browser.py'
       - 'tests/browser_opening.py'
       - 'tests/control-002-opening.test.cjs'
@@ -51,11 +53,17 @@ jobs:
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
+          python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
           python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
           python tests/test_release_delivery_browser.py
+      - name: Write effect-level public DOM and gateway evidence
+        run: |
+          node tests/control-005-effect-matrix.test.cjs
+          node tests/control-006-abilities.test.cjs
+          node scripts/report-control-006-connections.cjs
       - name: Verify service worker and offline resume on published PWA
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
@@ -67,6 +75,7 @@ jobs:
           name: published-mobile-browser-evidence
           path: |
             artifacts/
+            test-results/control-00*.json
             test-results/published-pwa-verification.json
           if-no-files-found: warn
           retention-days: 30

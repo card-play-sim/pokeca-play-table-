@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),{execFileSync}=require('node:child_process');
+const baseline='30c94e9e1d1359b255afec4523119a5cbbe5e18b',read=p=>execFileSync('git',['show',baseline+':'+p],{encoding:'utf8'}),c={window:{},performance,console,Math,setTimeout};vm.runInNewContext(read('ui/engine.bundle.js'),c);const E=c.window.Pokeca;
+const S=vm.runInNewContext(fs.readFileSync('tests/fixtures/control-005-scenarios.js','utf8'),{console}),manifest=JSON.parse(read('data/fixed-test-decks.json')),rows=S.inventory(E,manifest),failures=[];
+for(const mechanic of ['EXCITE_DIVE','ADRENA_BRAIN','ENERGY_SWITCH']){
+ const row=rows.find(r=>r.plan.mechanic===mechanic),frame=S.create(E,manifest,row);let g=frame.game;const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x});port.loadGame(g);const o=S.option(E,port,frame);
+ if(mechanic==='EXCITE_DIVE')failures.push({code:'QUICK_ABILITY_HAND_OMITTED',status:'FAILED',evidence:'baseline UI collector is field-only; hand UI port reports legal ability',portHasLegalHandAbility:o.ok===true,fieldOnlyQuickCollector:read('ui/mobile.js').includes("const abilityOptions=[you.active,...you.bench]")});
+ if(mechanic==='ADRENA_BRAIN'){const a=JSON.parse(JSON.stringify(o.action));a.selections.count=0;const result=port.dispatch('you',a);failures.push({code:'COUNTER_SELECTOR_OFFERS_REJECTED_ZERO',status:'FAILED',declaredMinimum:o.requests.find(r=>r.kind==='COUNT').min,zeroRejected:!result.ok,errors:result.errors});}
+ if(mechanic==='ENERGY_SWITCH'){const a=JSON.parse(JSON.stringify(o.action));a.selections.attachTo=[frame.activeId];const result=port.dispatch('you',a);failures.push({code:'TRANSFER_SELECTOR_OFFERS_ORIGINAL_HOLDER',status:'FAILED',holderOffered:o.requests.find(r=>r.key==='attachTo').candidates.some(c=>c.id===frame.activeId),sameHolderRejected:!result.ok,errors:result.errors});}
+}
+fs.writeFileSync('reports/control-006-repair-history.json',JSON.stringify({baseline,scope:'reproduced-baseline-source-and-canonical-gateway-not-physical-Android',failures,resolution:'Shared hand/field collector and declarative dependent selection resolver; regression artifacts contain resulting state and rollback assertions'},null,2)+'\n');console.log('Captured three reproducible baseline failures without checking out old sources');

@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'ui/mobile.js'
+      - 'tests/control-006-abilities.test.cjs'
+      - 'tests/test_control_006_browser.py'
+      - 'tests/fixtures/control-005-scenarios.js'
       - 'ui/table-components.js'
       - 'ui/card-back.svg'
       - 'tests/table-components.test.cjs'
@@ -41,6 +44,16 @@ jobs:
           node --test tests/g-base-008-ui-contract.test.cjs
           node tests/control-002-opening.test.cjs
           node tests/table-components.test.cjs
+          node tests/control-005-effect-matrix.test.cjs
+          node tests/control-006-abilities.test.cjs
+          node tests/control-006-official-evidence.test.cjs
+          node scripts/report-control-006-connections.cjs
+      - name: Preserve effect-level connection evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-006-node-evidence
+          path: test-results/control-00*.json
       - name: Verify bundle and PWA release hashes
         run: |
           node scripts/check-reference-bundle-sync.cjs
@@ -61,6 +74,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
           python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
@@ -73,6 +87,7 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/control-006-*
             artifacts/ui-control-008-*
             artifacts/control-002-browser-results.json
             artifacts/control-002-opening-*.png
