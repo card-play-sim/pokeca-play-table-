@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'ui/mobile.js'
+      - 'ui/table-components.js'
+      - 'ui/card-back.svg'
+      - 'tests/table-components.test.cjs'
+      - 'tests/test_ui_control_008_browser.py'
       - 'ui/app-update.js'
       - 'index.html'
       - 'update.html'
@@ -36,6 +40,7 @@ jobs:
         run: |
           node --test tests/g-base-008-ui-contract.test.cjs
           node tests/control-002-opening.test.cjs
+          node tests/table-components.test.cjs
       - name: Verify bundle and PWA release hashes
         run: |
           node scripts/check-reference-bundle-sync.cjs
@@ -56,6 +61,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_ui_control_008_browser.py
           python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
@@ -67,6 +73,7 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/ui-control-008-*
             artifacts/control-002-browser-results.json
             artifacts/control-002-opening-*.png
             artifacts/g-base-008-browser-results.json

@@ -12,6 +12,7 @@ on:
       - 'tests/test_reference_match_browser.py'
       - 'tests/test_g_base_008_browser.py'
       - 'tests/test_control_002_browser.py'
+      - 'tests/test_ui_control_008_browser.py'
       - 'tests/test_control_003_update_browser.py'
       - 'tests/browser_opening.py'
       - 'tests/control-002-opening.test.cjs'
@@ -50,6 +51,7 @@ jobs:
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
+          python tests/test_ui_control_008_browser.py
           python tests/test_control_002_browser.py
           python tests/test_g_base_008_browser.py
           python tests/test_reference_match_browser.py
