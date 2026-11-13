@@ -688,8 +688,8 @@ function verifyRequests(g,actor,card,effect,action){
   }
   if(r.kind==='COUNT'){const n=action.selections?.count;assert(Number.isInteger(n)&&n>=r.min&&n<=r.max,'INVALID_COUNTER_COUNT');continue;}
   const ids=r.kind==='POKEMON'?(action.targetIds||[]):selected(action,r.key);
-  for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
   assert(ids.length>=r.min&&ids.length<=r.max&&new Set(ids).size===ids.length&&ids.every(i=>r.candidates.some(c=>(c.id||c.instanceId)===i)),'INVALID_REFERENCE_SELECTION:'+r.key);
+  for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
  if(m==='AKAMATSU'){
