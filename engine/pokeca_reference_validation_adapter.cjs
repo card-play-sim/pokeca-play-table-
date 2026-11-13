@@ -3,9 +3,10 @@ const R=require('./pokeca_reference_effect_runtime');
 const copy=x=>JSON.parse(JSON.stringify(x));
 function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlayer='you',startingActive={},startingBench={}}={}){
  if(manifest?.decks?.length!==2||![0,1].includes(firstDeck))throw Error('REFERENCE_DECK_SCHEMA');
+ for(const deck of manifest.decks){if(!Array.isArray(deck.cards)||deck.cards.some(c=>!Number.isInteger(c.count)||c.count<1||c.count>60)||deck.cards.reduce((n,c)=>n+c.count,0)!==60)throw Error('REFERENCE_DECK_COUNT');}
  const order=firstDeck?[1,0]:[0,1],used=new Set();
  const decks=order.map((index,i)=>manifest.decks[index].cards.flatMap(entry=>{
-  const ident=String(referenceIds[entry.name]||R.catalog.defaultValidationReferences[entry.name]||''),record=R.catalog.records.find(r=>r.officialCardId===ident);
+  const ident=String(entry.referenceOfficialCardId||referenceIds[entry.name]||R.catalog.defaultValidationReferences[entry.name]||''),record=R.referenceRecord(ident);
   if(!record||record.deckName!==entry.name||record.category!==entry.category||!Number.isInteger(entry.count)||entry.count<1)throw Error('REFERENCE_PRINT_BINDING:'+entry.name);
   return Array.from({length:entry.count},(_,n)=>{
    const physical=`reference-${i}-${used.size}`;if(used.has(physical))throw Error('DUPLICATE_REFERENCE_PHYSICAL_ID');used.add(physical);

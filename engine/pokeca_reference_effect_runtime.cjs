@@ -2,7 +2,8 @@
 // Print-scoped extensions of the canonical gateway. Adoption remains a separate concern.
 const catalog=require('./pokeca_reference_effect_data');
 const Selection=require('./pokeca_selection_constraints');
-const records=new Map(catalog.records.map(r=>[r.officialCardId,r]));
+const fullCatalog=require('./pokeca_effect_extensions').catalog(catalog);
+const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
@@ -177,6 +178,8 @@ function requests(g,actor,card,effect){
  if(m==='ENERGY_SWITCH'){
   cardRequest('energy',own.flatMap(c=>(c.energyCards||[]).filter(basicEnergy).map(e=>({...e,containerId:id(c)}))),1,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),1,1);out.at(-1).dependencies=[{kind:'excludeSelectedField',key:'energy',field:'containerId'}];
  }
+ if(m==='HEAL_DAMAGE')cardRequest('cards',own.filter(c=>(c.damage||0)>0),1,1);
+ if(m==='COIN_FORCE_SWITCH')cardRequest('bench',o.bench,1,1);
  if(m==='HAMMER'){const energies=opp.flatMap(c=>c.energyCards||[]);cardRequest('energy',energies,energies.length?1:0,1);}
  if(m==='ROSA'){
   cardRequest('cards',p.discard.filter(basicEnergy),0,2);cardRequest('attachTo',own.filter(c=>record(c).facts.stage===2).map(c=>({id:id(c),name:c.name})),1,1);
@@ -256,7 +259,7 @@ function preflight(g,actor,action){
    if(action.type==='play_item')assert(card.cardType==='ITEM'&&!itemLocked(g,actor),'ITEM_NOT_ALLOWED');
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&g.turnNumber!==1&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
-   const m=r.mainPlan.mechanic;if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
+   const m=r.mainPlan.mechanic;if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
    if(m==='UNFAIR')assert(wasKnockedOut(g,actor),'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
    if(m==='ROSA')assert(p.prizes>o.prizes,'MORE_REMAINING_PRIZES_REQUIRED');
    if(['play_item','play_supporter'].includes(action.type))verifyRequests(g,actor,card,{plan:r.mainPlan},action);
@@ -400,6 +403,9 @@ function applyPlan(g,actor,card,effect,action){
   case 'ENERGY_SWITCH':{
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
+  case 'DRAW_CARDS':draw(g,p,plan.amount);break;
+  case 'HEAL_DAMAGE':{const mon=find(g,ids('cards')[0]);assert(mon?.player===p&&Number.isSafeInteger(plan.amount)&&plan.amount>0,'INVALID_HEAL_TARGET');const amount=Math.min(mon.card.damage||0,plan.amount);mon.card.damage-=amount;event(g,actor,'HEAL',{targetInstanceId:id(mon.card),amount});break;}
+  case 'COIN_FORCE_SWITCH':if(coin(g,actor))chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'SWITCH':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
   case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'REPELLENT':assert(o.bench.length>0,'NO_OPPONENT_BENCH');g.pendingReferenceChoice={kind:'SWITCH',playerId:o.id,options:o.bench.map(id)};break;
@@ -602,4 +608,4 @@ function cardInfo(g,actor,ident){
  return {instanceId:ident,entries,referenceOfficialCardId:r.officialCardId,officialPageUrl:r.officialPageUrl,deckPrintAdopted:false};
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
-module.exports={reduced,catalog,record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages};
+module.exports={reduced,catalog,fullCatalog,referenceRecord:ident=>records.get(String(ident)),record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages};
