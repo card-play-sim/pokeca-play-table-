@@ -19,4 +19,12 @@ for(const row of rows){for(const variant of ['COMBO','HAMMER','COIN_PROTECT'].in
 }}
 fs.mkdirSync('test-results',{recursive:true});fs.writeFileSync('test-results/control-005-node.json',JSON.stringify({scope:'controlled-reference-effects',results},null,2)+'\n');
 console.log(JSON.stringify({effects:rows.length,cases:results.length,counts:results.reduce((a,x)=>(a[x.status]=(a[x.status]||0)+1,a),{}),failures:results.filter(x=>x.status==='FAILED').map(x=>({effectId:x.effectId,name:x.cardName,error:x.error}))},null,2));
+// The downstream status reporter must be able to distinguish a validated
+// reference execution from print-identity adoption. These fields are the
+// contract used for an independent, scoped execution PASS.
+for(const result of results.filter(x=>x.status==='EXECUTED')){
+ assert.equal(result.aiLegalActionMatched,true,'executed case must match AI legal action');
+ assert.equal(result.saveRestoreExact,true,'executed case must restore identical game state');
+ assert(Array.isArray(result.checks)&&result.checks.length>0,'executed case must assert effects');
+}
 if(results.some(x=>x.status==='FAILED'))process.exitCode=1;
