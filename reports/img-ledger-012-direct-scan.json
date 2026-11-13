@@ -1,45 +1,173 @@
 {
-  "schemaVersion": 1,
-  "source": "GitHub connected app direct authenticated API",
+  "schemaVersion": 2,
   "repository": "card-play-sim/pokeca-card-simulator",
-  "totalWorkflowRunsAtInspection": 583,
-  "runPagesRetrieved": 6,
-  "runCountsPerPage": [
-    100,
-    100,
-    100,
-    100,
-    100,
-    83
+  "totalRuns": 583,
+  "inspectedRunIds": [
+    42760481782,
+    42760476344,
+    42760467591,
+    42760436107,
+    42760423543,
+    42760402123,
+    42760384363,
+    42760378217,
+    42760338248,
+    42760292286,
+    42760284130,
+    42759827643,
+    42759807756,
+    42759800833,
+    42726190496,
+    42726165976,
+    42726098246,
+    42726081316,
+    42726041858,
+    42725877768,
+    42725854354,
+    42725839794,
+    42725825452,
+    42725564664,
+    42725551587,
+    42725471009,
+    42725371066,
+    42725327910,
+    42725315692,
+    42725074808,
+    42724772759,
+    42724757691,
+    42724145686,
+    42723833082,
+    42723741853,
+    42723725808,
+    42723626305,
+    42723553181,
+    42722980706,
+    42722966001,
+    42622545751,
+    42622529959,
+    42622510686,
+    42622360620,
+    42622360609,
+    42622259857,
+    42622259843,
+    42622244784,
+    42621956109,
+    42621943431,
+    42621927834,
+    42621813333,
+    42621452519,
+    42621437328,
+    42621425556,
+    42621414579,
+    42621390685,
+    42620961127,
+    42421257844,
+    42421253472,
+    42421251908,
+    42421251905,
+    42421251902,
+    42421245995,
+    42420848460,
+    42420848381,
+    42420848346,
+    42420832934,
+    42420832914,
+    42420832796,
+    42420828663,
+    42420822645,
+    42420822629,
+    42420822624,
+    42420819129,
+    42420210004,
+    42016838327,
+    42016815772,
+    42016757036,
+    42016495783,
+    42014889483,
+    42014863991,
+    42014844749,
+    42014837359,
+    42014392585,
+    42014355727,
+    42012955389,
+    42012942360,
+    42012687742,
+    42011029279,
+    42010989234,
+    42010978332,
+    42008383528,
+    41987720047
   ],
-  "directArtifactRunIdsInspected": 54,
-  "artifactDownloadsInspected": [
+  "runArtifactListingVerified": 94,
+  "remainingRunCount": 489,
+  "verifiedArtifactDownloads": [
     {
-      "runId": 42622360609,
       "id": 13675144927,
-      "name": "official-effect-evidence-inventory",
+      "runId": 42622360609,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
       "catalogFound": false
     },
     {
-      "runId": 42622259857,
       "id": 13675184728,
-      "name": "official-effect-evidence-inventory",
+      "runId": 42622259857,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
       "catalogFound": false
     },
     {
-      "runId": 42421257844,
       "id": 13593114517,
-      "name": "effect-audit-diagnostics",
+      "runId": 42421257844,
+      "zipMembers": [
+        "command-audit.json",
+        "effect-proposals.json",
+        "parser-coverage.json",
+        "selection-contracts.json",
+        "text-audit.json"
+      ],
       "catalogFound": false
     }
   ],
-  "expectedSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
-  "formalVerified": 0,
-  "status": "PARTIAL_DIRECT_SCAN",
-  "remainingRunInspections": 529,
-  "limitations": [
-    "GitHub connector does not expose repository-wide private artifacts endpoint through generic fetch",
-    "Workflow Actions token lacks development repository permission without configured secret"
+  "observedArtifacts": [
+    {
+      "runId": 42622360609,
+      "name": "official-effect-evidence-inventory",
+      "id": 13675144927
+    },
+    {
+      "runId": 42622259857,
+      "name": "official-effect-evidence-inventory",
+      "id": 13675184728
+    },
+    {
+      "runId": 42421257844,
+      "name": "effect-audit-diagnostics",
+      "id": 13593114517
+    },
+    {
+      "runId": 42421251902,
+      "name": "effect-audit-diagnostics",
+      "id": 13594120744
+    },
+    {
+      "runId": 42420832914,
+      "name": "effect-audit-diagnostics",
+      "id": 13594015264
+    },
+    {
+      "runId": 42420822645,
+      "name": "effect-audit-diagnostics",
+      "id": 13594105062
+    }
   ],
-  "notes": "Directly downloaded three private repository artifacts and checked ZIP member names; none contain card_catalog.json."
+  "formalOriginalStatus": "NOT_FOUND_IN_VERIFIED_DOWNLOADS",
+  "expectedSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+  "status": "PARTIAL_RESTARTABLE",
+  "note": "Only listed IDs are verified through per-run artifact API; historical 54 count is superseded by explicit run IDs."
 }
