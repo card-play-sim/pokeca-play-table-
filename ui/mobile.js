@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='250';
+window.PokecaMobileBuild='251';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -312,12 +312,25 @@ window.PokecaMobileBuild='250';
     if(player.id==='you'&&player.hand.some(c=>idOf(c)===id))addHandActions(id,$('detail-actions'));
   }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
-  function ruleRow(entry){return `<section class="effect-row rule-explanation"><strong>${entry.type==='ABILITY'?'特性':entry.type==='ATTACK'?'ワザ':'カード効果'} · ${esc(entry.name)}${entry.active===null?'':entry.active?'（現在有効）':'（現在無効／使用済み・条件不成立）'}</strong><p>${esc(entry.description)}</p>${entry.inactiveReasons?.length?'<p>'+esc(entry.inactiveReasons.join(' / '))+'</p>':''}${entry.officialText!==null?'<small>保存済みofficialTextを表示（原文は変更しません）</small>':''}<dl class="effect-metadata"><dt>発動条件</dt><dd>${esc(entry.condition)}</dd><dt>対象</dt><dd>${esc(entry.target)}</dd><dt>使用回数制限</dt><dd>${esc(entry.usage)}</dd><dt>解除条件</dt><dd>${esc(entry.removal)}</dd><dt>処理順（表示用）</dt><dd>${esc(entry.resolution)}</dd></dl></section>`;}
+  function operationReason(reason){
+    const messages={BENCH_FULL:'ベンチが5匹で空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'自分の場に無色タイプのメガシンカexが必要です',ABILITY_ALREADY_USED:'この特性はこの番に使用済みです',ABILITY_SUPPRESSED:'場の効果で特性が無効になっています',BENCH_ENTRY_WINDOW_REQUIRED:'手札からベンチに出した直後だけ使えます',REFERENCE_ACTION_NOT_ALLOWED:'自分の番のメイン操作中に使ってください'};
+    if(reason.startsWith('ABILITY_SOURCE_ZONE:'))return 'この特性を使う場所：'+reason.slice('ABILITY_SOURCE_ZONE:'.length).split('|').map(z=>({HAND:'手札',ACTIVE:'バトル場',BENCH:'ベンチ'}[z]||z)).join('・');
+    return messages[reason]||reason;
+  }
+  function ruleRow(entry){return `<section class="effect-row rule-explanation"><strong>${entry.type==='ABILITY'?'特性':entry.type==='ATTACK'?'ワザ':'カード効果'} · ${esc(entry.name)}${entry.active===null?'':entry.active?'（現在有効）':'（現在無効／使用済み・条件不成立）'}</strong><p>${esc(entry.description)}</p>${entry.inactiveReasons?.length?'<p>'+esc(entry.inactiveReasons.map(operationReason).join(' / '))+'</p>':''}${entry.officialText!==null?'<small>保存済みofficialTextを表示（原文は変更しません）</small>':''}<dl class="effect-metadata"><dt>発動条件</dt><dd>${esc(entry.condition)}</dd><dt>対象</dt><dd>${esc(entry.target)}</dd><dt>使用回数制限</dt><dd>${esc(entry.usage)}</dd><dt>解除条件</dt><dd>${esc(entry.removal)}</dd><dt>処理順（表示用）</dt><dd>${esc(entry.resolution)}</dd></dl></section>`;}
   function stateDetail(id){const found=getCard(id),info=found?port.getCardInfo(found.player.id,id):null;const states=statesFor(view(),id);openSheet('継続効果・期限',states.map(effectRow).join('')+(info?.specialStatus?effectRow(info.specialStatus):'') || '<p>現在有効な継続効果はありません。</p>');}
   function scopedStates(playerId){return port.getStatusView().filter(s=>s.scope==='PLAYER'?s.playerId===playerId:s.scope==='FIELD'&&(!s.playerIds || s.playerIds.includes(playerId)));}
   function scopedStateDetail(playerId){openSheet((playerId==='you'?'自分':'相手')+'側・場の制限',scopedStates(playerId).map(effectRow).join('') || '<p>現在有効な制限はありません。</p>');}
   function addHandActions(id,container){const card=getCard(id)?.card;
-    if(view().referenceEffectValidation){for(const option of [...port.getHandOptions('you',id)].sort((a,b)=>Number(b.ok)-Number(a.ok))){const check=option.ok;container.append(button(option.label,()=>{void resolveOption(option);},{disabled:!check}));if(!check)container.append(button('停止・使用制限の理由',()=>openSheet('効果の検証結果',(option.errors||[]).map(e=>'<p>'+esc(e)+'</p>').join(''))));}return;}
+    if(view().referenceEffectValidation){
+      const options=[...port.getHandOptions('you',id)].sort((a,b)=>Number(b.ok)-Number(a.ok)||Number(b.kind==='ability')-Number(a.kind==='ability'));
+      for(const option of options){
+        const check=option.ok,b=button((option.kind==='ability'?'特性 · ':'')+option.label,()=>{void resolveOption(option);},{disabled:!check});
+        b.dataset.actionType=option.action.type;container.append(b);
+        if(!check){const reason=document.createElement('p');reason.className='action-reason';reason.textContent=(option.errors||[]).map(operationReason).join(' / ');container.append(reason);}
+      }
+      return;
+    }
     if(card?.cardType==='SUPPORTER'){
       const a={type:'play_supporter',cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
       if(search){

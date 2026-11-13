@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'ui/mobile.js'
+      - 'tests/shared-operation-origins.test.cjs'
+      - 'tests/test_shared_operation_browser.py'
       - 'data/effect-extensions/**'
       - 'tests/control-008-extensions.test.cjs'
       - 'tests/test_control_008_extensions_browser.py'
@@ -52,6 +54,7 @@ jobs:
           node tests/control-006-abilities.test.cjs
           node tests/control-006-official-evidence.test.cjs
           node scripts/build-effect-extensions.cjs --check
+          node tests/shared-operation-origins.test.cjs
           node tests/control-008-extensions.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Preserve effect-level connection evidence
@@ -59,7 +62,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: control-006-node-evidence
-          path: test-results/control-00*.json
+          path: |
+            test-results/control-00*.json
+            test-results/shared-operation-origins.json
       - name: Verify bundle and PWA release hashes
         run: |
           node scripts/check-reference-bundle-sync.cjs
@@ -80,6 +85,7 @@ jobs:
         run: |
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
+          python tests/test_shared_operation_browser.py
           python tests/test_control_008_extensions_browser.py
           python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
@@ -94,6 +100,7 @@ jobs:
         with:
           name: candidate-gameplay-evidence
           path: |
+            artifacts/shared-operation-*
             artifacts/control-008-*
             artifacts/control-006-*
             artifacts/ui-control-008-*

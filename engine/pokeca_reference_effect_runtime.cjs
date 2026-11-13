@@ -212,15 +212,28 @@ function verifyRequests(g,actor,card,effect,action){
  if(m==='ENERGY_SWITCH'){const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===selected(action,'energy')[0]));assert(source&&id(source)!==selected(action,'attachTo')[0],'ENERGY_SWITCH_SAME_POKEMON');}
  if(m==='ADRENA_BRAIN')assert((find(g,selected(action,'source')[0]).card.damage||0)>=action.selections.count*10,'NOT_ENOUGH_DAMAGE_COUNTERS');
 }
+// Activation origins come from verified text of an already compiled ability.
+// Never infer executable effects from a card name or an uncompiled description.
+function abilityOrigin(a){
+ const text=String(a.text||'').replace(/\s+/g,'');
+ if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
+ if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
+ if(text.startsWith('このポケモンがバトル場にいるなら'))return {zones:['ACTIVE'],entry:false};
+ return {zones:['ACTIVE','BENCH'],entry:false};
+}
+function abilityZone(p,card){return p.hand.includes(card)?'HAND':p.active===card?'ACTIVE':p.bench.includes(card)?'BENCH':null;}
 function abilityCheck(g,actor,card,a,action){
  const p=player(g,actor),m=a.plan.mechanic;
- assert(abilityEnabled(g,card)||m==='EXCITE_DIVE'&&p.hand.some(c=>id(c)===id(card)),'ABILITY_SUPPRESSED');
+ const origin=abilityOrigin(a),zone=abilityZone(p,card);
+ assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
+ assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
+ assert(zone==='HAND'||abilityEnabled(g,card),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='DASH')assert(p.active===card&&!p.turnLimits?.abilityNames?.DASH,'DASH_ACTIVE_AND_SHARED_LIMIT');
  if(m==='REVERSAL_DRAW')assert(wasKnockedOut(g,actor)&&!p.turnLimits?.abilityNames?.REVERSAL_DRAW,'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
  if(m==='MEOWTH_ENTRY')assert(card.entryWindow===g.referenceActionSequence&&!p.turnLimits?.abilityNames?.MEOWTH_ENTRY,'BENCH_ENTRY_WINDOW_REQUIRED');
  if(m==='ADRENA_BRAIN')assert(energyUnits(card).some(u=>u.includes('悪')),'DARK_ENERGY_REQUIRED');
- if(m==='EXCITE_DIVE')assert(p.hand.some(c=>id(c)===id(card))&&p.bench.length<5&&field(p).some(c=>record(c).facts.prizeCount===3&&record(c).facts.types.includes('無色')),'COLORLESS_MEGA_IN_PLAY_REQUIRED');
+ if(m==='EXCITE_DIVE'){assert(p.bench.length<5,'BENCH_FULL');assert(field(p).some(c=>record(c).facts.prizeCount===3&&record(c).facts.types.includes('無色')),'COLORLESS_MEGA_IN_PLAY_REQUIRED');}
  verifyRequests(g,actor,card,a,action);
 }
 function handles(action){return ['attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
@@ -513,7 +526,7 @@ function handOptions(g,actor,ident){
  if(card.kind==='pokemon'){
   if(card.basic){out.push({key:'bench',label:'ベンチに出す',action:{type:'bench_basic',cardId:ident}});out.push({key:'active',label:'バトル場に出す',action:{type:'play_active_basic',cardId:ident}});}
   else for(const c of field(p))out.push({key:id(c),label:'進化する',action:{type:'evolve',cardId:ident,targetInstanceId:id(c)}});
-  for(const a of abilityActions(g,actor,card))if(a.referenceEffect.plan?.mechanic==='EXCITE_DIVE')out.push({...a,key:'hand-ability'});
+  for(const a of abilityActions(g,actor,card))if(abilityOrigin(a.referenceEffect).zones.includes('HAND'))out.push({...a,key:'hand-ability:'+a.action.abilityId});
  }
  if(['trainer','stadium'].includes(card.kind)){
   const type=card.kind==='stadium'?'play_stadium':card.cardType==='SUPPORTER'?'play_supporter':'play_item',effect={plan:record(card).mainPlan};
@@ -605,6 +618,12 @@ function statuses(g){
 function cardInfo(g,actor,ident){
  const p=player(g,actor),card=[...field(p),...p.hand,...p.discard].find(c=>id(c)===ident),r=record(card);if(!r)return null;
  const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?field(p).includes(card)&&abilityEnabled(g,card):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
+ for(const entry of entries.filter(e=>e.type==='ABILITY'&&e.active===null)){
+  const effect=r.abilities.find(a=>a.effectId===entry.id),option=abilityActions(g,actor,card).find(o=>o.action.abilityId===entry.id);
+  entry.activationOrigin=abilityOrigin(effect);
+  const action=completeAction(g,actor,option),check=preflight(g,actor,action);
+  entry.actionAvailable=check.errors.length===0;entry.inactiveReasons=check.errors;
+ }
  return {instanceId:ident,entries,referenceOfficialCardId:r.officialCardId,officialPageUrl:r.officialPageUrl,deckPrintAdopted:false};
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
