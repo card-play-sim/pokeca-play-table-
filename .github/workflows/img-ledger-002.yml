@@ -6,6 +6,7 @@ on:
       - 'scripts/img-ledger-002-audit.cjs'
       - 'scripts/img-ledger-003-registry.cjs'
       - 'scripts/img-ledger-006-linkage.cjs'
+      - 'tests/image-browser-load.mjs'
       - 'tests/img-ledger-002-audit.test.cjs'
       - '.github/workflows/img-ledger-002.yml'
 jobs:
@@ -44,4 +45,35 @@ jobs:
           path: |
             reports/img-ledger-003-*.json
             reports/img-ledger-006-*.json
+          if-no-files-found: warn
+
+  chromium-candidate-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Read immutable v247 candidate
+        run: |
+          git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/img-ledger-v247.json
+      - name: Chromium image loading for all 6248 candidate prints
+        env:
+          IMAGE_REGISTRY_PATH: /tmp/img-ledger-v247.json
+          IMAGE_BROWSER_REPORT_PATH: artifacts/img-ledger-007-browser.json
+        run: node tests/image-browser-load.mjs
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-ledger-007-chromium
+          path: artifacts/img-ledger-007-browser.json
           if-no-files-found: warn
