@@ -17,6 +17,7 @@ on:
       - 'scripts/img-ledger-006-linkage.cjs'
       - 'tests/image-browser-load.mjs'
       - 'scripts/img-ledger-008-artifact-inventory.py'
+      - 'scripts/img-ledger-011-deep-scan.py'
       - 'tests/img-ledger-002-audit.test.cjs'
       - '.github/workflows/img-ledger-002.yml'
 jobs:
@@ -123,3 +124,29 @@ jobs:
           name: img-ledger-008-source-inventory
           path: reports/img-ledger-008-artifact-search.json
           if-no-files-found: warn
+
+  development-history-deep-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore previous scan checkpoint when available
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p reports
+          gh run download --repo "${{ github.repository }}" --name img-ledger-011-deep-scan --dir reports || true
+      - name: Scan every development Actions run and inspect retained archives
+        env:
+          DEVELOPMENT_REPO_TOKEN: ${{ secrets.DEVELOPMENT_REPO_READ_TOKEN }}
+        run: python3 scripts/img-ledger-011-deep-scan.py reports/img-ledger-011-deep-scan.json
+      - name: Preserve resumable per-run scan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-ledger-011-deep-scan
+          path: reports/img-ledger-011-deep-scan.json
+          if-no-files-found: error
