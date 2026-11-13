@@ -1,25 +1,26 @@
 """Inspect actual served and worker-delivered bytes, then start a fixed deck."""
-import asyncio,hashlib,json,os
+import asyncio,hashlib,json,os,re
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
 from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
+BUILD=re.search(r'name="pokeca-build" content="(\d+)"',(ROOT/'index.html').read_text()).group(1)
 async def main():
  url=os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/');report={};errors=[]
  async with async_playwright() as p:
   b=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   c=await b.new_context(**device);page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(url+'update.html?build=247');await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
+  await page.goto(url+'update.html?build='+BUILD);await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
   # A reload with an active controller proves that these runtime bytes come from its release.
   await page.reload();await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
-  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]=='247' for k in ('htmlBuild','mobileBuild','controllerBuild'))
+  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]==BUILD for k in ('htmlBuild','mobileBuild','controllerBuild'))
   assert await page.locator('#demo-open').inner_text()=='固定デッキ対戦'
   cached=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName),out={};for(const path of Object.keys(PokecaUpdateStatus.releaseFiles)){const r=await c.match(new URL(path,location.href));out[path]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
   assert cached==status['releaseFiles']
   served={}
   direct=await b.new_context(service_workers='block');raw_page=await direct.new_page()
-  for path in ('index.html','ui/mobile.js?build=247','ui/app-update.js?build=247','sw.js'):
+  for path in ('index.html','ui/mobile.js?build='+BUILD,'ui/app-update.js?build='+BUILD,'sw.js'):
    r=await raw_page.goto(url+path,wait_until='domcontentloaded');assert r.status==200
    digest=hashlib.sha256(await r.body()).hexdigest();assert digest==hashlib.sha256((ROOT/path.split('?')[0]).read_bytes()).hexdigest(),path
    served[path]={'sha256':digest,'headers':r.headers}

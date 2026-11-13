@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='247';
+window.PokecaMobileBuild='248';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -25,6 +25,7 @@ window.PokecaMobileBuild='247';
   const metrics={moves:0,shuffles:0,animationErrors:0};
   let animationsEnabled=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sheet=$('sheet');
+  const tableUI=window.PokecaTableUI,cardZoom=tableUI.installZoom(document);
   function japaneseError(value){
     const msg=String(value ?? '操作できません');
     const known=[
@@ -163,13 +164,22 @@ window.PokecaMobileBuild='247';
   }
   function attachedEnergyHTML(card){
     if(card.kind!=='pokemon'||!card.energyCards?.length)return '';
-    const counts=new Map();
-    for(const energy of card.energyCards){const type=String(energy.energyType||'不明');counts.set(type,(counts.get(type)||0)+1);}
-    const chips=[...counts].map(([type,n])=>`<span class="attached-energy-chip" title="${esc(type)}エネルギー ${n}枚">${esc(symbols[type]||'◆')}<b>${n}</b></span>`).join('');
+    const chips=tableUI.energyGroups(card.energyCards).map(g=>`<span class="attached-energy-chip${g.special?' special-energy':''}" data-energy-label="${esc(g.label)}" data-energy-count="${g.count}" title="${esc(g.label)} ${g.count}枚">${esc(g.special?g.label:(symbols[g.label]||g.label))}<b>${g.count}</b></span>`).join('');
     return `<span class="attached-energy-strip" aria-label="装着エネルギー ${card.energyCards.length}枚">${chips}</span>`;
   }
-  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで詳細">${cardArt(card)}${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
-  function zoneHTML(player,zone,label,icon){const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;return `<button class="zone ${zone}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${esc(label)} ${count}枚"><span class="zone-icon">${icon}</span><span>${label}</span><strong>${count}</strong></button>`;}
+  function legalMarks(card,snapshot,owner,hand){
+    if(owner.id!=='you'||snapshot.status!=='active'||snapshot.turnPlayer!=='you'||referenceStopped())return '';
+    const options=hand?port.getHandOptions('you',idOf(card)):port.getPokemonActions('you',idOf(card));
+    return tableUI.marks(options).map(label=>`<span class="available-mark" data-legal-mark="${esc(label)}">${esc(label)}</span>`).join('');
+  }
+  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで拡大">${cardArt(card)}<span class="available-marks">${legalMarks(card,snapshot,owner,hand)}</span>${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
+  function zoneHTML(player,zone,label,icon){
+    const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;
+    const back='<img class="zone-back" src="ui/card-back.svg" alt="" draggable="false">';
+    const slots=player.prizeSlots||Array.from({length:6},(_,i)=>i<count);
+    const art=zone==='prize'?`<span class="prize-map" aria-hidden="true">${slots.map((v,i)=>`<span data-prize-position="${i}" class="prize-position${v?'':' taken'}">${v?back:'✓'}</span>`).join('')}</span>`:zone==='deck'?back:`<span class="zone-icon">${icon}</span>`;
+    return `<button class="zone ${zone}${count===0?' zone-empty':''}" data-zone="${zone}" data-zone-owner="${player.id}" aria-label="${player.id==='you'?'自分':'相手'}の${esc(label)} ${count}枚">${art}<span>${label}</span><strong>${count}</strong></button>`;
+  }
   function render(){if(fixedImageBoard){renderFixedImageBoard();return;}const s=view(),you=s.players.find(p=>p.id==='you'),opp=s.players.find(p=>p.id!=='you');
     if(s.pendingPrizeSelection?.playerId==='you'&&!prizeDialogOpen)queueMicrotask(showPrizeChoice);
     if(!s.pendingPrizeSelection&&s.pendingReferenceChoice?.playerId==='you'&&(!sheet.open||!$('reference-choice')))queueMicrotask(showReferenceChoice);
@@ -220,17 +230,18 @@ window.PokecaMobileBuild='247';
       if(selected&&!el.dataset.hand){if(dropOn(el))return;}
       if(el.dataset.hand)selectHand(id);else pokemonMenu(id,el.dataset.owner);
     };
-    el.oncontextmenu=e=>{e.preventDefault();detail(el.dataset.cardId);};
+    el.oncontextmenu=e=>{e.preventDefault();cardZoom.open(el);};
     el.onpointerdown=e=>pointerStart(e,el);
     el.onpointermove=e=>pointerMove(e);
     el.onpointerup=e=>pointerEnd(e);
+    el.onpointercancel=()=>clearGesture();
     el.onpointercancel=()=>clearGesture();
   });
     document.querySelectorAll('[data-state-card]').forEach(el=>{el.onclick=e=>{e.stopPropagation();stateDetail(el.dataset.stateCard);};});
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
     document.querySelectorAll('.bench-slot.empty').forEach(el=>el.onclick=()=>{if(selected)dropOn(el);});
   }
-  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
+  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>o.action?.type==='use_ability')){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
     if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';return;}
     const entry=getCard(id);if(!entry)return;
     $('interaction-hint').textContent='選択中：'+(entry.card.name||'カード')+'・配置先をタップ';
@@ -262,7 +273,7 @@ window.PokecaMobileBuild='247';
   function pointerStart(e,el){if(e.button!==0)return;suppressClick=0;
     clearTimeout(longTimer);const id=el.dataset.cardId;
     drag={pointerId:e.pointerId,x:e.clientX,y:e.clientY,el,id,hand:!!el.dataset.hand,retreatSource:!el.dataset.hand&&el.dataset.owner==='you'&&!!view().players.find(p=>p.id==='you')?.active&&idOf(view().players.find(p=>p.id==='you').active)===id,active:false,scroll:false};
-    longTimer=setTimeout(()=>{if(drag&&!drag.active&&!drag.scroll){suppressClick=Date.now()+1000;detail(id);clearGesture();suppressClick=Date.now()+500;}},480);
+    longTimer=setTimeout(()=>{if(drag&&!drag.active&&!drag.scroll){suppressClick=Date.now()+1000;cardZoom.open(el);clearGesture();suppressClick=Date.now()+500;}},480);
   }
   function pointerMove(e){if(!drag||drag.pointerId!==e.pointerId)return;
     const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
@@ -285,7 +296,7 @@ window.PokecaMobileBuild='247';
     const attacks=registry.filter(e=>e.source.type==='ATTACK').map(e=>e.source.name).concat((card.attacks || []).map(a=>a.name));
     const abilities=declared.map(a=>a.name+': '+(a.text || '')).concat(registry.filter(e=>e.source.type==='ABILITY').map(e=>e.source.name));
     const stateHTML=statesFor(s,id).map(effectRow).join('');
-    openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card)}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc((card.energyCards || []).map(c=>c.energyType).join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
+    openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card)}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc(tableUI.energyGroups(card.energyCards).map(g=>g.label+' '+g.count+'枚').join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
     if(view().referenceEffectValidation){const ref=Pokeca.getReferenceEffectRecord(card);if(ref){const source=document.createElement('p');source.className='reference-print-source';source.innerHTML='効果検証の参照版：'+esc(ref.officialCardId)+' / '+esc(ref.set)+' / '+esc(ref.cardNumber||'番号無印字')+'（正式採用未確定） <a target="_blank" rel="noopener" href="'+esc(ref.officialPageUrl)+'">公式出典</a>';$('sheet-content').prepend(source);}}
     refreshImageSheet=()=>detail(id);
     if(card.energyCards?.length){const attached=document.createElement('div');attached.className='discard-grid attached-image-gallery';attached.innerHTML=card.energyCards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}">${cardArt(c)}</div>`).join('');$('sheet-content').append(attached);}
@@ -297,7 +308,7 @@ window.PokecaMobileBuild='247';
   function scopedStates(playerId){return port.getStatusView().filter(s=>s.scope==='PLAYER'?s.playerId===playerId:s.scope==='FIELD'&&(!s.playerIds || s.playerIds.includes(playerId)));}
   function scopedStateDetail(playerId){openSheet((playerId==='you'?'自分':'相手')+'側・場の制限',scopedStates(playerId).map(effectRow).join('') || '<p>現在有効な制限はありません。</p>');}
   function addHandActions(id,container){const card=getCard(id)?.card;
-    if(view().referenceEffectValidation){for(const option of port.getHandOptions('you',id)){const check=option.ok;container.append(button(option.label,()=>{void resolveOption(option);},{disabled:!check}));if(!check)container.append(button('停止・使用制限の理由',()=>openSheet('効果の検証結果',(option.errors||[]).map(e=>'<p>'+esc(e)+'</p>').join(''))));}return;}
+    if(view().referenceEffectValidation){for(const option of [...port.getHandOptions('you',id)].sort((a,b)=>Number(b.ok)-Number(a.ok))){const check=option.ok;container.append(button(option.label,()=>{void resolveOption(option);},{disabled:!check}));if(!check)container.append(button('停止・使用制限の理由',()=>openSheet('効果の検証結果',(option.errors||[]).map(e=>'<p>'+esc(e)+'</p>').join(''))));}return;}
     if(card?.cardType==='SUPPORTER'){
       const a={type:'play_supporter',cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
       if(search){
@@ -343,7 +354,7 @@ window.PokecaMobileBuild='247';
   function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind!=='retreat')){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    for(const option of options.filter(o=>o.kind!=='retreat').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -530,7 +541,7 @@ window.PokecaMobileBuild='247';
       list.innerHTML='';
       slots.forEach((id,i)=>{
         const b=document.createElement('button');b.className='discard-card';b.style.cssText='min-height:90px;cursor:pointer;'+(chosen.has(i)?'outline:3px solid #2b7653;':'');
-        b.textContent=id?'サイド '+(i+1)+(chosen.has(i)?' ✓':''):'取得済み';b.disabled=!id;
+        b.innerHTML=id?'<img class="prize-pick-back" src="ui/card-back.svg" alt=""><span>サイド '+(i+1)+(chosen.has(i)?' ✓':'')+'</span>':'取得済み';b.disabled=!id;b.setAttribute('aria-label',id?'サイド '+(i+1):'取得済み');
         b.onclick=()=>{if(chosen.has(i))chosen.delete(i);else if(chosen.size<pending.count)chosen.add(i);paint();};
         list.appendChild(b);
       });
