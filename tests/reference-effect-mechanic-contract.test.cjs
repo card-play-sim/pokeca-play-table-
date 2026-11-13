@@ -62,6 +62,8 @@ const countRequest={key:'count',candidates:[{id:'x'},{id:'y'}],min:0,max:2,depen
 assert.equal(selections.resolve(countRequest,[dependent[0],countRequest],{source:['a']}).min,2,'dependent count must apply');
 assert.throws(()=>selections.resolve({...countRequest,candidates:[{id:'x'}]},[dependent[0],countRequest],{source:['a']}),/IMPOSSIBLE_SELECTION_COUNT/);
 assert.throws(()=>selections.resolve({...countRequest,dependencies:[{kind:'countFromSelection',key:'source',threshold:-1,count:2}]},[dependent[0],countRequest],{source:['a']}),/INVALID_SELECTION_COUNT_RULE/);
+assert.equal(selections.allows([{id:'a',kind:'energy'}],['a'],[{kind:'maxWhen',field:'kind',equals:'energy',max:-1}]),false,'negative conditional max must be rejected');
+assert.equal(selections.allows([{id:'a',kind:'energy'}],['a'],[{kind:'maxWhen',field:'kind',equals:'energy',max:1}]),true,'valid conditional max must remain legal');
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))
