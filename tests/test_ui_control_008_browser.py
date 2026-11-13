@@ -66,8 +66,16 @@ async def main():
   await page.locator('#self-hand .card').tap();await page.locator('#hand-actions button:enabled').first.tap();await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap()
   await page.wait_for_function('PokecaMobile.port.getSnapshot().players[1].active.energyCards.length===0');assert await page.locator('#opponent-active .attached-energy-chip').count()==0
   await page.locator('[data-zone="discard"][data-zone-owner="you"]').tap();await zoom('[data-gallery-card-id]');await page.locator('#sheet-close').tap()
+  # Empty deck and taken prize slots are presentation of canonical state, not rules.
+  await page.evaluate('()=>{const g=PokecaMobile.port.getSnapshot(),p=g.players[0];p.discard.push(...p.deck.splice(0));p.prizeSlots=p.prizeCards.map(c=>c.id);p.prizeSlots[1]=null;p.prizeSlots[4]=null;p.hand.push(...p.prizeCards.splice(4,1),...p.prizeCards.splice(1,1));p.prizes=4;const r=PokecaMobile.port.loadGame(g);if(!r.ok)throw Error(JSON.stringify(r));}')
+  assert await page.locator('[data-zone-owner="you"].deck.zone-empty strong').inner_text()=='0'
+  assert await page.locator('[data-zone-owner="you"].prize .prize-position.taken').count()==2
+  before=await snap();await page.locator('#demo-open').tap();await page.locator('#reference-match-choices button').first.tap();await page.locator('#confirm-ok').tap();await page.locator('#opening-start').wait_for()
+  assert await page.locator('[data-opening-card]').count()==7
+  await zoom('#opening-choices .discard-card:first-child');assert await page.locator('#opening-start').is_disabled();assert await snap()==before
+  await page.locator('#sheet-close').tap()
   assert not errors,errors
-  report={'url':page.url,'cases':reports,'physicalEnergyAttachMoveDiscard':True,'handAbilityDOM':True,'saveReloadExact':True,'galleryZoom':True,'javascriptErrors':errors,'physicalAndroidVerified':False}
+  report={'url':page.url,'cases':reports,'physicalEnergyAttachMoveDiscard':True,'handAbilityDOM':True,'saveReloadExact':True,'galleryZoom':True,'openingZoomNoPlacement':True,'emptyDeckAndTakenPrizes':True,'javascriptErrors':errors,'physicalAndroidVerified':False}
   (ROOT/'artifacts/ui-control-008-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False),flush=True);await b.close()
 if __name__=='__main__':
  try:asyncio.run(main())

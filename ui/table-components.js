@@ -10,7 +10,7 @@
   function open(el){const images=[...el.querySelectorAll('img')].filter(i=>!i.hidden);content.replaceChildren();for(const image of images){const copy=image.cloneNode(true);copy.removeAttribute('id');content.append(copy);}if(!images.length){const fallback=el.querySelector('.card-fallback');content.append(fallback?fallback.cloneNode(true):doc.createTextNode(el.getAttribute('aria-label')||'カード画像なし'));}doc.getElementById('card-zoom-title').textContent=el.dataset.cardName||el.getAttribute('aria-label')||images[0]?.alt||'カード拡大';until=Date.now()+800;held=true;if(!dialog.open)dialog.showModal();}
   doc.getElementById('card-zoom-close').onclick=()=>dialog.close();
   dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
-  doc.addEventListener('pointerdown',e=>{if(e.button!==0)return;const el=e.target.closest('[data-gallery-card-id],.opening-card-art,#stadium-art,.fixed-image-card');if(!el||!el.querySelector('img,.card-fallback'))return;origin={x:e.clientX,y:e.clientY};timer=setTimeout(()=>open(el),480);},true);
+  doc.addEventListener('pointerdown',e=>{if(e.button!==0)return;const el=e.target.closest('.discard-card,.detail-art,.opening-card-art,#stadium-art,.fixed-image-card');if(!el||!el.querySelector('img,.card-fallback'))return;origin={x:e.clientX,y:e.clientY};timer=setTimeout(()=>open(el),480);},true);
   doc.addEventListener('pointermove',e=>{if(origin&&Math.hypot(e.clientX-origin.x,e.clientY-origin.y)>8)cancel();},true);
   doc.addEventListener('pointerup',()=>{cancel();if(held){until=Date.now()+700;held=false;}},true);doc.addEventListener('pointercancel',cancel,true);
   doc.addEventListener('click',e=>{if(Date.now()<until&&!e.target.closest('#card-zoom')){e.preventDefault();e.stopImmediatePropagation();}},true);
