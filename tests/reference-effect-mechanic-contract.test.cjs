@@ -40,6 +40,14 @@ for(const [mechanic,minPrints] of Object.entries({
  assert(entry&&entry.prints.size>=minPrints,
   'shared mechanic coverage lost: '+mechanic);
 }
+// Shared selection constraints are consumed by Rule Engine, AI legality and UI.
+// Invalid dependent limits must fail closed rather than yield Infinity/NaN.
+const selections=require('../engine/pokeca_selection_constraints.cjs');
+const dependent=[{key:'source',candidates:[{id:'a',available:4}]},{key:'target',candidates:[{id:'b'}],min:0,max:6,dependencies:[{kind:'maxFromSelection',key:'source',field:'available',divisor:2}]}];
+assert.equal(selections.resolve(dependent[1],dependent,{}).max,6,'empty source selection must preserve max');
+assert.equal(selections.resolve(dependent[1],dependent,{source:['a']}).max,2,'dependent max must be bounded');
+assert.throws(()=>selections.resolve({...dependent[1],dependencies:[{kind:'maxFromSelection',key:'source',field:'available',divisor:0}]},dependent,{source:['a']}),/INVALID_SELECTION_DIVISOR/);
+assert.throws(()=>selections.resolve(dependent[1],[{key:'source',candidates:[{id:'a',available:-1}]},dependent[1]],{source:['a']}),/INVALID_SELECTION_LIMIT/);
 const report={schemaVersion:1,kind:'reference-mechanic-contract',
  referencePrints:catalog.records.length,adoptedPrints:catalog.adoptedDeckPrints,
  mechanics:Object.fromEntries([...byMechanic].sort(([a],[b])=>a.localeCompare(b))
