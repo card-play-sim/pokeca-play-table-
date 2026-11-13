@@ -144,10 +144,22 @@
     42627154932,
     42627154833,
     42627122823,
-    42627122759
+    42627122759,
+    42626981505,
+    42626981461,
+    42623615970,
+    42623615863,
+    42623273786,
+    42623273697,
+    42623135076,
+    42623135070,
+    42622942374,
+    42622849434,
+    42622682829,
+    42622569699
   ],
-  "runArtifactListingVerified": 142,
-  "remainingRunCount": 441,
+  "runArtifactListingVerified": 154,
+  "remainingRunCount": 429,
   "verifiedArtifactDownloads": [
     {
       "id": 13675144927,
@@ -370,6 +382,46 @@
         "candidate-evidence-audit.json"
       ],
       "catalogFound": false
+    },
+    {
+      "runId": 42626981461,
+      "id": 13679330387,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "runId": 42623615863,
+      "id": 13677079276,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "runId": 42623273697,
+      "id": 13676009749,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
+    },
+    {
+      "runId": 42623135070,
+      "id": 13677179105,
+      "zipMembers": [
+        "evidence-inventory.json",
+        "fixed45-crosscheck.json",
+        "candidate-evidence-audit.json"
+      ],
+      "catalogFound": false
     }
   ],
   "observedArtifacts": [
@@ -496,6 +548,26 @@
     {
       "runId": 42627154833,
       "id": 13679981021,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "runId": 42626981461,
+      "id": 13679330387,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "runId": 42623615863,
+      "id": 13677079276,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "runId": 42623273697,
+      "id": 13676009749,
+      "name": "official-effect-evidence-inventory"
+    },
+    {
+      "runId": 42623135070,
+      "id": 13677179105,
       "name": "official-effect-evidence-inventory"
     }
   ],
