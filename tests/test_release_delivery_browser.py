@@ -13,13 +13,13 @@ async def main():
   await page.goto(url);await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
   # A reload with an active controller proves that these runtime bytes come from its release.
   await page.reload();await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
-  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]=='246' for k in ('htmlBuild','mobileBuild','controllerBuild'))
+  status=await page.evaluate('PokecaUpdateStatus');assert all(status[k]=='247' for k in ('htmlBuild','mobileBuild','controllerBuild'))
   assert await page.locator('#demo-open').inner_text()=='固定デッキ対戦'
   cached=await page.evaluate("""async()=>{const c=await caches.open(PokecaUpdateStatus.cacheName),out={};for(const path of Object.keys(PokecaUpdateStatus.releaseFiles)){const r=await c.match(new URL(path,location.href));out[path]=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await r.arrayBuffer())),b=>b.toString(16).padStart(2,'0')).join('');}return out;}""")
   assert cached==status['releaseFiles']
   served={}
   direct=await b.new_context(service_workers='block');raw_page=await direct.new_page()
-  for path in ('index.html','ui/mobile.js?build=246','ui/app-update.js?build=246','sw.js'):
+  for path in ('index.html','ui/mobile.js?build=247','ui/app-update.js?build=247','sw.js'):
    r=await raw_page.goto(url+path,wait_until='domcontentloaded');assert r.status==200
    digest=hashlib.sha256(await r.body()).hexdigest();assert digest==hashlib.sha256((ROOT/path.split('?')[0]).read_bytes()).hexdigest(),path
    served[path]={'sha256':digest,'headers':r.headers}
