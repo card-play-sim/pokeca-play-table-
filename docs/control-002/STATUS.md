@@ -61,3 +61,9 @@ unapproved-contract boundary; ordinary evolution restrictions are retained.
 
 Formal 1945 DB, fixed decks, image registry, approved core modules and save schema
 are unchanged. Chromium Pixel 5 emulation is not physical Android verification.
+
+Selection candidate stage flags are projected from the verified reference facts,
+not editable snapshot hints. A regression test changes a deck evolution's Basic
+hint and verifies that a forbidden two-card selection is rejected atomically and
+the UI candidate still carries the official stage. This guards both the shared
+selector and authoritative runtime checks without modifying the saved card.
