@@ -1,0 +1,13 @@
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const {spawnSync} = require("node:child_process");
+const source = fs.readFileSync("scripts/continue-official-effect-intake.py","utf8");
+const parsed = spawnSync("python",["-c","import ast,sys; ast.parse(sys.stdin.read())"],{input:source,encoding:"utf8"});
+assert.equal(parsed.status,0,parsed.stderr);
+assert.match(source,/--retry-transient/);
+assert.match(source,/blocked\[i\]\.get\('reason'\)=='COLLECTOR_EXCEPTION'/);
+assert.match(source,/blocked\[i\]\.get\('attempts',1\)<2/);
+assert.match(source,/old\.get\('attempts',0\)\+1/);
+assert.match(source,/fcntl\.LOCK_EX\|fcntl\.LOCK_NB/);
+console.log("Bounded transient intake retry syntax and guard regression PASS");

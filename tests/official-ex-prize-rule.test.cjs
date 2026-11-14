@@ -23,7 +23,7 @@ for (const id of ['44365', '44379', '44381', '44387']) {
 }
 // Official evolution chains may mix ev_on/ev_off and whitespace after the div tag.
 // Only the direct chain is accepted; alternative evolution branches remain excluded.
-for (const [id, evolvesFrom, stage] of [['44392','ガバイト',2], ['44401','ガバイト',2], ['49715','キルリア',1], ['50557','タマタマ',1]]) {
+for (const [id, evolvesFrom, stage] of [['44392','ガバイト',2], ['44401','ガバイト',2], ['49715','ラルトス',1], ['50557','タマタマ',1]]) {
   const proof = JSON.parse(fs.readFileSync(`data/effect-extensions/evidence/${id}.json`, 'utf8'));
   const card = parse(proof.html);
   assert.equal(card.facts.stage, stage, id);
