@@ -11,7 +11,7 @@ def node(*args):
  if r.returncode:raise RuntimeError(r.stderr[-3000:] or r.stdout[-3000:])
  return r.stdout
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--max-tasks',type=int,default=10000);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--retry-transient',action='store_true',help='Retry only collector exceptions, at most twice per ID');p.add_argument('--max-tasks',type=int,default=10000);a=p.parse_args()
  assert 1<=a.limit<=10000 and a.max_tasks>0
  folder=ROOT/'data/official-effect-intake';folder.mkdir(exist_ok=True)
  file=folder/'checkpoint.json';prior=json.loads(file.read_text()) if file.exists() else {'schemaVersion':1,'records':[],'blocked':[]}
@@ -19,7 +19,7 @@ def main():
  base=json.loads((ROOT/'data/reference-effects/catalog.json').read_text());ext=json.loads((ROOT/'data/effect-extensions/intake.json').read_text());adopted={r['officialCardId'] for r in base['records']+ext['records']}
  ids=json.loads(Path(a.ids).read_text()) if a.ids else [r['officialCardId'] for r in json.loads((ROOT/'data/official-image-registry.json').read_text())['cards']]
  ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 4<=len(i)<=8 for i in ids)
- pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked)][:a.limit]
+ pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked or (a.retry_transient and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' and blocked[i].get('attempts',1)<2))][:a.limit]
  def collect(i):
   # Existing saved official HTML is preferred, including previously unparsed pages.
   path=ROOT/f'data/effect-extensions/evidence/{i}.json'
@@ -37,7 +37,10 @@ def main():
  def persist(r):
   if r['status']=='FETCHED':
    row=r['record'];records[row['officialCardId']]=row;blocked.pop(row['officialCardId'],None)
-  else:blocked[r['officialCardId']]=r
+  else:
+   old=blocked.get(r['officialCardId'],{})
+   if r.get('reason')=='COLLECTOR_EXCEPTION':r={**r,'attempts':old.get('attempts',0)+1}
+   blocked[r['officialCardId']]=r
   C.save(file,{'schemaVersion':1,'records':list(records.values()),'blocked':list(blocked.values())})
  for r in results:persist(r)
  def collect_network(i):
@@ -54,7 +57,7 @@ def main():
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
  output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)
- print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
+ print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'transientRetries':sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending),'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
 if __name__=='__main__':
  import fcntl
  (ROOT/'work').mkdir(exist_ok=True)
