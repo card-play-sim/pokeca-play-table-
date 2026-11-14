@@ -1,4 +1,5 @@
 'use strict';
+if(process.argv.includes('--batch')){require('./lib/shared-effect-batch.cjs').chooseCLI(process.argv.slice(2));}else{
 // Resolve stable task IDs without accidentally executing a different task from another source.
 const fs=require('node:fs'),path=require('node:path');
 const [id,out,...sources]=process.argv.slice(2);
@@ -55,3 +56,5 @@ for(const item of found.slice(1)){
 fs.mkdirSync(path.dirname(path.resolve(out)),{recursive:true});
 fs.writeFileSync(out,JSON.stringify(primary.batch,null,2)+'\n');
 console.log('CODEX_TASK_SOURCE_SELECTED:',JSON.stringify({taskId:id,source:primary.source,sourceCount:found.length}));
+
+}

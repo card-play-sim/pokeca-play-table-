@@ -1,0 +1,36 @@
+name: Shared effect batch processing
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  batch-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Preserve single-task compatibility and official evidence gates
+        run: |
+          node tests/select-codex-shared-effect-task.test.cjs
+          node tests/choose-codex-shared-effect-source.test.cjs
+          node tests/official-effect-codex-batch.test.cjs
+          node tests/reference-official-effect-evidence-export.test.cjs
+      - name: Verify bulk classification, crash recovery and failure isolation
+        run: node tests/control-011-batch-queue.test.cjs
+      - name: Verify registered effects through real engine, AI and save restore
+        run: node tests/control-011-engine-batch.test.cjs
+      - name: Verify unchanged engine and PWA artifacts
+        run: |
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: control-011-batch-evidence
+          path: test-results/control-011*.json
+          if-no-files-found: warn
