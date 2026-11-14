@@ -17,6 +17,6 @@ for (const id of ['44365', '44379', '44381', '44387']) {
   const proof = JSON.parse(fs.readFileSync(`data/effect-extensions/evidence/${id}.json`, 'utf8'));
   const card = parse(proof.html);
   assert.equal(card.category, 'pokemon', id);
-  assert.ok(card.attacks.some(attack => /^\\d+\\+$/.test(attack.damage)), id);
+  assert.ok(card.attacks.some(attack => /^\d+\+$/.test(attack.damage)), id);
 }
 console.log('official ex prize rule: PASS');
