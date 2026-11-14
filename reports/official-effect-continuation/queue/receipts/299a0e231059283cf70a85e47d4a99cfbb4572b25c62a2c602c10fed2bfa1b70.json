@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FBC69480B8FA9312:7427a722bbf55faad906a561acc9f280151b3c123345b2edbe4189c0466c7841",
   "taskFingerprint": "7427a722bbf55faad906a561acc9f280151b3c123345b2edbe4189c0466c7841",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "21acdc13-ea6f-41da-9993-335104285b0b",
+  "executionFingerprint": "95650adce18b5fda0249019de0c69ffe5b8d11f851bc0d2937c18a0b45bca302",
+  "attemptId": "44d43c59-9230-4074-86e1-7ca8e3ca5359",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -15,8 +15,15 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45351:attack:ジェミニレーザー:0",
@@ -29,8 +36,15 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50452:attack:かけぬける:0",
@@ -43,5 +57,5 @@
       }
     ]
   },
-  "checksum": "54884d4fa80222fea72dc4e07edb5f7d4d0897084a12fdcf4f34073daf4b6e50"
+  "checksum": "0d53da1f7a15b76b88b12355f50b3afebfe1b31de3848c65629603eb09c6f9df"
 }

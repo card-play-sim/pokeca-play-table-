@@ -69,10 +69,15 @@ if (fixtures.length < (requested.size ? requested.size * perPattern : 5))
   throw Error("INSUFFICIENT_INTAKE_VERIFICATION_CASES");
 B.atomic(prefix + "/browser-fixtures.json", fixtures);
 const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json")),
-  manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
-    fixed,
-    fixtures.slice(0, 8).map((f) => f.r),
-  );
+  manifestBase =
+    require("../tests/fixtures/control-009-extension-manifest.cjs")(
+      fixed,
+      fixtures.slice(0, 8).map((f) => f.r),
+    );
+const manifest = require("../tests/fixtures/expanded-energy-manifest.cjs")(
+  manifestBase,
+  records,
+);
 B.atomic(prefix + "/example-decks.json", manifest);
 console.log(
   JSON.stringify({

@@ -1,0 +1,59 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_3FAD2233AA1BB3F2:9b19cc571cf0af13d2b9f8d6519aef843f7db5345e5f0658140bd03b0d7da1c8",
+  "taskFingerprint": "9b19cc571cf0af13d2b9f8d6519aef843f7db5345e5f0658140bd03b0d7da1c8",
+  "executionFingerprint": "95650adce18b5fda0249019de0c69ffe5b8d11f851bc0d2937c18a0b45bca302",
+  "attemptId": "6fd128b7-8a3a-4cec-ace3-4c3c7a8da2f0",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "44968:energy:リバーサルエネルギー:0",
+        "mechanic": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45340:energy:リバーサルエネルギー:0",
+        "mechanic": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45393:energy:リバーサルエネルギー:0",
+        "mechanic": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "8e314ed857460184abc881a260ea11b5eaa58d3bf204f1c46ecefaac2e985156"
+}

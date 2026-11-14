@@ -1,5 +1,5 @@
 """New effect families via public DOM, persistent game state and offline restart."""
-import asyncio,json,os,subprocess,traceback
+import asyncio,json,os,re,subprocess,traceback
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
@@ -23,11 +23,12 @@ async def main():
    before=await snap();option=f['option'];assert option
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
    if f['kind'] in ('attack','ability'):
-    await page.locator(f'#self-active [data-card-id="{ident}"]').tap();await page.locator(f'#pokemon-actions [data-action-kind="{f["kind"]}"]').first.tap()
+    await page.locator(f'#self-active [data-card-id="{ident}"]').tap();await page.get_by_role('button',name=re.compile(('^ワザ · ' if f['kind']=='attack' else '^特性 · ')+re.escape(f['e']['name'])+r'(?:\s|$)')).first.tap()
    elif r['category']=='stadium':
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
    else:await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
-   if r['category']=='tool':await page.locator(f'#self-active [data-card-id="{option["action"]["targetInstanceId"]}"]').tap()
+   if r['category']=='energy':await page.locator(f'#self-active [data-card-id="{before["players"][0]["active"]["id"]}"]').tap()
+   elif r['category']=='tool':await page.locator(f'#self-active [data-card-id="{option["action"]["targetInstanceId"]}"]').tap()
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     for req in option.get('requests',[]):
@@ -37,19 +38,36 @@ async def main():
     for req in option.get('requests',[]):
      for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):await page.locator(f'[data-selection-id="{target}"]').tap()
      await page.locator('#selection-confirm').tap()
-   if await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
+   if f['kind'] in ('attack','ability'):await page.locator('#confirm-ok').tap()
+   elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
+   if r['category']=='energy':
+    assert any(c0['id']==ident for c0 in after['players'][0]['active']['energyCards'])
+    if m=='CONDITIONAL_EVOLVED_ENERGY':assert len(after['players'][0]['active']['energies'])==f['e']['plan']['bonusUnits']
+   if m=='ABILITY_ATTACH_SELF_DRAW':assert len(after['players'][0]['active']['energyCards'])==len(before['players'][0]['active']['energyCards'])+1 and after['players'][0]['normalEnergyAttached']==before['players'][0]['normalEnergyAttached']
+   if m=='ATTACK_BENCH_BASICS':assert all(any(c0['id']==id0 for c0 in after['players'][0]['bench']) for id0 in option['action']['selections']['cards'])
+   if m=='ATTACK_DISCARD_DECK_TOP':assert all(any(c0['id']==d['id'] for c0 in after['players'][1]['discard']) for d in before['players'][1]['deck'][:f['e']['plan']['amount']])
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):
     after=await snap()
-    if after['status']=='finished' or after['turnPlayer']=='you':break
+    if after['status']=='finished':break
+    choice=after.get('pendingReferenceChoice');prizes=after.get('pendingPrizeSelection')
+    if prizes and prizes['playerId']=='you':
+     player=after['players'][0];slots=[i for i,v in enumerate(player['prizeSlots']) if v][:prizes['count']]
+     for slot in slots:await page.get_by_role('button',name='サイド '+str(slot+1),exact=True).tap()
+     await page.get_by_role('button',name='選んだサイドを手札に加える',exact=True).tap();continue
+    if choice and choice['playerId']=='you':await page.locator('#reference-choice button').first.tap();continue
+    if not choice and not prizes and after['turnPlayer']=='you':break
     result=await page.evaluate('async()=>{const r=await Pokeca.runAITurn(PokecaMobile.port,"ai",{maxActions:80});return {ok:r.ok,stage:r.stage};}');assert result['ok'],result
    after=await snap()
-   await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
+   await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();restored=await snap()
+   if restored!=after:
+    (ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/'artifacts/restore-diff.json').write_text(json.dumps({'print':r['officialCardId'],'before':after,'restored':restored},ensure_ascii=False))
+   assert restored==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
   # Start the expanded decks through the real import/manual-opening UI, then use
   # the same canonical AI port for both players through victory, not fixture damage.

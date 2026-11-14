@@ -82,7 +82,8 @@ const registryHash = B.hash(
   JSON.stringify(compiled.records) +
     B.hash(fs.readFileSync("ui/engine.bundle.js")) +
     B.hash(fs.readFileSync("scripts/lib/shared-effect-engine-worker.cjs")) +
-    B.hash(fs.readFileSync("tests/fixtures/control-005-scenarios.js")),
+    B.hash(fs.readFileSync("tests/fixtures/control-005-scenarios.js")) +
+    B.hash(fs.readFileSync("tests/fixtures/expanded-energy-manifest.cjs")),
 );
 const repair =
   previous.registryHash === registryHash
@@ -165,16 +166,24 @@ const report = {
   compilerBlocked: compiled.blocked,
   // Preserve a stable, cross-card repair priority list without adopting unknown effects.
   blockerSummary: {
-    fetch: Object.entries(raw.blocked.reduce((counts, row) => {
-      const reason = row.reason || "UNKNOWN";
-      counts[reason] = (counts[reason] || 0) + 1;
-      return counts;
-    }, {})).map(([reason, count]) => ({reason, count})).sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
-    compiler: Object.entries(compiled.blocked.reduce((counts, row) => {
-      const reason = row.reason || "UNKNOWN";
-      counts[reason] = (counts[reason] || 0) + 1;
-      return counts;
-    }, {})).map(([reason, count]) => ({reason, count})).sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
+    fetch: Object.entries(
+      raw.blocked.reduce((counts, row) => {
+        const reason = row.reason || "UNKNOWN";
+        counts[reason] = (counts[reason] || 0) + 1;
+        return counts;
+      }, {}),
+    )
+      .map(([reason, count]) => ({ reason, count }))
+      .sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
+    compiler: Object.entries(
+      compiled.blocked.reduce((counts, row) => {
+        const reason = row.reason || "UNKNOWN";
+        counts[reason] = (counts[reason] || 0) + 1;
+        return counts;
+      }, {}),
+    )
+      .map(([reason, count]) => ({ reason, count }))
+      .sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
   },
   queue: queue.run,
   resumeCommand:

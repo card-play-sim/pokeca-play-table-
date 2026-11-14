@@ -11,7 +11,7 @@ def node(*args):
  if r.returncode:raise RuntimeError(r.stderr[-3000:] or r.stdout[-3000:])
  return r.stdout
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--max-tasks',type=int,default=10000);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--reparse-saved',action='store_true');p.add_argument('--max-tasks',type=int,default=10000);a=p.parse_args()
  assert 1<=a.limit<=10000 and a.max_tasks>0
  folder=ROOT/'data/official-effect-intake';folder.mkdir(exist_ok=True)
  file=folder/'checkpoint.json';prior=json.loads(file.read_text()) if file.exists() else {'schemaVersion':1,'records':[],'blocked':[]}
@@ -19,7 +19,7 @@ def main():
  base=json.loads((ROOT/'data/reference-effects/catalog.json').read_text());ext=json.loads((ROOT/'data/effect-extensions/intake.json').read_text());adopted={r['officialCardId'] for r in base['records']+ext['records']}
  ids=json.loads(Path(a.ids).read_text()) if a.ids else [r['officialCardId'] for r in json.loads((ROOT/'data/official-image-registry.json').read_text())['cards']]
  ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 4<=len(i)<=8 for i in ids)
- pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked)][:a.limit]
+ pending=[i for i in ids if ((a.reparse_saved and (ROOT/f'data/effect-extensions/evidence/{i}.json').exists()) or (i not in adopted and i not in records and (a.retry_blocked or i not in blocked)))][:a.limit]
  def collect(i):
   # Existing saved official HTML is preferred, including previously unparsed pages.
   path=ROOT/f'data/effect-extensions/evidence/{i}.json'
@@ -29,7 +29,7 @@ def main():
    return collect_saved(i)
   return C.collect(i)
  def collect_saved(i):
-  return C.collect(i,saved=True)
+  return C.collect(i,saved=True,reparse=a.reparse_saved)
  results=[];saved=[i for i in pending if (ROOT/f'data/effect-extensions/evidence/{i}.json').exists()];network=[i for i in pending if i not in saved]
  for i in saved:
   try:results.append(collect(i))

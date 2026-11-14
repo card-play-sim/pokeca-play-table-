@@ -43,6 +43,8 @@ const fileDigests = [
   "tests/fixtures/control-005-scenarios.js",
   "tests/fixtures/control-009-scenarios.cjs",
   "tests/fixtures/control-010-scenarios.cjs",
+  "tests/fixtures/expanded-energy-manifest.cjs",
+  "tests/fixtures/control-009-extension-manifest.cjs",
   "data/fixed-test-decks.json",
   "data/effect-extensions/compiled.json",
 ].map((p) => [p, B.hash(fs.readFileSync(p))]);
@@ -145,6 +147,16 @@ function prepare(r, e, kind) {
         fixed,
         [r],
       );
+  if (
+    !E.getReferenceEffectCatalog().records.some(
+      (b) => b.officialCardId === r.officialCardId,
+    )
+  )
+    manifest = require("../../tests/fixtures/expanded-energy-manifest.cjs")(
+      manifest,
+      [...records.values()],
+      r.deckName,
+    );
   for (const d of manifest.decks)
     for (const card of d.cards)
       if (card.name === r.deckName)
@@ -152,6 +164,8 @@ function prepare(r, e, kind) {
   const locations = manifest.decks.flatMap((d, i) =>
     d.cards.filter((c) => c.name === r.deckName).map(() => ({ deck: i })),
   );
+  if (m === "CONDITIONAL_EVOLVED_ENERGY")
+    locations.sort((a, b) => b.deck - a.deck);
   if (!locations.length) return { blocked: "NO_VERIFICATION_DECK_ADAPTER" };
   const row = {
     cardName: r.deckName,
@@ -178,6 +192,19 @@ function prepare(r, e, kind) {
   if (m === "HEAL_SELF_ATTACK")
     frame.game.players[0].active.damage = Math.min(
       40,
+      frame.game.players[0].active.hp - 10,
+    );
+  if (m === "ABILITY_ATTACH_SELF_DRAW") {
+    const p = frame.game.players[0],
+      i = p.deck.findIndex(
+        (c) =>
+          c.kind === "energy" && !c.isSpecial && c.energyType === e.plan.type,
+      );
+    if (i >= 0) p.hand.push(p.deck.splice(i, 1)[0]);
+  }
+  if (m === "DAMAGE_BY_OWN_COUNTERS")
+    frame.game.players[0].active.damage = Math.min(
+      30,
       frame.game.players[0].active.hp - 10,
     );
   if (m === "RECOVER_TYPED_DISCARD") {

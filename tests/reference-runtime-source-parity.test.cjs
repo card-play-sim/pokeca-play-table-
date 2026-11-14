@@ -27,8 +27,10 @@ const contract=[
  "case 'DECK_ENERGY_TO_GRASS_BENCH':",
  "assert(x===undefined||Array.isArray(x),'INVALID_REFERENCE_SELECTION_TYPE:'+key);"
 ];
+// Structural guards tolerate source formatting; bundle byte parity is checked separately.
+const normalized=s=>s.replace(/\s+/g,'').replace(/'/g,'"').replace(/,(?=[)\]])/g,'').replace(/\(([A-Za-z_$][\w$]*)\)=>/g,'$1=>');
 for(const token of contract){
- assert(source.includes(token),'canonical source lacks '+token);
- assert(embedded.includes(token),'generated bundle lacks '+token);
+ assert(normalized(source).includes(normalized(token)),'canonical source lacks '+token);
+ assert(normalized(embedded).includes(normalized(token)),'generated bundle lacks '+token);
 }
 console.log('PASS canonical runtime and generated bundle share all new effect mechanics');

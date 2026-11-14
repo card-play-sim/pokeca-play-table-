@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_31CB79CD589A598E:0d8cb6d4e4c7bccac944162404e3e4e632116ffe49f971fa7aa6412b96fca5bc",
   "taskFingerprint": "0d8cb6d4e4c7bccac944162404e3e4e632116ffe49f971fa7aa6412b96fca5bc",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "0b61d553-1267-4491-a37c-0ec8548baa4b",
+  "executionFingerprint": "95650adce18b5fda0249019de0c69ffe5b8d11f851bc0d2937c18a0b45bca302",
+  "attemptId": "10a675af-dafd-433d-8529-3d2228ae1013",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -16,13 +16,35 @@
       },
       {
         "slot": "46257:attack:ほるほる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_DECK_TOP",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46410:attack:ふみならす:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_DECK_TOP",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47344:attack:やまどつき:1",
@@ -31,8 +53,19 @@
       },
       {
         "slot": "47441:attack:やまかじり:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_DECK_TOP",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47772:attack:やまくずし:0",
@@ -41,5 +74,5 @@
       }
     ]
   },
-  "checksum": "48041c999be6db234e5cd35cb34812b742c1e1efa7b1d2caf868007e67abbe1e"
+  "checksum": "b0450e0f16cf6e7ff53cc47dae89d44f59a6bb6f7544aaa083e798ec58514f44"
 }
