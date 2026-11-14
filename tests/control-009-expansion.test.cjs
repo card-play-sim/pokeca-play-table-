@@ -19,7 +19,7 @@ for(const r of F.records.filter(r=>r.category==='supporter'))test(r.officialCard
 for(const r of F.records.filter(r=>r.mainPlan.mechanic==='RECOVER_BASIC_ENERGY'))test(r.officialCardId+' recovery rejects foreign, duplicate, excessive, special, absent targets',()=>{
  const t=F.create(r.officialCardId),o=option(t),g=t.port.getSnapshot();
  const special=g.players[0].deck.find(c=>c.kind==='energy'&&c.isSpecial);assert(special);
- for(const ids of [[special.id],[g.players[1].active.id],[o.action.selections.cards[0],o.action.selections.cards[0]],[...o.action.selections.cards,g.players[0].active.id]])reject(t,{...o.action,selections:{cards:ids}});
+ for(const ids of [[],[special.id],[g.players[1].active.id],[o.action.selections.cards[0],o.action.selections.cards[0]],[...o.action.selections.cards,g.players[0].active.id]])reject(t,{...o.action,selections:{cards:ids}});
  const p=g.players[0];p.deck.push(...p.discard.splice(0));assert(t.port.loadGame(g).ok);reject(t,o.action);assert(!t.port.getHandOptions('you',t.frame.sourceId).some(o=>o.ok));
 });
 for(const r of F.records.filter(r=>r.category==='tool'))test(r.officialCardId+' evolved attachment legal without basic-only bonus',()=>{
@@ -39,6 +39,9 @@ for(const r of F.records.filter(r=>r.category==='tool'))test(r.officialCardId+' 
 });
 for(const r of F.records.filter(r=>r.category==='supporter'))test(r.officialCardId+' discard/draw keeps physical identities with a short deck',()=>{
  const t=F.create(r.officialCardId),g=t.port.getSnapshot(),p=g.players[0];p.discard.push(...p.deck.splice(1));assert(t.port.loadGame(g).ok);const before=t.port.getSnapshot(),o=option(t);assert(o);assert(t.port.dispatch('you',o.action).ok);const after=t.port.getSnapshot();assert.equal(after.players[0].hand.length,1);assert.equal(after.players[0].deck.length,0);assert.deepEqual(t.S.identities(before),t.S.identities(after));restore(t);
+});
+test('official public recovery minimum and partial draw rulings retain raw hashes',()=>{
+ const crypto=require('node:crypto');for(const name of ['public-recovery-minimum','partial-discard-draw']){const p=require('../data/effect-extensions/rulings/'+name+'.json');assert.equal(crypto.createHash('sha256').update(p.html).digest('hex'),p.htmlSha256);assert(p.url.startsWith('https://www.pokemon-card.com/rules/faq/search.php?freeword='));const text=p.html.replace(/<[^>]*>/g,'');assert(name==='public-recovery-minimum'?text.includes('1枚以上選ぶ必要があります。'):text.includes('山札を1枚引きます。'));}
 });
 // Source parsing remains exact even when the official usage-rule footer changed between eras.
 test('new families reject wrong category, extra clauses and unsupported evolution shortcut',()=>{
