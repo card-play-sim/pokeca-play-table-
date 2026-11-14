@@ -15,6 +15,22 @@ const coverage = engine.getReferenceEffectCoverage();
 const sourceCatalog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/reference-effects/plans.json'), 'utf8'));
 const { compile } = require('../engine/reference-effect-plans.cjs');
 const expected = compile(sourceCatalog);
+const isolated = compile(sourceCatalog);
+const sameTextPlans = isolated.records.flatMap(r => [...r.attacks.map(a => a.plan), ...r.abilities.map(a => a.plan), r.mainPlan].filter(Boolean));
+const byMechanic = new Map();
+for (const plan of sameTextPlans) {
+ if (!Array.isArray(plan.commands)) continue;
+ const previous = byMechanic.get(plan.mechanic);
+ if (previous && previous.commands.join('|') === plan.commands.join('|')) {
+  assert.notStrictEqual(previous.commands, plan.commands, 'effect command arrays must not be shared across compiled cards');
+  const original = plan.commands.slice();
+  previous.commands.push('ISOLATION_PROBE');
+  assert.equal(plan.commands.join('|'), original.join('|'), 'mutating one card plan must not change another card plan');
+  previous.commands.pop();
+ }
+ byMechanic.set(plan.mechanic, plan);
+}
+
 assert.equal(catalog.records.length, expected.records.length, 'published runtime catalog must include every verified reference print');
 const bundledById = new Map(catalog.records.map(r => [String(r.officialCardId), r]));
 assert.equal(bundledById.size, catalog.records.length, 'published runtime must not duplicate print IDs');
