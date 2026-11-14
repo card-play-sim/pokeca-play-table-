@@ -11,7 +11,15 @@ from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
 ROOT=Path(__file__).resolve().parents[1]
 OLD='87b5b668';PREVIOUS='13b43222'
-BUILD=re.search(r'name="pokeca-build" content="(\d+)"',(ROOT/'index.html').read_text()).group(1)
+BUILD=re.search(r'name="pokeca-build" content="(\\d+)"',(ROOT/'index.html').read_text()).group(1)
+def assert_release_markers():
+ html=(ROOT/'index.html').read_text()
+ mobile=(ROOT/'ui/mobile.js').read_text()
+ revision=re.search(r'id="build-revision">v(\\d+)<',html)
+ runtime=re.search(r'window\\.PokecaMobileBuild=[\\\'"](\\d+)[\\\'"]',mobile)
+ assert revision and revision.group(1)==BUILD, f'PWA_VISIBLE_BUILD_MISMATCH: expected {BUILD}, found {revision.group(1) if revision else "missing"}'
+ assert runtime and runtime.group(1)==BUILD, f'PWA_MOBILE_BUILD_MISMATCH: expected {BUILD}, found {runtime.group(1) if runtime else "missing"}'
+assert_release_markers()
 PUBLIC=os.environ.get('POKECA_UPGRADE_PUBLIC_SOURCE')
 phase={'value':'old'};cached={};requests=[]
 def source(ref,path):
