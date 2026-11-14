@@ -1,0 +1,32 @@
+name: Build verified PWA v256
+on:
+  push:
+    branches:
+      - automation/release-v256-verified-pwa
+permissions:
+  contents: write
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate atomic verified service worker
+        run: node scripts/build-pwa-release.cjs
+      - name: Verify release and preserve offline install
+        run: |
+          node scripts/build-pwa-release.cjs --check
+          node tests/pwa-release.test.cjs
+      - name: Commit generated release only when changed
+        run: |
+          if ! git diff --quiet -- sw.js; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add sw.js
+            git commit -m "build: generate verified v256 PWA service worker"
+            git push origin HEAD:automation/release-v256-verified-pwa
+          fi
