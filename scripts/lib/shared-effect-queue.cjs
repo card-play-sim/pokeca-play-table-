@@ -406,6 +406,7 @@ async function run(
     maxTasks = 100,
     timeoutMs = 120000,
     retryFailed = false,
+    retryTransient = false,
     retryBlocked = false,
     recheck = false,
   } = {},
@@ -471,6 +472,10 @@ async function run(
     for (const j of Object.values(store.state.jobs))
       if (
         (retryFailed && j.status === "FAILED") ||
+        (retryTransient &&
+          j.status === "FAILED" &&
+          j.attempts < 2 &&
+          /^WORKER_(TASK_TIMEOUT|EXIT)/.test(j.summary?.reason || "")) ||
         (retryBlocked &&
           j.status === "BLOCKED" &&
           j.summary?.reason !== "PERSISTED_EVIDENCE_CONFLICT") ||
@@ -522,6 +527,15 @@ async function run(
           result,
         },
         receipt = { ...body, checksum: B.hash(JSON.stringify(body)) };
+      B.atomic(
+        path.join(
+          dir,
+          "receipts",
+          "history",
+          B.hash(j.jobId) + "-" + attempt.id + ".json",
+        ),
+        receipt,
+      );
       B.atomic(receiptPath(dir, j), receipt);
       store.append("FINISH", {
         jobId: j.jobId,

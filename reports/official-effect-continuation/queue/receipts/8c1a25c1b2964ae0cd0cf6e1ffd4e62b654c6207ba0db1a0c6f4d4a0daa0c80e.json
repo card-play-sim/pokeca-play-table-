@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_4875286416243771:bcddbc8a47b21d8093c6707feb64348162c6381292260acb48c22017913f6e02",
+  "taskFingerprint": "bcddbc8a47b21d8093c6707feb64348162c6381292260acb48c22017913f6e02",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "8563b2a5-2124-4bb3-af6c-d3a5aadce5e6",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45747:attack:エナジーフェザー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45850:attack:エナジーフェザー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46737:attack:エナジーフェザー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "6927ebe741bbab4cd4675c0b5274f1b55f02230f944e077d72b8706f3c6309fc"
+}

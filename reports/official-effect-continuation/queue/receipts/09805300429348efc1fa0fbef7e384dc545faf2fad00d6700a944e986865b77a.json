@@ -1,0 +1,42 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:4336783b4d976822cd6dfc70623611f219e52ab43d90e9fa30c8538695eed539",
+  "taskFingerprint": "4336783b4d976822cd6dfc70623611f219e52ab43d90e9fa30c8538695eed539",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "c704903d-c40e-489e-84d6-bb3728b6ce82",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44368:attack:ずっこけ:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "44430:attack:あばれハンマー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45843:attack:ハンマーウィップ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "6792cb1e1e235508fec90521f1422b219b207a6526a6ed09dc8fa333d796ec9e"
+}

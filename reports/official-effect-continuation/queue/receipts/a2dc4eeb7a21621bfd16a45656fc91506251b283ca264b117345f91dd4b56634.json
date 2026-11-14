@@ -1,0 +1,48 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_8C34CA5CA780CE8C:335434e649a8716a3c95bcddd14b30441cd915688317ebadb871aa11cce3e43a",
+  "taskFingerprint": "335434e649a8716a3c95bcddd14b30441cd915688317ebadb871aa11cce3e43a",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "536a03f1-0e09-422b-a5f5-b676cccbf524",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "48483:ability:にげあしドロー:0",
+        "mechanic": "RUN_AWAY_DRAW",
+        "commands": [
+          "DRAW",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46791:ability:にげあしドロー:0",
+        "mechanic": "RUN_AWAY_DRAW",
+        "commands": [
+          "DRAW",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "c918c35a0ea85e5297170a5efd0079ab1b20818b1c384d72f183eef2a1dffa71"
+}

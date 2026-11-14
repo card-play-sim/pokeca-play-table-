@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_1BC9BE32F792AFDF:2a7fa079931d20189253331a27b3c8acbc6707c99fd11b34ab7abc530d5849a7",
+  "taskFingerprint": "2a7fa079931d20189253331a27b3c8acbc6707c99fd11b34ab7abc530d5849a7",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "b918af3c-00ae-4cbc-9092-eb0cc032f7ed",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45601:attack:スピットシュート:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45667:attack:スピットシュート:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46534:attack:ドロップショット:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "5c9702631c1140f3f8b7c9eff7bf0722b93455d265451e50aedef8ca44135dc3"
+}

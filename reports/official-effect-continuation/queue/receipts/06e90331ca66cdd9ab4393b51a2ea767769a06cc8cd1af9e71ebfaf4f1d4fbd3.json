@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_90254B3F0760988C:401a3df52a78bcd43d90a193f26cc9614b2d03a2953ccedfbd01213c1a21deb3",
+  "taskFingerprint": "401a3df52a78bcd43d90a193f26cc9614b2d03a2953ccedfbd01213c1a21deb3",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "09650724-d9e5-4059-94d9-775df574f36f",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50156:item:スペシャルレッドカード:0",
+        "mechanic": "RED_CARD",
+        "commands": [
+          "RETURN_TO_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "2668cb039c7dbc2d3c28d721832d232d0515b9ea60ccd927217bba065df9e30f"
+}

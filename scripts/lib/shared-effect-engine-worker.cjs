@@ -83,7 +83,12 @@ function prepare(r, e, kind) {
     const t = F9.create(r.officialCardId);
     return { port: t.port, sourceId: t.frame.sourceId, kind };
   }
-  if (legacy.some((x) => x.officialCardId === r.officialCardId)) {
+  if (
+    legacy.some((x) => x.officialCardId === r.officialCardId) &&
+    JSON.stringify(
+      require("../../tests/fixtures/control-008-extension-manifest.cjs")(fixed),
+    ).includes(r.officialCardId)
+  ) {
     const manifest =
       require("../../tests/fixtures/control-008-extension-manifest.cjs")(fixed);
     let n = 2;
@@ -133,7 +138,13 @@ function prepare(r, e, kind) {
     }
     return { port: port(g), sourceId: source.id, kind };
   }
-  const manifest = JSON.parse(JSON.stringify(fixed));
+  let manifest = JSON.parse(JSON.stringify(fixed));
+  if (!manifest.decks.some((d) => d.cards.some((c) => c.name === r.deckName)))
+    manifest =
+      require("../../tests/fixtures/control-009-extension-manifest.cjs")(
+        fixed,
+        [r],
+      );
   for (const d of manifest.decks)
     for (const card of d.cards)
       if (card.name === r.deckName)
@@ -263,6 +274,7 @@ function verifyCase(t, e) {
   };
 }
 module.exports = {
+  prepare,
   version: "1",
   idempotent: true,
   contextFingerprint: B.hash(JSON.stringify(fileDigests)),

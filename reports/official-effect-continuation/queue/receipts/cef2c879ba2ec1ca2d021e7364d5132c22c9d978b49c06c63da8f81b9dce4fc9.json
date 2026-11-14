@@ -1,0 +1,29 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_5AD6BE5BAD486CBB:a437e379933fa6918c1faf227e018d3e09b7c53df41be86c7013cf814f9e1c83",
+  "taskFingerprint": "a437e379933fa6918c1faf227e018d3e09b7c53df41be86c7013cf814f9e1c83",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "0a8e205a-68fc-4ef7-9f72-85c18250be38",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "47796:stadium:危ない廃墟:0",
+        "mechanic": "RUINS",
+        "commands": [
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "90b1f4cb71a11e147e5bbb154808ffebeb4711c26b75da9fc9a662db1c8b6b5e"
+}

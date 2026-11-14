@@ -1,0 +1,55 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_47DCE632AAC87A9B:efd4b414240fcc6be85a5d45ef126fd8ef6fe1722016f61dc5f9049fc090468e",
+  "taskFingerprint": "efd4b414240fcc6be85a5d45ef126fd8ef6fe1722016f61dc5f9049fc090468e",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "24bfd719-4580-456c-921a-862ba4aead79",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45430:item:きずぐすり:0",
+        "mechanic": "HEAL_DAMAGE",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46584:item:きずぐすり:0",
+        "mechanic": "HEAL_DAMAGE",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49599:item:きずぐすり:0",
+        "mechanic": "HEAL_DAMAGE",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
+      }
+    ]
+  },
+  "checksum": "3e8ccf01679e07731dc71ff579f5f78ac44edaed65d2871e7c3ea2cd55867379"
+}

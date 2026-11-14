@@ -1,0 +1,73 @@
+name: Incremental official effect intake
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Maximum new official pages
+        default: "50"
+        required: true
+  schedule:
+    - cron: "15 20 * * *"
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: incremental-official-effect-intake
+  cancel-in-progress: false
+jobs:
+  continue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Resume only the automation-owned checkpoint branch
+        run: |
+          if git ls-remote --exit-code --heads origin automation/control-013-intake >/dev/null; then
+            git fetch origin automation/control-013-intake
+            git checkout -b automation/control-013-intake origin/automation/control-013-intake
+            git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com merge origin/main --no-edit
+          else
+            git checkout -b automation/control-013-intake
+          fi
+      - name: Collect incremental official evidence and run approved local commands
+        env:
+          INTAKE_LIMIT: ${{ inputs.limit || '50' }}
+        run: |
+          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt
+          node scripts/build-pwa-release.cjs
+          node tests/control-013-continuation.test.cjs
+          node tests/control-008-extensions.test.cjs
+          node tests/control-009-expansion.test.cjs
+          node tests/control-010-effects.test.cjs
+          node tests/control-011-engine-batch.test.cjs
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Save checkpoint and outcomes on the automation branch for review
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add data/effect-extensions data/official-effect-intake reports/official-effect-continuation ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
+            git push -u origin automation/control-013-intake
+            if [ -z "$(gh pr list --head automation/control-013-intake --json number --jq '.[0].number // empty')" ]; then
+              gh pr create --draft --base main --head automation/control-013-intake --title 'Official effect intake: incremental checkpoint for review' --body 'Incremental official HTML, compiler results and durable queue. Review test results and BLOCKED causes before merging. No model API or automatic main merge. GITHUB_TOKEN-created PRs may need a maintainer event to start PR workflows.'
+            fi
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-effect-continuation-checkpoint
+          path: |
+            data/official-effect-intake/
+            reports/official-effect-continuation/
+            test-results/control-013*.json
+          retention-days: 90

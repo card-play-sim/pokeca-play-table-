@@ -1,0 +1,44 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_29063B83652A9155:98458845e05a8eda9885a64c0a46dce27cf5340a00ce1061afb03fb7c914dae2",
+  "taskFingerprint": "98458845e05a8eda9885a64c0a46dce27cf5340a00ce1061afb03fb7c914dae2",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "0c05fa31-3e9a-4e66-b44b-ee689d0c84c5",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "44600:attack:にぎにぎドロー:0",
+        "mechanic": "HAND_LIMIT_DRAW_ATTACK",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45041:attack:にぎにぎドロー:0",
+        "mechanic": "HAND_LIMIT_DRAW_ATTACK",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "c26b2c4c2707656c7373f2e99e4ed9b90a2384d62621d944d01b64b33006338a"
+}
