@@ -20,6 +20,7 @@ def assert_release_markers():
  assert revision and revision.group(1)==BUILD, f'PWA_VISIBLE_BUILD_MISMATCH: expected {BUILD}, found {revision.group(1) if revision else "missing"}'
  assert runtime and runtime.group(1)==BUILD, f'PWA_MOBILE_BUILD_MISMATCH: expected {BUILD}, found {runtime.group(1) if runtime else "missing"}'
 assert_release_markers()
+PUBLIC=os.environ.get('POKECA_UPGRADE_PUBLIC_SOURCE')
 phase={'value':'old'};cached={};requests=[]
 def source(ref,path):
  key=(ref,path)
