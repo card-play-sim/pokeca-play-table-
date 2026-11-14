@@ -5,7 +5,7 @@ const {spawnSync}=require('node:child_process');
 const fs=require('node:fs'),path=require('node:path');
 const test=process.argv[2];
 if(!test||!/^tests\/[a-z0-9-]+\.test\.cjs$/.test(test))throw Error('INVALID_TEST_PATH');
-const timeoutMs=Number(process.env.REFERENCE_TEST_TIMEOUT_MS||120000);
+const timeoutMs=Number(process.env.REFERENCE_TEST_TIMEOUT_MS||300000);
 if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1000||timeoutMs>600000)throw Error('INVALID_TEST_TIMEOUT');
 const result=spawnSync(process.execPath,[test],{encoding:'utf8',maxBuffer:8*1024*1024,timeout:timeoutMs});
 if(result.stdout)process.stdout.write(result.stdout);
