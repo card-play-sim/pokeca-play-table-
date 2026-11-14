@@ -14,7 +14,7 @@ assert.equal(fail.exitCode,1);
 assert.equal(fail.record.causeId,'FIRST_PLAYER_FIRST_TURN_ATTACK');
 assert.equal(fail.record.test,'tests/reference-effect-runtime-smoke.test.cjs');
 assert.ok(fail.logs.join('').includes('REFERENCE_RUNTIME_FAILURE_JSON:'));
-const timeout=run(null,'','',{code:'ETIMEDOUT',message:'test exceeded 120000 ms'});
+const timeout=run(null,'','',{code:'ETIMEDOUT',message:'test exceeded 300000 ms'});
 assert.equal(timeout.exitCode,1);
 assert.equal(timeout.record.causeId,'TEST_TIMEOUT');
 const fallback=run(1,'AssertionError: ordinary mismatch');
