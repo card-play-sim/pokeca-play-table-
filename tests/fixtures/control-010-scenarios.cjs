@@ -4,8 +4,8 @@ module.exports=function(E){
  const S=vm.runInNewContext(fs.readFileSync('tests/fixtures/control-005-scenarios.js','utf8'),{console}),fixed=JSON.parse(fs.readFileSync('data/fixed-test-decks.json'));
  const records=E.getReferenceEffectCatalog({includeExtensions:true}).records.filter(r=>r.category==='pokemon'&&!E.getReferenceEffectCatalog().records.some(b=>b.officialCardId===r.officialCardId)||r.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY');
  const manifest=require('./control-009-extension-manifest.cjs')(fixed,records);manifest.decks.forEach((d,i)=>{d.id='control-010-reference-'+i;d.name='ワザ・特性・特殊エネルギー検証 '+(i+1);});
- function create(ident,kind,index=0,seed=0){
-  const r=records.find(r=>r.officialCardId===ident),effect=kind==='attack'?r.attacks[index]:kind==='ability'?r.abilities[index]:{plan:r.mainPlan},row={cardName:r.name,category:r.category,officialCardId:ident,kind,index,locations:[{deck:0}],effectId:effect.effectId,plan:effect.plan,cost:effect.cost||[],damage:effect.damage||'0'};
+ function create(ident,kind,index=0,seed=0,deck=0){
+  const r=records.find(r=>r.officialCardId===ident),effect=kind==='attack'?r.attacks[index]:kind==='ability'?r.abilities[index]:{plan:r.mainPlan},row={cardName:r.name,category:r.category,officialCardId:ident,kind,index,locations:[{deck}],effectId:effect.effectId,plan:effect.plan,cost:effect.cost||[],damage:effect.damage||'0'};
   const frame=S.create(E,manifest,row),g=frame.game,p=g.players[0];g.referenceRngState=seed;
   // Isolate baseline attack/ability tests from the separately tested special-energy modifier.
   for(const mon of [p.active,...p.bench]){p.deck.push(...mon.energyCards);mon.energyCards=[];mon.energies=[];}
