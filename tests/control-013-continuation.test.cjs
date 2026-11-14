@@ -10,7 +10,13 @@ const raw = JSON.parse(
     fs.readFileSync("data/effect-extensions/compiled.json"),
   );
 assert(raw.records.length >= 211);
-assert(raw.blocked.length >= 109);
+assert(raw.records.length + raw.blocked.length >= 1320);
+assert(
+  raw.blocked.every(
+    (b) =>
+      b.status === "BLOCKED" && typeof b.reason === "string" && b.reason.length,
+  ),
+);
 assert(compiled.records.length >= 83);
 for (const r of raw.records) {
   const proof = JSON.parse(fs.readFileSync(r.source.path));

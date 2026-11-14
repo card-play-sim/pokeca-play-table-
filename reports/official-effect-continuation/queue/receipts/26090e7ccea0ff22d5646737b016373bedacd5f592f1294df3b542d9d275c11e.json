@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_56AEA7EB41E63C8A:4c2cc57107a922c449e6edceb4a21fcb23b6e488452a6f5296e0c379010dcb45",
   "taskFingerprint": "4c2cc57107a922c449e6edceb4a21fcb23b6e488452a6f5296e0c379010dcb45",
-  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
-  "attemptId": "f0ff804f-3ff6-47ad-ac7a-584cdd8d225b",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "5a3bd62e-efce-479a-8859-02e0e7b62d2c",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,15 +11,25 @@
     "cases": [
       {
         "slot": "50800:attack:ミサイルばり:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "45692:attack:タネマシンガン:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       }
     ]
   },
-  "checksum": "5f02c8948f910e6a497951962724dd6e71cec283c07c374f24494f558247c592"
+  "checksum": "d0cd1f52ded1b63d80bdd10fc0b1170c8e760c4314a17b489362ff95c0383048"
 }

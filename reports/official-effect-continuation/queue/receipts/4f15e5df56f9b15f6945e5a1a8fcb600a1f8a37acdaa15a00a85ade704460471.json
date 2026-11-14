@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
   "taskFingerprint": "82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
-  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
-  "attemptId": "1541b0c9-a5df-4078-be69-7e5ed78d6a26",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "d5d867d9-2ad1-4ebd-a136-314abb68fe26",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -23,7 +23,8 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       },
       {
         "slot": "44430:attack:あばれハンマー:0",
@@ -62,8 +63,20 @@
       },
       {
         "slot": "46211:attack:ギガインパクト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46538:attack:アイアンバスター:1",
@@ -119,7 +132,8 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       },
       {
         "slot": "46324:attack:むげんのやいば:0",
@@ -135,7 +149,8 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       },
       {
         "slot": "46333:attack:むげんのやいば:0",
@@ -151,7 +166,8 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       },
       {
         "slot": "48597:attack:むげんのやいば:0",
@@ -167,7 +183,8 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       },
       {
         "slot": "49028:attack:むげんのやいば:0",
@@ -183,9 +200,10 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ]
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "793998d2c568bac7a789afa22a616d5799a3cb801f750135bdfed6afbf64955f"
+  "checksum": "d7776f409a0c9709f922759abf74d1607948937e7652c8aa07a7f8d5fc8f989e"
 }

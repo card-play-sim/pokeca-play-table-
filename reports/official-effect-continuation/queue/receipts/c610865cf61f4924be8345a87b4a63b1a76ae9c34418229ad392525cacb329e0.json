@@ -1,0 +1,105 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_20221F16A95EBCDA:22d4273cf863367d3e1723994693d7a85a516be5c9fbe92a32f22ee1a8d6a38d",
+  "taskFingerprint": "22d4273cf863367d3e1723994693d7a85a516be5c9fbe92a32f22ee1a8d6a38d",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "368bf10d-16a3-410c-b874-a3307682d304",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50630:attack:ボルテッカー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "45881:attack:ウッドハンマー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46042:attack:ウッドハンマー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46539:attack:とびつきバイト:1",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "44461:attack:もろはぎり:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45398:attack:ブレイブバード:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "49592:attack:ボルテッカー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "50556:attack:かみなり:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "50660:attack:かみなり:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46240:attack:ブラックフロスト:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46323:attack:ブラックフロスト:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46492:attack:かみなり:1",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      }
+    ]
+  },
+  "checksum": "533fd072bf46dd7cebc62a2d863c8bfd22f0fc057bedd59e2035b9d63f7702d4"
+}

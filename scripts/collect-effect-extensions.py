@@ -25,7 +25,9 @@ def collect(ident,saved=False):
   name=plain(re.search(r'<h1[^>]*>(.*?)</h1>',body,re.S)[1]);section=re.search(r'<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)</h2>\s*<p[^>]*>(.*?)</p>',body,re.S)
   parsed=None
   if section:
-   category={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'}[section[1]];text=plain(section[2]);assert text and '<span' not in section[2],'UNPARSED_INLINE_SYMBOL'
+   category={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'}[section[1]]
+   text=plain(section[2]) if '<span' not in section[2] else subprocess.check_output(['node','-e',"process.stdout.write(require('./scripts/parse-official-pokemon-energy.cjs').text(require('fs').readFileSync(0,'utf8')))"],input=section[2].encode(),stderr=subprocess.PIPE,cwd=ROOT).decode()
+   assert text,'EMPTY_OFFICIAL_EFFECT'
   else:
    parsed=json.loads(subprocess.check_output(['node','scripts/parse-official-pokemon-energy.cjs'],input=body.encode(),stderr=subprocess.PIPE,cwd=ROOT));category=parsed['category'];text=parsed['text']
   image=re.search(r'<img[^>]*src="([^"]*/card_images/large/[^"]+)"',body)[1];image='https://www.pokemon-card.com'+image if image.startswith('/') else image

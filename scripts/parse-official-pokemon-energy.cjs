@@ -27,10 +27,10 @@ function parse(html){
  for(const m of block.matchAll(re)){assert(!block.slice(cursor,m.index).trim(),'UNPARSED_EFFECT_BOUNDARY');cursor=m.index+m[0].length;
   if(m[1]!==undefined){mode=text(m[1]);assert(['ワザ','特性'].includes(mode),'UNSUPPORTED_POKEMON_RULE_SECTION');continue;}
   assert(mode,'MISSING_EFFECT_KIND');if(mode==='特性'){abilities.push({name:label(m[2]),text:text(m[3])});continue;}
-  const d=m[2].match(/<span class="f_right Text-fjalla">([^<]*)<\/span>/),header=m[2].replace(/<span class="f_right Text-fjalla">[^<]*<\/span>/,'');const cost=tokens(header),name=label(header.replace(/<span[^>]*><\/span>/g,'')),damage=d?text(d[1]).replace(/＋/g,'+'):'0';assert(name&&/^\d+[+×]?$/.test(damage),'UNSUPPORTED_ATTACK_HEADER');attacks.push({name,cost,damage,text:text(m[3])});
+  const d=m[2].match(/<span class="f_right Text-fjalla">([^<]*)<\/span>/),header=m[2].replace(/<span class="f_right Text-fjalla">[^<]*<\/span>/,'');const cost=tokens(header),name=label(header.replace(/<span[^>]*><\/span>/g,'')),damage=d?text(d[1]).replace(/＋/g,'+').replace(/[－−]/g,'-'):'0';assert(name&&/^\d+[-+×]?$/.test(damage),'UNSUPPORTED_ATTACK_HEADER');attacks.push({name,cost,damage,text:text(m[3])});
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
- const evo=[...right.matchAll(/<div class="evolution ev_off"><a[^>]*>(.*?)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===1,'UNSUPPORTED_EVOLUTION_CHAIN');
+ const evo=[...right.matchAll(/<div class="evolution ev_off"><a[^>]*>(.*?)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
  return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection:false}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}

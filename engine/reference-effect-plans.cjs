@@ -87,6 +87,14 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。')return {mechanic:'BENCH_DAMAGE_PROTECTION',commands:['PREVENT_DAMAGE']};
  match=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー([1-9][0-9]*)個ぶんとしてはたらく。このカードをつけているポケモンが使うワザの、相手のポケモンへのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='MAIN'&&entry.category==='energy'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COLORLESS_MULTI_ENERGY',commands:['ATTACH_ENERGY','MODIFY_DAMAGE'],units:Number(match[1]),damagePenalty:Number(match[2])};
+ match=generic.match(/^このポケモンにも([1-9][0-9]*)ダメージ。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage))&&Number.isSafeInteger(Number(match[1])))return {mechanic:'RECOIL_DAMAGE',commands:['DAMAGE'],amount:Number(match[1])};
+ match=generic.match(/^このポケモンのHPを「([1-9][0-9]*)」回復する。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage))&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_SELF_ATTACK',commands:['DAMAGE','HEAL'],amount:Number(match[1])};
+ match=generic.match(/^コインを([1-9][0-9]?)回投げ、オモテの数×([1-9][0-9]*)ダメージ。$/);
+ if(kind==='ATTACK'&&match&&/^\d+×$/.test(String(entry.damage))&&Number.parseInt(entry.damage,10)===Number(match[2])&&Number.isSafeInteger(Number(match[2])))return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(match[1]),unit:Number(match[2])};
+ match=generic.match(/^自分のトラッシュから\[([^\]]+)\]ポケモンと「基本\[([^\]]+)\]エネルギー」を合計([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&match[1]===match[2]&&['草','炎','水','雷','超','闘','悪','鋼','妖','竜','無色'].includes(match[1])&&Number.isSafeInteger(Number(match[3])))return {mechanic:'RECOVER_TYPED_DISCARD',commands:['REVEAL','ADD_TO_HAND'],type:match[1],amount:Number(match[3])};
  const p=byText.get(text);return p?{...p}:null;
 }
 function compile(catalog){

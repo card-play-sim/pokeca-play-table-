@@ -1,0 +1,20 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_1BE38DA32FA004DC:2aa6cbfd73e62e5d081215a99d5c605e4023e2cb56865bb91bca537e9cc80b27",
+  "taskFingerprint": "2aa6cbfd73e62e5d081215a99d5c605e4023e2cb56865bb91bca537e9cc80b27",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "ff9a96c7-979a-49a9-866a-daa139879fa6",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50662:attack:ニトロサンダー:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "e99634e47a6c07042d09aad46c200c128ddfed94ce31af7819cc8661e44fd2ef"
+}

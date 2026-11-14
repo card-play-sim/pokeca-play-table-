@@ -25,7 +25,10 @@ jobs:
       - name: Verify registered effects through real engine, AI and save restore
         run: node tests/control-011-engine-batch.test.cjs
       - name: Verify real incremental official intake and protected data
-        run: node tests/control-013-continuation.test.cjs
+        run: |
+          node tests/control-013-continuation.test.cjs
+          node tests/control-014-shared-effects.test.cjs
+          node tests/control-014-official-parser.test.cjs
       - name: Verify unchanged engine and PWA artifacts
         run: |
           node scripts/sync-reference-effects.cjs --check
@@ -37,4 +40,5 @@ jobs:
           path: |
             test-results/control-011*.json
             test-results/control-013*.json
+            test-results/control-014*.json
           if-no-files-found: warn

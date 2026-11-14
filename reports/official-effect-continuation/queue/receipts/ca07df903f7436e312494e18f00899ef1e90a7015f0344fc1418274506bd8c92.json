@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_20221F16A95EBCDA:595b48798dd02a888498465424af9cdfdad0c124fa2378e560a568cddbd7a5fa",
   "taskFingerprint": "595b48798dd02a888498465424af9cdfdad0c124fa2378e560a568cddbd7a5fa",
-  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
-  "attemptId": "daf4334b-1ed4-474d-b42e-5ea84a4dd9a3",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "3b76f2bb-32b5-46f3-b2cb-eb81048fb458",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,25 +11,48 @@
     "cases": [
       {
         "slot": "50630:attack:ボルテッカー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "45881:attack:ウッドハンマー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "46042:attack:ウッドハンマー:0",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "46539:attack:とびつきバイト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "4ebf2f0dfb89c8d7f788e841a4d6ee139712c021f2baff6fb7c2f352fb83eb0a"
+  "checksum": "db816efd2ad7c0187f39af6302feec283ad9e7d262d90dc0b617591623db2624"
 }

@@ -30,7 +30,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
    const usage={item:'グッズは、自分の番に何枚でも使える。',supporter:'サポートは、自分の番に1枚しか使えない。',tool:'ポケモンのどうぐは、自分の番に何枚でも、自分のポケモンにつけられる。ポケモン1匹につき1枚だけつけられ、つけたままにする。',stadium:'スタジアムは、自分の番に1枚、バトル場の横に出せる。別のスタジアムが場に出たなら、このカードをトラッシュする。同じ名前のスタジアムは場に出せない。'};
    const acceptedUsage=[usage[row.category],...(row.category==='stadium'?['スタジアムは、自分の番に1枚だけ、バトル場の横に出せる。別の名前のスタジアムが場に出たなら、このカードをトラッシュする。']:[])];
    if(paragraphs.length!==2||!acceptedUsage.includes(plain(paragraphs[1])))throw Error('UNSUPPORTED_EFFECT_PARAGRAPHS');
-   if(!section||categories[section[1]]!==row.category||/<span/.test(paragraphs[0])||plain(paragraphs[0])!==row.text||hash(row.text)!==row.source.textSha256)throw Error('OFFICIAL_TEXT_MISMATCH');
+   if(!section||categories[section[1]]!==row.category||(paragraphs[0].includes('<span')?require('./parse-official-pokemon-energy.cjs').text(paragraphs[0]):plain(paragraphs[0]))!==row.text||hash(row.text)!==row.source.textSha256)throw Error('OFFICIAL_TEXT_MISMATCH');
    if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl)||!body.includes(row.imageSourceUrl.replace('https://www.pokemon-card.com','')))throw Error('IMAGE_REFERENCE_MISMATCH');
    if(mainText(row.text)!==norm(row.text))throw Error('EMBEDDED_USAGE_RULE_NOT_SUPPORTED');
    const clean={...row,attacks:[],abilities:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false},rulesText:[],set:'OFFICIAL_PAGE_REFERENCE',cardNumber:''};

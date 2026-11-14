@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_8971CCDFB7254258:11ae165be4c0c3e1d654539e98594f073b61f556935fa864229919b4b50fda17",
   "taskFingerprint": "11ae165be4c0c3e1d654539e98594f073b61f556935fa864229919b4b50fda17",
-  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
-  "attemptId": "f22e6eb5-34d9-4671-aee9-54feb7575b1e",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "891d63f9-9796-4465-b574-7856707e6dc3",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,10 +11,14 @@
     "cases": [
       {
         "slot": "44451:attack:ワイルドボルト:1",
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       }
     ]
   },
-  "checksum": "2ea316c9ec30f442669b204fa6eb676e5aaf84f2d1a156830ba400e49f7e202e"
+  "checksum": "1a7937840a53c05680a35dd091825271079e38b2b21b4d4a53a138498bc54caa"
 }
