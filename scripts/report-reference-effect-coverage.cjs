@@ -11,6 +11,8 @@ const unresolvedGroups = new Map();
 let recognized = 0, total = 0;
 // Text recognition is not proof of runtime execution or rule-engine integration.
 const executionVerified = 0;
+// Recognition is never equivalent to verified execution. Keep this distinction explicit.
+if (executionVerified > recognized) throw new Error('EFFECT_COVERAGE_EXECUTION_EXCEEDS_RECOGNITION');
 function scan(record, kind, index, effect, original) {
   total++;
   const category = record.category;
