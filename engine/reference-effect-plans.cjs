@@ -95,7 +95,7 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&match&&/^\d+×$/.test(String(entry.damage))&&Number.parseInt(entry.damage,10)===Number(match[2])&&Number.isSafeInteger(Number(match[2])))return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(match[1]),unit:Number(match[2])};
  match=generic.match(/^自分のトラッシュから\[([^\]]+)\]ポケモンと「基本\[([^\]]+)\]エネルギー」を合計([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&match[1]===match[2]&&['草','炎','水','雷','超','闘','悪','鋼','妖','竜','無色'].includes(match[1])&&Number.isSafeInteger(Number(match[3])))return {mechanic:'RECOVER_TYPED_DISCARD',commands:['REVEAL','ADD_TO_HAND'],type:match[1],amount:Number(match[3])};
- const p=byText.get(text);return p?{...p}:null;
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:null;
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
