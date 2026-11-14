@@ -167,6 +167,35 @@ async function until(fn, ms = 10000) {
       assert.match(f.batch.evidenceTrust, /REQUIRES_OFFICIAL_CORROBORATION/);
       assert.equal(Object.keys(f.batch.categories).length, 3);
     });
+    await test("live locks and stale-owner acquisition are serialized without stealing a new owner", () => {
+      const dir = path.join(tmp, "lock-race");
+      fs.mkdirSync(dir);
+      fs.writeFileSync(
+        path.join(dir, "lock.json"),
+        JSON.stringify({
+          pid: process.pid,
+          host: os.hostname(),
+          start: "reused-pid",
+          token: "dead",
+        }),
+      );
+      const release = Q.lock(dir);
+      const token = JSON.parse(
+        fs.readFileSync(path.join(dir, "lock.json")),
+      ).token;
+      assert.throws(() => Q.lock(dir), /QUEUE_LOCKED/);
+      assert.equal(
+        JSON.parse(fs.readFileSync(path.join(dir, "lock.json"))).token,
+        token,
+      );
+      release();
+      fs.writeFileSync(
+        path.join(dir, "lock-acquisition.json"),
+        "stale or live owner must be checked",
+      );
+      assert.throws(() => Q.lock(dir), /QUEUE_LOCK_ACQUISITION_BUSY/);
+      assert.equal(fs.existsSync(path.join(dir, "lock.json")), false);
+    });
     await test("limits defer rather than lose work, completed jobs and duplicate imports are skipped", async () => {
       const rows = Array.from({ length: 10 }, (_, i) =>
           row(72000000 + i, "work " + i),

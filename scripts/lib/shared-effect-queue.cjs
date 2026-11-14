@@ -48,16 +48,18 @@ function lock(dir) {
       start: startToken(process.pid),
       token: crypto.randomUUID(),
     };
-  for (let i = 0; i < 2; i++)
-    try {
-      fs.writeFileSync(file, JSON.stringify(owner), { flag: "wx" });
-      return () => {
-        const now = JSON.parse(fs.readFileSync(file));
-        if (now.token !== owner.token) throw Error("QUEUE_LOCK_OWNER_CHANGED");
-        fs.unlinkSync(file);
-      };
-    } catch (e) {
-      if (e.code !== "EEXIST") throw e;
+  // Serialize acquisition as well as stale-owner reclamation. Otherwise two
+  // reclaimers could unlink one another's freshly acquired lock.
+  const gate = path.join(dir, "lock-acquisition.json");
+  try {
+    fs.writeFileSync(gate, JSON.stringify(owner), { flag: "wx" });
+  } catch (e) {
+    if (e.code === "EEXIST")
+      throw Error("QUEUE_LOCK_ACQUISITION_BUSY_REQUIRES_OWNER_CHECK_IF_STALE");
+    throw e;
+  }
+  try {
+    if (fs.existsSync(file)) {
       let prior;
       try {
         prior = JSON.parse(fs.readFileSync(file));
@@ -76,8 +78,17 @@ function lock(dir) {
         throw Error("QUEUE_LOCKED");
       fs.unlinkSync(file);
     }
-  throw Error("QUEUE_LOCK_RACE");
+    fs.writeFileSync(file, JSON.stringify(owner), { flag: "wx" });
+  } finally {
+    fs.unlinkSync(gate);
+  }
+  return () => {
+    const now = JSON.parse(fs.readFileSync(file));
+    if (now.token !== owner.token) throw Error("QUEUE_LOCK_OWNER_CHANGED");
+    fs.unlinkSync(file);
+  };
 }
+
 function load(dir) {
   const snapshot = path.join(dir, "queue.json"),
     journal = path.join(dir, "journal.ndjson");
