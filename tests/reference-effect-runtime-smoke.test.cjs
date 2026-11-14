@@ -98,8 +98,10 @@ assert.equal(abilityResult.ok, true, 'DRAW ability must execute: ' + JSON.string
 assert.equal(player.hand.length, handBefore + 2, 'DRAW must move two cards into hand');
 assert.equal(player.deck.length, deckBefore - 2, 'DRAW must remove exactly two cards from deck');
 assert.equal(abilityGame.players.reduce((n, p) => n + p.deck.length + p.hand.length + p.discard.length + p.prizeCards.length + (p.active ? 1 : 0) + p.bench.length, 0) >= 120, true, 'cards must not disappear from match');
+const abilityStateAfter = JSON.stringify(abilityGame);
 const secondUse = abilityPort.dispatch('you', ability);
 assert.equal(secondUse.ok, false, 'once-per-turn ability must reject repeated use');
+assert.equal(JSON.stringify(abilityGame), abilityStateAfter, 'rejected ability replay must not mutate game state');
 console.log('REFERENCE_DRAW_ABILITY PASS: 2 cards drawn; repeat blocked');
 // A reusable search/discard item effect must preserve all physical cards.
 let itemSeed = 1;
