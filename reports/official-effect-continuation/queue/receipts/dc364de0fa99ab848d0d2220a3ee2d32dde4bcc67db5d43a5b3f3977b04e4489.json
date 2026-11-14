@@ -1,0 +1,50 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_FB3675E62BBA80F7:fe52c4a2a989fbc07f4d973e9467efccd7ae88eda37d79c26f297549d3937fab",
+  "taskFingerprint": "fe52c4a2a989fbc07f4d973e9467efccd7ae88eda37d79c26f297549d3937fab",
+  "executionFingerprint": "31384982a42c1238f41dc22133c48b85db4499ea9f3566be9779386844102013",
+  "attemptId": "d49f0820-d6f6-4b94-9b54-154876f36bc1",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50537:attack:かぎづめハント:0",
+        "mechanic": "HUNT",
+        "commands": [
+          "DAMAGE",
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "50400:attack:かぎづめハント:0",
+        "mechanic": "HUNT",
+        "commands": [
+          "DAMAGE",
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "85e805755699c9855629d90b87be70dbf0645beca0ed4d0296794c18bf1bc01d"
+}

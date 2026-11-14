@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_CCCF9F5D84EFC49A:37e4b8e438c2ef51ae6d66b463ea67873068600ee6c7d56a9a40eca06252f381",
+  "taskFingerprint": "37e4b8e438c2ef51ae6d66b463ea67873068600ee6c7d56a9a40eca06252f381",
+  "executionFingerprint": "31384982a42c1238f41dc22133c48b85db4499ea9f3566be9779386844102013",
+  "attemptId": "732cbdb8-c786-4d65-a792-dcfa2bb6bf9b",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44392:attack:ソニックダイブ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "44401:attack:ソニックダイブ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "44966:attack:ソニックダイブ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "631a7e169a40c8e64af159fda12451017554d764128361bc0d5304783f083830"
+}

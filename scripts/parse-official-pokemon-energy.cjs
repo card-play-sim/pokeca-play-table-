@@ -32,7 +32,8 @@ function parse(html){
   const d=m[2].match(/<span class="f_right Text-fjalla">([^<]*)<\/span>/),header=m[2].replace(/<span class="f_right Text-fjalla">[^<]*<\/span>/,'');const cost=tokens(header),name=label(header.replace(/<span[^>]*><\/span>/g,'')),damage=d?text(d[1]).replace(/＋/g,'+').replace(/[－−]/g,'-'):'0';assert(name&&/^\d+[-+×]?$/.test(damage),'UNSUPPORTED_ATTACK_HEADER');attacks.push({name,cost,damage,text:text(m[3])});
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
- const evo=[...right.matchAll(/<div class="evolution ev_(?:off|on)">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
+ const printedName=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||'').replace(/\s/g,'');
+ const evo=[...right.matchAll(/<div class="evolution ev_(?:off|on)">\s*<a\b[^>]*>([^<]+)<\/a>\s*<div class="arrow_(?:off|on)">/g)].map(m=>label(m[1])).filter(name=>name.replace(/\s/g,'')!==printedName);assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
  return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}

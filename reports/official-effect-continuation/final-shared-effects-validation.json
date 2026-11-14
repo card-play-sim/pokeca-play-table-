@@ -11,16 +11,16 @@
     "CONDITIONAL_EVOLVED_ENERGY"
   ],
   "basicEnergyTypes": 8,
-  "compiledPrints": 594,
+  "compiledPrints": 598,
   "previousCompiledPrints": 503,
-  "notImplementedPrints": 828,
-  "parseBlockedPages": 29,
+  "notImplementedPrints": 840,
+  "parseBlockedPages": 13,
   "queue": {
     "PENDING": 0,
     "RUNNING": 0,
-    "SUCCEEDED": 109,
+    "SUCCEEDED": 112,
     "FAILED": 0,
-    "BLOCKED": 668
+    "BLOCKED": 683
   },
   "regressionCases": 100,
   "candidateChromium": {
@@ -238,5 +238,8 @@
   "resumeCommand": "python scripts/continue-official-effect-intake.py --limit 100 --adopt",
   "checkpoint": "data/official-effect-intake/checkpoint.json",
   "publicChromium": "PENDING_PAGES_DEPLOYMENT",
-  "physicalAndroidVerified": false
+  "physicalAndroidVerified": false,
+  "officialPages": 1438,
+  "savedEvolutionPagesRecovered": 16,
+  "latestMainPreserved": "9e5f02b0a6312318ab32d97d6f1846b0ade4c740"
 }

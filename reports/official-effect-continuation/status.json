@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "registryHash": "8c0846e26e9dddcd6da55a4f6fffe5a688dda7ddf69c2d49d8a67f73229fb9fc",
+  "registryHash": "0f326f438518942956ed4ff12014f55acef848e6277cb7bb87d4a2bd4a767781",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
-  "officialPages": 1422,
-  "collectedNewPages": 1311,
-  "explicitEffects": 1578,
-  "noExplicitText": 627,
+  "officialPages": 1438,
+  "collectedNewPages": 1327,
+  "explicitEffects": 1600,
+  "noExplicitText": 633,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
     "supporter": {
@@ -39,11 +39,11 @@
       "executionVerifiedPrints": 5
     },
     "pokemon": {
-      "prints": 1253,
-      "compiled": 497,
-      "notImplemented": 756,
+      "prints": 1269,
+      "compiled": 501,
+      "notImplemented": 768,
       "blocked": 0,
-      "executionVerifiedPrints": 286
+      "executionVerifiedPrints": 289
     },
     "energy": {
       "prints": 31,
@@ -54,6 +54,7 @@
     }
   },
   "commandCoverage": [
+    "ABILITY_TRIGGER",
     "ADD_STATE",
     "ADD_TO_HAND",
     "ATTACH_ENERGY",
@@ -79,87 +80,10 @@
   "fetchBlocked": [
     {
       "status": "BLOCKED",
-      "officialCardId": "44392",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44392",
-      "evidencePath": "data/effect-extensions/evidence/44392.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44401",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44401",
-      "evidencePath": "data/effect-extensions/evidence/44401.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44431",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44431",
-      "evidencePath": "data/effect-extensions/evidence/44431.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44446",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44446",
-      "evidencePath": "data/effect-extensions/evidence/44446.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44449",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44449",
-      "evidencePath": "data/effect-extensions/evidence/44449.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44456",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44456",
-      "evidencePath": "data/effect-extensions/evidence/44456.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
       "officialCardId": "44460",
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44460",
       "evidencePath": "data/effect-extensions/evidence/44460.json",
       "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "44966",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44966",
-      "evidencePath": "data/effect-extensions/evidence/44966.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "46125",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46125",
-      "evidencePath": "data/effect-extensions/evidence/46125.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "46133",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46133",
-      "evidencePath": "data/effect-extensions/evidence/46133.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "47493",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47493",
-      "evidencePath": "data/effect-extensions/evidence/47493.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "49715",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49715",
-      "evidencePath": "data/effect-extensions/evidence/49715.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
     },
     {
       "status": "BLOCKED",
@@ -219,45 +143,10 @@
     },
     {
       "status": "BLOCKED",
-      "officialCardId": "50557",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50557",
-      "evidencePath": "data/effect-extensions/evidence/50557.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "50560",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50560",
-      "evidencePath": "data/effect-extensions/evidence/50560.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "50562",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50562",
-      "evidencePath": "data/effect-extensions/evidence/50562.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "50563",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50563",
-      "evidencePath": "data/effect-extensions/evidence/50563.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "status": "BLOCKED",
       "officialCardId": "50781",
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50781",
       "evidencePath": "data/effect-extensions/evidence/50781.json",
       "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
-    },
-    {
-      "status": "BLOCKED",
-      "officialCardId": "50537",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50537",
-      "evidencePath": "data/effect-extensions/evidence/50537.json",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
     },
     {
       "status": "BLOCKED",
@@ -5141,14 +5030,70 @@
       "officialCardId": "47589",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "44392",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "44401",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "44456",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "44966",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49715",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "50557",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "50562",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "50563",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "44431",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46133",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "47493",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "50560",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     }
   ],
   "blockerSummary": {
     "fetch": [
-      {
-        "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-        "count": 16
-      },
       {
         "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
         "count": 12
@@ -5161,7 +5106,7 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 756
+        "count": 768
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
@@ -5172,25 +5117,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "95650adce18b5fda0249019de0c69ffe5b8d11f851bc0d2937c18a0b45bca302",
+    "executionFingerprint": "31384982a42c1238f41dc22133c48b85db4499ea9f3566be9779386844102013",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 27741,
-    "totalJobs": 777,
+    "seq": 32484,
+    "totalJobs": 795,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 109,
+      "SUCCEEDED": 112,
       "FAILED": 0,
-      "BLOCKED": 668
+      "BLOCKED": 683
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 60,
+        "SUCCEEDED": 63,
         "FAILED": 0,
-        "BLOCKED": 611
+        "BLOCKED": 626
       },
       "supporter": {
         "PENDING": 0,
