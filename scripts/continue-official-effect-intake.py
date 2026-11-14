@@ -47,7 +47,13 @@ def main():
  def collect_network(i):
   # A single transient request failure must not abort the entire unattended batch.
   # Keep the failed ID retryable and persist every other successful result.
-  try:return C.collect(i)
+  try:
+   result=C.collect(i)
+   # Collector reports transport subprocess failures as CalledProcessError.
+   # Normalize only that known transport failure; semantic/parser blockers stay blocked.
+   if result.get('status')=='BLOCKED' and result.get('reason')=='CalledProcessError':
+    return {**result,'reason':'COLLECTOR_EXCEPTION','detail':'COLLECTOR_TRANSPORT_ERROR'}
+   return result
   except Exception as e:return {'status':'BLOCKED','officialCardId':i,'reason':'COLLECTOR_EXCEPTION','detail':str(e)[:500]}
  with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
   for r in pool.map(collect_network,network):persist(r)
