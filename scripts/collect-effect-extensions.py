@@ -1,4 +1,4 @@
-"""Fetch explicitly selected official trainer prints; no image-ID adoption."""
+"""Fetch official trainer, Pokemon and special-energy prints; no image-ID adoption."""
 import concurrent.futures,hashlib,json,re,subprocess,sys,os,tempfile
 from pathlib import Path
 from html.parser import HTMLParser
@@ -21,13 +21,18 @@ def collect(ident):
   if prior:return {'status':'FETCHED','record':prior}
   body=json.loads(path.read_text())['html'] if '--saved' in sys.argv else subprocess.check_output(['curl','-fsS','--max-time','30',url],stderr=subprocess.PIPE).decode('utf8')
   canonical=re.search(r'<meta property="og:url" content="([^"]+)"',body)[1];assert re.search('/card/'+ident+'/?$',canonical)
-  name=plain(re.search(r'<h1[^>]*>(.*?)</h1>',body,re.S)[1]);section=re.search(r'<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)</h2>\s*<p[^>]*>(.*?)</p>',body,re.S);assert section,'UNSUPPORTED_PAGE_CATEGORY'
-  category={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'}[section[1]];text=plain(section[2]);assert text and '<span' not in section[2],'UNPARSED_INLINE_SYMBOL'
-  image=re.search(r'<img[^>]*src="([^"]*/card_images/large/[^"]+)"',body)[1];image='https://www.pokemon-card.com'+image if image.startswith('/') else image
   sha=hashlib.sha256(body.encode()).hexdigest();save(path,{'url':url,'htmlSha256':sha,'html':body})
+  name=plain(re.search(r'<h1[^>]*>(.*?)</h1>',body,re.S)[1]);section=re.search(r'<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)</h2>\s*<p[^>]*>(.*?)</p>',body,re.S)
+  parsed=None
+  if section:
+   category={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'}[section[1]];text=plain(section[2]);assert text and '<span' not in section[2],'UNPARSED_INLINE_SYMBOL'
+  else:
+   parsed=json.loads(subprocess.check_output(['node','scripts/parse-official-pokemon-energy.cjs'],input=body.encode(),stderr=subprocess.PIPE,cwd=ROOT));category=parsed['category'];text=parsed['text']
+  image=re.search(r'<img[^>]*src="([^"]*/card_images/large/[^"]+)"',body)[1];image='https://www.pokemon-card.com'+image if image.startswith('/') else image
   record={'officialCardId':ident,'name':name,'deckName':name,'set':'OFFICIAL_PAGE_REFERENCE','cardNumber':'','officialPageUrl':url,'imageSourceUrl':image,'category':category,'deckPrintAdopted':False,'attacks':[],'abilities':[],'rulesText':[],'text':text,'facts':{'prizeCount':1,'rulePokemon':False,'teraBenchProtection':False},'source':{'kind':'saved-official-extension','path':str(path.relative_to(ROOT)),'sha256':sha,'htmlSha256':sha,'textSha256':hashlib.sha256(text.encode()).hexdigest()}}
+  if parsed:record.update(parsed)
   return {'status':'FETCHED','record':record}
- except Exception as e:return {'status':'BLOCKED','officialCardId':ident,'reason':str(e) if isinstance(e,AssertionError) else type(e).__name__}
+ except Exception as e:return {'status':'BLOCKED','officialCardId':ident,'officialPageUrl':url,'evidencePath':str(path.relative_to(ROOT)) if path.exists() else None,'reason':str(e) if isinstance(e,AssertionError) else (e.stderr.decode() if isinstance(e,subprocess.CalledProcessError) and e.stderr else type(e).__name__)}
 if __name__=='__main__':
  ids=[s for s in sys.argv[1:] if s.isdigit()];assert ids and len(ids)==len(set(ids))
  with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(collect,ids))

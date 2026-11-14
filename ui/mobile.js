@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='252';
+window.PokecaMobileBuild='253';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -313,7 +313,7 @@ window.PokecaMobileBuild='252';
   }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
   function operationReason(reason){
-    const messages={BENCH_FULL:'ベンチが5匹で空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'自分の場に無色タイプのメガシンカexが必要です',ABILITY_ALREADY_USED:'この特性はこの番に使用済みです',ABILITY_SUPPRESSED:'場の効果で特性が無効になっています',BENCH_ENTRY_WINDOW_REQUIRED:'手札からベンチに出した直後だけ使えます',REFERENCE_ACTION_NOT_ALLOWED:'自分の番のメイン操作中に使ってください'};
+    const messages={HAND_LIMIT_DRAW_UNAVAILABLE:'手札が補充の上限以上、または山札がありません',BENCH_FULL:'ベンチが5匹で空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'自分の場に無色タイプのメガシンカexが必要です',ABILITY_ALREADY_USED:'この特性はこの番に使用済みです',ABILITY_SUPPRESSED:'場の効果で特性が無効になっています',BENCH_ENTRY_WINDOW_REQUIRED:'手札からベンチに出した直後だけ使えます',REFERENCE_ACTION_NOT_ALLOWED:'自分の番のメイン操作中に使ってください'};
     if(reason.startsWith('ABILITY_SOURCE_ZONE:'))return 'この特性を使う場所：'+reason.slice('ABILITY_SOURCE_ZONE:'.length).split('|').map(z=>({HAND:'手札',ACTIVE:'バトル場',BENCH:'ベンチ'}[z]||z)).join('・');
     return messages[reason]||reason;
   }

@@ -17,6 +17,10 @@ on:
       - 'tests/test_control_008_extensions_browser.py'
       - 'tests/control-009-expansion.test.cjs'
       - 'tests/test_control_009_browser.py'
+      - 'tests/control-010-effects.test.cjs'
+      - 'tests/test_control_010_browser.py'
+      - 'tests/fixtures/control-010-scenarios.cjs'
+      - 'scripts/parse-official-pokemon-energy.cjs'
       - 'tests/fixtures/control-009-extension-manifest.cjs'
       - 'tests/fixtures/control-009-scenarios.cjs'
       - 'tests/shared-operation-origins.test.cjs'
@@ -62,6 +66,7 @@ jobs:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
           python tests/test_shared_operation_browser.py
+          python tests/test_control_010_browser.py
           python tests/test_control_009_browser.py
           python tests/test_control_008_extensions_browser.py
           python tests/test_control_006_browser.py
@@ -77,6 +82,7 @@ jobs:
           node tests/shared-operation-origins.test.cjs
           node tests/control-008-extensions.test.cjs
           node tests/control-009-expansion.test.cjs
+          node tests/control-010-effects.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Verify service worker and offline resume on published PWA
         env:
@@ -91,6 +97,8 @@ jobs:
             artifacts/
             test-results/shared-operation-origins.json
             test-results/control-00*.json
+            test-results/control-010*.json
+            test-results/control-010-failures/
             test-results/published-pwa-verification.json
           if-no-files-found: warn
           retention-days: 30

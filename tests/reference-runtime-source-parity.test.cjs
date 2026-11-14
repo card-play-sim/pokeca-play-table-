@@ -10,7 +10,12 @@ const end=bundle.indexOf('},"pokeca_reference_validation_adapter":function',star
 assert(end>start,'reference runtime module boundary missing');
 const embedded=bundle.slice(start,end);
 const contract=[
- "const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION']);",
+ "case 'HAND_LIMIT_DRAW_ATTACK':",
+ "case 'HAND_LIMIT_DRAW_ABILITY':",
+ "case 'COIN_FAILURE_DAMAGE':",
+ "if(bench&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='BENCH_DAMAGE_PROTECTION'))return 0;",
+ "if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)",
+ "const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION']);",
  "if(bench&&!record(mon).facts.rulePokemon&&field(other).some",
  "if(m==='SWITCH_SELF_ATTACK')add('targetIds'",
  "if(m==='ACTIVE_AND_BENCH_DAMAGE')add('targetIds'",

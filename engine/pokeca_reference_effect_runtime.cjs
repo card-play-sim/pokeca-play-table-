@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -51,6 +51,7 @@ function energyUnits(mon){
  for(const c of mon.energyCards||[]){
   const r=record(c),m=r?.mainPlan?.mechanic;
   if(m==='ROCKET_ENERGY'){if(record(mon)?.name.startsWith('ロケット団の'))out.push(['超','悪'],['超','悪']);}
+  else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
   else if(m==='IGNITION')for(let i=0;i<(record(mon)?.facts.stage>0?3:1);i++)out.push(['無色']);
   else if(basicEnergy(c))out.push([c.energyType]);
  }
@@ -122,7 +123,10 @@ function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);
 function damages(g,actor,mon,amount,{bench=false,ignore=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
  if(amount===0)return 0;
+ const penalty=(source.energyCards||[]).reduce((sum,c)=>sum+(record(c)?.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY'?record(c).mainPlan.damagePenalty:0),0);
+ if(find(g,id(mon))?.player.id!==actor)amount=Math.max(0,amount-penalty);
  if(!ignore){
+  if(bench&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='BENCH_DAMAGE_PROTECTION'))return 0;
   if(bench&&record(mon).facts.teraBenchProtection)return 0;
   if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
@@ -226,6 +230,7 @@ function verifyRequests(g,actor,card,effect,action){
 // Never infer executable effects from a card name or an uncompiled description.
 function abilityOrigin(a){
  const text=String(a.text||'').replace(/\s+/g,'');
+ if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
  if(text.startsWith('このポケモンがバトル場にいるなら'))return {zones:['ACTIVE'],entry:false};
@@ -239,6 +244,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
  assert(zone==='HAND'||abilityEnabled(g,card),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
+ if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='DASH')assert(p.active===card&&!p.turnLimits?.abilityNames?.DASH,'DASH_ACTIVE_AND_SHARED_LIMIT');
  if(m==='REVERSAL_DRAW')assert(wasKnockedOut(g,actor)&&!p.turnLimits?.abilityNames?.REVERSAL_DRAW,'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
  if(m==='MEOWTH_ENTRY')assert(card.entryWindow===g.referenceActionSequence&&!p.turnLimits?.abilityNames?.MEOWTH_ENTRY,'BENCH_ENTRY_WINDOW_REQUIRED');
@@ -369,8 +375,9 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
-  case 'VANILLA_DAMAGE':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'VANILLA_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
+   if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
    if(m==='COMBO'){amount=Number.parseInt(effect.damage,10);let flips=0;while(coin(g,actor)){amount+=50;assert(++flips<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');}}
    if(m==='MOON_RONDO')amount=Number.parseInt(effect.damage,10)+20*(p.bench.length+o.bench.length);
    if(m==='EX_COUNT_DAMAGE')amount=60*field(o).filter(c=>record(c).facts.prizeCount>=2).length;
@@ -408,6 +415,8 @@ function applyPlan(g,actor,card,effect,action){
    break;
   }
   case 'SWITCH_SELF_ATTACK':if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);break;
+  case 'HAND_LIMIT_DRAW_ATTACK':if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
+  case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'DASH':draw(g,p,2);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.DASH=true;break;
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;
   case 'EXCITE_DIVE':bench(g,p,card,true);break;
@@ -629,7 +638,8 @@ function statuses(g){
 }
 function cardInfo(g,actor,ident){
  const p=player(g,actor),card=[...field(p),...p.hand,...p.discard].find(c=>id(c)===ident),r=record(card);if(!r)return null;
- const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?field(p).includes(card)&&abilityEnabled(g,card):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
+ const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?abilityOrigin(e).zones.includes(abilityZone(p,card))&&abilityEnabled(g,card):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
+ for(const entry of entries.filter(e=>e.type==='ABILITY'&&e.active===false&&!e.inactiveReasons.length))entry.inactiveReasons=['ABILITY_SOURCE_ZONE:'+abilityOrigin(r.abilities.find(a=>a.effectId===entry.id)).zones.join('|')];
  for(const entry of entries.filter(e=>e.type==='ABILITY'&&e.active===null)){
   const effect=r.abilities.find(a=>a.effectId===entry.id),option=abilityActions(g,actor,card).find(o=>o.action.abilityId===entry.id);
   entry.activationOrigin=abilityOrigin(effect);
