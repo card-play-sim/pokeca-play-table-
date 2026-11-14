@@ -1,0 +1,52 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_4CF3E25CEE8E0DC0:00fa5efd9c032e3004fbc5a9aaa09342abafc98fab9092e9232c86e1ee8e40ea",
+  "taskFingerprint": "00fa5efd9c032e3004fbc5a9aaa09342abafc98fab9092e9232c86e1ee8e40ea",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "31aaf050-eb93-4207-a7ba-be36fb61331b",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49600:item:ハイパーボール:0",
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46588:item:ハイパーボール:0",
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "bd5eb52ce26d1f737bb3b76b14740adfa253b4fa099cf9a55a138ad72c7907fd"
+}

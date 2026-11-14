@@ -1,0 +1,59 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_A87118169C7C3CCA:a99a27a7e808359e5ea1ef8a453559001c6230bd786b868adb71c88a4cd911be",
+  "taskFingerprint": "a99a27a7e808359e5ea1ef8a453559001c6230bd786b868adb71c88a4cd911be",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "478f50a3-a9c3-40cc-a3c0-729a16d0b371",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "47847:ability:おつかいダッシュ:0",
+        "mechanic": "DASH",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48466:ability:おつかいダッシュ:0",
+        "mechanic": "DASH",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48475:ability:おつかいダッシュ:0",
+        "mechanic": "DASH",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "18ff2992fcbc79b6b40dff804f77a20091a74a8915f813b654f72d357a16bea3"
+}

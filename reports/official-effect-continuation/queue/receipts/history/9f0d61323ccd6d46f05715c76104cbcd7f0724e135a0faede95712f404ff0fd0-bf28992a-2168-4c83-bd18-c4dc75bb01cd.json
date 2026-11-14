@@ -1,0 +1,32 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_3801AFBC39C2CA55:8dd17cea8631da3c2f4f9af4a521b60b983c7f9dd24e258469554d524cb33ec8",
+  "taskFingerprint": "8dd17cea8631da3c2f4f9af4a521b60b983c7f9dd24e258469554d524cb33ec8",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "bf28992a-2168-4c83-bd18-c4dc75bb01cd",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50846:item:ポケパッド:0",
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "557e5270ac8f4d6c48f2cbb1a8dbbae7d390ff77b8075e952ed27523bb78a1a7"
+}

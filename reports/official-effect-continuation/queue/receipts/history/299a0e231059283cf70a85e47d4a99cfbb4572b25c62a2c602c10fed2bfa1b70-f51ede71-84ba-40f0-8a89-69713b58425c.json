@@ -1,0 +1,47 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_FBC69480B8FA9312:7427a722bbf55faad906a561acc9f280151b3c123345b2edbe4189c0466c7841",
+  "taskFingerprint": "7427a722bbf55faad906a561acc9f280151b3c123345b2edbe4189c0466c7841",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "f51ede71-84ba-40f0-8a89-69713b58425c",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50631:attack:スパーク:0",
+        "mechanic": "ACTIVE_AND_BENCH_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "45351:attack:ジェミニレーザー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47766:attack:ストーンキック:0",
+        "mechanic": "ACTIVE_AND_BENCH_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "50452:attack:かけぬける:0",
+        "mechanic": "ACTIVE_AND_BENCH_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      }
+    ]
+  },
+  "checksum": "a2a949515cd5ec3f13706c86867b15c78db0b7a195941715d86003b05296f0ce"
+}

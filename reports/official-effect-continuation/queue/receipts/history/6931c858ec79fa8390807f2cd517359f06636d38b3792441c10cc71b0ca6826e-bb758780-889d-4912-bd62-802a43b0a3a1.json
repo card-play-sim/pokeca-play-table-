@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_58E797F6A85B997F:db489f936b3367aa30822c9bdd41572b308f5747f284dcfc9bb41d6399a8bfef",
+  "taskFingerprint": "db489f936b3367aa30822c9bdd41572b308f5747f284dcfc9bb41d6399a8bfef",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "bb758780-889d-4912-bd62-802a43b0a3a1",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49264:attack:ファントムダイブ:1",
+        "mechanic": "PHANTOM",
+        "commands": [
+          "DAMAGE",
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "40c2a6b9a297e985246a527c1dd7de9bde5ffbb242988531ffdeb74d6cc9a866"
+}

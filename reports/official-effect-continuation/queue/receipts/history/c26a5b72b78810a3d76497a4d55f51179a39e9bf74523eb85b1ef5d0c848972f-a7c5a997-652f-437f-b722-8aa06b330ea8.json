@@ -1,0 +1,46 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_6199D16AC9D214E7:d2aec48cceda73609b4623df47e7e762e2130d194d4c78947288425bee8aac95",
+  "taskFingerprint": "d2aec48cceda73609b4623df47e7e762e2130d194d4c78947288425bee8aac95",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "a7c5a997-652f-437f-b722-8aa06b330ea8",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "44515:supporter:博士の研究:0",
+        "mechanic": "DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "44516:supporter:博士の研究:0",
+        "mechanic": "DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "54982ab866bb630c325b346d1f56cc282d170a7d70c5265e8d65058e929951e1"
+}

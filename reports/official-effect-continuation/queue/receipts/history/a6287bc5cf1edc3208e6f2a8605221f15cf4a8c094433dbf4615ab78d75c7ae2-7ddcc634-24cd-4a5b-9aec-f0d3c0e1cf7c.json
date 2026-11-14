@@ -1,0 +1,44 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_49B1CFEA2E2F0975:d86e196f2ee1524239256de55eb54777b461c8b2584b423ab5994df09f6e7d06",
+  "taskFingerprint": "d86e196f2ee1524239256de55eb54777b461c8b2584b423ab5994df09f6e7d06",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "7ddcc634-24cd-4a5b-9aec-f0d3c0e1cf7c",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "45305:ability:はたらくまえば:0",
+        "mechanic": "HAND_LIMIT_DRAW_ABILITY",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45357:ability:はたらくまえば:0",
+        "mechanic": "HAND_LIMIT_DRAW_ABILITY",
+        "commands": [
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "62cfbf084bfa5e4c7db6c30a445b487f0ad872151ba14263be77588578b3b879"
+}

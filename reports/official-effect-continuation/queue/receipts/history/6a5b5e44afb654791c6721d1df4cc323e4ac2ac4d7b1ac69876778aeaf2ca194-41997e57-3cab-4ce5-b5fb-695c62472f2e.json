@@ -1,0 +1,84 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_520EC284162B1F33:7aeb5874c822fa157f07b2ca2910bd5fbf90a64bb812d304122d02f2186b3a80",
+  "taskFingerprint": "7aeb5874c822fa157f07b2ca2910bd5fbf90a64bb812d304122d02f2186b3a80",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "41997e57-3cab-4ce5-b5fb-695c62472f2e",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "46449:attack:つきとばす:0",
+        "mechanic": "REPELLENT",
+        "commands": [
+          "FORCE_SWITCH"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "47015:attack:つきとばす:0",
+        "mechanic": "REPELLENT",
+        "commands": [
+          "FORCE_SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46022:attack:つきかえす:0",
+        "mechanic": "REPELLENT",
+        "commands": [
+          "FORCE_SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "47297:attack:ふきとばし:0",
+        "mechanic": "REPELLENT",
+        "commands": [
+          "FORCE_SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "47365:attack:ふきとばし:0",
+        "mechanic": "REPELLENT",
+        "commands": [
+          "FORCE_SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "bb74c6849e32447c713c3619689a677455502299e2ab56591e1d30cf2bd8e83a"
+}

@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_31768BCEC09089AF:8cfaab359c45480da9c38b1d535402d41b234a5a85215e11f58411a49a09adaf",
+  "taskFingerprint": "8cfaab359c45480da9c38b1d535402d41b234a5a85215e11f58411a49a09adaf",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "6d5b57d2-6470-4bed-b05c-d4e5138f6109",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45747:ability:アドレナフェロモン:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45850:ability:アドレナフェロモン:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46737:ability:アドレナフェロモン:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "6111a36b7327c9e88b193470e2ddcf84670e62db9de18dd15656221075690232"
+}

@@ -1,0 +1,89 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_BB3929A2869C6B8E:fc3ad54e40aa5ac8339d3f4d22e280bc33b757a29dcd350614b4acfa3be40a08",
+  "taskFingerprint": "fc3ad54e40aa5ac8339d3f4d22e280bc33b757a29dcd350614b4acfa3be40a08",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "be1bb365-aea7-4c7b-8ab7-02bc3be6f32f",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "46248:ability:スカイライン:0",
+        "mechanic": "SKYLINE",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46324:ability:スカイライン:0",
+        "mechanic": "SKYLINE",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46333:ability:スカイライン:0",
+        "mechanic": "SKYLINE",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48597:ability:スカイライン:0",
+        "mechanic": "SKYLINE",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49028:ability:スカイライン:0",
+        "mechanic": "SKYLINE",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "bfe2b7daad8181262d2ca18d639423c630e1efd7dcc7775d3886d951b0dc4586"
+}

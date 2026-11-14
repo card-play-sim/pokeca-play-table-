@@ -1,0 +1,29 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_1BB9E49E89D42B3A:0b6d1186e986c4dd0709ca56eafb4cdb8dc0edb39f116638c5940238206c7d3d",
+  "taskFingerprint": "0b6d1186e986c4dd0709ca56eafb4cdb8dc0edb39f116638c5940238206c7d3d",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "1990606b-5e26-4dc1-becd-e09249fa7271",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "48711:stadium:ロケット団の監視塔:0",
+        "mechanic": "WATCHTOWER",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "d8458394b62d4cd889a9d8dbdd230cd50fb96574d5ecdd7930b35b12d98810c8"
+}

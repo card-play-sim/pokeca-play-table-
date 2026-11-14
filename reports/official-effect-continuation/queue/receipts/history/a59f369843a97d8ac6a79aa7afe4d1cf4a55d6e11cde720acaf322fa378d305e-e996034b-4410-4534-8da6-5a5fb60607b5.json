@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_A9FE47838E00A579:ce37d49be65ddd8f23199d892fed9eb2dfd1b995141c3df81171afefdd806243",
+  "taskFingerprint": "ce37d49be65ddd8f23199d892fed9eb2dfd1b995141c3df81171afefdd806243",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "e996034b-4410-4534-8da6-5a5fb60607b5",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49386:item:夜のタンカ:0",
+        "mechanic": "STRETCHER",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "01a404fb8df4817736affff3b3eae0d58910cb9d1ace65694bc5fd36f9e5a577"
+}

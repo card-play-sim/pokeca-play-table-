@@ -1,0 +1,47 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_989D440E7A17BB63:0fbccdd8de70cccd96945a319d0f3cd4678d9bf55b5c7cca4a02293ad43872ff",
+  "taskFingerprint": "0fbccdd8de70cccd96945a319d0f3cd4678d9bf55b5c7cca4a02293ad43872ff",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "315fa3e1-6cf0-48dc-9aff-d9cc365b14d8",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47170:attack:ぶきみなかぜ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "48249:attack:サイコトリップ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "50805:attack:チャームボイス:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      }
+    ]
+  },
+  "checksum": "46ed3a8cdc38a9a750810fd2e5f34963014ac02776ae1e29bd14d209265265a0"
+}

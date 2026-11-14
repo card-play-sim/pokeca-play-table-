@@ -1,0 +1,35 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_20221F16A95EBCDA:595b48798dd02a888498465424af9cdfdad0c124fa2378e560a568cddbd7a5fa",
+  "taskFingerprint": "595b48798dd02a888498465424af9cdfdad0c124fa2378e560a568cddbd7a5fa",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "daf4334b-1ed4-474d-b42e-5ea84a4dd9a3",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50630:attack:ボルテッカー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45881:attack:ウッドハンマー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46042:attack:ウッドハンマー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46539:attack:とびつきバイト:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "4ebf2f0dfb89c8d7f788e841a4d6ee139712c021f2baff6fb7c2f352fb83eb0a"
+}
