@@ -1,0 +1,65 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_78C062ED86F02E0E:96f130e74342d0446fd72080257f013d01fae6e930e94544618613e5edd00ee2",
+  "taskFingerprint": "96f130e74342d0446fd72080257f013d01fae6e930e94544618613e5edd00ee2",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "a12d9e0b-0a81-4f84-92ab-4d21c7dfe690",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "48253:supporter:リーリエの決心:0",
+        "mechanic": "LILLIE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49609:supporter:リーリエの決心:0",
+        "mechanic": "LILLIE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "50489:supporter:リーリエの決心:0",
+        "mechanic": "LILLIE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "580fd85bed0af85f3ffe25df457eca075fbb29d8ad01df3b9ca0a00011e410e8"
+}

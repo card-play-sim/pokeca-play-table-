@@ -1,0 +1,162 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_989D440E7A17BB63:1cd7faee895d691aec27012c7a166be0a56a49cd256015df127cbb346d8b89e5",
+  "taskFingerprint": "1cd7faee895d691aec27012c7a166be0a56a49cd256015df127cbb346d8b89e5",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "c5bcaee9-8962-46de-b581-ee041b24dca0",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47170:attack:ぶきみなかぜ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48249:attack:サイコトリップ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "50805:attack:チャームボイス:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "45248:attack:ぶきみなねんぱ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46212:attack:げんわくダンス:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46277:attack:チャームボイス:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46250:attack:まどわす:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46508:attack:ゴーストトリップ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45746:attack:サイコトリップ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45849:attack:サイコトリップ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46736:attack:サイコトリップ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48603:attack:サイコトリップ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49074:attack:サイコトリップ:0",
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "bb4c5b839445faef510e44d6fc2f630a3a9499a556eb511826e07b65d3d36dc0"
+}

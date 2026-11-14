@@ -1,0 +1,35 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_B0A135168E7B8462:d71bfb8a196c2617bb54144f0725e8977c6bfe6bb6638627f3c7a8ec3cafb9a9",
+  "taskFingerprint": "d71bfb8a196c2617bb54144f0725e8977c6bfe6bb6638627f3c7a8ec3cafb9a9",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "fe45e135-0a8c-44a3-84a1-96c31091d7b9",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45258:attack:リパルサーアックス:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45559:attack:リパルサーアックス:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45567:attack:リパルサーアックス:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45572:attack:リパルサーアックス:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "fb73ea4a80ba71c8bd1aee891b295152e05cb5f6b1cce4e2f616ac24e8774774"
+}

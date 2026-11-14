@@ -1,0 +1,29 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_0B31BBCE18E90B3F:6799efb7850ea9ba9f76738f2f4b113f6eee52420e4fb957352e0f6e8e4ad842",
+  "taskFingerprint": "6799efb7850ea9ba9f76738f2f4b113f6eee52420e4fb957352e0f6e8e4ad842",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "a2a84ccd-86a1-49de-8e89-dd3614df03b7",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50323:item:エネルギーつけかえ:0",
+        "mechanic": "ENERGY_SWITCH",
+        "commands": [
+          "MOVE_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "26443c6b42f946faadd0b81c80745ed0b34963fe79329016d8f40b632b2069e0"
+}

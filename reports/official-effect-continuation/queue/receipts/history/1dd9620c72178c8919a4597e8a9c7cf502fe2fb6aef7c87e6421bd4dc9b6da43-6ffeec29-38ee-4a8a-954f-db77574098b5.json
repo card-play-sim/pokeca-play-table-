@@ -1,0 +1,25 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_C4A777CCAC363603:54ad0807d4db67918408dcd956ff81f3018fbf0d2fe6af2e232afb0dc24b88f0",
+  "taskFingerprint": "54ad0807d4db67918408dcd956ff81f3018fbf0d2fe6af2e232afb0dc24b88f0",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "6ffeec29-38ee-4a8a-954f-db77574098b5",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47174:supporter:ポケモンセンターのお姉さん:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47732:supporter:ポケモンセンターのお姉さん:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "6dabc95916888bba1c03adf223c02cb938b72aa15474353db094b2c419fa766e"
+}

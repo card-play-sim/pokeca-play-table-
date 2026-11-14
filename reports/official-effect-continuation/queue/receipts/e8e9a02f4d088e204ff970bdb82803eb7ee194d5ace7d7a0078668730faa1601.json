@@ -1,0 +1,117 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_6F2DEB8499ACC129:87c517ffdd0b322f0bc56a2bf5911e94e7af4fc90c6ef72b4a17420428a41927",
+  "taskFingerprint": "87c517ffdd0b322f0bc56a2bf5911e94e7af4fc90c6ef72b4a17420428a41927",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "83271bef-ac97-4a57-85e3-a13ebaf55083",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44447:attack:きのこドレイン:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "49620:attack:たべあるく:1",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "50633:attack:ひとやすみ:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "45885:attack:じっとする:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46044:attack:じっとする:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46211:attack:オーロラゲイン:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46466:attack:リーフドレイン:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "47328:attack:バブルドレイン:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45575:attack:マジカルリーフ:1",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "45418:attack:マジカルリーフ:1",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      }
+    ]
+  },
+  "checksum": "28f6b0bf86e8fa50ac877dca3ed1a59a4eb54dae5636ff3d744bdf3f3eccf81e"
+}

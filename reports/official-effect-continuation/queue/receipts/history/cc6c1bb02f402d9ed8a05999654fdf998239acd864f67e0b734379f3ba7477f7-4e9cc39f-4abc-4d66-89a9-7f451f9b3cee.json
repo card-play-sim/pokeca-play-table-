@@ -1,0 +1,40 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_8971CCDFB7254258:59107bac845a0bc27f081ec2027e9fd954b7a3887182da7be2251d332f20b024",
+  "taskFingerprint": "59107bac845a0bc27f081ec2027e9fd954b7a3887182da7be2251d332f20b024",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "4e9cc39f-4abc-4d66-89a9-7f451f9b3cee",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44451:attack:ワイルドボルト:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45167:attack:アクアボム:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45476:attack:とつげき:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45708:attack:ほのおタックル:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46703:attack:アクアボム:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "e6b0e1689279150ffb1703599bbe43e55235994ecc3aac5de48b9af51358bab9"
+}

@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_D16CA0E9F506E8CB:bbba8578ee6a188dfb0a0a64ed67c1792b6d61d859462853dddc4b44a33a54c9",
   "taskFingerprint": "bbba8578ee6a188dfb0a0a64ed67c1792b6d61d859462853dddc4b44a33a54c9",
-  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
-  "attemptId": "e1548c5f-8d3a-45d1-a297-5a305ce91229",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "3483a9dc-7520-4e23-9b97-df979aa0f886",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,13 +11,37 @@
     "cases": [
       {
         "slot": "47363:attack:くつろぐ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50485:attack:ひとやすみ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45602:attack:オーロラゲイン:0",
@@ -26,30 +50,76 @@
       },
       {
         "slot": "45697:attack:やどりぎのタネ:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "45992:attack:めいそう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46159:attack:めいそう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46245:attack:ドレインフィン:0",
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "47740:attack:ひとやすみ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "15a26b40e7de469386934baef0420ad3b5f3daacbfe12bce97e0f66a1519b92c"
+  "checksum": "25a795ff615ff4ad9df77657d80cae745d1a9fe93ded8549d7823dc75eabb7ee"
 }

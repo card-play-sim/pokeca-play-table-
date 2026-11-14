@@ -536,6 +536,16 @@ async function run(
         ),
         receipt,
       );
+      if (receipt.status === "FAILED")
+        B.atomic(
+          path.join(
+            dir,
+            "receipts",
+            "failures",
+            B.hash(j.jobId) + "-" + attempt.id + ".json",
+          ),
+          receipt,
+        );
       B.atomic(receiptPath(dir, j), receipt);
       store.append("FINISH", {
         jobId: j.jobId,

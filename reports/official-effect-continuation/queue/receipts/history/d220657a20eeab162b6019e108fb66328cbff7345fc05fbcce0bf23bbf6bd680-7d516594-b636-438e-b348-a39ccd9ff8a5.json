@@ -1,0 +1,50 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_8AA9C1D8A5CD59F1:b972898b2a70f6782b21f5edc1eb9c9fbbc3d6468a178bdc8ef3104d535f5401",
+  "taskFingerprint": "b972898b2a70f6782b21f5edc1eb9c9fbbc3d6468a178bdc8ef3104d535f5401",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "7d516594-b636-438e-b348-a39ccd9ff8a5",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "45202:attack:あなをほる:1",
+        "mechanic": "COIN_PROTECT",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "46790:attack:あなをほる:1",
+        "mechanic": "COIN_PROTECT",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      }
+    ]
+  },
+  "checksum": "965280d5911e000d3bcfad3a033c556f947f1ba72d96fa44db9e30fbf414fd2e"
+}

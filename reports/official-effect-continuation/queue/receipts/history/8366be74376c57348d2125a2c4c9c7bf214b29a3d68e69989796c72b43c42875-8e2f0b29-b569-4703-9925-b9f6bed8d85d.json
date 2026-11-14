@@ -1,0 +1,32 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_FB3675E62BBA80F7:8ccbd69a70fc3f441585e477e0accdb27602a156564c7cd6f76258d2337027ab",
+  "taskFingerprint": "8ccbd69a70fc3f441585e477e0accdb27602a156564c7cd6f76258d2337027ab",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "8e2f0b29-b569-4703-9925-b9f6bed8d85d",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50400:attack:かぎづめハント:0",
+        "mechanic": "HUNT",
+        "commands": [
+          "DAMAGE",
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "eecfa09bd2098f1219a797de21d5ad1c6ad9cb06975ec9784661dcf39ca6fadb"
+}

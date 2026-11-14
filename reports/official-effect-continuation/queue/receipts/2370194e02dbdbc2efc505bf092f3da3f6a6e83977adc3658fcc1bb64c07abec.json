@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FE3D161F37F46E4E:321584fabd08c61c0076dc4881a7875647a8079ee7962ca937d8b0588a72a7a5",
   "taskFingerprint": "321584fabd08c61c0076dc4881a7875647a8079ee7962ca937d8b0588a72a7a5",
-  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
-  "attemptId": "245590d2-1821-45f7-bc11-2c28d970ee90",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "be0ca912-3216-43d6-b471-b8a90a538427",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,10 +11,15 @@
     "cases": [
       {
         "slot": "50807:attack:にどげり:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       }
     ]
   },
-  "checksum": "7f2aaaea20af4dd14e3e3a4ab14527bc32128d8ade72f99599cc309b51262bc2"
+  "checksum": "b60aa321e18830513b38ec030e4d95dc6fd832d70305b0b9f602f750c21520c0"
 }

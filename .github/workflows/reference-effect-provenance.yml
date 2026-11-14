@@ -50,6 +50,8 @@ on:
       - 'tests/reference-official-effect-evidence-export.test.cjs'
       - 'tests/official-effect-codex-batch.test.cjs'
       - 'tests/official-effect-pipeline.test.cjs'
+      - 'tests/official-ex-prize-rule.test.cjs'
+      - 'scripts/parse-official-pokemon-energy.cjs'
       - 'tests/official-page-verification.test.cjs'
       - 'scripts/verify-official-effect-pages.cjs'
       - 'data/official-effect-evidence.json'
@@ -122,6 +124,8 @@ jobs:
           node-version: '22'
       - name: Fast reference effect runtime smoke test
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-runtime-smoke.test.cjs
+      - name: Official ex prize rule regression (saved official HTML)
+        run: node tests/official-ex-prize-rule.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()
         run: node scripts/report-reference-runtime-failures.cjs reports/reference-effect-runtime.log reports/reference-effect-runtime-causes.json

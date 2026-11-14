@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FE3D161F37F46E4E:5f21192236e64b0a5176bc5242bff94f1fa6a3eb7c29ac5229ef6d926ecd9c86",
   "taskFingerprint": "5f21192236e64b0a5176bc5242bff94f1fa6a3eb7c29ac5229ef6d926ecd9c86",
-  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
-  "attemptId": "e67c9d33-49ab-41a0-aebf-a75690ccc2dc",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "17b84177-bf8f-46fb-873d-4d990afa8c59",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,45 +11,121 @@
     "cases": [
       {
         "slot": "50807:attack:にどげり:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "45714:attack:しっぽビンタ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45748:attack:ダブルひっかき:1",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "45906:attack:ダブルひっかき:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45969:attack:ダブルボルト:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46049:attack:ダブルひっかき:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46757:attack:ダブルひっかき:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47613:attack:スイープビンタ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "0838b37e0a47f22039d4226b08b80093fc30b2ab8f3eaf8dce238771a096d4b3"
+  "checksum": "fadec1d979e24ad7f0614bfdf320acdac5e94d6485e52f60be5e0288ed511dcf"
 }

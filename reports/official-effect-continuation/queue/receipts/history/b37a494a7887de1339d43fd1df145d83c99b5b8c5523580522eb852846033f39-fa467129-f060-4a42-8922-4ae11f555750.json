@@ -1,0 +1,35 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_62810FD98E31EF1C:9c354c8e28a853b06bfb2b25a9b022bb445361fa4ed0f556d492ab3f9ab58eb7",
+  "taskFingerprint": "9c354c8e28a853b06bfb2b25a9b022bb445361fa4ed0f556d492ab3f9ab58eb7",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "fa467129-f060-4a42-8922-4ae11f555750",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45617:attack:まるやけ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45670:attack:まるやけ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45763:attack:おおあらし:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47397:attack:かりとりカッター:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "4d1bc72fd11cdc3c1f36e1a78fde986d82443af6a24c73b7dac9fa6ffcc5fe17"
+}

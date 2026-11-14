@@ -1,0 +1,31 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_5E4872794AAC7EBF:57e6d264dd2cf730eba50afefde485d093152e6182ddef2dfccc6d2ffe9a05a5",
+  "taskFingerprint": "57e6d264dd2cf730eba50afefde485d093152e6182ddef2dfccc6d2ffe9a05a5",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "65b483df-7d8f-4401-b680-2778d7573d07",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "50855:supporter:リーリエの決心:0",
+        "mechanic": "LILLIE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "c2f7f86f15c964b4d68b9a549deee76b5d21fb8550ab56dd1e07503589fdc2ee"
+}

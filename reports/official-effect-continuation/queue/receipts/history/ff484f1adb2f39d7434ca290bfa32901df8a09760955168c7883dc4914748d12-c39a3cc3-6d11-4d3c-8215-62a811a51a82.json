@@ -1,0 +1,34 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_4CF3E25CEE8E0DC0:b307640b738a864bedc921767724b0f6ec9deacff4cc771385a3742d8fd8ee2d",
+  "taskFingerprint": "b307640b738a864bedc921767724b0f6ec9deacff4cc771385a3742d8fd8ee2d",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "c39a3cc3-6d11-4d3c-8215-62a811a51a82",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49600:item:ハイパーボール:0",
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      }
+    ]
+  },
+  "checksum": "a2481776705516b6674b15f4b7f4c4a1040cf47a53bc87079376c01d369f0b84"
+}

@@ -1,0 +1,40 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_C8692786D454748F:f2b084b9a095692ec898a553d2c4bd103828a675adaa2bb4afe17f0c7df4ebfd",
+  "taskFingerprint": "f2b084b9a095692ec898a553d2c4bd103828a675adaa2bb4afe17f0c7df4ebfd",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "641ef0c1-7f64-41af-84b3-e0475063492e",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50698:attack:はじきおとす:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46233:attack:はかいのイカリ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47349:attack:かじりとる:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47554:attack:つつきおとす:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47785:attack:ついばむ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "dcf6e56b46d8c0a16479bd1c98d821423d35dbb64b1b02f278f7308c5b215e75"
+}

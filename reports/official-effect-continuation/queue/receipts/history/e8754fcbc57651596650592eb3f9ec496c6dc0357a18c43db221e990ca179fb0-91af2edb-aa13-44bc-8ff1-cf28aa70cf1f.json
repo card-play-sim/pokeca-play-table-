@@ -1,0 +1,31 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_8F135DC8EFF3EF6E:e25b3a9b8af79705f2f6b2116576d1f7241e18b75527377a89012dbd3cabb3d7",
+  "taskFingerprint": "e25b3a9b8af79705f2f6b2116576d1f7241e18b75527377a89012dbd3cabb3d7",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "91af2edb-aa13-44bc-8ff1-cf28aa70cf1f",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49608:supporter:ジャッジマン:0",
+        "mechanic": "JUDGE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "ec698d6fb3c26330bf769968e6226bbcc26476e3c0b1f19ef2e15bfed414dc18"
+}

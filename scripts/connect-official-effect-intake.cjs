@@ -163,6 +163,19 @@ const report = {
   ].sort(),
   fetchBlocked: raw.blocked,
   compilerBlocked: compiled.blocked,
+  // Preserve a stable, cross-card repair priority list without adopting unknown effects.
+  blockerSummary: {
+    fetch: Object.entries(raw.blocked.reduce((counts, row) => {
+      const reason = row.reason || "UNKNOWN";
+      counts[reason] = (counts[reason] || 0) + 1;
+      return counts;
+    }, {})).map(([reason, count]) => ({reason, count})).sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
+    compiler: Object.entries(compiled.blocked.reduce((counts, row) => {
+      const reason = row.reason || "UNKNOWN";
+      counts[reason] = (counts[reason] || 0) + 1;
+      return counts;
+    }, {})).map(([reason, count]) => ({reason, count})).sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
+  },
   queue: queue.run,
   resumeCommand:
     "python scripts/continue-official-effect-intake.py --limit 100 --adopt",

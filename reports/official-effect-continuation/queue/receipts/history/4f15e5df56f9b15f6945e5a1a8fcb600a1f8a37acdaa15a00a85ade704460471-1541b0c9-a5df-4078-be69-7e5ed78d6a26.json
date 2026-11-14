@@ -1,0 +1,191 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
+  "taskFingerprint": "82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "1541b0c9-a5df-4078-be69-7e5ed78d6a26",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44368:attack:ずっこけ:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "44430:attack:あばれハンマー:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45843:attack:ハンマーウィップ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45725:attack:アクアスラッシュ:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "45775:attack:そこぢから:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "45855:attack:そこぢから:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46020:attack:そこぢから:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46211:attack:ギガインパクト:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "46538:attack:アイアンバスター:1",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46705:attack:アクアスラッシュ:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46794:attack:そこぢから:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47632:attack:エメラルドブレード:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47766:attack:そこぢから:1",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "BLOCKED",
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+      },
+      {
+        "slot": "46248:attack:むげんのやいば:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46324:attack:むげんのやいば:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "46333:attack:むげんのやいば:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "48597:attack:むげんのやいば:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49028:attack:むげんのやいば:0",
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "793998d2c568bac7a789afa22a616d5799a3cb801f750135bdfed6afbf64955f"
+}

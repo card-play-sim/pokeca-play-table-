@@ -167,6 +167,28 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS"].includes(m)) {
+    const p = frame.game.players[0];
+    for (const energy of [...p.active.energyCards])
+      if (energy.isSpecial) {
+        p.active.energyCards.splice(p.active.energyCards.indexOf(energy), 1);
+        p.deck.push(energy);
+      }
+  }
+  if (m === "HEAL_SELF_ATTACK")
+    frame.game.players[0].active.damage = Math.min(
+      40,
+      frame.game.players[0].active.hp - 10,
+    );
+  if (m === "RECOVER_TYPED_DISCARD") {
+    const p = frame.game.players[0],
+      eligible = (c) =>
+        c.kind === "pokemon"
+          ? E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)
+          : c.kind === "energy" && !c.isSpecial && c.energyType === e.plan.type;
+    for (const c of [...p.deck].filter(eligible).slice(0, e.plan.amount))
+      p.discard.push(p.deck.splice(p.deck.indexOf(c), 1)[0]);
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(

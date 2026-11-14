@@ -1,0 +1,31 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_8A85410221E391BD:8a2ebee8c47c60944d35a18e6ea0665d52931fbaa7616c78f18801d8edbc1e64",
+  "taskFingerprint": "8a2ebee8c47c60944d35a18e6ea0665d52931fbaa7616c78f18801d8edbc1e64",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "9f673084-eb53-4c81-ad44-b05277982b73",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "45209:item:なかよしポフィン:0",
+        "mechanic": "POFFIN",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "49b140fbfa9b2e771f8993c15d4a66583e28f0867b1da8a2bd4285dcf916b950"
+}

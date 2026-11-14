@@ -1,0 +1,20 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_E590F156E63F28AA:e4b84c6ec610e50813f7b46fb5bef083a2c2d22eb626cd303667017bfe6bc220",
+  "taskFingerprint": "e4b84c6ec610e50813f7b46fb5bef083a2c2d22eb626cd303667017bfe6bc220",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "e64123e3-23ab-4c1f-bfc8-b4c63bef7910",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "45352:attack:サイバードライブ:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "6056b69de13e4342c1b92778fff4ca39bd9fd9178f66391c82193164d1cd658d"
+}

@@ -1,0 +1,25 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_89E05FAF155EC7D4:0fdaaef04e499862b74e424186e829bdc67d11b0fc0d46ab530f140f641fe794",
+  "taskFingerprint": "0fdaaef04e499862b74e424186e829bdc67d11b0fc0d46ab530f140f641fe794",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "b147a513-3737-4666-b498-27291292a011",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47415:attack:ダークフロスト:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47426:attack:バッドサンダー:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "e3cc76918d9c55d75de04e057e05858cd42c6dfaba42bb2b2a1c780e2d7a0a21"
+}

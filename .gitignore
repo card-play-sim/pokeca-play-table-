@@ -8,3 +8,6 @@ reports/official-effect-continuation/queue/classifications/
 reports/official-effect-continuation/queue/row-receipts/
 reports/official-effect-continuation/queue/selection.json
 reports/official-effect-continuation/queue/last-run.json
+
+# Per-attempt success/blocked history is retained in workflow artifacts; current receipts remain versioned.
+reports/official-effect-continuation/queue/receipts/history/

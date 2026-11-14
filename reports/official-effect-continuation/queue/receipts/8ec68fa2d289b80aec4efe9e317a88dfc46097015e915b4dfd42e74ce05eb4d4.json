@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_CD3C84DF16680FA0:5d287685f9e276ff91d8b76fd827e5bbaf90d61a52800d9b5e372692bd6235ca",
   "taskFingerprint": "5d287685f9e276ff91d8b76fd827e5bbaf90d61a52800d9b5e372692bd6235ca",
-  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
-  "attemptId": "1b65ca02-28b5-4742-8648-14852417bdc6",
+  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
+  "attemptId": "517e85b2-dfae-43b5-9953-49ba982e876c",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,50 +11,131 @@
     "cases": [
       {
         "slot": "44383:attack:はねまくる:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "48255:attack:ふみまくる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "49589:attack:ふみまくる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45153:attack:トリプルスピン:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "47018:attack:ふみまくる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46015:attack:さんどづき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46192:attack:さんどづき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46665:attack:トリプルスピン:0",
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
       },
       {
         "slot": "47182:attack:さんどづき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "FIXED_COIN_HITS",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "701fa8769ae504e151cb021e37b75be0d0e3acafed869d02a8a492a6401e86f7"
+  "checksum": "4f67949b6a13ccd66bd9b098316b9e2fd9936c6014f8c9d307303eada7b61974"
 }

@@ -1,0 +1,88 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_B05DE174C849CEE2:3c6e9fa3994cbd595204947d1c1139868c002c62d30662090fa64f8a78a9a6a3",
+  "taskFingerprint": "3c6e9fa3994cbd595204947d1c1139868c002c62d30662090fa64f8a78a9a6a3",
+  "executionFingerprint": "e624564d9193774e56e6a4b21dabb9414c7b9e52a091d5788e15370b9681b271",
+  "attemptId": "d325b2fe-6c25-4eed-bde8-b628355ecea3",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47164:attack:ぱっときえる:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47170:attack:バルーンリターン:1",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "49694:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "50067:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      },
+      {
+        "slot": "50081:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
+      }
+    ]
+  },
+  "checksum": "5256b4a161a2870182b2786f2b1d708168b3872820f120bad5397e8fe14bb0dc"
+}
