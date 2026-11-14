@@ -23,6 +23,10 @@ for (const plan of sameTextPlans) {
  const previous = byMechanic.get(plan.mechanic);
  if (previous && previous.commands.join('|') === plan.commands.join('|')) {
   assert.notStrictEqual(previous.commands, plan.commands, 'effect command arrays must not be shared across compiled cards');
+  const original = plan.commands.slice();
+  previous.commands.push('ISOLATION_PROBE');
+  assert.equal(plan.commands.join('|'), original.join('|'), 'mutating one card plan must not change another card plan');
+  previous.commands.pop();
  }
  byMechanic.set(plan.mechanic, plan);
 }
