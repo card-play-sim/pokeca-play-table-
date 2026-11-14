@@ -10,7 +10,7 @@ const engine = sandbox.window.Pokeca;
 const manifest = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../data/fixed-test-decks.json'), 'utf8'));
 let checked = 0;
 for (const firstDeck of [0, 1]) {
-  for (let initialSeed = 1; initialSeed <= 100; initialSeed++) {
+  for (let initialSeed = 1; initialSeed <= 150; initialSeed++) {
     let seed = initialSeed;
     const rng = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
     const created = engine.createReferenceValidationMatch(manifest, { rng, firstDeck, firstPlayer: firstDeck ? 'ai' : 'you' });
