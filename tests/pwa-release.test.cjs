@@ -2,6 +2,12 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
 const BUILD=fs.readFileSync('index.html','utf8').match(/name="pokeca-build" content="(\d+)"/)[1];
 assert.equal(spawnSync(process.execPath,['scripts/build-pwa-release.cjs','--check']).status,0);
+const MOBILE_BUILD=fs.readFileSync('ui/mobile.js','utf8').match(/window\.PokecaMobileBuild=['"](\d+)['"]/);
+assert(MOBILE_BUILD,'mobile runtime build marker missing');
+assert.equal(MOBILE_BUILD[1],BUILD,'HTML and mobile runtime build must match before publishing');
+const workerSource=fs.readFileSync('sw.js','utf8');
+assert(workerSource.includes('const BUILD='+JSON.stringify(BUILD)+';'),'service worker build must match HTML');
+
 async function worker({bad=false}={}){
  const handlers={},storage=new Map([['pokeca-first-playable-v240',new Map([['old','saved shell']])],['unrelated-app',new Map([['keep','yes']])]]);let network=0,skipped=false;
  const caches={keys:async()=>[...storage.keys()],delete:async k=>storage.delete(k),open:async k=>{if(!storage.has(k))storage.set(k,new Map());return {put:async(u,r)=>storage.get(k).set(u,r),match:async u=>storage.get(k).get(u)}}};
