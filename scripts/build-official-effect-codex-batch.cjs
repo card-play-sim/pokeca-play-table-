@@ -13,12 +13,12 @@ const result={schemaVersion:1,purpose:'OFFICIAL_EFFECT_SHARED_MECHANIC_CODEX_BAT
 let rows=[];
 if(!fs.existsSync(input))result.blocked.push({reason:'OFFICIAL_EFFECT_EVIDENCE_FILE_MISSING',source:input});
 else{
- const data=JSON.parse(fs.readFileSync(input,'utf8'));
+ const content=fs.readFileSync(input,'utf8');result.inputSha256=digest(content);const data=JSON.parse(content);
  if(!Array.isArray(data))throw Error('EVIDENCE_MUST_BE_ARRAY');
  rows=data;
 }
 result.counts.received=rows.length;
-const grouped=new Map(),seen=new Map();
+const grouped=new Map(),seen=new Map(),groupPrints=new Map(),conflictedSlots=new Set();
 for(const row of rows){
  const ident=String(row?.officialCardId||'').trim(),category=String(row?.category||'').trim();
  const text=String(row?.effectText||'').trim(),url=String(row?.officialPageUrl||'').trim();
@@ -35,28 +35,30 @@ for(const row of rows){
  else if(url.match(/\/card\/(\d{4,8})(?:\/|$)/)?.[1]!==ident)reasons.push('OFFICIAL_URL_CARD_ID_MISMATCH');
  if(!/^[a-f0-9]{64}$/.test(sourceHash)||sourceHash!==digest(text))reasons.push('OFFICIAL_TEXT_HASH_MISMATCH');
  const key=ident+':'+kind+':'+String(row?.effectName||'')+':'+String(row?.effectIndex??0);
- if(seen.has(key)&&seen.get(key)!==sourceHash)reasons.push('CONFLICTING_EFFECT_EVIDENCE');
+ if(seen.has(key)&&seen.get(key)!==sourceHash){reasons.push('CONFLICTING_EFFECT_EVIDENCE');conflictedSlots.add(key);}
  if(seen.has(key)&&seen.get(key)===sourceHash)reasons.push('DUPLICATE_EFFECT_EVIDENCE');
- if(reasons.length){result.blocked.push({officialCardId:ident,effectKind:kind,reasons});continue;}
+ if(reasons.length){result.blocked.push({officialCardId:ident,category,effectKind:kind,effectName:String(row?.effectName||''),effectIndex:row?.effectIndex??0,reasons});continue;}
  seen.set(key,sourceHash);result.counts.verified++;
  // Exact normalized text is a conservative grouping key, not a claim of equivalent semantics.
  const normalized=text.normalize('NFKC').replace(/\s+/g,' ').trim();
  const groupKey=category+':'+kind+':'+digest(normalized);
  const group=grouped.get(groupKey)||{category,effectKind:kind,normalizedTextHash:digest(normalized),officialText:normalized,prints:[],evidence:[]};
- if(!group.prints.includes(ident))group.prints.push(ident);
+ const printSet=groupPrints.get(groupKey)||new Set();if(!printSet.has(ident)){group.prints.push(ident);printSet.add(ident);}groupPrints.set(groupKey,printSet);
  group.evidence.push({officialCardId:ident,officialPageUrl:url,officialTextSha256:sourceHash,effectText:text,category,effectKind:kind,effectName:String(row.effectName||''),effectIndex:row.effectIndex??0});
  grouped.set(groupKey,group);
 }
+for(const [key,group]of grouped){const kept=[],removed=[];for(const e of group.evidence)(conflictedSlots.has([e.officialCardId,e.effectKind,e.effectName,e.effectIndex].join(':'))?removed:kept).push(e);for(const e of removed){result.counts.verified--;result.blocked.push({...e,reasons:['QUARANTINED_CONFLICTING_EFFECT_EVIDENCE']});}group.evidence=kept;group.prints=[...new Set(kept.map(e=>e.officialCardId))];if(!kept.length)grouped.delete(key);}
 result.tasks=[...grouped.values()].sort((a,b)=>b.prints.length-a.prints.length||a.normalizedTextHash.localeCompare(b.normalizedTextHash)).map(group=>({
  taskId:'OFFICIAL_SHARED_EFFECT_'+digest(group.category+':'+group.effectKind+':'+group.normalizedTextHash).slice(0,16).toUpperCase(),status:'CODEX_REVIEW_REQUIRED',
  scope:'ONE_SHARED_EFFECT_PATTERN_ALL_AFFECTED_PRINTS',...group,
  instructions:['Verify official source and hash for every affected print','Compare with approved Effect Command contract; do not infer missing behavior','Implement or extend a reusable command, not a print-specific branch','Cover attacks, abilities and trainer categories using the same engine boundary','Add positive, invalid-action rollback, deterministic replay and card conservation tests for all affected prints','Synchronize browser bundle and run full CI; publish only after release gates pass'],
  acceptance:['OFFICIAL_EVIDENCE_VERIFIED','NO_UNAPPROVED_COMMAND_SEMANTICS','AFFECTED_PRINTS_REGRESSION_PASS','FULL_REFERENCE_EFFECT_CI_PASS','BROWSER_BUNDLE_SYNCHRONIZED']
 }));
+const tools=require('./lib/shared-effect-batch.cjs');result.candidateFamilies=tools.classify(result.tasks);result.categories=tools.summarize(result.tasks,result.blocked);result.evidenceTrust='FORMAT_ID_URL_AND_HASH_VERIFIED_REQUIRES_OFFICIAL_CORROBORATION';
 result.counts.sharedPatterns=result.tasks.length;result.counts.blocked=result.blocked.length;
 result.status=result.blocked.length?'PARTIAL_BLOCKED':rows.length?'READY_FOR_CODEX_REVIEW':'BLOCKED_NO_EFFECT_EVIDENCE';
-fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true});
-fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');
+if(path.resolve(input)===path.resolve(output))throw Error('INPUT_OUTPUT_MUST_DIFFER');
+tools.atomic(output,result);
 console.log('OFFICIAL_EFFECT_CODEX_BATCH:',JSON.stringify({status:result.status,counts:result.counts,output}));
 if(result.status!=='READY_FOR_CODEX_REVIEW')process.exitCode=2;
 module.exports={result};
