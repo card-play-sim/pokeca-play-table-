@@ -10,7 +10,6 @@ on:
     - cron: "15 20 * * *"
 permissions:
   contents: write
-  pull-requests: write
 concurrency:
   group: incremental-official-effect-intake
   cancel-in-progress: false
@@ -41,6 +40,8 @@ jobs:
           python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt
           node scripts/build-pwa-release.cjs
           node tests/control-013-continuation.test.cjs
+          node tests/control-014-shared-effects.test.cjs
+          node tests/control-014-official-parser.test.cjs
           node tests/control-008-extensions.test.cjs
           node tests/control-009-expansion.test.cjs
           node tests/control-010-effects.test.cjs
@@ -49,8 +50,6 @@ jobs:
           node scripts/build-pwa-release.cjs --check
       - name: Save checkpoint and outcomes on the automation branch for review
         if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@users.noreply.github.com
@@ -58,9 +57,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
             git push -u origin automation/control-013-intake
-            if [ -z "$(gh pr list --head automation/control-013-intake --json number --jq '.[0].number // empty')" ]; then
-              gh pr create --draft --base main --head automation/control-013-intake --title 'Official effect intake: incremental checkpoint for review' --body 'Incremental official HTML, compiler results and durable queue. Review test results and BLOCKED causes before merging. No model API or automatic main merge. GITHUB_TOKEN-created PRs may need a maintainer event to start PR workflows.'
-            fi
+          fi
           fi
       - uses: actions/upload-artifact@v4
         if: always()
@@ -70,4 +67,5 @@ jobs:
             data/official-effect-intake/
             reports/official-effect-continuation/
             test-results/control-013*.json
+            test-results/control-014*.json
           retention-days: 90
