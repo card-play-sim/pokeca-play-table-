@@ -1,0 +1,89 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_B05DE174C849CEE2:99b27745e42801a47217ade1e99ad23e6b9ac80301d112a7409f64482bd0ce57",
+  "taskFingerprint": "99b27745e42801a47217ade1e99ad23e6b9ac80301d112a7409f64482bd0ce57",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "197d3a8d-d668-4ac7-9b34-378fccd0655a",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47164:attack:ぱっときえる:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "47170:attack:バルーンリターン:1",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "47051:attack:ぱっときえる:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "49694:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "50067:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "50081:attack:しっぽをまく:0",
+        "mechanic": "RETURN_SELF_HAND",
+        "commands": [
+          "DAMAGE",
+          "RETURN_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "8f971f4d86958e23c1d2c3097297b4a9307d5a4c4b8b504de7cebb2cad600cf9"
+}

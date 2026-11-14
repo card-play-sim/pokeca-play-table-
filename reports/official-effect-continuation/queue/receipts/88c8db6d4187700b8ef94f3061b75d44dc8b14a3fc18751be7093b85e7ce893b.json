@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_304C6D13E53B2176:caec0d9b56216b564ed7f1aa08482869e2d5e915303b29b544cc4904738891af",
+  "taskFingerprint": "caec0d9b56216b564ed7f1aa08482869e2d5e915303b29b544cc4904738891af",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "fe4203cd-560b-4f1d-8b50-bc51edd2b8eb",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50786:attack:ひのこ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "50798:attack:ひのこ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "50810:attack:かえんほうしゃ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "74c1bb745de72c5a62ca65e8c5340e4c310af5c90a1b64c4a1ddca02af758388"
+}

@@ -1,0 +1,44 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_1F6AC7880BACBC91:bc72f4e9f36b5e1463105e09d4c86855e5e59cc33795955337a131fef75951ca",
+  "taskFingerprint": "bc72f4e9f36b5e1463105e09d4c86855e5e59cc33795955337a131fef75951ca",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "f3339106-7d1e-4e28-9939-0abd40c42df7",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "44961:item:ポケモンいれかえ:0",
+        "mechanic": "SWITCH",
+        "commands": [
+          "SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      },
+      {
+        "slot": "49602:item:ポケモンいれかえ:0",
+        "mechanic": "SWITCH",
+        "commands": [
+          "SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "211253d4fd481b1944e13edb131a32ad0a5fd692ae70582e100226bae70423d5"
+}

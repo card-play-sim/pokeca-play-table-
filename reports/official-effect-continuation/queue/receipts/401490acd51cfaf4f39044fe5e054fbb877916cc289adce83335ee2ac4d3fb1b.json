@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_7AB7E25CF2E5754E:00aaea68f71949c51b0ddcffa5181f7b8ecbcf8ee218ac99dd556705ada97c38",
+  "taskFingerprint": "00aaea68f71949c51b0ddcffa5181f7b8ecbcf8ee218ac99dd556705ada97c38",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "363a8883-d973-4f7e-8482-9cd86ded40e4",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49458:energy:ロケット団エネルギー:0",
+        "mechanic": "ROCKET_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "267e51f590a4a13b0a5f5aa2c258d2e580630be5f97126892927880a310c40c9"
+}

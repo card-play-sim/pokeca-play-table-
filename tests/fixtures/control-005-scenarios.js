@@ -25,6 +25,7 @@
    p.active=pokemon(0,criterion);if(!p.active)throw Error('FIXTURE_ACTIVE_MISSING');
   }
   o.active=pokemon(1,m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
+  if(!o.active)o.active=pokemon(1);
   for(let i=0;i<2;i++){const a=pokemon(0);if(a)p.bench.push(a);const b=pokemon(1,c=>!record(c).facts.teraBenchProtection);if(b)o.bench.push(b);}
   function addHand(i,pred){const c=take(i,pred,false);if(c)g.players[i].hand.push(c);return c;}
   function attach(i,target,pred){const c=take(i,pred,false);if(c)target.energyCards.push(c);return c;}

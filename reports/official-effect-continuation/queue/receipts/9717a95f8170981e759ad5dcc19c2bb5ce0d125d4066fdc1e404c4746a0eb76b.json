@@ -1,0 +1,32 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_407F49000C0DB098:12d8dd1d10973d6684e8a28cc533384d8279d407c91fe2f4ca7ac6ee72634b59",
+  "taskFingerprint": "12d8dd1d10973d6684e8a28cc533384d8279d407c91fe2f4ca7ac6ee72634b59",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "69112e01-0414-45a1-be39-d7baabbb84d8",
+  "status": "SUCCEEDED",
+  "result": {
+    "status": "SUCCEEDED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "cases": [
+      {
+        "slot": "49434:supporter:トウコ:0",
+        "mechanic": "HILDA",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
+      }
+    ]
+  },
+  "checksum": "6c6eb93bfab873d1d54e7977415e510fc29f97d9970cb3b1e9cfa69a11925d07"
+}

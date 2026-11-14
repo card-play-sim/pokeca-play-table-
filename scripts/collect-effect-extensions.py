@@ -14,12 +14,12 @@ def save(path,value):
  path.parent.mkdir(parents=True,exist_ok=True);fd,tmp=tempfile.mkstemp(dir=path.parent)
  with os.fdopen(fd,'w') as f:json.dump(value,f,ensure_ascii=False,indent=2);f.write('\n')
  os.replace(tmp,path)
-def collect(ident):
+def collect(ident,saved=False):
  url='https://www.pokemon-card.com/card-search/details.php/card/'+ident;path=ROOT/f'data/effect-extensions/evidence/{ident}.json'
  try:
   prior=BY_ID.get(ident)
   if prior:return {'status':'FETCHED','record':prior}
-  body=json.loads(path.read_text())['html'] if '--saved' in sys.argv else subprocess.check_output(['curl','-fsS','--max-time','30',url],stderr=subprocess.PIPE).decode('utf8')
+  body=json.loads(path.read_text())['html'] if saved or '--saved' in sys.argv else subprocess.check_output(['curl','-fsS','--max-time','30',url],stderr=subprocess.PIPE).decode('utf8')
   canonical=re.search(r'<meta property="og:url" content="([^"]+)"',body)[1];assert re.search('/card/'+ident+'/?$',canonical)
   sha=hashlib.sha256(body.encode()).hexdigest();save(path,{'url':url,'htmlSha256':sha,'html':body})
   name=plain(re.search(r'<h1[^>]*>(.*?)</h1>',body,re.S)[1]);section=re.search(r'<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)</h2>\s*<p[^>]*>(.*?)</p>',body,re.S)

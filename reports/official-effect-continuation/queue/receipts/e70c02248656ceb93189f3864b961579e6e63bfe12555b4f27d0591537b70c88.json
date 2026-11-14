@@ -1,0 +1,20 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_2B867B2BEA9DEDA0:31519f9b1376c8b818fd09b469a2cc6b5451617dbae9c7bac60a38766f4f94ed",
+  "taskFingerprint": "31519f9b1376c8b818fd09b469a2cc6b5451617dbae9c7bac60a38766f4f94ed",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "90ed169e-4954-49cc-a893-42335aaa0ef7",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47048:attack:ビクトリーシンボル:1",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "8381902a0fedd96e58004cb46829c1c65d40abb6f0161473495c2107674f5520"
+}

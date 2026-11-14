@@ -16,7 +16,14 @@ const fs = require("node:fs"),
   const options = {},
     pos = [];
   for (let i = 0; i < argv.length; i++) {
-    if (["--retry-failed", "--retry-blocked", "--recheck"].includes(argv[i]))
+    if (
+      [
+        "--retry-failed",
+        "--retry-transient",
+        "--retry-blocked",
+        "--recheck",
+      ].includes(argv[i])
+    )
       options[argv[i]] = true;
     else if (argv[i].startsWith("--")) {
       if (
@@ -86,6 +93,7 @@ const fs = require("node:fs"),
       maxTasks: Number(options["--max-tasks"] || Number.MAX_SAFE_INTEGER),
       timeoutMs: Number(options["--timeout-ms"] || 120000),
       retryFailed: !!options["--retry-failed"],
+      retryTransient: !!options["--retry-transient"],
       retryBlocked: !!options["--retry-blocked"],
       recheck: !!options["--recheck"],
     },

@@ -24,7 +24,13 @@ function cli(script, args) {
       "data/reference-effects/plans.json",
     ].map((source, i) => {
       const file = path.join(tmp, "evidence-" + i + ".json");
-      cli("export-reference-official-effect-evidence.cjs", [source, file]);
+      let input=source;
+      if (i===0) {
+        const ids=new Set(["example-decks.json","control-009-example-decks.json","control-010-example-decks.json"].flatMap(name=>JSON.parse(fs.readFileSync("data/effect-extensions/"+name)).decks.flatMap(d=>d.cards.map(c=>c.referenceOfficialCardId))));
+        const fixture=JSON.parse(fs.readFileSync(source));fixture.records=fixture.records.filter(r=>ids.has(r.officialCardId));
+        input=path.join(tmp,"original-21-reference-fixture.json");fs.writeFileSync(input,JSON.stringify(fixture));assert.equal(fixture.records.length,21);
+      }
+      cli("export-reference-official-effect-evidence.cjs", [input, file]);
       return file;
     });
     const dir = path.join(tmp, "queue"),

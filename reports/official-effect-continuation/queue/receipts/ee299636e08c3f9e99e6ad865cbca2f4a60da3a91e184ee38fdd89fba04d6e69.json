@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_510CB97F7DC33FA7:4b27c578c1b90ea76b048f1df92bdb2ca9b7e3eb080452e11fab7747c679006c",
+  "taskFingerprint": "4b27c578c1b90ea76b048f1df92bdb2ca9b7e3eb080452e11fab7747c679006c",
+  "executionFingerprint": "3330a370db50278cea8e59a2bf1f5e092d0b1611a422047c13802574aa481a68",
+  "attemptId": "05982e0a-a50d-4ad4-b88e-7282713685d3",
+  "status": "BLOCKED",
+  "result": {
+    "status": "BLOCKED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "44377:supporter:フトゥー博士のシナリオ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "44465:supporter:フトゥー博士のシナリオ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      },
+      {
+        "slot": "44470:supporter:フトゥー博士のシナリオ:0",
+        "status": "BLOCKED",
+        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+      }
+    ]
+  },
+  "checksum": "b182319620630116622371dfa6e6bee09be09835164c51b302d6a20799869358"
+}
