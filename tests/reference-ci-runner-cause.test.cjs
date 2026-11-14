@@ -19,6 +19,8 @@ for (const cause of ['PWA_MOBILE_BUILD_MISMATCH','PWA_VISIBLE_BUILD_MISMATCH']) 
  assert.equal(mismatch.exitCode,1);
  assert.equal(mismatch.record.causeId,cause);
 }
+const stdoutOnly=run(1,'','PWA_VISIBLE_BUILD_MISMATCH: current marker mismatch');
+assert.equal(stdoutOnly.record.causeId,'PWA_VISIBLE_BUILD_MISMATCH');
 const fallback=run(1,'AssertionError: ordinary mismatch');
 assert.equal(fallback.record.causeId,'TEST_ASSERTION_OR_RUNTIME_FAILURE');
 const structured='REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify({causeId:'INVALID_TARGET',command:'MOVE_DAMAGE_COUNTERS',test:'tests/reference-effect-runtime-smoke.test.cjs',officialCardId:'48248'})+'\\n';
