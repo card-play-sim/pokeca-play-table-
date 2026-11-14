@@ -58,7 +58,6 @@ jobs:
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
             git push -u origin automation/control-013-intake
           fi
-          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
