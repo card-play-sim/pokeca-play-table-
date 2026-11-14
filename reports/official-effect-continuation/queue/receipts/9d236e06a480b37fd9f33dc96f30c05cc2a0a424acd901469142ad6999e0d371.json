@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_AB9DA20A7404B2A9:c4f9e34b1f6f7fc5497e368707d232b4928eb56c815bafc526d311b7231e827c",
   "taskFingerprint": "c4f9e34b1f6f7fc5497e368707d232b4928eb56c815bafc526d311b7231e827c",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "55c2fd15-208d-40a4-96e7-d82958193656",
+  "executionFingerprint": "31384982a42c1238f41dc22133c48b85db4499ea9f3566be9779386844102013",
+  "attemptId": "8dfeec4d-0697-4fe6-8e0e-4c81ca4b8876",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -47,8 +47,14 @@
           "DAMAGE",
           "DRAW"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45164:attack:クイックドロー:0",
@@ -57,8 +63,14 @@
           "DAMAGE",
           "DRAW"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45348:attack:ひきつける:0",
@@ -130,8 +142,19 @@
       },
       {
         "slot": "49618:attack:リニューアルオープン！:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45594:attack:ひきつける:0",
@@ -140,5 +163,5 @@
       }
     ]
   },
-  "checksum": "edb04d26fe98640bafe7038eda42378b127ee23b89a33f7c24be733b7657b207"
+  "checksum": "1eb9c8125aa0f8b7da19db4ae389357da6b21d7c015ea08dd26668fcd832cb4b"
 }

@@ -21,7 +21,7 @@
   const p=g.players[0],o=g.players[1];
   if(fieldSource)p.active=mon(source);else p.hand.push(source);
   if(!p.active){
-   const criterion=m==='ROCKET_ENERGY'?c=>record(c).name.startsWith('ロケット団の'):m==='IGNITION'||m==='ROSA'?c=>record(c).facts.stage===2:m==='FAIRY_ZONE'?c=>record(c).facts.types.includes('超')&&!record(c).abilities.some(a=>a.plan?.mechanic==='FAIRY_ZONE'):()=>true;
+   const criterion=m==='ROCKET_ENERGY'?c=>record(c).name.startsWith('ロケット団の'):m==='CONDITIONAL_EVOLVED_ENERGY'?c=>record(c).facts.stage>0&&!record(c).facts.rulePokemon:m==='IGNITION'||m==='ROSA'?c=>record(c).facts.stage===2:m==='FAIRY_ZONE'?c=>record(c).facts.types.includes('超')&&!record(c).abilities.some(a=>a.plan?.mechanic==='FAIRY_ZONE'):()=>true;
    p.active=pokemon(0,criterion);if(!p.active)throw Error('FIXTURE_ACTIVE_MISSING');
   }
   o.active=pokemon(1,m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
@@ -42,6 +42,7 @@
    const fallen=take(0,c=>c.kind==='pokemon',false);if(fallen)p.discard.push(fallen);
    g.history.push({turnNumber:39,player:'ai',type:'knockout',details:{targetPlayerId:'you',cardId:fallen?.id}});o.prizes=5;
   }
+  if(m==='CONDITIONAL_EVOLVED_ENERGY')o.prizes=5;
   if(m==='RED_CARD')o.prizes=3;
   if(m==='ROSA'){o.prizes=5;for(let n=0;n<2;n++)p.discard.push(take(0,basic));}
   if(m==='STRETCHER')p.discard.push(take(0,basic));

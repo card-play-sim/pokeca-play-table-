@@ -66,6 +66,7 @@ jobs:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
           python tests/test_shared_operation_browser.py
+          python tests/test_final_shared_effects_browser.py
           python tests/test_control_014_browser.py
           python tests/test_control_013_browser.py
           python tests/test_control_010_browser.py

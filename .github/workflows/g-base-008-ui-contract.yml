@@ -98,6 +98,7 @@ jobs:
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
           python tests/test_shared_operation_browser.py
+          python tests/test_final_shared_effects_browser.py
           python tests/test_control_014_browser.py
           python tests/test_control_013_browser.py
           python tests/test_control_010_browser.py
@@ -117,6 +118,7 @@ jobs:
           name: candidate-gameplay-evidence
           path: |
             artifacts/shared-operation-*
+            artifacts/final-shared-effects-*
             artifacts/control-014-*
             artifacts/control-013-*
             artifacts/control-010-*

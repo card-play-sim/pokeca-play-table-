@@ -12,9 +12,9 @@ for (const r of JSON.parse(
     const p = parse(proof.html),
       chain = [
         ...proof.html.matchAll(
-          /<div class="evolution ev_off"><a[^>]*>(.*?)<\/a>/g,
+          /<div class="evolution ev_(?:off|on)">\s*<a[^>]*>([^<]+)<\/a>\s*<div class="arrow_(?:off|on)">/g,
         ),
-      ];
+      ].filter(m => m[1].replace(/\s/g, "") !== r.name.replace(/\s/g, ""));
     assert.equal(chain.length, 2);
     assert.equal(p.facts.evolvesFrom, chain[0][1]);
     stageTwo++;
