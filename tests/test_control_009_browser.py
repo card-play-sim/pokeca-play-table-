@@ -3,6 +3,7 @@ import asyncio,json,os,subprocess,traceback
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
+from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 PREPARE="""const fs=require('fs'),vm=require('vm'),c={window:{},console,performance,Math,setTimeout};vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),c);const F=require('./tests/fixtures/control-009-scenarios.cjs')(c.window.Pokeca);console.log(JSON.stringify(F.records.map(r=>{const t=F.create(r.officialCardId);return {record:r,frame:t.frame,game:t.port.getSnapshot()};})));"""
 async def main():
@@ -41,8 +42,29 @@ async def main():
     await page.locator('#sheet-close').tap();assert await snap()==after
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':r['mainPlan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
+  # Start the expanded decks through the real import/manual-opening UI, then use
+  # the same canonical AI port for both players through victory, not fixture damage.
+  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(ROOT/'data/effect-extensions/control-009-example-decks.json'))
+  await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+  await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
+  for _ in range(10):
+   pending=(await snap()).get('pendingReferenceChoice')
+   if not pending:break
+   if pending['playerId']=='you':await page.locator('#reference-choice button').first.tap()
+   else:await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
+  await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
+  if await toggle.count():await toggle.tap()
+  else:await page.locator('#sheet-close').tap()
+  for turn in range(120):
+   state=await snap()
+   if state['status']=='finished':break
+   actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
+   result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return {ok:r.ok,actions:r.actions,stage:r.stage};}',actor);assert result['ok'],result
+   await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
+  final=await snap();assert final['status']=='finished';new_ids={f['record']['officialCardId'] for f in fixtures};used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
+  await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
   assert not errors,errors
-  report={'url':page.url,'newPrints':len(fixtures),'newPatterns':len(set(f['record']['mainPlan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/'artifacts/control-009-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
+  report={'url':page.url,'expandedAIMatch':match,'newPrints':len(fixtures),'newPatterns':len(set(f['record']['mainPlan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/'artifacts/control-009-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
 if __name__=='__main__':
  try:asyncio.run(main())
  except Exception:
