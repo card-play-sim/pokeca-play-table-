@@ -40,8 +40,13 @@ def main():
   else:blocked[r['officialCardId']]=r
   C.save(file,{'schemaVersion':1,'records':list(records.values()),'blocked':list(blocked.values())})
  for r in results:persist(r)
+ def collect_network(i):
+  # A single transient request failure must not abort the entire unattended batch.
+  # Keep the failed ID retryable and persist every other successful result.
+  try:return C.collect(i)
+  except Exception as e:return {'status':'BLOCKED','officialCardId':i,'reason':'COLLECTOR_EXCEPTION','detail':str(e)[:500]}
  with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-  for r in pool.map(C.collect,network):persist(r)
+  for r in pool.map(collect_network,network):persist(r)
  # Persist before compilation/queue execution: interruptions never lose successful pages.
  C.save(file,{'schemaVersion':1,'records':list(records.values()),'blocked':list(blocked.values())})
  if a.adopt:
