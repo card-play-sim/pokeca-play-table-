@@ -99,8 +99,10 @@ assert.equal(abilityResult.ok, true, 'DRAW ability must execute: ' + JSON.string
 assert.equal(player.hand.length, handBefore + 2, 'DRAW must move two cards into hand');
 assert.equal(player.deck.length, deckBefore - 2, 'DRAW must remove exactly two cards from deck');
 assert.equal(abilityGame.players.reduce((n, p) => n + p.deck.length + p.hand.length + p.discard.length + p.prizeCards.length + (p.active ? 1 : 0) + p.bench.length, 0) >= 120, true, 'cards must not disappear from match');
+const abilityStateAfter = JSON.stringify(abilityGame);
 const secondUse = abilityPort.dispatch('you', ability);
 assert.equal(secondUse.ok, false, 'once-per-turn ability must reject repeated use');
+assert.equal(JSON.stringify(abilityGame), abilityStateAfter, 'rejected ability replay must not mutate game state');
 assert.equal(engine.getLegalActions(abilityGame, 'you').actions.some(a => a.type === 'use_ability' && a.abilityId === ability.abilityId), false, 'used ability must disappear from shared legal action provider');
 console.log('REFERENCE_DRAW_ABILITY PASS: 2 cards drawn; repeat blocked');
 // A reusable search/discard item effect must preserve all physical cards.
@@ -128,6 +130,10 @@ assert.equal(itemPlayer.deck.length, itemBefore.deck - 1, 'search removes exactl
 assert.equal(itemPlayer.discard.length, itemBefore.discard + 3, 'two discard costs and item enter discard');
 assert.equal(itemResult.transitionAudit?.conservation?.ok, true, 'item effect must preserve physical cards');
 assert.equal(engine.getLegalActions(itemGame, 'you').actions.some(a => a.type === 'play_item' && a.cardId === item.cardId), false, 'consumed item must disappear from shared legal action provider');
+const itemStateAfter = JSON.stringify(itemGame);
+const itemReplay = itemPort.dispatch('you', item);
+assert.equal(itemReplay.ok, false, 'consumed item cannot be played twice');
+assert.equal(JSON.stringify(itemGame), itemStateAfter, 'rejected item replay must not mutate the game');
 console.log('REFERENCE_SEARCH_DISCARD_ITEM PASS: hand/deck/discard conserved');
 // Cross-card rule regression: energy attachment is once per turn, stadium is a real shared zone.
 function openSeededReferenceMatch(initialSeed) {
@@ -157,7 +163,9 @@ assert.equal(energyCase.game.players[0].active.energyCards.length, energyBefore 
 assert.equal(energyResult.transitionAudit?.conservation?.ok, true);
 assert.equal(engine.getLegalActions(energyCase.game, 'you').actions.some(a => a.type === 'attach_energy'), false, 'second hand attachment must not be legal');
 assert.equal(energyResult.transitionAudit?.conservation?.ok, true, 'legal-action update must conserve energy cards');
+const energyStateAfter = JSON.stringify(energyCase.game);
 assert.equal(energyCase.gateway.dispatch('you', energyAction).ok, false, 'replaying energy attachment must be rejected');
+assert.equal(JSON.stringify(energyCase.game), energyStateAfter, 'rejected energy replay must not mutate the game');
 const stadiumCase = openSeededReferenceMatch(8);
 const stadiumAction = engine.getLegalActions(stadiumCase.game, 'you').actions.find(a => a.type === 'play_stadium');
 assert.ok(stadiumAction, 'stadium play must be legal');
@@ -166,5 +174,9 @@ assert.equal(stadiumResult.ok, true);
 assert.equal(stadiumCase.game.stadium?.name, '夜の鉱山');
 assert.equal(stadiumResult.transitionAudit?.conservation?.ok, true);
 assert.equal(engine.getLegalActions(stadiumCase.game, 'you').actions.some(a => a.type === 'play_stadium' && a.cardId === stadiumAction.cardId), false, 'played stadium must disappear from shared legal action provider');
+const stadiumStateAfter = JSON.stringify(stadiumCase.game);
+const stadiumReplay = stadiumCase.gateway.dispatch('you', stadiumAction);
+assert.equal(stadiumReplay.ok, false, 'consumed stadium cannot be replayed from hand');
+assert.equal(JSON.stringify(stadiumCase.game), stadiumStateAfter, 'rejected stadium replay must not mutate the game');
 console.log('REFERENCE_RULE_FAMILIES PASS: once-per-turn energy; stadium zone; conservation');
 console.log('REFERENCE_FAST_SMOKE_GATE PASS');
