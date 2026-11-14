@@ -4,10 +4,10 @@ This repository is the **existing public Android PWA**. Do not create a second a
 
 ## Mandatory first read for every Codex / successor ChatGPT session
 
-**Read [docs/DEVELOPMENT_CONTROL.md](docs/DEVELOPMENT_CONTROL.md) before changing code.** It defines the current GitHub-first operating contract, the exact PR #37 continuation route, responsibility boundaries, release gates, known failure signatures and compact reporting. Treat the document's historical SHAs as examples; always refresh PR head and latest-head Actions. Do not start by rewriting plans, opening a replacement PR, requesting ZIPs, or repeatedly pushing into a runner/approval block.
+**Read [docs/DEVELOPMENT_CONTROL.md](docs/DEVELOPMENT_CONTROL.md) before changing code.** It defines the current GitHub-first operating contract, the latest merged baseline, responsibility boundaries, release gates, historical failure signatures and compact reporting. PR #37 and #38 are already merged; never resume work on their closed branches. Treat the document's historical SHAs as examples; always refresh PR head and latest-head Actions. Do not start by rewriting plans, opening a replacement PR, requesting ZIPs, or repeatedly pushing into a runner/approval block.
 
 ## Primary goal
-Implement attacks, abilities, items, supporters, tools, stadiums and special energy from **verified official card effect text**, as reusable Effect Commands and Rule Engine operations. Never implement one print-specific workaround when the cause is a shared mechanic. Aim for 5,000+ cards by incremental, evidence-gated ingestion rather than one-by-one hand coding.
+Implement attacks, abilities, items, supporters, tools, stadiums and special energy from **verified official card effect text**, as reusable Effect Commands and Rule Engine operations. Never implement one print-specific workaround when the cause is a shared mechanic. Aim for 6,000+ cards by evidence-gated ingestion and shared-mechanic expansion rather than one-by-one hand coding. New shared effect implementation is the primary work; bug fixes are supporting work.
 
 ## Entry points
 - GitHub Issue #17: official effect intake and implementation roadmap.
