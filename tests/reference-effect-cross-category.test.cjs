@@ -16,6 +16,12 @@ const sourceCatalog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../dat
 const { compile } = require('../engine/reference-effect-plans.cjs');
 const expected = compile(sourceCatalog);
 const isolated = compile(sourceCatalog);
+const fallbackProbe = {category:'item',text:'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'};
+const fallbackPlans = compile({records:[{officialCardId:'probe-1',category:'item',name:'Probe 1',text:fallbackProbe.text,attacks:[],abilities:[]},{officialCardId:'probe-2',category:'item',name:'Probe 2',text:fallbackProbe.text,attacks:[],abilities:[]}]}).records;
+assert.ok(fallbackPlans[0].mainPlan && fallbackPlans[1].mainPlan, 'known fallback text must compile');
+assert.notStrictEqual(fallbackPlans[0].mainPlan.commands, fallbackPlans[1].mainPlan.commands, 'fallback plans must own independent command arrays');
+fallbackPlans[0].mainPlan.commands.push('ISOLATION_PROBE');
+assert.equal(fallbackPlans[1].mainPlan.commands.includes('ISOLATION_PROBE'), false, 'fallback plan mutation must not leak');
 const sameTextPlans = isolated.records.flatMap(r => [...r.attacks.map(a => a.plan), ...r.abilities.map(a => a.plan), r.mainPlan].filter(Boolean));
 const byMechanic = new Map();
 for (const plan of sameTextPlans) {
