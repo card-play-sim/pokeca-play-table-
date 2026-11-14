@@ -11,6 +11,7 @@ if (data.adoptedDeckPrints !== 0) fail('reference dataset must not declare adopt
 if (!data.defaultValidationReferences || typeof data.defaultValidationReferences !== 'object') fail('missing validation references');
 if (!Array.isArray(data.records) || !data.records.length) fail('missing reference records');
 const byId = new Map();
+const seenOfficialPages = new Set();
 for (const [index, record] of data.records.entries()) {
   const id = String(record.officialCardId || '');
   if (!/^\d+$/.test(id)) fail('invalid officialCardId at ' + index);
@@ -19,6 +20,8 @@ for (const [index, record] of data.records.entries()) {
   const officialUrl = /^https:\/\/www\.pokemon-card\.com\/card-search\/details\.php\/card\/(\d+)(?:\/regu\/[A-Za-z0-9_-]+)?\/?$/;
   const officialMatch = typeof record.officialPageUrl === 'string' && record.officialPageUrl.match(officialUrl);
   if (!officialMatch || officialMatch[1] !== id) fail('invalid official card URL ' + id);
+  if (seenOfficialPages.has(record.officialPageUrl)) fail('duplicate official card URL ' + id);
+  seenOfficialPages.add(record.officialPageUrl);
   if (!record.source || !record.source.path || !record.source.sha256 || !(record.source.recordSha256 || record.source.htmlSha256)) fail('missing provenance ' + id);
   if (!['formal1945-readonly', 'saved-official-html'].includes(record.source.kind)) fail('unsupported provenance kind ' + id);
   const digests = record.source.kind === 'saved-official-html'
