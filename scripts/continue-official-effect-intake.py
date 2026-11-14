@@ -20,6 +20,7 @@ def main():
  ids=json.loads(Path(a.ids).read_text()) if a.ids else [r['officialCardId'] for r in json.loads((ROOT/'data/official-image-registry.json').read_text())['cards']]
  ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 4<=len(i)<=8 for i in ids)
  pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked or (a.retry_transient and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' and blocked[i].get('attempts',1)<2))][:a.limit]
+ transient_retries=sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending)
  def collect(i):
   # Existing saved official HTML is preferred, including previously unparsed pages.
   path=ROOT/f'data/effect-extensions/evidence/{i}.json'
@@ -57,7 +58,7 @@ def main():
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
  output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)
- print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'transientRetries':sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending),'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
+ print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
 if __name__=='__main__':
  import fcntl
  (ROOT/'work').mkdir(exist_ok=True)
