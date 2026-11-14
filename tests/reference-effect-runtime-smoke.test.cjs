@@ -125,6 +125,10 @@ assert.equal(itemPlayer.hand.length, itemBefore.hand - 2, 'two discards and item
 assert.equal(itemPlayer.deck.length, itemBefore.deck - 1, 'search removes exactly one card from deck');
 assert.equal(itemPlayer.discard.length, itemBefore.discard + 3, 'two discard costs and item enter discard');
 assert.equal(itemResult.transitionAudit?.conservation?.ok, true, 'item effect must preserve physical cards');
+const itemStateAfter = JSON.stringify(itemGame);
+const itemReplay = itemPort.dispatch('you', item);
+assert.equal(itemReplay.ok, false, 'consumed item cannot be played twice');
+assert.equal(JSON.stringify(itemGame), itemStateAfter, 'rejected item replay must not mutate the game');
 console.log('REFERENCE_SEARCH_DISCARD_ITEM PASS: hand/deck/discard conserved');
 // Cross-card rule regression: energy attachment is once per turn, stadium is a real shared zone.
 function openSeededReferenceMatch(initialSeed) {
@@ -161,5 +165,9 @@ const stadiumResult = stadiumCase.gateway.dispatch('you', stadiumAction);
 assert.equal(stadiumResult.ok, true);
 assert.equal(stadiumCase.game.stadium?.name, '夜の鉱山');
 assert.equal(stadiumResult.transitionAudit?.conservation?.ok, true);
+const stadiumStateAfter = JSON.stringify(stadiumCase.game);
+const stadiumReplay = stadiumCase.gateway.dispatch('you', stadiumAction);
+assert.equal(stadiumReplay.ok, false, 'consumed stadium cannot be replayed from hand');
+assert.equal(JSON.stringify(stadiumCase.game), stadiumStateAfter, 'rejected stadium replay must not mutate the game');
 console.log('REFERENCE_RULE_FAMILIES PASS: once-per-turn energy; stadium zone; conservation');
 console.log('REFERENCE_FAST_SMOKE_GATE PASS');
