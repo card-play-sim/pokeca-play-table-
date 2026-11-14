@@ -11,6 +11,7 @@ if (data.adoptedDeckPrints !== 0) fail('reference dataset must not declare adopt
 if (!data.defaultValidationReferences || typeof data.defaultValidationReferences !== 'object') fail('missing validation references');
 if (!Array.isArray(data.records) || !data.records.length) fail('missing reference records');
 const byId = new Map();
+const seenOfficialPages = new Set();
 for (const [index, record] of data.records.entries()) {
   const id = String(record.officialCardId || '');
   if (!/^\d+$/.test(id)) fail('invalid officialCardId at ' + index);
