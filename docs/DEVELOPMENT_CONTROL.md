@@ -1,15 +1,19 @@
 # 開発統制・次担当の起動手順（GitHubを唯一の作業起点にする）
 
-更新基準: 2026-11-14 / CODEX-CONTROL-007 / PR #37。**この文書のSHAや実行状況を現在値とみなさず、必ずGitHub APIで再確認する。**
+更新基準: 2026-11-14 / PR #37・#38 統合後 / 公開v251。**この文書のSHAや実行状況を現在値とみなさず、必ずGitHub APIで再確認する。**
 
 ## 0. 新しい担当が最初に実行すること
 
 1. `AGENTS.md` と本書を読む。新しい指示書や担当チャットを作らない。
-2. `main` のSHA、[PR #37](https://github.com/card-play-sim/pokeca-play-table-/pull/37) のhead SHA・Draft・mergeability・変更ファイル、[Issue #36](https://github.com/card-play-sim/pokeca-play-table-/issues/36) の優先順位を取得する。
-3. **PRの最新head SHAに限定して** Actionsの各runとjobsを取得する。過去の成功を最新成功と誤認しない。`queued` / `in_progress` / `action_required` / `failure` を別扱いにする。
+2. `main` のSHA、最新の未統合PR、[Issue #36](https://github.com/card-play-sim/pokeca-play-table-/issues/36) の優先順位を取得する。PR #37・#38は統合済みの履歴であり、作業先ではない。
+3. **作業対象の最新head SHAに限定して** Actionsの各runとjobsを取得する。過去の成功を最新成功と誤認しない。`queued` / `in_progress` / `action_required` / `failure` を別扱いにする。
 4. FAILなら **失敗ジョブのログと該当ソースだけ**読む。まず共通原因ごとに束ね、再調査やログ全件取得を繰り返さない。
-5. 変更は既存PR #37のブランチ `fix/control-007-blocker-diagnostics` へ。別PR・別アプリ・ZIP納品・1枚ずつの個別修正を避ける。変更前にhead SHAを再照合し、競合したら取り直す。
+5. 変更は最新mainから新しい作業ブランチを作り、PRで統合する。統合済みPR #37のブランチに書き込まない。別アプリ・ZIP納品・1枚ずつの個別修正を避ける。変更前にhead SHAを再照合し、競合したら取り直す。
 6. 修正→生成物同期→ローカル検証→push→Actions→失敗ログ→共通修正を **一続き**で進める。実行制限はコード修正と混同しない。
+
+## 現在の最優先（新規共通効果の対応拡張が主作業）
+
+公開v251・main `fc595cd` を引継ぎ基準とする（現在値はAPIで再確認）。PR #37と#38はマージ済み。ファイアローexのエキサイトダイブは公開Chromiumで実行確認済みだが、元のAndroid保存盤面と物理Android実機は未検証。次は不具合修復だけで終わらず、公式証跡のある未対応効果パターンを複数選び、共通Effect Command・Rule Engine・AI・UIへ実装し、固定デッキ外を含む回帰テストと公開検証まで進める。正式印刷版未確定60枠と未対応進化パターンは効果実装とは独立してBLOCKED管理する。追加課金が必要な `.github/workflows/codex-shared-effect-implementation.yml` は無断起動しない。
 
 ## 最優先の規模要件（固定デッキ専用実装を禁止）
 
@@ -29,7 +33,7 @@
 
 A/B/Cは独立に進められるが、D/Eは統合後のSHAを検証する。画像台帳と正式DBの担当領域には介入しない。
 
-## 2. PR #37 で確認された障害（履歴・再検証必須）
+## 2. PR #37 で確認された障害（解決済み履歴・現在の障害として扱わない）
 
 - 2026-11-13: `2974b51` の Cross-category effect regression、Card reflection runtime checks、Refresh verified PWA release manifest は成功。
 - 同SHAの G-BASE-008 UI effect contract は Chromium実対戦・既存PWA更新テストの `Page.wait_for_function` 60秒タイムアウト、PWA release hash確認失敗。
@@ -62,6 +66,6 @@ node tests/control-005-effect-matrix.test.cjs
 ## 5. 保護・競合ルール
 
 - 正式1,945件DB、画像台帳6,248件、H/I/J対象4,357件、固定デッキのリスト、保存データを破壊・上書きしない。
-- `main` へ直接pushしない。PR #37以外の作業ブランチや画像担当PR #28に書き込まない。
+- `main` へ直接pushしない。新しい作業ブランチでPRを作成し、画像担当PR #28には書き込まない。
 - 公式出典が不明な印刷IDはBLOCKED、ただし共通効果エンジンの検証を停止させない。
 - 2回同じ失敗が続いたら、同じ操作を再試行せず、原因分類・手法・実行環境を切り替える。
