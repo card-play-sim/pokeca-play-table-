@@ -9,6 +9,8 @@ for (const id of ['44369', '44391']) {
   assert.equal(card.category, 'pokemon', id);
   assert.equal(card.facts.rulePokemon, true, id);
   assert.equal(card.facts.prizeCount, 2, id);
+  assert.equal(card.facts.stage, 1, id);
+  assert.equal(card.facts.basic, false, id);
   const altered = proof.html.replace('ポケモンexがきぜつしたとき、相手はサイドを2枚とる。', '未対応の特別なルール');
   assert.throws(() => parse(altered), /UNSUPPORTED_POKEMON_RULE_SECTION/, id);
 }
