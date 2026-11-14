@@ -51,7 +51,7 @@ def main():
    result=C.collect(i)
    # Collector reports transport subprocess failures as CalledProcessError.
    # Normalize only that known transport failure; semantic/parser blockers stay blocked.
-   if result.get('status')=='BLOCKED' and result.get('reason')=='CalledProcessError':
+   if result.get('status')=='BLOCKED' and not result.get('evidencePath') and (result.get('reason')=='CalledProcessError' or any(marker in result.get('reason','') for marker in ('curl: (6)', 'curl: (7)', 'curl: (28)', 'curl: (35)', 'curl: (52)', 'curl: (56)'))):
     return {**result,'reason':'COLLECTOR_EXCEPTION','detail':'COLLECTOR_TRANSPORT_ERROR'}
    return result
   except Exception as e:return {'status':'BLOCKED','officialCardId':i,'reason':'COLLECTOR_EXCEPTION','detail':str(e)[:500]}
