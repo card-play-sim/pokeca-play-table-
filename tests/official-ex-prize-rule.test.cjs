@@ -12,4 +12,11 @@ for (const id of ['44369', '44391']) {
   const altered = proof.html.replace('ポケモンexがきぜつしたとき、相手はサイドを2枚とる。', '未対応の特別なルール');
   assert.throws(() => parse(altered), /UNSUPPORTED_POKEMON_RULE_SECTION/, id);
 }
+// Fullwidth plus is printed in official damage headers; normalize its syntax only.
+for (const id of ['44365', '44379', '44381', '44387']) {
+  const proof = JSON.parse(fs.readFileSync(`data/effect-extensions/evidence/${id}.json`, 'utf8'));
+  const card = parse(proof.html);
+  assert.equal(card.category, 'pokemon', id);
+  assert.ok(card.attacks.some(attack => /^\\d+\\+$/.test(attack.damage)), id);
+}
 console.log('official ex prize rule: PASS');
