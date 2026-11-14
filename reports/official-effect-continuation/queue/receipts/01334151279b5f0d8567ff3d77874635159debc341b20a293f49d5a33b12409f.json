@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_9266AC8F5CBA068E:edb982a0de188898b8496e8b18f6aecf508ada1c6c75e421afa5e177f3bf907e",
   "taskFingerprint": "edb982a0de188898b8496e8b18f6aecf508ada1c6c75e421afa5e177f3bf907e",
-  "executionFingerprint": "f34eee144b0a0b23a2789936b057905ae4fea3f63d3f7ccaa80a06807e07c5ed",
-  "attemptId": "6747b0b3-a000-4b63-b9ae-8bf66468dc5e",
-  "status": "BLOCKED",
+  "executionFingerprint": "d3d7b7ab554d4cb7a4333d9036781521298debf73b011ed68c943fef783bc982",
+  "attemptId": "8f880143-c37b-4f16-9ff1-e7b24fbc87e8",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50472:attack:じっとする:0",
@@ -32,8 +31,14 @@
           "DAMAGE",
           "HEAL"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45250:attack:プチドレイン:0",
@@ -106,8 +111,14 @@
           "DAMAGE",
           "HEAL"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47569:attack:じっとする:0",
@@ -132,10 +143,16 @@
           "DAMAGE",
           "HEAL"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "21a7654323d6f0e81edfe17ea92f40b682fd155e2653c10ab9c6886422eeb7cd"
+  "checksum": "ddd34bb434cf0e04612dd376078c33610788de3d58a1ac9907f461e5d999d8be"
 }

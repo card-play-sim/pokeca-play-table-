@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_50E4A5DB0F695DC9:4274287de01ab1eafdec8d8b45d72e5c7ca278b1acee2de37bacaea7f3f3e416",
   "taskFingerprint": "4274287de01ab1eafdec8d8b45d72e5c7ca278b1acee2de37bacaea7f3f3e416",
-  "executionFingerprint": "f34eee144b0a0b23a2789936b057905ae4fea3f63d3f7ccaa80a06807e07c5ed",
-  "attemptId": "47a1f293-33ee-42aa-9b61-d417f562178d",
+  "executionFingerprint": "d3d7b7ab554d4cb7a4333d9036781521298debf73b011ed68c943fef783bc982",
+  "attemptId": "9fc8fa38-1565-4c53-8ed5-ebce18829cf6",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,18 +11,51 @@
     "cases": [
       {
         "slot": "49618:attack:のりこなす:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_BONUS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50799:attack:シェルブレード:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_BONUS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45946:attack:おそいかかる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_BONUS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46274:attack:ころばす:1",
@@ -31,5 +64,5 @@
       }
     ]
   },
-  "checksum": "66300cf628ee1b74ba829f8afd25e070372111736bf376e0d231c65956b2cf94"
+  "checksum": "28798d45225a803b0697558de2e449e6116395365ffc9544e7727ae45bac047c"
 }

@@ -41,6 +41,7 @@ jobs:
           node scripts/build-pwa-release.cjs
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
+          node tests/final-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
           node tests/control-008-extensions.test.cjs
           node tests/control-009-expansion.test.cjs
@@ -67,4 +68,5 @@ jobs:
             reports/official-effect-continuation/
             test-results/control-013*.json
             test-results/control-014*.json
+            test-results/final*.json
           retention-days: 90

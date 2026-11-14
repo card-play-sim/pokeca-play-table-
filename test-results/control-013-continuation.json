@@ -1,0 +1,115 @@
+{
+  "status": "PASS",
+  "newOfficialPages": 1312,
+  "blockedParsing": 29,
+  "registeredSupplementalPrints": 506,
+  "categories": {
+    "supporter": {
+      "prints": 66,
+      "compiled": 25,
+      "notImplemented": 41,
+      "blocked": 0,
+      "executionVerifiedPrints": 25
+    },
+    "item": {
+      "prints": 46,
+      "compiled": 32,
+      "notImplemented": 14,
+      "blocked": 0,
+      "executionVerifiedPrints": 31
+    },
+    "tool": {
+      "prints": 14,
+      "compiled": 4,
+      "notImplemented": 10,
+      "blocked": 0,
+      "executionVerifiedPrints": 4
+    },
+    "stadium": {
+      "prints": 12,
+      "compiled": 5,
+      "notImplemented": 7,
+      "blocked": 0,
+      "executionVerifiedPrints": 5
+    },
+    "pokemon": {
+      "prints": 1254,
+      "compiled": 498,
+      "notImplemented": 756,
+      "blocked": 0,
+      "executionVerifiedPrints": 287
+    },
+    "energy": {
+      "prints": 31,
+      "compiled": 31,
+      "notImplemented": 0,
+      "blocked": 0,
+      "executionVerifiedPrints": 7
+    }
+  },
+  "queue": {
+    "processed": 0,
+    "stopped": false,
+    "executionFingerprint": "d3d7b7ab554d4cb7a4333d9036781521298debf73b011ed68c943fef783bc982",
+    "staleSuccesses": 0,
+    "inputBlocked": 0,
+    "seq": 30075,
+    "totalJobs": 778,
+    "counts": {
+      "PENDING": 0,
+      "RUNNING": 0,
+      "SUCCEEDED": 109,
+      "FAILED": 0,
+      "BLOCKED": 669
+    },
+    "categories": {
+      "pokemon": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 60,
+        "FAILED": 0,
+        "BLOCKED": 612
+      },
+      "supporter": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 16,
+        "FAILED": 0,
+        "BLOCKED": 30
+      },
+      "item": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 20,
+        "FAILED": 0,
+        "BLOCKED": 13
+      },
+      "stadium": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 5,
+        "FAILED": 0,
+        "BLOCKED": 5
+      },
+      "tool": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 3,
+        "FAILED": 0,
+        "BLOCKED": 9
+      },
+      "energy": {
+        "PENDING": 0,
+        "RUNNING": 0,
+        "SUCCEEDED": 5,
+        "FAILED": 0,
+        "BLOCKED": 0
+      }
+    },
+    "blockedInputs": []
+  },
+  "incrementalNoNetworkRepeat": true,
+  "realEvidenceCheckpointResumeAndDelta": true,
+  "duplicateExecutionSkipped": true,
+  "protectedFilesUnchanged": true
+}

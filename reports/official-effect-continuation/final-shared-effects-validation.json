@@ -1,0 +1,242 @@
+{
+  "candidateVersion": "v256",
+  "baselineVersion": "v255",
+  "newGenericPatterns": [
+    "COIN_BONUS_DAMAGE",
+    "DAMAGE_BY_OWN_COUNTERS",
+    "DAMAGE_BY_ACTIVE_ENERGY",
+    "ATTACK_DISCARD_DECK_TOP",
+    "ATTACK_BENCH_BASICS",
+    "ABILITY_ATTACH_SELF_DRAW",
+    "CONDITIONAL_EVOLVED_ENERGY"
+  ],
+  "basicEnergyTypes": 8,
+  "compiledPrints": 594,
+  "previousCompiledPrints": 503,
+  "notImplementedPrints": 828,
+  "parseBlockedPages": 29,
+  "queue": {
+    "PENDING": 0,
+    "RUNNING": 0,
+    "SUCCEEDED": 109,
+    "FAILED": 0,
+    "BLOCKED": 668
+  },
+  "regressionCases": 100,
+  "candidateChromium": {
+    "url": "http://127.0.0.1:8769/",
+    "expandedAIMatch": {
+      "seed": 2,
+      "winner": "you",
+      "turn": 11,
+      "finished": true,
+      "executedNewPrints": [
+        "47159"
+      ]
+    },
+    "newPrints": 14,
+    "newPatterns": 8,
+    "cases": [
+      {
+        "print": "44968",
+        "category": "energy",
+        "pattern": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "47159",
+        "category": "pokemon",
+        "pattern": "ATTACK_BENCH_BASICS",
+        "commands": [
+          "DAMAGE",
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "48482",
+        "category": "pokemon",
+        "pattern": "ATTACK_BENCH_BASICS",
+        "commands": [
+          "DAMAGE",
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45720",
+        "category": "pokemon",
+        "pattern": "DAMAGE_BY_OWN_COUNTERS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "46257",
+        "category": "pokemon",
+        "pattern": "ATTACK_DISCARD_DECK_TOP",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "46410",
+        "category": "pokemon",
+        "pattern": "ATTACK_DISCARD_DECK_TOP",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "46696",
+        "category": "pokemon",
+        "pattern": "DAMAGE_BY_OWN_COUNTERS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "47161",
+        "category": "pokemon",
+        "pattern": "COIN_BONUS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "47167",
+        "category": "pokemon",
+        "pattern": "COIN_BONUS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45707",
+        "category": "pokemon",
+        "pattern": "DAMAGE_BY_ACTIVE_ENERGY",
+        "commands": [
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45707",
+        "category": "pokemon",
+        "pattern": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45856",
+        "category": "pokemon",
+        "pattern": "DAMAGE_BY_ACTIVE_ENERGY",
+        "commands": [
+          "DAMAGE"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45856",
+        "category": "pokemon",
+        "pattern": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "44956",
+        "category": "energy",
+        "pattern": "BASIC_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "44962",
+        "category": "energy",
+        "pattern": "BASIC_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      },
+      {
+        "print": "45340",
+        "category": "energy",
+        "pattern": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "domExecuted": true,
+        "aiParity": true,
+        "offlineRestoreExact": true
+      }
+    ],
+    "javascriptErrors": [],
+    "physicalAndroidVerified": false
+  },
+  "protectedFiles": {
+    "data/fixed-test-decks.json": "c2fed7d4ab2e9c96844904f510af4e4b31426000d98a8c95c41c84d9cc66be3e",
+    "data/official-image-registry.json": "67366b46839b0f50f4e194cc22484fedd63e67b36d9bb5d94fb86df83e1eda45",
+    "data/reference-effects/plans.json": "4b051ea0da70e3652ff8cb14e677eda4f9fe3f5997ddabf3a5d0290aa4cffb40",
+    "data/reference-effects/catalog.json": "a7db5ce876aa111b6830ce59b32692a2ff134904f69041039bfb48aae6618c47"
+  },
+  "resumeCommand": "python scripts/continue-official-effect-intake.py --limit 100 --adopt",
+  "checkpoint": "data/official-effect-intake/checkpoint.json",
+  "publicChromium": "PENDING_PAGES_DEPLOYMENT",
+  "physicalAndroidVerified": false
+}

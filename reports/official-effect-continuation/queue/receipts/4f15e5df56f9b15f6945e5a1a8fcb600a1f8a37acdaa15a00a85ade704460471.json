@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
   "taskFingerprint": "82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
-  "executionFingerprint": "f34eee144b0a0b23a2789936b057905ae4fea3f63d3f7ccaa80a06807e07c5ed",
-  "attemptId": "1d09ccb8-8322-4b2b-9597-98547d4eb982",
+  "executionFingerprint": "d3d7b7ab554d4cb7a4333d9036781521298debf73b011ed68c943fef783bc982",
+  "attemptId": "6d942582-37e6-4d6f-ad8d-c47e1a995014",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -43,8 +43,15 @@
           "DAMAGE",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45775:attack:そこぢから:1",
@@ -85,8 +92,15 @@
           "DAMAGE",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46705:attack:アクアスラッシュ:0",
@@ -95,8 +109,15 @@
           "DAMAGE",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46794:attack:そこぢから:0",
@@ -115,8 +136,15 @@
           "DAMAGE",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46248:attack:むげんのやいば:0",
@@ -205,5 +233,5 @@
       }
     ]
   },
-  "checksum": "d919612df5d7e770cd4f39823e31d54b3a9b0fecdba09a339cb000919fc4c303"
+  "checksum": "fa37c17d46274055514cfdb0ff3281b2e588c566fe9145afbc9ce079c76e68cc"
 }

@@ -28,6 +28,7 @@ jobs:
         run: |
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
+          node tests/final-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
       - name: Verify unchanged engine and PWA artifacts
         run: |
@@ -41,4 +42,5 @@ jobs:
             test-results/control-011*.json
             test-results/control-013*.json
             test-results/control-014*.json
+            test-results/final*.json
           if-no-files-found: warn

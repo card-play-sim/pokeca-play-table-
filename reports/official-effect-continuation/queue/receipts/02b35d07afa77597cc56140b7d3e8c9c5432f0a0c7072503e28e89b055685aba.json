@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3FAD2233AA1BB3F2:415e78642c868a9bbd90dfc5617694620e4a9275133fede2b169acc3b0aa987b",
   "taskFingerprint": "415e78642c868a9bbd90dfc5617694620e4a9275133fede2b169acc3b0aa987b",
-  "executionFingerprint": "f34eee144b0a0b23a2789936b057905ae4fea3f63d3f7ccaa80a06807e07c5ed",
-  "attemptId": "14e0ee02-2763-4d36-8b4f-aa28525a0a0c",
-  "status": "BLOCKED",
+  "executionFingerprint": "d3d7b7ab554d4cb7a4333d9036781521298debf73b011ed68c943fef783bc982",
+  "attemptId": "c102368f-2ba9-4c07-a17b-c043141b07c0",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "44968:energy:リバーサルエネルギー:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONDITIONAL_EVOLVED_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "698e05abb9e5fc1154b05d0011a9c141bae248657cb47dc7cab458471d30a643"
+  "checksum": "f6d75f003c7f7f6c7ad386952de4c6ab59441ea21b64b820bb658e5f809052f9"
 }
