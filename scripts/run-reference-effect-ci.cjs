@@ -10,7 +10,8 @@ if(result.stdout)process.stdout.write(result.stdout);
 if(result.stderr)process.stderr.write(result.stderr);
 const code=result.status===null?1:result.status;
 const stderr=String(result.error?.message||result.stderr||result.signal||'nonzero exit');
-const codes=[...stderr.matchAll(/(?:UNCONNECTED_EFFECT|INVALID_REFERENCE_RNG_STATE|REFERENCE_[A-Z_]+|FIRST_PLAYER_FIRST_TURN_ATTACK|PWA_RELEASE_STALE|STALE_BUNDLE_MODULE|REFERENCE_PRINT_CONFLICT|INVALID_REFERENCE_CHOICE)/g)].map(x=>x[0]);
+const diagnostic=stderr+'\n'+String(result.stdout||'');
+const codes=[...diagnostic.matchAll(/(?:UNCONNECTED_EFFECT|INVALID_REFERENCE_RNG_STATE|REFERENCE_[A-Z_]+|FIRST_PLAYER_FIRST_TURN_ATTACK|PWA_MOBILE_BUILD_MISMATCH|PWA_VISIBLE_BUILD_MISMATCH|PWA_RELEASE_STALE|STALE_BUNDLE_MODULE|REFERENCE_PRINT_CONFLICT|INVALID_REFERENCE_CHOICE)/g)].map(x=>x[0]);
 const causeId=result.error?'TEST_RUNNER_ERROR':result.signal?'TEST_TERMINATED':codes[0]||'TEST_ASSERTION_OR_RUNTIME_FAILURE';
 const record=code===0?null:{causeId,command:'UNKNOWN',test,error:stderr.slice(0,400),exitCode:code};
 // Tests may already emit precise, structured causes. Do not duplicate those

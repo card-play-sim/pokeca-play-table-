@@ -14,6 +14,13 @@ assert.equal(fail.exitCode,1);
 assert.equal(fail.record.causeId,'FIRST_PLAYER_FIRST_TURN_ATTACK');
 assert.equal(fail.record.test,'tests/reference-effect-runtime-smoke.test.cjs');
 assert.ok(fail.logs.join('').includes('REFERENCE_RUNTIME_FAILURE_JSON:'));
+for (const cause of ['PWA_MOBILE_BUILD_MISMATCH','PWA_VISIBLE_BUILD_MISMATCH']) {
+ const mismatch=run(1,'Error: '+cause);
+ assert.equal(mismatch.exitCode,1);
+ assert.equal(mismatch.record.causeId,cause);
+}
+const stdoutOnly=run(1,'','PWA_VISIBLE_BUILD_MISMATCH: current marker mismatch');
+assert.equal(stdoutOnly.record.causeId,'PWA_VISIBLE_BUILD_MISMATCH');
 const fallback=run(1,'AssertionError: ordinary mismatch');
 assert.equal(fallback.record.causeId,'TEST_ASSERTION_OR_RUNTIME_FAILURE');
 const structured='REFERENCE_RUNTIME_FAILURE_JSON:'+JSON.stringify({causeId:'INVALID_TARGET',command:'MOVE_DAMAGE_COUNTERS',test:'tests/reference-effect-runtime-smoke.test.cjs',officialCardId:'48248'})+'\\n';
