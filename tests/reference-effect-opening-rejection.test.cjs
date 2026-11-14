@@ -39,5 +39,5 @@ for (const firstDeck of [0, 1]) {
     checked++;
   }
 }
-assert.equal(checked, 200);
+assert.equal(checked, 300);
 console.log('REFERENCE_OPENING_REJECTION_INTEGRITY PASS:', checked, 'seeded opening games');
