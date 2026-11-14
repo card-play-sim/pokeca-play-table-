@@ -13,7 +13,7 @@ function setup(id,coin=0){let n=2;const m=E.createReferenceValidationMatch(manif
  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x});assert(port.loadGame(g).ok);return {port,sourceId:source.id,get game(){return port.getSnapshot();}};
 }
 function identities(g){let ids=[];function collect(c){if(!c)return;ids.push(c.id);for(const k of ['energyCards','tools','evolutionCards'])for(const x of c[k]||[])collect(x);}for(const p of g.players)for(const x of [p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards,...p.discard])collect(x);collect(g.stadium);return ids.sort().join('|');}
-for(const r of data.records)for(const seed of r.mainPlan.mechanic==='COIN_FORCE_SWITCH'?[0,682]:[0])run(r.name+' '+r.officialCardId+' seed '+seed,()=>{
+for(const r of data.records.filter(r=>['DRAW_CARDS','HEAL_DAMAGE','COIN_FORCE_SWITCH'].includes(r.mainPlan.mechanic)))for(const seed of r.mainPlan.mechanic==='COIN_FORCE_SWITCH'?[0,682]:[0])run(r.name+' '+r.officialCardId+' seed '+seed,()=>{
  const t=setup(r.officialCardId,seed),option=t.port.getHandOptions('you',t.sourceId).find(o=>o.ok);assert(option);const before=t.game,legal=E.getLegalActions(before,'you').actions;assert(legal.some(a=>a.cardId===t.sourceId&&a.type===option.action.type));
  const forged=JSON.parse(JSON.stringify(option.action));if(r.mainPlan.mechanic==='HEAL_DAMAGE')forged.selections.cards=[before.players[1].active.id];else if(r.mainPlan.mechanic==='COIN_FORCE_SWITCH')forged.selections.bench=[before.players[0].active.id];else forged.type='play_item';
  const original=JSON.stringify(before);assert.equal(t.port.dispatch('you',forged).ok,false);assert.equal(JSON.stringify(t.game),original,'rejection preserves all state/RNG');
@@ -23,7 +23,7 @@ for(const r of data.records)for(const seed of r.mainPlan.mechanic==='COIN_FORCE_
  if(r.mainPlan.mechanic==='COIN_FORCE_SWITCH')assert.equal(after.players[1].active.id,seed===0?option.action.selections.bench[0]:before.players[1].active.id);
  const envelope=t.port.getResumeSnapshot();assert(t.port.restoreSession(envelope).ok);assert.equal(JSON.stringify(t.game),JSON.stringify(after));
 });
-for(const r of data.records)run(r.officialCardId+' source-specific use conditions and heal clamping',()=>{
+for(const r of data.records.filter(r=>['DRAW_CARDS','HEAL_DAMAGE','COIN_FORCE_SWITCH'].includes(r.mainPlan.mechanic)))run(r.officialCardId+' source-specific use conditions and heal clamping',()=>{
  const t=setup(r.officialCardId),option=t.port.getHandOptions('you',t.sourceId).find(o=>o.ok),g=t.game,m=r.mainPlan.mechanic;
  if(m==='HEAL_DAMAGE'){
   g.players[0].active.damage=10;assert(t.port.loadGame(g).ok);assert(t.port.dispatch('you',option.action).ok);assert.equal(t.game.players[0].active.damage,0);
@@ -46,11 +46,11 @@ run('existing official intake, checkpoint importer and shared batch pipeline acc
  try{const exported=path.join(tmp,'export.json'),ndjson=path.join(tmp,'rows.ndjson'),registry=path.join(tmp,'registry.json'),batch=path.join(tmp,'batch.json');
   const invoke=args=>{const r=spawnSync(process.execPath,args,{encoding:'utf8'});assert.equal(r.status,0,r.stderr||r.stdout);};
   invoke(['scripts/export-reference-official-effect-evidence.cjs','data/effect-extensions/compiled.json',exported]);fs.writeFileSync(ndjson,JSON.parse(fs.readFileSync(exported)).map(r=>JSON.stringify(r)).join('\n')+'\n');
-  invoke(['scripts/import-official-effect-evidence.cjs',ndjson,registry,'--checkpoint']);invoke(['scripts/build-official-effect-codex-batch.cjs',registry,batch]);const result=JSON.parse(fs.readFileSync(batch));assert.equal(result.counts.verified,6);assert.equal(result.counts.sharedPatterns,3);
+  invoke(['scripts/import-official-effect-evidence.cjs',ndjson,registry,'--checkpoint']);invoke(['scripts/build-official-effect-codex-batch.cjs',registry,batch]);const result=JSON.parse(fs.readFileSync(batch));assert.equal(result.counts.verified,data.records.length);assert.equal(result.counts.sharedPatterns,new Set(data.records.map(r=>r.mainPlan.mechanic)).size);
  }finally{fs.rmSync(tmp,{recursive:true,force:true});}
 });
 run('6001 shared compilation operations do not depend on card names or print IDs',()=>{
  const {compile}=require('../engine/reference-effect-plans.cjs');for(let i=0;i<6001;i++){const row=intake.records[i%6];const r=compile({records:[row]}).records[0];assert(r.mainPlan);assert(!E.getReferenceEffectCatalog().defaultValidationReferences[row.name]);}
- assert.equal(E.getReferenceEffectCatalog().records.length,89);assert.equal(E.getReferenceEffectCatalog({includeExtensions:true}).records.length,95);assert.deepEqual(fixed,JSON.parse(fs.readFileSync('data/fixed-test-decks.json')));
+ assert.equal(E.getReferenceEffectCatalog().records.length,89);assert.equal(E.getReferenceEffectCatalog({includeExtensions:true}).records.length,89+data.records.length);assert.deepEqual(fixed,JSON.parse(fs.readFileSync('data/fixed-test-decks.json')));
 });
 fs.mkdirSync('test-results',{recursive:true});fs.writeFileSync('test-results/control-008-extensions.json',JSON.stringify({scope:'outside-fixed-deck-supplemental-official-references',actualAdditionalPrints:data.records.length,sharedCompilationWorkload:6001,notClaiming6001OfficialCards:true,results},null,2)+'\n');console.log(JSON.stringify(results,null,2));if(results.some(r=>r.status==='FAILED'))process.exitCode=1;

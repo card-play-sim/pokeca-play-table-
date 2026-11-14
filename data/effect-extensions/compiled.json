@@ -205,6 +205,250 @@
           "FORCE_SWITCH"
         ]
       }
+    },
+    {
+      "officialCardId": "44515",
+      "name": "博士の研究",
+      "deckName": "博士の研究",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44515",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVG/044515_T_HAKASENOKENKIXYUU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべてトラッシュし、山札を7枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/44515.json",
+        "sha256": "0c626f03b4b184773451e6018ec9780cfe1b89078203bc0b53f14f2407b130dc",
+        "htmlSha256": "0c626f03b4b184773451e6018ec9780cfe1b89078203bc0b53f14f2407b130dc",
+        "textSha256": "2e4931980b8ae63c577a7d3f0e500d69cca19594a095c00c6a0a3e5a50164675"
+      },
+      "mainPlan": {
+        "mechanic": "DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 7
+      }
+    },
+    {
+      "officialCardId": "44516",
+      "name": "博士の研究",
+      "deckName": "博士の研究",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44516",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVG/044516_T_HAKASENOKENKIXYUU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべてトラッシュし、山札を7枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/44516.json",
+        "sha256": "5406e2ef43a9e78bbe58739c64d23b74319f8ad59eab9f0962bb22fd72c1a272",
+        "htmlSha256": "5406e2ef43a9e78bbe58739c64d23b74319f8ad59eab9f0962bb22fd72c1a272",
+        "textSha256": "2e4931980b8ae63c577a7d3f0e500d69cca19594a095c00c6a0a3e5a50164675"
+      },
+      "mainPlan": {
+        "mechanic": "DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 7
+      }
+    },
+    {
+      "officialCardId": "45429",
+      "name": "エネルギー回収",
+      "deckName": "エネルギー回収",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45429",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVI/045429_T_ENERUGIKAISHIXYUU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを2枚まで選び、相手に見せて、手札に加える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45429.json",
+        "sha256": "91cfea77e9ad0e19be256c9fc5c01aa1c09ba1b4419631e73587055d00fbd839",
+        "htmlSha256": "91cfea77e9ad0e19be256c9fc5c01aa1c09ba1b4419631e73587055d00fbd839",
+        "textSha256": "2c76811d70d3226cefed2c1425d9720e63631037eca80efd00a02dcbdf1d1cdb"
+      },
+      "mainPlan": {
+        "mechanic": "RECOVER_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "amount": 2
+      }
+    },
+    {
+      "officialCardId": "46579",
+      "name": "エネルギー回収",
+      "deckName": "エネルギー回収",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46579",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046579_T_ENERUGIKAISHIXYUU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを2枚まで選び、相手に見せて、手札に加える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46579.json",
+        "sha256": "db8df385e62abc707b7d1fccc6b611aa37d236d695d4f04d0da234bdc89b2f58",
+        "htmlSha256": "db8df385e62abc707b7d1fccc6b611aa37d236d695d4f04d0da234bdc89b2f58",
+        "textSha256": "2c76811d70d3226cefed2c1425d9720e63631037eca80efd00a02dcbdf1d1cdb"
+      },
+      "mainPlan": {
+        "mechanic": "RECOVER_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "amount": 2
+      }
+    },
+    {
+      "officialCardId": "44692",
+      "name": "勇気のおまもり",
+      "deckName": "勇気のおまもり",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44692",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV4a/044692_T_YUUKINOOMAMORI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているたねポケモンの最大HPは「＋50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/44692.json",
+        "sha256": "91d82ffe343d80d3c5a6570675ed5b0bf8d7334a19c2893d89ecd34069214363",
+        "htmlSha256": "91d82ffe343d80d3c5a6570675ed5b0bf8d7334a19c2893d89ecd34069214363",
+        "textSha256": "c6f8eb652e55f25681841f2e6d687c0a2c1972513de52fe47ed14f0a540e10df"
+      },
+      "mainPlan": {
+        "mechanic": "CONDITIONAL_MAX_HP",
+        "commands": [
+          "MODIFY_MAX_HP"
+        ],
+        "amount": 50,
+        "basicOnly": true
+      }
+    },
+    {
+      "officialCardId": "45325",
+      "name": "勇気のおまもり",
+      "deckName": "勇気のおまもり",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45325",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVHK/045325_T_YUUKINOOMAMORI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているたねポケモンの最大HPは「＋50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45325.json",
+        "sha256": "588735c0bb8673975da6079644e17bd04ed53a9325f4dd964fa93eee12c1c63d",
+        "htmlSha256": "588735c0bb8673975da6079644e17bd04ed53a9325f4dd964fa93eee12c1c63d",
+        "textSha256": "c6f8eb652e55f25681841f2e6d687c0a2c1972513de52fe47ed14f0a540e10df"
+      },
+      "mainPlan": {
+        "mechanic": "CONDITIONAL_MAX_HP",
+        "commands": [
+          "MODIFY_MAX_HP"
+        ],
+        "amount": 50,
+        "basicOnly": true
+      }
+    },
+    {
+      "officialCardId": "44068",
+      "name": "頂への雪道",
+      "deckName": "頂への雪道",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/44068",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVF/044068_T_ITADAKIHENOYUKIDOU.jpg",
+      "category": "stadium",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいの場の「ルールを持つポケモン」の特性は、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/44068.json",
+        "sha256": "076f87cf9e56fd31c72f2dbfc3eb32685d0ed899831134c89dc6b4f1e5abbffb",
+        "htmlSha256": "076f87cf9e56fd31c72f2dbfc3eb32685d0ed899831134c89dc6b4f1e5abbffb",
+        "textSha256": "4e540666f04fb031e88c61db05096c17efa8a1a08266945d215b9a886d532e5b"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPRESS_RULE_ABILITIES",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "rulePokemonOnly": true
+      }
     }
   ],
   "blocked": [

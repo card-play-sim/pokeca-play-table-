@@ -34,7 +34,17 @@ function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,co
 function command(g,a,cmd,context={}){functions().Effects.apply(g,cmd,{playerId:a,sourceType:'POKEMON',actionType:'ATTACK',...context});}
 function stadium(g){return record(g.stadium)?.mainPlan?.mechanic;}
 function toolEnabled(g){return stadium(g)!=='JAMMING';}
-function abilityEnabled(g,card){return !(stadium(g)==='WATCHTOWER'&&record(card)?.facts.types?.includes('無色'));}
+function abilityEnabled(g,card){
+ const r=record(card);return !(stadium(g)==='WATCHTOWER'&&r?.facts.types?.includes('無色')||stadium(g)==='SUPPRESS_RULE_ABILITIES'&&r?.facts.rulePokemon);
+}
+function maxHpBonus(g,card){
+ if(!toolEnabled(g))return 0;
+ return (card.tools||[]).reduce((sum,tool)=>{const plan=record(tool)?.mainPlan;
+  if(plan?.mechanic==='HERO_CAPE')return sum+100;
+  if(plan?.mechanic==='CONDITIONAL_MAX_HP'&&(!plan.basicOnly||record(card).facts.basic))return sum+plan.amount;
+  return sum;
+ },0);
+}
 function basicEnergy(c){return c?.kind==='energy'&&!c.isSpecial&&basicTypes.includes(c.energyType);}
 function energyUnits(mon){
  const out=[];
@@ -85,8 +95,7 @@ function refresh(g){
  if(!g.referenceEffectValidation)return;
  for(const {card} of inPlay(g)){
   const r=record(card);assert(r,'REFERENCE_MISSING_IN_PLAY');
-  const cape=toolEnabled(g)&&(card.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='HERO_CAPE');
-  card.hp=r.facts.hp+(cape?100:0);card.prizeCount=r.facts.prizeCount;
+  card.hp=r.facts.hp+maxHpBonus(g,card);card.prizeCount=r.facts.prizeCount;
   card.retreatCost=r.facts.retreatCost;
  }
  for(const p of g.players){
@@ -173,6 +182,7 @@ function requests(g,actor,card,effect){
    cardRequest('toHand',candidates,0,1);out.at(-1).dependencies=[{kind:'subset',key:'cards'},{kind:'countFromSelection',key:'cards',threshold:1,count:1}];cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),0,1);out.at(-1).dependencies=[{kind:'countFromSelection',key:'cards',threshold:2,count:1}];
   }
  }
+ if(m==='RECOVER_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),0,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='STRETCHER')cardRequest('cards',p.discard.filter(c=>c.kind==='pokemon'||basicEnergy(c)),1,1);
  if(['SWITCH','BOSS'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);
  if(m==='ENERGY_SWITCH'){
@@ -272,7 +282,7 @@ function preflight(g,actor,action){
    if(action.type==='play_item')assert(card.cardType==='ITEM'&&!itemLocked(g,actor),'ITEM_NOT_ALLOWED');
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&g.turnNumber!==1&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
-   const m=r.mainPlan.mechanic;if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
+   const m=r.mainPlan.mechanic;if(m==='RECOVER_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');if(m==='DISCARD_HAND_DRAW')assert(p.deck.length>0||p.hand.some(c=>id(c)!==id(card)),'NO_DISCARD_OR_DRAW_POSSIBLE');if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
    if(m==='UNFAIR')assert(wasKnockedOut(g,actor),'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
    if(m==='ROSA')assert(p.prizes>o.prizes,'MORE_REMAINING_PRIZES_REQUIRED');
    if(['play_item','play_supporter'].includes(action.type))verifyRequests(g,actor,card,{plan:r.mainPlan},action);
@@ -417,6 +427,8 @@ function applyPlan(g,actor,card,effect,action){
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
+  case 'DISCARD_HAND_DRAW':{const cards=p.hand.splice(0);p.discard.push(...cards);event(g,actor,'DISCARD',{cardIds:cards.map(id)});draw(g,p,plan.amount);break;}
+  case 'RECOVER_BASIC_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'HEAL_DAMAGE':{const mon=find(g,ids('cards')[0]);assert(mon?.player===p&&Number.isSafeInteger(plan.amount)&&plan.amount>0,'INVALID_HEAL_TARGET');const amount=Math.min(mon.card.damage||0,plan.amount);mon.card.damage-=amount;event(g,actor,'HEAL',{targetInstanceId:id(mon.card),amount});break;}
   case 'COIN_FORCE_SWITCH':if(coin(g,actor))chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'SWITCH':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
@@ -580,8 +592,8 @@ function validateGame(g){
  assert(g.referenceEffectValidation.adoptedPrints===0,'REFERENCE_ADOPTION_FORBIDDEN');
  for(const c of nested){const r=record(c);assert(r,'REFERENCE_SOURCE_REQUIRED');assert(c.officialCardId==null&&c.catalogCardId==null,'REFERENCE_ADOPTION_FORBIDDEN');}
  for(const {card} of inPlay(g)){
-  const r=record(card),cape=toolEnabled(g)&&(card.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='HERO_CAPE');
-  assert(card.hp===r.facts.hp+(cape?100:0),'REFERENCE_HP_CONFLICT');
+  const r=record(card);
+  assert(card.hp===r.facts.hp+maxHpBonus(g,card),'REFERENCE_HP_CONFLICT');
   assert(card.basic===r.facts.basic&&card.stage===r.facts.stage,'REFERENCE_STAGE_CONFLICT');
  }
 }
@@ -611,7 +623,7 @@ function statuses(g){
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');
  }
  for(const state of g.referenceItemLock||[])if(g.turnNumber===state.turnNumber)out.push({id:'reference-item-lock-'+state.playerId,short:'グッズ不可',label:'グッズ使用不可',scope:'PLAYER',playerId:state.playerId,sourceCard:'スボミー',sourceEffect:'むずむずかふん',start:'前の番のワザ解決時',duration:'この番の終わりまで',removal:'期限終了',condition:'このプレイヤーの番',description:'手札からグッズを出して使えない'});
- const name={WATCHTOWER:'無色ポケモンの特性なし',NIGHT_MINE:'テラスタルのワザの無色コスト＋1',RUINS:'悪以外のたねをベンチに出すとダメカン2個',JAMMING:'どうぐの効果なし'}[stadium(g)];
+ const name={WATCHTOWER:'無色ポケモンの特性なし',NIGHT_MINE:'テラスタルのワザの無色コスト＋1',RUINS:'悪以外のたねをベンチに出すとダメカン2個',JAMMING:'どうぐの効果なし',SUPPRESS_RULE_ABILITIES:'ルールを持つポケモンの特性なし'}[stadium(g)];
  if(name)out.push({id:'reference-stadium',short:name,label:name,scope:'FIELD',sourceCard:g.stadium.name,sourceEffect:'スタジアム',start:'スタジアムが場に出たとき',duration:'このスタジアムが場にあるかぎり',removal:'場を離れたとき',condition:'公式参照版',description:name});
  return out;
 }

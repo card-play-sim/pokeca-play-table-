@@ -1,5 +1,5 @@
 'use strict';
-window.PokecaMobileBuild='251';
+window.PokecaMobileBuild='252';
 (() => {
   const $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
   const idOf=c=>c?.id || c?.cardId;
@@ -250,7 +250,7 @@ window.PokecaMobileBuild='251';
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
     document.querySelectorAll('.bench-slot.empty').forEach(el=>el.onclick=()=>{if(selected)dropOn(el);});
   }
-  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>o.action?.type==='use_ability')){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
+  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>['use_ability','play_item','play_supporter'].includes(o.action?.type))){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
     if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';return;}
     const entry=getCard(id);if(!entry)return;
     $('interaction-hint').textContent='選択中：'+(entry.card.name||'カード')+'・配置先をタップ';
@@ -680,7 +680,7 @@ window.PokecaMobileBuild='251';
     const result=dispatch(s.turnPlayer,{type:'end_turn'});
     if(result.ok&&aiAutoMode&&s.turnPlayer==='you'&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   }};
-  $('stadium').onclick=()=>{if(selected&&dropOn($('stadium')))return;const stadiumCards=mine().hand.filter(c=>c.cardType==='STADIUM');openSheet('スタジアム',`<p>手札からスタジアムを選んで置けます。</p><div id="stadium-actions" class="menu-list"></div><div>${port.getStatusView().filter(s=>s.scope==='FIELD').map(effectRow).join('') || '<p>現在、場全体の効果はありません。</p>'}</div>`);const container=$('stadium-actions');for(const card of stadiumCards){const a={type:'play_stadium',cardId:idOf(card)},check=port.getActionExplanation('you',a);container.append(button(card.name+'を置く',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!check.ok}));if(!check.ok)container.append(button('置けない理由',()=>toast(check.errors.join(' / '))));}if(!stadiumCards.length)container.append(document.createTextNode('手札にスタジアムはありません'));};
+  $('stadium').onclick=()=>{if(selected&&dropOn($('stadium')))return;const stadiumCards=mine().hand.filter(c=>port.getHandOptions('you',idOf(c)).some(o=>o.action?.type==='play_stadium'));openSheet('スタジアム',`<p>手札からスタジアムを選んで置けます。</p><div id="stadium-actions" class="menu-list"></div><div>${port.getStatusView().filter(s=>s.scope==='FIELD').map(effectRow).join('') || '<p>現在、場全体の効果はありません。</p>'}</div>`);const container=$('stadium-actions');for(const card of stadiumCards){const a={type:'play_stadium',cardId:idOf(card)},check=port.getActionExplanation('you',a);container.append(button(card.name+'を置く',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!check.ok}));if(!check.ok)container.append(button('置けない理由',()=>toast(check.errors.join(' / '))));}if(!stadiumCards.length)container.append(document.createTextNode('手札にスタジアムはありません'));};
   $('practice-info').onclick=()=>openSheet('この盤面について','<p>実証5件と操作練習を行うローカル盤面です。公式デッキではありません。実証カードのHPは仮設定です。</p><p>進化・どうぐ・宣言型特性は「練習」カードの明示データで確認できます。提供されていない公式カード効果は実装していません。</p><p>ドラッグはカードを上へ動かして開始します。横方向は手札スクロール、タップ後に緑の対象をタップしても同じ操作ができます。</p>');
   function setupRng(seed){let state=seed>>>0;return ()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}
   async function chooseDemoOpening(){

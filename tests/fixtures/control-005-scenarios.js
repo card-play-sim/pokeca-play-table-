@@ -16,7 +16,7 @@
   const take=(i,pred,required=true)=>{const index=pools[i].findIndex(typeof pred==='string'?c=>c.name===pred:pred);if(index<0){if(required)throw Error('FIXTURE_RESOURCE_MISSING');return null;}return pools[i].splice(index,1)[0];};
   const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});
   const pokemon=(i,pred=()=>true)=>{const choices=pools[i].filter(c=>c.kind==='pokemon'&&pred(c)).sort((a,b)=>record(b).facts.hp-record(a).facts.hp);return choices[0]?mon(take(i,choices[0].name)):null;};
-  const source=take(0,row.cardName),handActivation=['EXCITE_DIVE','MEOWTH_ENTRY','SKYLINE','FAIRY_ZONE'].includes(m),fieldSource=row.kind==='attack'||row.kind==='ability'&&!handActivation;
+  const source=take(0,c=>c.name===row.cardName&&record(c).officialCardId===row.officialCardId),handActivation=['EXCITE_DIVE','MEOWTH_ENTRY','SKYLINE','FAIRY_ZONE'].includes(m),fieldSource=row.kind==='attack'||row.kind==='ability'&&!handActivation;
   g.players.forEach(p=>{p.active=null;p.bench=[];p.hand=[];p.deck=[];p.discard=[];p.prizeCards=[];p.prizes=6;p.turnLimits={supporterUsed:false,abilityUses:{}};p.normalEnergyAttached=false;});
   const p=g.players[0],o=g.players[1];
   if(fieldSource)p.active=mon(source);else p.hand.push(source);

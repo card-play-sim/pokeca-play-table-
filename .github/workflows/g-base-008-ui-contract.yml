@@ -8,6 +8,10 @@ on:
       - 'data/effect-extensions/**'
       - 'tests/control-008-extensions.test.cjs'
       - 'tests/test_control_008_extensions_browser.py'
+      - 'tests/control-009-expansion.test.cjs'
+      - 'tests/test_control_009_browser.py'
+      - 'tests/fixtures/control-009-extension-manifest.cjs'
+      - 'tests/fixtures/control-009-scenarios.cjs'
       - 'tests/fixtures/control-008-extension-manifest.cjs'
       - 'tests/control-006-abilities.test.cjs'
       - 'tests/test_control_006_browser.py'
@@ -56,6 +60,7 @@ jobs:
           node scripts/build-effect-extensions.cjs --check
           node tests/shared-operation-origins.test.cjs
           node tests/control-008-extensions.test.cjs
+          node tests/control-009-expansion.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Preserve effect-level connection evidence
         if: always()
@@ -86,6 +91,7 @@ jobs:
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
           python tests/test_shared_operation_browser.py
+          python tests/test_control_009_browser.py
           python tests/test_control_008_extensions_browser.py
           python tests/test_control_006_browser.py
           python tests/test_ui_control_008_browser.py
@@ -101,6 +107,7 @@ jobs:
           name: candidate-gameplay-evidence
           path: |
             artifacts/shared-operation-*
+            artifacts/control-009-*
             artifacts/control-008-*
             artifacts/control-006-*
             artifacts/ui-control-008-*

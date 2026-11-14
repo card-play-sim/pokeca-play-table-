@@ -65,12 +65,20 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
  const draw=kind==='ATTACK'&&text.match(/^自分の山札を([1-9])枚引く。$/);
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
+ const known=byText.get(text);if(known)return {...known};
  const generic=text.normalize('NFKC');
  let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')return {mechanic:'COIN_FORCE_SWITCH',commands:['COIN_FLIP','FORCE_SWITCH']};
+ match=generic.match(/^自分の手札をすべてトラッシュし、山札を([1-9][0-9]*)枚引く。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DISCARD_HAND_DRAW',commands:['DISCARD','DRAW'],amount:Number(match[1])};
+ match=generic.match(/^自分のトラッシュから基本エネルギーを([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'RECOVER_BASIC_ENERGY',commands:['REVEAL','ADD_TO_HAND'],amount:Number(match[1])};
+ match=generic.match(/^このカードをつけている(たね)?ポケモンの最大HPは「\+([1-9][0-9]*)」される。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&match&&Number.isSafeInteger(Number(match[2])))return {mechanic:'CONDITIONAL_MAX_HP',commands:['MODIFY_MAX_HP'],amount:Number(match[2]),basicOnly:!!match[1]};
+ if(kind==='MAIN'&&entry.category==='stadium'&&generic==='おたがいの場の「ルールを持つポケモン」の特性は、すべてなくなる。')return {mechanic:'SUPPRESS_RULE_ABILITIES',commands:['ADD_STATE'],rulePokemonOnly:true};
  const p=byText.get(text);return p?{...p}:null;
 }
 function compile(catalog){
