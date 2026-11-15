@@ -4,7 +4,7 @@ const fs=require('node:fs'),{compile}=require('../engine/reference-effect-plans.
 const input=JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
 if(input.adoptedDeckPrints!==0)throw Error('UNREVIEWED_PRINT_ADOPTION');
 for(const r of input.records){
- if(!/^\d+$/.test(String(r.officialCardId))||!r.source?.sha256||!r.source?.recordSha256||!r.officialPageUrl?.startsWith('https://www.pokemon-card.com/'))throw Error('OFFICIAL_EFFECT_PROVENANCE_MISSING:'+r.officialCardId);
+ if(!/^\d+$/.test(String(r.officialCardId))||!r.source?.sha256||!(r.source?.recordSha256||r.source?.htmlSha256)||!['formal1945-readonly','saved-official-html'].includes(r.source?.kind)||!r.officialPageUrl?.startsWith('https://www.pokemon-card.com/'))throw Error('OFFICIAL_EFFECT_PROVENANCE_MISSING:'+r.officialCardId);
 }
 const catalog=compile(input);
 catalog.rulingEvidence={};
