@@ -57,6 +57,7 @@ for (const r of catalog.records) {
     const before = p.getSnapshot(),
       serialized = JSON.stringify(before),
       ai = E.getLegalActions(before, "you").actions;
+    assert(ai.every(a=>a&&typeof a.type==='string'),'AI_LEGAL_ACTION_MALFORMED');
     assert(
       ai.some(
         (a) =>
