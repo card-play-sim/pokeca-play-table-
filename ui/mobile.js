@@ -168,8 +168,19 @@ window.PokecaMobileBuild='256';
   }
   function attachedEnergyHTML(card){
     if(card.kind!=='pokemon'||!card.energyCards?.length)return '';
-    const chips=tableUI.energyGroups(card.energyCards).map(g=>`<span class="attached-energy-chip${g.special?' special-energy':''}" data-energy-label="${esc(g.label)}" data-energy-count="${g.count}" title="${esc(g.label)} ${g.count}枚">${esc(g.special?g.label:(symbols[g.label]||g.label))}<b>${g.count}</b></span>`).join('');
-    return `<span class="attached-energy-strip" aria-label="装着エネルギー ${card.energyCards.length}枚">${chips}</span>`;
+    const groups=new Map();
+    for(const energy of card.energyCards){
+      const special=energy.isSpecial===true||energy.energyType==='特殊';
+      const key=special?'special:'+energy.name:'basic:'+(energy.energyType||energy.name);
+      if(!groups.has(key))groups.set(key,{energy,count:0,label:special?(energy.name||'特殊エネルギー'):(energy.energyType||energy.name||'エネルギー'),special});
+      groups.get(key).count++;
+    }
+    const thumbs=[...groups.values()].map(g=>{
+      const url=imageURL(g.energy);
+      const image=url?`<img src="${esc(url)}" alt="" draggable="false" loading="lazy">`:`<span class="attached-energy-symbol">${esc(symbols[g.label]||'◇')}</span>`;
+      return `<span class="attached-energy-card${g.special?' special-energy':''}" title="${esc(g.label)} ${g.count}枚" aria-label="${esc(g.label)} ${g.count}枚">${image}<b>${g.count}</b></span>`;
+    }).join('');
+    return `<span class="attached-energy-strip attached-energy-images" aria-label="装着エネルギー ${card.energyCards.length}枚">${thumbs}</span>`;
   }
   function legalMarks(card,snapshot,owner,hand){
     if(owner.id!=='you'||snapshot.status!=='active'||snapshot.turnPlayer!=='you'||referenceStopped())return '';
