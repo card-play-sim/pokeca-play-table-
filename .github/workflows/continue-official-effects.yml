@@ -32,8 +32,8 @@ jobs:
           INTAKE_BRANCH="automation/control-013-intake-${GITHUB_RUN_ID}"
           git checkout -b "$INTAKE_BRANCH"
           echo "INTAKE_BRANCH=$INTAKE_BRANCH" >> "$GITHUB_ENV"
-          # Resume the newest successful run's checkpoint rather than replaying
-          # the legacy branch forever. Numeric run IDs are monotonically increasing.
+          # Resume the newest branch with a durable checkpoint, skipping interrupted
+          # branches without one. Numeric run IDs are monotonically increasing.
           CHECKPOINT_FOUND=0
           for RUN_ID in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' |
             sed -n 's|.*refs/heads/automation/control-013-intake-\([0-9][0-9]*\)$|\1|p' |
