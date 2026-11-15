@@ -9,4 +9,7 @@ assert.deepEqual(ability('自分の番に1回使える。自分の山札を3枚�
 assert.equal(ability('自分の番に2回使える。自分の山札を3枚引く。'),null);
 assert.equal(ability('自分の番に1回使える。相手の山札を3枚引く。'),null);
 assert.equal(ability('自分の番に1回使える。自分の山札を101枚引く。'),null);
-console.log('generic official ability draw compiler PASS');
+assert.deepEqual(ability('自分の番に1回使える。このポケモンのHPを「30」回復する。'),{mechanic:'ABILITY_HEAL_SELF',commands:['HEAL'],amount:30});
+assert.equal(ability('自分の番に1回使える。相手のポケモンのHPを「30」回復する。'),null);
+assert.equal(ability('自分の番に2回使える。このポケモンのHPを「30」回復する。'),null);
+console.log('generic official draw and self-heal ability compiler PASS');
