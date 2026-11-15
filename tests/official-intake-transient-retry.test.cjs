@@ -11,5 +11,5 @@ assert.match(source,/blocked\[i\]\.get\('attempts',1\)<2/);
 assert.match(source,/old\.get\('attempts',0\)\+1/);
 assert.match(source,/fcntl\.LOCK_EX\|fcntl\.LOCK_NB/);
 const workflow=fs.readFileSync(".github/workflows/continue-official-effects.yml","utf8");
-assert.match(workflow,/python scripts\/continue-official-effect-intake\.py --limit "\\$INTAKE_LIMIT" --adopt --retry-transient/);
+assert.match(workflow,/python scripts\/continue-official-effect-intake\.py --limit "\$INTAKE_LIMIT" --adopt --retry-transient/);
 console.log("Bounded transient intake retry syntax and guard regression PASS");
