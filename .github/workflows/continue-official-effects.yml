@@ -32,10 +32,20 @@ jobs:
           INTAKE_BRANCH="automation/control-013-intake-${GITHUB_RUN_ID}"
           git checkout -b "$INTAKE_BRANCH"
           echo "INTAKE_BRANCH=$INTAKE_BRANCH" >> "$GITHUB_ENV"
-          if git ls-remote --exit-code --heads origin automation/control-013-intake >/dev/null; then
-            git fetch origin automation/control-013-intake
-            if git cat-file -e origin/automation/control-013-intake:data/official-effect-intake/checkpoint.json 2>/dev/null; then
-              git restore --source=origin/automation/control-013-intake -- data/official-effect-intake/checkpoint.json
+          # Resume the newest successful run's checkpoint rather than replaying
+          # the legacy branch forever. Numeric run IDs are monotonically increasing.
+          LATEST=$(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' |
+            sed -n 's|.*refs/heads/automation/control-013-intake-\\([0-9][0-9]*\\)$|\\1|p' |
+            sort -n | tail -1)
+          if [ -n "$LATEST" ]; then
+            CHECKPOINT_BRANCH="automation/control-013-intake-$LATEST"
+          else
+            CHECKPOINT_BRANCH="automation/control-013-intake"
+          fi
+          if git ls-remote --exit-code --heads origin "$CHECKPOINT_BRANCH" >/dev/null; then
+            git fetch origin "$CHECKPOINT_BRANCH"
+            if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
+              git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
             fi
           fi
       - name: Collect incremental official evidence and run approved local commands
