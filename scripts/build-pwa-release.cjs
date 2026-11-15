@@ -7,6 +7,7 @@ const mobileBuild=mobile.match(/window\.PokecaMobileBuild=['"](\d+)['"]/);
 if(!mobileBuild||mobileBuild[1]!==build)throw Error('PWA_MOBILE_BUILD_MISMATCH: HTML='+build+' mobile='+(mobileBuild?.[1]??'missing'));
 const revision=html.match(/id="build-revision">v(\d+)</);
 if(!revision||revision[1]!==build)throw Error('PWA_VISIBLE_BUILD_MISMATCH: HTML='+build+' header='+(revision?.[1]??'missing'));
+for(const [,version] of html.matchAll(/(?:src|href)=\"[^\" ]+\?build=(\d+)\"/g))if(version!==build)throw Error('PWA_ASSET_BUILD_MISMATCH:'+version+' != '+build);
 const urls=['./','./index.html',...Array.from(html.matchAll(/(?:src|href)="([^" ]+\?build=\d+)"/g),m=>'./'+m[1]),'./data/fixed-test-decks.json','./data/official-image-registry.json','./data/fixed-deck-preview-bindings.json','./data/fixed-deck-practice-facts.json','./ui/card-back.svg','./manifest.webmanifest','./icon.svg'];
 const files=Object.fromEntries([...new Set(urls)].map(url=>[url,crypto.createHash('sha256').update(fs.readFileSync(url==='./'?'index.html':url.split('?')[0])).digest('hex')]));
 const releaseId=crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex').slice(0,16);
