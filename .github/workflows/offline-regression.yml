@@ -44,6 +44,6 @@ jobs:
           python-version: '3.12'
       - name: All offline Python checks
         run: |
-          for pattern in test_formal_zip_reconciliation.py test_fixed_preview_evidence.py test_fixed_practice_facts.py test_mobile_header_layout.py test_card_reflection_wiring.py test_official_image_workflow.py; do
+          for pattern in test_formal_zip_reconciliation.py test_fixed_preview_evidence.py test_fixed_practice_facts.py test_mobile_header_layout.py test_card_reflection_wiring.py test_official_image_workflow.py test_restore_official_intake_evidence.py; do
             python -m unittest discover -s tests -p "$pattern" -v
           done

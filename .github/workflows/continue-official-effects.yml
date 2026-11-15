@@ -45,6 +45,7 @@ jobs:
             fi
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
               git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD
               CHECKPOINT_FOUND=1
               echo "Resumed checkpoint from $CHECKPOINT_BRANCH"
               break
@@ -55,6 +56,7 @@ jobs:
             git fetch origin automation/control-013-intake
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
               git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD
               echo "Resumed legacy checkpoint"
             fi
           fi
@@ -62,6 +64,7 @@ jobs:
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '50' }}
         run: |
+          python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient
           node scripts/build-pwa-release.cjs
           node tests/control-013-continuation.test.cjs
