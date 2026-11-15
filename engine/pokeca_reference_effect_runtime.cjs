@@ -423,6 +423,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'SWITCH_SELF_ATTACK':if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);break;
   case 'HAND_LIMIT_DRAW_ATTACK':if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
+  case 'ABILITY_DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DASH':draw(g,p,2);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.DASH=true;break;
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;
   case 'EXCITE_DIVE':bench(g,p,card,true);break;
