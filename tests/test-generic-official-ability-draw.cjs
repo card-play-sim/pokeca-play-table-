@@ -51,4 +51,14 @@ assert.equal(main('tool','このカードをつけているたねポケモンの
 assert.equal(attack('このポケモンにも30ダメージ。その後、エネルギーを1枚トラッシュする。','100'),null);
 assert.equal(attack('このポケモンのHPを「30」回復する。その後、ベンチと入れ替える。','100'),null);
 
-console.log('generic official cross-category compiler contract and negative boundaries PASS');
+
+const fs=require('node:fs');
+const catalog=JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
+const ids=catalog.records.map(r=>String(r.officialCardId));
+assert.equal(new Set(ids).size,ids.length,'DUPLICATE_OFFICIAL_PRINT_ID');
+assert.equal(catalog.adoptedDeckPrints,0,'UNREVIEWED_FIXED_DECK_ADOPTION');
+for(const [name,print] of Object.entries(catalog.defaultValidationReferences)){
+ assert(catalog.records.some(r=>String(r.officialCardId)===String(print)&&r.deckName===name),'UNRESOLVED_REFERENCE:'+name);
+}
+
+console.log('generic official cross-category and identity ledger guards PASS');
