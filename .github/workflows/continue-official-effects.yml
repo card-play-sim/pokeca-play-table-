@@ -45,6 +45,7 @@ jobs:
             fi
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
               git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD
               CHECKPOINT_FOUND=1
               echo "Resumed checkpoint from $CHECKPOINT_BRANCH"
               break
@@ -55,6 +56,7 @@ jobs:
             git fetch origin automation/control-013-intake
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
               git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD
               echo "Resumed legacy checkpoint"
             fi
           fi
