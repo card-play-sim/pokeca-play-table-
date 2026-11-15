@@ -68,4 +68,18 @@ assert.equal(main('tool','このカードをつけているポケモンの最大
 assert.equal(attack('このポケモンにも999999999999999999999ダメージ。','100'),null);
 assert.equal(attack('このポケモンのHPを「999999999999999999999」回復する。','100'),null);
 
-console.log('generic official cross-category, compound, and numeric boundary regression PASS');
+const fs=require('node:fs');
+const catalog=JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
+const ids=catalog.records.map(r=>String(r.officialCardId));
+assert.equal(new Set(ids).size,ids.length,'DUPLICATE_OFFICIAL_PRINT_ID');
+assert(catalog.records.length>0,'REFERENCE_CATALOG_EMPTY');
+for(const r of catalog.records){
+ assert(/^\d+$/.test(String(r.officialCardId)),'INVALID_OFFICIAL_PRINT_ID');
+ assert(r.officialPageUrl?.includes('/card/'+r.officialCardId),'OFFICIAL_URL_ID_MISMATCH:'+r.officialCardId);
+}
+assert.equal(catalog.adoptedDeckPrints,0,'UNREVIEWED_FIXED_DECK_ADOPTION');
+for(const [name,print] of Object.entries(catalog.defaultValidationReferences)){
+ assert(catalog.records.some(r=>String(r.officialCardId)===String(print)&&r.deckName===name),'UNRESOLVED_REFERENCE:'+name);
+}
+
+console.log('generic official cross-category, compound, numeric and identity ledger regression PASS');
