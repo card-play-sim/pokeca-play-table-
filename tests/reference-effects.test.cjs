@@ -341,6 +341,7 @@ test('shared selection constraints reject forged deck stage hints using official
  assert.equal(request.candidates.find(c=>c.id===evolution.id).basic,false,'selector must receive verified stage facts');
 });
 test('Goods Hammer discards the selected opposing energy on heads',()=>{const t=setup({firstDeck:1,active:['ドラメシヤ','ロケット団のニューラ'],hand:{0:['クラッシュハンマー']},energy:{1:{active:['基本悪エネルギー']}}});const p=t.g.players[1],energy=p.active.energyCards[0].id;const a=actionFor(t,'you','クラッシュハンマー','play_item');a.selections={energy:[energy]};t.g.referenceRngState=0;t.do('you',a);assert(!p.active.energyCards.some(x=>x.id===energy));assert(p.discard.some(x=>x.id===energy));});
+test('Repellent is disabled without an opposing bench and never consumes the item',()=>{const t=setup({hand:{0:['むしよけスプレー']}});const a=t.g.players[0].hand.find(c=>c.name==='むしよけスプレー');const choice=t.port.getHandOptions('you',a.id).find(x=>x.action.type==='play_item');assert(choice);assert.equal(choice.ok,false);assert(choice.errors.some(e=>e.includes('NO_OPPONENT_BENCH')));t.reject('you',choice.action,/NO_OPPONENT_BENCH/);assert(t.g.players[0].hand.some(c=>c.id===a.id));});
 test('forged card attack commands never bypass source-verified attack cost',()=>{const t=setup({active:['シェイミ','ドラメシヤ']});t.g.players[0].active.attacks=[{name:'forged',cost:[],damage:999,commands:[{command:'DAMAGE',amount:999}]}];t.reject('you',{type:'attack_turn',attackIndex:0},/ENERGY/);assert.equal(t.g.players[1].active.damage,0);});
 console.log('Reference effect scenarios',cases);
 
