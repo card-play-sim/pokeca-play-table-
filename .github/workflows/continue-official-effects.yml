@@ -62,7 +62,7 @@ jobs:
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '50' }}
         run: |
-          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt
+          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient
           node scripts/build-pwa-release.cjs
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
