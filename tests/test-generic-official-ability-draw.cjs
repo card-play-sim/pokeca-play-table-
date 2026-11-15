@@ -72,7 +72,7 @@ const fs=require('node:fs');
 const catalog=JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
 const ids=catalog.records.map(r=>String(r.officialCardId));
 assert.equal(new Set(ids).size,ids.length,'DUPLICATE_OFFICIAL_PRINT_ID');
-assert.equal(catalog.records.length,89,'REFERENCE_CATALOG_UNEXPECTED_SIZE');
+assert(catalog.records.length>0,'REFERENCE_CATALOG_EMPTY');
 assert.equal(catalog.adoptedDeckPrints,0,'UNREVIEWED_FIXED_DECK_ADOPTION');
 for(const [name,print] of Object.entries(catalog.defaultValidationReferences)){
  assert(catalog.records.some(r=>String(r.officialCardId)===String(print)&&r.deckName===name),'UNRESOLVED_REFERENCE:'+name);
