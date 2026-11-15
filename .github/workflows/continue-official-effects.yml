@@ -39,7 +39,10 @@ jobs:
             sed -n 's|.*refs/heads/automation/control-013-intake-\([0-9][0-9]*\)$|\1|p' |
             sort -nr); do
             CHECKPOINT_BRANCH="automation/control-013-intake-$RUN_ID"
-            git fetch origin "$CHECKPOINT_BRANCH"
+            # A concurrent branch deletion must not abort checkpoint recovery.
+            if ! git fetch origin "$CHECKPOINT_BRANCH"; then
+              continue
+            fi
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
               git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
               CHECKPOINT_FOUND=1
