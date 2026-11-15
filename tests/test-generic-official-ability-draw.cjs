@@ -52,6 +52,22 @@ assert.equal(attack('このポケモンにも30ダメージ。その後、エネ
 assert.equal(attack('このポケモンのHPを「30」回復する。その後、ベンチと入れ替える。','100'),null);
 
 
+const numericBoundaryCases=[
+ ['ability draw max',()=>ability('自分の番に1回使える。自分の山札を100枚引く。'),p=>p?.amount===100],
+ ['ability heal max',()=>ability('自分の番に1回使える。このポケモンのHPを「1000」回復する。'),p=>p?.amount===1000],
+ ['item draw positive',()=>main('item','自分の山札を1枚引く。'),p=>p?.amount===1],
+ ['supporter heal positive',()=>main('supporter','自分のポケモン1匹のHPを「1」回復する。'),p=>p?.amount===1],
+ ['attack recoil positive',()=>attack('このポケモンにも1ダメージ。','1'),p=>p?.amount===1],
+];
+for(const [label,run,accept]of numericBoundaryCases)assert(accept(run()),'Boundary unexpectedly rejected: '+label);
+assert.equal(ability('自分の番に1回使える。自分の山札を999999999999999999999枚引く。'),null);
+assert.equal(ability('自分の番に1回使える。このポケモンのHPを「999999999999999999999」回復する。'),null);
+assert.equal(main('item','自分の山札を999999999999999999999枚引く。'),null);
+assert.equal(main('supporter','自分のポケモン1匹のHPを「999999999999999999999」回復する。'),null);
+assert.equal(main('tool','このカードをつけているポケモンの最大HPは「+999999999999999999999」される。'),null);
+assert.equal(attack('このポケモンにも999999999999999999999ダメージ。','100'),null);
+assert.equal(attack('このポケモンのHPを「999999999999999999999」回復する。','100'),null);
+
 const fs=require('node:fs');
 const catalog=JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
 const ids=catalog.records.map(r=>String(r.officialCardId));
@@ -61,4 +77,4 @@ for(const [name,print] of Object.entries(catalog.defaultValidationReferences)){
  assert(catalog.records.some(r=>String(r.officialCardId)===String(print)&&r.deckName===name),'UNRESOLVED_REFERENCE:'+name);
 }
 
-console.log('generic official cross-category and identity ledger guards PASS');
+console.log('generic official cross-category, compound, and numeric boundary regression PASS');
