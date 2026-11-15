@@ -176,8 +176,8 @@ window.PokecaMobileBuild='256';
       groups.get(key).count++;
     }
     const thumbs=[...groups.values()].map(g=>{
-      const url=imageURL(g.energy);
-      const image=url?`<img src="${esc(url)}" alt="" draggable="false" loading="lazy">`:`<span class="attached-energy-symbol">${esc(symbols[g.label]||'◇')}</span>`;
+      // Reuse the same verified image/fallback pipeline as the hand and board.
+      const image=cardArt(g.energy);
       return `<span class="attached-energy-card${g.special?' special-energy':''}" title="${esc(g.label)} ${g.count}枚" aria-label="${esc(g.label)} ${g.count}枚">${image}<b>${g.count}</b></span>`;
     }).join('');
     return `<span class="attached-energy-strip attached-energy-images" aria-label="装着エネルギー ${card.energyCards.length}枚">${thumbs}</span>`;
