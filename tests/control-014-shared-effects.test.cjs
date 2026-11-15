@@ -191,3 +191,6 @@ console.log(
   "blocked fixtures",
   blocked.length,
 );
+
+// Keep generic official ability compiler guards in the required shared-effects CI job.
+require('./test-generic-official-ability-draw.cjs');
