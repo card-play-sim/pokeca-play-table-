@@ -94,6 +94,8 @@ const result = spawnSync(
     "scripts/process-shared-effect-batch.cjs",
     "reports/official-effect-continuation/queue",
     "reports/official-effect-continuation/evidence.json",
+    "--limit",
+    String(Math.min(100000, Math.max(100, evidence.length))),
     "--max-tasks",
     process.argv[2] || "10000",
     ...repair,
