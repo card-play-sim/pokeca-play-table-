@@ -79,6 +79,8 @@ function plan(entry,kind){
  match=generic.match(/^このカードをつけている(たね)?ポケモンの最大HPは「\+([1-9][0-9]*)」される。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&match&&Number.isSafeInteger(Number(match[2])))return {mechanic:'CONDITIONAL_MAX_HP',commands:['MODIFY_MAX_HP'],amount:Number(match[2]),basicOnly:!!match[1]};
  if(kind==='MAIN'&&entry.category==='stadium'&&generic==='おたがいの場の「ルールを持つポケモン」の特性は、すべてなくなる。')return {mechanic:'SUPPRESS_RULE_ABILITIES',commands:['ADD_STATE'],rulePokemonOnly:true};
+ match=generic.match(/^自分の番に1回使える。このポケモンのHPを「([1-9][0-9]*)」回復する。$/);
+ if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1]))&&Number(match[1])<=1000)return {mechanic:'ABILITY_HEAL_SELF',commands:['HEAL'],amount:Number(match[1])};
  match=generic.match(/^自分の番に1回使える。自分の山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1]))&&Number(match[1])<=100)return {mechanic:'ABILITY_DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分の手札が([1-9][0-9]*)枚になるように、山札を引く。$/);
