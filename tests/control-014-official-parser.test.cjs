@@ -33,6 +33,14 @@ for(const type of ['草','炎','水','雷','超','闘','悪','鋼']){
   const p=parse(html);assert.equal(p.category,'energy');assert.equal(p.facts.basicEnergyType,type);assert.deepEqual(p.attacks,[]);assert.deepEqual(p.abilities,[]);
 }
 assert.throws(()=>parse('<h1>基本妖エネルギー</h1><div class="RightBox-inner"><h2>基本エネルギー</h2></div>'),/UNVERIFIED_BASIC_ENERGY_TYPE/);
+// Exercise the official-layout rule parser with a saved, hash-verified print.
+const teraProof=JSON.parse(fs.readFileSync("data/effect-extensions/evidence/45944.json")).html;
+const topRule='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。';
+const teraHtml=teraProof.replace('<h2 class="mt20">ワザ</h2>','<p>'+topRule+'</p><h2 class="mt20">ワザ</h2>');
+assert.equal(parse(teraProof).facts.teraBenchProtection,false);
+assert.equal(parse(teraHtml).facts.teraBenchProtection,false);
+assert.equal(parse(teraHtml,{enableTeraRule:true}).facts.teraBenchProtection,true);
+assert.throws(()=>parse(teraHtml.replace(topRule,'このポケモンは、すべてのダメージを受けない。')),/UNSUPPORTED_TOP_RULE/);
 assert(stageTwo >= 2);
 assert(iconProofs >= 3);
 for (const id of ["45944", "46371", "47589"]) {

@@ -8,7 +8,7 @@ function text(s){
  assert(!/<[^>]+>/.test(s),'UNSUPPORTED_INLINE_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,'').trim();
 }
 function label(s){assert(!/<[^>]*>/.test(s),'UNSUPPORTED_NAME_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();}
-function parse(html){
+function parse(html,{enableTeraRule=false}={}){
  const right=html.slice(html.indexOf('<div class="RightBox-inner">'));assert(right.startsWith('<div'),'OFFICIAL_DETAIL_LAYOUT');
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
  if(/^<h2[^>]*>基本エネルギー<\/h2>\s*<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
@@ -20,6 +20,7 @@ function parse(html){
   assert(special&&special[1].trim()===exPrizeRule,'UNSUPPORTED_POKEMON_RULE_SECTION');
  const rulePokemon=Boolean(special);
  const top=right.slice(0,first),stageText=text(top.match(/<span class="type">(.*?)<\/span>/s)?.[1]||'').replace(/\s/g,''),stage=stageText==='たね'?0:stageText==='1進化'?1:stageText==='2進化'?2:null;assert(stage!==null,'UNSUPPORTED_POKEMON_STAGE');
+ const topParagraphs=[...top.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map(m=>text(m[1]));assert(topParagraphs.every(t=>t==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。'),'UNSUPPORTED_TOP_RULE');const teraBenchProtection=enableTeraRule&&topParagraphs.length>0;
  const hp=Number(top.match(/<span class="hp-num">(\d+)<\/span>/)?.[1]);assert(hp>0&&Number.isSafeInteger(hp),'MISSING_PRINTED_HP');const types=tokens(top);assert(types.length===1,'UNSUPPORTED_POKEMON_TYPES');
  const table=right.match(/<table\b[^>]*>([\s\S]*?)<\/table>/);assert(table,'MISSING_PRINTED_DEFENSE');const cells=[...table[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(m=>m[1]);assert(cells.length===3,'UNSUPPORTED_PRINTED_DEFENSE');
  const defense=(s,kind)=>{if(text(s)==='--')return null;const types=tokens(s),v=text(s.replace(/<span[^>]*><\/span>/g,''));assert(types.length===1&&(kind==='weakness'?v==='×2':/^[-－−](20|30)$/.test(v)),'UNSUPPORTED_'+kind);return {types,value:kind==='resistance'?v.replace(/[－−]/g,'-'):v};};
@@ -32,7 +33,7 @@ function parse(html){
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
  const evo=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
- return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection:false}};
+ return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}
 module.exports={parse,text};
