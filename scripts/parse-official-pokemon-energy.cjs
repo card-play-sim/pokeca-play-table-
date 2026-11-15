@@ -11,6 +11,7 @@ function label(s){assert(!/<[^>]*>/.test(s),'UNSUPPORTED_NAME_MARKUP');return s.
 function parse(html){
  const right=html.slice(html.indexOf('<div class="RightBox-inner">'));assert(right.startsWith('<div'),'OFFICIAL_DETAIL_LAYOUT');
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
+ if(/^<h2[^>]*>基本エネルギー<\/h2>\s*<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
  if(/<h2[^>]*>特殊エネルギー<\/h2>/.test(right.slice(first,first+90))){const section=right.slice(first).match(/^<h2[^>]*>特殊エネルギー<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/div>/);assert(section,'UNSUPPORTED_ENERGY_PARAGRAPHS');return {category:'energy',text:text(section[1]),attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false}};}
  // Recognize only the exact official ex prize rule; other special rules fail closed.
  const special=right.match(/<h2[^>]*>特別なルール<\/h2>\s*<p><p>([^<]*)<\/p><\/p>/);

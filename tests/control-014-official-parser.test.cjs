@@ -28,6 +28,11 @@ for (const r of JSON.parse(
     iconProofs++;
   }
 }
+for(const type of ['草','炎','水','雷','超','闘','悪','鋼']){
+  const html='<h1>基本'+type+'エネルギー</h1><div class="RightBox-inner"><h2>基本エネルギー</h2></div>';
+  const p=parse(html);assert.equal(p.category,'energy');assert.equal(p.facts.basicEnergyType,type);assert.deepEqual(p.attacks,[]);assert.deepEqual(p.abilities,[]);
+}
+assert.throws(()=>parse('<h1>基本妖エネルギー</h1><div class="RightBox-inner"><h2>基本エネルギー</h2></div>'),/UNVERIFIED_BASIC_ENERGY_TYPE/);
 assert(stageTwo >= 2);
 assert(iconProofs >= 3);
 for (const id of ["45944", "46371", "47589"]) {
