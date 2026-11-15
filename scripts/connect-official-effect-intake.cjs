@@ -70,7 +70,7 @@ evidence.push(
   ),
 );
 for (const r of base.records) accepted.add(r.officialCardId);
-B.atomic("reports/official-effect-continuation/evidence.json", evidence);
+// The batch selector supports at most 100000 entries. Never report partial\n// processing as full coverage when the registry grows beyond that bound.\nif (evidence.length > 100000)\n  throw Error("OFFICIAL_EFFECT_BATCH_LIMIT_EXCEEDED:" + evidence.length);\nB.atomic("reports/official-effect-continuation/evidence.json", evidence);
 const previous = fs.existsSync(
   "reports/official-effect-continuation/status.json",
 )
