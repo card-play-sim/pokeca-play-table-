@@ -418,7 +418,7 @@ window.PokecaMobileBuild='256';
     }
     // Keep attacks accessible without making attack descriptions the default tap action.
     const attackOptions=options.filter(o=>o.kind==='attack');
-    if(attackOptions.length)container.append(button('ワザを使う',()=>{openSheet(entry.card.name,'<div class="menu-list" id="attack-actions"></div>');for(const option of attackOptions){const b=button(option.label+attackCostLabel(entry.card,option.action.attackIndex??0),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='attack';$('attack-actions').append(b);}},{}));
+    if(attackOptions.length)container.append(button('ワザを使う',()=>{openSheet(entry.card.name,'<div class="menu-list" id="attack-actions"></div>');for(const option of attackOptions){const b=button(option.label+attackCostLabel(entry.card,option.action.attackIndex??0),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='attack';b.dataset.attackIndex=String(option.action.attackIndex??0);$('attack-actions').append(b);}},{}));
     const retreatOptions=options.filter(o=>o.kind==='retreat');
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
