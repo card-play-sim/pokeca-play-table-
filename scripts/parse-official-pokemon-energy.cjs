@@ -20,6 +20,7 @@ function parse(html){
   assert(special&&special[1].trim()===exPrizeRule,'UNSUPPORTED_POKEMON_RULE_SECTION');
  const rulePokemon=Boolean(special);
  const top=right.slice(0,first),stageText=text(top.match(/<span class="type">(.*?)<\/span>/s)?.[1]||'').replace(/\s/g,''),stage=stageText==='たね'?0:stageText==='1進化'?1:stageText==='2進化'?2:null;assert(stage!==null,'UNSUPPORTED_POKEMON_STAGE');
+ const topParagraphs=[...top.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map(m=>text(m[1]));assert(topParagraphs.every(t=>t==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。'),'UNSUPPORTED_TOP_RULE');const teraBenchProtection=topParagraphs.length>0;
  const hp=Number(top.match(/<span class="hp-num">(\d+)<\/span>/)?.[1]);assert(hp>0&&Number.isSafeInteger(hp),'MISSING_PRINTED_HP');const types=tokens(top);assert(types.length===1,'UNSUPPORTED_POKEMON_TYPES');
  const table=right.match(/<table\b[^>]*>([\s\S]*?)<\/table>/);assert(table,'MISSING_PRINTED_DEFENSE');const cells=[...table[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(m=>m[1]);assert(cells.length===3,'UNSUPPORTED_PRINTED_DEFENSE');
  const defense=(s,kind)=>{if(text(s)==='--')return null;const types=tokens(s),v=text(s.replace(/<span[^>]*><\/span>/g,''));assert(types.length===1&&(kind==='weakness'?v==='×2':/^[-－−](20|30)$/.test(v)),'UNSUPPORTED_'+kind);return {types,value:kind==='resistance'?v.replace(/[－−]/g,'-'):v};};
@@ -32,7 +33,7 @@ function parse(html){
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
  const evo=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
- return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection:false}};
+ return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}
 module.exports={parse,text};
