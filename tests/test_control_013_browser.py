@@ -24,7 +24,7 @@ async def main():
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
    if f['kind'] in ('attack','ability'):
     await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
-    if f["kind"]=="attack":await page.get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator('#attack-actions [data-action-kind="attack"]').first.tap()
+    if f["kind"]=="attack":await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator('#attack-actions [data-action-kind="attack"]').first.tap()
     else:await page.locator('#pokemon-actions [data-action-kind="ability"]').first.tap()
    elif r['category']=='stadium':
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
