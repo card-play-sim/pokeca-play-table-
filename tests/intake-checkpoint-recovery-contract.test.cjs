@@ -1,0 +1,13 @@
+"use strict";
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const workflow=fs.readFileSync(".github/workflows/continue-official-effects.yml","utf8");
+const section=workflow.split("      - name: Collect incremental")[0];
+assert.match(section,/sort -nr/,"newest checkpoints must be inspected first");
+assert.match(section,/for RUN_ID in \$\(/,"must iterate beyond the newest interrupted run");
+assert.match(section,/git cat-file -e FETCH_HEAD:data\/official-effect-intake\/checkpoint\.json/,"checkpoint must exist before restore");
+assert.match(section,/CHECKPOINT_FOUND=1/,"found checkpoint must stop fallback");
+assert.match(section,/if \[ "\$CHECKPOINT_FOUND" -eq 0 \]/,"legacy fallback only when no numbered checkpoint exists");
+assert.match(section,/if ! git fetch origin "\$CHECKPOINT_BRANCH"/,"deleted branches must not abort recovery");
+assert.match(section,/git restore --source=FETCH_HEAD -- data\/official-effect-intake\/checkpoint\.json/,"restore only the checkpoint file");
+console.log("INTAKE_CHECKPOINT_RECOVERY_CONTRACT PASS");
