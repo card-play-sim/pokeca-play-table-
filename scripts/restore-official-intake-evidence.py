@@ -14,7 +14,8 @@ EVIDENCE = ROOT / "data/effect-extensions/evidence"
 
 def recover(commit, checkpoint):
     records = json.loads(checkpoint.read_text(encoding="utf-8"))["records"]
-    recovered = 0
+    # Validate the complete checkpoint before creating any new evidence files.
+    pending = []
     for record in records:
         official_id = str(record["officialCardId"])
         if not official_id.isdigit() or not 4 <= len(official_id) <= 8:
@@ -35,9 +36,18 @@ def recover(commit, checkpoint):
         ):
             raise ValueError("EVIDENCE_INTEGRITY_CONFLICT:" + official_id)
         if not target.exists():
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(raw)
+            pending.append((target, raw))
+    recovered = 0
+    for target, raw in pending:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        # Exclusive creation prevents a concurrent recovery from overwriting proof.
+        try:
+            with target.open("xb") as output:
+                output.write(raw)
             recovered += 1
+        except FileExistsError:
+            if target.read_bytes() != raw:
+                raise ValueError("EVIDENCE_INTEGRITY_CONFLICT:" + target.stem)
     return recovered
 
 if __name__ == "__main__":
