@@ -245,6 +245,14 @@ window.PokecaMobileBuild='256';
     if(s.practiceScenario?.focusInstanceId)document.querySelectorAll('[data-card-id]').forEach(el=>el.classList.toggle('scenario-focus',el.dataset.cardId===s.practiceScenario.focusInstanceId));
   }
   function getCard(id){for(const p of view().players){const c=[...p.hand,p.active,...p.bench,...p.discard].find(c=>idOf(c)===id);if(c)return {card:c,player:p};}return null;}
+  // The enlarged hand is an optional overlay; ordinary horizontal scrolling remains intact.
+  const handExpand=$('hand-expand');
+  if(handExpand)handExpand.onclick=()=>{
+    const expanded=$('app').classList.toggle('hand-expanded');
+    handExpand.setAttribute('aria-expanded',String(expanded));
+    handExpand.setAttribute('aria-label',expanded?'手札を元の大きさに戻す':'手札を大きく表示');
+    handExpand.textContent=expanded?'手札を戻す ⤡':'手札を拡大 ⤢';
+  };
   function bindCards(){document.querySelectorAll('[data-card-id]').forEach(el=>{
     el.onclick=()=>{if(Date.now()<suppressClick)return;const id=el.dataset.cardId;
       if(selected&&!el.dataset.hand){if(dropOn(el))return;}

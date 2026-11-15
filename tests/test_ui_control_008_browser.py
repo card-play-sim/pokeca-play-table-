@@ -41,30 +41,30 @@ async def main():
    # Independent expected labels are mapped from canonical legal actions, never card names.
    mismatch=await page.evaluate('''()=>{const g=PokecaMobile.port.getSnapshot(),labels={use_ability:'特性',play_item:'使う',play_supporter:'使う',play_stadium:'使う',bench_basic:'出す',play_active_basic:'出す',evolve:'進化',attach_energy:'つける',attach_tool:'つける'};return [...document.querySelectorAll('[data-card-id]')].flatMap(el=>{const own=el.dataset.owner==='you',hand=!!el.dataset.hand,opts=own?(hand?PokecaMobile.port.getHandOptions('you',el.dataset.cardId):PokecaMobile.port.getPokemonActions('you',el.dataset.cardId)):[],expected=[...new Set(opts.filter(o=>o.ok===true||o.enabled===true).map(o=>labels[o.action?.type]||(o.kind==='attack'?'ワザ':o.kind==='ability'?'特性':null)).filter(Boolean))].sort(),actual=[...el.querySelectorAll('[data-legal-mark]')].map(x=>x.dataset.legalMark).sort();return JSON.stringify(actual)===JSON.stringify(expected)?[]:[{id:el.dataset.cardId,actual,expected}];});}''')
    assert not mismatch,mismatch
-   assert await page.locator('#self-active [data-energy-label="悪"]').get_attribute('data-energy-count')=='2'
-   assert await page.locator('#self-active [data-energy-label="イグニッションエネルギー"]').get_attribute('data-energy-count')=='1'
+   assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='2'
+   assert await page.locator('#self-active .attached-energy-card[aria-label^="イグニッションエネルギー "]').locator('b').inner_text()=='1'
    await zoom('#self-active .card');await zoom('#self-hand .card:first-child')
    await page.screenshot(path=str(ROOT/f'artifacts/ui-control-008-{width}.png'),full_page=True)
    reports.append({'viewport':[width,height],'withinViewport':True,'legalMarksMatchPort':True,'zoneBacksAndCounts':True,'longPressNoMutation':True,'specialEnergyName':True})
   cards={x['name']:x['id'] for x in s['players'][0]['hand']};active=s['players'][0]['active']['id'];bench=s['players'][0]['bench'][0]['id']
   # Short tap must select rather than zoom; physical basic attachment then shared move.
   await page.locator(f'#self-hand [data-card-id="{cards["基本悪エネルギー"]}"]').tap();assert not await page.locator('#card-zoom').evaluate('e=>e.open')
-  await page.locator('#self-active .card').tap();assert await page.locator('#self-active [data-energy-label="悪"]').get_attribute('data-energy-count')=='3'
+  await page.locator('#self-active .card').tap();assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='3'
   await page.locator(f'#self-hand [data-card-id="{cards["エネルギーつけかえ"]}"]').tap();await page.locator('#hand-actions button:enabled').first.tap()
   await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap();await page.locator(f'[data-selection-id="{bench}"]').tap();await page.locator('#selection-confirm').tap()
-  await page.wait_for_function('PokecaMobile.port.getSnapshot().players[0].bench[0].energyCards.length===1');assert await page.locator('#self-active [data-energy-label="悪"]').get_attribute('data-energy-count')=='2';assert await page.locator('#self-bench [data-energy-label="悪"]').get_attribute('data-energy-count')=='1'
+  await page.wait_for_function('PokecaMobile.port.getSnapshot().players[0].bench[0].energyCards.length===1');assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='2';assert await page.locator('#self-bench .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='1'
   # Hand-use abilities use the same action menu as every hand action family.
   await page.locator(f'#self-hand [data-card-id="{cards["ファイアローex"]}"]').tap();await page.locator('#hand-actions button:enabled').first.tap()
   await page.locator('#confirm-ok').wait_for(state='visible');await page.locator('#confirm-ok').tap()
   await page.wait_for_function('id=>PokecaMobile.port.getSnapshot().players[0].bench.some(c=>c.id===id)',arg=cards['ファイアローex'])
   after=await snap();await saved();await page.reload();await page.wait_for_function('window.PokecaMobile&&document.getElementById("save-status").textContent==="自動保存済"');assert await snap()==after
-  assert await page.locator('#self-bench [data-energy-label="悪"]').get_attribute('data-energy-count')=='1'
+  assert await page.locator('#self-bench .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='1'
   # Shared discard selector updates opposing energy strips too (heads is seeded).
   s=await page.evaluate(FIXTURE,{'firstDeck':1,'active':['ドラメシヤ','ロケット団のニューラ'],'hand':{'0':['クラッシュハンマー']},'energy':{'1':{'active':['基本悪エネルギー']}}})
   await page.evaluate('()=>{const g=PokecaMobile.port.getSnapshot();g.referenceRngState=0;PokecaMobile.port.loadGame(g);}')
-  assert await page.locator('#opponent-active [data-energy-label="悪"]').count()==1
+  assert await page.locator('#opponent-active .attached-energy-card[aria-label^="悪 "]').count()==1
   await page.locator('#self-hand .card').tap();await page.locator('#hand-actions button:enabled').first.tap();await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap()
-  await page.wait_for_function('PokecaMobile.port.getSnapshot().players[1].active.energyCards.length===0');assert await page.locator('#opponent-active .attached-energy-chip').count()==0
+  await page.wait_for_function('PokecaMobile.port.getSnapshot().players[1].active.energyCards.length===0');assert await page.locator('#opponent-active .attached-energy-card').count()==0
   await page.locator('[data-zone="discard"][data-zone-owner="you"]').tap();await zoom('[data-gallery-card-id]');await page.locator('#sheet-close').tap()
   # Empty deck and taken prize slots are presentation of canonical state, not rules.
   await page.evaluate('()=>{const g=PokecaMobile.port.getSnapshot(),p=g.players[0];p.discard.push(...p.deck.splice(0));p.prizeSlots=p.prizeCards.map(c=>c.id);p.prizeSlots[1]=null;p.prizeSlots[4]=null;p.hand.push(...p.prizeCards.splice(4,1),...p.prizeCards.splice(1,1));p.prizes=4;const r=PokecaMobile.port.loadGame(g);if(!r.ok)throw Error(JSON.stringify(r));}')
