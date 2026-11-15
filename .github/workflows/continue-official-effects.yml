@@ -26,12 +26,17 @@ jobs:
           node-version: "22"
       - name: Resume only the automation-owned checkpoint branch
         run: |
+          # Never merge stale automation code into main: retain only durable intake data.
+          # Each run owns an isolated branch, so an interrupted run cannot overwrite
+          # a previous checkpoint or leave unresolved conflicts in the worktree.
+          INTAKE_BRANCH="automation/control-013-intake-${GITHUB_RUN_ID}"
+          git checkout -b "$INTAKE_BRANCH"
+          echo "INTAKE_BRANCH=$INTAKE_BRANCH" >> "$GITHUB_ENV"
           if git ls-remote --exit-code --heads origin automation/control-013-intake >/dev/null; then
             git fetch origin automation/control-013-intake
-            git checkout -b automation/control-013-intake origin/automation/control-013-intake
-            git -c user.name=github-actions -c user.email=github-actions@users.noreply.github.com merge origin/main --no-edit
-          else
-            git checkout -b automation/control-013-intake
+            if git cat-file -e origin/automation/control-013-intake:data/official-effect-intake/checkpoint.json 2>/dev/null; then
+              git restore --source=origin/automation/control-013-intake -- data/official-effect-intake/checkpoint.json
+            fi
           fi
       - name: Collect incremental official evidence and run approved local commands
         env:
@@ -56,7 +61,7 @@ jobs:
           git add data/effect-extensions data/official-effect-intake reports/official-effect-continuation ui/engine.bundle.js sw.js
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
-            git push -u origin automation/control-013-intake
+            git push -u origin "$INTAKE_BRANCH"
           fi
       - uses: actions/upload-artifact@v4
         if: always()
