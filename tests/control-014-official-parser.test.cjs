@@ -38,7 +38,8 @@ const teraProof=JSON.parse(fs.readFileSync("data/effect-extensions/evidence/4594
 const topRule='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。';
 const teraHtml=teraProof.replace('<h2 class="mt20">ワザ</h2>','<p>'+topRule+'</p><h2 class="mt20">ワザ</h2>');
 assert.equal(parse(teraProof).facts.teraBenchProtection,false);
-assert.equal(parse(teraHtml).facts.teraBenchProtection,true);
+assert.equal(parse(teraHtml).facts.teraBenchProtection,false);
+assert.equal(parse(teraHtml,{enableTeraRule:true}).facts.teraBenchProtection,true);
 assert.throws(()=>parse(teraHtml.replace(topRule,'このポケモンは、すべてのダメージを受けない。')),/UNSUPPORTED_TOP_RULE/);
 assert(stageTwo >= 2);
 assert(iconProofs >= 3);
