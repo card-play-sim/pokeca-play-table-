@@ -34,4 +34,21 @@ assert.equal(attack('このポケモンにも30ダメージ。','100+'),null);
 assert.deepEqual(attack('このポケモンのHPを「30」回復する。','100'),{mechanic:'HEAL_SELF_ATTACK',commands:['DAMAGE','HEAL'],amount:30});
 assert.equal(attack('このポケモンのHPを「30」回復する。','100+'),null);
 
-console.log('generic official cross-category compiler contract PASS');
+
+const blockedAbilityTexts=[
+ '自分の番に1回使える。自分の山札を3枚引く。その後、手札を1枚トラッシュする。',
+ '自分の番に1回使える。自分の山札を3枚引く。相手も3枚引く。',
+ '自分の番に1回使える。このポケモンのHPを「30」回復する。その後、このポケモンをベンチにもどす。',
+ '自分の番に1回使える。このポケモンのHPを「1001」回復する。',
+ '自分の番に1回使える。自分の山札を0枚引く。',
+];
+for(const text of blockedAbilityTexts)assert.equal(ability(text),null,'Unexpected generic ability adoption: '+text);
+for(const category of ['item','supporter']){
+ assert.equal(main(category,'自分の山札を3枚引く。その後、手札を1枚トラッシュする。'),null);
+ assert.equal(main(category,'自分のポケモン1匹のHPを「30」回復する。その後、エネルギーを1枚トラッシュする。'),null);
+}
+assert.equal(main('tool','このカードをつけているたねポケモンの最大HPは「+100」される。相手の番の終わりにトラッシュする。'),null);
+assert.equal(attack('このポケモンにも30ダメージ。その後、エネルギーを1枚トラッシュする。','100'),null);
+assert.equal(attack('このポケモンのHPを「30」回復する。その後、ベンチと入れ替える。','100'),null);
+
+console.log('generic official cross-category compiler contract and negative boundaries PASS');
