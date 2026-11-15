@@ -42,6 +42,18 @@ class RecoveryTest(unittest.TestCase):
                 module.recover("test-ref", self.checkpoint)
         self.assertFalse((self.root / self.rel).exists())
 
+    def test_later_conflict_does_not_partially_restore_earlier_proof(self):
+        second = {**self.record, "officialCardId": "45945",
+                  "source": {**self.record["source"],
+                             "path": "data/effect-extensions/evidence/45945.json"}}
+        self.checkpoint.write_text(json.dumps({"records": [self.record, second]}))
+        corrupt = json.dumps({**self.proof, "html": "tampered"}).encode()
+        with patch.object(module.subprocess, "check_output", side_effect=[self.raw, corrupt]):
+            with self.assertRaisesRegex(ValueError, "EVIDENCE_INTEGRITY_CONFLICT"):
+                module.recover("test-ref", self.checkpoint)
+        self.assertFalse((self.root / self.rel).exists())
+        self.assertFalse((self.root / second["source"]["path"]).exists())
+
     def test_path_substitution_rejected(self):
         self.record["source"]["path"] = "../../data/official-image-registry.json"
         self.checkpoint.write_text(json.dumps({"records": [self.record]}))
