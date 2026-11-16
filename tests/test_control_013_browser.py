@@ -37,7 +37,11 @@ async def main():
      await page.locator('#selection-confirm').tap()
    if f['kind'] in ('attack','ability'):
     for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):await page.locator(f'[data-selection-id="{target}"]').tap()
+     for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):
+      selector=page.locator(f'[data-selection-id="{target}"]')
+      if not await selector.count():
+       raise AssertionError(f"Missing target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
+      await selector.tap()
      await page.locator('#selection-confirm').tap()
    if await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
