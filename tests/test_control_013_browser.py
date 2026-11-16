@@ -67,7 +67,12 @@ async def main():
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
   # Start the expanded decks through the real import/manual-opening UI, then use
   # the same canonical AI port for both players through victory, not fixture damage.
-  # The last fixture may leave its action sheet open after the state is saved.\n  # Dismiss it before opening the import menu, as a native dialog blocks taps.\n  if await page.locator('#sheet').evaluate('(el)=>el.open'):\n   await page.locator('#sheet-close').tap()\n   await page.wait_for_function('!document.getElementById("sheet").open')\n  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
+  # The last fixture may leave its action sheet open after the state is saved.
+  # Dismiss it before opening the import menu, as a native dialog blocks taps.
+  if await page.locator('#sheet').evaluate('(el)=>el.open'):
+   await page.locator('#sheet-close').tap()
+   await page.wait_for_function('!document.getElementById("sheet").open')
+  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
   try:
    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
   except Exception:
