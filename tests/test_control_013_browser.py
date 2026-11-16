@@ -36,7 +36,7 @@ async def main():
      for target in option['action'].get('selections',{}).get(req['key'],[]):
       selector=page.locator(f'[data-selection-id="{target}"]')
       if not await selector.count():
-       raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
+       raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; request={req} option_requests={option.get('requests')} modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
       await selector.tap()
      await page.locator('#selection-confirm').tap()
    if f['kind'] in ('attack','ability'):
