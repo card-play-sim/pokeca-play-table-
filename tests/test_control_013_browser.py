@@ -68,7 +68,7 @@ async def main():
   # Start the expanded decks through the real import/manual-opening UI, then use
   # the same canonical AI port for both players through victory, not fixture damage.
   # The last fixture may leave its action sheet open after the state is saved.\n  # Dismiss it before opening the import menu, as a native dialog blocks taps.\n  if await page.locator('#sheet').evaluate('(el)=>el.open'):\n   await page.locator('#sheet-close').tap()\n   await page.wait_for_function('!document.getElementById("sheet").open')\n  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
-  await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+  try:\n   await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)\n  except Exception:\n   raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")\n  await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
   for _ in range(10):
    pending=(await snap()).get('pendingReferenceChoice')
