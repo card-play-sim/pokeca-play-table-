@@ -19,7 +19,12 @@ async def main():
    else:await page.locator('#sheet-close').tap()
   async def act(source,kind,target=None):
    opts=await page.evaluate('([id,kind])=>PokecaMobile.port.getPokemonActions("you",id).filter(o=>o.kind===kind)',[source,kind]);option=opts[0];assert option['enabled']
-   await page.locator(f'#self-active [data-card-id="{source}"]').tap();await page.locator(f'#pokemon-actions [data-action-kind="{kind}"]').first.tap()
+   await page.locator(f'#self-active [data-card-id="{source}"]').tap()
+   if kind=='attack':
+    await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
+    await page.locator('#attack-actions [data-action-kind="attack"]').first.tap()
+   else:
+    await page.locator(f'#pokemon-actions [data-action-kind="{kind}"]').first.tap()
    for req in option.get('requests',[]):
     ids=[target] if target and req['kind']=='POKEMON' else option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[]))
     for ident in ids:await page.locator(f'[data-selection-id="{ident}"]').tap()
