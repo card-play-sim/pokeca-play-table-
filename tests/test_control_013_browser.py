@@ -35,7 +35,9 @@ async def main():
     for req in option.get('requests',[]):
      for target in option['action'].get('selections',{}).get(req['key'],[]):
       selector=page.locator(f'[data-selection-id="{target}"]')
-      if not await selector.count():
+      try:
+       await selector.wait_for(state='visible',timeout=12000)
+      except Exception:
        raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; request={req} option_requests={option.get('requests')} modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
       await selector.tap()
      await page.locator('#selection-confirm').tap()
@@ -43,7 +45,9 @@ async def main():
     for req in option.get('requests',[]):
      for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):
       selector=page.locator(f'[data-selection-id="{target}"]')
-      if not await selector.count():
+      try:
+       await selector.wait_for(state='visible',timeout=12000)
+      except Exception:
        raise AssertionError(f"Missing target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
       await selector.tap()
      await page.locator('#selection-confirm').tap()
