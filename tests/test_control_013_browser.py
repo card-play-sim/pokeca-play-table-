@@ -33,7 +33,11 @@ async def main():
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],[]):await page.locator(f'[data-selection-id="{target}"]').tap()
+     for target in option['action'].get('selections',{}).get(req['key'],[]):
+      selector=page.locator(f'[data-selection-id="{target}"]')
+      if not await selector.count():
+       raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
+      await selector.tap()
      await page.locator('#selection-confirm').tap()
    if f['kind'] in ('attack','ability'):
     for req in option.get('requests',[]):
