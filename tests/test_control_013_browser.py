@@ -76,7 +76,9 @@ async def main():
    }
   }''')
   await page.wait_for_function('!document.getElementById("sheet").open && !document.getElementById("confirm-dialog").open')
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
+  # The previous fixture can asynchronously reopen a selection sheet after cleanup.
+  # Trigger the menu through its actual click handler to replace that stale sheet.
+  await page.locator('#menu-open').evaluate('(el)=>el.click()');await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
   try:
    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
   except Exception:
