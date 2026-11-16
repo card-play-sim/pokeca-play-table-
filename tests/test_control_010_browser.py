@@ -22,6 +22,7 @@ async def main():
    await page.locator(f'#self-active [data-card-id="{source}"]').tap()
    if kind=='attack':
     await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
+    await page.locator('#attack-actions [data-action-kind="attack"]').first.wait_for(state='visible',timeout=12000)
     await page.locator('#attack-actions [data-action-kind="attack"]').first.tap()
    else:
     await page.locator(f'#pokemon-actions [data-action-kind="{kind}"]').first.tap()
@@ -61,7 +62,9 @@ async def main():
    after=await snap();assert after['status']=='finished' or after['turnPlayer']=='you'
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'kind':kind,'domExecuted':True,'offlineRestoreExact':True})
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(ROOT/'data/effect-extensions/control-010-example-decks.json'));await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+  # A previous effect can reopen its sheet asynchronously; invoke the menu
+  # through the actual click handler so stale overlays cannot block navigation.
+  await page.locator('#menu-open').evaluate('(el)=>el.click()');await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(ROOT/'data/effect-extensions/control-010-example-decks.json'));await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
   for _ in range(10):
    pending=(await snap()).get('pendingReferenceChoice')
