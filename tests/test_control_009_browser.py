@@ -44,7 +44,8 @@ async def main():
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':r['mainPlan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
   # Start the expanded decks through the real import/manual-opening UI, then use
   # the same canonical AI port for both players through victory, not fixture damage.
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(ROOT/'data/effect-extensions/control-009-example-decks.json'))
+  # Previous scenario sheets may remain open; use the real menu click handler.
+  await page.locator('#menu-open').evaluate('(el)=>el.click()');await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(ROOT/'data/effect-extensions/control-009-example-decks.json'))
   await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
   for _ in range(10):

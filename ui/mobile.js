@@ -395,7 +395,7 @@ window.PokecaMobileBuild='256';
   function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind!=='retreat').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -416,6 +416,9 @@ window.PokecaMobileBuild='256';
       },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
       else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
     }
+    // Keep attacks accessible without making attack descriptions the default tap action.
+    const attackOptions=options.filter(o=>o.kind==='attack');
+    if(attackOptions.length)container.append(button('ワザを使う',()=>{openSheet(entry.card.name,'<div class="menu-list" id="attack-actions"></div>');for(const option of attackOptions){const b=button(option.label+attackCostLabel(entry.card,option.action.attackIndex??0),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='attack';b.dataset.attackIndex=String(option.action.attackIndex??0);$('attack-actions').append(b);}},{}));
     const retreatOptions=options.filter(o=>o.kind==='retreat');
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
@@ -458,7 +461,7 @@ window.PokecaMobileBuild='256';
     const cancel=()=>done(null);
     openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`${min}${unit}選択してください。`:`${min}〜${max}${unit}選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
-    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');$('selection-cards').append(b);}
+    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=cardArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);}
     $('selection-confirm').onclick=()=>done([...selectedIds]);
   });}
   function selectDeckSearch({title,deck,search}) {
@@ -483,7 +486,7 @@ window.PokecaMobileBuild='256';
           $('selection-count').textContent=selectedIds.size+'/'+maximum;
           $('selection-confirm').disabled=selectedIds.size<minimum;
         },{disabled:!allowed});
-        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';$('selection-cards').append(b);
+        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=cardArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);
       }
       $('selection-confirm').onclick=()=>done([...selectedIds]);
     });

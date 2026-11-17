@@ -23,7 +23,9 @@ async def main():
    before=await snap();option=f['option'];assert option
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
    if f['kind'] in ('attack','ability'):
-    await page.locator(f'#self-active [data-card-id="{ident}"]').tap();await page.locator(f'#pokemon-actions [data-action-kind="{f["kind"]}"]').first.tap()
+    await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
+    if f["kind"]=="attack":await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(f'#attack-actions [data-action-kind="attack"][data-attack-index="{option["action"]["attackIndex"]}"]').tap()
+    else:await page.locator('#pokemon-actions [data-action-kind="ability"]').first.tap()
    elif r['category']=='stadium':
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
    else:await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
@@ -31,11 +33,23 @@ async def main():
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],[]):await page.locator(f'[data-selection-id="{target}"]').tap()
+     for target in option['action'].get('selections',{}).get(req['key'],[]):
+      selector=page.locator(f'[data-selection-id="{target}"]')
+      try:
+       await selector.wait_for(state='visible',timeout=12000)
+      except Exception:
+       raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; request={req} option_requests={option.get('requests')} modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
+      await selector.tap()
      await page.locator('#selection-confirm').tap()
    if f['kind'] in ('attack','ability'):
     for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):await page.locator(f'[data-selection-id="{target}"]').tap()
+     for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):
+      selector=page.locator(f'[data-selection-id="{target}"]')
+      try:
+       await selector.wait_for(state='visible',timeout=12000)
+      except Exception:
+       raise AssertionError(f"Missing target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
+      await selector.tap()
      await page.locator('#selection-confirm').tap()
    if await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
@@ -53,8 +67,23 @@ async def main():
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
   # Start the expanded decks through the real import/manual-opening UI, then use
   # the same canonical AI port for both players through victory, not fixture damage.
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
-  await page.locator('#reference-import-choices button').first.wait_for();await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+  # Close all leftover modal layers after fixture execution before importing decks.
+  # A stale sheet can intercept the header even when the prior test passed.
+  await page.evaluate('''() => {
+   for (const id of ['confirm-dialog', 'sheet']) {
+    const dialog = document.getElementById(id);
+    if (dialog?.open) dialog.close();
+   }
+  }''')
+  await page.wait_for_function('!document.getElementById("sheet").open && !document.getElementById("confirm-dialog").open')
+  # The previous fixture can asynchronously reopen a selection sheet after cleanup.
+  # Trigger the menu through its actual click handler to replace that stale sheet.
+  await page.locator('#menu-open').evaluate('(el)=>el.click()');await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
+  try:
+   await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
+  except Exception:
+   raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
+  await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
   for _ in range(10):
    pending=(await snap()).get('pendingReferenceChoice')
