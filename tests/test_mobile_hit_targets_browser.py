@@ -52,6 +52,16 @@ async def main():
    assert len(children)==6,'gameplay grid gained a seventh child: '+repr(children)
    assert geometry['.table']['height']>=150,'gameplay board collapsed: '+repr(geometry)
    assert all(x.get('hittable') for x in result),result
+   await page.locator('#self-active [data-card-id]').first.tap()
+   detail_button=page.get_by_role('button',name='長押し詳細とカード情報',exact=True)
+   if await detail_button.is_visible():
+    await detail_button.tap()
+   details=page.locator('#sheet-content .detail')
+   await details.wait_for()
+   hidden_labels=('公式出典','効果検証の参照版','正式採用未確定','正式採用版未確定')
+   rendered=await details.inner_text()
+   assert not any(label in rendered for label in hidden_labels),rendered
+   assert await page.locator('#sheet-content [title*="正式採用版未確定"]').count()==0
    print(json.dumps({'mobileHitTargetsPass':True,'physicalAndroidVerified':False,'targets':result},ensure_ascii=False))
   finally:
    await browser.close()
