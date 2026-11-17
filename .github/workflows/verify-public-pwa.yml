@@ -1,0 +1,55 @@
+name: Verify published PWA card selection UI
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  published-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Pages serves the merged image selector and build
+        env:
+          PUBLIC_URL: https://card-play-sim.github.io/pokeca-play-table-/
+        run: |
+          python3 - <<'PY'
+          import os, re, time, urllib.request, urllib.error, pathlib, hashlib
+          base=os.environ['PUBLIC_URL']
+          local_index=pathlib.Path('index.html').read_bytes()
+          build_match=re.search(rb'<meta name="pokeca-build" content="([^"]+)"',local_index)
+          if not build_match:
+              build_match=re.search(rb'ui/mobile\.js\?build=([^"\s]+)',local_index)
+          assert build_match, 'Local HTML build marker missing'
+          build=build_match.group(1).decode()
+          expected={
+              'index.html':(local_index,[b'ui/mobile.js?build='+build.encode()]),
+              'ui/mobile.js':(pathlib.Path('ui/mobile.js').read_bytes(),[b'selection-card-art',b'function selectCards(',b'function selectDeckSearch(']),
+              'ui/mobile.css':(pathlib.Path('ui/mobile.css').read_bytes(),[b'.selection-grid button.selection-card-art',b'grid-template-columns:repeat(3']),
+              'sw.js':(pathlib.Path('sw.js').read_bytes(),[b'const BUILD="'+build.encode()+b'"'])
+          }
+          deadline=time.monotonic()+14*60
+          last=''
+          while time.monotonic()<deadline:
+              errors=[]
+              for path,(local,markers) in expected.items():
+                  try:
+                      url=base+path+'?verify='+str(int(time.time()))
+                      request=urllib.request.Request(url,headers={'Cache-Control':'no-cache','Pragma':'no-cache','User-Agent':'PWA-Public-Verification/1.0'})
+                      with urllib.request.urlopen(request,timeout=20) as response:
+                          live=response.read()
+                      if hashlib.sha256(live).digest()!=hashlib.sha256(local).digest():
+                          errors.append(path+': public SHA-256 differs from main')
+                      for marker in markers:
+                          if marker not in live: errors.append(path+': missing '+marker.decode())
+                  except Exception as exc:
+                      errors.append(path+': '+str(exc))
+              if not errors:
+                  print('PUBLIC_PWA_IMAGE_SELECTION_VERIFIED',{'build':build,'paths':list(expected)})
+                  break
+              last='; '.join(errors)
+              print('Pages propagation pending:',last,flush=True)
+              time.sleep(30)
+          else:
+              raise SystemExit('PUBLIC_PWA_NOT_VERIFIED: '+last)
+          PY
