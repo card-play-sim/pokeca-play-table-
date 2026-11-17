@@ -2,6 +2,10 @@
 
 This repository is the **existing public Android PWA**. Do not create a second app or ship ZIP files. The image registry is managed separately by Work; never delete, overwrite, or reinterpret its 6,000 reported image references.
 
+## Non-negotiable execution cadence (Issue #92)
+
+A user message `ｇ` means **continue working**, not "check one CI run and report again". Do not end a turn after a single queued/in-progress Actions status check. Parallelize independent investigation, diagnosis, shared code fixes, push/retest, and merge/Pages verification, observing real dependencies and release gates. Work on other independent tasks while CI runs. After two repetitions of the same blocker, change method instead of repeating status reports. Report consolidated *actual changes and verified outcomes*, distinguishing CI, Pages, browser, and physical Android. See [Issue #92](https://github.com/card-play-sim/pokeca-play-table-/issues/92) and `docs/DEVELOPMENT_CONTROL.md`.
+
 ## Mandatory first read for every Codex / successor ChatGPT session
 
 **Read [docs/DEVELOPMENT_CONTROL.md](docs/DEVELOPMENT_CONTROL.md) before changing code.** It defines the current GitHub-first operating contract, the latest merged baseline, responsibility boundaries, release gates, historical failure signatures and compact reporting. PR #37 and #38 are already merged; never resume work on their closed branches. Treat the document's historical SHAs as examples; always refresh PR head and latest-head Actions. Do not start by rewriting plans, opening a replacement PR, requesting ZIPs, or repeatedly pushing into a runner/approval block.
