@@ -89,6 +89,8 @@ async def main():
   await hand('ポケモンいれかえ').tap()
   assert await page.locator('#hand-actions button').all_text_contents()==['カードを使う']
   await page.locator('#hand-actions button:enabled').first.tap()
+  used=page.locator('#self-played-card img:not([hidden])')
+  assert await used.get_attribute('alt')=='ポケモンいれかえ'
   target=page.locator('#selection-cards button').first
   art=target.locator('img:not([hidden])')
   assert await art.get_attribute('alt')=='マシマシラ'
@@ -96,6 +98,7 @@ async def main():
   await target.tap();await page.locator('#selection-confirm').tap()
   await page.locator('#self-active .attached-tool-card').wait_for()
   assert await page.locator('#self-bench .attached-tool-card').count()==0
+  await used.wait_for(state='detached',timeout=5000)
   await hand('基本悪エネルギー').tap();await page.locator('#self-active .card').tap()
   await page.locator('#history-open').tap()
   log=await page.locator('.log-turns').inner_text()
