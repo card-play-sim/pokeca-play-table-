@@ -21,7 +21,8 @@ class CardReflectionWiringTests(unittest.TestCase):
 
     def test_attached_energy_uses_card_instance_state(self):
         self.assertIn("card.energyCards?.length", UI)
-        self.assertIn("tableUI.energyGroups(card.energyCards)", UI)
+        self.assertIn("for(const energy of card.energyCards||[])", UI)
+        self.assertIn("(card.tools||[]).map(tool", UI)
         components = (ROOT / "ui/table-components.js").read_text(encoding="utf-8")
         self.assertIn("for(const c of cards||[])", components)
         self.assertIn("g.count++", components)

@@ -25,10 +25,7 @@ window.PokecaMobileBuild='256';
   const metrics={moves:0,shuffles:0,animationErrors:0};
   let animationsEnabled=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sheet=$('sheet');
-  const tableUI=window.PokecaTableUI,cardZoom=tableUI.installZoom(document,{getDetails:el=>{
-    const id=el.dataset.cardId;
-    return id&&getCard(id)?()=>detail(id):null;
-  }});
+  const tableUI=window.PokecaTableUI,cardZoom=tableUI.installZoom(document);
   function japaneseError(value){
     const msg=String(value ?? '操作できません');
     const known=[
@@ -163,16 +160,16 @@ window.PokecaMobileBuild='256';
   function badges(card,snapshot,owner){let html='';
     if(card.damage)html+=`<span class="badge damage">${esc(card.damage)}</span>`;
     
-    if(card.tools?.length)html+=`<span class="badge">⌘ ${card.tools.length}</span>`;
+
     if(card.statusCondition)html+=`<span class="badge effect" data-state-card="${esc(idOf(card))}">${esc(port.getCardInfo(owner.id,idOf(card))?.specialStatus?.short || card.statusCondition)}</span>`;
     const states=statesFor(snapshot,idOf(card));for(const state of states)html+=`<span class="badge effect" role="button" aria-label="${esc(state.label)}・詳細" data-state-card="${esc(idOf(card))}">${esc(state.short)}</span>`;
     if(Object.keys(owner.turnLimits?.abilityUses || {}).some(k=>k.startsWith(idOf(card)+':')))html+='<span class="badge used">特性 使用済</span>';
     return html?`<span class="badges">${html}</span>`:'';
   }
   function attachedEnergyHTML(card){
-    if(card.kind!=='pokemon'||!card.energyCards?.length)return '';
+    if(card.kind!=='pokemon'||(!card.energyCards?.length&&!card.tools?.length))return '';
     const groups=new Map();
-    for(const energy of card.energyCards){
+    for(const energy of card.energyCards||[]){
       const special=energy.isSpecial===true||energy.energyType==='特殊';
       const key=special?'special:'+energy.name:'basic:'+(energy.energyType||energy.name);
       if(!groups.has(key))groups.set(key,{energy,count:0,label:special?(energy.name||'特殊エネルギー'):(energy.energyType||energy.name||'エネルギー'),special});
@@ -183,7 +180,9 @@ window.PokecaMobileBuild='256';
       const image=cardArt(g.energy);
       return `<span class="attached-energy-card${g.special?' special-energy':''}" title="${esc(g.label)} ${g.count}枚" aria-label="${esc(g.label)} ${g.count}枚">${image}<b>${g.count}</b></span>`;
     }).join('');
-    return `<span class="attached-energy-strip attached-energy-images" aria-label="装着エネルギー ${card.energyCards.length}枚">${thumbs}</span>`;
+    const tools=(card.tools||[]).map(tool=>`<span class="attached-energy-card attached-tool-card" title="${esc(tool.name)}" aria-label="どうぐ：${esc(tool.name)}">${cardArt(tool,{showProvisionalTitle:false})}</span>`).join('');
+    const energyCount=card.energyCards?.length||0,toolCount=card.tools?.length||0;
+    return `<span class="attached-energy-strip attached-energy-images" aria-label="装着エネルギー ${energyCount}枚${toolCount?'・どうぐ '+toolCount+'枚':''}">${thumbs}${tools}</span>`;
   }
   function legalMarks(card,snapshot,owner,hand){
     if(owner.id!=='you'||snapshot.status!=='active'||snapshot.turnPlayer!=='you'||referenceStopped())return '';
@@ -277,13 +276,13 @@ window.PokecaMobileBuild='256';
     document.querySelectorAll('.bench-slot.empty').forEach(el=>el.onclick=()=>{if(selected)dropOn(el);});
   }
   function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>['use_ability','play_item','play_supporter'].includes(o.action?.type))){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
-    if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';return;}
+    if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで拡大';return;}
     const entry=getCard(id);if(!entry)return;
     $('interaction-hint').textContent='選択中：'+(entry.card.name||'カード')+'・配置先をタップ';
     const options=port.getHandActions('you',id);
     if(options.length){if(entry.card.cardType==='STADIUM'){toast('中央のスタジアム欄をタップ、またはカードをもう一度タップ');$('interaction-hint').textContent='スタジアム欄をタップして配置';}else{toast('緑色の対象へドラッグ、またはタップ');$('interaction-hint').textContent='緑の対象をタップして配置';}}
     else if(['SUPPORTER','ITEM','STADIUM'].includes(entry.card.cardType))handMenu(id);
-    else {const reasons=port.getHandOptions('you',id).flatMap(x=>x.errors);toast(reasons[0] || '今は合法な配置先がありません。長押しで詳細');$('interaction-hint').textContent=reasons[0] || '合法な配置先なし';}
+    else {toast('今は配置できません');$('interaction-hint').textContent='今は配置できません';}
   }
   function targets(){return selected?port.getHandActions('you',selected):[];}
   function highlight(){document.querySelectorAll('.legal-target,.drop-hover').forEach(el=>el.classList.remove('legal-target','drop-hover'));
@@ -326,24 +325,7 @@ window.PokecaMobileBuild='256';
     clearGesture();if(tapTarget){tapTarget.click();suppressClick=Date.now()+500;}if(active)suppressClick=Date.now()+500;
   }
   function clearGesture(){clearTimeout(longTimer);suppressClick=Math.min(suppressClick,Date.now()+120);if(drag?.ghost)drag.ghost.remove();drag=null;document.querySelectorAll('.drop-hover').forEach(el=>el.classList.remove('drop-hover'));}
-  function detail(id){const entry=getCard(id);if(!entry){closeSheet();return;}const {card,player}=entry,s=view();
-    const info=port.getCardInfo(player.id,id);const declared=card.abilities || [],registry=port.getEffects(player.id).find(x=>x.instanceId===id)?.effects || [];
-    const attacks=registry.filter(e=>e.source.type==='ATTACK').map(e=>e.source.name).concat((card.attacks || []).map(a=>a.name));
-    const abilities=declared.map(a=>a.name+': '+(a.text || '')).concat(registry.filter(e=>e.source.type==='ABILITY').map(e=>e.source.name));
-    const stateHTML=statesFor(s,id).map(effectRow).join('');
-    openSheet(card.name,`<div class="detail"><div class="detail-art detail-art-large">${cardArt(card,{showProvisionalTitle:false})}</div><dl><dt>HP / ダメージ</dt><dd>${esc(card.hp ?? '—')} / ${esc(card.damage || 0)}</dd><dt>ワザ</dt><dd>${esc(attacks.join(' / ') || '提供データなし')}</dd><dt>特性</dt><dd>${esc(abilities.join(' / ') || '提供データなし')}</dd><dt>エネルギー</dt><dd>${esc(tableUI.energyGroups(card.energyCards).map(g=>g.label+' '+g.count+'枚').join(' / ') || 'なし')}</dd><dt>どうぐ</dt><dd>${esc((card.tools || []).map(c=>c.name).join(' / ') || 'なし')}</dd><dt>特殊状態</dt><dd>${esc(card.statusCondition || 'なし')}</dd>${card.fixtureNote&&!card.validationReference?'<dt>実証情報</dt><dd>'+esc(card.fixtureNote)+'</dd>':''}</dl><div class="detail-effects">${(info?.entries || []).map(ruleRow).join('')}${stateHTML || '<p>継続効果なし</p>'}</div></div><div id="detail-actions" class="menu-list"></div>`);
-    // Official evidence remains in internal data; omit developer provenance from player-facing card details.
-    refreshImageSheet=()=>detail(id);
-    if(card.energyCards?.length){const attached=document.createElement('div');attached.className='discard-grid attached-image-gallery';attached.innerHTML=card.energyCards.map(c=>`<div class="discard-card" data-gallery-card-id="${esc(idOf(c))}">${cardArt(c,{showProvisionalTitle:false})}</div>`).join('');$('sheet-content').append(attached);}
-    if(player.id==='you'&&player.hand.some(c=>idOf(c)===id))addHandActions(id,$('detail-actions'));
-  }
   function effectRow(state){return `<div class="effect-row"><strong>${esc(state.label)}</strong><dl class="effect-metadata"><dt>効果内容</dt><dd>${esc(state.description)}</dd><dt>発生元カード／効果</dt><dd>${esc(state.sourceCard)} / ${esc(state.sourceEffect)}</dd><dt>対象</dt><dd>${esc(state.target)}</dd><dt>開始タイミング</dt><dd>${esc(state.start)}</dd><dt>期限</dt><dd>${esc(state.duration)}</dd><dt>解除条件</dt><dd>${esc(state.removal)}</dd></dl></div>`;}
-  function operationReason(reason){
-    const messages={HAND_LIMIT_DRAW_UNAVAILABLE:'手札が補充の上限以上、または山札がありません',BENCH_FULL:'ベンチが5匹で空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'自分の場に無色タイプのメガシンカexが必要です',ABILITY_ALREADY_USED:'この特性はこの番に使用済みです',ABILITY_SUPPRESSED:'場の効果で特性が無効になっています',BENCH_ENTRY_WINDOW_REQUIRED:'手札からベンチに出した直後だけ使えます',REFERENCE_ACTION_NOT_ALLOWED:'自分の番のメイン操作中に使ってください'};
-    if(reason.startsWith('ABILITY_SOURCE_ZONE:'))return 'この特性を使う場所：'+reason.slice('ABILITY_SOURCE_ZONE:'.length).split('|').map(z=>({HAND:'手札',ACTIVE:'バトル場',BENCH:'ベンチ'}[z]||z)).join('・');
-    return messages[reason]||reason;
-  }
-  function ruleRow(entry){return `<section class="effect-row rule-explanation"><strong>${entry.type==='ABILITY'?'特性':entry.type==='ATTACK'?'ワザ':'カード効果'} · ${esc(entry.name)}${entry.active===null?'':entry.active?'（現在有効）':'（現在無効／使用済み・条件不成立）'}</strong><p>${esc(entry.description)}</p>${entry.inactiveReasons?.length?'<p>'+esc(entry.inactiveReasons.map(operationReason).join(' / '))+'</p>':''}${entry.officialText!==null?'<small>保存済みofficialTextを表示（原文は変更しません）</small>':''}<dl class="effect-metadata"><dt>発動条件</dt><dd>${esc(entry.condition)}</dd><dt>対象</dt><dd>${esc(entry.target)}</dd><dt>使用回数制限</dt><dd>${esc(entry.usage)}</dd><dt>解除条件</dt><dd>${esc(entry.removal)}</dd><dt>処理順（表示用）</dt><dd>${esc(entry.resolution)}</dd></dl></section>`;}
   function stateDetail(id){const found=getCard(id),info=found?port.getCardInfo(found.player.id,id):null;const states=statesFor(view(),id);openSheet('継続効果・期限',states.map(effectRow).join('')+(info?.specialStatus?effectRow(info.specialStatus):'') || '<p>現在有効な継続効果はありません。</p>');}
   function scopedStates(playerId){return port.getStatusView().filter(s=>s.scope==='PLAYER'?s.playerId===playerId:s.scope==='FIELD'&&(!s.playerIds || s.playerIds.includes(playerId)));}
   function scopedStateDetail(playerId){openSheet((playerId==='you'?'自分':'相手')+'側・場の制限',scopedStates(playerId).map(effectRow).join('') || '<p>現在有効な制限はありません。</p>');}
@@ -351,9 +333,21 @@ window.PokecaMobileBuild='256';
     if(view().referenceEffectValidation){
       const options=[...port.getHandOptions('you',id)].sort((a,b)=>Number(b.ok)-Number(a.ok)||Number(b.kind==='ability')-Number(a.kind==='ability'));
       for(const option of options){
-        const check=option.ok,b=button((option.kind==='ability'?'特性 · ':'')+option.label,()=>{void resolveOption(option);},{disabled:!check});
+        const check=option.ok, kind=option.kind;
+        const label=['play_item','play_supporter'].includes(option.action.type)?'カードを使う':(kind==='ability'?'特性 · ':'')+option.label;
+        const b=button(label,()=>{void resolveOption(option);},{disabled:!check});
+        if(kind==='ability')b.dataset.actionKind='ability';
         b.dataset.actionType=option.action.type;container.append(b);
-        if(!check){const reason=document.createElement('p');reason.className='action-reason';reason.textContent=(option.errors||[]).map(operationReason).join(' / ');container.append(reason);}
+        if(!check&&kind==='ability'){
+          const reasons={BENCH_FULL:'ベンチに空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'場に無色タイプのメガシンカexが必要です'};
+          const reason=option.errors?.find(code=>Object.hasOwn(reasons,code));
+          if(reason){
+            const hint=document.createElement('small');
+            hint.className='action-reason';
+            hint.textContent=reasons[reason];
+            container.append(hint);
+          }
+        }
       }
       return;
     }
@@ -364,41 +358,41 @@ window.PokecaMobileBuild='256';
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
         const probeIds=candidates.slice(0,Math.min(search.min||0,candidates.length)).map(c=>idOf(c));
         const allowed=port.getActionExplanation('you',{...a,selectedCardIds:probeIds});
-        container.append(button('山札を見る・カードを選ぶ',async()=>{
+        container.append(button('カードを使う',async()=>{
           await resolveDeckSearchPlay(a,{title:'サポートの効果：山札を確認',deck,search});
         },{disabled:!allowed.ok}));
-        if(!allowed.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',allowed.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
       }else{
         const explanation=port.getActionExplanation('you',a);
-        container.append(button('サポートを使う',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!explanation.ok}));
-        if(!explanation.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',explanation.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+        container.append(button('カードを使う',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!explanation.ok}));
       }
     }
-    for(const [kind,type,label] of [['ITEM','play_item','グッズを使う'],['STADIUM','play_stadium','スタジアムを出す']])if(card?.cardType===kind){
+    for(const [kind,type,label] of [['ITEM','play_item','カードを使う'],['STADIUM','play_stadium','スタジアムを出す']])if(card?.cardType===kind){
       const a={type,cardId:id},search=card.commands?.find(c=>c.command==='SEARCH_DECK');
       if(search){
         const snapshot=port.getSnapshot(),deck=snapshot.players.find(p=>p.id==='you').deck;
         const candidates=deck.filter(c=>(search.filter||[]).every(f=>f.field==='cardType'&&f.operator==='EQUALS'&&c.cardType===f.value));
         const probeIds=candidates.slice(0,Math.min(search.min||0,candidates.length)).map(c=>idOf(c));
         const allowed=port.getActionExplanation('you',{...a,selectedCardIds:probeIds});
-        container.append(button('山札を見る・カードを選ぶ',async()=>{
+        container.append(button('カードを使う',async()=>{
           await resolveDeckSearchPlay(a,{title:'グッズの効果：山札を確認',deck,search});
         },{disabled:!allowed.ok}));
-        if(!allowed.ok)container.append(button('使用できない理由',()=>toast(allowed.errors.join(' / '))));
       }else{
         const explanation=port.getActionExplanation('you',a);
         container.append(button(label,()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!explanation.ok}));
-        if(!explanation.ok)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',explanation.errors.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
       }
     }
     if(view().mode==='practice')for(const [type,label] of [['return_hand_to_deck','練習操作：山札へ戻す'],['discard_card','練習操作：トラッシュへ']]){const a={type,cardId:id};container.append(button(label,()=>{dispatch('you',a);closeSheet();},{disabled:!port.canDispatch('you',a)}));}
   }
-  function handMenu(id){if(view().turnPlayer!=='you'){detail(id);return;}openSheet(getCard(id)?.card.name || '手札','<div class="menu-list" id="hand-actions"></div>');addHandActions(id,$('hand-actions'));$('hand-actions').append(button('詳細を見る',()=>detail(id)));}
+  function handMenu(id){
+    if(view().turnPlayer!=='you'){toast('今は相手の番です');return;}
+    openSheet(getCard(id)?.card.name||'手札','<div class="menu-list" id="hand-actions"></div>');
+    addHandActions(id,$('hand-actions'));
+  }
   function attackCostLabel(card,index){const cost=card?.attacks?.[index]?.cost;if(!Array.isArray(cost))return '';const labels={C:'無色',無色:'無色'};return ' · 必要エネ '+(cost.length?cost.map(x=>labels[x]||x).join('・'):'なし');}
-  function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
+  function pokemonMenu(id,owner){if(owner!=='you')return;if(view().turnPlayer!=='you'){toast('今は相手の番です');return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='ability';container.append(b);}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -408,16 +402,15 @@ window.PokecaMobileBuild='256';
       const explanation=port.getActionExplanation('you',action);
       const abilityButton=button('特性 · '+(ability.name||ability.id),()=>{
         const check=port.getActionExplanation('you',action);
-        if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
+        if(!check.ok){toast('今は特性を使えません');return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
       },{disabled:!explanation.ok||!!ability.target});abilityButton.dataset.actionKind='ability';container.append(abilityButton);
-      if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
+      if(ability.target){const targetButton=button('特性の対象を選ぶ',async()=>{
         // Only offer engine-declared legal candidates; never infer targets from card text.
         const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
         if(!legal.length){toast('この特性の合法な対象候補がありません');return;}
         await resolveOption(legal[0]);
-      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
-      else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)});targetButton.dataset.actionKind='ability';container.append(targetButton);}
     }
     // Keep attacks accessible without making attack descriptions the default tap action.
     const attackOptions=options.filter(o=>o.kind==='attack');
@@ -426,9 +419,8 @@ window.PokecaMobileBuild='256';
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
       const chosen=enabled.find(o=>o.action.benchInstanceId===ids[0]);resolveOption(chosen);
-    },{disabled:!enabled.length}));
-    if(!enabled.length)container.append(button('にげられない理由',()=>openSheet('にげるの制限',retreatOptions.flatMap(o=>o.disabledReasons || []).filter((x,i,a)=>a.indexOf(x)===i).map(x=>'<p>'+esc(x)+'</p>').join(''))));}
-    // Short tap is for actions only. Detailed rules remain available via long press.
+    },{disabled:!enabled.length}));}
+    // Short taps show actions. Long presses show the card art.
     if(!container.children.length)container.append(document.createTextNode('現在使える操作はありません'));
   }
   async function resolveOption(option){
@@ -447,7 +439,7 @@ window.PokecaMobileBuild='256';
       if(request.min===0&&request.max===0){if(request.kind==='POKEMON')action.targetIds=[];else{action.selections||={};action.selections[request.key]=[];}continue;}
       if(request.kind==='COUNTERS'){const allocation=await selectReferenceCounters(request);if(!allocation)return;action.selections||={};action.selections[request.key]=allocation;continue;}
       if(request.kind==='COUNT'){const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:Math.max(0,request.max-request.min+1)},(_,i)=>({id:String(i+request.min),name:(i+request.min)+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
-      const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
+      const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,label:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
     }
@@ -461,6 +453,11 @@ window.PokecaMobileBuild='256';
       else if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
     }
   }
+  function selectionArt(candidate){
+    if(candidate.validationReference||candidate.officialCardId!=null||candidate.catalogCardId!=null)return cardArt(candidate);
+    const visible=getCard(candidate.instanceId||candidate.id)?.card;
+    return visible||candidate.kind||candidate.cardType?cardArt(visible||candidate):fallbackArt(candidate);
+  }
   function selectCards({title,min,max,candidates,constraints=[]}) {return new Promise(resolve=>{
     const unit=/エネルギー|カード|山札|サポート/.test(title)?'枚':'匹';
     const selectedIds=new Set();let settled=false;
@@ -469,7 +466,7 @@ window.PokecaMobileBuild='256';
     const cancel=()=>done(null);
     openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`${min}${unit}選択してください。`:`${min}〜${max}${unit}選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
-    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=cardArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);}
+    for(const card of candidates){const label=card.label||card.name||'カード';const b=button(label,()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',label);b.innerHTML=selectionArt(card);$('selection-cards').append(b);}
     $('selection-confirm').onclick=()=>done([...selectedIds]);
   });}
   async function resolveDeckSearchPlay(action,search){
@@ -503,7 +500,7 @@ window.PokecaMobileBuild='256';
           $('selection-count').textContent=selectedIds.size+'/'+maximum;
           $('selection-confirm').disabled=selectedIds.size<minimum;
         },{disabled:!allowed});
-        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=cardArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);
+        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=selectionArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);
       }
       $('selection-confirm').onclick=()=>done([...selectedIds]);
     });
@@ -561,7 +558,7 @@ window.PokecaMobileBuild='256';
   }
   function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=dispatchWithPlayedCard(playerId,action);
     if(!result.ok){referenceStop(result.errors);toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
-    selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
+    selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで拡大';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
     if(result.viewError)toast('処理は確定しました。表示を再読み込みしてください');
     try{animateEvents(before,view());}catch(_){metrics.animationErrors++;}
@@ -589,10 +586,11 @@ window.PokecaMobileBuild='256';
   }}
   function eventText(event){const d=event.details || {},c=d.command || event.type;
     if(c==='demo_judge_hand_reset')return (d.targetPlayerId==='ai'?'相手':'自分')+'の手札を山札に戻してシャッフル → '+d.drawn+'枚引いた（戻した枚数 '+d.returned+'枚）';
-    const labels={DAMAGE:'ダメージ',PLACE_DAMAGE_COUNTERS:'ダメカン配置',DRAW:'ドロー',draw:'ドロー',SEARCH_DECK:'山札を検索',REVEAL:'カードを公開',ADD_TO_HAND:'山札から手札へ',SHUFFLE_DECK:'山札をシャッフル',ADD_STATE:'継続状態を付与',REMOVE_STATE:'継続状態を解除',PREVENT_DAMAGE:'ダメージ防止',PREVENT_EFFECT:'効果防止',attach_energy:'エネルギー装着',attach_tool:'どうぐ装着',evolve:'進化',ability_used:'特性使用',attack:'ワザ使用',end_turn:'ターン終了',retreat:'にげる',knockout:'きぜつ・サイド取得',SWITCH:'いれかえ',FORCE_SWITCH:'強制いれかえ',discard:'トラッシュ',return_to_deck:'山札へ戻す',bench_basic:'ベンチに出す',play_active_basic:'バトル場へ',supporter_used:'サポート使用',item_used:'グッズ使用',stadium_played:'スタジアム配置',practice_started:'操作練習開始'};
-    const amount=d.counterCount!==undefined?d.counterCount+'個':d.amount!==undefined?d.amount+'ダメージ':d.count!==undefined?d.count+'枚':d.cardIds?d.cardIds.length+'枚':'';
-    const target=d.targetInstanceId?' → '+(getCard(d.targetInstanceId)?.card.name || d.targetInstanceId):'';
-    return (labels[c] || c)+(d.name?' · '+d.name:'')+(d.cardName?' · '+d.cardName:'')+(d.cards?.length?' · '+d.cards.map(c=>c.name).join(' / '):'')+(amount?' · '+amount:'')+target+(d.prevented?'（防止）':'');
+    const labels={MODIFY_MAX_HP:'最大HPが増加',ATTACH_ENERGY:'エネルギーを付けた',MOVE_ENERGY:'エネルギーを付け替えた',DISCARD:'トラッシュした',RETURN_TO_HAND:'手札に戻した',RETURN_TO_DECK:'山札に戻した',HEAL:'ダメージを回復した',COIN_FLIP:'コインを投げた',MODIFY_DAMAGE:'ダメージを変更した',APPLY_STATUS:'特殊状態にした',DAMAGE:'ダメージ',PLACE_DAMAGE_COUNTERS:'ダメカン配置',DRAW:'ドロー',draw:'ドロー',SEARCH_DECK:'山札を検索',REVEAL:'カードを公開',ADD_TO_HAND:'山札から手札へ',SHUFFLE_DECK:'山札をシャッフル',ADD_STATE:'継続状態を付与',REMOVE_STATE:'継続状態を解除',PREVENT_DAMAGE:'ダメージ防止',PREVENT_EFFECT:'効果防止',attach_energy:'エネルギーを付けた',attach_tool:'どうぐ装着',evolve:'進化',ability_used:'特性使用',attack:'ワザ使用',end_turn:'ターン終了',retreat:'にげる',knockout:'きぜつ・サイド取得',SWITCH:'いれかえ',FORCE_SWITCH:'強制いれかえ',discard:'トラッシュ',return_to_deck:'山札へ戻す',bench_basic:'ベンチに出す',play_active_basic:'バトル場へ',supporter_used:'サポート使用',item_used:'グッズ使用',stadium_played:'スタジアム配置',practice_started:'操作練習開始'};
+    const amount=d.counterCount!==undefined?d.counterCount+'個':d.amount!==undefined?d.amount+(['DAMAGE','HEAL','MODIFY_DAMAGE','MODIFY_MAX_HP'].includes(c)?' HP':''):d.count!==undefined?d.count+'枚':d.cardIds?d.cardIds.length+'枚':'';
+    const targetName=d.targetInstanceId&&getCard(d.targetInstanceId)?.card.name;
+    const target=targetName?' → '+targetName:'';
+    return (Object.hasOwn(labels,c)?labels[c]:'カードの効果を処理した')+(d.name?' · '+d.name:'')+(d.cardName?' · '+d.cardName:'')+(d.cards?.length?' · '+d.cards.map(c=>c.name).join(' / '):'')+(amount?' · '+amount:'')+target+(d.prevented?'（防止）':'');
   }
   function history(){
     const s=view(),events=s.history.slice().reverse(),groups=[];
@@ -607,7 +605,7 @@ window.PokecaMobileBuild='256';
     const logClass=e=>e.player==='ai'?'log-opponent':'log-self';
     const overview=highlights.length?highlights.map(e=>'<div class="log-highlight '+logClass(e)+'"><span class="log-player">'+(e.player==='ai'?'相手':'自分')+'</span><span class="log-description">'+esc(eventText(e))+'</span></div>').join(''):'<p>まだ主な行動はありません。</p>';
     const rows=groups.map((g,i)=>'<details class="log-turn '+(g.player==='相手'?'log-turn-opponent':'log-turn-self')+'" '+(i<2?'open':'')+'><summary><strong>ターン '+esc(g.turn)+' · '+g.player+'</strong><span>'+g.events.length+'件</span></summary><ol class="log-events">'+g.events.map(e=>'<li class="'+(relevant(e)?'log-important':'log-minor')+' '+logClass(e)+'"><span class="log-event-label">'+(e.player==='ai'?'相手':'自分')+'</span><span>'+esc(eventText(e))+'</span></li>').join('')+'</ol></details>').join('');
-    openSheet('対戦履歴 · 新表示 v137',`<div class="log-overview"><strong>直近の主な行動</strong>${overview}</div><div class="log-heading">ターンごとの履歴 <small>タップで開閉</small></div><div class="log-turns">${rows}</div><details class="log-export"><summary>ログ書き出し・研究用</summary><div class="menu-list"><button id="export-log">構造化ログを書き出す</button><button id="research-open">操作前後・研究履歴を確認</button><button id="export-research">研究ログJSONを書き出す（非公開情報を含む）</button></div></details>`);
+    openSheet('対戦履歴',`<div class="log-overview"><strong>直近の主な行動</strong>${overview}</div><div class="log-heading">ターンごとの履歴 <small>タップで開閉</small></div><div class="log-turns">${rows}</div><details class="log-export"><summary>ログ書き出し・研究用</summary><div class="menu-list"><button id="export-log">構造化ログを書き出す</button><button id="research-open">操作前後・研究履歴を確認</button><button id="export-research">研究ログJSONを書き出す（非公開情報を含む）</button></div></details>`);
     $('research-open').onclick=researchHistory;
     $('export-research').onclick=()=>downloadJSON(port.getResearchLog(),'pokeca-research-'+port.getResearchLog().matchId+'.json');
     $('export-log').onclick=()=>{const blob=new Blob([JSON.stringify({schemaVersion:1,mode:s.mode,status:s.status,winner:s.winner,events:s.history},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='pokeca-match-log.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
@@ -680,13 +678,13 @@ window.PokecaMobileBuild='256';
     if(state.status!=='active'||state.turnPlayer!=='you'){toast('今は自分の操作ができません');return;}
     const mons=kind==='attack'?[me.active].filter(Boolean):[me.active,...me.bench].filter(Boolean);
     const actions=kind==='ability'?abilityChoices(me):mons.flatMap(mon=>port.getPokemonActions('you',idOf(mon)).filter(o=>o.kind===kind).map(o=>({mon,option:o})));
-    openSheet(kind==='attack'?'ワザを選ぶ':'特性を選ぶ','<p>使用する'+(kind==='attack'?'ワザ':'特性')+'を選んでください。使用できないものは灰色で表示します。</p><div id="quick-actions" class="menu-list"></div>');
+    openSheet(kind==='attack'?'ワザを選ぶ':'特性を選ぶ','<div id="quick-actions" class="menu-list"></div>');
     const list=$('quick-actions');
     if(!actions.length){list.textContent=kind==='attack'?'使えるワザが登録されていません':'手動で使う特性はありません';return;}
     for(const {mon,position,option} of actions){
       const label=(position?'['+position+'] ':'')+(mon.name||'ポケモン')+' · '+option.label+(option.used?'（使用済み）':'');
-      list.append(button(label,()=>resolveOption(option),{disabled:!option.enabled}));
-      if(!option.enabled&&option.disabledReasons?.length)list.append(button('使用できない理由',()=>toast(option.disabledReasons.join(' / '))));
+      const actionButton=button(label,()=>resolveOption(option),{disabled:!option.enabled});
+      actionButton.dataset.actionKind=kind;list.append(actionButton);
     }
   }
   $('attack-button').onclick=()=>quickAction('attack');
@@ -760,10 +758,10 @@ window.PokecaMobileBuild='256';
     if(result.ok&&aiAutoMode&&s.turnPlayer==='you'&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   }};
   let stadiumPressTimer=null,stadiumLongPressed=false;
-  $('stadium').addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'&&event.button!==0)return;stadiumLongPressed=false;clearTimeout(stadiumPressTimer);stadiumPressTimer=setTimeout(()=>{if(!view().stadium)return;stadiumLongPressed=true;suppressClick=Date.now()+600;const art=$('stadium-art').querySelector('.card')||$('stadium-art').firstElementChild||$('stadium-art');cardZoom.open(art);},480);});
+  $('stadium').addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'&&event.button!==0)return;stadiumLongPressed=false;clearTimeout(stadiumPressTimer);stadiumPressTimer=setTimeout(()=>{if(!view().stadium)return;stadiumLongPressed=true;suppressClick=Date.now()+600;cardZoom.open($('stadium-art'));},480);});
   for(const eventName of ['pointerup','pointercancel','pointerleave'])$('stadium').addEventListener(eventName,()=>clearTimeout(stadiumPressTimer));
-  $('stadium').addEventListener('contextmenu',event=>{event.preventDefault();if(view().stadium){stadiumLongPressed=true;cardZoom.open($('stadium-art').firstElementChild||$('stadium-art'));}});
-  $('stadium').onclick=()=>{if(stadiumLongPressed){stadiumLongPressed=false;return;}if(selected&&dropOn($('stadium')))return;const stadiumCards=mine().hand.filter(c=>port.getHandOptions('you',idOf(c)).some(o=>o.action?.type==='play_stadium'));openSheet('スタジアム',`<p>手札からスタジアムを選んで置けます。</p><div id="stadium-actions" class="menu-list"></div>`);const container=$('stadium-actions');for(const card of stadiumCards){const a={type:'play_stadium',cardId:idOf(card)},check=port.getActionExplanation('you',a);container.append(button(card.name+'を置く',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!check.ok}));if(!check.ok)container.append(button('置けない理由',()=>toast(check.errors.join(' / '))));}if(!stadiumCards.length)container.append(document.createTextNode('手札にスタジアムはありません'));};
+  $('stadium').addEventListener('contextmenu',event=>{event.preventDefault();if(view().stadium){stadiumLongPressed=true;cardZoom.open($('stadium-art'));}});
+  $('stadium').onclick=()=>{if(stadiumLongPressed){stadiumLongPressed=false;return;}if(selected&&dropOn($('stadium')))return;const stadiumCards=mine().hand.filter(c=>port.getHandOptions('you',idOf(c)).some(o=>o.action?.type==='play_stadium'));openSheet('スタジアム',`<p>手札からスタジアムを選んで置けます。</p><div id="stadium-actions" class="menu-list"></div>`);const container=$('stadium-actions');for(const card of stadiumCards){const a={type:'play_stadium',cardId:idOf(card)},check=port.getActionExplanation('you',a);container.append(button(card.name+'を置く',()=>{const result=dispatch('you',a);if(result.ok)closeSheet();},{disabled:!check.ok}));}if(!stadiumCards.length)container.append(document.createTextNode('手札にスタジアムはありません'));};
   $('practice-info').onclick=()=>openSheet('この盤面について','<p>実証5件と操作練習を行うローカル盤面です。公式デッキではありません。実証カードのHPは仮設定です。</p><p>進化・どうぐ・宣言型特性は「練習」カードの明示データで確認できます。提供されていない公式カード効果は実装していません。</p><p>ドラッグはカードを上へ動かして開始します。横方向は手札スクロール、タップ後に緑の対象をタップしても同じ操作ができます。</p>');
   function setupRng(seed){let state=seed>>>0;return ()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}
   async function chooseDemoOpening(){
@@ -882,17 +880,32 @@ window.PokecaMobileBuild='256';
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
-    const p=state.players.find(p=>p.id==='you');
-    openSheet('自分が選ぶ効果の対象','<p>相手や自分が使った効果に対して、自分が選ぶ対象です。</p><div class="menu-list" id="reference-choice"></div>');
-    for(const value of choice.options){const label=choice.kind==='MULLIGAN'?'引き直しにより追加で'+value+'枚引く':choice.kind==='CIRCULATOR'?(state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId)?.name||value.energyId)+' を '+(state.players.flatMap(p=>p.bench).find(c=>idOf(c)===value.benchInstanceId)?.name||value.benchInstanceId)+' へ移す':p.bench.find(c=>idOf(c)===value)?.name||value;
-      $('reference-choice').append(button(label,()=>{const result=dispatch('you',{type:'resolve_reference_choice',...(choice.kind==='MULLIGAN'?{drawCount:value}:choice.kind==='CIRCULATOR'?value:{benchInstanceId:value})});if(result.ok){closeSheet();render();}}));}
+    const mulligan=choice.kind==='MULLIGAN';
+    openSheet(mulligan?'引き直し':'効果の対象を選ぶ',`<div class="${mulligan?'menu-list':'selection-grid'}" id="reference-choice"></div>`);
+    for(const value of choice.options){
+      const movesEnergy=choice.kind==='CIRCULATOR';
+      const targetId=movesEnergy?value.benchInstanceId:value;
+      const target=mulligan?null:getCard(targetId)?.card;
+      const energy=movesEnergy?state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId):null;
+      const label=mulligan?'引き直しにより追加で'+value+'枚引く':(energy?energy.name+' を ':'')+(target?.name||'ポケモン')+(energy?' へ移す':'');
+      const b=button(label,()=>{
+        const result=dispatch('you',{type:'resolve_reference_choice',...(mulligan?{drawCount:value}:movesEnergy?value:{benchInstanceId:value})});
+        if(result.ok){closeSheet();render();}
+      });
+      if(target){
+        b.className='selection-card-art';b.setAttribute('aria-label',label);
+        b.innerHTML=selectionArt(target);
+        if(energy){const description=document.createElement('span');description.className='selection-choice-note';description.textContent=energy.name;b.append(description);}
+      }
+      $('reference-choice').append(b);
+    }
   }
   function selectReferenceCounters(request){return new Promise(resolve=>{
     const allocation=Object.fromEntries(request.candidates.map(c=>[c.id,0]));
     openSheet('ダメカン6個をベンチにのせる','<p>合計6個を指定してください。対象はエンジンが許可した相手のベンチだけです。</p><div id="reference-counter-choices"></div><div id="reference-counter-submit"></div>');
     const paint=()=>{
       const total=Object.values(allocation).reduce((a,b)=>a+b,0);$('reference-counter-choices').replaceChildren();
-      for(const c of request.candidates){const row=document.createElement('div');row.textContent=c.name+'：'+allocation[c.id]+'個 ';row.append(button('−',()=>{allocation[c.id]--;paint();},{disabled:allocation[c.id]===0}),button('＋',()=>{allocation[c.id]++;paint();},{disabled:total===6}));$('reference-counter-choices').append(row);}
+      for(const c of request.candidates){const row=document.createElement('div');row.className='counter-target';const art=document.createElement('span');art.className='selection-card-art';art.innerHTML=selectionArt(c);row.append(art,document.createTextNode(c.name+'：'+allocation[c.id]+'個 '));row.append(button('−',()=>{allocation[c.id]--;paint();},{disabled:allocation[c.id]===0}),button('＋',()=>{allocation[c.id]++;paint();},{disabled:total===6}));$('reference-counter-choices').append(row);}
       $('reference-counter-submit').replaceChildren(button('この配分で決定',()=>{closeSheet();resolve(allocation);},{disabled:total!==6}),button('キャンセル',()=>{closeSheet();resolve(null);}));
     };paint();
   });}
