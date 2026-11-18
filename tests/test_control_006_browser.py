@@ -134,6 +134,7 @@ async def main():
    await page.locator('#hand-actions button:enabled').first.tap()
    await page.locator('#selection-cards').wait_for()
    await verify_played_image(row['cardName'])
+   assert await page.evaluate('document.querySelector("#sheet").getBoundingClientRect().right < document.querySelector("#self-played-card").getBoundingClientRect().left')
    if mechanic=='AKAMATSU':
     await page.wait_for_timeout(1900)
     assert await lane.locator('img:not([hidden])').count()==1
