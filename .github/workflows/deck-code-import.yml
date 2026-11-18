@@ -4,12 +4,16 @@ on:
     paths:
       - 'ui/deck-code-import.js'
       - 'tests/deck-code-import.test.cjs'
+      - 'ui/imported-deck-match.js'
+      - 'tests/imported-deck-match.test.cjs'
       - '.github/workflows/deck-code-import.yml'
   push:
     branches: [feature/deck-code-import-001]
     paths:
       - 'ui/deck-code-import.js'
       - 'tests/deck-code-import.test.cjs'
+      - 'ui/imported-deck-match.js'
+      - 'tests/imported-deck-match.test.cjs'
       - '.github/workflows/deck-code-import.yml'
 jobs:
   deck-code-import:
@@ -20,3 +24,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/deck-code-import.test.cjs
+      - run: node tests/imported-deck-match.test.cjs
