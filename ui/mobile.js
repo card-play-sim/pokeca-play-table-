@@ -338,6 +338,16 @@ window.PokecaMobileBuild='256';
         const b=button(label,()=>{void resolveOption(option);},{disabled:!check});
         if(kind==='ability')b.dataset.actionKind='ability';
         b.dataset.actionType=option.action.type;container.append(b);
+        if(!check&&kind==='ability'){
+          const reasons={BENCH_FULL:'ベンチに空きがありません',COLORLESS_MEGA_IN_PLAY_REQUIRED:'場に無色タイプのメガシンカexが必要です'};
+          const reason=option.errors?.find(code=>Object.hasOwn(reasons,code));
+          if(reason){
+            const hint=document.createElement('small');
+            hint.className='action-reason';
+            hint.textContent=reasons[reason];
+            container.append(hint);
+          }
+        }
       }
       return;
     }
@@ -395,12 +405,12 @@ window.PokecaMobileBuild='256';
         if(!check.ok){toast('今は特性を使えません');return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
       },{disabled:!explanation.ok||!!ability.target});abilityButton.dataset.actionKind='ability';container.append(abilityButton);
-      if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
+      if(ability.target){const targetButton=button('特性の対象を選ぶ',async()=>{
         // Only offer engine-declared legal candidates; never infer targets from card text.
         const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
         if(!legal.length){toast('この特性の合法な対象候補がありません');return;}
         await resolveOption(legal[0]);
-      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
+      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)});targetButton.dataset.actionKind='ability';container.append(targetButton);}
     }
     // Keep attacks accessible without making attack descriptions the default tap action.
     const attackOptions=options.filter(o=>o.kind==='attack');
