@@ -379,22 +379,14 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .played-card-lane img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .played-card-lane.settling { animation: played-card-fade 1.8s ease-out both; }
 @keyframes played-card-fade { 0%, 76% { opacity: 1; } 100% { opacity: 0; } }
-#card-zoom-details {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  color: white;
-  background: #182126ed;
-  border-color: #ffffff80;
-}
 #pokemon-actions{gap:12px}
-#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{display:flex;align-items:center;justify-content:flex-start;text-align:left;min-height:60px;width:100%;padding:13px 18px;border-radius:14px;font-size:16px;font-weight:700;line-height:1.35;touch-action:manipulation;transition:background-color .12s,transform .12s,box-shadow .12s}
-#pokemon-actions>button[data-action-kind='ability']{background:#dff4e6;color:#13543a;border:2px solid #70b68d;box-shadow:0 2px 0 #8abda1}
-#pokemon-actions>button[data-action-kind='attack-menu'],#attack-actions>button[data-action-kind='attack']{background:#e0ecff;color:#164a87;border:2px solid #7ba8e8;box-shadow:0 2px 0 #9eb9e4}
-#pokemon-actions>button[data-action-kind]:active,#attack-actions>button[data-action-kind]:active{transform:scale(.985);box-shadow:none;filter:brightness(.94)}
-#pokemon-actions>button[data-action-kind]:focus-visible,#attack-actions>button[data-action-kind]:focus-visible{outline:3px solid #b37b1e;outline-offset:2px}
-#pokemon-actions>button[data-action-kind]:disabled,#attack-actions>button[data-action-kind]:disabled{opacity:.48;box-shadow:none}
-@media(prefers-reduced-motion:reduce){#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{transition:none}}
+#hand-actions>button[data-action-kind],#quick-actions>button[data-action-kind],#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{display:flex;align-items:center;justify-content:flex-start;text-align:left;min-height:60px;width:100%;padding:13px 18px;border-radius:14px;font-size:16px;font-weight:700;line-height:1.35;touch-action:manipulation;transition:background-color .12s,transform .12s,box-shadow .12s}
+#hand-actions>button[data-action-kind='ability'],#quick-actions>button[data-action-kind='ability'],#pokemon-actions>button[data-action-kind='ability']{background:#dff4e6;color:#13543a;border:2px solid #70b68d;box-shadow:0 2px 0 #8abda1}
+#quick-actions>button[data-action-kind='attack'],#pokemon-actions>button[data-action-kind='attack-menu'],#attack-actions>button[data-action-kind='attack']{background:#e0ecff;color:#164a87;border:2px solid #7ba8e8;box-shadow:0 2px 0 #9eb9e4}
+#hand-actions>button[data-action-kind]:active,#quick-actions>button[data-action-kind]:active,#pokemon-actions>button[data-action-kind]:active,#attack-actions>button[data-action-kind]:active{transform:scale(.985);box-shadow:none;filter:brightness(.94)}
+#hand-actions>button[data-action-kind]:focus-visible,#quick-actions>button[data-action-kind]:focus-visible,#pokemon-actions>button[data-action-kind]:focus-visible,#attack-actions>button[data-action-kind]:focus-visible{outline:3px solid #b37b1e;outline-offset:2px}
+#hand-actions>button[data-action-kind]:disabled,#quick-actions>button[data-action-kind]:disabled,#pokemon-actions>button[data-action-kind]:disabled,#attack-actions>button[data-action-kind]:disabled{opacity:.48;box-shadow:none}
+@media(prefers-reduced-motion:reduce){#hand-actions>button[data-action-kind],#quick-actions>button[data-action-kind],#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{transition:none}}
 
 @media (orientation: landscape) and (max-height: 520px) {
   .app {
@@ -426,3 +418,24 @@ html,body{height:100%;max-height:100%;overflow:hidden}
   .hand .card { height: 32px; max-height: 32px; min-width: 0; width: auto; flex-basis: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .played-card-lane.settling { animation: none; } }
+
+/* Attachments share the thumbnail strip. Gold distinguishes Tools from Energy. */
+.card > .attached-energy-images > .attached-tool-card {
+  border: 2px solid #bf8a32;
+  background: #fff5dc;
+}
+.actionbar #ability-button:not(:disabled) { background: #176e52; border-color: #11553f; }
+.actionbar #attack-button:not(:disabled) { background: #315e9a; border-color: #234977; }
+.actionbar #attack-button:active, .actionbar #ability-button:active { filter: brightness(.84); }
+.selection-card-art img[hidden], .stadium-art img[hidden] { display: none !important; }
+.counter-target { display: flex; align-items: center; gap: 6px; }
+.counter-target .selection-card-art { flex: 0 0 32px; height: 44px; }
+.counter-target img { width: 100%; height: 100%; object-fit: contain; }
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .card > .attached-energy-images { bottom: -6px !important; gap: 2px !important; }
+  .card > .attached-energy-images > .attached-energy-card { width: 15px; height: 21px; }
+  .card > .attached-energy-images > .attached-energy-card b { font-size: 8px; min-width: 10px; height: 10px; right: -2px; bottom: -2px; }
+  .table > .stadium.has-stadium .stadium-art { width: 22px !important; height: 30px !important; }
+  .stadium .stadium-art img { max-height: 100%; object-fit: contain; }
+}

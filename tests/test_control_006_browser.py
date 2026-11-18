@@ -70,14 +70,14 @@ async def main():
     await page.locator('#card-zoom[open]').wait_for()
     await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
     await cdp.detach()
-    await page.locator('#card-zoom-details').tap()
-    detail=page.locator('#sheet-content .rule-explanation strong').filter(has_text=row['effectName'])
-    await detail.wait_for()
-    assert '現在有効' in await detail.inner_text()
+    artwork=page.locator('#card-zoom-art img:not([hidden])')
+    assert await artwork.get_attribute('alt')==row['cardName']
+    assert await artwork.evaluate('async img=>{await img.decode();return img.naturalWidth>0&&getComputedStyle(img).objectFit==="contain"}')
+    assert await page.locator('#card-zoom-details').count()==0
+    assert await page.evaluate('([id,name])=>PokecaMobile.port.getCardInfo("you",id).entries.some(e=>e.name===name&&e.active===true)',[ident,row['effectName']])
     assert await snapshot()==after
-    await page.wait_for_function('document.querySelector("#sheet[open] .detail")!==null')
+    await page.locator('#card-zoom-close').tap()
     await page.wait_for_timeout(750)
-    await page.locator('#sheet-close').tap()
    assert await page.locator(f'[data-card-id="{ident}"] [data-legal-mark="特性"]').count()==0
    await restore(after,offline=m in ('EXCITE_DIVE','RECON'));results.append({'offlineAfterAbility':m in ('EXCITE_DIVE','RECON'),'effectId':row['effectId'],'name':row['cardName'],'referencePrint':row['officialCardId'],'status':'PASS','domQuickAbility':m not in ('SKYLINE','FAIRY_ZONE'),'passiveDetails':m in ('SKYLINE','FAIRY_ZONE'),'checks':checks,'saveReloadExact':True})
   for mechanic in ('ENERGY_SWITCH','AKAMATSU','PHANTOM'):
