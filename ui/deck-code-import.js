@@ -17,6 +17,8 @@ function parse(text,code){
   if(header){if(pending)throw Error('公式レシピのカード枚数が欠落しています');group=groups[header[1]];declared[group]=Number(header[2]);continue}
   if(!group||/^(削除|調整用カード|すべてを|選択されたカード|デッキ登録|レギュレーションチェック|リスト表示|画像表示|現在のデッキ内)/.test(line)||/^[-─]+$/.test(line))continue;
   if(pending){const quantity=line.match(/^[|｜]\\s*(\\d+)\\s*(?:枚)?(?:\\s*[|｜].*)?$/)||line.match(/^(\\d+)\\s*枚?$/);if(quantity){flush(Number(quantity[1]));continue}}
+  const compact=line.match(/^(.+?)\\s*[|｜]\\s*(\\d+)\\s*(?:枚)?$/);
+  if(compact&&!line.startsWith('[Input]')){if(pending)throw Error('公式レシピのカード枚数が欠落しています');pending=compact[1].trim();flush(Number(compact[2]));continue}
   const nameLine=line.match(/^(?:\\[Input\\]\\s*)?[|｜]\\s*(.+?)(?:\\s*[|｜]\\s*(\\d+)\\s*(?:枚)?\\s*)?$/);
   if(nameLine&&nameLine[1]!=='削除'){
    if(pending)throw Error('公式レシピのカード枚数が欠落しています');
