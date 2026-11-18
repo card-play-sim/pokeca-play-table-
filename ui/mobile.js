@@ -504,8 +504,22 @@ window.PokecaMobileBuild='256';
     render();
   }
   function resumeReferenceAI(){queueMicrotask(()=>{const state=view(),actor=state.pendingPrizeSelection?.playerId||state.pendingReferenceChoice?.playerId||state.turnPlayer;if(state.referenceEffectValidation&&state.status==='active'&&actor==='ai'&&aiAutoMode&&!aiPracticeRunning&&!referenceStopped())void runOpponentPracticeTurn();});}
-  function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
+  let lastPlayedCard=null;
+  function updatePlayedCardLane(){
+    for(const owner of ['self','opponent']){
+      const lane=$(owner+'-played-card');if(!lane)continue;
+      const card=lastPlayedCard?.owner===owner?lastPlayedCard.card:null;
+      lane.replaceChildren();lane.classList.toggle('occupied',!!card);
+      if(!card){lane.textContent='使用カード';continue;}
+      const img=imageURL(card),label=document.createElement('span');label.className='played-card-label';label.textContent=card.name||'使用カード';
+      if(img){const art=document.createElement('img');art.src=img;art.alt=card.name||'使用カード';art.loading='lazy';lane.append(art);}
+      lane.append(label);
+    }
+  }
+  function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();const actorBefore=before.players?.find(p=>p.id===playerId);const playedSource=actorBefore?.hand?.find(card=>idOf(card)===action.sourceInstanceId||idOf(card)===action.cardInstanceId);if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=port.dispatch(playerId,action);
     if(!result.ok){referenceStop(result.errors);toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
+    if(playedSource){lastPlayedCard={owner:playerId==='you'?'self':'opponent',card:playedSource};updatePlayedCardLane();}
+    if(action.type==='end_turn'){lastPlayedCard=null;updatePlayedCardLane();}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで詳細';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
     if(result.viewError)toast('処理は確定しました。表示を再読み込みしてください');
