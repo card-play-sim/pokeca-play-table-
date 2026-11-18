@@ -314,3 +314,17 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .stadium .stadium-copy{display:flex;flex:1;min-width:0;flex-direction:column;align-items:flex-start;gap:1px;overflow:hidden}
 .stadium .stadium-copy #stadium-name{max-width:100%;font-weight:700}
 .stadium #stadium-effect-summary{font-size:9px;line-height:1.2;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#365b48}
+
+/* Compact side rails: prize left, deck and discard stacked right. */
+.side .active-row{grid-template-columns:minmax(56px,.72fr) minmax(0,2.9fr) minmax(62px,.78fr);column-gap:5px}
+.side .active-row>.zone-rail{height:100%;min-height:0;min-width:0}
+.side .active-row>.zone-rail:first-child{justify-content:flex-start;align-items:center}
+.side .active-row>.zone-rail:last-child{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:center;gap:5px}
+.side .active-row>.zone-rail .zone{box-sizing:border-box;flex:0 0 auto;min-width:0;width:100%;padding:4px 3px;min-height:48px;border:1px solid #dce4de;border-radius:9px;gap:1px;box-shadow:none}
+.side .active-row>.zone-rail:first-child .zone.prize{max-width:70px;min-height:60px;background:#fff9ed;border-color:#e4d6b4}
+.side .active-row>.zone-rail:last-child .zone{min-height:50px;max-height:74px}
+.side .active-row>.zone-rail .zone strong{font-size:14px;line-height:1.1}
+.side .active-row>.zone-rail .zone>span:not(.prize-map):not(.zone-icon){font-size:10px;white-space:nowrap}
+.side .active-row>.zone-rail .zone .zone-back{max-width:21px;max-height:29px;object-fit:contain}
+.side .active-row>.zone-rail .zone .prize-map{transform:scale(.85);transform-origin:center}
+@media(max-width:390px){.side .active-row{grid-template-columns:53px minmax(0,1fr) 60px;column-gap:3px}.side .active-row>.zone-rail .zone{padding:3px 1px}}
