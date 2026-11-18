@@ -275,7 +275,7 @@ window.PokecaMobileBuild='256';
     document.querySelectorAll('[data-zone]').forEach(el=>el.onclick=()=>{if(Date.now()<confirmTouchGuardUntil)return;zoneMenu(el.dataset.zoneOwner,el.dataset.zone);});
     document.querySelectorAll('.bench-slot.empty').forEach(el=>el.onclick=()=>{if(selected)dropOn(el);});
   }
-  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>['use_ability','play_item','play_supporter','play_stadium'].includes(o.action?.type))){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
+  function selectHand(id){if(['ITEM','SUPPORTER','STADIUM'].includes(getCard(id)?.card.cardType)||port.getHandOptions('you',id).some(o=>['use_ability','play_item','play_supporter'].includes(o.action?.type))){selected=id;highlight();$('interaction-hint').textContent='選択中：'+(getCard(id)?.card.name||'カード');handMenu(id);return;}selected=selected===id?null:id;highlight();
     if(!selected){$('interaction-hint').textContent='カードをタップで操作・長押しで拡大';return;}
     const entry=getCard(id);if(!entry)return;
     $('interaction-hint').textContent='選択中：'+(entry.card.name||'カード')+'・配置先をタップ';

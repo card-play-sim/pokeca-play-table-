@@ -81,7 +81,7 @@ async def main():
   assert await actions.all_text_contents()==['カードを使う']
   await page.locator('#sheet-close').tap()
   await hand('ロケット団の監視塔').tap()
-  await page.locator('#hand-actions button:enabled').first.tap()
+  await page.locator('#stadium.legal-target').tap()
   await page.wait_for_function('PokecaMobile.port.getSnapshot().stadium?.name==="ロケット団の監視塔"')
   await zoom('#stadium','ロケット団の監視塔',background_close=True)
   await hand('ヒーローマント').tap()
