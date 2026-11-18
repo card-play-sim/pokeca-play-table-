@@ -328,3 +328,15 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .side .active-row>.zone-rail .zone .zone-back{max-width:21px;max-height:29px;object-fit:contain}
 .side .active-row>.zone-rail .zone .prize-map{transform:scale(.85);transform-origin:center}
 @media(max-width:390px){.side .active-row{grid-template-columns:53px minmax(0,1fr) 60px;column-gap:3px}.side .active-row>.zone-rail .zone{padding:3px 1px}}
+
+/* Keep the battle Pokemon centered in the full play area, not the leftover rail width. */
+.side .active-row{position:relative;display:grid;grid-template-columns:minmax(0,1fr);isolation:isolate}
+.side .active-row>.active-slot{grid-column:1;grid-row:1;justify-self:center;width:min(43%,180px);min-width:0;z-index:1;pointer-events:none}
+.side .active-row>.active-slot>*{pointer-events:auto}
+.side .active-row>.zone-rail{position:absolute;top:0;bottom:0;z-index:2;width:clamp(49px,14%,75px)}
+.side .active-row>.zone-rail:first-child{left:0}
+.side .active-row>.zone-rail:last-child{right:0}
+.side .active-row>.zone-rail .zone{touch-action:manipulation}
+/* Reserved space between the central active card and right-side piles. */
+.side .active-row::after{content:'使用カード';position:absolute;left:calc(50% + min(22%,90px));right:clamp(49px,14%,75px);top:50%;transform:translateY(-50%);min-height:58px;border:1px dashed #b4c9bc;border-radius:8px;color:#789485;background:#eaf3ed77;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9px;pointer-events:none}
+@media(max-width:390px){.side .active-row>.active-slot{width:min(43%,155px)}.side .active-row::after{font-size:8px;left:calc(50% + min(22%,78px))}}
