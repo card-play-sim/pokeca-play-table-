@@ -5,6 +5,8 @@ on:
       - 'ui/deck-code-import.js'
       - 'tests/deck-code-import.test.cjs'
       - 'ui/imported-deck-match.js'
+      - 'deck-builder.html'
+      - 'deck-code-import.html'
       - 'tests/imported-deck-match.test.cjs'
       - '.github/workflows/deck-code-import.yml'
   push:
@@ -13,6 +15,8 @@ on:
       - 'ui/deck-code-import.js'
       - 'tests/deck-code-import.test.cjs'
       - 'ui/imported-deck-match.js'
+      - 'deck-builder.html'
+      - 'deck-code-import.html'
       - 'tests/imported-deck-match.test.cjs'
       - '.github/workflows/deck-code-import.yml'
 jobs:
@@ -25,3 +29,4 @@ jobs:
           node-version: '22'
       - run: node tests/deck-code-import.test.cjs
       - run: node tests/imported-deck-match.test.cjs
+      - run: node -e "const fs=require('fs');for(const file of ['deck-builder.html','deck-code-import.html']){const html=fs.readFileSync(file,'utf8');const js=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]).join('\\n');new (require('vm').Script)(js,{filename:file});console.log(file,'inline JavaScript syntax PASS')}"
