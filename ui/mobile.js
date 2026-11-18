@@ -393,7 +393,7 @@ window.PokecaMobileBuild='256';
     }
     if(view().mode==='practice')for(const [type,label] of [['return_hand_to_deck','練習操作：山札へ戻す'],['discard_card','練習操作：トラッシュへ']]){const a={type,cardId:id};container.append(button(label,()=>{dispatch('you',a);closeSheet();},{disabled:!port.canDispatch('you',a)}));}
   }
-  function handMenu(id){if(view().turnPlayer!=='you'){detail(id);return;}openSheet(getCard(id)?.card.name || '手札','<div class="menu-list" id="hand-actions"></div>');addHandActions(id,$('hand-actions'));$('hand-actions').append(button('詳細を見る',()=>detail(id)));}
+  function handMenu(id){if(view().turnPlayer!=='you'){detail(id);return;}openSheet(getCard(id)?.card.name || '手札','<div class="menu-list" id="hand-actions"></div>');addHandActions(id,$('hand-actions'));}
   function attackCostLabel(card,index){const cost=card?.attacks?.[index]?.cost;if(!Array.isArray(cost))return '';const labels={C:'無色',無色:'無色'};return ' · 必要エネ '+(cost.length?cost.map(x=>labels[x]||x).join('・'):'なし');}
   function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
