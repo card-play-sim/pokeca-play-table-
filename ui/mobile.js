@@ -214,6 +214,7 @@ window.PokecaMobileBuild='256';
       $(prefix+'-left').innerHTML=zoneHTML(p,'prize','サイド','◇');
       $(prefix+'-right').innerHTML=zoneHTML(p,'deck','山札','▤')+zoneHTML(p,'discard','トラッシュ','↘');
     }
+    updatePlayedCardLane();
     const scroll=$('self-hand').scrollLeft;$('self-hand').innerHTML=you.hand.map(c=>cardHTML(c,s,you,true)).join('');$('self-hand').scrollLeft=scroll;$('hand-count').textContent=you.handCount+'枚';
     const used=Object.keys(you.turnLimits?.abilityUses || {}).length;
     $('limits').innerHTML=`<span class="limit${you.normalEnergyAttached?' spent':''}">手張り ${you.normalEnergyAttached?'済':'未'}</span><span class="limit${you.turnLimits?.supporterUsed?' spent':''}">サポ ${you.turnLimits?.supporterUsed?'済':'未'}</span><span class="limit${used?' spent':''}">特性 ${used}</span><span class="limit${s.retreatUsed?' spent':''}">にげる ${s.retreatUsed?'済':'未'}</span>`;
