@@ -5,26 +5,35 @@ const validCode=x=>/^[A-Za-z0-9]{6}-[A-Za-z0-9]{6}-[A-Za-z0-9]{6}$/.test(x);
 function parse(text,code){
  if(!validCode(code))throw Error('デッキコード形式が不正です');
  if(typeof text!=='string'||text.length>1000000)throw Error('レシピ文字列が不正です');
- const lines=text.replace(/\r/g,'').split('\n').map(s=>s.trim()).filter(Boolean);
- let group='',rows=[],pending=null,pack='',number='';
- const push=(count)=>{if(!pending||!Number.isInteger(count)||count<1||count>60)throw Error('カード枚数が不正です');rows.push({name:pending,category:group,pack:pack||null,number:number||null,count});pending=null;pack='';number=''};
- for(let i=0;i<lines.length;i++){
-  let line=lines[i];
-  const head=line.match(/^(ポケモンのどうぐ|ポケモン|グッズ|サポート|スタジアム|エネルギー)\s*[（(](\d+)[)）]/);
-  if(head){group=groups[head[1]];pending=null;pack='';number='';continue}
-  if(!group||/^(削除|調整用カード|すべてを|選択されたカード|デッキ登録|レギュレーションチェック|リスト表示|画像表示|現在のデッキ内)/.test(line))continue;
-  if(/^[-─]+$/.test(line)||/^\[Input\]/.test(line))continue;
-  const compact=line.match(/^(.+?)\s*[|｜]\s*(\d+)\s*(?:枚)?\s*(?:[|｜].*)?$/);
-  if(compact){pending=compact[1].replace(/^\[Input\]\s*/,'').trim();push(Number(compact[2]));continue}
-  const cnt=line.match(/^(?:[|｜]\\s*)?(\\d+)\\s*(?:枚)?(?:\\s*[|｜].*)?$/);
-  if(cnt&&pending){push(Number(cnt[1]));continue}
-  if(pending&&/^[A-Za-z][A-Za-z0-9-]{0,12}$/.test(line)){pack=line;continue}
-  if(pending&&/^\d{1,4}\s*\/\s*(?:\d{1,4}|[A-Za-z]-P)$/.test(line)){number=line;continue}
-  if(line==='|'||line==='削除'||line==='-')continue;
-  if(!pending&&line.length<100&&!/^(\d+|\[Input|デッキコード)/.test(line))pending=line.replace(/^\|\s*/,'').trim();
+ const lines=text.replace(/\\r/g,'').split('\\n').map(x=>x.trim()).filter(Boolean);
+ const rows=[],declared={};let group='',pending=null,pack=null,number=null;
+ const flush=count=>{
+  if(!pending||!Number.isInteger(count)||count<1||count>60)throw Error('カード枚数が不正です');
+  rows.push({name:pending,category:group,pack,number,count});
+  pending=null;pack=null;number=null;
+ };
+ for(const line of lines){
+  const header=line.match(/^(ポケモンのどうぐ|ポケモン|グッズ|サポート|スタジアム|エネルギー)\\s*[（(](\\d+)[)）]/);
+  if(header){if(pending)throw Error('公式レシピのカード枚数が欠落しています');group=groups[header[1]];declared[group]=Number(header[2]);continue}
+  if(!group||/^(削除|調整用カード|すべてを|選択されたカード|デッキ登録|レギュレーションチェック|リスト表示|画像表示|現在のデッキ内)/.test(line)||/^[-─]+$/.test(line))continue;
+  const nameLine=line.match(/^(?:\\[Input\\]\\s*)?[|｜]\\s*(.+?)(?:\\s*[|｜]\\s*(\\d+)\\s*(?:枚)?\\s*)?$/);
+  if(nameLine&&nameLine[1]!=='削除'){
+   if(pending)throw Error('公式レシピのカード枚数が欠落しています');
+   pending=nameLine[1].trim();if(nameLine[2])flush(Number(nameLine[2]));continue;
+  }
+  if(pending){
+   const countLine=line.match(/^[|｜]\\s*(\\d+)\\s*(?:枚)?(?:\\s*[|｜].*)?$/)||line.match(/^(\\d+)\\s*枚?$/);
+   if(countLine){flush(Number(countLine[1]));continue}
+   if(!pack&&/^[A-Za-z][A-Za-z0-9-]{0,12}$/.test(line)){pack=line;continue}
+   if(!number&&/^\\d{1,4}\\s*\\/\\s*(?:\\d{1,4}|[A-Za-z]-P)$/.test(line)){number=line;continue}
+  }
  }
+ if(pending)throw Error('公式レシピのカード枚数が欠落しています');
  const total=rows.reduce((a,r)=>a+r.count,0);
  if(total!==60)throw Error('60枚の公式レシピを解析できませんでした（解析 '+total+'枚）。不完全な情報は保存しません');
+ for(const [category,count] of Object.entries(declared)){
+  if(rows.filter(r=>r.category===category).reduce((n,r)=>n+r.count,0)!==count)throw Error('公式レシピの分類別枚数が不一致: '+category);
+ }
  return {schemaVersion:1,source:'official-recipe-text',deckCode:code,total,cards:rows,identityStatus:'UNVERIFIED',playable:false};
 }
 function reconcile(deck,officialRecords,imageRegistry){
