@@ -65,20 +65,12 @@ async def main():
    after=await snap()
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
-  # Start the expanded decks through the real import/manual-opening UI, then use
-  # the same canonical AI port for both players through victory, not fixture damage.
-  # Close all leftover modal layers after fixture execution before importing decks.
-  # A stale sheet can intercept the header even when the prior test passed.
-  await page.evaluate('''() => {
-   for (const id of ['confirm-dialog', 'sheet']) {
-    const dialog = document.getElementById(id);
-    if (dialog?.open) dialog.close();
-   }
-  }''')
-  await page.wait_for_function('!document.getElementById("sheet").open && !document.getElementById("confirm-dialog").open')
-  # The previous fixture can asynchronously reopen a selection sheet after cleanup.
-  # Trigger the menu through its actual click handler to replace that stale sheet.
-  await page.locator('#menu-open').evaluate('(el)=>el.click()');await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
+  # Run the imported-deck match independently of any pending fixture choices.
+  await c.close()
+  c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
+  await ready()
+  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
   try:
    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
   except Exception:
