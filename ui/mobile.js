@@ -169,6 +169,13 @@ window.PokecaMobileBuild='256';
     if(Object.keys(owner.turnLimits?.abilityUses || {}).some(k=>k.startsWith(idOf(card)+':')))html+='<span class="badge used">特性 使用済</span>';
     return html?`<span class="badges">${html}</span>`:'';
   }
+  function attachedToolsHTML(card){
+    if(card.kind!=='pokemon'||!Array.isArray(card.tools)||!card.tools.length)return '';
+    return '<span class="attached-tool-strip" aria-label="装着しているどうぐ '+card.tools.length+'枚">'+card.tools.map(tool=>{
+      const name=tool?.name||'ポケモンのどうぐ';
+      return '<span class="attached-tool-card" title="'+esc(name)+'" aria-label="'+esc(name)+'">'+cardArt(tool)+'<span class="attached-tool-name">'+esc(name)+'</span></span>';
+    }).join('')+'</span>';
+  }
   function attachedEnergyHTML(card){
     if(card.kind!=='pokemon'||!card.energyCards?.length)return '';
     const groups=new Map();
@@ -190,7 +197,7 @@ window.PokecaMobileBuild='256';
     const options=hand?port.getHandOptions('you',idOf(card)):port.getPokemonActions('you',idOf(card));
     return tableUI.marks(options).map(label=>`<span class="available-mark" data-legal-mark="${esc(label)}">${esc(label)}</span>`).join('');
   }
-  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで拡大">${cardArt(card)}<span class="available-marks">${legalMarks(card,snapshot,owner,hand)}</span>${hand?'':attachedEnergyHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
+  function cardHTML(card,snapshot,owner,hand=false){return `<button class="card${selected===idOf(card)?' selected':''}" data-card-id="${esc(idOf(card))}" data-owner="${esc(owner.id)}" data-card-name="${esc(card.name)}" ${hand?'data-hand="true"':''} aria-label="${esc(card.name)}${hand?'・手札':'・HP '+Math.max(0,card.hp-(card.damage || 0))}" title="長押しで拡大">${cardArt(card)}<span class="available-marks">${legalMarks(card,snapshot,owner,hand)}</span>${hand?'':attachedEnergyHTML(card)+attachedToolsHTML(card)+(card.kind==='pokemon'?`<span class="field-hp" aria-label="残りHP ${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}"><b>HP</b> <strong>${esc(Math.max(0,Number(card.hp||0)-Number(card.damage||0)))}</strong><span class="hp-total"> / ${esc(card.hp ?? '—')}</span></span>`:'')+badges(card,snapshot,owner)}</button>`;}
   function zoneHTML(player,zone,label,icon){
     const count=zone==='deck'?player.deckCount:zone==='prize'?player.prizeCount:player.discardCount;
     const back='<img class="zone-back" src="ui/card-back.svg" alt="" draggable="false">';
