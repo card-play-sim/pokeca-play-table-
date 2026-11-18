@@ -398,7 +398,7 @@ window.PokecaMobileBuild='256';
   function pokemonMenu(id,owner){if(view().turnPlayer!=='you'){detail(id);return;}if(owner!=='you'){detail(id);return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);if(!option.enabled&&option.disabledReasons?.length)container.append(button('使用できない理由',()=>openSheet('使用制限の理由',option.disabledReasons.map(reason=>'<p>'+esc(reason)+'</p>').join(''))));}
+    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind=option.kind;container.append(b);}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -411,13 +411,7 @@ window.PokecaMobileBuild='256';
         if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
       },{disabled:!explanation.ok||!!ability.target});abilityButton.dataset.actionKind='ability';container.append(abilityButton);
-      if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
-        // Only offer engine-declared legal candidates; never infer targets from card text.
-        const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
-        if(!legal.length){toast('この特性の合法な対象候補がありません');return;}
-        await resolveOption(legal[0]);
-      },{disabled:!port.getPokemonActions('you',id).some(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled)}));
-      else if(!explanation.ok)container.append(button('特性を使えない理由',()=>openSheet('使用制限の理由',(explanation.errors||['使用できません']).map(reason=>'<p>'+esc(reason)+'</p>').join(''))));
+      
     }
     // Keep attacks accessible without making attack descriptions the default tap action.
     const attackOptions=options.filter(o=>o.kind==='attack');
@@ -427,7 +421,7 @@ window.PokecaMobileBuild='256';
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
       const chosen=enabled.find(o=>o.action.benchInstanceId===ids[0]);resolveOption(chosen);
     },{disabled:!enabled.length}));
-    if(!enabled.length)container.append(button('にげられない理由',()=>openSheet('にげるの制限',retreatOptions.flatMap(o=>o.disabledReasons || []).filter((x,i,a)=>a.indexOf(x)===i).map(x=>'<p>'+esc(x)+'</p>').join(''))));}
+    }
     // Short tap is for actions only. Detailed rules remain available via long press.
     if(!container.children.length)container.append(document.createTextNode('現在使える操作はありません'));
   }
