@@ -439,7 +439,7 @@ window.PokecaMobileBuild='256';
       if(request.min===0&&request.max===0){if(request.kind==='POKEMON')action.targetIds=[];else{action.selections||={};action.selections[request.key]=[];}continue;}
       if(request.kind==='COUNTERS'){const allocation=await selectReferenceCounters(request);if(!allocation)return;action.selections||={};action.selections[request.key]=allocation;continue;}
       if(request.kind==='COUNT'){const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:Math.max(0,request.max-request.min+1)},(_,i)=>({id:String(i+request.min),name:(i+request.min)+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
-      const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,name:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
+      const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,label:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
     }
@@ -466,7 +466,7 @@ window.PokecaMobileBuild='256';
     const cancel=()=>done(null);
     openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`${min}${unit}選択してください。`:`${min}〜${max}${unit}選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
-    for(const card of candidates){const b=button(card.name || 'カード',()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=selectionArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);}
+    for(const card of candidates){const label=card.label||card.name||'カード';const b=button(label,()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',label);b.innerHTML=selectionArt(card);$('selection-cards').append(b);}
     $('selection-confirm').onclick=()=>done([...selectedIds]);
   });}
   async function resolveDeckSearchPlay(action,search){
@@ -880,10 +880,25 @@ window.PokecaMobileBuild='256';
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
-    const p=state.players.find(p=>p.id==='you');
-    openSheet('自分が選ぶ効果の対象','<p>相手や自分が使った効果に対して、自分が選ぶ対象です。</p><div class="menu-list" id="reference-choice"></div>');
-    for(const value of choice.options){const label=choice.kind==='MULLIGAN'?'引き直しにより追加で'+value+'枚引く':choice.kind==='CIRCULATOR'?(state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId)?.name||value.energyId)+' を '+(state.players.flatMap(p=>p.bench).find(c=>idOf(c)===value.benchInstanceId)?.name||value.benchInstanceId)+' へ移す':p.bench.find(c=>idOf(c)===value)?.name||value;
-      $('reference-choice').append(button(label,()=>{const result=dispatch('you',{type:'resolve_reference_choice',...(choice.kind==='MULLIGAN'?{drawCount:value}:choice.kind==='CIRCULATOR'?value:{benchInstanceId:value})});if(result.ok){closeSheet();render();}}));}
+    const mulligan=choice.kind==='MULLIGAN';
+    openSheet(mulligan?'引き直し':'効果の対象を選ぶ',`<div class="${mulligan?'menu-list':'selection-grid'}" id="reference-choice"></div>`);
+    for(const value of choice.options){
+      const movesEnergy=choice.kind==='CIRCULATOR';
+      const targetId=movesEnergy?value.benchInstanceId:value;
+      const target=mulligan?null:getCard(targetId)?.card;
+      const energy=movesEnergy?state.players.flatMap(p=>[p.active,...p.bench].filter(Boolean)).flatMap(c=>c.energyCards||[]).find(c=>idOf(c)===value.energyId):null;
+      const label=mulligan?'引き直しにより追加で'+value+'枚引く':(energy?energy.name+' を ':'')+(target?.name||'ポケモン')+(energy?' へ移す':'');
+      const b=button(label,()=>{
+        const result=dispatch('you',{type:'resolve_reference_choice',...(mulligan?{drawCount:value}:movesEnergy?value:{benchInstanceId:value})});
+        if(result.ok){closeSheet();render();}
+      });
+      if(target){
+        b.className='selection-card-art';b.setAttribute('aria-label',label);
+        b.innerHTML=selectionArt(target);
+        if(energy){const description=document.createElement('span');description.className='selection-choice-note';description.textContent=energy.name;b.append(description);}
+      }
+      $('reference-choice').append(b);
+    }
   }
   function selectReferenceCounters(request){return new Promise(resolve=>{
     const allocation=Object.fromEntries(request.candidates.map(c=>[c.id,0]));

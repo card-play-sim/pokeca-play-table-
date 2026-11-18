@@ -59,7 +59,10 @@ async def main():
   await page.locator(f'#self-hand [data-card-id="{cards["基本悪エネルギー"]}"]').tap();assert not await page.locator('#card-zoom').evaluate('e=>e.open')
   await page.locator('#self-active .card').tap();assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='3'
   await page.locator(f'#self-hand [data-card-id="{cards["エネルギーつけかえ"]}"]').tap();await page.locator('#hand-actions button:enabled').first.tap()
-  await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap();await page.locator(f'[data-selection-id="{bench}"]').tap();await page.locator('#selection-confirm').tap()
+  await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap()
+  move_target=page.locator(f'[data-selection-id="{bench}"]')
+  assert await move_target.locator('img:not([hidden])').evaluate('async img=>{await img.decode();return img.alt==="マシマシラ"&&img.currentSrc.startsWith("https://www.pokemon-card.com/")}')
+  await move_target.tap();await page.locator('#selection-confirm').tap()
   await page.wait_for_function('PokecaMobile.port.getSnapshot().players[0].bench[0].energyCards.length===1');assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='2';assert await page.locator('#self-bench .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='1'
   # Hand-use abilities use the same action menu as every hand action family.
   await page.locator(f'#self-hand [data-card-id="{cards["ファイアローex"]}"]').tap();await page.locator('#hand-actions button:enabled').first.tap()
