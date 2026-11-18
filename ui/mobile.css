@@ -337,6 +337,11 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .side .active-row>.zone-rail:first-child{left:0}
 .side .active-row>.zone-rail:last-child{right:0}
 .side .active-row>.zone-rail .zone{touch-action:manipulation}
-/* Reserved space between the central active card and right-side piles. */
-.side .active-row::after{content:'使用カード';position:absolute;left:calc(50% + min(22%,90px));right:clamp(49px,14%,75px);top:50%;transform:translateY(-50%);min-height:58px;border:1px dashed #b4c9bc;border-radius:8px;color:#789485;background:#eaf3ed77;display:flex;align-items:center;justify-content:center;text-align:center;font-size:9px;pointer-events:none}
-@media(max-width:390px){.side .active-row>.active-slot{width:min(43%,155px)}.side .active-row::after{font-size:8px;left:calc(50% + min(22%,78px))}}
+
+
+/* Actual played-card lane; no pseudo-element placeholder. */
+.side .active-row>.played-card-lane{position:absolute;left:calc(50% + min(22%,90px));right:clamp(49px,14%,75px);top:50%;transform:translateY(-50%);height:min(105px,88%);z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px dashed #b4c9bc;border-radius:8px;background:#eaf3ed77;color:#789485;font-size:9px;text-align:center;overflow:hidden;pointer-events:none}
+.side .active-row>.played-card-lane.occupied{background:#fff9e8;border:1px solid #d9bb74;color:#3c463f}
+.side .played-card-lane img{display:block;max-width:100%;max-height:78%;object-fit:contain}
+.side .played-card-lane .played-card-label{font-size:9px;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:390px){.side .active-row>.played-card-lane{left:calc(50% + min(22%,78px));font-size:8px}}
