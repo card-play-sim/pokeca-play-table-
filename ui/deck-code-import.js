@@ -16,7 +16,7 @@ function parse(text,code){
   if(/^[-─]+$/.test(line)||/^\[Input\]/.test(line))continue;
   const compact=line.match(/^(.+?)\s*[|｜]\s*(\d+)\s*(?:枚)?\s*(?:[|｜].*)?$/);
   if(compact){pending=compact[1].replace(/^\[Input\]\s*/,'').trim();push(Number(compact[2]));continue}
-  const cnt=line.match(/^(\d+)\s*枚?$/);
+  const cnt=line.match(/^(?:[|｜]\\s*)?(\\d+)\\s*(?:枚)?(?:\\s*[|｜].*)?$/);
   if(cnt&&pending){push(Number(cnt[1]));continue}
   if(pending&&/^[A-Za-z][A-Za-z0-9-]{0,12}$/.test(line)){pack=line;continue}
   if(pending&&/^\d{1,4}\s*\/\s*(?:\d{1,4}|[A-Za-z]-P)$/.test(line)){number=line;continue}
@@ -27,5 +27,24 @@ function parse(text,code){
  if(total!==60)throw Error('60枚の公式レシピを解析できませんでした（解析 '+total+'枚）。不完全な情報は保存しません');
  return {schemaVersion:1,source:'official-recipe-text',deckCode:code,total,cards:rows,identityStatus:'UNVERIFIED',playable:false};
 }
-root.PokecaDeckCodeImport=Object.freeze({validCode,parse});
+function reconcile(deck,officialRecords,imageRegistry){
+ if(!deck||deck.total!==60||!Array.isArray(deck.cards))throw Error('60枚レシピが必要です');
+ const records=Array.isArray(officialRecords)?officialRecords:Object.values(officialRecords||{});
+ const images=imageRegistry?.imageByOfficialCardId||imageRegistry||{};
+ const output=deck.cards.map(row=>{
+  const candidates=records.filter(r=>r&&r.name===row.name&&(!row.pack||r.pack===row.pack||r.expansion===row.pack)&&(!row.number||r.number===row.number||r.cardNumber===row.number));
+  if(candidates.length!==1)return {...row,identityStatus:'BLOCKED',reason:candidates.length?'AMBIGUOUS_PRINT':'OFFICIAL_PRINT_NOT_FOUND'};
+  const record=candidates[0],id=String(record.officialCardId||'');
+  if(!/^\\d+$/.test(id))return {...row,identityStatus:'BLOCKED',reason:'OFFICIAL_ID_MISSING'};
+  const image=images[id];
+  if(!image||image.officialCardId!=null&&String(image.officialCardId)!==id||image.name&&image.name!==row.name||!(image.imageSourceUrl||image.sourceUrl))
+   return {...row,officialCardId:id,identityStatus:'BLOCKED',reason:'IMAGE_MISSING_OR_CONFLICT'};
+  if(record.effectStatus!=='verified'||record.engineReadable!==true)
+   return {...row,officialCardId:id,imageUrl:image.imageSourceUrl||image.sourceUrl,identityStatus:'BLOCKED',reason:'ENGINE_EFFECT_UNVERIFIED'};
+  return {...row,officialCardId:id,imageUrl:image.imageSourceUrl||image.sourceUrl,identityStatus:'CONFIRMED'};
+ });
+ const blocked=output.filter(r=>r.identityStatus!=='CONFIRMED');
+ return {...deck,cards:output,identityStatus:blocked.length?'BLOCKED':'CONFIRMED',playable:blocked.length===0,blockedCount:blocked.length};
+}
+root.PokecaDeckCodeImport=Object.freeze({validCode,parse,reconcile});
 })(typeof window!=='undefined'?window:globalThis);
