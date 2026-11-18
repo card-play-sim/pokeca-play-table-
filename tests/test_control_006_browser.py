@@ -59,7 +59,25 @@ async def main():
    await page.wait_for_function('()=>PokecaMobile.port.getSnapshot().history.length>0');after=await snapshot()
    checks=await page.evaluate('([before,action])=>Control006.verify(Pokeca,controlFrame,before,PokecaMobile.port.getSnapshot(),action)',[before,option['action']])
    if m in ('SKYLINE','FAIRY_ZONE'):
-    await page.locator(f'#self-bench [data-card-id="{ident}"]').tap();assert '現在有効' in await page.locator('#sheet-content').inner_text();await page.locator('#sheet-close').tap()
+    card=page.locator(f'#self-bench [data-card-id="{ident}"]')
+    await card.tap()
+    await page.locator('#pokemon-actions').wait_for()
+    assert await page.locator('#sheet-content .rule-explanation').count()==0
+    await page.locator('#sheet-close').tap()
+    box=await card.bounding_box()
+    cdp=await context.new_cdp_session(page)
+    await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':box['x']+box['width']/2,'y':box['y']+box['height']/2}]})
+    await page.locator('#card-zoom[open]').wait_for()
+    await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+    await cdp.detach()
+    await page.locator('#card-zoom-details').tap()
+    detail=page.locator('#sheet-content .rule-explanation strong').filter(has_text=row['effectName'])
+    await detail.wait_for()
+    assert '現在有効' in await detail.inner_text()
+    assert await snapshot()==after
+    await page.wait_for_function('document.querySelector("#sheet[open] .detail")!==null')
+    await page.wait_for_timeout(750)
+    await page.locator('#sheet-close').tap()
    assert await page.locator(f'[data-card-id="{ident}"] [data-legal-mark="特性"]').count()==0
    await restore(after,offline=m in ('EXCITE_DIVE','RECON'));results.append({'offlineAfterAbility':m in ('EXCITE_DIVE','RECON'),'effectId':row['effectId'],'name':row['cardName'],'referencePrint':row['officialCardId'],'status':'PASS','domQuickAbility':m not in ('SKYLINE','FAIRY_ZONE'),'passiveDetails':m in ('SKYLINE','FAIRY_ZONE'),'checks':checks,'saveReloadExact':True})
   for mechanic in ('ENERGY_SWITCH','AKAMATSU','PHANTOM'):
@@ -83,6 +101,60 @@ async def main():
    assert len(p['hand'])==len(bp['hand'])-1+count;assert len(p['deck'])==len(bp['deck'])-count;assert p['active']['energyCards']==bp['active']['energyCards'];assert p['turnLimits']['supporterUsed']
    assert await page.evaluate('Control006.identities(PokecaMobile.port.getSnapshot()).length')==120
    await restore(after);results.append({'effectId':row['effectId'],'status':'PASS','optionalSearchCount':count,'zeroCardinalityStepsSkipped':True,'saveReloadExact':True})
+  async def verify_board_geometry():
+   return await page.evaluate('''()=>{
+    const board=document.querySelector('.table').getBoundingClientRect(),bar=document.querySelector('.actionbar').getBoundingClientRect();
+    const rect=id=>document.querySelector(id).getBoundingClientRect();
+    const hit=(id,r)=>document.querySelector(id).contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));
+    const sides={};
+    for(const side of ['self','opponent']){
+     const active=rect('#'+side+'-active'),lane=rect('#'+side+'-played-card'),prize=rect('#'+side+'-left .prize'),deck=rect('#'+side+'-right .deck'),discard=rect('#'+side+'-right .discard');
+     sides[side]={center:Math.abs(active.x+active.width/2-innerWidth/2)<2,left:prize.right<=active.left,ordered:active.right<lane.left&&lane.width>0&&lane.right<deck.left&&deck.bottom<=discard.top&&Math.abs(deck.left-discard.left)<1,
+      hitTargets:[['-left .prize',prize],['-right .deck',deck],['-right .discard',discard]].every(([sel,r])=>r.height>=23&&hit('#'+side+sel,r)),inside:prize.top>=board.top&&discard.bottom<=bar.top};
+    }
+    return sides;
+   }''')
+  for width,height in [(640,360),(851,393),(915,412)]:
+   await page.set_viewport_size({'width':width,'height':height})
+   geometry=await verify_board_geometry()
+   assert all(all(side.values()) for side in geometry.values()),geometry
+   results.append({'landscape':[width,height],'geometry':geometry})
+  lane=page.locator('#self-played-card')
+  async def verify_played_image(name):
+   art=lane.locator('img:not([hidden])')
+   await art.wait_for()
+   assert await art.get_attribute('alt')==name
+   assert await art.evaluate('async img=>{try{await img.decode()}catch{return false}return img.naturalWidth>0&&getComputedStyle(img).objectFit==="contain"}')
+  for mechanic in ('AKAMATSU','ULTRA_BALL'):
+   row=next(r for r in rows if r['plan']['mechanic']==mechanic)
+   frame=await fixture(row);ident=frame['sourceId']
+   hand=page.locator(f'#self-hand [data-card-id="{ident}"]')
+   await hand.tap()
+   assert await lane.locator('img').count()==0
+   await page.locator('#hand-actions button:enabled').first.tap()
+   await page.locator('#selection-cards').wait_for()
+   await verify_played_image(row['cardName'])
+   assert await page.evaluate('document.querySelector("#sheet").getBoundingClientRect().right < document.querySelector("#self-played-card").getBoundingClientRect().left')
+   if mechanic=='AKAMATSU':
+    await page.wait_for_timeout(1900)
+    assert await lane.locator('img:not([hidden])').count()==1
+    await page.locator('#sheet-close').tap()
+    await lane.locator('img').first.wait_for(state='detached')
+    assert any(card['id']==ident for card in (await snapshot())['players'][0]['hand'])
+    await hand.tap();await page.locator('#hand-actions button:enabled').first.tap()
+    await page.locator('#selection-confirm').tap()
+   else:
+    cards=page.locator('#selection-cards button:enabled')
+    await cards.nth(0).tap();await cards.nth(1).tap()
+    await page.locator('#selection-confirm').tap()
+    await cards.first.tap()
+    await page.locator('#selection-confirm').tap()
+   await page.wait_for_function('id=>PokecaMobile.port.getSnapshot().players[0].discard.some(card=>card.id===id)',arg=ident)
+   await verify_played_image(row['cardName'])
+   await lane.locator('img').first.wait_for(state='detached',timeout=5000)
+   assert await page.evaluate('Control006.identities(PokecaMobile.port.getSnapshot()).length')==120
+   await restore(await snapshot())
+   results.append({'name':row['cardName'],'playedImageWhileSelecting':True,'clearedAfterEffect':True,'saveReloadExact':True})
   assert not errors,errors
   report={'scope':'controlled-reference-effects-not-adopted-prints','url':page.url,'physicalAndroidVerified':False,'cases':results,'javascriptErrors':errors};(ROOT/'artifacts/control-006-browser-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False),flush=True);await browser.close()
 if __name__=='__main__':

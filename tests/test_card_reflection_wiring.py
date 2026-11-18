@@ -28,11 +28,14 @@ class CardReflectionWiringTests(unittest.TestCase):
         self.assertIn("c.isSpecial===true", components)
 
     def test_failed_dispatch_does_not_claim_success(self):
-        failure = UI.split("const result=port.dispatch(playerId,action);", 1)[1].split("selected=null;highlight();", 1)[0]
+        failure = UI.split("const result=dispatchWithPlayedCard(playerId,action);", 1)[1].split("selected=null;highlight();", 1)[0]
         self.assertIn("if(!result.ok){", failure)
         self.assertIn("toast(", failure)
         self.assertIn("return result;", failure)
         self.assertIn("if(result.viewError)toast(", UI)
+        played = UI.split("function dispatchWithPlayedCard(", 1)[1].split("function dispatch(", 1)[0]
+        self.assertIn("const result=port.dispatch(playerId,action,options);", played)
+        self.assertIn("if(result.ok&&source){", played)
 
     def test_restore_uses_port_and_rerender_hook(self):
         self.assertIn("port.restoreSession(await store.read(entry.matchId))", UI)

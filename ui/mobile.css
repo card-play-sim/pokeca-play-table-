@@ -314,3 +314,115 @@ html,body{height:100%;max-height:100%;overflow:hidden}
 .stadium .stadium-copy{display:flex;flex:1;min-width:0;flex-direction:column;align-items:flex-start;gap:1px;overflow:hidden}
 .stadium .stadium-copy #stadium-name{max-width:100%;font-weight:700}
 .stadium #stadium-effect-summary{font-size:9px;line-height:1.2;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#365b48}
+
+/* Center the active card independently of the two zone rails. */
+.side .active-row {
+  --zone-width: clamp(57px, 14%, 75px);
+  --active-half: min(16%, 90px);
+  position: relative;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  isolation: isolate;
+}
+.side .active-row > .active-slot {
+  grid-area: 1 / 1;
+  justify-self: center;
+  width: calc(var(--active-half) + var(--active-half));
+}
+.side .active-row > .zone-rail {
+  position: absolute;
+  inset-block: 0;
+  width: var(--zone-width);
+  flex-wrap: nowrap;
+}
+.side .active-row > .zone-rail:first-child { left: 0; }
+.side .active-row > .zone-rail:last-child {
+  right: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+.side .active-row .zone {
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 0;
+  padding: 1px 3px;
+  gap: 2px;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid #dce4de;
+  touch-action: manipulation;
+}
+.side .active-row .zone.prize {
+  flex: 0 1 auto;
+  min-height: min(100%, 48px);
+  max-width: 70px;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #fff9ed;
+  border-color: #e4d6b4;
+}
+.side .active-row .zone strong { font-size: 12px; line-height: 1.15; }
+.side .active-row .zone > span:not(.prize-map) { font-size: 9px; white-space: nowrap; }
+.side .active-row .zone > .zone-back, .side .active-row .zone > .zone-icon { display: none; }
+.side .active-row .zone .prize-map { width: 100%; justify-content: center; }
+.side .active-row .zone .prize-position { width: 8px; height: 11px; }
+.side .active-row .zone .prize-position img { width: 100%; height: 100%; object-fit: contain; }
+
+.played-card-lane {
+  position: absolute;
+  inset: 2px calc(var(--zone-width) + 4px) 2px calc(50% + var(--active-half) + 4px);
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  pointer-events: none;
+}
+.played-card-lane img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.played-card-lane.settling { animation: played-card-fade 1.8s ease-out both; }
+@keyframes played-card-fade { 0%, 76% { opacity: 1; } 100% { opacity: 0; } }
+#card-zoom-details {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  color: white;
+  background: #182126ed;
+  border-color: #ffffff80;
+}
+#pokemon-actions{gap:12px}
+#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{display:flex;align-items:center;justify-content:flex-start;text-align:left;min-height:60px;width:100%;padding:13px 18px;border-radius:14px;font-size:16px;font-weight:700;line-height:1.35;touch-action:manipulation;transition:background-color .12s,transform .12s,box-shadow .12s}
+#pokemon-actions>button[data-action-kind='ability']{background:#dff4e6;color:#13543a;border:2px solid #70b68d;box-shadow:0 2px 0 #8abda1}
+#pokemon-actions>button[data-action-kind='attack-menu'],#attack-actions>button[data-action-kind='attack']{background:#e0ecff;color:#164a87;border:2px solid #7ba8e8;box-shadow:0 2px 0 #9eb9e4}
+#pokemon-actions>button[data-action-kind]:active,#attack-actions>button[data-action-kind]:active{transform:scale(.985);box-shadow:none;filter:brightness(.94)}
+#pokemon-actions>button[data-action-kind]:focus-visible,#attack-actions>button[data-action-kind]:focus-visible{outline:3px solid #b37b1e;outline-offset:2px}
+#pokemon-actions>button[data-action-kind]:disabled,#attack-actions>button[data-action-kind]:disabled{opacity:.48;box-shadow:none}
+@media(prefers-reduced-motion:reduce){#pokemon-actions>button[data-action-kind],#attack-actions>button[data-action-kind]{transition:none}}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .app {
+    width: 100%;
+    max-width: 940px;
+    grid-template-rows: 32px 19px minmax(0, 1fr) 34px 52px 13px;
+  }
+  .top-actions button { min-height: 30px; }
+  .table { padding: 3px 8px; grid-template-rows: minmax(0, 1fr) 21px minmax(0, 1fr); }
+  .side { gap: 2px; }
+  .opponent { grid-template-rows: 13px minmax(0, .4fr) minmax(49px, 1fr); }
+  .self { grid-template-rows: minmax(49px, 1fr) minmax(0, .4fr) 13px; }
+  .opponent-hand-summary, .side .limits { max-height: 13px; }
+  .stadium { min-height: 0; }
+  .stadium .stadium-art img { max-height: 22px; }
+  .actionbar #end-turn, .actionbar #draw-button, .actionbar #attack-button, .actionbar #ability-button {
+    min-height: 32px;
+  }
+  body:has(#self-played-card.occupied:not(.settling)) #sheet:has(#selection-cards) {
+    inset-inline: 0 auto;
+    margin-left: max(8px, calc((100vw - 940px) / 2 + 8px));
+    width: min(52vw, 470px);
+  }
+  body:has(#self-played-card.occupied:not(.settling)) #sheet:has(#selection-cards)::backdrop {
+    background: #132f3640;
+  }
+  .hand-heading { height: 16px; }
+  .hand { height: 35px; max-height: 35px; }
+  .hand .card { height: 32px; max-height: 32px; min-width: 0; width: auto; flex-basis: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .played-card-lane.settling { animation: none; } }

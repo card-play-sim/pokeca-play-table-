@@ -10,7 +10,7 @@ const source = fs.readFileSync(path.join(__dirname, '..', 'ui', 'mobile.js'), 'u
 test('deck-search UI delegates selection and legality to the engine', () => {
   assert.match(source, /function selectDeckSearch\(/);
   assert.match(source, /port\.getActionExplanation\('you',\{\.\.\.a,selectedCardIds:probeIds\}\)/);
-  assert.match(source, /dispatch\('you',\{\.\.\.a,selectedCardIds:ids\}\)/);
+  assert.match(source, /dispatch\('you',\{\.\.\.action,selectedCardIds:ids\}\)/);
   assert.match(source, /sheet\.addEventListener\('close',cancel\)/);
   assert.match(source, /disabled:!allowed/);
 });
@@ -23,7 +23,8 @@ test('ability targeting uses legal engine options and shared selector', () => {
 });
 test('switch and search choices are dispatched through one guarded path', () => {
   assert.match(source, /function dispatch\(playerId,action\)/);
-  assert.match(source, /const result=port\.dispatch\(playerId,action\)/);
+  assert.match(source, /const result=dispatchWithPlayedCard\(playerId,action\)/);
+  assert.match(source, /function dispatchWithPlayedCard\(playerId,action,options\)[\s\S]*?const result=port\.dispatch\(playerId,action,options\);/);
   assert.match(source, /getHandOptions\('you',id\)/);
   assert.match(source, /resolveOption\(option\)/);
 });
