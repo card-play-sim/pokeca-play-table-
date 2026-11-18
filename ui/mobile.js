@@ -406,11 +406,11 @@ window.PokecaMobileBuild='256';
     for(const ability of declared.filter(a=>a?.type==='DECLARED'&&typeof a.id==='string'&&!options.some(o=>o.kind==='ability'&&o.action?.abilityId===a.id))){
       const action={type:'use_ability',sourceInstanceId:id,abilityId:ability.id};
       const explanation=port.getActionExplanation('you',action);
-      container.append(button('特性 · '+(ability.name||ability.id),()=>{
+      const abilityButton=button('特性 · '+(ability.name||ability.id),()=>{
         const check=port.getActionExplanation('you',action);
         if(!check.ok){toast((check.errors||['使用できません']).join(' / '));return;}
         const result=dispatch('you',action);if(result.ok)closeSheet();
-      },{disabled:!explanation.ok||!!ability.target}));
+      },{disabled:!explanation.ok||!!ability.target});abilityButton.dataset.actionKind='ability';container.append(abilityButton);
       if(ability.target)container.append(button('特性の対象を選ぶ',async()=>{
         // Only offer engine-declared legal candidates; never infer targets from card text.
         const legal=port.getPokemonActions('you',id).filter(o=>o.kind==='ability'&&o.action?.abilityId===ability.id&&o.enabled);
@@ -421,7 +421,7 @@ window.PokecaMobileBuild='256';
     }
     // Keep attacks accessible without making attack descriptions the default tap action.
     const attackOptions=options.filter(o=>o.kind==='attack');
-    if(attackOptions.length)container.append(button('ワザを使う',()=>{openSheet(entry.card.name,'<div class="menu-list" id="attack-actions"></div>');for(const option of attackOptions){const b=button(option.label+attackCostLabel(entry.card,option.action.attackIndex??0),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='attack';b.dataset.attackIndex=String(option.action.attackIndex??0);$('attack-actions').append(b);}},{}));
+    if(attackOptions.length){const attackMenuButton=button('⚔ ワザを使う',()=>{openSheet(entry.card.name,'<div class="menu-list" id="attack-actions"></div>');for(const option of attackOptions){const b=button(option.label+attackCostLabel(entry.card,option.action.attackIndex??0),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='attack';b.dataset.attackIndex=String(option.action.attackIndex??0);$('attack-actions').append(b);}},{});attackMenuButton.dataset.actionKind='attack-menu';container.append(attackMenuButton);}
     const retreatOptions=options.filter(o=>o.kind==='retreat');
     if(retreatOptions.length){const enabled=retreatOptions.filter(o=>o.enabled);container.append(button('にげる',async()=>{
       const ids=await selectCards({title:'にげる先のベンチを選ぶ',min:1,max:1,candidates:enabled.map(o=>({id:o.action.benchInstanceId,name:o.label}))});if(!ids)return;
