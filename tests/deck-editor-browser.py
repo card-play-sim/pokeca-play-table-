@@ -1,4 +1,5 @@
 """Exercise the existing deck pages at a mobile Chromium viewport."""
+import os
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
@@ -64,6 +65,10 @@ def run(base):
 
 
 if __name__ == "__main__":
+    public_url = os.environ.get("POKECA_TEST_URL")
+    if public_url:
+        run(public_url.rstrip("/"))
+        raise SystemExit(0)
     server = ThreadingHTTPServer(("127.0.0.1", 0), SimpleHTTPRequestHandler)
     with server:
         threading.Thread(target=server.serve_forever, daemon=True).start()
