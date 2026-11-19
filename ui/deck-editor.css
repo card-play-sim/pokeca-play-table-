@@ -86,3 +86,8 @@ textarea { width: 100%; }
 #card-preview form { display: flex; justify-content: flex-end; }
 #card-preview img { width: 100%; max-height: 77dvh; object-fit: contain; }
 #card-preview h2 { font-size: .95rem; margin: .35rem 0; }
+
+/* Long-press cards stay inside the app; zoom preserves the entire official print. */
+.deck-builder .builder-card img, .deck-builder .deck-overview img { touch-action: pan-y; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+#card-preview { overscroll-behavior: contain; }
+#card-preview img { object-fit: contain; -webkit-touch-callout: none; }
