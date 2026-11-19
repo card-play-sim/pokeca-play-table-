@@ -105,7 +105,7 @@ def verify_detail(candidate, network):
     image = urljoin(BASE, fields.images[0])
     if image != urljoin(BASE, candidate['candidate']['cardThumbFile']):
         raise ValueError('SEARCH_DETAIL_IMAGE_MISMATCH')
-    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9_-]*/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp)', image, re.I):
+    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/(?:large|legend)/[A-Za-z0-9_-]*/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp|gif)', image, re.I):
         raise ValueError('OFFICIAL_IMAGE_PATH_OR_ID_INVALID')
     sets = set(fields.sets)
     if len(sets) > 1 or not fields.numbers:
@@ -136,9 +136,25 @@ def verify(candidate, network):
     ident = item['cardID']
     name = item['cardNameAltText']
     image = urljoin(BASE, item['cardThumbFile'])
-    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9_-]*/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp)', image, re.I):
+    filename = re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/(?:large|legend)/[A-Za-z0-9_-]*/0*(\d+)_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp|gif)', image, re.I)
+    if image == BASE + '/assets/images/noimage/poke_ura.jpg':
+        raise ValueError('OFFICIAL_SEARCH_PROVIDES_CARD_BACK_ONLY')
+    if not filename:
         raise ValueError('OFFICIAL_IMAGE_PATH_OR_ID_INVALID')
-    mime = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'webp': 'image/webp'}[image.rsplit('.', 1)[1].lower()]
+    shared = {}
+    if str(int(filename[1])) != ident:
+        detail_url = f'{BASE}/card-search/details.php/card/{ident}/regu/XY'
+        detail = network.fetch(detail_url, 'text/html')
+        html = detail.decode('utf-8')
+        identity = CORE.DetailIdentity()
+        identity.feed(html)
+        fields = CORE.DETAIL.Detail()
+        fields.feed(html)
+        if identity.urls != [detail_url] or fields.names != [name] or len(fields.images) != 1 or urljoin(BASE, fields.images[0]) != image:
+            raise ValueError('OFFICIAL_SHARED_IMAGE_ID_UNCONFIRMED')
+        shared = {'sharedImageFileOfficialId': str(int(filename[1])), 'officialDetailUrl': detail_url,
+                  'officialDetailSha256': CORE.digest(detail)}
+    mime = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'webp': 'image/webp', 'gif': 'image/gif'}[image.rsplit('.', 1)[1].lower()]
     body = network.fetch(image, mime)
     with Image.open(io.BytesIO(body)) as decoded:
         decoded.load()
@@ -150,7 +166,7 @@ def verify(candidate, network):
               'verified': True, 'deckPrintAdopted': False, 'namePreviewEligible': False}
     return {'record': record, 'evidence': {'kind': 'OFFICIAL_SEARCH_AND_DECODED_IMAGE',
             'imageSha256': CORE.digest(body), 'imageDimensions': dimensions, 'imageBytes': len(body),
-            'searchEvidence': candidate['searchEvidence'], 'verifiedAt': datetime.now(timezone.utc).isoformat()}}
+            'searchEvidence': candidate['searchEvidence'], 'verifiedAt': datetime.now(timezone.utc).isoformat(), **shared}}
 
 
 def collect(args):

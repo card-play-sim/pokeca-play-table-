@@ -68,7 +68,25 @@ class OfficialImageReconciliation(unittest.TestCase):
     def test_official_image_filename_must_match_id(self):
         row = candidate('1')
         row['candidate']['cardThumbFile'] = candidate('2')['candidate']['cardThumbFile']
-        with self.assertRaisesRegex(ValueError, 'PATH_OR_ID_INVALID'):
+        with self.assertRaisesRegex(ValueError, 'SHARED_IMAGE_ID_UNCONFIRMED'):
+            MODULE.verify(row, type('EmptyDetail', (), {'fetch': lambda self, url, mime: b''})())
+
+    def test_shared_image_requires_matching_official_detail(self):
+        body = io.BytesIO()
+        Image.new('RGB', (162, 226), 'white').save(body, format='JPEG')
+        class SharedNetwork:
+            def fetch(self, url, mime):
+                return html('1', image_ident='2').encode() if mime == 'text/html' else body.getvalue()
+        row = candidate('1')
+        row['candidate']['cardThumbFile'] = candidate('2')['candidate']['cardThumbFile']
+        item = MODULE.verify(row, SharedNetwork())
+        self.assertEqual(item['record']['officialCardId'], '1')
+        self.assertEqual(item['evidence']['sharedImageFileOfficialId'], '2')
+
+    def test_card_back_cannot_count_as_registered_front(self):
+        row = candidate('1')
+        row['candidate']['cardThumbFile'] = '/assets/images/noimage/poke_ura.jpg'
+        with self.assertRaisesRegex(ValueError, 'CARD_BACK_ONLY'):
             MODULE.verify(row, Network(''))
 
     def test_mismatched_image_rejected(self):
