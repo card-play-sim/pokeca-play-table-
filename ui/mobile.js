@@ -1158,7 +1158,7 @@ window.PokecaMobileBuild='256';
         }catch(error){toast('対戦開始不可：'+error.message);}
       };
     }));
-    list.append(button('デッキコード取り込み基盤について',()=>openSheet('Deck Import Adapter','<p>公式取得仕様が未確認のため、取得Providerは未設定です。公式ID対応と60枚検証を行う境界だけを用意しています。未確認の取得やカード生成は行いません。</p>')));
+    list.append(button('公式コード取り込み',()=>{location.href='deck-code-import.html';}));
     Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
   port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){for(const owner of playedCards.keys())clearPlayedCard(owner);if(view().fixedDeckPractice)aiAutoMode=false;selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
@@ -1176,17 +1176,29 @@ window.PokecaMobileBuild='256';
     console.error('Official image registry load failed',error);
   });
   let restored=false,recoveryWarning='';
-  (async()=>{
+  const sessionReady=(async()=>{
   try{store=PokecaStorage.createIndexedMatchStore(window.localStorage);const saves=await store.list();if(saves.length){const valid=saves.filter(entry=>entry.valid);if(!valid.length)throw Error('保存データを確認できません（既存データは削除しません）');let failures=[];for(const entry of valid){try{const result=port.restoreSession(await store.read(entry.matchId));if(!result.ok)throw Error(result.errors.join(' / '));restored=true;break;}catch(error){failures.push(entry.matchId+': '+String(error?.message||error));}}if(!restored)throw Error('保存データの再開に失敗：'+failures.join(' / '));}}
   catch(error){recoveryWarning=error.message;storageUnavailable=true;}
   if(!restored){const loaded=port.loadGame(game);if(!loaded.ok)toast(loaded.errors.join(' / '));}
   persistenceReady=true;
   if(restored&&view().fixedDeckPractice)aiAutoMode=false;
   if(view().referenceEffectValidation){try{window.PokecaReferenceValidationStop=JSON.parse(localStorage.getItem('pokeca-reference-stop:'+port.getSessionId())||'null');}catch{}if(referenceStopped()){aiAutoMode=false;render();}}
-  if(restored&&aiAutoMode&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
+  if(restored&&location.hash==='#battle'&&aiAutoMode&&view().turnPlayer==='ai'&&view().status==='active')void runOpponentPracticeTurn();
   if(recoveryWarning){$('save-status').textContent=storageUnavailable?'端末保存不可・JSON書出し':'保存の確認が必要';$('save-status').classList.add('save-error');toast('自動再開できませんでした：'+recoveryWarning+'。必要なら再開用JSONを書き出してください');}
   else{saveSafely();if(restored)toast('前回の対戦を再開しました');}
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveSafely();});
   window.addEventListener('pagehide',saveSafely);
   })();
+  window.PokecaMobile.startSavedDeck = async (manifest) => {
+    await sessionReady;
+    if(aiPracticeRunning)throw Error('AI操作が完了するまで待ってください');
+    chooseReferenceOpening(manifest,0);
+  };
+  window.PokecaMobile.returnToDecks = async () => {
+    await sessionReady;
+    if(aiPracticeRunning)throw Error('AI操作が完了するまで待ってください');
+    if(!await protectBeforeNewMatch())throw Error('対戦を保存できませんでした');
+    closeSheet();
+  };
+  window.PokecaMobile.resumeBattle = () => { if(persistenceReady)resumeReferenceAI(); };
 })();

@@ -13,7 +13,7 @@ async def main():
    context=await browser.new_context(**device,service_workers='block');page=await context.new_page();errors=[]
    page.on('pageerror',lambda e:errors.append(str(e)))
    await page.add_init_script(f'let aiTestSeed={trial};Math.random=()=>{{aiTestSeed=(Math.imul(aiTestSeed,1664525)+1013904223)>>>0;return aiTestSeed/4294967296;}};')
-   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
+   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
    await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
    await page.locator('#menu-open').tap();await page.get_by_text('AI自動応答：オン（タップでオフ）',exact=True).tap()
    await page.evaluate('seed=>{let first=true,state=20261108;Math.random=()=>{if(first){first=false;return seed/4294967296;}state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}',123+trial-1)

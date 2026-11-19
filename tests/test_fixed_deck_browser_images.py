@@ -45,7 +45,7 @@ async def main():
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.on('requestfailed', lambda request: failures.append({'url': request.url, 'reason': request.failure}))
         page.on('response', lambda response: responses.update({response.url: {'status': response.status, 'contentType': response.headers.get('content-type', '')}}))
-        await page.goto(os.environ.get('POKECA_TEST_URL', 'http://127.0.0.1:8765/'), wait_until='domcontentloaded')
+        await page.goto(os.environ.get('POKECA_TEST_URL', 'http://127.0.0.1:8765/')+'#battle', wait_until='domcontentloaded')
         await page.wait_for_function('window.PokecaMobile && PokecaImageRegistryStatus.state==="ready" && document.getElementById("save-status").textContent==="自動保存済"')
         before = await page.evaluate('PokecaMobile.port.getSnapshot()')
         await page.locator('#menu-open').click()

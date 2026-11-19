@@ -14,7 +14,7 @@ async def main():
   page=await browser.new_page(**device)
   page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('response',lambda r:responses.update({r.url:{'status':r.status,'type':r.headers.get('content-type','')}}))
-  await page.goto('http://127.0.0.1:8765/',wait_until='domcontentloaded')
+  await page.goto('http://127.0.0.1:8765/#battle',wait_until='domcontentloaded')
   await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
   before=await page.evaluate('PokecaMobile.port.getSnapshot()')
   async def inspect(locator,zone):

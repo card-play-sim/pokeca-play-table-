@@ -3,12 +3,13 @@ import os
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
+from test_fixed_deck_browser_images import session_ca_args
 from playwright.sync_api import expect, sync_playwright
 
 
 def run(base):
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch()
+        browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM_EXECUTABLE"), args=session_ca_args())
         page = browser.new_page(
             viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True
         )
@@ -57,10 +58,44 @@ def run(base):
         page.get_by_role("button", name="基本超エネルギーを追加").click()
         expect(page.locator("#total")).to_have_text("60 / 60枚")
         page.locator("#save").click()
-        page.reload()
+        page.locator(".deck-home-card").filter(has_text=code).get_by_role("link", name="編集").click()
         expect(page.locator("#total")).to_have_text("60 / 60枚")
         expect(page.locator("#message")).to_have_text("60枚・同名枚数の基本チェック完了")
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.goto(base + "/")
+        expect(page.get_by_role("heading", name="デッキ", exact=True)).to_be_visible()
+        expect(page.locator("#app")).to_be_hidden()
+        page.get_by_role("link", name="新規デッキ").click()
+        page.locator("#deck-name").fill("選択デッキ")
+        for card_id, card_name, count in (
+            ("45152", "シェイミ", 4), ("49463", "基本超エネルギー", 56)
+        ):
+            page.locator("#query").fill(card_id)
+            button = page.get_by_role("button",name=card_name + "を追加",exact=True)
+            for _ in range(count):
+                button.click()
+        page.locator("#deck-cover").select_option("45152")
+        page.locator("#save").click()
+        tile = page.locator(".deck-home-card").filter(has_text="選択デッキ")
+        expect(tile.locator("img")).to_have_attribute("alt", "シェイミ")
+        page.locator("#deck-home-search").fill("シェイミ")
+        expect(page.locator(".deck-home-card")).to_have_count(1)
+        tile.get_by_role("button",name="このデッキで対戦").click()
+        expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
+        page.get_by_role("button",name="対戦準備へ").click()
+        page.locator("[data-opening-active]:enabled").first.click()
+        page.locator("#opening-start").click()
+        expect(page.locator("#save-status")).to_have_text("自動保存済")
+        assert page.evaluate("PokecaMobile.port.getSnapshot().referenceEffectValidation.sourceDeckIds[0]") not in ("A","B")
+        expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
+        match_id = page.evaluate("PokecaMobile.port.getSessionId()")
+        page.get_by_role("link", name="デッキ一覧").click()
+        expect(tile).to_be_visible()
+        page.reload()
+        page.get_by_role("link", name="対戦・再開").click()
+        expect(page.locator("#save-status")).to_have_text("自動保存済")
+        assert page.evaluate("PokecaMobile.port.getSessionId()") == match_id
+        expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
         assert not errors, errors
         browser.close()
         print("Mobile Chromium deck search, limits, save/reload, duplication and import editing PASS")

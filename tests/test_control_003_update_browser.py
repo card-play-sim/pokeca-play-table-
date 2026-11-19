@@ -53,7 +53,7 @@ async def main():
     async def launch(offline=False,recovery=False):
      context=await p.chromium.launch_persistent_context(profile,executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args(),**device)
      await context.set_offline(offline);page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-     await page.goto(base+('update.html?build='+BUILD if recovery else ''),wait_until='domcontentloaded');return context,page
+     await page.goto(base+('update.html?build='+BUILD if recovery else '#battle'),wait_until='domcontentloaded');return context,page
     async def ready(page,build):
      try:
       await page.wait_for_function('build=>window.PokecaMobile&&PokecaUpdateStatus?.state==="ready"&&PokecaUpdateStatus.controllerBuild===build&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',arg=build,timeout=60000)

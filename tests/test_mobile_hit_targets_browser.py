@@ -12,7 +12,7 @@ async def main():
   context=await browser.new_context(**device,service_workers='block')
   page=await context.new_page()
   try:
-   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
+   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
    await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"')
    await page.get_by_role('button',name='固定デッキで検証用AI対戦を開始',exact=True).tap()
    await page.locator('#reference-match-choices button').first.tap()

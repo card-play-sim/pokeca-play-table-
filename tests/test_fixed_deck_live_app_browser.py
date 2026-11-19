@@ -34,7 +34,7 @@ async def main():
   async def end_turn():
    old=(await snapshot())['turnPlayer'];await page.locator('#end-turn').tap();await page.locator('#confirm-ok').tap()
    await page.wait_for_function('old=>PokecaMobile.port.getSnapshot().turnPlayer!==old',arg=old);await page.wait_for_timeout(750)
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
+  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
   await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"');await saved()
   await page.evaluate('''()=>{let seed=6;Math.random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}''')
   await page.locator('#menu-open').tap();await page.get_by_text('固定2デッキで操作練習（公式効果未接続）',exact=True).tap()

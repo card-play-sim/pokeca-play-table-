@@ -23,7 +23,7 @@
     if(active&&Number(active.build)>=Number(build)&&active.files?.['./ui/mobile.js?build='+active.build]){
      window.PokecaRecoveryResult={build:active.build,cacheName:active.cacheName,savedDataTouched:false};
      progress.textContent='v'+active.build+'を受信しました。保存した対戦を保持してアプリへ戻ります。';
-     location.replace('./?updated='+encodeURIComponent(active.build));return;
+     location.replace('./?updated='+encodeURIComponent(active.build)+'#battle');return;
     }
     await delay(500);
    }

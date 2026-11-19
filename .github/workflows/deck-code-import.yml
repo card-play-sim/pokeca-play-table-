@@ -5,6 +5,9 @@ on:
       - 'ui/deck-code-import.js'
       - 'ui/deck-import-page.js'
       - 'ui/deck-builder.js'
+      - 'ui/saved-decks.js'
+      - 'ui/deck-home.*'
+      - 'index.html'
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'
@@ -14,11 +17,14 @@ on:
       - 'tests/imported-deck-match.test.cjs'
       - '.github/workflows/deck-code-import.yml'
   push:
-    branches: [feature/deck-code-import-001]
+    branches: [feature/deck-code-import-001, feature/deck-ui-001]
     paths:
       - 'ui/deck-code-import.js'
       - 'ui/deck-import-page.js'
       - 'ui/deck-builder.js'
+      - 'ui/saved-decks.js'
+      - 'ui/deck-home.*'
+      - 'index.html'
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'

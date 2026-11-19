@@ -1,16 +1,15 @@
 (() => {
 'use strict';
-const KEY = 'pokeca.deck-builder.v1';
+const savedDecks = window.PokecaSavedDecks;
+const KEY = savedDecks.key;
+const params = new URLSearchParams(location.search);
+const fromList = params.has('new') || params.has('deck') || params.has('import');
 const api = window.PokecaDeckCodeImport;
 const $ = id => document.getElementById(id);
 const say = message => $('message').textContent = message;
 const fresh = () => ({id:crypto.randomUUID(),name:'新しいデッキ',cards:{}});
 const copy = deck => JSON.parse(JSON.stringify(deck));
-const rows = deck => Object.entries(deck.cards);
-const blocked = deck => deck.blocked || [];
-const total = deck => rows(deck).reduce((n,[,count]) => n+count,0) +
-  blocked(deck).reduce((n,row) => n+row.count,0);
-const basicEnergy = card => card.category === 'energy' && /^基本.+エネルギー$/.test(card.name);
+const {rows,blocked,total,basicEnergy,cover} = savedDecks;
 const trainer = new Set(['trainer','goods','item','tool','support','supporter','stadium']);
 let cards = new Map();
 let current = fresh();
@@ -19,9 +18,7 @@ let store = {decks:[]};
 let storageReady = true;
 
 try {
-  const saved = JSON.parse(localStorage.getItem(KEY) || '{"decks":[]}');
-  if (!Array.isArray(saved.decks)) throw Error('保存形式が不正です');
-  store = saved;
+  store = savedDecks.read();
 } catch {
   storageReady = false;
 }
@@ -64,7 +61,7 @@ function drawSaved() {
   for (const deck of store.decks) {
     const button = document.createElement('button');
     button.className = 'saved-deck';
-    addImage(button, rows(deck).map(([id]) => cards.get(id)).find(Boolean));
+    addImage(button, cover(deck,cards));
     const label = document.createElement('span');
     label.textContent = deck.name + ' · ' + total(deck) + '枚';
     button.append(label);
@@ -76,6 +73,14 @@ function drawSaved() {
 
 function drawDeck() {
   $('deck-name').value = current.name;
+  const select = $('deck-cover');
+  select.replaceChildren(new Option('自動', ''));
+  for (const [id] of rows(current)) {
+    const card = cards.get(id);
+    if (card) select.add(new Option(card.name + ' #' + id,id));
+  }
+  select.value = current.coverCardId || '';
+  if (!select.value) select.value = '';
   $('total').textContent = total(current) + ' / 60枚';
   const grid = $('deck-list');
   grid.replaceChildren();
@@ -146,12 +151,13 @@ function drawCards() {
   }
 }
 
-function persist(decks, message) {
+function persist(decks, message, returnToList = false) {
   try {
     if (!storageReady) throw Error('保存形式が不正です');
     const next = {...store,decks};
     localStorage.setItem(KEY,JSON.stringify(next));
     store = next;
+    if (returnToList) { location.href = './'; return; }
     drawSaved();
     say(message);
   } catch {
@@ -160,7 +166,14 @@ function persist(decks, message) {
 }
 
 function loadImport() {
-  const code = new URLSearchParams(location.search).get('import');
+  const deckId = params.get('deck');
+  if (deckId) {
+    const deck = store.decks.find(entry => entry.id === deckId);
+    if (!deck) throw Error('保存したデッキが見つかりません。');
+    current = copy(deck);
+    return;
+  }
+  const code = params.get('import');
   if (!code) return;
   const imported = api.readImports(localStorage).find(deck => deck.deckCode === code);
   if (!imported) throw Error('取り込んだレシピが見つかりません。');
@@ -177,6 +190,7 @@ function loadImport() {
   current = deck;
 }
 
+$('deck-cover').onchange = event => { current.coverCardId = event.target.value; };
 $('deck-name').oninput = event => current.name = event.target.value;
 $('query').oninput = $('category').onchange = () => { limit = 48; drawCards(); };
 $('more').onclick = () => { limit += 48; drawCards(); };
@@ -187,7 +201,7 @@ $('save').onclick = () => {
   const decks = [...store.decks];
   const index = decks.findIndex(deck => deck.id === current.id);
   decks[index < 0 ? decks.length : index] = copy(current);
-  persist(decks,'保存しました。' + deckStatus());
+  persist(decks,'保存しました。' + deckStatus(),fromList);
 };
 $('duplicate').onclick = () => {
   current = copy(current);
@@ -198,7 +212,7 @@ $('duplicate').onclick = () => {
 };
 $('remove').onclick = () => {
   if (!confirm('保存デッキを削除しますか？')) return;
-  persist(store.decks.filter(deck => deck.id !== current.id),'保存デッキを削除しました。');
+  persist(store.decks.filter(deck => deck.id !== current.id),'保存デッキを削除しました。',fromList);
 };
 $('export').onclick = () => {
   const blob = new Blob([JSON.stringify({schemaVersion:1,deck:current},null,2)],{type:'application/json'});
@@ -212,8 +226,8 @@ $('export').onclick = () => {
 
 drawDeck();
 $('catalog-info').textContent = 'カード台帳を読み込んでいます…';
-api.loadCatalog().then(catalog => {
-  cards = catalog;
+savedDecks.loadCatalog().then(catalog => {
+  cards = catalog.cards;
   drawCards();
   loadImport();
   drawDeck();

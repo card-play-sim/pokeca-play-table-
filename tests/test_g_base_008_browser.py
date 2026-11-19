@@ -14,7 +14,7 @@ async def main():
   device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   context=await browser.new_context(**device,service_workers='block');page=await context.new_page();errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/'),wait_until='domcontentloaded')
+  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
   await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"')
   async def snapshot():return await page.evaluate('PokecaMobile.port.getSnapshot()')
   def identities(s):
