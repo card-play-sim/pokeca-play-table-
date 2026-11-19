@@ -185,6 +185,11 @@ def run(base):
         page.locator("#opening-start").click()
         # Opponent mulligans can legitimately open a mandatory bonus-draw choice.
         # Resolve it through the same visible option a player uses before leaving.
+        page.wait_for_function("""() => {
+            const selected=JSON.parse(localStorage.getItem('pokeca.deck-builder.v1')).decks
+                .find(deck=>deck.name==='選択デッキ');
+            return PokecaMobile.port.getSnapshot().referenceEffectValidation?.sourceDeckIds?.[0]===selected.id;
+        }""")
         mulligan_choices = 0
         while page.evaluate("""() => {
             const choice=PokecaMobile.port.getSnapshot().pendingReferenceChoice;
