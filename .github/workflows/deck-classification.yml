@@ -2,11 +2,11 @@ name: Official H I J deck classification
 on:
   push:
     branches: [work/deck-work-002-hij]
-    paths: [tools/classify-deck-catalog.py, .github/workflows/deck-classification.yml]
+    paths: [tools/classify-deck-catalog.py, tools/classify-deck-search.py, .github/workflows/deck-classification.yml]
   workflow_dispatch:
 concurrency:
   group: deck-classification-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -25,7 +25,7 @@ jobs:
       - name: Classify official headings, identity and ACE SPEC rules
         env:
           DECK_CLASSIFICATION_BRANCH: work/deck-work-002-hij
-        run: python3 tools/classify-deck-catalog.py
+        run: python3 tools/classify-deck-search.py
       - name: Save classified catalog without touching the image registry
         run: |
           git add data/deck-building
