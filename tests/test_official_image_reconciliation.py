@@ -4,6 +4,8 @@ import io
 from PIL import Image
 from pathlib import Path
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('reconcile', ROOT / 'tools/reconcile-official-image-search.py')
@@ -88,6 +90,20 @@ class OfficialImageReconciliation(unittest.TestCase):
         row['candidate']['cardThumbFile'] = '/assets/images/noimage/poke_ura.jpg'
         with self.assertRaisesRegex(ValueError, 'CARD_BACK_ONLY'):
             MODULE.verify(row, Network(''))
+
+    def test_checkpoint_never_pushes_main(self):
+        args = SimpleNamespace(branch='main', output=Path('/tmp'))
+        with patch.object(MODULE.subprocess, 'check_output', return_value='main\n'), patch.object(MODULE.subprocess, 'run') as mutation:
+            with self.assertRaisesRegex(ValueError, 'MATCHING_WORK_BRANCH'):
+                MODULE.checkpoint(args)
+            mutation.assert_not_called()
+
+    def test_checkpoint_rejects_a_different_checkout_branch(self):
+        args = SimpleNamespace(branch='work/images', output=Path('/tmp'))
+        with patch.object(MODULE.subprocess, 'check_output', return_value='work/other\n'), patch.object(MODULE.subprocess, 'run') as mutation:
+            with self.assertRaisesRegex(ValueError, 'MATCHING_WORK_BRANCH'):
+                MODULE.checkpoint(args)
+            mutation.assert_not_called()
 
     def test_mismatched_image_rejected(self):
         with self.assertRaisesRegex(ValueError, 'SEARCH_DETAIL_IMAGE_MISMATCH'):

@@ -8,6 +8,12 @@ on:
       - ui/official-image-validation.js
       - tests/test_official_image_reconciliation.py
       - .github/workflows/reconcile-official-images.yml
+  pull_request:
+    paths:
+      - tools/reconcile-official-image-search.py
+      - tools/stage-reconciled-image-search.py
+      - tests/test_official_image_reconciliation.py
+      - .github/workflows/reconcile-official-images.yml
   workflow_dispatch:
 concurrency:
   group: official-image-completion-${{ github.ref }}
@@ -15,7 +21,18 @@ concurrency:
 permissions:
   contents: write
 jobs:
+  verify-id-and-write-guards:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: pip install Pillow==12.0.0
+      - run: python3 -m unittest discover -s tests -p test_official_image_reconciliation.py -v
   discover-and-register:
+    if: github.ref_name == 'work/official-image-completion-20261120'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
