@@ -1,0 +1,32 @@
+name: Deck search fix release rebuild
+on:
+  push:
+    branches:
+      - fix/deck-search-image-preview
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/deck-search-image-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate deck editor JavaScript
+        run: node --check ui/deck-builder.js && node --check ui/deck-code-import.js && node --check ui/saved-decks.js
+      - name: Regenerate and verify release manifest
+        run: node scripts/build-pwa-release.cjs && node scripts/build-pwa-release.cjs --check
+      - name: Commit generated worker only
+        run: |
+          if ! git diff --quiet -- sw.js; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add sw.js
+            git commit -m "build: regenerate verified PWA release after deck search fixes"
+            git push
+          fi
