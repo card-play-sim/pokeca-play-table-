@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>デッキ構築 | PLAY TABLE</title>
+<link rel="stylesheet" href="ui/deck-editor.css">
+</head>
+<body>
+<header><a href="./">← 対戦盤面</a><h1>デッキ構築</h1><a href="deck-code-import.html">公式コード取り込み</a></header>
+<main class="editor">
+<section class="collection">
+  <div class="heading"><h2>保存したデッキ</h2><button id="new">新規デッキ</button></div>
+  <div class="saved-grid" id="saved"></div>
+</section>
+<section class="editing">
+  <div class="heading"><h2>編集中のデッキ</h2><strong id="total">0 / 60枚</strong></div>
+  <label for="deck-name">デッキ名</label><input id="deck-name" maxlength="60">
+  <div class="toolbar">
+    <button id="save">保存</button>
+    <details class="menu"><summary>その他の操作</summary>
+      <div class="toolbar"><button id="duplicate">複製</button><button id="export">JSON出力</button><button id="remove">削除</button></div>
+    </details>
+  </div>
+  <p id="message" role="status"></p>
+  <div id="deck-list" class="deck-grid"></div>
+</section>
+<section class="search">
+  <h2>カードを追加</h2>
+  <div class="toolbar">
+    <input id="query" type="search" placeholder="カード名・IDで検索" aria-label="カード名・IDで検索">
+    <select id="category" aria-label="カード分類">
+      <option value="">すべて</option><option value="pokemon">ポケモン</option>
+      <option value="trainer">トレーナーズ</option><option value="energy">エネルギー</option>
+    </select>
+  </div>
+  <p id="catalog-info" role="status"></p>
+  <div class="deck-grid" id="cards"></div>
+  <button id="more" hidden>さらに表示</button>
+</section>
+</main>
+<script src="ui/deck-code-import.js" defer></script>
+<script src="ui/deck-builder.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+:root { font-family: system-ui, sans-serif; color: #eaf5f3; background: #10262b; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; background: #17383e; padding: .8rem 1rem; }
+h1 { font-size: 1.15rem; margin: 0; }
+h2 { font-size: 1rem; margin: 0 0 .5rem; }
+a { color: #a9eee1; }
+main { max-width: 1250px; margin: auto; padding: .75rem; display: grid; gap: .75rem; }
+.editor { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "collection collection" "search editing"; align-items: start; }
+.collection { grid-area: collection; }
+.search { grid-area: search; }
+.editing { grid-area: editing; }
+.import-page { max-width: 800px; }
+section { min-width: 0; padding: .85rem; border-radius: .8rem; background: #1a3439; }
+.heading, .toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.heading { justify-content: space-between; }
+.toolbar { margin: .5rem 0; }
+input, select, textarea, button, summary { font: inherit; min-height: 44px; }
+input, select, textarea, button { max-width: 100%; border-radius: .55rem; border: 1px solid #60878b; padding: .45rem .6rem; color: inherit; background: #25464b; }
+button, summary { cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+summary { padding: .65rem .25rem; }
+label { display: block; margin: .6rem 0 .25rem; }
+textarea { width: 100%; }
+.deck-grid, .saved-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(103px, 1fr)); gap: .55rem; }
+.saved-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.saved-deck { display: flex; text-align: left; align-items: center; gap: .45rem; overflow-wrap: anywhere; }
+.saved-deck img { width: 36px; }
+.card { display: flex; flex-direction: column; gap: .3rem; background: #25474b; padding: .45rem; border-radius: .55rem; min-width: 0; }
+.card img { width: 100%; aspect-ratio: .715; object-fit: contain; }
+.card strong, .card small { overflow-wrap: anywhere; font-size: .78rem; }
+.card small { color: #c7dcd9; }
+.card-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .25rem; }
+.card-actions button:last-child { grid-column: 1 / -1; }
+#status, #message { min-height: 1.3em; color: #ffe0ad; }
+#more { margin-top: .6rem; }
+@media (max-width: 700px) {
+  .editor { grid-template-columns: minmax(0,1fr); grid-template-areas: "collection" "editing" "search"; }
+}

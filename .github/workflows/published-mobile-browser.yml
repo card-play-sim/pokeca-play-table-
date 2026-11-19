@@ -5,6 +5,9 @@ on:
     paths:
       - 'ui/**'
       - 'index.html'
+      - 'deck-builder.html'
+      - 'deck-code-import.html'
+      - 'tests/deck-editor-browser.py'
       - 'update.html'
       - 'ui/pwa-recovery.js'
       - 'sw.js'
@@ -57,6 +60,10 @@ jobs:
           RELEASE_VERIFY_ATTEMPTS: '12'
           RELEASE_VERIFY_INTERVAL_MS: '30000'
         run: node scripts/verify-published-pwa.cjs
+      - name: Exercise published deck editing in mobile Chromium
+        env:
+          POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
+        run: python tests/deck-editor-browser.py
       - name: Create persistent browser evidence directory
         run: mkdir -p artifacts
       - name: Upgrade installed v246 from actual published assets and cold restart
