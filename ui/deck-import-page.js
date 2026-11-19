@@ -120,4 +120,7 @@ $('save').onclick = () => save(false);
 $('edit').onclick = () => save(true);
 $('open').href = recipeUrl();
 try { history(); } catch { status('取り込み履歴を読み込めませんでした。'); }
+for (const id of ['code', 'lookup-submit', 'html-file', 'recipe', 'import']) {
+  $(id).disabled = false;
+}
 })();
