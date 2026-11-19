@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'ui/deck-code-import.js'
+      - 'ui/deck-import-page.js'
+      - 'ui/deck-builder.js'
+      - 'ui/deck-editor.css'
+      - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
@@ -13,6 +17,10 @@ on:
     branches: [feature/deck-code-import-001]
     paths:
       - 'ui/deck-code-import.js'
+      - 'ui/deck-import-page.js'
+      - 'ui/deck-builder.js'
+      - 'ui/deck-editor.css'
+      - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
@@ -29,4 +37,10 @@ jobs:
           node-version: '22'
       - run: node tests/deck-code-import.test.cjs
       - run: node tests/imported-deck-match.test.cjs
-      - run: node -e "const fs=require('fs');for(const file of ['deck-builder.html','deck-code-import.html']){const html=fs.readFileSync(file,'utf8');const js=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]).join('\\n');new (require('vm').Script)(js,{filename:file});console.log(file,'inline JavaScript syntax PASS')}"
+      - run: node --check ui/deck-builder.js && node --check ui/deck-import-page.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.51.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/deck-editor-browser.py

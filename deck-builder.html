@@ -1,8 +1,45 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>デッキ構築 | PLAY TABLE</title><style>
-:root{font-family:system-ui,sans-serif;color:#eaf5f3;background:#10262b}*{box-sizing:border-box}body{margin:0}header{position:sticky;top:0;background:#17383e;padding:12px;z-index:2;display:flex;align-items:center;gap:12px}a{color:#a9eee1}h1{font-size:18px;margin:0}main{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,360px);gap:12px;padding:12px}section{background:#1a3439;border-radius:14px;padding:12px}input,select,button{font:inherit;border-radius:9px;padding:9px;border:1px solid #4e7277;background:#25464b;color:white}button{cursor:pointer}button:disabled{opacity:.4}input{max-width:100%}.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;max-height:72vh;overflow:auto}.card{background:#25474b;padding:7px;border-radius:10px;min-width:0}.card img{width:100%;aspect-ratio:0.715;object-fit:contain}.card strong{display:block;font-size:12px;overflow-wrap:anywhere}.card button{width:100%;margin-top:5px}.deckrow{display:flex;justify-content:space-between;gap:6px;align-items:center;border-bottom:1px solid #436067;padding:7px 0}.deckrow span{flex:1}.count{font-size:24px;font-weight:700}.warning{color:#ffd594}small{color:#c3d7d6}#message{min-height:1.5em} @media(max-width:700px){main{display:block}section{margin-bottom:12px}.cards{max-height:55vh}header{flex-wrap:wrap}}</style></head><body>
-<header><a href="./">← 対戦盤面</a><h1>デッキ構築</h1><a href="deck-code-import.html">＋ 公式コード取り込み</a></header>
-<main><section><h2>カードを選ぶ</h2><div class="toolbar"><input id="query" type="search" placeholder="カード名で検索"><select id="category"><option value="">すべて</option><option value="pokemon">ポケモン</option><option value="trainer">トレーナーズ</option><option value="energy">エネルギー</option></select></div><small id="catalog-info"></small><div class="cards" id="cards"></div></section>
-<section><h2>編集中のデッキ</h2><input id="deck-name" maxlength="60" value="新しいデッキ" aria-label="デッキ名"><p><span class="count" id="total">0</span> / 60枚</p><div id="message" role="status"></div><div class="toolbar"><button id="save">保存</button><button id="new">新規</button><button id="duplicate">複製</button><button id="export">JSON出力</button></div><div class="toolbar"><select id="saved" aria-label="保存したデッキ"></select><button id="load">開く</button><button id="remove">削除</button></div><div id="deck-list"></div><p><small>この画面はデッキ編集・保存の基盤です。対戦への受け渡しは未接続です。カード画像は登録済みの参照URLを使用します。</small></p></section></main>
-<script src="ui/verified-card-art.js"></script><script>
-(()=>{'use strict';const KEY='pokeca.deck-builder.v1',IMPORT_KEY='pokeca.official-deck-imports.v1';const $=id=>document.getElementById(id);const verified=window.PokecaVerifiedArt||{};let catalog=Object.entries(verified).filter(([id,c])=>c&&c.name&&c.sourceUrl).map(([id,c])=>({id,name:c.name,url:c.sourceUrl,category:'unknown'}));let byId=new Map(catalog.map(c=>[c.id,c]));let store={decks:[]};try{const parsed=JSON.parse(localStorage.getItem(KEY));if(parsed&&Array.isArray(parsed.decks))store=parsed}catch{}let current={id:crypto.randomUUID(),name:'新しいデッキ',cards:{}};const persist=()=>localStorage.setItem(KEY,JSON.stringify(store));const total=()=>Object.values(current.cards).reduce((a,b)=>a+b,0);const say=s=>$('message').textContent=s;function legal(){const n=total();if(n!==60)return '60枚にしてください（現在'+n+'枚）';const names={};for(const [id,count] of Object.entries(current.cards)){const c=byId.get(id);if(!c)return '参照できないカードIDがあります';names[c.name]=(names[c.name]||0)+count;if(names[c.name]>4&&!c.name.startsWith('基本'))return c.name+'が4枚を超えています'}return '60枚・同名枚数の基本検査OK（その他の公式ルールは未検証）'}function drawDeck(){ $('deck-name').value=current.name;$('total').textContent=total();$('deck-list').replaceChildren();for(const [id,count] of Object.entries(current.cards)){const c=byId.get(id);const row=document.createElement('div');row.className='deckrow';const name=document.createElement('span');name.textContent=(c?.name||'不明なカード')+' ×'+count;const minus=document.createElement('button');minus.textContent='−';minus.onclick=()=>change(id,-1);const plus=document.createElement('button');plus.textContent='＋';plus.onclick=()=>change(id,1);row.append(name,minus,plus);$('deck-list').append(row)}say(legal());drawSaved()}function change(id,delta){const c=byId.get(id);if(!c)return;const nameCount=Object.entries(current.cards).reduce((n,[key,count])=>n+(byId.get(key)?.name===c.name?count:0),0);if(delta>0&&(total()>=60||(!c.name.startsWith('基本')&&nameCount>=4)))return say('60枚上限または同名4枚制限です');const next=(current.cards[id]||0)+delta;if(next<=0)delete current.cards[id];else current.cards[id]=next;drawDeck()}function drawCards(){const q=$('query').value.trim().toLowerCase(),category=$('category').value;const matches=catalog.filter(c=>c.name.toLowerCase().includes(q)&&(!category||c.category===category));$('catalog-info').textContent='参照可能 '+catalog.length+'種類 / 検索結果 '+matches.length+'種類（分類未連結）';$('cards').replaceChildren();for(const c of matches.slice(0,120)){const div=document.createElement('div');div.className='card';const img=document.createElement('img');img.src=c.url;img.alt=c.name;img.loading='lazy';img.referrerPolicy='no-referrer';const name=document.createElement('strong');name.textContent=c.name;const btn=document.createElement('button');btn.textContent='＋ 追加';btn.onclick=()=>change(c.id,1);div.append(img,name,btn);$('cards').append(div)}}function drawSaved(){const s=$('saved'),chosen=s.value;s.replaceChildren();for(const d of store.decks){const o=document.createElement('option');o.value=d.id;o.textContent=d.name+' ('+Object.values(d.cards).reduce((a,b)=>a+b,0)+'枚)';s.append(o)}if(store.decks.some(d=>d.id===chosen))s.value=chosen}$('deck-name').oninput=e=>current.name=e.target.value;$('query').oninput=drawCards;$('category').onchange=drawCards;$('save').onclick=()=>{current.name=$('deck-name').value.trim()||'名称未設定';const copy=JSON.parse(JSON.stringify(current));const index=store.decks.findIndex(d=>d.id===current.id);if(index<0)store.decks.push(copy);else store.decks[index]=copy;try{persist();drawSaved();say('保存しました。'+legal())}catch{say('保存に失敗しました。端末の空き容量をご確認ください')}};$('new').onclick=()=>{current={id:crypto.randomUUID(),name:'新しいデッキ',cards:{}};drawDeck()};$('duplicate').onclick=()=>{current=JSON.parse(JSON.stringify(current));current.id=crypto.randomUUID();current.name+=' コピー';drawDeck()};$('load').onclick=()=>{const d=store.decks.find(x=>x.id===$('saved').value);if(d){current=JSON.parse(JSON.stringify(d));drawDeck()}};$('remove').onclick=()=>{const id=$('saved').value;if(!id||!confirm('保存デッキを削除しますか？'))return;store.decks=store.decks.filter(d=>d.id!==id);persist();drawSaved()};$('export').onclick=()=>{const blob=new Blob([JSON.stringify({schemaVersion:1,deck:current},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='pokeca-deck.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};function importSaved(){try{const source=JSON.parse(localStorage.getItem(IMPORT_KEY)||'[]');if(!Array.isArray(source))return;let added=0;for(const d of source){if(!d||d.total!==60||!Array.isArray(d.cards))continue;const cards={};let complete=true;for(const row of d.cards){const hits=catalog.filter(c=>c.name===row.name&&(!row.officialCardId||c.id===String(row.officialCardId)));if(hits.length!==1){complete=false;break}cards[hits[0].id]=(cards[hits[0].id]||0)+row.count}if(!complete)continue;const id='official-'+d.deckCode;if(store.decks.some(x=>x.id===id))continue;store.decks.push({id,name:d.name||d.deckCode,cards,sourceDeckCode:d.deckCode,identityStatus:'UNVERIFIED'});added++}if(added){persist();drawSaved();say(added+'件の公式コードデッキを編集一覧へ追加しました（正式照合未完了）')}}catch(e){say('取り込みデッキの読込失敗: '+e.message)}}drawCards();drawDeck();importSaved();fetch('data/official-image-registry.json').then(r=>{if(!r.ok)throw Error('registry '+r.status);return r.json()}).then(data=>{const source=data.imageByOfficialCardId||data.records||data;const rows=Array.isArray(source)?source.map((c,i)=>[String(c.officialCardId||i),c]):Object.entries(source);const found=rows.filter(([id,c])=>c&&typeof c==='object'&&(c.imageSourceUrl||c.sourceUrl)&&c.name).map(([id,c])=>({id:String(c.officialCardId||id),name:c.name,url:c.imageSourceUrl||c.sourceUrl,category:c.category||'unknown'}));if(found.length){catalog=found;byId=new Map(catalog.map(c=>[c.id,c]));drawCards();drawDeck();importSaved()}else say('画像台帳の形式を確認できません。暫定カード一覧を表示中')}).catch(()=>say('画像台帳を読み込めません。暫定カード一覧を表示中'))})();
-</script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>デッキ構築 | PLAY TABLE</title>
+<link rel="stylesheet" href="ui/deck-editor.css">
+</head>
+<body>
+<header><a href="./">← 対戦盤面</a><h1>デッキ構築</h1><a href="deck-code-import.html">公式コード取り込み</a></header>
+<main class="editor">
+<section class="collection">
+  <div class="heading"><h2>保存したデッキ</h2><button id="new">新規デッキ</button></div>
+  <div class="saved-grid" id="saved"></div>
+</section>
+<section class="editing">
+  <div class="heading"><h2>編集中のデッキ</h2><strong id="total">0 / 60枚</strong></div>
+  <label for="deck-name">デッキ名</label><input id="deck-name" maxlength="60">
+  <div class="toolbar">
+    <button id="save">保存</button>
+    <details class="menu"><summary>その他の操作</summary>
+      <div class="toolbar"><button id="duplicate">複製</button><button id="export">JSON出力</button><button id="remove">削除</button></div>
+    </details>
+  </div>
+  <p id="message" role="status"></p>
+  <div id="deck-list" class="deck-grid"></div>
+</section>
+<section class="search">
+  <h2>カードを追加</h2>
+  <div class="toolbar">
+    <input id="query" type="search" placeholder="カード名・IDで検索" aria-label="カード名・IDで検索">
+    <select id="category" aria-label="カード分類">
+      <option value="">すべて</option><option value="pokemon">ポケモン</option>
+      <option value="trainer">トレーナーズ</option><option value="energy">エネルギー</option>
+    </select>
+  </div>
+  <p id="catalog-info" role="status"></p>
+  <div class="deck-grid" id="cards"></div>
+  <button id="more" hidden>さらに表示</button>
+</section>
+</main>
+<script src="ui/deck-code-import.js" defer></script>
+<script src="ui/deck-builder.js" defer></script>
+</body>
+</html>

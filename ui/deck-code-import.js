@@ -6,6 +6,8 @@ function parse(text,code){
  if(!validCode(code))throw Error('デッキコード形式が不正です');
  if(typeof text!=='string'||text.length>1000000)throw Error('レシピ文字列が不正です');
  const lines=text.replace(/\r/g,'').split('\n').map(x=>x.trim()).filter(Boolean);
+ const embeddedCode = lines.join('\n').match(/デッキコード\s*\[([^\]]+)\]/);
+ if(embeddedCode && embeddedCode[1]!==code)throw Error('入力したコードとレシピが一致しません');
  const rows=[],declared={};let group='',pending=null,pack=null,number=null;
  const flush=count=>{
   if(!pending||!Number.isInteger(count)||count<1||count>60)throw Error('カード枚数が不正です');
@@ -39,6 +41,104 @@ function parse(text,code){
  }
  return {schemaVersion:1,source:'official-recipe-text',deckCode:code,total,cards:rows,identityStatus:'UNVERIFIED',playable:false};
 }
+
+const fields = {deck_pke:'pokemon', deck_gds:'goods', deck_tool:'tool',
+ deck_tech:'tool', deck_sup:'support', deck_sta:'stadium', deck_ene:'energy'};
+const IMPORT_KEY = 'pokeca.official-deck-imports.v1';
+function parseFields(values, code) {
+ if (!validCode(code) || values.saveDeckID !== code) throw Error('入力したコードと公式レシピが一致しません');
+ const cards = [];
+ for (const [field, category] of Object.entries(fields)) {
+  if (typeof values[field] !== 'string') throw Error('公式レシピの項目が不足しています');
+  if (!values[field]) continue;
+  for (const entry of values[field].split('-')) {
+   const match = /^(\d{1,12})_([1-9]\d?)_([01])$/.exec(entry);
+   if (!match) throw Error('公式レシピのカードIDまたは枚数が不正です');
+   const [, officialCardId, count] = match;
+   cards.push({officialCardId, category, count:Number(count)});
+  }
+ }
+ if (cards.reduce((n,row)=>n+row.count,0)!==60) throw Error('60枚の公式レシピを解析できませんでした');
+ return {schemaVersion:1,source:'official-recipe-html',deckCode:code,total:60,cards,identityStatus:'UNVERIFIED',playable:false};
+}
+function parseHtml(html, code) {
+ if (typeof html !== 'string' || html.length > 3000000) throw Error('公式レシピHTMLのサイズが不正です');
+ // Read only the official hidden fields. Never execute or insert uploaded HTML.
+ const doc = new DOMParser().parseFromString(html.replace(/<[^>]*>/g, tag =>
+  /^<input[\s>]/i.test(tag) ? tag : ''), 'text/html');
+ const values = {};
+ for (const key of ['saveDeckID', ...Object.keys(fields)]) {
+  const inputs = doc.querySelectorAll('input[type="hidden"][name="'+key+'"]');
+  if (inputs.length !== 1) throw Error('公式デッキ構築ページのHTMLを選んでください');
+  values[key] = inputs[0].value;
+ }
+ return parseFields(values, code);
+}
+function catalogFrom(registry, formal) {
+ const rows = Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {});
+ const formalById = new Map((Array.isArray(formal.records) ? formal.records : Object.values(formal.records || {}))
+  .map(row => [String(row.officialCardId), row]));
+ const duplicates = new Set();
+ const cards = new Map();
+ for (const row of rows) {
+  const id = String(row.officialCardId || '');
+  const url = row.imageSourceUrl;
+  if (!/^\d+$/.test(id) || row.verified !== true || !row.name ||
+   !new RegExp('^https://www\\.pokemon-card\\.com/card-search/details\\.php/card/'+id+'(?:/|$)').test(row.officialPageUrl) ||
+   !/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(url)) continue;
+  if (cards.has(id)) { duplicates.add(id); continue; }
+  const evidence = formalById.get(id);
+  if (evidence && (evidence.name !== row.name ||
+     (evidence.set && row.set && evidence.set !== row.set) ||
+     (evidence.cardNumber && row.cardNumber && evidence.cardNumber !== row.cardNumber))) continue;
+  const imageType = url.match(/\/\d+_([PTE])_/i)?.[1]?.toUpperCase();
+  const category = evidence?.category || row.category ||
+   ({P:'pokemon',T:'trainer',E:'energy'}[imageType] || 'unknown');
+  cards.set(id, {id,name:row.name,url,category,pack:row.set,number:row.cardNumber});
+ }
+ for (const id of duplicates) cards.delete(id);
+ return cards;
+}
+async function loadCatalog() {
+ const read = async path => {
+  const response = await fetch(path);
+  if (!response.ok) throw Error('カード台帳を読み込めませんでした');
+  return response.json();
+ };
+ const [registry, formal] = await Promise.all([
+  read('data/official-image-registry.json'), read('data/reference-effects/catalog.json')
+ ]);
+ const cards = catalogFrom(registry, formal);
+ if (!cards.size) throw Error('照合可能なカードがありません');
+ return cards;
+}
+function matchCatalog(deck, cards) {
+ const exactId = deck.source === 'official-recipe-html';
+ const output = deck.cards.map(row => {
+  const matches = exactId ? [cards.get(row.officialCardId)].filter(Boolean) :
+   [...cards.values()].filter(card => row.pack && row.number &&
+    card.name === row.name && card.pack === row.pack &&
+    card.number === row.number.replace(/\s/g,''));
+  if (matches.length !== 1) return {
+   ...row, identityStatus:'BLOCKED',
+   reason:matches.length ? 'AMBIGUOUS_PRINT' : 'OFFICIAL_PRINT_NOT_FOUND'
+  };
+  const card = matches[0];
+  return {...row, name:card.name, officialCardId:card.id, imageUrl:card.url, identityStatus:'CONFIRMED'};
+ });
+ const blockedCount = output.filter(row=>row.identityStatus==='BLOCKED').length;
+ return {...deck,cards:output,blockedCount,identityStatus:blockedCount?'BLOCKED':'CONFIRMED',playable:false};
+}
+function readImports(storage) {
+ const saved = JSON.parse(storage.getItem(IMPORT_KEY) || '[]');
+ return Array.isArray(saved) ? saved.filter(deck => validCode(deck?.deckCode) &&
+  deck.total === 60 && Array.isArray(deck.cards) && deck.cards.every(row => row &&
+  Number.isInteger(row.count) && row.count > 0) && deck.cards.reduce((n,row)=>n+row.count,0)===60) : [];
+}
+function saveImport(storage, deck) {
+ const saved = readImports(storage).filter(entry => entry.deckCode !== deck.deckCode);
+ storage.setItem(IMPORT_KEY,JSON.stringify([...saved,deck]));
+}
 function reconcile(deck,officialRecords,imageRegistry){
  if(!deck||deck.total!==60||!Array.isArray(deck.cards))throw Error('60枚レシピが必要です');
  const records=Array.isArray(officialRecords)?officialRecords:Object.values(officialRecords||{});
@@ -58,5 +158,5 @@ function reconcile(deck,officialRecords,imageRegistry){
  const blocked=output.filter(r=>r.identityStatus!=='CONFIRMED');
  return {...deck,cards:output,identityStatus:blocked.length?'BLOCKED':'CONFIRMED',playable:blocked.length===0,blockedCount:blocked.length};
 }
-root.PokecaDeckCodeImport=Object.freeze({validCode,parse,reconcile});
+root.PokecaDeckCodeImport=Object.freeze({validCode,parse,parseFields,parseHtml,reconcile,catalogFrom,loadCatalog,matchCatalog,readImports,saveImport});
 })(typeof window!=='undefined'?window:globalThis);
