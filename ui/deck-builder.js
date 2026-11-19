@@ -66,18 +66,33 @@ function addImage(parent, card) {
   img.addEventListener('contextmenu',event=>event.preventDefault());
   let hold;
   let held = false;
+  let activePointer = null;
+  let startX = 0, startY = 0;
+  let suppressNextClick = false;
   img.addEventListener('pointerdown',event=>{
     if(event.pointerType==='mouse' && event.button!==0)return;
+    if(activePointer!==null)return;
+    activePointer=event.pointerId;
+    startX=event.clientX;startY=event.clientY;
     held=false;
-    hold=setTimeout(()=>{held=true;showPreview(card);},450);
+    hold=setTimeout(()=>{held=true;suppressNextClick=true;showPreview(card);},500);
+  });
+  img.addEventListener('pointermove',event=>{
+    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12)clearTimeout(hold);
   });
   for(const name of ['pointerup','pointercancel','pointerleave'])
-    img.addEventListener(name,()=>clearTimeout(hold));
+    img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
   img.addEventListener('click',event=>{
-    if(held){event.preventDefault();event.stopPropagation();held=false;}
+    if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
   },true);
+  img.addEventListener('dragstart',event=>event.preventDefault());
   parent.append(img);
 }
+const previewDialog=$('card-preview');
+previewDialog.addEventListener('click',event=>{
+  if(event.target===previewDialog)previewDialog.close();
+});
+previewDialog.addEventListener('close',()=>{$('preview-image').removeAttribute('src');});
 function showPreview(card){
   if(!card?.url)return;
   const dialog=$('card-preview');
