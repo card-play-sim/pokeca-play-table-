@@ -57,12 +57,34 @@ function deckStatus() {
 }
 
 function addImage(parent, card) {
-
   const img = document.createElement('img');
   img.src = card?.url || "ui/card-back.svg";
   img.alt = card?.name || "";
   img.loading = 'lazy';
+  img.draggable = false;
+  // Prevent Android's native image menu; use the app's own preview instead.
+  img.addEventListener('contextmenu',event=>event.preventDefault());
+  let hold;
+  let held = false;
+  img.addEventListener('pointerdown',event=>{
+    if(event.pointerType==='mouse' && event.button!==0)return;
+    held=false;
+    hold=setTimeout(()=>{held=true;showPreview(card);},450);
+  });
+  for(const name of ['pointerup','pointercancel','pointerleave'])
+    img.addEventListener(name,()=>clearTimeout(hold));
+  img.addEventListener('click',event=>{
+    if(held){event.preventDefault();event.stopPropagation();held=false;}
+  },true);
   parent.append(img);
+}
+function showPreview(card){
+  if(!card?.url)return;
+  const dialog=$('card-preview');
+  $('preview-image').src=card.url;
+  $('preview-image').alt=card.name;
+  $('preview-title').textContent=card.name;
+  if(!dialog.open)dialog.showModal();
 }
 
 function control(text, label, action) {
