@@ -1,0 +1,40 @@
+name: Official H I J deck classification
+on:
+  push:
+    branches: [work/deck-work-002-hij]
+    paths: [tools/classify-deck-catalog.py, .github/workflows/deck-classification.yml]
+  workflow_dispatch:
+concurrency:
+  group: deck-classification-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  classify:
+    if: github.ref_name == 'work/deck-work-002-hij'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - name: Configure resumable branch checkpoints
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Classify official headings, identity and ACE SPEC rules
+        env:
+          DECK_CLASSIFICATION_BRANCH: work/deck-work-002-hij
+        run: python3 tools/classify-deck-catalog.py
+      - name: Save classified catalog without touching the image registry
+        run: |
+          git add data/deck-building
+          if ! git diff --cached --quiet; then
+            git commit -m 'Complete official H I J categories and basic energy exceptions'
+            git push origin HEAD:refs/heads/work/deck-work-002-hij
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-deck-classification-checkpoint
+          path: data/deck-building
