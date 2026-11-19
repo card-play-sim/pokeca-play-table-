@@ -21,7 +21,7 @@ with sync_playwright() as p:
             if file.is_relative_to(ROOT) and file.is_file():r.fulfill(path=str(file))
             else:r.abort()
         page.route('**/*',route)
-        page.goto('http://pokeca.test/')
+        page.goto('http://pokeca.test/#battle')
         page.wait_for_function('window.PokecaMobile && PokecaImageRegistryStatus.state==="ready"')
         # Registry loading and session restoration are independent async operations.
         page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')

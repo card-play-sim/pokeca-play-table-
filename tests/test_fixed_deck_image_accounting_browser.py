@@ -34,7 +34,7 @@ with sync_playwright() as p:
             if file.is_relative_to(ROOT) and file.is_file():request.fulfill(path=str(file))
             else:request.abort()
         page.route('**/*', route)
-        page.goto('http://pokeca.test/')
+        page.goto('http://pokeca.test/#battle')
         page.wait_for_function('window.PokecaMobile && PokecaImageRegistryStatus.state==="ready" && document.getElementById("save-status").textContent==="自動保存済"')
         before = page.evaluate('PokecaMobile.port.getSnapshot()')
         page.locator('#menu-open').click()
