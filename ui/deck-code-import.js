@@ -88,13 +88,19 @@ function catalogFrom(registry, formal) {
    !/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(url)) continue;
   if (cards.has(id)) { duplicates.add(id); continue; }
   const evidence = formalById.get(id);
+  // Only source-backed printed regulation marks are eligible for standard search.
+  // Set names, image paths and release dates cannot establish legality.
+  const marks = [row.regulationMark,row.regulation,row.regulationSymbol,evidence?.regulationMark,evidence?.regulation,evidence?.regulationSymbol]
+    .filter(value=>value!=null&&String(value).trim()!=='')
+    .map(value=>String(value).trim().toUpperCase());
+  if (!marks.length || marks.some(value=>!['H','I','J'].includes(value)) || new Set(marks).size!==1) continue;
   if (evidence && (evidence.name !== row.name ||
      (evidence.set && row.set && evidence.set !== row.set) ||
      (evidence.cardNumber && row.cardNumber && evidence.cardNumber !== row.cardNumber))) continue;
   const imageType = url.match(/\/\d+_([PTE])_/i)?.[1]?.toUpperCase();
   const category = evidence?.category || row.category ||
    ({P:'pokemon',T:'trainer',E:'energy'}[imageType] || 'unknown');
-  cards.set(id, {id,name:row.name,url,category,pack:row.set,number:row.cardNumber});
+  cards.set(id, {id,name:row.name,url,category,pack:row.set,number:row.cardNumber,regulationMark:marks[0]});
  }
  for (const id of duplicates) cards.delete(id);
  return cards;
