@@ -18,14 +18,28 @@
     }
     return rows(deck).map(([id]) => cards.get(id) || cards.archive?.get(id)).find(Boolean);
   }
+  function plansFrom(base,extensions) {
+    const plans = new Map();
+    for (const record of [...base.records,...extensions.records]) {
+      const id=String(record.officialCardId);
+      if (plans.has(id) || !/^[1-9][0-9]*$/.test(id) ||
+          !/^[a-f0-9]{64}$/.test(record.source?.sha256) || record.deckPrintAdopted !== false ||
+          !(record.category === 'pokemon' ? record.attacks?.length &&
+            [...record.attacks,...record.abilities].every(effect=>effect.plan) : record.mainPlan)) {
+        throw Error('対戦効果の公式証跡を照合できません。');
+      }
+      plans.set(id,record);
+    }
+    return plans;
+  }
   async function loadCatalog() {
     const importer = window.PokecaDeckCodeImport;
-    const [cards,response] = await Promise.all([
-      importer.loadCatalog(), fetch('./data/reference-effects/plans.json')
+    const [cards,response,extensionResponse] = await Promise.all([
+      importer.loadCatalog(), fetch('./data/reference-effects/plans.json'),
+      fetch('./data/effect-extensions/compiled.json')
     ]);
-    if (!response.ok) throw Error('対戦用の公式カード情報を読み込めません。');
-    const plans = await response.json();
-    return {cards,plans:new Map(plans.records.map(record => [String(record.officialCardId),record]))};
+    if (!response.ok || !extensionResponse.ok) throw Error('対戦用の公式カード情報を読み込めません。');
+    return {cards,plans:plansFrom(await response.json(),await extensionResponse.json())};
   }
   // Shared deck-composition rules used before editing and when starting a match.
   function compositionError(deck,cards,plans) {
@@ -60,8 +74,9 @@
     const entries = rows(deck).map(([id,count]) => {
       const card = cards.get(id);
       const record = plans.get(id);
-      if (!card || !record || card.name !== record.name ||
-          (card.pack && record.set && card.pack !== record.set) ||
+      const extension = record?.source?.kind === 'saved-official-extension' && record.set === 'OFFICIAL_PAGE_REFERENCE';
+      if (!card || !record || card.name !== record.name || card.url !== record.imageSourceUrl ||
+          (!extension && card.pack && record.set && card.pack !== record.set) ||
           (card.number && record.cardNumber && card.number !== record.cardNumber)) {
         throw Error('BLOCKED · カード効果の対戦接続が未対応です: ' + (card?.name || id));
       }
@@ -71,5 +86,5 @@
     if (!basics) throw Error('たねポケモンを1枚以上入れてください。');
     return entries;
   }
-  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,loadCatalog,compositionError,matchEntries};
+  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,plansFrom,loadCatalog,compositionError,matchEntries};
 })();
