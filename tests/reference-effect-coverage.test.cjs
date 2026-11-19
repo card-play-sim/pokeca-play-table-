@@ -13,7 +13,7 @@ try {
   const report = JSON.parse(fs.readFileSync(destination, 'utf8'));
   assert.equal(report.scope, 'PRINT_SPECIFIC_EFFECT_REFERENCES_NOT_DECK_ADOPTION');
   assert.equal(report.adoptedDeckPrints, 0);
-  assert.equal(report.referencePrints, 89);
+  assert.equal(report.referencePrints, 90);
   assert.equal(report.totalEffects, report.recognized + report.blocked);
   assert.equal(report.integrationStatus, 'NOT_VERIFIED_BY_COVERAGE_INVENTORY');
   assert.equal(report.executionVerified, 0, 'do not misrepresent recognition as runtime verification');

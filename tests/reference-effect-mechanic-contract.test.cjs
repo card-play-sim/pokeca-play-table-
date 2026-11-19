@@ -7,7 +7,7 @@ const context={window:{},console,performance,setTimeout,Math};
 vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),context);
 const engine=context.window.Pokeca;
 const catalog=engine.getReferenceEffectCatalog();
-assert.equal(catalog.records.length,89);
+assert.equal(catalog.records.length,90);
 assert.equal(catalog.adoptedDeckPrints,0);
 const canonicalPlans=JSON.parse(fs.readFileSync('data/reference-effects/plans.json','utf8'));
 assert.equal(canonicalPlans.records.length,catalog.records.length,'canonical plans and bundle print count differ');

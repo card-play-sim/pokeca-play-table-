@@ -10,7 +10,7 @@ try{
  const h=JSON.parse(first);
  assert.equal(h.purpose,'CODEX_SHARED_EFFECT_CAUSE_HANDOFF');
  assert.equal(h.adoptedDeckPrints,0);
- assert.equal(h.referencePrints,89);
+ assert.equal(h.referencePrints,90);
  assert.equal(h.unresolvedEffects,h.issues.reduce((n,x)=>n+x.occurrences,0));
  assert.equal(h.safetyStopRequired,h.issues.length>0);
  assert.equal(h.executionVerifiedByInventory,0);

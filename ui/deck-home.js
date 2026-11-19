@@ -35,6 +35,27 @@
       image.src = card?.url || 'ui/card-back.svg';
       image.alt = card?.name || '';
       image.loading = 'lazy';
+      const coverButton=document.createElement('button');
+      coverButton.className='deck-cover';
+      coverButton.setAttribute('aria-label',deck.name+'の内容を見る');
+      coverButton.append(image);
+      coverButton.onclick=()=>{
+        const details=$('deck-home-details');
+        $('deck-detail-title').textContent=deck.name;
+        const list=$('deck-detail-cards');
+        list.replaceChildren();
+        for(const [id,count] of saved.rows(deck)){
+          const row=document.createElement('li');
+          row.textContent=(cards.get(id)?.name||'未照合カード')+' ×'+count;
+          list.append(row);
+        }
+        for(const card of saved.blocked(deck)){
+          const row=document.createElement('li');
+          row.textContent=(card.name||'未照合カード')+' ×'+card.count;
+          list.append(row);
+        }
+        details.showModal();
+      };
       const title = document.createElement('h2');
       title.textContent = deck.name;
       const count = document.createElement('p');
@@ -42,14 +63,14 @@
       const edit = document.createElement('a');
       edit.className = 'home-button';
       edit.href = 'deck-builder.html?deck=' + encodeURIComponent(deck.id);
-      edit.textContent = '編集';
+      edit.textContent = '編集する';
       const play = document.createElement('button');
-      play.textContent = 'このデッキで対戦';
+      play.textContent = '対戦する';
       play.onclick = () => prepare(deck.id,play);
       const actions = document.createElement('div');
       actions.className = 'deck-home-actions';
       actions.append(edit,play);
-      tile.append(image,title,count,actions);
+      tile.append(coverButton,title,count,actions);
       grid.append(tile);
     }
     status.textContent = grid.childElementCount ? '' :
@@ -88,9 +109,15 @@
 
   function route(resume) {
     const battle = location.hash === '#battle';
+    const enteringBattle=battle&&(!$('app').dataset.battleVisible);
+    $('app').dataset.battleVisible=battle?'1':'';
     home.hidden = battle;
     document.documentElement.classList.toggle("deck-home-active", !battle);
     $('app').hidden = !battle;
+    if(enteringBattle){
+      window.scrollTo(0,0);
+      requestAnimationFrame(()=>window.scrollTo(0,0));
+    }
     if (battle && resume) window.PokecaMobile.resumeBattle();
     if (!battle) render();
   }

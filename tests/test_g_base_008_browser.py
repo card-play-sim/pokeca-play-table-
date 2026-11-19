@@ -29,10 +29,28 @@ async def main():
    await page.reload(wait_until='domcontentloaded')
    await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
    assert await snapshot()==expected
+  initial=await page.evaluate(FIXTURE,{'topSupporterSearch':True,'hand':{'0':['ポケギア3.0']}})
+  gear=initial['players'][0]['hand'][0]['id']
+  await page.locator(f'#self-hand [data-card-id="{gear}"]').tap()
+  await page.locator('#hand-actions button:enabled').first.tap()
+  picker=page.locator('#selection-cards')
+  await picker.wait_for()
+  top=[card['id'] for card in initial['players'][0]['deck'][:7]]
+  assert await picker.locator('button').evaluate_all('nodes=>nodes.map(node=>node.dataset.selectionId)')==top
+  assert await picker.locator('button:enabled').count()==1
+  assert await picker.locator('button:disabled').count()==6
+  await picker.locator('button:enabled').tap()
+  await page.locator('#selection-confirm').tap()
+  await page.wait_for_function('id=>PokecaMobile.port.getSnapshot().players[0].discard.some(card=>card.id===id)',arg=gear)
+  after=await snapshot()
+  assert any(card['id']==top[0] for card in after['players'][0]['hand'])
+  assert identities(after)==identities(initial)
+  await resume(after)
+  assert await page.locator('#selection-cards:visible').count()==0
   # Cover all six fixed-deck search trainers (including the five requested families).
-  for name,deck in [('ポケパッド',1),('なかよしポフィン',1),('シアノ',0),('トウコ',0),('たけしのスカウト',0),('アカマツ',1)]:
+  for name,deck in [('ハイパーボール',0),('ポケパッド',1),('なかよしポフィン',1),('シアノ',0),('トウコ',0),('たけしのスカウト',0),('アカマツ',1)]:
    print('START search '+name,flush=True)
-   opts={'firstDeck':deck,'active':['ドラメシヤ','ロケット団のニューラ'] if deck else ['ロケット団のニューラ','ドラメシヤ'],'hand':{'0':[name]}}
+   opts={'firstDeck':deck,'active':['ドラメシヤ','ロケット団のニューラ'] if deck else ['ロケット団のニューラ','ドラメシヤ'],'hand':{'0':[name]+(['シアノ','トウコ'] if name=='ハイパーボール' else [])}}
    initial=await page.evaluate(FIXTURE,opts);card=initial['players'][0]['hand'][0];ident=card['id']
    option=await page.evaluate('id=>PokecaMobile.port.getHandOptions("you",id).find(o=>o.ok)',ident)
    assert option, name
@@ -41,8 +59,11 @@ async def main():
     await page.locator('#hand-actions button:enabled').first.tap()
     await page.locator('#selection-cards').wait_for()
    await open_search()
-   request=option['requests'][0]
-   assert await page.locator('#selection-cards button').count()==len(request['candidates']),name
+   request=next(r for r in option['requests'] if r['key']=='cards')
+   assert request['inspection']['privateTo']=='you'
+   if name!='ハイパーボール':
+    assert await page.locator('#selection-cards button').count()==len(initial['players'][0]['deck']),name
+    assert await page.locator('#selection-cards button:enabled').count()==len(request['candidates']),name
    await page.locator('#sheet-close').tap()
    assert await snapshot()==initial,(name,'cancel mutated state')
    await open_search()
@@ -50,7 +71,10 @@ async def main():
    for req in option['requests']:
     await page.locator('#selection-cards').wait_for()
     buttons=page.locator('#selection-cards button')
-    if req['key']=='cards':
+    if req['key']=='discard':
+     for candidate in req['candidates'][:2]:
+      await page.locator(f'#selection-cards [data-selection-id="{candidate["id"]}"]').tap()
+    elif req['key']=='cards':
      # Select two energy types for Akamatsu to exercise hand and attachment destinations.
      chosen=request['candidates'][:1]
      if name=='アカマツ':

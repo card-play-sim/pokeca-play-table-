@@ -51,6 +51,10 @@ async def main():
    assert not mismatch,mismatch
    assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='2'
    assert await page.locator('#self-active .attached-energy-card[aria-label^="イグニッションエネルギー "]').locator('b').inner_text()=='1'
+   assert await page.locator('#self-active .attached-energy-images').evaluate('''strip=>{
+    const energy=strip.getBoundingClientRect(),card=strip.parentElement.getBoundingClientRect();
+    return energy.bottom<=card.bottom;
+   }''')
    await zoom('#self-active .card');await zoom('#self-hand .card:first-child')
    await page.screenshot(path=str(ROOT/f'artifacts/ui-control-008-{width}.png'),full_page=True)
    reports.append({'viewport':[width,height],'withinViewport':True,'legalMarksMatchPort':True,'zoneBacksAndCounts':True,'longPressNoMutation':True,'specialEnergyName':True})
@@ -59,9 +63,12 @@ async def main():
   await page.locator(f'#self-hand [data-card-id="{cards["基本悪エネルギー"]}"]').tap();assert not await page.locator('#card-zoom').evaluate('e=>e.open')
   await page.locator('#self-active .card').tap();assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='3'
   await page.locator(f'#self-hand [data-card-id="{cards["エネルギーつけかえ"]}"]').tap();await page.locator('#hand-actions button:enabled').first.tap()
+  assert '移動元' in await page.locator('#sheet-title').inner_text()
+  assert 'バトル場' in await page.locator('#selection-cards .selection-target-context').first.inner_text()
   await page.locator('#selection-cards button').first.tap();await page.locator('#selection-confirm').tap()
   move_target=page.locator(f'[data-selection-id="{bench}"]')
   assert await move_target.locator('img:not([hidden])').evaluate('async img=>{await img.decode();return img.alt==="マシマシラ"&&img.currentSrc.startsWith("https://www.pokemon-card.com/")}')
+  assert 'ベンチ' in await move_target.locator('.selection-target-context').inner_text()
   await move_target.tap();await page.locator('#selection-confirm').tap()
   await page.wait_for_function('PokecaMobile.port.getSnapshot().players[0].bench[0].energyCards.length===1');assert await page.locator('#self-active .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='2';assert await page.locator('#self-bench .attached-energy-card[aria-label^="悪 "]').locator('b').inner_text()=='1'
   # Hand-use abilities use the same action menu as every hand action family.

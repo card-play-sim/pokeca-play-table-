@@ -7,7 +7,7 @@ try{
  const run=cp.spawnSync(process.execPath,[path.resolve(__dirname,'../scripts/export-reference-official-effect-evidence.cjs'),source,output],{encoding:'utf8'});
  assert.equal(run.status,0,run.stderr+' '+run.stdout);
  const original=JSON.parse(fs.readFileSync(source,'utf8')),rows=JSON.parse(fs.readFileSync(output,'utf8'));
- assert.equal(original.records.length,89);
+ assert.equal(original.records.length,90);
  assert.ok(rows.length>=100,'INSUFFICIENT_VERIFIED_REFERENCE_EFFECT_TEXT');
  assert.ok(rows.some(x=>x.effectKind==='attack')&&rows.some(x=>x.effectKind==='ability'));
  for(const category of ['item','supporter','stadium','tool','energy'])assert.ok(rows.some(x=>x.category===category),'MISSING_EFFECT_CATEGORY:'+category);

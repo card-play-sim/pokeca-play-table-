@@ -65,8 +65,11 @@ def run(base):
         page.goto(base + "/")
         expect(page.get_by_role("heading", name="デッキ", exact=True)).to_be_visible()
         expect(page.locator("#app")).to_be_hidden()
+        assert page.locator("#deck-home").evaluate("node=>getComputedStyle(node).backgroundColor") == "rgb(255, 255, 255)"
+        assert page.locator("#deck-home-grid").evaluate("node=>getComputedStyle(node).gridTemplateColumns.split(' ').length") == 2
+
         invalid = page.locator(".deck-home-card").filter(has=page.get_by_role("heading", name="モバイル検証", exact=True))
-        invalid.get_by_role("button",name="このデッキで対戦").click()
+        invalid.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-status")).to_contain_text("60枚")
         expect(page.locator("#app")).to_be_hidden()
         page.get_by_role("link", name="新規デッキ").click()
@@ -82,9 +85,13 @@ def run(base):
         page.locator("#save").click()
         tile = page.locator(".deck-home-card").filter(has_text="選択デッキ")
         expect(tile.locator("img")).to_have_attribute("alt", "シェイミ")
+        expect(tile.locator("img")).to_have_count(1)
+        tile.get_by_role("button",name="選択デッキの内容を見る").click()
+        expect(page.locator("#deck-detail-cards")).to_contain_text("シェイミ ×4")
+        page.locator("#deck-home-details").get_by_role("button",name="閉じる").click()
         page.locator("#deck-home-search").fill("シェイミ")
         expect(page.locator(".deck-home-card")).to_have_count(1)
-        tile.get_by_role("button",name="このデッキで対戦").click()
+        tile.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
         page.get_by_role("button",name="対戦準備へ").click()
         page.locator("[data-opening-active]:enabled").first.click()
@@ -102,6 +109,10 @@ def run(base):
                 cards.filter(card => card.validationReference.officialCardId === '49463').length === 56;
         }""")
         expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
+        assert page.evaluate("""() => {
+            const hand = document.querySelector('.hand-panel').getBoundingClientRect();
+            return hand.top >= 0 && hand.bottom <= visualViewport.height + 1;
+        }""")
         match_id = page.evaluate("PokecaMobile.port.getSessionId()")
         page.get_by_role("link", name="デッキ一覧").click()
         expect(tile).to_be_visible()
