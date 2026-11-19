@@ -38,6 +38,8 @@ def run(base):
         page.get_by_role("link", name="公式コード取り込み").click()
         code = "ABC123-DEF456-GHI789"
         page.locator("#code").fill(code)
+        # File injection does not wait for the input to become enabled.
+        expect(page.locator("#html-file")).to_be_enabled()
         values = dict(saveDeckID=code, deck_pke="47832_4_1-999999999_1_1",
                       deck_gds="", deck_tool="", deck_tech="", deck_sup="",
                       deck_sta="", deck_ene="44962_55_1")

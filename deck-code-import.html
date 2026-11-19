@@ -12,17 +12,17 @@
 <section>
 <form id="lookup">
   <label for="code">公式デッキコード</label>
-  <input id="code" placeholder="xxxxxx-xxxxxx-xxxxxx" autocomplete="off" autocapitalize="off">
-  <div class="toolbar"><button type="submit">自動取得</button><a id="open" target="_blank" rel="noopener">公式レシピを開く</a></div>
+  <input id="code" placeholder="xxxxxx-xxxxxx-xxxxxx" autocomplete="off" autocapitalize="off" disabled>
+  <div class="toolbar"><button id="lookup-submit" type="submit" disabled>自動取得</button><a id="open" target="_blank" rel="noopener">公式レシピを開く</a></div>
 </form>
 <details open>
   <summary>公式ページを取り込む</summary>
   <p>自動取得できない場合は、公式のデッキ構築ページをHTMLとして保存し、ここで選択してください。</p>
   <label for="html-file">公式ページのHTML</label>
-  <input type="file" id="html-file" accept=".html,.htm,text/html">
+  <input type="file" id="html-file" accept=".html,.htm,text/html" disabled>
   <label for="recipe">公式レシピ一覧を貼り付け</label>
-  <textarea id="recipe" rows="5" placeholder="公式ページのカード一覧"></textarea>
-  <button id="import" type="button">一覧を解析</button>
+  <textarea id="recipe" rows="5" placeholder="公式ページのカード一覧" disabled></textarea>
+  <button id="import" type="button" disabled>一覧を解析</button>
 </details>
 <p id="status" role="status"></p>
 <div id="cards" class="deck-grid"></div>
