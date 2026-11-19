@@ -183,6 +183,17 @@ def run(base):
         page.get_by_role("button",name="対戦準備へ").click()
         page.locator("[data-opening-active]:enabled").first.click()
         page.locator("#opening-start").click()
+        # Opponent mulligans can legitimately open a mandatory bonus-draw choice.
+        # Resolve it through the same visible option a player uses before leaving.
+        mulligan_choices = 0
+        while page.evaluate("""() => {
+            const choice=PokecaMobile.port.getSnapshot().pendingReferenceChoice;
+            return choice?.kind==='MULLIGAN' && choice.playerId==='you';
+        }"""):
+            assert mulligan_choices < 4
+            page.get_by_role('button',name='引き直しにより追加で0枚引く',exact=True).click()
+            mulligan_choices += 1
+        expect(page.locator('#sheet')).not_to_be_visible()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("""() => {
             const game = PokecaMobile.port.getResumeSnapshot().game;
@@ -224,7 +235,7 @@ def run(base):
         page.screenshot(path='test-results/deck-work-002-home.png',full_page=True)
         report={'result':'PASS','viewport':{'width':320,'height':700},'classified':len(classification['records']),
                 'classificationBlocked':len(classification['blocked']),'browserErrors':errors,'images':image_checks,
-                'officialCode':'kbvV5V-TEZjLI-dVfVVk','officialCodeMethod':'actual official HTML import',
+                'officialCode':'kbvV5V-TEZjLI-dVfVVk','officialCodeMethod':'actual official HTML import','mulliganChoicesResolved':mulligan_choices,
                 'checks':['H/I/J x six categories','official image loaded','long press and backdrop close','ordinary tap',
                           'same-name four','ACE SPEC one','60-card maximum','save/reload/duplicate','official HTML code import and unknown ID blocked',
                           'supported 60-card saved deck starts battle','battle save/resume','narrow viewport']}
