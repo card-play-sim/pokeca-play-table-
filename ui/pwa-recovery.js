@@ -15,7 +15,10 @@
    if(!isSecureContext||!navigator.serviceWorker)throw Error('この画面はHTTPSのChromeで開いてください。');
    if(navigator.onLine===false)throw Error('オンラインで更新をお試しください。保存対戦は保持されています。');
    progress.textContent='更新ファイルを確認しています。保存対戦は保持しています。';
-   const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});await reg.update();
+   const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+   // An install may already be waiting when the browser opens this page. Drive
+   // activation while checking the network rather than waiting on a second update.
+   if(!reg.waiting&&!reg.installing)void reg.update().catch(()=>{});
    const until=Date.now()+90000;
    while(Date.now()<until){
     reg.waiting?.postMessage({type:'ACTIVATE_UPDATE'});

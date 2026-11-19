@@ -65,6 +65,10 @@ def run(base):
         page.goto(base + "/")
         expect(page.get_by_role("heading", name="デッキ", exact=True)).to_be_visible()
         expect(page.locator("#app")).to_be_hidden()
+        invalid = page.locator(".deck-home-card").filter(has=page.get_by_role("heading", name="モバイル検証", exact=True))
+        invalid.get_by_role("button",name="このデッキで対戦").click()
+        expect(page.locator("#deck-home-status")).to_contain_text("60枚")
+        expect(page.locator("#app")).to_be_hidden()
         page.get_by_role("link", name="新規デッキ").click()
         page.locator("#deck-name").fill("選択デッキ")
         for card_id, card_name, count in (
@@ -86,7 +90,17 @@ def run(base):
         page.locator("[data-opening-active]:enabled").first.click()
         page.locator("#opening-start").click()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
-        assert page.evaluate("PokecaMobile.port.getSnapshot().referenceEffectValidation.sourceDeckIds[0]") not in ("A","B")
+        assert page.evaluate("""() => {
+            const game = PokecaMobile.port.getResumeSnapshot().game;
+            const selected = JSON.parse(localStorage.getItem('pokeca.deck-builder.v1')).decks
+                .find(deck => deck.name === '選択デッキ');
+            const player = game.players.find(player => player.id === 'you');
+            const cards = [player.active,...player.bench,...player.deck,...player.hand,...player.prizeCards];
+            return game.referenceEffectValidation.sourceDeckIds[0] === selected.id &&
+                cards.length === 60 &&
+                cards.filter(card => card.validationReference.officialCardId === '45152').length === 4 &&
+                cards.filter(card => card.validationReference.officialCardId === '49463').length === 56;
+        }""")
         expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
         match_id = page.evaluate("PokecaMobile.port.getSessionId()")
         page.get_by_role("link", name="デッキ一覧").click()
@@ -96,6 +110,15 @@ def run(base):
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("PokecaMobile.port.getSessionId()") == match_id
         expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
+        assert page.evaluate("""() => {
+            const game = PokecaMobile.port.getResumeSnapshot().game;
+            game.status = 'finished';
+            game.winner = 'you';
+            return PokecaMobile.port.loadGame(game).ok;
+        }""")
+        expect(page.locator("#turn-label")).to_contain_text("対戦終了")
+        page.get_by_role("link", name="デッキ一覧").click()
+        expect(tile).to_be_visible()
         assert not errors, errors
         browser.close()
         print("Mobile Chromium deck search, limits, save/reload, duplication and import editing PASS")
