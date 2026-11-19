@@ -154,7 +154,7 @@ def run(base):
         page.locator("#deck-name").fill("選択デッキ")
         open_search()
         for card_id, card_name, count in (
-            ("45152", "シェイミ", 4), ("49463", "基本超エネルギー", 56)
+            ("45796", "ズルッグ", 4), ("49465", "基本悪エネルギー", 56)
         ):
             page.locator("#query").fill(card_id)
             button = page.get_by_role("button",name=card_name + "を追加",exact=True)
@@ -165,24 +165,39 @@ def run(base):
         expect(page.locator('#message')).to_contain_text('60枚')
         back_to_editor()
         page.get_by_text("その他の操作").click()
-        page.locator("#deck-cover").select_option("45152")
+        page.locator("#deck-cover").select_option("45796")
         page.locator("#save").click()
         tile = page.locator(".deck-home-card").filter(has_text="選択デッキ")
-        expect(tile.locator("img")).to_have_attribute("alt", "シェイミ")
+        expect(tile.locator("img")).to_have_attribute("alt", "ズルッグ")
         expect(tile.locator("img")).to_have_count(1)
         tile.get_by_role("button",name="選択デッキの内容を見る").click()
         expect(page.locator('#deck-name')).to_have_value('選択デッキ')
         expect(page.locator('#total')).to_have_text('60 / 60枚')
         expect(page.locator('.overview-count')).to_have_count(2)
         page.locator('#builder-back').click()
-        page.locator("#deck-home-search").fill("シェイミ")
-        # The actual official-code fixture also contains Shaymin.
-        expect(page.locator(".deck-home-card")).to_have_count(2)
+        page.locator("#deck-home-search").fill("ズルッグ")
+        expect(page.locator(".deck-home-card")).to_have_count(1)
         tile.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
         page.get_by_role("button",name="対戦準備へ").click()
         page.locator("[data-opening-active]:enabled").first.click()
         page.locator("#opening-start").click()
+        # Opponent mulligans can legitimately open a mandatory bonus-draw choice.
+        # Resolve it through the same visible option a player uses before leaving.
+        page.wait_for_function("""() => {
+            const selected=JSON.parse(localStorage.getItem('pokeca.deck-builder.v1')).decks
+                .find(deck=>deck.name==='選択デッキ');
+            return PokecaMobile.port.getSnapshot().referenceEffectValidation?.sourceDeckIds?.[0]===selected.id;
+        }""")
+        mulligan_choices = 0
+        while page.evaluate("""() => {
+            const choice=PokecaMobile.port.getSnapshot().pendingReferenceChoice;
+            return choice?.kind==='MULLIGAN' && choice.playerId==='you';
+        }"""):
+            assert mulligan_choices < 4
+            page.get_by_role('button',name='引き直しにより追加で0枚引く',exact=True).click()
+            mulligan_choices += 1
+        expect(page.locator('#sheet')).not_to_be_visible()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("""() => {
             const game = PokecaMobile.port.getResumeSnapshot().game;
@@ -192,10 +207,10 @@ def run(base):
             const cards = [player.active,...player.bench,...player.deck,...player.hand,...player.prizeCards];
             return game.referenceEffectValidation.sourceDeckIds[0] === selected.id &&
                 cards.length === 60 &&
-                cards.filter(card => card.validationReference.officialCardId === '45152').length === 4 &&
-                cards.filter(card => card.validationReference.officialCardId === '49463').length === 56;
+                cards.filter(card => card.validationReference.officialCardId === '45796').length === 4 &&
+                cards.filter(card => card.validationReference.officialCardId === '49465').length === 56;
         }""")
-        expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
+        expect(page.locator("#self-active").get_by_role("button",name="ズルッグ・HP 60")).to_be_visible()
         assert page.evaluate("""() => {
             const hand = document.querySelector('.hand-panel').getBoundingClientRect();
             return hand.top >= 0 && hand.bottom <= visualViewport.height + 1;
@@ -209,7 +224,7 @@ def run(base):
         page.get_by_role("link", name="対戦・再開").click()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("PokecaMobile.port.getSessionId()") == match_id
-        expect(page.locator("#self-active").get_by_role("button",name="シェイミ・HP 70")).to_be_visible()
+        expect(page.locator("#self-active").get_by_role("button",name="ズルッグ・HP 60")).to_be_visible()
         assert page.evaluate("""() => {
             const game = PokecaMobile.port.getResumeSnapshot().game;
             game.status = 'finished';
@@ -224,10 +239,10 @@ def run(base):
         page.screenshot(path='test-results/deck-work-002-home.png',full_page=True)
         report={'result':'PASS','viewport':{'width':320,'height':700},'classified':len(classification['records']),
                 'classificationBlocked':len(classification['blocked']),'browserErrors':errors,'images':image_checks,
-                'officialCode':'kbvV5V-TEZjLI-dVfVVk','officialCodeMethod':'actual official HTML import',
+                'officialCode':'kbvV5V-TEZjLI-dVfVVk','officialCodeMethod':'actual official HTML import','mulliganChoicesResolved':mulligan_choices,
                 'checks':['H/I/J x six categories','official image loaded','long press and backdrop close','ordinary tap',
                           'same-name four','ACE SPEC one','60-card maximum','save/reload/duplicate','official HTML code import and unknown ID blocked',
-                          'supported 60-card saved deck starts battle','battle save/resume','narrow viewport']}
+                          'compiled extension 60-card saved deck starts battle','battle save/resume','narrow viewport']}
         Path('test-results/deck-work-002-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
         browser.close()
         print("Mobile Chromium deck search, limits, save/reload, duplication and import editing PASS")
