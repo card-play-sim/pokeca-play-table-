@@ -65,6 +65,9 @@ def run(base):
         page.goto(base + "/")
         expect(page.get_by_role("heading", name="デッキ", exact=True)).to_be_visible()
         expect(page.locator("#app")).to_be_hidden()
+        assert page.locator("#deck-home").evaluate("node=>getComputedStyle(node).backgroundColor") == "rgb(255, 255, 255)"
+        assert page.locator("#deck-home-grid").evaluate("node=>getComputedStyle(node).gridTemplateColumns.split(' ').length") == 2
+
         invalid = page.locator(".deck-home-card").filter(has=page.get_by_role("heading", name="モバイル検証", exact=True))
         invalid.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-status")).to_contain_text("60枚")

@@ -45,18 +45,18 @@ function cli(script, args) {
         ]),
       );
     assert.equal(first.selection.selected, 2);
-    assert.equal(first.selection.deferred, 65);
+    assert.equal(first.selection.deferred, 66);
     assert.equal(first.run.processed, 2);
-    assert.equal(first.run.counts.PENDING, 65);
+    assert.equal(first.run.counts.PENDING, 66);
     const resumed = JSON.parse(
       cli("process-shared-effect-batch.cjs", [dir, ...inputs]),
     );
     assert.equal(resumed.enqueued.added, 0);
-    assert.equal(resumed.enqueued.duplicates, 67);
+    assert.equal(resumed.enqueued.duplicates, 68);
     assert.equal(resumed.classifierCached, 2);
-    assert.equal(resumed.run.processed, 65);
+    assert.equal(resumed.run.processed, 66);
     assert.equal(resumed.run.counts.FAILED, 0);
-    assert.equal(resumed.run.counts.SUCCEEDED, 62);
+    assert.equal(resumed.run.counts.SUCCEEDED, 63);
     assert.equal(resumed.run.counts.BLOCKED, 5);
     const repeat = JSON.parse(
       cli("process-shared-effect-batch.cjs", [dir, ...inputs]),
@@ -66,7 +66,7 @@ function cli(script, args) {
       jobs = Object.values(store.state.jobs);
     store.close();
     const cases = jobs.flatMap((j) => j.summary.cases);
-    assert.equal(cases.length, 139);
+    assert.equal(cases.length, 140);
     const blocked = cases.filter((c) => c.status === "BLOCKED");
     assert(
       blocked.every((c) =>
@@ -100,9 +100,9 @@ function cli(script, args) {
     assert.equal(unknown.run.counts.FAILED, 0);
     const report = {
       status: "PASS",
-      officialReferencePrints: 110,
-      evidenceSlots: 139,
-      registeredTasks: 67,
+      officialReferencePrints: 111,
+      evidenceSlots: 140,
+      registeredTasks: 68,
       counts: resumed.run.counts,
       categories: resumed.run.categories,
       successfulSlots: cases.filter((c) => c.status === "SUCCEEDED").length,
