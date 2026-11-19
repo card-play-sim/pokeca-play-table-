@@ -39,23 +39,8 @@
       coverButton.className='deck-cover';
       coverButton.setAttribute('aria-label',deck.name+'の内容を見る');
       coverButton.append(image);
-      coverButton.onclick=()=>{
-        const details=$('deck-home-details');
-        $('deck-detail-title').textContent=deck.name;
-        const list=$('deck-detail-cards');
-        list.replaceChildren();
-        for(const [id,count] of saved.rows(deck)){
-          const row=document.createElement('li');
-          row.textContent=(cards.get(id)?.name||'未照合カード')+' ×'+count;
-          list.append(row);
-        }
-        for(const card of saved.blocked(deck)){
-          const row=document.createElement('li');
-          row.textContent=(card.name||'未照合カード')+' ×'+card.count;
-          list.append(row);
-        }
-        details.showModal();
-      };
+      // Open the visual editor directly instead of the legacy text-only modal.
+      coverButton.onclick=()=>{ location.href='deck-builder.html?deck='+encodeURIComponent(deck.id); };
       const title = document.createElement('h2');
       title.textContent = deck.name;
       const count = document.createElement('p');
