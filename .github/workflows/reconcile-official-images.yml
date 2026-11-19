@@ -5,11 +5,13 @@ on:
     paths:
       - tools/reconcile-official-image-search.py
       - tools/stage-reconciled-image-search.py
+      - ui/official-image-validation.js
+      - tests/test_official_image_reconciliation.py
       - .github/workflows/reconcile-official-images.yml
   workflow_dispatch:
 concurrency:
   group: official-image-completion-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -20,6 +22,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+      - name: Check official-ID and print-shape regression
+        run: python3 -m unittest discover -s tests -p test_official_image_reconciliation.py -v
       - name: Restore protected 6248-entry source
         run: |
           git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
@@ -29,7 +33,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
       - name: Discover official IDs and persist verified references
         run: |
-          python3 tools/reconcile-official-image-search.py /tmp/protected-6248.json data/image-automation/official-completion-20261120 --rate 12 --workers 24 --checkpoint-every 500 --branch '${{ github.ref_name }}'
+          python3 tools/reconcile-official-image-search.py /tmp/protected-6248.json data/image-automation/official-completion-20261120 --rate 24 --workers 32 --checkpoint-every 500 --branch '${{ github.ref_name }}'
       - name: Stage append-only image registry and verified release
         run: |
           python3 tools/stage-reconciled-image-search.py data/official-image-registry.json /tmp/protected-6248.json data/image-automation/official-completion-20261120

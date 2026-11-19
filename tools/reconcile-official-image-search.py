@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Reconcile complete official search snapshots by ID, with resumable evidence."""
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from datetime import datetime, timezone
 import fcntl
 import hashlib
@@ -103,17 +103,19 @@ def verify(candidate, network):
     image = urljoin(BASE, fields.images[0])
     if image != urljoin(BASE, candidate['candidate']['cardThumbFile']):
         raise ValueError('SEARCH_DETAIL_IMAGE_MISMATCH')
-    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9_-]+/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp)', image, re.I):
+    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9_-]*/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp)', image, re.I):
         raise ValueError('OFFICIAL_IMAGE_PATH_OR_ID_INVALID')
     sets = set(fields.sets)
-    if len(sets) != 1 or not fields.numbers:
+    if len(sets) > 1 or not fields.numbers:
         raise ValueError('OFFICIAL_PRINT_METADATA_AMBIGUOUS')
-    set_code = next(iter(sets))
-    if set_code != image.split('/')[-2]:
+    set_code = next(iter(sets), None)
+    if set_code and image.split('/')[-2] and set_code != image.split('/')[-2]:
         raise ValueError('OFFICIAL_SET_IMAGE_MISMATCH')
     labels = [re.sub(r'\s+', '', text) for text in fields.numbers]
-    record = {'officialCardId': ident, 'name': name, 'set': set_code, 'imageSourceUrl': image,
+    record = {'officialCardId': ident, 'name': name, 'imageSourceUrl': image,
               'officialPageUrl': url, 'verified': True, 'deckPrintAdopted': False, 'namePreviewEligible': False}
+    if set_code:
+        record['set'] = set_code
     numbers = re.findall(r'(?<![A-Za-z0-9])\d+\s*/\s*(?:\d+|[A-Za-z]+(?:-[A-Za-z]+)?)(?![A-Za-z0-9])', ' '.join(fields.numbers))
     numbers = sorted(set(re.sub(r'\s+', '', n) for n in numbers))
     if len(numbers) == 1:
@@ -166,22 +168,34 @@ def collect(args):
         holds.mkdir(exist_ok=True)
         pending = [r for r in missing if not (records / (r['candidate']['cardID'] + '.json')).exists()]
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
-            futures = {pool.submit(verify, row, net): row for row in pending}
-            for index, future in enumerate(as_completed(futures), 1):
-                row = futures[future]
-                ident = row['candidate']['cardID']
-                try:
-                    item = future.result()
-                    atomic(records / (ident + '.json'), item)
-                except (OSError, ValueError, KeyError) as error:
-                    atomic(holds / (ident + '.json'), {'officialCardId': ident, 'reason': str(error), 'candidate': row})
-                if index % 100 == 0 or index == len(pending):
-                    accepted = len(list(records.glob('*.json')))
-                    atomic(args.output / 'progress.json', {'official': len(all_cards), 'baseline': len(known), 'missingBefore': len(missing),
-                           'registeredCandidates': accepted, 'remaining': len(missing) - accepted, 'holds': len(list(holds.glob('*.json')))})
-                    print((args.output / 'progress.json').read_text().strip(), flush=True)
-                if args.checkpoint_every and index % args.checkpoint_every == 0:
-                    checkpoint(args)
+            jobs = iter(pending)
+            futures = {}
+            def schedule():
+                row = next(jobs, None)
+                if row is not None:
+                    futures[pool.submit(verify, row, net)] = row
+            for _ in range(args.workers):
+                schedule()
+            index = 0
+            while futures:
+                done, _ = wait(futures, return_when=FIRST_COMPLETED)
+                for future in done:
+                    row = futures.pop(future)
+                    ident = row['candidate']['cardID']
+                    try:
+                        item = future.result()
+                        atomic(records / (ident + '.json'), item)
+                    except (OSError, ValueError, KeyError) as error:
+                        atomic(holds / (ident + '.json'), {'officialCardId': ident, 'reason': str(error), 'candidate': row})
+                    index += 1
+                    if index % 100 == 0 or index == len(pending):
+                        accepted = len(list(records.glob('*.json')))
+                        atomic(args.output / 'progress.json', {'official': len(all_cards), 'baseline': len(known), 'missingBefore': len(missing),
+                               'registeredCandidates': accepted, 'remaining': len(missing) - accepted, 'holds': len(list(holds.glob('*.json')))})
+                        print((args.output / 'progress.json').read_text().strip(), flush=True)
+                    if args.checkpoint_every and index % args.checkpoint_every == 0:
+                        checkpoint(args)
+                    schedule()
         if args.checkpoint_every:
             checkpoint(args)
 
