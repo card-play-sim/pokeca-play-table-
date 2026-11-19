@@ -44,7 +44,9 @@ def stage(registry_path, baseline_path, source):
         candidate = known[ident]['candidate']
         if row['name'] != candidate['cardNameAltText'] or row['imageSourceUrl'] != CORE.urljoin(CORE.BASE, candidate['cardThumbFile']):
             raise ValueError('SEARCH_DETAIL_METADATA_MISMATCH')
-        if not re.fullmatch(r'[a-f0-9]{64}', item['evidence']['detailSha256']):
+        proof = item['evidence']
+        source_hash = proof.get('detailSha256') or proof.get('imageSha256', '')
+        if not re.fullmatch(r'[a-f0-9]{64}', source_hash):
             raise ValueError('DETAIL_EVIDENCE_MISSING')
         if ident in cards:
             if cards[ident] != row:

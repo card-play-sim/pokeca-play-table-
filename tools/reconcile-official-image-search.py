@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import io
 from html import unescape
 import importlib.util
 import json
@@ -16,6 +17,7 @@ import time
 from urllib.error import HTTPError
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
+from PIL import Image
 
 SPEC = importlib.util.spec_from_file_location('collector', Path(__file__).with_name('collect-official-image-references.py'))
 CORE = importlib.util.module_from_spec(SPEC)
@@ -42,8 +44,8 @@ class Network:
         with urlopen(req, timeout=25) as response:
             if response.geturl() != url or response.headers.get_content_type() != mime:
                 raise ValueError('UNEXPECTED_OFFICIAL_RESPONSE')
-            body = response.read(2_000_001)
-            if len(body) > 2_000_000:
+            body = response.read(8_000_001)
+            if len(body) > 8_000_000:
                 raise ValueError('OFFICIAL_RESPONSE_TOO_LARGE')
             return body
 
@@ -86,7 +88,7 @@ def snapshot(network, output, regulation, workers):
     return cards
 
 
-def verify(candidate, network):
+def verify_detail(candidate, network):
     ident = candidate['candidate']['cardID']
     name = candidate['candidate']['cardNameAltText']
     url = f'{BASE}/card-search/details.php/card/{ident}/regu/XY'
@@ -125,6 +127,30 @@ def verify(candidate, network):
     evidence = {'detailSha256': CORE.digest(raw), 'officialNumberLabels': labels,
                 'searchEvidence': candidate['searchEvidence'], 'verifiedAt': datetime.now(timezone.utc).isoformat()}
     return {'record': record, 'evidence': evidence}
+
+
+def verify(candidate, network):
+    # The official search provides the ID/name/image relationship. Print numbers
+    # and expansion codes stay absent unless a verified detail checkpoint has them.
+    item = candidate['candidate']
+    ident = item['cardID']
+    name = item['cardNameAltText']
+    image = urljoin(BASE, item['cardThumbFile'])
+    if not re.fullmatch(r'https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9_-]*/0*' + ident + r'_[A-Za-z0-9_.-]+\.(?:jpg|png|jpeg|webp)', image, re.I):
+        raise ValueError('OFFICIAL_IMAGE_PATH_OR_ID_INVALID')
+    mime = {'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png', 'webp': 'image/webp'}[image.rsplit('.', 1)[1].lower()]
+    body = network.fetch(image, mime)
+    with Image.open(io.BytesIO(body)) as decoded:
+        decoded.load()
+        dimensions = list(decoded.size)
+        if min(dimensions) < 50:
+            raise ValueError('OFFICIAL_IMAGE_TOO_SMALL')
+    record = {'officialCardId': ident, 'name': name, 'imageSourceUrl': image,
+              'officialPageUrl': f'{BASE}/card-search/details.php/card/{ident}/regu/XY',
+              'verified': True, 'deckPrintAdopted': False, 'namePreviewEligible': False}
+    return {'record': record, 'evidence': {'kind': 'OFFICIAL_SEARCH_AND_DECODED_IMAGE',
+            'imageSha256': CORE.digest(body), 'imageDimensions': dimensions, 'imageBytes': len(body),
+            'searchEvidence': candidate['searchEvidence'], 'verifiedAt': datetime.now(timezone.utc).isoformat()}}
 
 
 def collect(args):

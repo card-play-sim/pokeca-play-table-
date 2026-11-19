@@ -22,6 +22,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+      - run: pip install Pillow==12.0.0
       - name: Check official-ID and print-shape regression
         run: python3 -m unittest discover -s tests -p test_official_image_reconciliation.py -v
       - name: Restore protected 6248-entry source
