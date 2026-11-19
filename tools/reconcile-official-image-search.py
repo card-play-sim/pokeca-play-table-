@@ -245,6 +245,9 @@ def collect(args):
 def checkpoint(args):
     # Fast-forward push only. A changed branch head rejects publication.
     root = Path(__file__).resolve().parents[1]
+    branch = subprocess.check_output(['git', 'branch', '--show-current'], cwd=root, text=True).strip()
+    if args.branch in ('main', 'master') or branch != args.branch:
+        raise ValueError('CHECKPOINT_REQUIRES_MATCHING_WORK_BRANCH')
     relative = args.output.resolve().relative_to(root)
     subprocess.run(['git', 'add', '--', str(relative)], cwd=root, check=True)
     if subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=root).returncode == 0:

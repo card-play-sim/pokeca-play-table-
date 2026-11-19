@@ -16,6 +16,7 @@ permissions:
   contents: write
 jobs:
   discover-and-register:
+    if: github.ref_name == 'work/official-image-completion-20261120'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
