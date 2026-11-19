@@ -71,6 +71,7 @@ def run(base):
         expect(page.locator('#card-preview')).to_be_visible()
         expect(page.locator('#preview-image')).to_have_attribute('src',image.get_attribute('src'))
         assert page.locator('#preview-image').evaluate("img=>getComputedStyle(img).objectFit") == 'contain'
+        assert page.locator('#preview-image').evaluate("img=>img.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true}))") is False
         page.mouse.click(2,2)
         expect(page.locator('#card-preview')).not_to_be_visible()
         image.click()
@@ -175,7 +176,8 @@ def run(base):
         expect(page.locator('.overview-count')).to_have_count(2)
         page.locator('#builder-back').click()
         page.locator("#deck-home-search").fill("シェイミ")
-        expect(page.locator(".deck-home-card")).to_have_count(1)
+        # The actual official-code fixture also contains Shaymin.
+        expect(page.locator(".deck-home-card")).to_have_count(2)
         tile.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
         page.get_by_role("button",name="対戦準備へ").click()

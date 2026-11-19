@@ -92,6 +92,8 @@ function addImage(parent, card) {
   parent.append(img);
 }
 const previewDialog=$('card-preview');
+previewDialog.addEventListener('contextmenu',event=>event.preventDefault());
+previewDialog.addEventListener('dragstart',event=>event.preventDefault());
 previewDialog.addEventListener('click',event=>{
   if(event.target===previewDialog)previewDialog.close();
 });
