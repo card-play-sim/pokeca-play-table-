@@ -2,6 +2,10 @@
 // Only setup uses loadGame; every tested effect is subsequently selected through DOM taps.
 async options => {
  const E=Pokeca, manifest=await (await fetch('data/fixed-test-decks.json')).json();
+ if(options.topSupporterSearch){
+  const row=manifest.decks[0].cards.find(card=>card.name==='ハイパーボール');
+  Object.assign(row,{name:'ポケギア3.0',category:'item',referenceOfficialCardId:'46199'});
+ }
  let seed=2;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
  const g=E.createReferenceValidationMatch(manifest,{rng,firstDeck:options.firstDeck||0}).game;
  delete g.pendingReferenceChoice;delete g.pendingPrizeSelection;g.turnNumber=3;g.turnPlayer='you';g.history=[];g.effectStates=[];
@@ -18,6 +22,11 @@ async options => {
   p.prizes=options.prizes?.[i]??6;p.prizeCards=pools[i].splice(0,p.prizes);p.deck=pools[i];
  });
  if(options.damage)for(const [i,n] of Object.entries(options.damage))g.players[Number(i)].active.damage=n;
+ if(options.topSupporterSearch){
+  const you=g.players[0],supporters=you.deck.filter(card=>card.cardType==='SUPPORTER');
+  const others=you.deck.filter(card=>card.cardType!=='SUPPORTER');
+  you.deck=[supporters[0],...others.slice(0,6),...supporters.slice(1),...others.slice(6)];
+ }
  const loaded=PokecaMobile.port.loadGame(g);if(!loaded.ok||loaded.viewError)throw Error(JSON.stringify(loaded));
  return PokecaMobile.port.getSnapshot();
 }

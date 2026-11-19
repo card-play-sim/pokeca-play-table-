@@ -440,3 +440,15 @@ html,body{height:100%;max-height:100%;overflow:hidden}
   .stadium .stadium-art img { max-height: 100%; object-fit: contain; }
 }
 .selection-choice-note { position: absolute; inset: auto 2px 2px; background: #fffef5; font-size: 10px; }
+
+/* Keep attachments inside the card and fit the board to the returned viewport. */
+.card > .attached-energy-images { bottom: 3px !important; max-width: calc(100% - 6px); flex-wrap: nowrap; overflow: hidden; }
+.card > .attached-energy-images > .attached-energy-card { min-width: 0; flex: 0 1 24px; height: 26px; }
+.card > .attached-energy-images > .attached-energy-card b { right: 0; bottom: 0; }
+.selection-grid button.selection-card-art:disabled { opacity: 1; border-color: #bdc5c1; }
+.selection-grid button.selection-with-context { aspect-ratio: auto; }
+.selection-grid button.selection-with-context > img { height: auto; aspect-ratio: 63/88; }
+.selection-target-context { display: block; font-size: 11px; line-height: 1.35; }
+@media (max-width: 600px) {
+  #app:not([hidden]) { height: calc(100dvh - 72px); max-height: calc(100dvh - 72px); min-height: 0; }
+}

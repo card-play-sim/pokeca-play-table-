@@ -20,4 +20,4 @@ for(const r of catalog.records){
  assert.equal(resolver.resolveDisplay({...card,officialCardId:r.officialCardId}).url,'');
 }
 for(const script of ['scripts/sync-reference-effects.cjs','scripts/sync-ai-policy.cjs'])assert.equal(spawnSync(process.execPath,[script,'--check'],{encoding:'utf8'}).status,0,script);
-console.log('PASS 89 source fingerprints, exact reference image tuples, contradictory print rejection and generated bundle checks');
+console.log('PASS 90 source fingerprints, exact reference image tuples, contradictory print rejection and generated bundle checks');

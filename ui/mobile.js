@@ -436,10 +436,15 @@ window.PokecaMobileBuild='256';
     // Never permit free-form damage or counter placement from the UI.
     for(const originalRequest of option.requests || []) {
       const request=Pokeca.resolveReferenceRequest(originalRequest,option.requests,action.selections);
-      if(request.min===0&&request.max===0){if(request.kind==='POKEMON')action.targetIds=[];else{action.selections||={};action.selections[request.key]=[];}continue;}
+      if(request.min===0&&request.max===0&&!request.inspection?.cards.length){if(request.kind==='POKEMON')action.targetIds=[];else{action.selections||={};action.selections[request.key]=[];}continue;}
       if(request.kind==='COUNTERS'){const allocation=await selectReferenceCounters(request);if(!allocation)return;action.selections||={};action.selections[request.key]=allocation;continue;}
       if(request.kind==='COUNT'){const choice=await selectCards({title:'のせ替えるダメカンの数',min:1,max:1,candidates:Array.from({length:Math.max(0,request.max-request.min+1)},(_,i)=>({id:String(i+request.min),name:(i+request.min)+'個'}))});if(!choice)return;action.selections||={};action.selections[request.key]=Number(choice[0]);continue;}
-      const choices=await selectCards({title:request.kind==='CARD'?'効果の対象カードを選ぶ':'ワザ・特性の対象ポケモンを選ぶ',min:request.min,max:request.max,constraints:request.constraints||[],candidates:request.candidates.map(c=>{const id=c.instanceId||idOf(c);const state=view();const owner=state.players.find(p=>p.active&&idOf(p.active)===id||p.bench?.some(b=>idOf(b)===id));const benchIndex=owner?.bench?.findIndex(b=>idOf(b)===id)??-1;const position=benchIndex>=0?'ベンチ'+(benchIndex+1):'バトル場';if(request.kind==='CARD'&&!owner)return {...c,id,name:c.name||c.cardName||'カード'};const side=owner?.id==='you'?'自分':owner?'相手':'対象';const mon=benchIndex>=0?owner?.bench[benchIndex]:owner?.active;const hp=mon?.hp!=null?' · 残りHP '+Math.max(0,Number(mon.hp)-Number(mon.damage||0)):'';return {...c,id,label:side+' '+position+' · '+(mon?.name||c.name||'ポケモン')+hp};})});
+      const visual=request.inspection?.privateTo==='you'?request.inspection.cards:null;
+      const eligibility=request.candidates.map(c=>({...c,id:c.instanceId||idOf(c)}));
+      const title=visual?'自分だけが見られる山札':request.key==='attachTo'?'エネルギーをつける先を選ぶ':
+        request.key==='energy'&&eligibility.some(c=>c.containerId)?'移動元のエネルギーを選ぶ':'効果の対象を選ぶ';
+      const choices=await selectCards({title,min:request.min,max:request.max,constraints:request.constraints,
+        candidates:eligibility,visible:visual||eligibility});
       if(!choices)return;
       if(request.kind==='POKEMON')action.targetIds=choices;else{action.selections ||= {};action.selections[request.key]=choices;}
     }
@@ -458,16 +463,69 @@ window.PokecaMobileBuild='256';
     const visible=getCard(candidate.instanceId||candidate.id)?.card;
     return visible||candidate.kind||candidate.cardType?cardArt(visible||candidate):fallbackArt(candidate);
   }
-  function selectCards({title,min,max,candidates,constraints=[]}) {return new Promise(resolve=>{
-    const unit=/エネルギー|カード|山札|サポート/.test(title)?'枚':'匹';
-    const selectedIds=new Set();let settled=false;
-    // A close event is queued: settle after it fires so it cannot cancel the next selector.
-    const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
+  function selectionContext(candidate){
+    const id=candidate.containerId||candidate.id||candidate.instanceId;
+    for(const owner of view().players){
+      const index=owner.bench.findIndex(card=>idOf(card)===id);
+      const mon=index>=0?owner.bench[index]:idOf(owner.active)===id?owner.active:null;
+      if(!mon)continue;
+      const counts=new Map();
+      for(const energy of mon.energyCards||[]){
+        const type=energy.isSpecial?energy.name:energy.energyType||energy.name;
+        counts.set(type,(counts.get(type)||0)+1);
+      }
+      const summary=[...counts].map(([type,count])=>type+' ×'+count).join('・')||'エネルギーなし';
+      return (owner.id==='you'?'自分':'相手')+' '+(index<0?'バトル場':'ベンチ '+(index+1))+' · '+mon.name+' · '+summary;
+    }
+    return '';
+  }
+  function selectCards({title,min,max,candidates,visible=candidates,constraints=[]}) {return new Promise(resolve=>{
+    const selectedIds=new Set(), choices=new Map(candidates.map(card=>[idOf(card),card]));
+    let settled=false;
+    const done=value=>{
+      if(settled)return;
+      settled=true;
+      sheet.removeEventListener('close',cancel);
+      $('selection-cards')?.replaceChildren();
+      if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}
+      else resolve(value);
+    };
     const cancel=()=>done(null);
-    openSheet(title,`<p>選択できるカードだけを表示しています。${min===max?`${min}${unit}選択してください。`:`${min}〜${max}${unit}選択できます。`}</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
+    openSheet(title,`<div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${max}</span><button id="selection-confirm" class="primary" ${min?'disabled':''}>決定</button></div>`);
     sheet.addEventListener('close',cancel);
-    for(const card of candidates){const label=card.label||card.name||'カード';const b=button(label,()=>{if(selectedIds.has(card.id))selectedIds.delete(card.id);else{if(max===1)selectedIds.clear();if(selectedIds.size<max&&Pokeca.isSelectionAllowed(candidates,[...selectedIds,card.id],constraints))selectedIds.add(card.id);else toast('この組み合わせは効果の条件を満たしません');}document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));$('selection-count').textContent=selectedIds.size+'/'+max;$('selection-confirm').disabled=selectedIds.size<min;document.querySelectorAll('#selection-cards button').forEach(el=>{const id=el.dataset.selectionId;el.disabled=!selectedIds.has(id)&&!Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints);});});b.dataset.selectionId=card.id;b.setAttribute('aria-pressed','false');b.classList.add('selection-card-art');b.setAttribute('aria-label',label);b.innerHTML=selectionArt(card);$('selection-cards').append(b);}
+    function update(){
+      $('selection-count').textContent=selectedIds.size+'/'+max;
+      $('selection-confirm').disabled=selectedIds.size<min;
+      for(const item of $('selection-cards').querySelectorAll('button')){
+        const id=item.dataset.selectionId,chosen=selectedIds.has(id);
+        item.setAttribute('aria-pressed',String(chosen));
+        item.disabled=!chosen&&(!choices.has(id)||max===0||(max>1&&selectedIds.size>=max)||
+          !Pokeca.isSelectionAllowed(candidates,[...(max===1?[]:selectedIds),id],constraints));
+      }
+    }
+    for(const card of visible){
+      const id=idOf(card),choice=choices.get(id),label=card.label||card.name||'カード';
+      const context=selectionContext(choice||card);
+      const item=button(label,()=>{
+        if(selectedIds.has(id))selectedIds.delete(id);
+        else {if(max===1)selectedIds.clear();selectedIds.add(id);}
+        update();
+      });
+      item.dataset.selectionId=id;
+      item.className='selection-card-art';
+      item.setAttribute('aria-label',[label,context,choice?'':'閲覧のみ'].filter(Boolean).join(' · '));
+      item.innerHTML=selectionArt(card);
+      if(context||!choice){
+        item.classList.add('selection-with-context');
+        const note=document.createElement('span');
+        note.className='selection-target-context';
+        note.textContent=context||'閲覧のみ';
+        item.append(note);
+      }
+      $('selection-cards').append(item);
+    }
     $('selection-confirm').onclick=()=>done([...selectedIds]);
+    update();
   });}
   async function resolveDeckSearchPlay(action,search){
     const source=playedCardSource('you',action);
@@ -483,28 +541,9 @@ window.PokecaMobileBuild='256';
     if(!Array.isArray(filters)||!filters.every(f=>f.field==='cardType'&&f.operator==='EQUALS')){toast('この検索条件はまだ未対応です');return Promise.resolve(null);}
     const eligible=deck.filter(c=>filters.every(f=>c.cardType===f.value));
     const minimum=Math.min(search.min||0,eligible.length),maximum=search.max||1;
-    return new Promise(resolve=>{
-      const selectedIds=new Set();let settled=false;
-      // A close event is queued: settle after it fires so it cannot cancel the next selector.
-      const done=value=>{if(settled)return;settled=true;sheet.removeEventListener('close',cancel);if(sheet.open){sheet.addEventListener('close',()=>resolve(value),{once:true});sheet.close();}else resolve(value);};
-      const cancel=()=>done(null);
-      openSheet(title,`<p>山札全${deck.length}枚を表示しています。選択できるのは効果の条件を満たすカードだけです。選択 ${minimum}〜${maximum}枚。</p><div class="selection-grid" id="selection-cards"></div><div class="selection-footer"><span id="selection-count">0/${maximum}</span><button id="selection-confirm" class="primary" ${minimum?'disabled':''}>決定</button></div>`);
-      sheet.addEventListener('close',cancel);
-      for(const card of deck){
-        const id=idOf(card),allowed=eligible.some(c=>idOf(c)===id);
-        const b=button(card.name||'カード',()=>{
-          if(!allowed)return;
-          if(selectedIds.has(id))selectedIds.delete(id);
-          else {if(maximum===1)selectedIds.clear();if(selectedIds.size<maximum)selectedIds.add(id);else toast('最大'+maximum+'枚までです');}
-          document.querySelectorAll('#selection-cards button').forEach(el=>el.setAttribute('aria-pressed',String(selectedIds.has(el.dataset.selectionId))));
-          $('selection-count').textContent=selectedIds.size+'/'+maximum;
-          $('selection-confirm').disabled=selectedIds.size<minimum;
-        },{disabled:!allowed});
-        b.dataset.selectionId=id;b.setAttribute('aria-pressed','false');b.title=allowed?'選択できます':'効果の対象外（閲覧のみ）';b.classList.add('selection-card-art');b.setAttribute('aria-label',card.name||'カード');try{b.innerHTML=selectionArt(card);}catch(error){console.error('Card selection artwork failed',card.id,error);b.innerHTML=fallbackArt(card);} $('selection-cards').append(b);
-      }
-      $('selection-confirm').onclick=()=>done([...selectedIds]);
-    });
+    return selectCards({title,min:minimum,max:maximum,candidates:eligible.map(card=>({...card,id:idOf(card)})),visible:deck});
   }
+
   function referenceStopped(){return view().referenceEffectValidation&&window.PokecaReferenceValidationStop?.matchId===port.getSessionId();}
   function referenceStop(errors,blockedEffects=[]){
     if(!view().referenceEffectValidation)return;

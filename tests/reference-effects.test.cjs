@@ -5,7 +5,7 @@ const ctx={window:{},performance,console,Math:MathCopy,setTimeout};vm.runInNewCo
 const manifest=JSON.parse(fs.readFileSync('data/fixed-test-decks.json','utf8'));
 const catalog=E.getReferenceEffectCatalog(),byName=name=>catalog.records.find(r=>r.officialCardId===catalog.defaultValidationReferences[name]);
 function setup(options={}){
- let seed=2;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};let g=E.createReferenceValidationMatch(manifest,{rng,firstDeck:options.firstDeck||0,referenceIds:options.referenceIds||{}}).game;
+ let seed=2;const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};let g=E.createReferenceValidationMatch(options.manifest||manifest,{rng,firstDeck:options.firstDeck||0,referenceIds:options.referenceIds||{}}).game;
  delete g.pendingReferenceChoice;delete g.pendingPrizeSelection;g.turnNumber=3;g.turnPlayer='you';g.history=[];g.effectStates=[];
  const pools=g.players.map(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards].filter(Boolean));
  const take=(i,name)=>{const at=pools[i].findIndex(c=>c.name===name);assert(at>=0,'Missing fixed-deck fixture '+name);return pools[i].splice(at,1)[0];};
@@ -27,7 +27,7 @@ function setup(options={}){
 function actionFor(t,actor,name,type){const p=t.g.players.find(p=>p.id===actor),card=p.hand.find(c=>c.name===name);assert(card);const choices=t.port.getHandOptions(actor,card.id);const x=choices.find(x=>x.action.type===type);assert(x,JSON.stringify(choices));assert(x.ok,JSON.stringify(x));return x.action;}
 function ability(t,actor,name){const p=t.g.players.find(p=>p.id===actor),c=[p.active,...p.bench].find(c=>c.name===name);const x=t.port.getPokemonActions(actor,c.id).find(a=>a.kind==='ability'&&a.enabled);assert(x,JSON.stringify(t.port.getPokemonActions(actor,c.id)));return x.action;}
 let cases=0;function test(name,fn){try{fn();console.log('PASS reference '+name);cases++;}catch(e){console.error('FAIL reference '+name);throw e;}}
-test('89 print-specific references, 45 default names, no adoption',()=>{assert.equal(catalog.records.length,89);assert.equal(Object.keys(catalog.defaultValidationReferences).length,45);assert.equal(catalog.adoptedDeckPrints,0);const t=setup();assert(t.g.players.every(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards].filter(Boolean).every(c=>!c.officialCardId&&!c.catalogCardId&&c.validationReference.adopted===false)));});
+test('90 print-specific references, 45 default names, no adoption',()=>{assert.equal(catalog.records.length,90);assert.equal(Object.keys(catalog.defaultValidationReferences).length,45);assert.equal(catalog.adoptedDeckPrints,0);const t=setup();assert(t.g.players.every(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards].filter(Boolean).every(c=>!c.officialCardId&&!c.catalogCardId&&c.validationReference.adopted===false)));});
 test('fixed 20 damage, real energy, turn draw and identity preservation',()=>{const t=setup({energy:{0:{active:['基本悪エネルギー']}}});const count=t.g.players[1].hand.length;t.do('you',{type:'attack_turn',attackIndex:0});assert.equal(t.g.players[1].active.damage,20);assert.equal(t.g.turnPlayer,'ai');assert.equal(t.g.players[1].hand.length,count+1);});
 test('shared special conditions: poison and burn permit attacks; sleep and paralysis prohibit attacks across two Pokemon',()=>{
  for(const fixture of [
@@ -147,7 +147,7 @@ test('stretcher only moves real discard target and preserves its ID',()=>{const 
 test('supporter once per turn and printed Lillie draw eight at six prizes',()=>{const t=setup({hand:{0:['リーリエの決心','ジャッジマン']}});t.do('you',actionFor(t,'you','リーリエの決心','play_supporter'));assert.equal(t.g.players[0].hand.length,8);assert(t.g.players[0].turnLimits.supporterUsed);const c=t.g.players[0].hand.find(c=>c.cardType==='SUPPORTER');if(c)t.reject('you',{type:'play_supporter',cardId:c.id},/SUPPORTER/);});
 test('judge resets both exact hands to four, not synthetic demo effect',()=>{const t=setup({hand:{0:['ジャッジマン','基本悪エネルギー'],1:['基本炎エネルギー']}});t.do('you',actionFor(t,'you','ジャッジマン','play_supporter'));assert.equal(t.g.players[0].hand.length,4);assert.equal(t.g.players[1].hand.length,4);});
 test('boss caster choice and repellent defender choice are distinct',()=>{let t=setup({hand:{0:['ボスの指令']},bench:{1:['スボミー']}});const target=t.g.players[1].bench[0].id;t.do('you',actionFor(t,'you','ボスの指令','play_supporter'));assert.equal(t.g.players[1].active.id,target);t=setup({hand:{0:['むしよけスプレー']},bench:{1:['スボミー','ノコッチ']}});t.do('you',actionFor(t,'you','むしよけスプレー','play_item'));assert.equal(t.g.pendingReferenceChoice.playerId,'ai');t.reject('you',{type:'resolve_reference_choice',benchInstanceId:t.g.players[1].bench[0].id},/turn|CHOICE/);const chosen=t.g.players[1].bench[1].id;t.do('ai',{type:'resolve_reference_choice',benchInstanceId:chosen});assert.equal(t.g.players[1].active.id,chosen);});
-test('all 89 verified reference print effects have connected plans without adopting official prints',()=>{assert.equal(catalog.records.length,89);for(const r of catalog.records){for(const effect of [...r.attacks,...r.abilities])assert(effect.plan,'missing '+r.officialCardId+':'+effect.name);}assert.equal(catalog.adoptedDeckPrints,0);});
+test('all 90 verified reference print effects have connected plans without adopting official prints',()=>{assert.equal(catalog.records.length,90);for(const r of catalog.records){for(const effect of [...r.attacks,...r.abilities])assert(effect.plan,'missing '+r.officialCardId+':'+effect.name);}assert.equal(catalog.adoptedDeckPrints,0);});
 test('shared self-switch attack uses selected bench target on both verified print variants',()=>{
  for(const officialCardId of ['47086','49290']){
   const t=setup({active:['ロケット団のニューラ','ノコッチ'],bench:{1:['ドラメシヤ']},
@@ -260,6 +260,38 @@ test('shared deck-top inspection preserves identity, privacy and deck size acros
   assert.equal(p.deck.length,before-1);
   assert.equal(p.deck.at(-1).id,top[1-selected]);
   assert(t.g.history.some(h=>h.details?.command==='ADD_TO_HAND'&&h.details?.privateTo==='you'));
+ }
+});
+test('top-seven search scopes cards, rejects outside IDs and only reveals the choice',()=>{
+ const fixture=JSON.parse(JSON.stringify(manifest));
+ const replaced=fixture.decks[0].cards.find(c=>c.name==='ハイパーボール');
+ Object.assign(replaced,{name:'ポケギア3.0',category:'item',referenceOfficialCardId:'46199'});
+ for(const scenario of ['select','decline','no-target']){
+  const t=setup({manifest:fixture,hand:{0:['ポケギア3.0']}});
+  const p=t.g.players[0],card=p.hand[0];
+  const supporters=p.deck.filter(c=>c.cardType==='SUPPORTER');
+  const other=p.deck.filter(c=>c.cardType!=='SUPPORTER');
+  p.deck=scenario==='no-target'?[...other.slice(0,3)]:[supporters[0],...other.slice(0,6),...supporters.slice(1),...other.slice(6)];
+  if(scenario==='no-target')p.discard.push(...other.slice(3),...supporters);
+  assert(t.port.loadGame(t.g).ok);
+  const request=t.port.getHandOptions('you',card.id)[0].requests[0];
+  const top=p.deck.slice(0,7);
+  assert.equal(request.inspection.privateTo,'you');
+  assert.equal(JSON.stringify(request.inspection.cards.map(c=>c.id)),JSON.stringify(top.map(c=>c.id)));
+  assert.equal(request.candidates.length,scenario==='no-target'?0:1);
+  assert.equal(t.port.getView('ai').players.find(p=>p.id==='you').deck.length,0);
+  const action={type:'play_item',cardId:card.id,selections:{cards:[]}};
+  if(scenario!=='no-target')t.reject('you',{...action,selections:{cards:[supporters[1].id]}},/SELECTION/);
+  t.reject('you',{...action,selections:{cards:[other[0].id]}},/SELECTION/);
+  if(scenario==='select')action.selections.cards=[supporters[0].id];
+  const length=p.deck.length;
+  t.do('you',action);
+  assert.equal(t.g.players[0].deck.length,length-action.selections.cards.length);
+  const reveals=t.g.history.filter(e=>e.details?.command==='REVEAL'&&e.details?.cardIds);
+  assert.equal(JSON.stringify(reveals.flatMap(e=>e.details.cardIds)),JSON.stringify(action.selections.cards));
+  const save=t.port.getResumeSnapshot();
+  const restored=t.port.restoreSession(save);assert(restored.ok,JSON.stringify(restored));
+  assert(!JSON.stringify(t.port.getView('ai')).includes(other[0].id)||scenario==='no-target');
  }
 });
 test('Recon looks at exactly two, adds one and returns the other to bottom',()=>{const t=setup({firstDeck:1,active:['ドロンチ','ロケット団のニューラ']});const top=t.g.players[0].deck.slice(0,2).map(c=>c.id),a=ability(t,'you','ドロンチ');t.do('you',a);assert(t.g.players[0].hand.some(c=>c.id===top[0]));assert.equal(t.g.players[0].deck.at(-1).id,top[1]);});

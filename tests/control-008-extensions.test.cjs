@@ -51,6 +51,6 @@ run('existing official intake, checkpoint importer and shared batch pipeline acc
 });
 run('6001 shared compilation operations do not depend on card names or print IDs',()=>{
  const {compile}=require('../engine/reference-effect-plans.cjs');for(let i=0;i<6001;i++){const row=intake.records[i%6];const r=compile({records:[row]}).records[0];assert(r.mainPlan);assert(!E.getReferenceEffectCatalog().defaultValidationReferences[row.name]);}
- assert.equal(E.getReferenceEffectCatalog().records.length,89);assert.equal(E.getReferenceEffectCatalog({includeExtensions:true}).records.length,89+data.records.length);assert.deepEqual(fixed,JSON.parse(fs.readFileSync('data/fixed-test-decks.json')));
+ assert.equal(E.getReferenceEffectCatalog().records.length,90);assert.equal(E.getReferenceEffectCatalog({includeExtensions:true}).records.length,90+data.records.length);assert.deepEqual(fixed,JSON.parse(fs.readFileSync('data/fixed-test-decks.json')));
 });
 fs.mkdirSync('test-results',{recursive:true});fs.writeFileSync('test-results/control-008-extensions.json',JSON.stringify({scope:'outside-fixed-deck-supplemental-official-references',actualAdditionalPrints:data.records.length,sharedCompilationWorkload:6001,notClaiming6001OfficialCards:true,results},null,2)+'\n');console.log(JSON.stringify(results,null,2));if(results.some(r=>r.status==='FAILED'))process.exitCode=1;

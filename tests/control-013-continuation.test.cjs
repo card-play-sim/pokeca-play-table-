@@ -27,7 +27,7 @@ for (const r of raw.records) {
 const baseline = JSON.parse(
   fs.readFileSync("data/reference-effects/plans.json"),
 );
-assert.equal(baseline.records.length, 89);
+assert.equal(baseline.records.length, 90);
 const before = fs.readFileSync(
     "data/official-effect-intake/checkpoint.json",
     "utf8",

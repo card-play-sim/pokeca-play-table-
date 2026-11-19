@@ -30,3 +30,7 @@
 #battle-home { font-size: .78rem; min-height: 36px; white-space: nowrap; }
 
 html.deck-home-active, html.deck-home-active body { height: auto; max-height: none; overflow: visible; }
+#deck-home { background: #fff; }
+#deck-home button.deck-cover { display: block; width: 100%; padding: 0; border: 0; background: transparent; }
+#deck-home-details { width: min(92vw,420px); max-height: 80dvh; }
+#deck-detail-cards { padding-inline-start: 1.25rem; }
