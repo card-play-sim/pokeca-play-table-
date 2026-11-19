@@ -6,7 +6,7 @@ const officialLayout='デッキコード[kbvV5V-TEZjLI-dVfVVk]のデッキレシ
 
 const registry = JSON.parse(fs.readFileSync('data/official-image-registry.json','utf8'));
 const formal = JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
-const catalog = api.catalogFrom(registry, formal);
+const catalog = api.catalogFrom(registry, formal, JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')));
 assert.ok(catalog.size > 1000);
 assert.equal(catalog.get('47832').name,'ケーシィ');
 // Captured hidden fields from the official construction page for this code.

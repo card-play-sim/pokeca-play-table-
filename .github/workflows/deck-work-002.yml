@@ -1,0 +1,60 @@
+name: DECK-WORK-002 classification and mobile deck checks
+on:
+  pull_request:
+    paths:
+      - 'data/deck-building/**'
+      - 'ui/deck-*.js'
+      - 'ui/saved-decks.js'
+      - 'deck-builder.html'
+      - 'tests/deck-classification.test.cjs'
+      - 'tests/deck-editor-browser.py'
+      - '.github/workflows/deck-work-002.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/deck-building/catalog.json'
+      - '.github/workflows/deck-work-002.yml'
+permissions:
+  contents: read
+jobs:
+  classified-mobile-decks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify protected registry and all classified IDs
+        run: |
+          node tests/deck-classification.test.cjs
+          node tests/deck-code-import.test.cjs
+          node tests/imported-deck-match.test.cjs
+          node scripts/build-pwa-release.cjs --check
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Exercise mobile editor and actual saved deck match
+        if: github.event_name == 'pull_request'
+        run: python tests/deck-editor-browser.py
+      - name: Confirm deployed release before live interaction
+        if: github.event_name == 'push'
+        env:
+          RELEASE_VERIFY_ATTEMPTS: '16'
+          RELEASE_VERIFY_INTERVAL_MS: '30000'
+        run: node scripts/verify-published-pwa.cjs
+      - name: Exercise existing published app in mobile Chromium
+        if: github.event_name == 'push'
+        env:
+          POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
+        run: python tests/deck-editor-browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deck-work-002-${{ github.event_name }}
+          path: test-results
+          if-no-files-found: warn
