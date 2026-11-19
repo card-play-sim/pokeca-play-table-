@@ -20,8 +20,13 @@ for(const b of data.bindings.filter(b=>!b.nameAlias&&!b.numberlessEnergy)){
  assert.equal(r.resolvePreview({...print,name:'別カード'}),'');
 }
 const fire=data.bindings.find(b=>b.deckName==='基本炎エネルギー');
-assert.equal(fire.preview.cardNumber,null);assert(!registry.cards.some(c=>c.officialCardId===fire.preview.officialCardId));
-assert.equal(r.resolve({...fire.preview,cardNumber:undefined}),'','numberless evidence must never be promoted into strict registry');
+assert.equal(fire.preview.cardNumber,null);
+const registeredFire=registry.cards.find(c=>c.officialCardId===fire.preview.officialCardId);
+assert(registeredFire,'an independently verified numberless official image can be registered');
+assert.equal(registeredFire.name,fire.preview.name);
+assert.equal(registeredFire.imageSourceUrl,fire.preview.imageSourceUrl);
+assert.equal(r.resolve({officialCardId:registeredFire.officialCardId,name:registeredFire.name}),fire.preview.imageSourceUrl);
+assert.equal(r.resolveDisplay(deck.decks.flatMap(d=>d.cards).find(c=>c.name==='基本炎エネルギー')).adopted,false,'image registration never adopts a deck printing');
 assert.equal(r.resolvePreview({name:'基本炎エネルギー',set:'OTHER'}),'');
 assert.equal(r.resolvePreview({name:'基本炎エネルギー',evolutionCards:[{name:'別カード',officialCardId:'99999'}]}),'');
 assert.equal(r.resolveDisplay({name:'たけしのスカウト'}).officialName,'タケシのスカウト');

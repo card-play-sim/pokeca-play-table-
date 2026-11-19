@@ -9,7 +9,9 @@ try {
   const page=await browser.newPage({viewport:{width:393,height:851},isMobile:true,hasTouch:true,serviceWorkers:'block'});
   const errors=[];
   page.on('pageerror',error=>errors.push(String(error)));
-  await page.goto(publishedUrl||'about:blank',{waitUntil:'domcontentloaded'});
+  const appUrl=publishedUrl?new URL(publishedUrl):null;
+  if(appUrl)appUrl.hash='battle';
+  await page.goto(appUrl?.href||'about:blank',{waitUntil:'domcontentloaded'});
   let galleryPages=0;
   const gallery=[];
   if(publishedUrl){

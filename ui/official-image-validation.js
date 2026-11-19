@@ -5,7 +5,7 @@
   else root.PokecaImageValidation=api;
 })(typeof window==='object'?window:globalThis,function(){
   'use strict';
-  const validURL=url=>typeof url==='string'&&/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\/[A-Za-z0-9_-]+\/[A-Za-z0-9_.-]+\.(jpg|jpeg|png|webp)$/i.test(url);
+  const validURL=url=>typeof url==='string'&&/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/(?:large|legend)\/[A-Za-z0-9_-]*\/[A-Za-z0-9_.-]+\.(jpg|jpeg|png|webp|gif)$/i.test(url);
   const present=v=>v!==undefined&&v!==null;
   function canonical(raw){
     if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('IMAGE_REGISTRY_INVALID_CARD');

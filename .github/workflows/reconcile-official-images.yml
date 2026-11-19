@@ -1,0 +1,55 @@
+name: Reconcile every official card image by ID
+on:
+  push:
+    branches: [work/official-image-completion-20261120]
+    paths:
+      - tools/reconcile-official-image-search.py
+      - tools/stage-reconciled-image-search.py
+      - ui/official-image-validation.js
+      - tests/test_official_image_reconciliation.py
+      - .github/workflows/reconcile-official-images.yml
+  workflow_dispatch:
+concurrency:
+  group: official-image-completion-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  discover-and-register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - run: pip install Pillow==12.0.0
+      - name: Check official-ID and print-shape regression
+        run: python3 -m unittest discover -s tests -p test_official_image_reconciliation.py -v
+      - name: Restore protected 6248-entry source
+        run: |
+          git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/protected-6248.json
+          echo 'b0c26612a90688026c4b7201d7909bde20f6e203cea47c9b28ba89fe3be0e0c8  /tmp/protected-6248.json' | sha256sum -c -
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Discover official IDs and persist verified references
+        run: |
+          python3 tools/reconcile-official-image-search.py /tmp/protected-6248.json data/image-automation/official-completion-20261120 --rate 24 --workers 32 --checkpoint-every 500 --branch '${{ github.ref_name }}'
+      - name: Stage append-only image registry and verified release
+        run: |
+          python3 tools/stage-reconciled-image-search.py data/official-image-registry.json /tmp/protected-6248.json data/image-automation/official-completion-20261120
+          node scripts/build-pwa-release.cjs
+          node scripts/build-pwa-release.cjs --check
+          node tests/image-resolver-existing.test.mjs
+          git add data/official-image-registry.json data/image-automation/official-completion-20261120 sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Append official image references and exact search coverage'
+            git push origin 'HEAD:refs/heads/${{ github.ref_name }}'
+          fi
+      - name: Preserve resumable evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-image-completion
+          path: data/image-automation/official-completion-20261120
+          if-no-files-found: warn
