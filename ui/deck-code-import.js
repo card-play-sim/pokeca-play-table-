@@ -74,29 +74,44 @@ function parseHtml(html, code) {
  }
  return parseFields(values, code);
 }
-function catalogFrom(registry, formal) {
+function catalogFrom(registry, formal, classification = {records:[]}) {
+ const classified = new Map(classification.records.map(row => [String(row.officialCardId), row]));
  const rows = Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {});
  const formalById = new Map((Array.isArray(formal.records) ? formal.records : Object.values(formal.records || {}))
   .map(row => [String(row.officialCardId), row]));
  const duplicates = new Set();
  const cards = new Map();
+ cards.archive = new Map();
+ const seen = new Set();
  for (const row of rows) {
   const id = String(row.officialCardId || '');
   const url = row.imageSourceUrl;
-  if (!/^\d+$/.test(id) || row.verified !== true || !row.name ||
+  if (!/^\d+$/.test(id) || row.verified === false || !row.name ||
    !new RegExp('^https://www\\.pokemon-card\\.com/card-search/details\\.php/card/'+id+'(?:/|$)').test(row.officialPageUrl) ||
    !/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(url)) continue;
-  if (cards.has(id)) { duplicates.add(id); continue; }
+  if (seen.has(id)) { duplicates.add(id); continue; }
+  seen.add(id);
+  cards.archive.set(id,{id,name:row.name,url,pack:row.set,number:row.cardNumber,category:'unknown'});
   const evidence = formalById.get(id);
   if (evidence && (evidence.name !== row.name ||
      (evidence.set && row.set && evidence.set !== row.set) ||
      (evidence.cardNumber && row.cardNumber && evidence.cardNumber !== row.cardNumber))) continue;
-  const imageType = url.match(/\/\d+_([PTE])_/i)?.[1]?.toUpperCase();
-  const category = evidence?.category || row.category ||
-   ({P:'pokemon',T:'trainer',E:'energy'}[imageType] || 'unknown');
-  cards.set(id, {id,name:row.name,url,category,pack:row.set,number:row.cardNumber});
+  const proof = classified.get(id);
+  const categories = ['pokemon','goods','support','tool','stadium','energy'];
+  if (!proof || !categories.includes(proof.category) ||
+      !/^[a-f0-9]{64}$/.test(proof.source?.sha256) ||
+      proof.source.identityName !== row.name || proof.source.identityImageUrl !== url ||
+      !(proof.source.url === row.officialPageUrl || proof.source.kind === 'official-filtered-search' &&
+        /^https:\/\/www\.pokemon-card\.com\/card-search\/resultAPI\.php\?/.test(proof.source.url)) ||
+      !(['H','I','J'].includes(proof.regulationMark) && proof.legality === 'printed-hij' &&
+         /^[a-f0-9]{64}$/.test(proof.markEvidence?.imageSha256) ||
+        proof.basicEnergy === true && proof.category === 'energy' &&
+         proof.source.heading === '基本エネルギー' && proof.legality === 'official-basic-energy-exception')) continue;
+  cards.set(id, {id,name:row.name,url,category:proof.category,pack:proof.pack,number:proof.number,
+    regulationMark:proof.regulationMark,basicEnergy:proof.basicEnergy,aceSpec:proof.aceSpec,
+    pokemonStage:proof.pokemonStage});
  }
- for (const id of duplicates) cards.delete(id);
+ for (const id of duplicates) { cards.delete(id); cards.archive.delete(id); }
  return cards;
 }
 async function loadCatalog() {
@@ -105,10 +120,11 @@ async function loadCatalog() {
   if (!response.ok) throw Error('カード台帳を読み込めませんでした');
   return response.json();
  };
- const [registry, formal] = await Promise.all([
-  read('data/official-image-registry.json'), read('data/reference-effects/catalog.json')
+ const [registry, formal, classification] = await Promise.all([
+  read('data/official-image-registry.json'), read('data/reference-effects/catalog.json'),
+  read('data/deck-building/catalog.json')
  ]);
- const cards = catalogFrom(registry, formal);
+ const cards = catalogFrom(registry, formal, classification);
  if (!cards.size) throw Error('照合可能なカードがありません');
  return cards;
 }

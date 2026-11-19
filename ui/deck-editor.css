@@ -78,3 +78,20 @@ textarea { width: 100%; }
 .builder-quantity button { min-height: 40px; padding: 0; }
 .builder-card .add-card { margin-top: auto; padding-inline: .15rem; }
 #deck-menu { margin-top: .6rem; }
+
+/* Native image actions must not replace the card preview on Android. */
+.deck-builder img { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+#card-preview { width: min(92vw,440px); max-height: 94dvh; border: 0; border-radius: .8rem; padding: .75rem; background: white; color: #192f2d; }
+#card-preview::backdrop { background: rgba(0,0,0,.75); }
+#card-preview form { display: flex; justify-content: flex-end; }
+#card-preview img { width: 100%; max-height: 77dvh; object-fit: contain; }
+#card-preview h2 { font-size: .95rem; margin: .35rem 0; }
+
+/* Long-press cards stay inside the app; zoom preserves the entire official print. */
+.deck-builder .builder-card img, .deck-builder .deck-overview img { touch-action: pan-y; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+#card-preview { overscroll-behavior: contain; }
+#card-preview img { object-fit: contain; -webkit-touch-callout: none; }
+/* Keep search filters within a narrow phone screen. */
+#search-screen .toolbar { display: flex; flex-wrap: wrap; gap: .4rem; }
+#query { width: 100%; }
+#search-screen select { max-width: 100%; min-width: 0; flex: 1; }

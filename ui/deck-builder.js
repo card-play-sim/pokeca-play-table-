@@ -53,16 +53,56 @@ try {
 function deckStatus() {
   const unknown = blocked(current).length + rows(current).filter(([id]) => !cards.has(id)).length;
   if (unknown) return 'BLOCKED · 照合できないカードが' + unknown + '行あります。';
-  return compositionError(current,cards,plans);
+  const error = compositionError(current,cards,plans);
+  if (error) return error;
+  const unsupported = rows(current).filter(([id]) => !plans.has(id));
+  return unsupported.length ? '保存できます · 対戦未対応のカード効果 '+unsupported.length+'種類' : '';
 }
 
 function addImage(parent, card) {
-
   const img = document.createElement('img');
   img.src = card?.url || "ui/card-back.svg";
   img.alt = card?.name || "";
   img.loading = 'lazy';
+  img.draggable = false;
+  // Prevent Android's native image menu; use the app's own preview instead.
+  img.addEventListener('contextmenu',event=>event.preventDefault());
+  let hold;
+  let held = false;
+  let activePointer = null;
+  let startX = 0, startY = 0;
+  let suppressNextClick = false;
+  img.addEventListener('pointerdown',event=>{
+    if(event.pointerType==='mouse' && event.button!==0)return;
+    if(activePointer!==null)return;
+    activePointer=event.pointerId;
+    startX=event.clientX;startY=event.clientY;
+    held=false;
+    hold=setTimeout(()=>{held=true;suppressNextClick=true;showPreview(card);},500);
+  });
+  img.addEventListener('pointermove',event=>{
+    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12)clearTimeout(hold);
+  });
+  for(const name of ['pointerup','pointercancel','pointerleave'])
+    img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
+  img.addEventListener('click',event=>{
+    if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
+  },true);
+  img.addEventListener('dragstart',event=>event.preventDefault());
   parent.append(img);
+}
+const previewDialog=$('card-preview');
+previewDialog.addEventListener('click',event=>{
+  if(event.target===previewDialog)previewDialog.close();
+});
+previewDialog.addEventListener('close',()=>{$('preview-image').removeAttribute('src');});
+function showPreview(card){
+  if(!card?.url)return;
+  const dialog=$('card-preview');
+  $('preview-image').src=card.url;
+  $('preview-image').alt=card.name;
+  $('preview-title').textContent=card.name;
+  if(!dialog.open)dialog.showModal();
 }
 
 function control(text, label, action) {
@@ -80,7 +120,7 @@ function drawDeck() {
   cover.replaceChildren(new Option('自動',''));
   const entries = [];
   for (const [id,count] of rows(current)) {
-    const card = cards.get(id);
+    const card = cards.get(id) || cards.archive?.get(id);
     if (card) cover.add(new Option(card.name+' #'+id,id));
     entries.push({key:id,count,card,name:card?.name || 'カードID '+id,
       category:card?categoryOf(card,current.categories?.[id]):'blocked',
@@ -136,7 +176,7 @@ function drawDeck() {
       const amount = document.createElement('span');
       amount.textContent = count;
       const plus = control('＋',name+'を1枚増やす',()=>entry.change(1));
-      plus.disabled = !card;
+      plus.disabled = !cards.has(key);
       quantity.append(control('−',name+'を1枚減らす',()=>entry.change(-1)),amount,plus);
       tile.append(label,quantity);
       grid.append(tile);
@@ -169,7 +209,9 @@ function change(id,delta) {
 function drawCards() {
   const query = $('query').value.trim().toLowerCase();
   const category = $('category').value;
+  const regulation = $('regulation').value;
   const matches = [...cards.values()].filter(card =>
+    (!regulation || (regulation === 'basic' ? card.basicEnergy : card.regulationMark === regulation)) &&
     (!category || categoryOf(card,current.categories?.[card.id])===category) &&
     (card.name.toLowerCase().includes(query) || card.id.includes(query)));
   $('catalog-info').textContent = matches.length + '種類';
@@ -183,14 +225,16 @@ function drawCards() {
     const label = document.createElement('strong');
     label.textContent = card.name;
     const print = document.createElement('small');
-    print.textContent = [card.pack,card.number,'#'+card.id].filter(Boolean).join(' ');
+    print.textContent = [card.regulationMark || '基本エネルギー',card.pack,card.number,'#'+card.id].filter(Boolean).join(' ');
     const amount = document.createElement('small');
     amount.id = 'in-deck-'+card.id;
     amount.textContent = 'デッキ内 '+(current.cards[card.id]||0)+'枚';
     const add = control('＋ 追加',card.name+'を追加',() => change(card.id,1));
     add.className = 'add-card';
     add.disabled = !loaded;
-    tile.append(label,print,amount,add);
+    const effect = document.createElement('small');
+    effect.textContent = plans.has(card.id) ? '対戦対応' : '対戦未対応';
+    tile.append(label,print,effect,amount,add);
     grid.append(tile);
   }
 }
@@ -235,7 +279,7 @@ function loadImport() {
 
 $('deck-cover').onchange = event => { current.coverCardId = event.target.value; keepDraft(); };
 $('deck-name').oninput = event => { current.name = event.target.value; drawHeader(); keepDraft(); };
-$('query').oninput = $('category').onchange = () => { limit = 48; drawCards(); };
+$('query').oninput = $('category').onchange = $('regulation').onchange = () => { limit = 48; drawCards(); };
 $('more').onclick = () => { limit += 48; drawCards(); };
 $('category').add(new Option('すべて',''));
 for(const [key,label] of categories) if(key!=='blocked') $('category').add(new Option(label,key));

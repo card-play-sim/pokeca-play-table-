@@ -26,7 +26,7 @@
     for (const deck of decks) {
       const matches = name => name?.toLocaleLowerCase().includes(query);
       if (query && !matches(deck.name) &&
-          !saved.rows(deck).some(([id]) => matches(cards.get(id)?.name)) &&
+          !saved.rows(deck).some(([id]) => matches((cards.get(id) || cards.archive?.get(id))?.name)) &&
           !saved.blocked(deck).some(row => matches(row.name))) continue;
       const tile = document.createElement('article');
       tile.className = 'deck-home-card';
