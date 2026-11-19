@@ -515,14 +515,57 @@
     "50854",
     "50855"
   ],
-  "directCodeLookup": "Official server does not grant browser CORS. Actual official HTML import remains available.",
+  "directCodeLookup": "PASS: public Chrome automatically retrieved kbvV5V-TEZjLI-dVfVVk and confirmed all 60 cards by official ID and image. Official HTML import also passes. The earlier CORS blocker was not reproduced in the browser.",
   "protectedPathsUnchanged": [
     "data/official-image-registry.json",
     "data/reference-effects/catalog.json",
     "data/reference-effects/plans.json",
     "data/fixed-test-decks.json",
     "engine",
-    "ui/engine.bundle.js"
+    "ui/engine.bundle.js",
+    "data/effect-extensions/compiled.json"
   ],
-  "publishedVersion": 258
+  "publishedVersion": 258,
+  "officialCodeVerification": {
+    "code": "kbvV5V-TEZjLI-dVfVVk",
+    "method": "public app auto-fetch button",
+    "status": "PASS",
+    "total": 60,
+    "identityStatus": "CONFIRMED",
+    "observedAt": "2026-11-20T08:25:57.680394+09:00",
+    "physicalAndroidVerified": false,
+    "build": 258
+  },
+  "applicationCommit": "122b17a9c33f2f2ca2792fc3346128e7d66b49f6",
+  "hijRegistered": 4357,
+  "hijMissing": 0,
+  "hijUnclassified": 0,
+  "publicVerification": {
+    "status": "PASS",
+    "url": "https://card-play-sim.github.io/pokeca-play-table-/",
+    "release": "pokeca-first-playable-v258-975fe41312d46579",
+    "releaseFilesMatched": 40,
+    "releaseFilesMismatched": 0,
+    "browserWorkflowRunId": 44638750122,
+    "bytesWorkflowRunId": 44638750150,
+    "mobileViewport": {
+      "width": 320,
+      "height": 700
+    },
+    "representativeImagesLoaded": 18,
+    "representativeImageFailures": 0,
+    "browserErrors": 0,
+    "mulliganChoicesResolved": 1,
+    "existingNativeBrowserDecksRetained": 3,
+    "physicalAndroidVerified": false
+  },
+  "pullRequests": [
+    110,
+    111
+  ],
+  "preReleaseWorkflowSuitesPassed": 9,
+  "nextSteps": [
+    "No remaining blocker for H/I/J classification, 60-card storage, supported-card match start or tested official-code auto-import.",
+    "4,522 searchable prints lack an existing connected effect plan; they can be saved but must remain blocked for matches until separately implemented and verified."
+  ]
 }
