@@ -21,7 +21,7 @@ self.addEventListener('activate',event=>event.waitUntil((async()=>{
  for(const key of await caches.keys())if(key.startsWith('pokeca-first-playable-v')&&key!==CACHE)await caches.delete(key);
 })()));
 self.addEventListener('message',event=>{
- if(event.data?.type==='ACTIVATE_UPDATE')void self.skipWaiting();
+ if(event.data?.type==='ACTIVATE_UPDATE')event.waitUntil(self.skipWaiting());
  if(event.data?.type==='RELEASE_INFO')event.ports[0]?.postMessage({build:BUILD,cacheName:CACHE,files:FILES});
 });
 self.addEventListener('fetch',event=>{
@@ -29,7 +29,8 @@ self.addEventListener('fetch',event=>{
  const url=new URL(event.request.url);
  if(url.origin!==self.location.origin)return;
  const isShell=event.request.mode==='navigate'&&(url.pathname===new URL('./',self.registration.scope).pathname||url.pathname===new URL('./index.html',self.registration.scope).pathname);
- const key=isShell?absolute('./index.html'):event.request.url;
+ const editor=absolute('./deck-builder.html');
+ const key=isShell?absolute('./index.html'):event.request.mode==='navigate'&&url.origin+url.pathname===editor?editor:event.request.url;
  if(!isShell&&!release.has(key))return;
  event.respondWith((async()=>{
   const response=await (await caches.open(CACHE)).match(key);

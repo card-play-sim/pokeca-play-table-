@@ -1,0 +1,32 @@
+#app[hidden], #deck-home[hidden] { display: none !important; }
+#deck-home {
+  max-width: 920px;
+  min-height: 100dvh;
+  margin: auto;
+  padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom));
+  color: #172d32;
+  background: #f4f6ef;
+}
+#deck-home h1 { font-size: 1.5rem; }
+.deck-home-header, .deck-home-nav, .deck-home-actions { display: flex; align-items: center; gap: .5rem; }
+.deck-home-header { justify-content: space-between; margin-bottom: 1rem; }
+#deck-home-search { display: block; width: 100%; min-height: 44px; margin: .4rem 0 1rem; padding: .5rem; border: 1px solid #53716e; border-radius: .6rem; background: white; color: #172d32; font: inherit; }
+.deck-home-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
+.deck-home-card { padding: .65rem; border-radius: .75rem; border: 1px solid #b3c8bd; background: white; overflow-wrap: anywhere; }
+.deck-home-card img { display: block; width: 100%; height: clamp(100px,34vw,190px); object-fit: contain; }
+.deck-home-card h2 { font-size: 1rem; margin: .5rem 0 .2rem; }
+.deck-home-card p { margin: 0 0 .5rem; }
+.deck-home-actions { flex-wrap: wrap; }
+#deck-home .home-button, #deck-home button, #battle-home {
+  display: inline-flex; justify-content: center; align-items: center; min-height: 44px;
+  padding: .45rem .65rem; border: 1px solid #466661; border-radius: .55rem;
+  background: #e5efe9; color: #173832; font: inherit; text-decoration: none;
+}
+#deck-home .home-add, #deck-home [aria-current], #deck-home button[value="start"] { background: #1d554b; color: #fff; }
+#deck-home .home-add { min-width: 48px; font-size: 1.45rem; margin-left: auto; }
+.deck-home-nav { position: fixed; inset: auto 0 0; z-index: 3; background: #f4f6ef; border-top: 1px solid #b3c8bd; padding: .6rem 1rem calc(.6rem + env(safe-area-inset-bottom)); }
+#deck-home-confirm { width: min(92vw,420px); }
+#deck-home-confirm form { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: end; }
+#battle-home { font-size: .78rem; min-height: 36px; white-space: nowrap; }
+
+html.deck-home-active, html.deck-home-active body { height: auto; max-height: none; overflow: visible; }

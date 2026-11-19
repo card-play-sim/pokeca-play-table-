@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="ui/deck-editor.css">
 </head>
 <body>
-<header><a href="./">← 対戦盤面</a><h1>デッキ構築</h1><a href="deck-code-import.html">公式コード取り込み</a></header>
+<header><a href="./">← デッキ一覧</a><h1>デッキ構築</h1><a href="deck-code-import.html">公式コード取り込み</a></header>
 <main class="editor">
 <section class="collection">
   <div class="heading"><h2>保存したデッキ</h2><button id="new">新規デッキ</button></div>
@@ -15,6 +15,7 @@
 </section>
 <section class="editing">
   <div class="heading"><h2>編集中のデッキ</h2><strong id="total">0 / 60枚</strong></div>
+  <label for="deck-cover">表紙カード</label><select id="deck-cover"></select>
   <label for="deck-name">デッキ名</label><input id="deck-name" maxlength="60">
   <div class="toolbar">
     <button id="save">保存</button>
@@ -40,6 +41,7 @@
 </section>
 </main>
 <script src="ui/deck-code-import.js" defer></script>
+<script src="ui/saved-decks.js" defer></script>
 <script src="ui/deck-builder.js" defer></script>
 </body>
 </html>

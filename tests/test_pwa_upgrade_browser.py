@@ -36,7 +36,7 @@ async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   context=await browser.new_context(**device);page=await context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(base);await page.wait_for_function('navigator.serviceWorker.controller&&window.PokecaMobile&&document.getElementById("save-status").textContent==="自動保存済"')
+  await page.goto(base+"#battle");await page.wait_for_function('navigator.serviceWorker.controller&&window.PokecaMobile&&document.getElementById("save-status").textContent==="自動保存済"')
   assert await page.locator('#demo-open').inner_text()==('AI試験対戦' if BASE=='f040d35' else '固定デッキ対戦')
   assert 'v240' in await page.locator('#build-revision').inner_text()
   if BASE!='f040d35':
