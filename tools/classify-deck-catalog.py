@@ -27,8 +27,9 @@ def parse(raw,row):
  right=html.split('<div class="RightBox-inner">',1)[1]
  headings=[text(x) for x in re.findall(r'<h2[^>]*>(.*?)</h2>',right,re.S)]
  stage=re.search(r'<span class="type">(.*?)</span>',right,re.S)
- if stage and text(stage[1]) in ['たね','1進化','2進化','復元']:
-  category='pokemon';heading=text(stage[1])
+ stage_text=re.sub(r'\s+','',text(stage[1])) if stage else None
+ if stage_text in ['たね','1進化','2進化','復元']:
+  category='pokemon';heading=stage_text
  else:
   assert headings and headings[0] in CATEGORIES, 'UNKNOWN_OFFICIAL_HEADING:'+str(headings[:1])
   heading=headings[0];category=CATEGORIES[heading]
