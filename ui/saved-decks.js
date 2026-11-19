@@ -28,15 +28,35 @@
     for (const [id,card] of references) if (!cards.has(id)) cards.set(id,card);
     return {cards,plans:new Map(plans.records.map(record => [String(record.officialCardId),record]))};
   }
+  // Shared deck-composition rules used before editing and when starting a match.
+  function compositionError(deck,cards,plans) {
+    if (total(deck)>60) return '60枚まで追加できます。';
+    const names=new Map();
+    let radiant=0, aceSpec=0;
+    for(const [id,count] of rows(deck)){
+      const card=cards.get(id);
+      if(!card)continue;
+      if(!basicEnergy(card)){
+        const combined=(names.get(card.name)||0)+count;
+        if(combined>4)return card.name+'は同名4枚制限です。';
+        names.set(card.name,combined);
+      }
+      if(card.category==='pokemon'&&card.name.startsWith('かがやく'))radiant+=count;
+      if(plans.get(id)?.rulesText?.includes('ACE SPECのカードは、デッキに1枚'))aceSpec+=count;
+    }
+    if(aceSpec>1)return 'ACE SPECはデッキに1枚までです。';
+    if(radiant>1)return 'かがやくポケモンはデッキに1枚までです。';
+    return '';
+  }
   function matchEntries(deck,cards,plans) {
     if (total(deck) !== 60 || rows(deck).some(([,count]) => !Number.isInteger(count) || count < 1)) {
       throw Error('デッキを60枚にしてください。');
     }
     if (blocked(deck).length) throw Error('BLOCKED · 未照合のカードがあります。');
-    const names = new Map();
+    const error = compositionError(deck,cards,plans);
+    if(error)throw Error(error);
     let basics = false;
-    let radiant = 0;
-    let aceSpec = 0;
+
     const entries = rows(deck).map(([id,count]) => {
       const card = cards.get(id);
       const record = plans.get(id);
@@ -45,18 +65,11 @@
           (card.number && record.cardNumber && card.number !== record.cardNumber)) {
         throw Error('BLOCKED · 対戦用の公式印刷版を照合できません: ' + (card?.name || id));
       }
-      const nameCount = (names.get(card.name) || 0) + count;
-      names.set(card.name,nameCount);
-      if (!basicEnergy(card) && nameCount > 4) throw Error(card.name + 'は同名4枚までです。');
-      if (card.name.startsWith('かがやく')) radiant += count;
-      if (record.rulesText?.includes('ACE SPECのカードは、デッキに1枚')) aceSpec += count;
       if (record.category === 'pokemon' && record.facts?.basic === true) basics = true;
       return {name:record.deckName,category:record.category,count,referenceOfficialCardId:id};
     });
-    if (aceSpec > 1) throw Error('ACE SPECはデッキに1枚までです。');
-    if (radiant > 1) throw Error('かがやくポケモンはデッキに1枚までです。');
     if (!basics) throw Error('たねポケモンを1枚以上入れてください。');
     return entries;
   }
-  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,loadCatalog,matchEntries};
+  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,loadCatalog,compositionError,matchEntries};
 })();
