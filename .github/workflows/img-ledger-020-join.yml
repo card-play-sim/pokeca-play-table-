@@ -1,0 +1,32 @@
+name: IMG-LEDGER-020 formal identity image join
+on:
+  push:
+    branches:
+      - audit/img-ledger-002-official-id-join-20261113
+    paths:
+      - scripts/img-ledger-020-verify.mjs
+      - reports/img-ledger-020-join.json
+      - .github/workflows/img-ledger-020-join.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve pinned 6248-image candidate and H-I-J manifest (read only)
+        run: |
+          mkdir -p /tmp/img-ledger-020
+          curl -fLsS --retry 3 'https://raw.githubusercontent.com/card-play-sim/pokeca-play-table-/9bab9d4b5ce8116e169fed6c4cadce2d5f382b58/data/official-image-registry.json' -o /tmp/img-ledger-020/registry.json
+          curl -fLsS --retry 3 'https://raw.githubusercontent.com/card-play-sim/pokeca-play-table-/9bab9d4b5ce8116e169fed6c4cadce2d5f382b58/data/image-automation/hij-v247/coverage-manifest.json' -o /tmp/img-ledger-020/coverage.json
+          echo 'IMAGE_REGISTRY_PATH=/tmp/img-ledger-020/registry.json' >> "$GITHUB_ENV"
+          echo 'HIJ_MANIFEST_PATH=/tmp/img-ledger-020/coverage.json' >> "$GITHUB_ENV"
+      - name: Verify exact 1945-to-6248 official ID join and H-I-J manifest
+        run: node scripts/img-ledger-020-verify.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: img-ledger-020-verification
+          path: reports/ci/img-ledger-020-verified.json
+          if-no-files-found: warn

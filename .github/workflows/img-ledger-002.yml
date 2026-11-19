@@ -1,0 +1,156 @@
+name: IMG-LEDGER-002 official ID join audit
+on:
+  workflow_dispatch:
+    inputs:
+      formal_artifact_run_id:
+        description: 'Optional existing workflow run ID holding the exact original formal catalog'
+        required: false
+        type: string
+      formal_artifact_name:
+        description: 'Optional artifact name containing pokeca_card_catalog_HIJ/card_catalog.json'
+        required: false
+        type: string
+  pull_request:
+    paths:
+      - 'scripts/img-ledger-002-audit.cjs'
+      - 'scripts/img-ledger-003-registry.cjs'
+      - 'scripts/img-ledger-006-linkage.cjs'
+      - 'tests/image-browser-load.mjs'
+      - 'scripts/img-ledger-008-artifact-inventory.py'
+      - 'scripts/img-ledger-011-deep-scan.py'
+      - 'tests/img-ledger-002-audit.test.cjs'
+      - '.github/workflows/img-ledger-002.yml'
+jobs:
+  registry-and-join:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/img-ledger-002-audit.test.cjs
+      - name: Load immutable v247 candidate sources
+        run: |
+          git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/img-ledger-v247.json
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/image-automation/hij-v247/coverage-manifest.json > /tmp/img-ledger-v247-manifest.json
+      - name: Independently verify all 6248 registry entries
+        run: node scripts/img-ledger-003-registry.cjs /tmp/img-ledger-v247.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-003-registry.json
+      - name: Static app image linkage and H/I/J manifest
+        run: node scripts/img-ledger-006-linkage.cjs /tmp/img-ledger-v247.json data/official-image-registry.json data/fixed-deck-preview-bindings.json /tmp/img-ledger-v247-manifest.json reports/img-ledger-006-linkage.json
+      - name: Restore formal source from verified existing artifact when supplied
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORMAL_RUN: ${{ inputs.formal_artifact_run_id }}
+          FORMAL_ARTIFACT: ${{ inputs.formal_artifact_name }}
+        run: |
+          if [ -n "$FORMAL_RUN" ] && [ -n "$FORMAL_ARTIFACT" ]; then
+            mkdir -p /tmp/img-ledger-formal-source
+            gh run download "$FORMAL_RUN" --repo "${{ github.repository }}" --name "$FORMAL_ARTIFACT" --dir /tmp/img-ledger-formal-source
+            SOURCE="$(find /tmp/img-ledger-formal-source -type f -name card_catalog.json -print -quit)"
+            if [ -z "$SOURCE" ]; then echo 'Artifact lacks card_catalog.json'; exit 1; fi
+            printf '%s  %s\n' '6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790' "$SOURCE" | sha256sum -c -
+            mkdir -p data/formal-1945-original
+            cp "$SOURCE" data/formal-1945-original/card_catalog.json
+          fi
+      - name: Formal catalog source gate
+        shell: bash
+        run: |
+          if [ -f data/formal-1945-original/card_catalog.json ]; then
+            node scripts/img-ledger-002-audit.cjs /tmp/img-ledger-v247.json data/formal-1945-original/card_catalog.json reports/img-ledger-003-formal-join.json data/fixed-deck-preview-bindings.json
+          else
+            printf '{"status":"BLOCKED","reason":"FORMAL_1945_ORIGINAL_NOT_IN_CHECKOUT","expectedOriginalSha256":"6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790"}\n' > reports/img-ledger-003-formal-join.json
+            echo 'BLOCKED: original formal 1945 catalog unavailable; not substituting derived candidates'
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: img-ledger-003-evidence
+          path: |
+            reports/img-ledger-003-*.json
+            reports/img-ledger-006-*.json
+          if-no-files-found: warn
+
+  chromium-candidate-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Read immutable v247 candidate
+        run: |
+          git fetch --no-tags origin 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58
+          git show 9bab9d4b5ce8116e169fed6c4cadce2d5f382b58:data/official-image-registry.json > /tmp/img-ledger-v247.json
+      - name: Chromium image loading for all 6248 candidate prints
+        env:
+          IMAGE_REGISTRY_PATH: /tmp/img-ledger-v247.json
+          IMAGE_BROWSER_REPORT_PATH: artifacts/img-ledger-007-browser.json
+        run: node tests/image-browser-load.mjs
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-ledger-007-chromium
+          path: artifacts/img-ledger-007-browser.json
+          if-no-files-found: warn
+
+  artifact-source-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory both repositories with checkpoint JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEVELOPMENT_REPO_TOKEN: ${{ secrets.DEVELOPMENT_REPO_READ_TOKEN }}
+        run: python3 scripts/img-ledger-008-artifact-inventory.py reports/img-ledger-008-artifact-search.json
+      - name: Preserve original-source search evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-ledger-008-source-inventory
+          path: reports/img-ledger-008-artifact-search.json
+          if-no-files-found: warn
+
+  development-history-deep-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore previous scan checkpoint when available
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p reports
+          ARTIFACT_ID="$(gh api "repos/${{ github.repository }}/actions/artifacts?per_page=100" --jq '[.artifacts[] | select(.name=="img-ledger-011-deep-scan" and .expired==false)] | first | .id // empty' || true)"
+          if [ -n "$ARTIFACT_ID" ]; then
+            gh api "repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" > /tmp/img-ledger-011-checkpoint.zip
+            unzip -o /tmp/img-ledger-011-checkpoint.zip -d reports
+          fi
+      - name: Scan every development Actions run and inspect retained archives
+        env:
+          DEVELOPMENT_REPO_TOKEN: ${{ secrets.DEVELOPMENT_REPO_READ_TOKEN }}
+        run: python3 scripts/img-ledger-011-deep-scan.py reports/img-ledger-011-deep-scan.json
+      - name: Preserve resumable per-run scan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: img-ledger-011-deep-scan
+          path: reports/img-ledger-011-deep-scan.json
+          if-no-files-found: error
