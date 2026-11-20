@@ -27,8 +27,8 @@ reject({regulationMark:'G'});reject({source:{...proof.source,identityName:'別�
 assert.equal(api.catalogFrom(registry,formal).size,0,'Absent evidence must fail closed');
 assert.equal(cards.archive.size,23525,'Old images remain available for saved decks');
 const plans=saved.plansFrom(read('data/reference-effects/plans.json'),read('data/effect-extensions/compiled.json'));
-assert.equal(plans.size,504);
-assert.equal([...cards.keys()].filter(id=>plans.has(id)).length,473);
+assert.equal(plans.size,566);
+assert.equal([...cards.keys()].filter(id=>plans.has(id)).length,535);
 assert.equal(saved.matchEntries({cards:{'45796':4,'49465':56}},cards,plans).reduce((n,r)=>n+r.count,0),60);
 const basic=[...cards.values()].find(c=>c.basicEnergy);assert(basic);assert.equal(saved.compositionError({cards:{[basic.id]:60}},cards,plans),'');assert.match(saved.compositionError({cards:{[basic.id]:61}},cards,plans),/60枚/);
 const ace=[...cards.values()].filter(c=>c.aceSpec);assert(ace.length>1);assert.match(saved.compositionError({cards:{[ace[0].id]:1,[ace[1].id]:1}},cards,plans),/ACE SPEC/);

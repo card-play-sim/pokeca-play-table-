@@ -1675,6 +1675,41 @@
       }
     },
     {
+      "officialCardId": "47174",
+      "name": "ポケモンセンターのお姉さん",
+      "deckName": "ポケモンセンターのお姉さん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47174",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047174_T_POKEMONSENTANOONEESAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のポケモン1匹のHPを「60」回復し、特殊状態もすべて回復する。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47174.json",
+        "sha256": "63a1678a3a20f6f06dfa7fedf664701be5f397f21a100e51ef51d073c8164dbe",
+        "htmlSha256": "63a1678a3a20f6f06dfa7fedf664701be5f397f21a100e51ef51d073c8164dbe",
+        "textSha256": "bb7445620ae6b505a4212d42ddfa65e2c550bcc0ec7b1f88b1bce492c5b70f49"
+      },
+      "mainPlan": {
+        "mechanic": "HEAL_AND_CLEAR_STATUS",
+        "commands": [
+          "HEAL",
+          "STATUS_CONDITION"
+        ],
+        "amount": 60
+      }
+    },
+    {
       "officialCardId": "47363",
       "name": "ピカチュウ",
       "deckName": "ピカチュウ",
@@ -1839,6 +1874,41 @@
       }
     },
     {
+      "officialCardId": "47732",
+      "name": "ポケモンセンターのお姉さん",
+      "deckName": "ポケモンセンターのお姉さん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47732",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047732_T_POKEMONSENTANOONEESAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のポケモン1匹のHPを「60」回復し、特殊状態もすべて回復する。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47732.json",
+        "sha256": "4f6c22cf240f0eb02c9f60454a9d9bde7083ae6042700795e12a73f884d5384b",
+        "htmlSha256": "4f6c22cf240f0eb02c9f60454a9d9bde7083ae6042700795e12a73f884d5384b",
+        "textSha256": "bb7445620ae6b505a4212d42ddfa65e2c550bcc0ec7b1f88b1bce492c5b70f49"
+      },
+      "mainPlan": {
+        "mechanic": "HEAL_AND_CLEAR_STATUS",
+        "commands": [
+          "HEAL",
+          "STATUS_CONDITION"
+        ],
+        "amount": 60
+      }
+    },
+    {
       "officialCardId": "48250",
       "name": "マクノシタ",
       "deckName": "マクノシタ",
@@ -1912,6 +1982,40 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48251",
+      "name": "あなあけスコップ",
+      "deckName": "あなあけスコップ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48251",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048251_T_ANAAKESUKOPPU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から2枚トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48251.json",
+        "sha256": "80d2a53392a83718c2e10d1b2922a454d954bc98785071bc54274e9cf6ea42ea",
+        "htmlSha256": "80d2a53392a83718c2e10d1b2922a454d954bc98785071bc54274e9cf6ea42ea",
+        "textSha256": "8bfd667dfb887ce19aa8cd699fa8d06a4390f488f87d9512908d07cb8e69393b"
+      },
+      "mainPlan": {
+        "mechanic": "DISCARD_DECK_TOP",
+        "commands": [
+          "DISCARD"
+        ],
+        "amount": 2
+      }
     },
     {
       "officialCardId": "48253",
@@ -2196,6 +2300,42 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48340",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48340",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048340_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48340.json",
+        "sha256": "b7d6432db3851b9d7b71706fa4defd5f948ec6e19f920c065124b8ce7d1742d5",
+        "htmlSha256": "b7d6432db3851b9d7b71706fa4defd5f948ec6e19f920c065124b8ce7d1742d5",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
     },
     {
       "officialCardId": "48480",
@@ -3712,6 +3852,42 @@
       }
     },
     {
+      "officialCardId": "50502",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50502",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050502_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50502.json",
+        "sha256": "138ff9803638fcead0a6b1184b1359c6801ebc41ca910163f01d8c472c5cd2a4",
+        "htmlSha256": "138ff9803638fcead0a6b1184b1359c6801ebc41ca910163f01d8c472c5cd2a4",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
       "officialCardId": "50778",
       "name": "ゴビット",
       "deckName": "ゴビット",
@@ -3835,6 +4011,42 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50782",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50782",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050782_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50782.json",
+        "sha256": "288eac210b00bee33fffa0f531273dc59456365280e2ee03737d4f6fd66a19d2",
+        "htmlSha256": "288eac210b00bee33fffa0f531273dc59456365280e2ee03737d4f6fd66a19d2",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
     },
     {
       "officialCardId": "50785",
@@ -26274,6 +26486,2395 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47261",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47261",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOM/047261_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47261.json",
+        "sha256": "25f1311e86ee3da27f376c988edc3ece5df6d2c351a1b4b862b1d1b959fbf1da",
+        "htmlSha256": "25f1311e86ee3da27f376c988edc3ece5df6d2c351a1b4b862b1d1b959fbf1da",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "47279",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47279",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOD/047279_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47279.json",
+        "sha256": "7a82d1e991a1e2c583a3b1a038ff326c218bb07a570a9c44508ecb1e4d280295",
+        "htmlSha256": "7a82d1e991a1e2c583a3b1a038ff326c218bb07a570a9c44508ecb1e4d280295",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "47617",
+      "name": "ポケギア3.0",
+      "deckName": "ポケギア3.0",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47617",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047617_T_POKEGIA30.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から7枚見て、その中からサポートを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47617.json",
+        "sha256": "dc6c866dbd94d202accf30b1551475d498370775925193f0c13ee8f0094ea92c",
+        "htmlSha256": "dc6c866dbd94d202accf30b1551475d498370775925193f0c13ee8f0094ea92c",
+        "textSha256": "ec07e5f71371968faaeef7d4136bd73ea5b29668d9687e39d8eb9af13103d139"
+      },
+      "mainPlan": {
+        "mechanic": "TOP_SUPPORTER_SEARCH",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47707",
+      "name": "トウコ",
+      "deckName": "トウコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47707",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047707_T_TOUKO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から進化ポケモンとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47707.json",
+        "sha256": "1813df134c5d632dfa0fee47b948aa3ce6db1655558cd902a3e446b6b98c7bd8",
+        "htmlSha256": "1813df134c5d632dfa0fee47b948aa3ce6db1655558cd902a3e446b6b98c7bd8",
+        "textSha256": "3c0a7cec7fff22ca45eb49959c8afc167e001c12d495bf1f7733ce4e36dc7c6a"
+      },
+      "mainPlan": {
+        "mechanic": "HILDA",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47854",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47854",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047854_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47854.json",
+        "sha256": "3984b8b9d8a7f90966d7a83f62dc8557b5a8eb4e4f599f971e0a641380cc8fc4",
+        "htmlSha256": "3984b8b9d8a7f90966d7a83f62dc8557b5a8eb4e4f599f971e0a641380cc8fc4",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47879",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47879",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047879_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47879.json",
+        "sha256": "06e0ca85db70a58693977e6ff837986cd09dee78f334dc873f31d7b80fe5dfdd",
+        "htmlSha256": "06e0ca85db70a58693977e6ff837986cd09dee78f334dc873f31d7b80fe5dfdd",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47884",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47884",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047884_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47884.json",
+        "sha256": "f559d42e08d5d84a034bc15bcd3d94c71ed84dc33549f2e3c41cf2b005dfd222",
+        "htmlSha256": "f559d42e08d5d84a034bc15bcd3d94c71ed84dc33549f2e3c41cf2b005dfd222",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48078",
+      "name": "トウコ",
+      "deckName": "トウコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48078",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048078_T_TOUKO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から進化ポケモンとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48078.json",
+        "sha256": "c600a15f8ef594b54a5aecb9dbd39045f65eba48125476791b96aa2c0c603cff",
+        "htmlSha256": "c600a15f8ef594b54a5aecb9dbd39045f65eba48125476791b96aa2c0c603cff",
+        "textSha256": "3c0a7cec7fff22ca45eb49959c8afc167e001c12d495bf1f7733ce4e36dc7c6a"
+      },
+      "mainPlan": {
+        "mechanic": "HILDA",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48085",
+      "name": "トウコ",
+      "deckName": "トウコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48085",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048085_T_TOUKO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から進化ポケモンとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48085.json",
+        "sha256": "a0747fe693922b9ad861301ec2fdaa5940c91e458dd5b50117a45fe486f75116",
+        "htmlSha256": "a0747fe693922b9ad861301ec2fdaa5940c91e458dd5b50117a45fe486f75116",
+        "textSha256": "3c0a7cec7fff22ca45eb49959c8afc167e001c12d495bf1f7733ce4e36dc7c6a"
+      },
+      "mainPlan": {
+        "mechanic": "HILDA",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48272",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48272",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBG/048272_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48272.json",
+        "sha256": "e7c8bfc8a797e8b19d5e2a44b3dd3df97a2e8796585e0591a25890f323571bf2",
+        "htmlSha256": "e7c8bfc8a797e8b19d5e2a44b3dd3df97a2e8796585e0591a25890f323571bf2",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48276",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48276",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBG/048276_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48276.json",
+        "sha256": "24f23711bd4a2c7e50e2e8a406980eb74893d50d1b309e92b7ffc109ad90714a",
+        "htmlSha256": "24f23711bd4a2c7e50e2e8a406980eb74893d50d1b309e92b7ffc109ad90714a",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48295",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48295",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048295_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48295.json",
+        "sha256": "84273fd8228565f5b71e0a9dbbe26e06a27e86f29ffdc8858c154b870086ca12",
+        "htmlSha256": "84273fd8228565f5b71e0a9dbbe26e06a27e86f29ffdc8858c154b870086ca12",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48297",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48297",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048297_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48297.json",
+        "sha256": "5a8a85ec0f109d85183a04f5baaf1c0db958852ec2936540b50c11c51f3110b3",
+        "htmlSha256": "5a8a85ec0f109d85183a04f5baaf1c0db958852ec2936540b50c11c51f3110b3",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48469",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48469",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/048469_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48469.json",
+        "sha256": "ad865d592bcbd5fe940e9f07cea30425b97b656983d47f2272af78650506d2a3",
+        "htmlSha256": "ad865d592bcbd5fe940e9f07cea30425b97b656983d47f2272af78650506d2a3",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48669",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48669",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048669_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48669.json",
+        "sha256": "ac42d4caffb87e075017cf473404ab5853508a350bea37abd4a44a8a3b05463e",
+        "htmlSha256": "ac42d4caffb87e075017cf473404ab5853508a350bea37abd4a44a8a3b05463e",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "48680",
+      "name": "メガシグナル",
+      "deckName": "メガシグナル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48680",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048680_T_MSHIGUNARU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48680.json",
+        "sha256": "0547d2d893573d38784695f25731e56eed77bd2f500c651af3375b92b7c96afd",
+        "htmlSha256": "0547d2d893573d38784695f25731e56eed77bd2f500c651af3375b92b7c96afd",
+        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
+      },
+      "mainPlan": {
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48694",
+      "name": "トウコ",
+      "deckName": "トウコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48694",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048694_T_TOUKO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から進化ポケモンとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48694.json",
+        "sha256": "f8e5379979f9dc79479c15bf75b7d4aa88e057692e889582a5e94a03d27694f1",
+        "htmlSha256": "f8e5379979f9dc79479c15bf75b7d4aa88e057692e889582a5e94a03d27694f1",
+        "textSha256": "3c0a7cec7fff22ca45eb49959c8afc167e001c12d495bf1f7733ce4e36dc7c6a"
+      },
+      "mainPlan": {
+        "mechanic": "HILDA",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "48800",
+      "name": "リザード",
+      "deckName": "リザード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48800",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048800_P_RIZADO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-48800-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ヒトカゲ",
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48800.json",
+        "sha256": "3172b42495b57141c494bf389f3ccdf78f5a7d8006a9ca084afc80779fd19646",
+        "htmlSha256": "3172b42495b57141c494bf389f3ccdf78f5a7d8006a9ca084afc80779fd19646",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48825",
+      "name": "ポカブ",
+      "deckName": "ポカブ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48825",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048825_P_POKABU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ひをはく",
+          "cost": [
+            "炎"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48825-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48825.json",
+        "sha256": "4435db7a19052188dc95d499b8b6d8a610de5b848cc678f9e873e33db9c9d0e2",
+        "htmlSha256": "4435db7a19052188dc95d499b8b6d8a610de5b848cc678f9e873e33db9c9d0e2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48881",
+      "name": "ワニノコ",
+      "deckName": "ワニノコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48881",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048881_P_WANINOKO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょっとつっこむ",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "40",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-48881-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48881.json",
+        "sha256": "f62ea564544e12d29d3ac1e58ed7c1a7703b36a7c3e030e6dda2f2094b0a0344",
+        "htmlSha256": "f62ea564544e12d29d3ac1e58ed7c1a7703b36a7c3e030e6dda2f2094b0a0344",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48941",
+      "name": "ピカチュウ",
+      "deckName": "ピカチュウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48941",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048941_P_PIKACHIXYUU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "しっぽでたたく",
+          "cost": [
+            "雷"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-48941-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "プチボルト",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-48941-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48941.json",
+        "sha256": "007e1642fe23432f54198214e5176b73e9504ed085391abc170b5f8b727dc1b4",
+        "htmlSha256": "007e1642fe23432f54198214e5176b73e9504ed085391abc170b5f8b727dc1b4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49011",
+      "name": "マリル",
+      "deckName": "マリル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49011",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049011_P_MARIRU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かくれる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "コインを1回投げオモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。",
+          "effectId": "reference-49011-attack-0",
+          "plan": {
+            "mechanic": "COIN_PROTECT",
+            "commands": [
+              "DAMAGE",
+              "COIN_FLIP",
+              "ADD_STATE"
+            ]
+          }
+        },
+        {
+          "name": "はねまわる",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49011-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49011.json",
+        "sha256": "d6c810e0b383dfae3f18cb43440f3c7a39bb9846a62db0b63d7a7df1bf83020b",
+        "htmlSha256": "d6c810e0b383dfae3f18cb43440f3c7a39bb9846a62db0b63d7a7df1bf83020b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49190",
+      "name": "バルチャイ",
+      "deckName": "バルチャイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49190",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049190_P_BARUCHIXYAI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はばたく",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49190-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49190.json",
+        "sha256": "f812710fa05b235e6b37362e57a3d309f20c8c7410825434b5c82c2e3fcde006",
+        "htmlSha256": "f812710fa05b235e6b37362e57a3d309f20c8c7410825434b5c82c2e3fcde006",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49356",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49356",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049356_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49356.json",
+        "sha256": "e88f81d9c571bbf00136f6b6eb4ea831c5415eb3a26838c35ed5b659affd0f19",
+        "htmlSha256": "e88f81d9c571bbf00136f6b6eb4ea831c5415eb3a26838c35ed5b659affd0f19",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "49359",
+      "name": "きずぐすり",
+      "deckName": "きずぐすり",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49359",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049359_T_KIZUGUSURI.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のポケモン1匹のHPを「30」回復する。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49359.json",
+        "sha256": "277af9eae10b7a89858c597b9adfda59341a70873ec9c4bbef0f6b08b92d2a2a",
+        "htmlSha256": "277af9eae10b7a89858c597b9adfda59341a70873ec9c4bbef0f6b08b92d2a2a",
+        "textSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+      },
+      "mainPlan": {
+        "mechanic": "HEAL_DAMAGE",
+        "commands": [
+          "HEAL"
+        ],
+        "amount": 30
+      }
+    },
+    {
+      "officialCardId": "49360",
+      "name": "クラッシュハンマー",
+      "deckName": "クラッシュハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49360",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049360_T_KURASSHIXYUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "コインを1回投げオモテなら、相手の場のポケモンについているエネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49360.json",
+        "sha256": "da42ba78357c2db339f778d891283d12e7df0dd3531c90e00e3a8c2fad645eed",
+        "htmlSha256": "da42ba78357c2db339f778d891283d12e7df0dd3531c90e00e3a8c2fad645eed",
+        "textSha256": "56362f76a9bafb4cc3e15b9ce58883147d8056041248c536b627c2e2283f1e36"
+      },
+      "mainPlan": {
+        "mechanic": "HAMMER",
+        "commands": [
+          "COIN_FLIP",
+          "DISCARD"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49367",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49367",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049367_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49367.json",
+        "sha256": "6ca0bc1560ccb8ea5ffbf63a3a0522086adb2e762386a420bd8682664ec2cd12",
+        "htmlSha256": "6ca0bc1560ccb8ea5ffbf63a3a0522086adb2e762386a420bd8682664ec2cd12",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49376",
+      "name": "ポケギア3.0",
+      "deckName": "ポケギア3.0",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49376",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049376_T_POKEGIA30.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から7枚見て、その中からサポートを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49376.json",
+        "sha256": "ea112d3fd128dac7fbe33447470dc97f26f953b2c40a5fa5784a0f4c9bcf225d",
+        "htmlSha256": "ea112d3fd128dac7fbe33447470dc97f26f953b2c40a5fa5784a0f4c9bcf225d",
+        "textSha256": "ec07e5f71371968faaeef7d4136bd73ea5b29668d9687e39d8eb9af13103d139"
+      },
+      "mainPlan": {
+        "mechanic": "TOP_SUPPORTER_SEARCH",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49378",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49378",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049378_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49378.json",
+        "sha256": "61afba4a383d668a1b4cf2641e3e19cfd11c536ad7395212d077383816800e64",
+        "htmlSha256": "61afba4a383d668a1b4cf2641e3e19cfd11c536ad7395212d077383816800e64",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49381",
+      "name": "ポケモンキャッチャー",
+      "deckName": "ポケモンキャッチャー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49381",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049381_T_POKEMONKIXYATCHIXYA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49381.json",
+        "sha256": "4ecf540fa7d7c822616b80bbde4c0211076086fd3301a63dcfd976b3a1e37de6",
+        "htmlSha256": "4ecf540fa7d7c822616b80bbde4c0211076086fd3301a63dcfd976b3a1e37de6",
+        "textSha256": "918dfbfdbf5794e769c4f1ccaac48959dbf2242a20755cf9364c48d18c9a92fd"
+      },
+      "mainPlan": {
+        "mechanic": "COIN_FORCE_SWITCH",
+        "commands": [
+          "COIN_FLIP",
+          "FORCE_SWITCH"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49418",
+      "name": "ガイ",
+      "deckName": "ガイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49418",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049418_T_GAI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を3枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49418.json",
+        "sha256": "4a4e435d42e4d73d43252ff128e32281fad70efa7091ee5916cf446d6c9b373f",
+        "htmlSha256": "4a4e435d42e4d73d43252ff128e32281fad70efa7091ee5916cf446d6c9b373f",
+        "textSha256": "89cca6b463a22ef1f6b59c96ded75350e32a07b3844b65cbdeee74322c9cea43"
+      },
+      "mainPlan": {
+        "mechanic": "DRAW_CARDS",
+        "commands": [
+          "DRAW"
+        ],
+        "amount": 3
+      }
+    },
+    {
+      "officialCardId": "49427",
+      "name": "ジャッジマン",
+      "deckName": "ジャッジマン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49427",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049427_T_JIXYAJJIMAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、それぞれ山札を4枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49427.json",
+        "sha256": "941478647134ae11a971a38a39791acd7e9aba51a9c31e5773356c1b838b53ef",
+        "htmlSha256": "941478647134ae11a971a38a39791acd7e9aba51a9c31e5773356c1b838b53ef",
+        "textSha256": "6df37b64e462a852a6b7013a630545c39ee7a212c44093e47b971077777bad08"
+      },
+      "mainPlan": {
+        "mechanic": "JUDGE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49637",
+      "name": "ツタージャ",
+      "deckName": "ツタージャ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49637",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049637_P_TSUTAJIXYA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "とつげき",
+          "cost": [
+            "草"
+          ],
+          "damage": "30",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-49637-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49637.json",
+        "sha256": "7bccf1cdfd3154c5869752c129b8b8ff463ece6628223bdcb7cc31883b4f9ed0",
+        "htmlSha256": "7bccf1cdfd3154c5869752c129b8b8ff463ece6628223bdcb7cc31883b4f9ed0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49651",
+      "name": "パウワウ",
+      "deckName": "パウワウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49651",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049651_P_PAUWAU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みずかけ",
+          "cost": [
+            "水"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-49651-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "スプラッシュ",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-49651-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49651.json",
+        "sha256": "ea6df4149835555575273f8166ac9d0c5ff58096622b4dbae5ce79e8c2f4a55c",
+        "htmlSha256": "ea6df4149835555575273f8166ac9d0c5ff58096622b4dbae5ce79e8c2f4a55c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49662",
+      "name": "ピッピ",
+      "deckName": "ピッピ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49662",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049662_P_PIPPI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "このゆびとまれ",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+          "effectId": "reference-49662-attack-0",
+          "plan": {
+            "mechanic": "BOSS",
+            "commands": [
+              "FORCE_SWITCH"
+            ]
+          }
+        },
+        {
+          "name": "はねまわる",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-49662-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49662.json",
+        "sha256": "1b05409127997ba5d0b70b101800670bebc2fe610e0773cc37b2b098483d40e4",
+        "htmlSha256": "1b05409127997ba5d0b70b101800670bebc2fe610e0773cc37b2b098483d40e4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49669",
+      "name": "ノズパス",
+      "deckName": "ノズパス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49669",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049669_P_NOZUPASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "いわころがり",
+          "cost": [
+            "闘",
+            "闘"
+          ],
+          "damage": "40",
+          "text": "",
+          "effectId": "reference-49669-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49669.json",
+        "sha256": "18feb71c7bb26bd0345ce9959ab17d2dce02acddd667ed1ce5e178d676316013",
+        "htmlSha256": "18feb71c7bb26bd0345ce9959ab17d2dce02acddd667ed1ce5e178d676316013",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49674",
+      "name": "カメテテ",
+      "deckName": "カメテテ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49674",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049674_P_KAMETETE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダブルドロー",
+          "cost": [
+            "闘"
+          ],
+          "damage": "0",
+          "text": "自分の山札を2枚引く。",
+          "effectId": "reference-49674-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 2
+          }
+        },
+        {
+          "name": "ひっかく",
+          "cost": [
+            "闘",
+            "闘"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-49674-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49674.json",
+        "sha256": "741f57a4a1cd1ae4057a7f7eba0ae3444c68f9ab15a73bf23aa11a98bcc3c996",
+        "htmlSha256": "741f57a4a1cd1ae4057a7f7eba0ae3444c68f9ab15a73bf23aa11a98bcc3c996",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49680",
+      "name": "ゴース",
+      "deckName": "ゴース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49680",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049680_P_GOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ふいをつく",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30",
+          "text": "コインを1回投げウラなら、このワザは失敗。",
+          "effectId": "reference-49680-attack-0",
+          "plan": {
+            "mechanic": "COIN_FAILURE_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49680.json",
+        "sha256": "cf4021b4c8c2800f8b21eaf4e9e916a5542dc7d92f837cd04fea5dc4dee4b6c1",
+        "htmlSha256": "cf4021b4c8c2800f8b21eaf4e9e916a5542dc7d92f837cd04fea5dc4dee4b6c1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49703",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49703",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049703_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49703.json",
+        "sha256": "347c9e89daaf558f7a26019548b1524b637ce289c8690727646b942cd2b71452",
+        "htmlSha256": "347c9e89daaf558f7a26019548b1524b637ce289c8690727646b942cd2b71452",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "49976",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49976",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049976_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49976.json",
+        "sha256": "371dd1894f9b7fc2404e2c623cc0abaad4f7ff5796b31242a5de02e4555d0609",
+        "htmlSha256": "371dd1894f9b7fc2404e2c623cc0abaad4f7ff5796b31242a5de02e4555d0609",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50068",
+      "name": "エネルギーリサイクル",
+      "deckName": "エネルギーリサイクル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50068",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/050068_T_ENERUGIRISAIKURU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50068.json",
+        "sha256": "cf2b3d27e34947e99f931cc8535bd0375cf998b87e13337c054fa5b88f94c722",
+        "htmlSha256": "cf2b3d27e34947e99f931cc8535bd0375cf998b87e13337c054fa5b88f94c722",
+        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
+      },
+      "mainPlan": {
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "50070",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50070",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/050070_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50070.json",
+        "sha256": "2dd4009a9cbc4cf2046abe351a4f3c53619096820d7691c753411d5291c37b13",
+        "htmlSha256": "2dd4009a9cbc4cf2046abe351a4f3c53619096820d7691c753411d5291c37b13",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50422",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50422",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050422_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50422.json",
+        "sha256": "b117cf5443bb5ed498f794ed16aa4d05a229160aa23842680f0ecd4ca0d995f5",
+        "htmlSha256": "b117cf5443bb5ed498f794ed16aa4d05a229160aa23842680f0ecd4ca0d995f5",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50424",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50424",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050424_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50424.json",
+        "sha256": "4cc9d472f7ad8e6d749fc3052a723d4cfe7e3a1c74638e99dc1e829421b8fa8b",
+        "htmlSha256": "4cc9d472f7ad8e6d749fc3052a723d4cfe7e3a1c74638e99dc1e829421b8fa8b",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50427",
+      "name": "ジャッジマン",
+      "deckName": "ジャッジマン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50427",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050427_T_JIXYAJJIMAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、それぞれ山札を4枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50427.json",
+        "sha256": "dc5386b79afbf39b12abd888d21059b3353b5b0e69e4a02e0592ee13ba6e2812",
+        "htmlSha256": "dc5386b79afbf39b12abd888d21059b3353b5b0e69e4a02e0592ee13ba6e2812",
+        "textSha256": "6df37b64e462a852a6b7013a630545c39ee7a212c44093e47b971077777bad08"
+      },
+      "mainPlan": {
+        "mechanic": "JUDGE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50443",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50443",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050443_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50443.json",
+        "sha256": "ea13f6acca879a92d2790ee7b9ee32be90814e942faf9f1a7057288c7d8638ef",
+        "htmlSha256": "ea13f6acca879a92d2790ee7b9ee32be90814e942faf9f1a7057288c7d8638ef",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50444",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50444",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050444_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50444.json",
+        "sha256": "c7b2aa2fa18a0ec8d18cdc22933ef3e21679ea43d6f7a12c84fe000e3cf930b5",
+        "htmlSha256": "c7b2aa2fa18a0ec8d18cdc22933ef3e21679ea43d6f7a12c84fe000e3cf930b5",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50448",
+      "name": "ジャッジマン",
+      "deckName": "ジャッジマン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50448",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050448_T_JIXYAJJIMAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、それぞれ山札を4枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50448.json",
+        "sha256": "887ea7c9fdb60e525a278f3cb1b3d29cd41eebf0d5e60e89e08d379433518c38",
+        "htmlSha256": "887ea7c9fdb60e525a278f3cb1b3d29cd41eebf0d5e60e89e08d379433518c38",
+        "textSha256": "6df37b64e462a852a6b7013a630545c39ee7a212c44093e47b971077777bad08"
+      },
+      "mainPlan": {
+        "mechanic": "JUDGE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50461",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50461",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEM/050461_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50461.json",
+        "sha256": "1673940e39852ae227e89221be542fd9acfbbf4a1c944039f721fce254c048ca",
+        "htmlSha256": "1673940e39852ae227e89221be542fd9acfbbf4a1c944039f721fce254c048ca",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50463",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50463",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEM/050463_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50463.json",
+        "sha256": "2fb80ba9c810c8a73c9a5dc2336b9ab108c57bcda48b4f3ed7b91cf3f2e084ab",
+        "htmlSha256": "2fb80ba9c810c8a73c9a5dc2336b9ab108c57bcda48b4f3ed7b91cf3f2e084ab",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50597",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50597",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050597_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50597.json",
+        "sha256": "524a1341489dbe45428f0b12d20aa9ba25c55d970f8c4a5997b11d586a5aaf82",
+        "htmlSha256": "524a1341489dbe45428f0b12d20aa9ba25c55d970f8c4a5997b11d586a5aaf82",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50598",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50598",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050598_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50598.json",
+        "sha256": "9dd3f1166a5b282e816329e9c1b749431d90b4b9db2918ef771650cd6385ab22",
+        "htmlSha256": "9dd3f1166a5b282e816329e9c1b749431d90b4b9db2918ef771650cd6385ab22",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50604",
+      "name": "ジャッジマン",
+      "deckName": "ジャッジマン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50604",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050604_T_JIXYAJJIMAN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、それぞれ山札を4枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50604.json",
+        "sha256": "5f8927b0d4d6356cd1655e8bda68dd21be288767d313a96ca129fd05acebffeb",
+        "htmlSha256": "5f8927b0d4d6356cd1655e8bda68dd21be288767d313a96ca129fd05acebffeb",
+        "textSha256": "6df37b64e462a852a6b7013a630545c39ee7a212c44093e47b971077777bad08"
+      },
+      "mainPlan": {
+        "mechanic": "JUDGE",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50742",
+      "name": "ハイパーボール",
+      "deckName": "ハイパーボール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50742",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050742_T_HAIPABORU.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を2枚トラッシュしなければ使えない。\n\n自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50742.json",
+        "sha256": "ba1601d3b2264e4bec3a246d10418804b92d8144dad97c278b054090b995dea4",
+        "htmlSha256": "ba1601d3b2264e4bec3a246d10418804b92d8144dad97c278b054090b995dea4",
+        "textSha256": "119ee0c80dae94376869a3de9dce0305d08026afff0aeb9a55f51709e4fd84fe"
+      },
+      "mainPlan": {
+        "mechanic": "ULTRA_BALL",
+        "commands": [
+          "DISCARD",
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50743",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50743",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050743_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50743.json",
+        "sha256": "edb125c7efa6438e86d928b15d878ce30ea8e458808b34a76cfe810422f013c4",
+        "htmlSha256": "edb125c7efa6438e86d928b15d878ce30ea8e458808b34a76cfe810422f013c4",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50845",
+      "name": "ポケギア3.0",
+      "deckName": "ポケギア3.0",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50845",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050845_T_POKEGIA30.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から7枚見て、その中からサポートを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50845.json",
+        "sha256": "1e768e423ff0850daf5a21292723c64920b7f04805f2be016d3498b12d30a974",
+        "htmlSha256": "1e768e423ff0850daf5a21292723c64920b7f04805f2be016d3498b12d30a974",
+        "textSha256": "ec07e5f71371968faaeef7d4136bd73ea5b29668d9687e39d8eb9af13103d139"
+      },
+      "mainPlan": {
+        "mechanic": "TOP_SUPPORTER_SEARCH",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ]
+      }
     }
   ],
   "blocked": [
@@ -27038,21 +29639,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47174",
-      "name": "ポケモンセンターのお姉さん",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のポケモン1匹のHPを「60」回復し、特殊状態もすべて回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47174.json",
-        "sha256": "63a1678a3a20f6f06dfa7fedf664701be5f397f21a100e51ef51d073c8164dbe",
-        "htmlSha256": "63a1678a3a20f6f06dfa7fedf664701be5f397f21a100e51ef51d073c8164dbe",
-        "textSha256": "bb7445620ae6b505a4212d42ddfa65e2c550bcc0ec7b1f88b1bce492c5b70f49"
-      }
-    },
-    {
       "officialCardId": "47175",
       "name": "カキツバタ",
       "category": "supporter",
@@ -27143,21 +29729,6 @@
       }
     },
     {
-      "officialCardId": "47732",
-      "name": "ポケモンセンターのお姉さん",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のポケモン1匹のHPを「60」回復し、特殊状態もすべて回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47732.json",
-        "sha256": "4f6c22cf240f0eb02c9f60454a9d9bde7083ae6042700795e12a73f884d5384b",
-        "htmlSha256": "4f6c22cf240f0eb02c9f60454a9d9bde7083ae6042700795e12a73f884d5384b",
-        "textSha256": "bb7445620ae6b505a4212d42ddfa65e2c550bcc0ec7b1f88b1bce492c5b70f49"
-      }
-    },
-    {
       "officialCardId": "47733",
       "name": "エキサイトスタジアム",
       "category": "stadium",
@@ -27176,21 +29747,6 @@
       "officialCardId": "48249",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48251",
-      "name": "あなあけスコップ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から2枚トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48251.json",
-        "sha256": "80d2a53392a83718c2e10d1b2922a454d954bc98785071bc54274e9cf6ea42ea",
-        "htmlSha256": "80d2a53392a83718c2e10d1b2922a454d954bc98785071bc54274e9cf6ea42ea",
-        "textSha256": "8bfd667dfb887ce19aa8cd699fa8d06a4390f488f87d9512908d07cb8e69393b"
-      }
     },
     {
       "officialCardId": "48254",
@@ -27235,21 +29791,6 @@
         "sha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
         "htmlSha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
         "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
-    },
-    {
-      "officialCardId": "48340",
-      "name": "メガシグナル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48340.json",
-        "sha256": "b7d6432db3851b9d7b71706fa4defd5f948ec6e19f920c065124b8ce7d1742d5",
-        "htmlSha256": "b7d6432db3851b9d7b71706fa4defd5f948ec6e19f920c065124b8ce7d1742d5",
-        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
       }
     },
     {
@@ -27518,21 +30059,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50502",
-      "name": "メガシグナル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50502.json",
-        "sha256": "138ff9803638fcead0a6b1184b1359c6801ebc41ca910163f01d8c472c5cd2a4",
-        "htmlSha256": "138ff9803638fcead0a6b1184b1359c6801ebc41ca910163f01d8c472c5cd2a4",
-        "textSha256": "ae53e7fb83d5d3a6296b9f4428137f21c2ca3e6e5f79aa0ade0a4aaaf71b662f"
-      }
-    },
-    {
       "officialCardId": "50558",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27551,21 +30077,6 @@
       "officialCardId": "50779",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50782",
-      "name": "エネルギーリサイクル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50782.json",
-        "sha256": "288eac210b00bee33fffa0f531273dc59456365280e2ee03737d4f6fd66a19d2",
-        "htmlSha256": "288eac210b00bee33fffa0f531273dc59456365280e2ee03737d4f6fd66a19d2",
-        "textSha256": "29e8eb55df5a162b7543317d86193987885c7b101ea74153c937cc4894c4fb30"
-      }
     },
     {
       "officialCardId": "50783",
@@ -31474,6 +33985,36 @@
     },
     {
       "officialCardId": "47589",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48732",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49337",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49634",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49643",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49667",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49671",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     }
