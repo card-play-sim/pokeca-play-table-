@@ -41,6 +41,26 @@
     if (!response.ok || !extensionResponse.ok) throw Error('対戦用の公式カード情報を読み込めません。');
     return {cards,plans:plansFrom(await response.json(),await extensionResponse.json())};
   }
+  // Audits only the current I/J priority scope. H and historical prints are excluded.
+  // An existing plan is evidence of connection, not proof of successful execution.
+  function auditIJCoverage(cards,plans) {
+    const result = {I:{total:0,connected:0,missing:0},J:{total:0,connected:0,missing:0}};
+    for (const [id,card] of cards) {
+      const mark = card.regulationMark;
+      if (mark !== 'I' && mark !== 'J') continue;
+      const bucket = result[mark];
+      bucket.total++;
+      const record = plans.get(String(id));
+      const extension = record?.source?.kind === 'saved-official-extension' &&
+        record.set === 'OFFICIAL_PAGE_REFERENCE';
+      const connected = !!record && card.name === record.name &&
+        card.url === record.imageSourceUrl &&
+        (extension || !card.pack || !record.set || card.pack === record.set) &&
+        (!card.number || !record.cardNumber || card.number === record.cardNumber);
+      bucket[connected ? 'connected' : 'missing']++;
+    }
+    return result;
+  }
   // Shared deck-composition rules used before editing and when starting a match.
   function compositionError(deck,cards,plans) {
     if (rows(deck).some(([,count]) => !Number.isSafeInteger(count) || count < 1)) return '枚数が不正です。';
@@ -86,5 +106,5 @@
     if (!basics) throw Error('たねポケモンを1枚以上入れてください。');
     return entries;
   }
-  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,plansFrom,loadCatalog,compositionError,matchEntries};
+  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,plansFrom,loadCatalog,auditIJCoverage,compositionError,matchEntries};
 })();
