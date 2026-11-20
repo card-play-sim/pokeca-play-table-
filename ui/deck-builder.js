@@ -224,6 +224,15 @@ function drawCards() {
     (!regulation || (regulation === 'basic' ? card.basicEnergy : card.regulationMark === regulation)) &&
     (!category || categoryOf(card,current.categories?.[card.id])===category) &&
     (card.name.toLowerCase().includes(query) || card.id.includes(query)));
+  // Keep print variants adjacent while preserving each official card ID.
+  const categoryOrder = [...categories.keys()];
+  const japanese = new Intl.Collator('ja', {numeric:true, sensitivity:'base'});
+  matches.sort((a,b) =>
+    categoryOrder.indexOf(categoryOf(a)) - categoryOrder.indexOf(categoryOf(b)) ||
+    japanese.compare(a.name,b.name) ||
+    japanese.compare(a.pack || '',b.pack || '') ||
+    japanese.compare(a.number || '',b.number || '') ||
+    japanese.compare(a.id,b.id));
   $('catalog-info').textContent = matches.length + '種類';
   $('more').hidden = matches.length<=limit;
   const grid = $('cards');
