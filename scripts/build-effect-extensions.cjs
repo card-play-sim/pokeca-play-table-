@@ -1,11 +1,14 @@
 'use strict';
-const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),{compile,norm,mainText}=require('../engine/reference-effect-plans.cjs');
+const fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path'),{compile,norm,mainText,ijMechanics}=require('../engine/reference-effect-plans.cjs');
 const input=process.argv[2]&&!process.argv[2].startsWith('--')?process.argv[2]:'data/effect-extensions/intake.json';
 const output=process.argv[3]&&!process.argv[3].startsWith('--')?process.argv[3]:'data/effect-extensions/compiled.json';
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();
 function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
  const records=[],blocked=[...(intake.blocked||[])],seen=new Set(),base=new Set(JSON.parse(fs.readFileSync('data/reference-effects/catalog.json')).records.map(r=>r.officialCardId));
+ const ijIds=new Set(JSON.parse(fs.readFileSync('data/deck-building/catalog.json')).records
+  .filter(row=>row.legality==='printed-hij'&&['I','J'].includes(row.regulationMark))
+  .map(row=>row.officialCardId));
  for(const row of intake.records||[]){
   const ident=String(row.officialCardId||'');
   try{
@@ -35,6 +38,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
    if(mainText(row.text)!==norm(row.text))throw Error('EMBEDDED_USAGE_RULE_NOT_SUPPORTED');
    const clean={...row,attacks:[],abilities:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false},rulesText:[],set:'OFFICIAL_PAGE_REFERENCE',cardNumber:''};
    const record=compile({records:[clean]}).records[0];if(!record.mainPlan){blocked.push({officialCardId:ident,name,category:row.category,status:'BLOCKED',reason:'UNSUPPORTED_EFFECT_PATTERN',text:row.text,source:row.source});continue;}
+   if(ijMechanics.has(record.mainPlan.mechanic)&&!ijIds.has(ident))throw Error('OUTSIDE_IJ_MECHANIC_SCOPE');
    records.push(record);
   }catch(e){blocked.push({officialCardId:ident,status:'BLOCKED',reason:e.message});}
  }

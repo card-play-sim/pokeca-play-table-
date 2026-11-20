@@ -7,6 +7,9 @@ on:
       - 'ui/saved-decks.js'
       - 'deck-builder.html'
       - 'tests/deck-classification.test.cjs'
+      - 'tests/ij-*.test.cjs'
+      - 'reports/ij-effect-*.json'
+      - 'scripts/report-ij-effect-coverage.cjs'
       - 'tests/deck-editor-browser.py'
       - '.github/workflows/deck-work-002.yml'
   push:
@@ -31,6 +34,11 @@ jobs:
       - name: Verify protected registry and all classified IDs
         run: |
           node tests/deck-classification.test.cjs
+          node tests/ij-coverage.test.cjs
+          node tests/ij-effects.test.cjs /tmp/ij-execution.json
+          cmp /tmp/ij-execution.json reports/ij-effect-executions.json
+          node scripts/report-ij-effect-coverage.cjs /tmp/ij-coverage.json /tmp/ij-execution.json
+          cmp /tmp/ij-coverage.json reports/ij-effect-coverage.json
           node tests/deck-code-import.test.cjs
           node tests/imported-deck-match.test.cjs
           node scripts/build-pwa-release.cjs --check

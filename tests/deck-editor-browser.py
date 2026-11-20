@@ -154,7 +154,7 @@ def run(base):
         page.locator("#deck-name").fill("選択デッキ")
         open_search()
         for card_id, card_name, count in (
-            ("45796", "ズルッグ", 4), ("49465", "基本悪エネルギー", 56)
+            ("49011", "マリル", 4), ("48251", "あなあけスコップ", 1), ("49463", "基本超エネルギー", 55)
         ):
             page.locator("#query").fill(card_id)
             button = page.get_by_role("button",name=card_name + "を追加",exact=True)
@@ -165,17 +165,17 @@ def run(base):
         expect(page.locator('#message')).to_contain_text('60枚')
         back_to_editor()
         page.get_by_text("その他の操作").click()
-        page.locator("#deck-cover").select_option("45796")
+        page.locator("#deck-cover").select_option("49011")
         page.locator("#save").click()
         tile = page.locator(".deck-home-card").filter(has_text="選択デッキ")
-        expect(tile.locator("img")).to_have_attribute("alt", "ズルッグ")
+        expect(tile.locator("img")).to_have_attribute("alt", "マリル")
         expect(tile.locator("img")).to_have_count(1)
         tile.get_by_role("button",name="選択デッキの内容を見る").click()
         expect(page.locator('#deck-name')).to_have_value('選択デッキ')
         expect(page.locator('#total')).to_have_text('60 / 60枚')
-        expect(page.locator('.overview-count')).to_have_count(2)
+        expect(page.locator('.overview-count')).to_have_count(3)
         page.locator('#builder-back').click()
-        page.locator("#deck-home-search").fill("ズルッグ")
+        page.locator("#deck-home-search").fill("マリル")
         expect(page.locator(".deck-home-card")).to_have_count(1)
         tile.get_by_role("button",name="対戦する").click()
         expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
@@ -207,10 +207,11 @@ def run(base):
             const cards = [player.active,...player.bench,...player.deck,...player.hand,...player.prizeCards];
             return game.referenceEffectValidation.sourceDeckIds[0] === selected.id &&
                 cards.length === 60 &&
-                cards.filter(card => card.validationReference.officialCardId === '45796').length === 4 &&
-                cards.filter(card => card.validationReference.officialCardId === '49465').length === 56;
+                cards.filter(card => card.validationReference.officialCardId === '49011').length === 4 &&
+                cards.filter(card => card.validationReference.officialCardId === '48251').length === 1 &&
+                cards.filter(card => card.validationReference.officialCardId === '49463').length === 55;
         }""")
-        expect(page.locator("#self-active").get_by_role("button",name="ズルッグ・HP 60")).to_be_visible()
+        expect(page.locator("#self-active").get_by_role("button",name="マリル・HP 70")).to_be_visible()
         assert page.evaluate("""() => {
             const hand = document.querySelector('.hand-panel').getBoundingClientRect();
             return hand.top >= 0 && hand.bottom <= visualViewport.height + 1;
@@ -224,7 +225,28 @@ def run(base):
         page.get_by_role("link", name="対戦・再開").click()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("PokecaMobile.port.getSessionId()") == match_id
-        expect(page.locator("#self-active").get_by_role("button",name="ズルッグ・HP 60")).to_be_visible()
+        expect(page.locator("#self-active").get_by_role("button",name="マリル・HP 70")).to_be_visible()
+        # Put the exact saved I print into hand without changing its physical identity,
+        # then play it through the same UI controls as a normal drawn card.
+        scoop = page.evaluate("""() => {
+            const game = PokecaMobile.port.getResumeSnapshot().game;
+            const p = game.players[0];
+            const isScoop = card => card.validationReference.officialCardId === '48251';
+            const slot = p.deck.findIndex(isScoop);
+            const prize = p.prizeCards.findIndex(isScoop);
+            if (slot >= 0) p.hand.push(p.deck.splice(slot,1)[0]);
+            if (prize >= 0) p.hand.push(p.prizeCards.splice(prize,1,p.deck.pop())[0]);
+            const ids = p.deck.slice(0,2).map(card=>card.id);
+            const card = p.hand.find(isScoop);
+            if (!PokecaMobile.port.loadGame(game).ok) throw Error('I/J fixture could not load');
+            return {id:card.id,ids};
+        }""")
+        page.locator(f'#self-hand [data-card-id="{scoop["id"]}"]').click()
+        page.locator('#hand-actions button[data-action-type="play_item"]:enabled').click()
+        page.wait_for_function("""fixture => {
+            const discard = PokecaMobile.port.getSnapshot().players[0].discard.map(card=>card.id);
+            return discard.includes(fixture.id) && fixture.ids.every(id=>discard.includes(id));
+        }""",arg=scoop)
         assert page.evaluate("""() => {
             const game = PokecaMobile.port.getResumeSnapshot().game;
             game.status = 'finished';
@@ -242,7 +264,7 @@ def run(base):
                 'officialCode':'kbvV5V-TEZjLI-dVfVVk','officialCodeMethod':'actual official HTML import','mulliganChoicesResolved':mulligan_choices,
                 'checks':['H/I/J x six categories','official image loaded','long press and backdrop close','ordinary tap',
                           'same-name four','ACE SPEC one','60-card maximum','save/reload/duplicate','official HTML code import and unknown ID blocked',
-                          'compiled extension 60-card saved deck starts battle','battle save/resume','narrow viewport']}
+                          'I/J 60-card saved deck starts battle','official I print discards top two through battle UI','battle save/resume','narrow viewport']}
         Path('test-results/deck-work-002-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
         browser.close()
         print("Mobile Chromium deck search, limits, save/reload, duplication and import editing PASS")

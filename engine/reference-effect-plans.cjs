@@ -61,6 +61,13 @@ const definitions=[
 ];
 const byText=new Map(definitions.map(([mechanic,text,commands])=>[norm(text),{mechanic,commands}]));
 function mainText(text){return norm(text).split(/グッズは、自分の番に|サポートは、自分の番に|ポケモンのどうぐは、自分の番に|スタジアムは、自分の番に/)[0];}
+const ijMainPlans=new Map([
+ ['supporter:自分のポケモン1匹のHPを「60」回復し、特殊状態もすべて回復する。',{mechanic:'HEAL_AND_CLEAR_STATUS',commands:['HEAL','STATUS_CONDITION'],amount:60}],
+ ['item:自分の山札を上から2枚トラッシュする。',{mechanic:'DISCARD_DECK_TOP',commands:['DISCARD'],amount:2}],
+ ['item:自分のトラッシュから基本エネルギーを5枚まで選び、相手に見せて、山札にもどして切る。',{mechanic:'RECYCLE_BASIC_ENERGY',commands:['REVEAL','RETURN_TO_DECK','SHUFFLE_DECK'],amount:5}],
+ ['item:自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。',{mechanic:'SEARCH_MEGA_EVOLUTION_EX',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']}]
+]);
+const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
@@ -100,6 +107,8 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&match&&/^\d+×$/.test(String(entry.damage))&&Number.parseInt(entry.damage,10)===Number(match[2])&&Number.isSafeInteger(Number(match[2])))return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(match[1]),unit:Number(match[2])};
  match=generic.match(/^自分のトラッシュから\[([^\]]+)\]ポケモンと「基本\[([^\]]+)\]エネルギー」を合計([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&match[1]===match[2]&&['草','炎','水','雷','超','闘','悪','鋼','妖','竜','無色'].includes(match[1])&&Number.isSafeInteger(Number(match[3])))return {mechanic:'RECOVER_TYPED_DISCARD',commands:['REVEAL','ADD_TO_HAND'],type:match[1],amount:Number(match[3])};
+ const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
+ if(ij)return {...ij,commands:[...ij.commands]};
  const p=byText.get(text);return p?{...p,commands:[...p.commands]}:null;
 }
 function compile(catalog){
@@ -109,4 +118,4 @@ function compile(catalog){
   mainPlan:r.category==='energy'&&r.name.match(/^基本[炎超悪]エネルギー$/)?{mechanic:'BASIC_ENERGY',commands:['ATTACH_ENERGY']}:plan(r,'MAIN')
  }))};
 }
-module.exports={compile,norm,mainText};
+module.exports={ijMechanics,compile,norm,mainText};
