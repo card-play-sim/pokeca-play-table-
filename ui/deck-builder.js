@@ -211,6 +211,7 @@ function change(id,delta) {
     drawHeader();
     const amount = document.getElementById('in-deck-'+id);
     if (amount) amount.textContent = 'デッキ内 '+count+'枚';
+    drawDeck();
     say(cards.get(id).name+'を追加しました。');
   } else drawDeck();
   keepDraft();
@@ -240,7 +241,10 @@ function drawCards() {
   for (const card of matches.slice(0,limit)) {
     const tile = document.createElement('div');
     tile.className = 'builder-card';
-    addImage(tile,card);
+    const imageButton = control('',card.name+'を1枚追加',()=>change(card.id,1));
+    imageButton.className = 'search-card-tap';
+    addImage(imageButton,card);
+    tile.append(imageButton);
     const label = document.createElement('strong');
     label.textContent = card.name;
     const print = document.createElement('small');
@@ -340,10 +344,11 @@ function route() {
   $('screen-name').textContent = search ? 'カード検索・追加' : 'デッキ編集';
   $('builder-back').textContent = search ? '‹ デッキ編集' : '‹ デッキ一覧';
   $('builder-back').href = search ? '#' : './';
-  $('editor-screen').hidden = search;
+  $('editor-screen').hidden = false;
   $('search-screen').hidden = !search;
+  document.body.classList.toggle('deck-search-open',search);
   if (!loaded) return;
-  if (search) { say(''); drawCards(); window.scrollTo(0,0); }
+  if (search) { say(''); drawDeck(); drawCards(); }
   else { drawDeck(); window.scrollTo(0,editingScroll); }
 }
 $('editor-screen').querySelector('a[href="#search"]').onclick = event => {
