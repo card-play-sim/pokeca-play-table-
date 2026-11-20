@@ -363,6 +363,11 @@ $('builder-back').onclick = event => {
   event.preventDefault();
   history.back();
 };
+$('close-picker').onclick = event => {
+  event.preventDefault();
+  if (history.state?.deckSearch) history.back();
+  else { history.replaceState(null,'',location.pathname+location.search); route(); }
+};
 window.addEventListener('hashchange',route);
 route();
 $('catalog-info').textContent = 'カード台帳を読み込んでいます…';
