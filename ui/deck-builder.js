@@ -92,10 +92,15 @@ function addImage(parent, card) {
   parent.append(img);
 }
 const previewDialog=$('card-preview');
+let backdropPressed = false;
 previewDialog.addEventListener('contextmenu',event=>event.preventDefault());
 previewDialog.addEventListener('dragstart',event=>event.preventDefault());
+previewDialog.addEventListener('pointerdown',event=>{
+  backdropPressed = event.target === previewDialog;
+});
 previewDialog.addEventListener('click',event=>{
-  if(event.target===previewDialog)previewDialog.close();
+  if(backdropPressed && event.target===previewDialog)previewDialog.close();
+  backdropPressed = false;
 });
 previewDialog.addEventListener('close',()=>{$('preview-image').removeAttribute('src');});
 function showPreview(card){
@@ -104,7 +109,10 @@ function showPreview(card){
   $('preview-image').src=card.url;
   $('preview-image').alt=card.name;
   $('preview-title').textContent=card.name;
-  if(!dialog.open)dialog.showModal();
+  if(!dialog.open){
+    backdropPressed = false;
+    dialog.showModal();
+  }
 }
 
 function control(text, label, action) {

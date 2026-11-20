@@ -76,6 +76,23 @@ def run(base):
         expect(page.locator('#card-preview')).not_to_be_visible()
         image.click()
         expect(page.locator('#card-preview')).not_to_be_visible()
+        # Touch release can generate a click on the new backdrop when the
+        # original thumbnail is near the bottom edge of the viewport.
+        page.locator('#query').fill('')
+        lower_card = page.locator('#cards img').nth(18)
+        lower_card.evaluate("img=>window.scrollBy(0,img.getBoundingClientRect().top+img.height/2-(innerHeight-15))")
+        box = lower_card.bounding_box()
+        point = {'x':box['x']+box['width']/2,'y':box['y']+box['height']/2}
+        cdp = page.context.new_cdp_session(page)
+        cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
+        expect(page.locator('#card-preview')).to_be_visible()
+        assert page.locator('#card-preview').evaluate("(dialog,y)=>y>dialog.getBoundingClientRect().bottom",point['y'])
+        cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+        expect(page.locator('#card-preview')).to_be_visible()
+        page.touchscreen.tap(2,2)
+        expect(page.locator('#card-preview')).not_to_be_visible()
+        expect(page.locator('#total')).to_have_text('0 / 60枚')
+        page.locator('#query').fill('47832')
         for _ in range(5):
             add.click()
         expect(page.locator("#total")).to_have_text("4 / 60枚")
