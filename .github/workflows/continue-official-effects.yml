@@ -82,6 +82,8 @@ jobs:
           node scripts/sync-reference-effects.cjs
           node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
           node scripts/build-pwa-release.cjs
+          POKECA_INTAKE_RELEASE_BASE="$(git rev-parse HEAD)" POKECA_INTAKE_PREFIX=work/card-auto-connect/browser \
+            node scripts/build-intake-verification-fixtures.cjs
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
