@@ -38,9 +38,9 @@ const unsupported=[...cards.values()].find(c=>!plans.has(c.id)&&!c.basicEnergy);
 // BLOCKED must identify whether a print lacks a plan or conflicts with verified identity.
 const noPlan=[...cards.values()].find(c=>!plans.has(c.id)&&!c.basicEnergy);
 assert(noPlan);
-assert.throws(()=>saved.matchEntries({cards:{[noPlan.id]:4,'49465':56}},cards,plans),/公式効果計画なし.*\\[ID [0-9]+\\]/);
+assert.throws(()=>saved.matchEntries({cards:{[noPlan.id]:4,'49465':56}},cards,plans),/公式効果計画なし.*\[ID [0-9]+\]/);
 const mismatchCards=new Map(cards);
 mismatchCards.set('45152',{...cards.get('45152'),url:'https://example.invalid/changed.jpg'});
-assert.throws(()=>saved.matchEntries({cards:{'45152':4,'49463':56}},mismatchCards,plans),/印刷版の公式照合不一致.*\\[ID 45152\\]/);
+assert.throws(()=>saved.matchEntries({cards:{'45152':4,'49463':56}},mismatchCards,plans),/印刷版の公式照合不一致.*\[ID 45152\]/);
 const legal={cards:{'45152':4,'49463':56}};assert.equal(saved.matchEntries(legal,cards,plans).reduce((n,r)=>n+r.count,0),60);
 console.log(JSON.stringify({result:'PASS',searchable:cards.size,marks:counts,aceSpecPrints:ace.length,battleSupported:[...cards.keys()].filter(id=>plans.has(id)).length}));
