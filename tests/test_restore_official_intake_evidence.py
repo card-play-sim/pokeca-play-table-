@@ -54,6 +54,31 @@ class RecoveryTest(unittest.TestCase):
         self.assertFalse((self.root / self.rel).exists())
         self.assertFalse((self.root / second["source"]["path"]).exists())
 
+    def test_merge_retains_current_proofs_and_resolves_obsolete_blockers(self):
+        current = {"schemaVersion": 1, "records": [self.record],
+                   "blocked": [{"officialCardId": "45946", "reason": "COLLECTOR_EXCEPTION", "attempts": 1}]}
+        self.checkpoint.write_text(json.dumps(current))
+        target = self.root / self.rel
+        target.parent.mkdir(parents=True)
+        target.write_bytes(self.raw)
+        saved = {"schemaVersion": 1, "records": [],
+                 "blocked": [{"officialCardId": "45944", "reason": "COLLECTOR_EXCEPTION"},
+                             {"officialCardId": "45946", "reason": "COLLECTOR_EXCEPTION", "attempts": 2}]}
+        with patch.object(module.subprocess, "check_output", return_value=json.dumps(saved)):
+            self.assertEqual(module.merge_checkpoint("test-ref", self.checkpoint), 0)
+        self.assertEqual(json.loads(self.checkpoint.read_text()), {
+            **current, "blocked": [saved["blocked"][1]]})
+        self.assertEqual(target.read_bytes(), self.raw)
+
+    def test_merge_fails_closed_on_disagreeing_official_record(self):
+        current = {"schemaVersion": 1, "records": [self.record], "blocked": []}
+        self.checkpoint.write_text(json.dumps(current))
+        saved = {**current, "records": [{**self.record, "name": "conflict"}]}
+        with patch.object(module.subprocess, "check_output", return_value=json.dumps(saved)):
+            with self.assertRaisesRegex(ValueError, "CHECKPOINT_RECORD_CONFLICT"):
+                module.merge_checkpoint("test-ref", self.checkpoint)
+        self.assertEqual(json.loads(self.checkpoint.read_text()), current)
+
     def test_path_substitution_rejected(self):
         self.record["source"]["path"] = "../../data/official-image-registry.json"
         self.checkpoint.write_text(json.dumps({"records": [self.record]}))

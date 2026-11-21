@@ -53,8 +53,7 @@ jobs:
               continue
             fi
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
-              git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
-              python scripts/restore-official-intake-evidence.py FETCH_HEAD
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
               CHECKPOINT_FOUND=1
               echo "Resumed checkpoint from $CHECKPOINT_BRANCH"
               break
@@ -64,8 +63,7 @@ jobs:
              git ls-remote --exit-code --heads origin automation/control-013-intake >/dev/null; then
             git fetch origin automation/control-013-intake
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
-              git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
-              python scripts/restore-official-intake-evidence.py FETCH_HEAD
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
               echo "Resumed legacy checkpoint"
             fi
           fi
@@ -78,7 +76,7 @@ jobs:
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node scripts/list-card-auto-connect-ids.cjs /tmp/official-update-ids.json
           python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient --ids /tmp/official-update-ids.json
-          node scripts/stage-card-auto-connect.cjs HEAD work/card-auto-connect
+          node scripts/stage-card-auto-connect.cjs "$(git rev-parse HEAD)" work/card-auto-connect
           git restore --source=HEAD -- data/effect-extensions/compiled.json
           node scripts/build-effect-extensions.cjs
           node scripts/sync-reference-effects.cjs
@@ -100,6 +98,8 @@ jobs:
           git config user.email github-actions@users.noreply.github.com
           git add data/effect-extensions/evidence data/official-effect-intake reports/official-effect-continuation
           if [ "${{ job.status }}" = success ]; then
+            cp work/card-auto-connect/candidate.json reports/official-effect-continuation/candidate.json
+            git add reports/official-effect-continuation/candidate.json
             git add data/effect-extensions/intake.json data/effect-extensions/compiled.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json
           fi
           if ! git diff --cached --quiet; then

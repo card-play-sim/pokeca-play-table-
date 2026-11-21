@@ -7,13 +7,16 @@ import argparse
 import hashlib
 import json
 import subprocess
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "data/effect-extensions/evidence"
 
 def recover(commit, checkpoint):
-    records = json.loads(checkpoint.read_text(encoding="utf-8"))["records"]
+    return recover_records(commit, json.loads(checkpoint.read_text(encoding="utf-8"))["records"])
+
+def recover_records(commit, records):
     # Validate the complete checkpoint before creating any new evidence files.
     pending = []
     for record in records:
@@ -50,9 +53,50 @@ def recover(commit, checkpoint):
                 raise ValueError("EVIDENCE_INTEGRITY_CONFLICT:" + target.stem)
     return recovered
 
+def merge_checkpoint(commit, checkpoint):
+    rel = checkpoint.relative_to(ROOT).as_posix()
+    saved = json.loads(subprocess.check_output(["git", "show", f"{commit}:{rel}"], cwd=ROOT))
+    current = json.loads(checkpoint.read_text(encoding="utf-8"))
+    if current.get("schemaVersion") != 1 or saved.get("schemaVersion") != 1:
+        raise ValueError("INVALID_CHECKPOINT_VERSION")
+    records = {}
+    blocked = {}
+    for source in (current, saved):
+        for row in source["records"]:
+            ident = row["officialCardId"]
+            if ident in records and records[ident] != row:
+                raise ValueError("CHECKPOINT_RECORD_CONFLICT:" + ident)
+            records[ident] = row
+        for row in source["blocked"]:
+            ident = row["officialCardId"]
+            previous = blocked.get(ident)
+            if previous is None or (
+                previous.get("reason") == row.get("reason") == "COLLECTOR_EXCEPTION"
+                and row.get("attempts", 1) > previous.get("attempts", 1)
+            ):
+                blocked[ident] = row
+    recovered = recover_records(commit, records.values())
+    combined = {
+        **current,
+        "records": list(records.values()),
+        "blocked": [row for ident, row in blocked.items() if ident not in records],
+    }
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=checkpoint.parent,
+                                     delete=False) as output:
+        json.dump(combined, output, ensure_ascii=False, indent=2)
+        output.write("\n")
+    temporary = Path(output.name)
+    try:
+        temporary.replace(checkpoint)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return recovered
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("commit")
     parser.add_argument("--checkpoint", default="data/official-effect-intake/checkpoint.json")
+    parser.add_argument("--merge", action="store_true")
     args = parser.parse_args()
-    print(json.dumps({"recoveredEvidence": recover(args.commit, ROOT / args.checkpoint)}))
+    restore = merge_checkpoint if args.merge else recover
+    print(json.dumps({"recoveredEvidence": restore(args.commit, ROOT / args.checkpoint)}))
