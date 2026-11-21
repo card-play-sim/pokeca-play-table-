@@ -87,6 +87,14 @@ function run(baseCommit, directory) {
     else blockers.push({id, reason: slots.some(slot=>results.get(B.slot(slot))==='FAILED')
       ? 'ENGINE_EXECUTION_FAILED' : 'EXECUTION_EVIDENCE_INCOMPLETE'});
   }
+  const report = {baseCommit, state:'PREPUBLICATION', qualified, blockers, publicBattleVerified:[]};
+  B.atomic(directory + '/candidate.json', report);
+  console.log(JSON.stringify(report));
+  // An engine change can compile previously unsupported rows already in the
+  // release input. Preserve that input and stop if any such row is unverified.
+  const promotedWithoutProof = blockers.filter(({id}) => baseIntake.has(id));
+  if (promotedWithoutProof.length)
+    throw Error('EXISTING_INTAKE_PROMOTION_BLOCKED: ' + promotedWithoutProof.map(row => row.id).join(', '));
   const allowed = new Set(qualified);
   const intake = read(intakePath);
   // Keep raw evidence in the existing checkpoint. Only qualified additions go
@@ -95,9 +103,7 @@ function run(baseCommit, directory) {
   const temporary = intakePath + '.candidate-' + process.pid;
   fs.writeFileSync(temporary, JSON.stringify(intake,null,2)+'\n', {flag:'wx'});
   fs.renameSync(temporary,intakePath);
-  const report = {baseCommit, state:'PREPUBLICATION', qualified, blockers, publicBattleVerified:[]};
-  B.atomic(directory + '/candidate.json', report);
-  console.log(JSON.stringify(report));
+
 }
 
 if (require.main === module) run(process.argv[2], process.argv[3]);

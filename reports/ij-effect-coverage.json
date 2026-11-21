@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 267,
-      "missing": 1435
+      "connected": 282,
+      "missing": 1420
     },
     "J": {
       "total": 791,
-      "connected": 95,
-      "missing": 696
+      "connected": 97,
+      "missing": 694
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 261,
-      "MECHANIC_REQUIRED": 222,
+      "CONNECTED_UNTESTED": 276,
+      "MECHANIC_REQUIRED": 214,
       "EVIDENCE_UNVERIFIED": 14,
-      "ENGINE_CONNECTION_REQUIRED": 119,
+      "ENGINE_CONNECTION_REQUIRED": 112,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 94,
-      "MECHANIC_REQUIRED": 90,
+      "CONNECTED_UNTESTED": 96,
+      "MECHANIC_REQUIRED": 88,
       "EVIDENCE_UNVERIFIED": 13,
       "EVIDENCE_MISSING": 593,
       "EXECUTION_PASS": 1
@@ -771,8 +771,7 @@
       "name": "ピカチュウ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50653.json"
     },
     {
@@ -1191,8 +1190,7 @@
       "name": "ナンジャモのカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47039.json"
     },
     {
@@ -2236,8 +2234,7 @@
       "name": "アサナン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47446.json"
     },
     {
@@ -2942,8 +2939,7 @@
       "name": "バニプッチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47646.json"
     },
     {
@@ -3002,8 +2998,7 @@
       "name": "デスマス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47658.json"
     },
     {
@@ -3130,8 +3125,7 @@
       "name": "クリムガン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47691.json"
     },
     {
@@ -3148,8 +3142,7 @@
       "name": "ヨーテリー",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47694.json"
     },
     {
@@ -4207,8 +4200,7 @@
       "name": "バニプッチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48020.json"
     },
     {
@@ -4258,8 +4250,7 @@
       "name": "デスマス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48031.json"
     },
     {
@@ -4386,8 +4377,7 @@
       "name": "クリムガン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48062.json"
     },
     {
@@ -4404,8 +4394,7 @@
       "name": "ヨーテリー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48065.json"
     },
     {
@@ -4518,8 +4507,7 @@
       "name": "ヤミカラス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48265.json"
     },
     {
@@ -4752,8 +4740,7 @@
       "name": "ワンパチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48370.json"
     },
     {
@@ -5125,8 +5112,7 @@
       "name": "ワンパチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48492.json"
     },
     {
@@ -18961,8 +18947,7 @@
       "name": "ナンジャモのカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47167.json"
     },
     {
@@ -19430,8 +19415,7 @@
       "name": "ヒロシマのピカチュウ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49618.json"
     },
     {
@@ -20023,8 +20007,7 @@
       "name": "ミジュマル",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50799.json"
     },
     {

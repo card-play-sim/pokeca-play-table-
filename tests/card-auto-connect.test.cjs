@@ -21,6 +21,16 @@ const printedSlot = requiredSlots(printedRecord).find(slot => slot.printedDamage
 assert.equal(worker.verifyPrintedDamage(printedSlot).status, 'SUCCEEDED');
 assert.equal(worker.verifyPrintedDamage({...printedSlot, printedDamage:'30'}).status, 'BLOCKED');
 assert(!allExecuted([{...printedSlot, printedDamage:undefined}],new Map([[B.slot(printedSlot),'SUCCEEDED']])));
+const {compile} = require('../engine/reference-effect-plans.cjs');
+const [coinProof] = require('../data/effect-extensions/intake.json').records
+  .filter(row => row.attacks.some(effect => /コインを1回投げオモテなら、\d+ダメージ追加。/.test(effect.text)));
+const coinAttack = coinProof.attacks.find(effect => /コインを1回投げオモテなら、\d+ダメージ追加。/.test(effect.text));
+const makePlan = attack => compile({records:[{...coinProof,attacks:[attack]}]}).records[0].attacks[0].plan;
+const coinPlan = makePlan(coinAttack);
+assert.equal(coinPlan.mechanic,'COIN_BONUS_DAMAGE');
+assert.equal(coinPlan.base,Number.parseInt(coinAttack.damage,10));
+assert.equal(makePlan({...coinAttack,damage:'20×'}),null);
+assert.equal(makePlan({...coinAttack,text:coinAttack.text+'自分の山札を1枚引く。'}),null);
 const workflow=fs.readFileSync('.github/workflows/continue-official-effects.yml','utf8');
 assert.match(workflow,/comment\.user\.login == github\.repository_owner/);
 assert.match(workflow,/comment\.body == '\/card-auto-connect'/);
