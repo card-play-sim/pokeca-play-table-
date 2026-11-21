@@ -27,7 +27,7 @@ def run(base):
             expect(page.locator("#deck-overview")).to_be_visible()
             expect(page.locator("#search-screen")).to_be_visible()
         def back_to_editor():
-            page.locator("#builder-back").click()
+            page.locator("#close-picker").click()
             expect(page.locator("#deck-overview")).to_be_visible()
             expect(page.locator("#cards")).to_be_hidden()
         open_search()
