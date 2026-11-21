@@ -12,7 +12,8 @@ const plans=saved.plansFrom(read('data/reference-effects/plans.json'),compiled);
 const intake=read('data/official-effect-intake/checkpoint.json');
 const ingested=new Map([...intake.records,...read('data/effect-extensions/intake.json').records].map(row=>[row.officialCardId,row]));
 const blockers=new Map([...intake.blocked,...compiled.blocked].map(row=>[row.officialCardId,row]));
-const executions=process.argv[3]?new Map(Object.entries(read(process.argv[3]))):new Map();
+const executionFile=process.argv.slice(3).find(arg=>!arg.startsWith('--'));
+const executions=executionFile?new Map(Object.entries(read(executionFile))):new Map();
 const audit=saved.auditIJCoverage(cards,plans);
 const report={schemaVersion:2,scope:'I_J_EXACT_PRINTS',completionGate:'BATTLE_EXECUTION_PASS_REQUIRED',audit,counts:{I:{},J:{}},playability:{I:{total:0,playable:0,incomplete:0},J:{total:0,playable:0,incomplete:0}},records:[]};
 for(const [id,card] of cards){
