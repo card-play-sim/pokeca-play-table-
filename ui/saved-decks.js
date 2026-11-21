@@ -102,8 +102,11 @@
     const entries = rows(deck).map(([id,count]) => {
       const card = cards.get(id);
       const record = plans.get(id);
-      if (connectionError(id,card,record)) {
-        throw Error('BLOCKED · カード効果の対戦接続が未対応です: ' + (card?.name || id));
+      const reason = connectionError(id,card,record);
+      if (reason) {
+        // Preserve exact print identity: a same-name plan is not proof of equivalent effects.
+        const reasonLabel = reason === 'NO_EFFECT_PLAN' ? '公式効果計画なし' : '印刷版の公式照合不一致';
+        throw Error('BLOCKED · ' + reasonLabel + ': ' + (card?.name || id) + ' [ID ' + id + ']');
       }
       if (record.category === 'pokemon' && record.facts?.basic === true) basics = true;
       return {name:record.deckName,category:record.category,count,referenceOfficialCardId:id};
