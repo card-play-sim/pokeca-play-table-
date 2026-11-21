@@ -6,6 +6,33 @@ from test_fixed_deck_browser_images import session_ca_args
 from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 PREFIX=ROOT/os.environ.get('POKECA_INTAKE_PREFIX','reports/official-effect-continuation')
+async def select_effect_targets(page, option):
+ action=option['action']
+ selections=action.get('selections',{})
+ for request in option.get('requests',[]):
+  key=request['key']
+  kind=request['kind']
+  if request['min']==request['max']==0 and not (request.get('inspection') or {}).get('cards'):
+   continue
+  if kind=='COUNTERS':
+   allocation=selections[key]
+   for index,candidate in enumerate(request['candidates']):
+    ident=candidate.get('id') or candidate.get('instanceId')
+    row=page.locator('#reference-counter-choices .counter-target').nth(index)
+    for _ in range(allocation.get(ident,0)):
+     await row.get_by_role('button',name='＋',exact=True).tap()
+   await page.get_by_role('button',name='この配分で決定',exact=True).tap()
+   continue
+  if kind=='COUNT':
+   ids=[str(selections[key])]
+  elif kind=='POKEMON':
+   ids=action.get('targetIds',[])
+  else:
+   ids=selections.get(key,[])
+  for ident in ids:
+   await page.locator(f'#selection-cards [data-selection-id="{ident}"]').tap(timeout=12000)
+  await page.locator('#selection-confirm').tap()
+
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
@@ -67,25 +94,9 @@ async def main():
     await page.locator(container+' [data-card-id]').nth(index).tap()
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
-    for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],[]):
-      selector=page.locator(f'[data-selection-id="{target}"]')
-      try:
-       await selector.wait_for(state='visible',timeout=12000)
-      except Exception:
-       raise AssertionError(f"Missing item target {target} for {r['officialCardId']} {m}; request={req} option_requests={option.get('requests')} modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
-      await selector.tap()
-     await page.locator('#selection-confirm').tap()
+    await select_effect_targets(page,option)
    if f['kind'] in ('attack','ability'):
-    for req in option.get('requests',[]):
-     for target in option['action'].get('selections',{}).get(req['key'],option['action'].get('targetIds',[])):
-      selector=page.locator(f'[data-selection-id="{target}"]')
-      try:
-       await selector.wait_for(state='visible',timeout=12000)
-      except Exception:
-       raise AssertionError(f"Missing target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
-      await selector.tap()
-     await page.locator('#selection-confirm').tap()
+    await select_effect_targets(page,option)
    if f['kind'] in ('attack','ability'):await page.locator('#confirm-ok').tap()
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
