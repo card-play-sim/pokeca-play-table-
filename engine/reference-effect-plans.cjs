@@ -76,6 +76,8 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const reduction=generic.match(/^次の相手の番、このポケモンが受けるワザのダメージは「-([1-9][0-9]*)」される。$/);
+ if(kind==='ATTACK'&&reduction&&/^\d+$/.test(String(entry.damage||'0'))&&Number.isSafeInteger(Number(reduction[1])))return {mechanic:'ATTACK_DAMAGE_REDUCTION',commands:['DAMAGE','ADD_STATE'],amount:Number(reduction[1])};
  let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);

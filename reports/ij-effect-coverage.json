@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 287,
-      "missing": 1415
+      "connected": 291,
+      "missing": 1411
     },
     "J": {
       "total": 791,
@@ -16,10 +16,10 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 281,
-      "MECHANIC_REQUIRED": 211,
+      "CONNECTED_UNTESTED": 285,
+      "MECHANIC_REQUIRED": 208,
       "EVIDENCE_UNVERIFIED": 14,
-      "ENGINE_CONNECTION_REQUIRED": 110,
+      "ENGINE_CONNECTION_REQUIRED": 109,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
@@ -2104,8 +2104,7 @@
       "name": "パールル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47416.json"
     },
     {
@@ -2382,8 +2381,7 @@
       "name": "パールル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47506.json"
     },
     {
@@ -3106,8 +3104,7 @@
       "name": "ギアル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47687.json"
     },
     {
@@ -4355,8 +4352,7 @@
       "name": "ギアル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48058.json"
     },
     {

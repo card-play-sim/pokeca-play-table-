@@ -223,6 +223,11 @@ function prepare(r, e, kind) {
     for (const card of payment)
       opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
   }
+  if (m === "ATTACK_DAMAGE_REDUCTION") {
+    const opponent = frame.game.players[1];
+    for (const card of opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial))
+      opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -363,6 +368,33 @@ function verifyCase(t, e) {
       assert.equal(p.dispatch("ai", action).ok, false);
       assert.equal(JSON.stringify(p.getSnapshot()), JSON.stringify(after));
     }
+  }
+  if (e.plan.mechanic === "ATTACK_DAMAGE_REDUCTION") {
+    const active = after.players[0].active;
+    assert.equal(active.referenceDamageReduction.turn, after.turnNumber);
+    assert.equal(active.referenceDamageReduction.amount, e.plan.amount);
+    const baseline = JSON.parse(JSON.stringify(after));
+    delete baseline.players[0].active.referenceDamageReduction;
+    const incoming = E.getLegalActions(baseline, "ai").actions.filter(action =>
+      action.type === "attack_turn" &&
+      E.getReferenceEffectRecord(baseline.players[1].active).attacks[action.attackIndex].plan.mechanic !== "IGNORE_DEFENDER_EFFECTS");
+    const damage = (state, action) => {
+      const replay = port(state);
+      if (!replay.dispatch("ai", action).ok) return undefined;
+      return replay.getSnapshot().history.slice(state.history.length).find(event =>
+        event.details?.command === "DAMAGE" && event.details.targetInstanceId === active.id)?.details.amount;
+    };
+    let tested = false;
+    for (const action of incoming) {
+      const normal = damage(baseline, action);
+      if (!(normal > 0)) continue;
+      assert.equal(damage(after, action), Math.max(0, normal - e.plan.amount));
+      const expired = { ...after, turnNumber: after.turnNumber + 2 };
+      assert.equal(damage(expired, action), normal);
+      tested = true;
+      break;
+    }
+    assert(tested, "NO_INCOMING_ATTACK_DAMAGE_FIXTURE");
   }
   assert.deepEqual(S.identities(before), S.identities(after));
   const saved = p.getResumeSnapshot(),
