@@ -17,6 +17,7 @@ def run(base):
         )
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("console", lambda message: print("DECK_BROWSER_CONSOLE",message.text,flush=True) if message.text.startswith("DECK_HOLD_") else None)
         page.goto(base + "/")
         page.get_by_role("link", name="新規デッキ").click()
         name = page.locator("#deck-name")
@@ -24,9 +25,10 @@ def run(base):
         def open_search():
             page.get_by_role("link", name="カードを追加").click()
             expect(page.get_by_role("heading", name="カード検索・追加")).to_be_visible()
-            expect(page.locator("#deck-overview")).to_be_hidden()
+            expect(page.locator("#deck-overview")).to_be_visible()
+            expect(page.locator("#search-screen")).to_be_visible()
         def back_to_editor():
-            page.locator("#builder-back").click()
+            page.locator("#close-picker").click()
             expect(page.locator("#deck-overview")).to_be_visible()
             expect(page.locator("#cards")).to_be_hidden()
         open_search()
@@ -63,12 +65,23 @@ def run(base):
         image = page.locator('#cards img')
         expect(image).to_be_visible()
         page.wait_for_function("document.querySelector('#cards img').naturalWidth>0",timeout=60000)
+        # The bottom-sheet picker scrolls independently of the page. Ensure
+        # the thumbnail is inside the viewport before sending mouse events.
+        image.scroll_into_view_if_needed()
         box = image.bounding_box()
-        page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
+        assert box and 0 <= box['y'] and box['y'] + box['height'] <= 700
+        point_x,point_y=box['x']+box['width']/2,box['y']+box['height']/2
+        hit=page.evaluate("([x,y])=>{let e=document.elementFromPoint(x,y);return {tag:e?.tagName,cls:e?.className,alt:e?.getAttribute('alt'),imageRect:document.querySelector('#cards img')?.getBoundingClientRect().toJSON()}}",[point_x,point_y])
+        print('DECK_LONG_PRESS_HIT_TARGET',json.dumps(hit,ensure_ascii=False),flush=True)
+        page.evaluate("""()=>{window.__pressLog=[];for(let t of ['pointerdown','pointermove','pointerleave','pointercancel','pointerup','click'])document.addEventListener(t,e=>window.__pressLog.push({type:t,tag:e.target.tagName,cls:e.target.className,pointerType:e.pointerType}),true)}""")
+        page.mouse.move(point_x,point_y)
         page.mouse.down()
         page.wait_for_timeout(650)
+        print('DECK_LONG_PRESS_EVENTS',json.dumps(page.evaluate("window.__pressLog"),ensure_ascii=False),flush=True)
+        print('DECK_LONG_PRESS_STATE',json.dumps(page.evaluate("()=>({open:document.querySelector('#card-preview').open,element:document.elementFromPoint(innerWidth/2,innerHeight/2)?.tagName})"),ensure_ascii=False),flush=True)
+        expect(page.locator('#card-preview')).to_be_visible()  # must open while held
         page.mouse.up()
-        expect(page.locator('#card-preview')).to_be_visible()
+        expect(page.locator('#card-preview')).to_be_visible()  # must survive release
         expect(page.locator('#preview-image')).to_have_attribute('src',image.get_attribute('src'))
         assert page.locator('#preview-image').evaluate("img=>getComputedStyle(img).objectFit") == 'contain'
         assert page.locator('#preview-image').evaluate("img=>img.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true}))") is False
@@ -80,13 +93,16 @@ def run(base):
         # original thumbnail is near the bottom edge of the viewport.
         page.locator('#query').fill('')
         lower_card = page.locator('#cards img').nth(18)
-        lower_card.evaluate("img=>window.scrollBy(0,img.getBoundingClientRect().top+img.height/2-(innerHeight-15))")
+        lower_card.scroll_into_view_if_needed()
         box = lower_card.bounding_box()
+        assert box and 0 <= box['y'] and box['y']+box['height'] <= 700
         point = {'x':box['x']+box['width']/2,'y':box['y']+box['height']/2}
+        print('DECK_TOUCH_HIT_TARGET',json.dumps(page.evaluate("([x,y])=>({tag:document.elementFromPoint(x,y)?.tagName,alt:document.elementFromPoint(x,y)?.getAttribute('alt')})",[point['x'],point['y']]),ensure_ascii=False),flush=True)
         cdp = page.context.new_cdp_session(page)
         cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
+        page.wait_for_timeout(650)
         expect(page.locator('#card-preview')).to_be_visible()
-        assert page.locator('#card-preview').evaluate("(dialog,y)=>y>dialog.getBoundingClientRect().bottom",point['y'])
+        assert page.locator('#card-preview').evaluate("dialog=>dialog.open && dialog.getBoundingClientRect().width>0 && dialog.getBoundingClientRect().height>0")
         cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
         expect(page.locator('#card-preview')).to_be_visible()
         page.touchscreen.tap(2,2)

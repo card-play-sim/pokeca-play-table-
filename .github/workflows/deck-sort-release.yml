@@ -1,0 +1,33 @@
+name: Regenerate deck sort PWA release
+on:
+  push:
+    branches:
+      - fix/deck-catalog-name-sort
+    paths:
+      - ui/deck-builder.js
+      - .github/workflows/deck-sort-release.yml
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/deck-catalog-name-sort
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          node scripts/build-pwa-release.cjs
+          node scripts/build-pwa-release.cjs --check
+      - name: Commit generated PWA manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m "build: regenerate PWA release for sorted deck catalog"
+            git push origin HEAD:fix/deck-catalog-name-sort
+          fi

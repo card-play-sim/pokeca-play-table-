@@ -32,7 +32,8 @@
       </div>
     </details>
   </section>
-  <section id="search-screen" hidden>
+  <section id="search-screen" hidden role="dialog" aria-modal="true" aria-label="カード追加">
+    <div class="picker-heading"><strong>カード追加</strong><a href="#" id="close-picker" aria-label="カード追加を閉じる">×</a></div>
     <div class="toolbar">
       <input id="query" type="search" placeholder="カード名・公式IDで検索" aria-label="カード名・公式IDで検索">
       <select id="category" aria-label="カード分類"></select>

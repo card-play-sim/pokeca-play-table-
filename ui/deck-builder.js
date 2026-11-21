@@ -73,18 +73,27 @@ function addImage(parent, card) {
   let startX = 0, startY = 0;
   let suppressNextClick = false;
   img.addEventListener('pointerdown',event=>{
+    console.info('DECK_HOLD_DOWN',event.pointerType,event.button,event.pointerId);
     if(event.pointerType==='mouse' && event.button!==0)return;
     if(activePointer!==null)return;
     activePointer=event.pointerId;
     startX=event.clientX;startY=event.clientY;
     held=false;
-    hold=setTimeout(()=>{held=true;suppressNextClick=true;showPreview(card);},500);
+    hold=setTimeout(()=>{console.info('DECK_HOLD_TIMER_FIRED',card?.name);held=true;suppressNextClick=true;showPreview(card);},500);
   });
   img.addEventListener('pointermove',event=>{
-    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12)clearTimeout(hold);
+    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12){
+      console.info('DECK_HOLD_CANCEL_MOVE',event.clientX-startX,event.clientY-startY);
+      clearTimeout(hold);
+    }
   });
-  for(const name of ['pointerup','pointercancel','pointerleave'])
+  // Opening a modal moves the pointer out of the thumbnail in Chromium.
+  // A pointerleave must not cancel an otherwise stationary long press.
+  for(const name of ['pointerup','pointercancel'])
     img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
+  // Do not cancel a stationary press on pointerleave: mobile browser
+  // scrolling/reflow can retarget the pointer even without finger movement.
+  // pointermove (distance threshold), pointerup and pointercancel own cancellation.
   img.addEventListener('click',event=>{
     if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
   },true);
@@ -211,6 +220,7 @@ function change(id,delta) {
     drawHeader();
     const amount = document.getElementById('in-deck-'+id);
     if (amount) amount.textContent = 'デッキ内 '+count+'枚';
+    drawDeck();
     say(cards.get(id).name+'を追加しました。');
   } else drawDeck();
   keepDraft();
@@ -224,6 +234,15 @@ function drawCards() {
     (!regulation || (regulation === 'basic' ? card.basicEnergy : card.regulationMark === regulation)) &&
     (!category || categoryOf(card,current.categories?.[card.id])===category) &&
     (card.name.toLowerCase().includes(query) || card.id.includes(query)));
+  // Keep print variants adjacent while preserving each official card ID.
+  const categoryOrder = [...categories.keys()];
+  const japanese = new Intl.Collator('ja', {numeric:true, sensitivity:'base'});
+  matches.sort((a,b) =>
+    categoryOrder.indexOf(categoryOf(a)) - categoryOrder.indexOf(categoryOf(b)) ||
+    japanese.compare(a.name,b.name) ||
+    japanese.compare(a.pack || '',b.pack || '') ||
+    japanese.compare(a.number || '',b.number || '') ||
+    japanese.compare(a.id,b.id));
   $('catalog-info').textContent = matches.length + '種類';
   $('more').hidden = matches.length<=limit;
   const grid = $('cards');
@@ -231,7 +250,10 @@ function drawCards() {
   for (const card of matches.slice(0,limit)) {
     const tile = document.createElement('div');
     tile.className = 'builder-card';
-    addImage(tile,card);
+    const imageButton = control('',card.name+'を1枚追加',()=>change(card.id,1));
+    imageButton.className = 'search-card-tap';
+    addImage(imageButton,card);
+    tile.append(imageButton);
     const label = document.createElement('strong');
     label.textContent = card.name;
     const print = document.createElement('small');
@@ -331,10 +353,11 @@ function route() {
   $('screen-name').textContent = search ? 'カード検索・追加' : 'デッキ編集';
   $('builder-back').textContent = search ? '‹ デッキ編集' : '‹ デッキ一覧';
   $('builder-back').href = search ? '#' : './';
-  $('editor-screen').hidden = search;
+  $('editor-screen').hidden = false;
   $('search-screen').hidden = !search;
+  document.body.classList.toggle('deck-search-open',search);
   if (!loaded) return;
-  if (search) { say(''); drawCards(); window.scrollTo(0,0); }
+  if (search) { say(''); drawDeck(); drawCards(); }
   else { drawDeck(); window.scrollTo(0,editingScroll); }
 }
 $('editor-screen').querySelector('a[href="#search"]').onclick = event => {
@@ -348,6 +371,11 @@ $('builder-back').onclick = event => {
   if (!searching() || !history.state?.deckSearch) return;
   event.preventDefault();
   history.back();
+};
+$('close-picker').onclick = event => {
+  event.preventDefault();
+  if (history.state?.deckSearch) history.back();
+  else { history.replaceState(null,'',location.pathname+location.search); route(); }
 };
 window.addEventListener('hashchange',route);
 route();
