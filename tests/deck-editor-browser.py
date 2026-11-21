@@ -17,6 +17,7 @@ def run(base):
         )
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.on("console", lambda message: print("DECK_BROWSER_CONSOLE",message.text,flush=True) if message.text.startswith("DECK_HOLD_") else None)
         page.goto(base + "/")
         page.get_by_role("link", name="新規デッキ").click()
         name = page.locator("#deck-name")
