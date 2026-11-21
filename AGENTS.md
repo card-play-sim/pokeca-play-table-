@@ -2,6 +2,14 @@
 
 This repository is the **existing public Android PWA**. Do not create a second app or ship ZIP files. The image registry is managed separately by Work; never delete, overwrite, or reinterpret its 6,000 reported image references.
 
+## Mandatory automatic card-effect connection — all ChatGPT / Codex / Work agents (2026-11-21)
+
+**P0 / binding project instruction:** Every agent working on H/I/J card effects or battle connectivity MUST reuse the existing official-effect intake, batch compilation, shared Effect Command/Rule Engine, and GitHub Actions pipelines. The user has NOT authorized one-card-at-a-time connection, manual per-print patches, or building a replacement connection system. Do not bypass official identity/evidence verification or mark untested cards as battle-ready.
+
+**Required workflow:** (1) inspect the existing automation, its checkpoint, batch workflow, blockers, and coverage reports; (2) run/reuse the automated H/I/J batch pipeline and diagnose failures by shared cause; (3) fix common collection, parsing, evidence, or effect-command logic once for an entire class of cards; (4) rerun the batch, regression tests, and identity/provenance gates; (5) push, merge only after gates pass, verify Pages deployment and real battle flow. Work on independent steps in parallel. Treat basic energy exception prints as already catalogued, not missing cards. Distinguish catalogued, compiled, engine-connected, execution-tested, and Pages-verified counts.
+
+**Never substitute** cosmetic BLOCKED messaging, a single print fix, or a CI-status-only report for the actual requested batch connection work. If the pipeline is working but evidence or mechanics remain incomplete, say so accurately; do not claim it is broken without proof. Keep the next actionable resume point in GitHub Issue #122 / PR #123. This instruction applies to all future agents reading this repository and overrides conflicting historical one-off task notes.
+
 ## Non-negotiable execution cadence (Issue #92)
 
 A user message `ｇ` means **continue working**, not "check one CI run and report again". Do not end a turn after a single queued/in-progress Actions status check. Parallelize independent investigation, diagnosis, shared code fixes, push/retest, and merge/Pages verification, observing real dependencies and release gates. Work on other independent tasks while CI runs. After two repetitions of the same blocker, change method instead of repeating status reports. Report consolidated *actual changes and verified outcomes*, distinguishing CI, Pages, browser, and physical Android. See [Issue #92](https://github.com/card-play-sim/pokeca-play-table-/issues/92) and `docs/DEVELOPMENT_CONTROL.md`.
