@@ -29042,6 +29042,917 @@
           "DISCARD"
         ]
       }
+    },
+    {
+      "officialCardId": "47830",
+      "name": "エリキテル",
+      "deckName": "エリキテル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47830",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047830_P_ERIKITERU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダブルひっかき",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "コインを2回投げ、オモテの数×10ダメージ。",
+          "effectId": "reference-47830-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47830.json",
+        "sha256": "5af94054a4bb6d2677e9c6917eff0b652b99c33fe2167ca79b1c2e2ddf8866d1",
+        "htmlSha256": "5af94054a4bb6d2677e9c6917eff0b652b99c33fe2167ca79b1c2e2ddf8866d1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47832",
+      "name": "ケーシィ",
+      "deckName": "ケーシィ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47832",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047832_P_KESHII.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "テレポートアタック",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "このポケモンをベンチポケモンと入れ替える。",
+          "effectId": "reference-47832-attack-0",
+          "plan": {
+            "mechanic": "SWITCH_SELF_ATTACK",
+            "commands": [
+              "SWITCH"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 50,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47832.json",
+        "sha256": "a9b4a229a9fcc95f5fd93a0d73175a9bc98481b9c29a1a5ed94b76bb95804da9",
+        "htmlSha256": "a9b4a229a9fcc95f5fd93a0d73175a9bc98481b9c29a1a5ed94b76bb95804da9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47840",
+      "name": "バネブー",
+      "deckName": "バネブー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47840",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047840_P_BANEBU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "トリプルスピン",
+          "cost": [
+            "超"
+          ],
+          "damage": "10×",
+          "text": "コインを3回投げ、オモテの数×10ダメージ。",
+          "effectId": "reference-47840-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47840.json",
+        "sha256": "5cb6c21282813b17b0baa2d1c69957d1cdd8f4f7be4425cf59d66a8182ae546b",
+        "htmlSha256": "5cb6c21282813b17b0baa2d1c69957d1cdd8f4f7be4425cf59d66a8182ae546b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47867",
+      "name": "ホーホー",
+      "deckName": "ホーホー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47867",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047867_P_HOHO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さんどづき",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "コインを3回投げ、オモテの数×10ダメージ。",
+          "effectId": "reference-47867-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47867.json",
+        "sha256": "0632799d13c3f3f1000ee3633f27ef6ebf000317ba45eede6d60eab9fe9d28ec",
+        "htmlSha256": "0632799d13c3f3f1000ee3633f27ef6ebf000317ba45eede6d60eab9fe9d28ec",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47941",
+      "name": "シビシラス",
+      "deckName": "シビシラス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47941",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047941_P_SHIBISHIRASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じっとする",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "このポケモンのHPを「10」回復する。",
+          "effectId": "reference-47941-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 40,
+        "evolvesFrom": null,
+        "retreatCost": 0,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47941.json",
+        "sha256": "64e172d471f3b0436441226a276cf5f717b2341ee18e032d9475f753dcaf3b2d",
+        "htmlSha256": "64e172d471f3b0436441226a276cf5f717b2341ee18e032d9475f753dcaf3b2d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47952",
+      "name": "ゴビット",
+      "deckName": "ゴビット",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47952",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047952_P_GOBITTO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぜんりょくパンチ",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "コインを1回投げウラなら、このワザは失敗。",
+          "effectId": "reference-47952-attack-0",
+          "plan": {
+            "mechanic": "COIN_FAILURE_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47952.json",
+        "sha256": "ad923c9f49e238672ab55aa540f5356336d5790d3b7f9fba9919eb5ce62c8369",
+        "htmlSha256": "ad923c9f49e238672ab55aa540f5356336d5790d3b7f9fba9919eb5ce62c8369",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47981",
+      "name": "チラーミィ",
+      "deckName": "チラーミィ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47981",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047981_P_CHIRAMII.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スイープビンタ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "コインを2回投げ、オモテの数×20ダメージ。",
+          "effectId": "reference-47981-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47981.json",
+        "sha256": "8ea95cad00d14029343a4c48e6f6b67c19fa95167aeb1f51777e729b4d321f5b",
+        "htmlSha256": "8ea95cad00d14029343a4c48e6f6b67c19fa95167aeb1f51777e729b4d321f5b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48036",
+      "name": "プルリル",
+      "deckName": "プルリル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48036",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048036_P_PURURIRU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "うみのかげ",
+          "cost": [
+            "超"
+          ],
+          "damage": "20",
+          "text": "次の相手の番、相手は手札からグッズを出して使えない。",
+          "effectId": "reference-48036-attack-0",
+          "plan": {
+            "mechanic": "ITEM_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48036.json",
+        "sha256": "43624013fc29f663752cd8b62969cbe19fdedf3e0329cf88c206be063192855e",
+        "htmlSha256": "43624013fc29f663752cd8b62969cbe19fdedf3e0329cf88c206be063192855e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48052",
+      "name": "ゾロア",
+      "deckName": "ゾロア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48052",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048052_P_ZOROA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "とっしん",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-48052-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48052.json",
+        "sha256": "a6a5ab8d67e1ef820e863cbddae425cbbeb62a0b4680e060974ecdea71406f44",
+        "htmlSha256": "a6a5ab8d67e1ef820e863cbddae425cbbeb62a0b4680e060974ecdea71406f44",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48291",
+      "name": "マホミル",
+      "deckName": "マホミル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48291",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048291_P_MAHOMIRU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ドレインキッス",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "このポケモンのHPを「10」回復する。",
+          "effectId": "reference-48291-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 50,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48291.json",
+        "sha256": "69f15f2eaa80224b316d4192ec5ec5dac3a20090bf1c9cd5bba05d02ce71a4d0",
+        "htmlSha256": "69f15f2eaa80224b316d4192ec5ec5dac3a20090bf1c9cd5bba05d02ce71a4d0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48377",
+      "name": "モンメン",
+      "deckName": "モンメン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48377",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048377_P_MONMEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "もってくる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札を1枚引く。",
+          "effectId": "reference-48377-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 1
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48377.json",
+        "sha256": "616104e766d8914400c128ed714a159ad414116edea0ca43254094087cf6775f",
+        "htmlSha256": "616104e766d8914400c128ed714a159ad414116edea0ca43254094087cf6775f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48390",
+      "name": "キバニア",
+      "deckName": "キバニア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48390",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048390_P_KIBANIA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "とつげき",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-48390-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48390.json",
+        "sha256": "a76b25bf1718e1805aa253510f0d0fa0f790bffd708444d798574082b3cc9765",
+        "htmlSha256": "a76b25bf1718e1805aa253510f0d0fa0f790bffd708444d798574082b3cc9765",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48409",
+      "name": "ジグザグマ",
+      "deckName": "ジグザグマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48409",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048409_P_JIGUZAGUMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ふいをつく",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "コインを1回投げウラなら、このワザは失敗。",
+          "effectId": "reference-48409-attack-0",
+          "plan": {
+            "mechanic": "COIN_FAILURE_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48409.json",
+        "sha256": "3a7f39b2c1df6e189e301de72d1620547013734e35d742edd36b6a66901b821b",
+        "htmlSha256": "3a7f39b2c1df6e189e301de72d1620547013734e35d742edd36b6a66901b821b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48456",
+      "name": "エリキテル",
+      "deckName": "エリキテル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48456",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/048456_P_ERIKITERU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダブルひっかき",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "コインを2回投げ、オモテの数×10ダメージ。",
+          "effectId": "reference-48456-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48456.json",
+        "sha256": "0aaed15a3b26947df4bf3b23a82816b55f5a76b9af141ae8f3c5d35a7b7312a3",
+        "htmlSha256": "0aaed15a3b26947df4bf3b23a82816b55f5a76b9af141ae8f3c5d35a7b7312a3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45281",
+      "name": "ヒーローマント",
+      "deckName": "ヒーローマント",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45281",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045281_T_HIROMANTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンの最大HPは「＋100」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45281.json",
+        "sha256": "ef2c0648ee32f8f99b8ac28a7c81caa5108fe2f779c0428f0574fd4bf0d5760d",
+        "htmlSha256": "ef2c0648ee32f8f99b8ac28a7c81caa5108fe2f779c0428f0574fd4bf0d5760d",
+        "textSha256": "e40582bc6044bb46d8151f54443398b18ed0ab4e21f87c02a5f23d3a8421ee4a"
+      },
+      "mainPlan": {
+        "mechanic": "HERO_CAPE",
+        "commands": [
+          "MODIFY_MAX_HP"
+        ]
+      }
     }
   ],
   "blocked": [

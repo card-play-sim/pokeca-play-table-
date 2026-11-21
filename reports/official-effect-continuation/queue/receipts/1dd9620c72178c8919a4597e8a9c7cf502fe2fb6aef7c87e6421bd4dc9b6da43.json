@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_C4A777CCAC363603:54ad0807d4db67918408dcd956ff81f3018fbf0d2fe6af2e232afb0dc24b88f0",
   "taskFingerprint": "54ad0807d4db67918408dcd956ff81f3018fbf0d2fe6af2e232afb0dc24b88f0",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "d623a575-5f75-4c2a-af64-015e3001172e",
+  "executionFingerprint": "51cb160ad5681a3ea7eeee9e5508ee8172dcef9ebe6d889c6de0fa61d22e0744",
+  "attemptId": "ec89891a-6407-46cb-a220-d5ba0661171d",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,15 +11,27 @@
     "cases": [
       {
         "slot": "47174:supporter:ポケモンセンターのお姉さん:0",
+        "mechanic": "HEAL_AND_CLEAR_STATUS",
+        "commands": [
+          "HEAL",
+          "STATUS_CONDITION"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
       },
       {
         "slot": "47732:supporter:ポケモンセンターのお姉さん:0",
+        "mechanic": "HEAL_AND_CLEAR_STATUS",
+        "commands": [
+          "HEAL",
+          "STATUS_CONDITION"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
       }
     ]
   },
-  "checksum": "e942350c3dbec96f8cfc553d77a3b939d450ed668105a3254aaa298829004cc4"
+  "checksum": "31d787e7f88550a26d172d6b2cc6cd70b3f2de0805edffc08d2ab7727b09265d"
 }
