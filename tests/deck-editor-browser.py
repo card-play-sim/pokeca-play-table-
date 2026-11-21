@@ -78,6 +78,7 @@ def run(base):
         page.mouse.down()
         page.wait_for_timeout(650)
         print('DECK_LONG_PRESS_EVENTS',json.dumps(page.evaluate("window.__pressLog"),ensure_ascii=False),flush=True)
+        print('DECK_LONG_PRESS_STATE',json.dumps(page.evaluate("()=>({open:document.querySelector('#card-preview').open,element:document.elementFromPoint(innerWidth/2,innerHeight/2)?.tagName})"),ensure_ascii=False),flush=True)
         expect(page.locator('#card-preview')).to_be_visible()  # must open while held
         page.mouse.up()
         expect(page.locator('#card-preview')).to_be_visible()  # must survive release
