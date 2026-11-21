@@ -81,3 +81,11 @@ node tests/control-005-effect-matrix.test.cjs
 - `main` へ直接pushしない。新しい作業ブランチでPRを作成し、画像担当PR #28には書き込まない。
 - 公式出典が不明な印刷IDはBLOCKED、ただし共通効果エンジンの検証を停止させない。
 - 2回同じ失敗が続いたら、同じ操作を再試行せず、原因分類・手法・実行環境を切り替える。
+
+## 公式カード自動接続の再開
+
+リポジトリ所有者のGitHub接続から Issue #122 に `/card-auto-connect` とだけコメントすると、既存の Incremental official effect intake が main から起動する。同じワークフローは Actions の手動起動でも実行できる。候補範囲は公式分類カタログに登録済みのH/I/J。公式分類カタログに未登録の新パックは、既存の分類・画像監査を先に通す。
+
+最後に保存された `automation/control-013-intake-<run ID>` のチェックポイントを再利用する。新規接続は公式印刷版の照合と全効果のエンジン実行が必要。未解決の効果はチェックポイントとActions成果物 `official-effect-continuation-checkpoint` に残る。失敗時は該当runの `candidate.json` と収集・コンパイラのブロッカーを参照する。
+
+候補があるときはGitHubのワークフロートークンでPR作成を試行する。リポジトリでActionsからのPR作成が許可されない場合は保存済みブランチが再開点。必須CI後にPRを統合し、既存Pages配信と公開版の対戦を確認する。コンパイル・エンジン実行・PR作成だけで公開対戦済みにはならない。

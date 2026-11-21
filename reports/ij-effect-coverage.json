@@ -1,32 +1,47 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "scope": "I_J_EXACT_PRINTS",
+  "completionGate": "PUBLIC_BATTLE_VERIFICATION_REQUIRED",
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 196,
-      "missing": 1506
+      "connected": 199,
+      "missing": 1503
     },
     "J": {
       "total": 791,
-      "connected": 93,
-      "missing": 698
+      "connected": 95,
+      "missing": 696
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 190,
+      "CONNECTED_UNTESTED": 193,
       "MECHANIC_REQUIRED": 222,
       "EVIDENCE_UNVERIFIED": 5,
-      "EVIDENCE_MISSING": 1279,
+      "EVIDENCE_MISSING": 1276,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 92,
+      "CONNECTED_UNTESTED": 94,
       "MECHANIC_REQUIRED": 90,
       "EVIDENCE_UNVERIFIED": 13,
-      "EVIDENCE_MISSING": 595,
+      "EVIDENCE_MISSING": 593,
       "EXECUTION_PASS": 1
+    }
+  },
+  "playability": {
+    "I": {
+      "total": 1702,
+      "playable": 0,
+      "incomplete": 1702,
+      "executionVerified": 6
+    },
+    "J": {
+      "total": 791,
+      "playable": 0,
+      "incomplete": 791,
+      "executionVerified": 1
     }
   },
   "records": [
@@ -11664,8 +11679,8 @@
       "name": "ポケモンいれかえ",
       "mark": "I",
       "category": "goods",
-      "status": "EVIDENCE_MISSING",
-      "reason": "NO_EFFECT_PLAN"
+      "status": "CONNECTED_UNTESTED",
+      "proof": "data/effect-extensions/evidence/47882.json"
     },
     {
       "id": "47884",
@@ -12464,8 +12479,8 @@
       "name": "ポケモンいれかえ",
       "mark": "I",
       "category": "goods",
-      "status": "EVIDENCE_MISSING",
-      "reason": "NO_EFFECT_PLAN"
+      "status": "CONNECTED_UNTESTED",
+      "proof": "data/effect-extensions/evidence/48275.json"
     },
     {
       "id": "48276",
@@ -15232,8 +15247,8 @@
       "name": "ポケモンいれかえ",
       "mark": "I",
       "category": "goods",
-      "status": "EVIDENCE_MISSING",
-      "reason": "NO_EFFECT_PLAN"
+      "status": "CONNECTED_UNTESTED",
+      "proof": "data/effect-extensions/evidence/49379.json"
     },
     {
       "id": "49381",
@@ -17392,8 +17407,8 @@
       "name": "クラッシュハンマー",
       "mark": "J",
       "category": "goods",
-      "status": "EVIDENCE_MISSING",
-      "reason": "NO_EFFECT_PLAN"
+      "status": "CONNECTED_UNTESTED",
+      "proof": "data/effect-extensions/evidence/50324.json"
     },
     {
       "id": "50325",
@@ -17832,8 +17847,8 @@
       "name": "クラッシュハンマー",
       "mark": "J",
       "category": "goods",
-      "status": "EVIDENCE_MISSING",
-      "reason": "NO_EFFECT_PLAN"
+      "status": "CONNECTED_UNTESTED",
+      "proof": "data/effect-extensions/evidence/50442.json"
     },
     {
       "id": "50443",
