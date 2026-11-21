@@ -3,9 +3,12 @@ const { execFileSync } = require("node:child_process");
 const fs = require("node:fs"),
   W = require("./lib/shared-effect-engine-worker.cjs"),
   B = require("./lib/shared-effect-batch.cjs");
+const releaseBase = process.env.POKECA_INTAKE_RELEASE_BASE;
+const intakeSource = releaseBase ? "data/effect-extensions/intake.json"
+  : "data/official-effect-intake/checkpoint.json";
 const raw = new Set(
     JSON.parse(
-      fs.readFileSync("data/official-effect-intake/checkpoint.json"),
+      fs.readFileSync(intakeSource),
     ).records.map((r) => r.officialCardId),
   ),
   records = JSON.parse(
@@ -20,7 +23,6 @@ const perPattern = Number(process.env.POKECA_INTAKE_PER_PATTERN || 1);
 const prefix =
   process.env.POKECA_INTAKE_PREFIX || "reports/official-effect-continuation";
 // A release run must cover every slot for each changed intake print.
-const releaseBase = process.env.POKECA_INTAKE_RELEASE_BASE;
 const compiledPath = "data/effect-extensions/compiled.json";
 const previous = releaseBase
   ? new Map(JSON.parse(execFileSync("git", ["show", releaseBase + ":" + compiledPath],
