@@ -160,20 +160,18 @@ function prepare(r, e, kind) {
     for (const type of e.cost || []) {
       if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
     }
-    const basicType = entry => {
-      const id = entry.referenceOfficialCardId || references.defaultValidationReferences[entry.name];
-      const reference = records.get(id);
-      if (reference?.mainPlan?.mechanic !== "BASIC_ENERGY") return null;
-      return reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1];
-    };
+    const basicType = reference => reference?.mainPlan?.mechanic === "BASIC_ENERGY"
+      ? reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1]
+      : null;
+    const entryType = entry => basicType(records.get(
+      entry.referenceOfficialCardId || references.defaultValidationReferences[entry.name]));
     for (const [type, count] of needed) {
-      const available = cards.filter(card => basicType(card) === type)
+      const available = cards.filter(card => entryType(card) === type)
         .reduce((total, card) => total + card.count, 0);
       if (available >= count) continue;
-      const reference = [...records.values()].find(card => card.mainPlan?.mechanic === "BASIC_ENERGY"
-        && card.facts.basicEnergyType === type);
+      const reference = [...records.values()].find(card => basicType(card) === type);
       const donor = cards.find(card => card.category === "energy" && card.count >= count - available
-        && !needed.has(basicType(card)));
+        && !needed.has(entryType(card)));
       if (!reference || !donor) continue;
       donor.count -= count - available;
       cards.push({name:reference.name, category:"energy", count:count - available,
