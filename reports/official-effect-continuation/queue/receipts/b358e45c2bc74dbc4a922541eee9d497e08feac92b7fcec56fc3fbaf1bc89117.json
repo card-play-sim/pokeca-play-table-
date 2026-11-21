@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FE3D161F37F46E4E:5f21192236e64b0a5176bc5242bff94f1fa6a3eb7c29ac5229ef6d926ecd9c86",
   "taskFingerprint": "5f21192236e64b0a5176bc5242bff94f1fa6a3eb7c29ac5229ef6d926ecd9c86",
-  "executionFingerprint": "38bf6b73cb95e87a0a613d1a05af49002957e46a9652ecf0cceae1782506d3f1",
-  "attemptId": "f14d6daf-f68f-47cd-b8b4-8739a5525b4f",
-  "status": "BLOCKED",
+  "executionFingerprint": "d00bf4d2cc1200cb7c0b4f0d2a33f9225ff9ba54ce6e04a04ba5a5afa686244f",
+  "attemptId": "d80a8716-a499-4bc3-842f-6130b5d50169",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50807:attack:にどげり:0",
@@ -16,8 +15,14 @@
           "COIN_FLIP",
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45714:attack:しっぽビンタ:1",
@@ -42,8 +47,14 @@
           "COIN_FLIP",
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45906:attack:ダブルひっかき:1",
@@ -127,5 +138,5 @@
       }
     ]
   },
-  "checksum": "31ee95779eb5df8405331037d93e2edc7c4be8f3aa5eb9fc33f00c3395e9264f"
+  "checksum": "92dd043ed3dc5e0ce58f6ddba97f7b2750f4bf4dae94535f056248c23d4f44df"
 }
