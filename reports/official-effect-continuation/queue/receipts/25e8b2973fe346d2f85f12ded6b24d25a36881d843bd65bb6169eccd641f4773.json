@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_989D440E7A17BB63:878a23289b14870cea5f7f2bce98da75d8f93d3da92e60ca11fcb1755c221d3f",
   "taskFingerprint": "878a23289b14870cea5f7f2bce98da75d8f93d3da92e60ca11fcb1755c221d3f",
-  "executionFingerprint": "51cb160ad5681a3ea7eeee9e5508ee8172dcef9ebe6d889c6de0fa61d22e0744",
-  "attemptId": "9cac0cb9-4934-4e08-ae67-2ccaa75cf4b0",
+  "executionFingerprint": "f64527f50911e1ed1812d79d4e260984091d6aa3fd176f410485dd5617b3d2d9",
+  "attemptId": "8bd0bdee-8523-4dfe-9065-6c9ed7936928",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -38,8 +38,15 @@
           "DAMAGE",
           "STATUS_CONDITION"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45248:attack:ぶきみなねんぱ:1",
@@ -155,5 +162,5 @@
       }
     ]
   },
-  "checksum": "b2e361c5668f0fa7e0254f6aac63f01e150f4f5770eb72c29b3893fc78e76f44"
+  "checksum": "fb708c8191df9edeaa4d7999ca987a1039998e504d5774e16e95037d629f463c"
 }

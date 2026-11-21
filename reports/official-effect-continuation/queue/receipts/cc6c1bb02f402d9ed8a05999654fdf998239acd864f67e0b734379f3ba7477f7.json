@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_8971CCDFB7254258:59107bac845a0bc27f081ec2027e9fd954b7a3887182da7be2251d332f20b024",
   "taskFingerprint": "59107bac845a0bc27f081ec2027e9fd954b7a3887182da7be2251d332f20b024",
-  "executionFingerprint": "51cb160ad5681a3ea7eeee9e5508ee8172dcef9ebe6d889c6de0fa61d22e0744",
-  "attemptId": "fd034e4d-75dc-41c0-aab8-778e4de10d86",
+  "executionFingerprint": "f64527f50911e1ed1812d79d4e260984091d6aa3fd176f410485dd5617b3d2d9",
+  "attemptId": "785f26e0-005d-4345-99d3-92f9f321fb63",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -15,8 +15,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45167:attack:アクアボム:1",
@@ -44,8 +50,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46703:attack:アクアボム:1",
@@ -54,5 +66,5 @@
       }
     ]
   },
-  "checksum": "b83e2234b549af6709a1769ac7c8f7dd0dfa349d75eb79917ca134590923d4d0"
+  "checksum": "45ef14f5d844caa81be8c39ccc5f86d2c131b24c6b17bf7220f6fb316da9ae88"
 }

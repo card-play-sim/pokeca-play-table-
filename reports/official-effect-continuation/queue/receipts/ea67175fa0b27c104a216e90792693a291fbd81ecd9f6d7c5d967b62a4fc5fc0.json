@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_8971CCDFB7254258:11ae165be4c0c3e1d654539e98594f073b61f556935fa864229919b4b50fda17",
   "taskFingerprint": "11ae165be4c0c3e1d654539e98594f073b61f556935fa864229919b4b50fda17",
-  "executionFingerprint": "51cb160ad5681a3ea7eeee9e5508ee8172dcef9ebe6d889c6de0fa61d22e0744",
-  "attemptId": "ecd805aa-d10e-481d-ab91-8341c37e9a8c",
-  "status": "BLOCKED",
+  "executionFingerprint": "f64527f50911e1ed1812d79d4e260984091d6aa3fd176f410485dd5617b3d2d9",
+  "attemptId": "f234fd36-5384-4410-b9e1-aaa8a6badff1",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "44451:attack:ワイルドボルト:1",
@@ -15,10 +14,17 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "f4d11a35101066b4d9992f80bd0fc3c8328ceb8fa72a4d7fe015fb2d6fe8ed19"
+  "checksum": "7d72d376342a75450c60abf693621a6623c805f8453649fcf5ce9bf90a8e4b53"
 }
