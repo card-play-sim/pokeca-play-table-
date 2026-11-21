@@ -299,6 +299,7 @@ function drawCards() {
     const print = document.createElement('small');
     const effect = document.createElement('small');
     const amount = document.createElement('small');
+    const combined = document.createElement('small');
     const add = control('＋ 追加',card.name+'を追加',()=>change(card.id,1));
     add.className = 'add-card';
     add.disabled = !loaded;
@@ -307,11 +308,13 @@ function drawCards() {
         const entry = cards.get(id);
         return sum + (entry && entry.name===card.name && entry.category===card.category ? count : 0);
       },0);
-      amount.textContent = 'デッキ内 '+(current.cards[card.id]||0)+'枚（同名合計 '+sameNameCount+'枚）';
+      amount.textContent = 'デッキ内 '+(current.cards[card.id]||0)+'枚';
+      combined.textContent = '同名合計 '+sameNameCount+'枚';
     };
     const selectPrint = selected => {
       card = selected;
       selectedPrints.set(key,selected.id);
+      amount.id = 'in-deck-'+card.id;
       imageButton.replaceChildren();
       addImage(imageButton,card);
       imageButton.setAttribute('aria-label',card.name+' #'+card.id+'を1枚追加');
@@ -319,7 +322,7 @@ function drawCards() {
       effect.textContent = plans.has(card.id) ? '対戦対応' : '対戦未対応';
       updateCount();
     };
-    tile.append(imageButton,label,print,effect,amount,add);
+    tile.append(imageButton,label,print,effect,amount,combined,add);
     if (variants.length>1) {
       const chooser = control('絵柄・収録版 '+variants.length+'種',card.name+'の絵柄・収録版を選ぶ',()=>showPrintChooser(variants,selectPrint));
       chooser.className = 'print-chooser-open';
