@@ -87,11 +87,9 @@ function addImage(parent, card) {
   // A pointerleave must not cancel an otherwise stationary long press.
   for(const name of ['pointerup','pointercancel'])
     img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
-  img.addEventListener('pointerleave',event=>{
-    if(event.pointerId!==activePointer)return;
-    // Keep the hold timer if the modal itself caused the leave.
-    if(!held){clearTimeout(hold);activePointer=null;}
-  });
+  // Do not cancel a stationary press on pointerleave: mobile browser
+  // scrolling/reflow can retarget the pointer even without finger movement.
+  // pointermove (distance threshold), pointerup and pointercancel own cancellation.
   img.addEventListener('click',event=>{
     if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
   },true);
