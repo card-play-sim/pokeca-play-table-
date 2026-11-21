@@ -85,6 +85,13 @@ async def main():
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
+   events=after['history'][len(before.get('history',[])):]
+   if f['kind']=='attack':
+    assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
+               and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
+   if m=='VANILLA_DAMAGE':
+    assert f['printedDamageEvents']
+    assert all(event in events for event in f['printedDamageEvents'])
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])

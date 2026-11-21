@@ -167,7 +167,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -279,6 +279,22 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if (e.plan.mechanic === "VANILLA_DAMAGE") {
+    const [own, opponent] = before.players;
+    const attacker = E.getReferenceEffectRecord(own.active);
+    const defender = E.getReferenceEffectRecord(opponent.active);
+    const hasType = rule => rule?.types.some(type => attacker.facts.types.includes(type));
+    let amount = Number(e.damage);
+    if (hasType(defender.facts.weakness)) amount *= 2;
+    if (hasType(defender.facts.resistance))
+      amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
+    const changes = after.history.slice(before.history.length);
+    assert(changes.some(event => event.type === "attack" &&
+      event.details.effectId === e.effectId &&
+      event.details.referenceOfficialCardId === attacker.officialCardId));
+    assert(changes.some(event => event.details?.command === "DAMAGE" &&
+      event.details.targetInstanceId === opponent.active.id && event.details.amount === amount));
+  }
   assert.deepEqual(S.identities(before), S.identities(after));
   const saved = p.getResumeSnapshot(),
     expected = JSON.stringify(after);
@@ -295,8 +311,26 @@ function verifyCase(t, e) {
     ],
   };
 }
+function verifyPrintedDamage(evidence) {
+  const slot = B.slot(evidence);
+  const r = records.get(evidence.officialCardId);
+  const original = r?.attacks[evidence.effectIndex];
+  if (evidence.effectKind !== "attack" || r?.category !== "pokemon" ||
+      r.officialPageUrl !== evidence.officialPageUrl || !original ||
+      original.name !== evidence.effectName || original.text.trim() ||
+      original.plan?.mechanic !== "VANILLA_DAMAGE" ||
+      !/^\d+$/.test(original.damage) || original.damage !== evidence.printedDamage)
+    return { slot, status: "BLOCKED", reason: "OFFICIAL_PRINTED_DAMAGE_MISMATCH" };
+  const effect = { ...original, effectIndex: evidence.effectIndex };
+  try {
+    return { slot, ...verifyCase(prepare(r, effect, "attack"), effect) };
+  } catch (error) {
+    return { slot, status: "FAILED", reason: error.message };
+  }
+}
 module.exports = {
   prepare,
+  verifyPrintedDamage,
   version: "1",
   idempotent: true,
   contextFingerprint: B.hash(JSON.stringify(fileDigests)),
