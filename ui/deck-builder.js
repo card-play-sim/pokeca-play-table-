@@ -83,8 +83,15 @@ function addImage(parent, card) {
   img.addEventListener('pointermove',event=>{
     if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12)clearTimeout(hold);
   });
-  for(const name of ['pointerup','pointercancel','pointerleave'])
+  // Opening a modal moves the pointer out of the thumbnail in Chromium.
+  // A pointerleave must not cancel an otherwise stationary long press.
+  for(const name of ['pointerup','pointercancel'])
     img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
+  img.addEventListener('pointerleave',event=>{
+    if(event.pointerId!==activePointer)return;
+    // Keep the hold timer if the modal itself caused the leave.
+    if(!held){clearTimeout(hold);activePointer=null;}
+  });
   img.addEventListener('click',event=>{
     if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
   },true);
