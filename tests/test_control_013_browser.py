@@ -1,5 +1,5 @@
 """New effect families via public DOM, persistent game state and offline restart."""
-import asyncio,json,os,subprocess,traceback
+import asyncio,hashlib,json,os,subprocess,traceback
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
@@ -30,7 +30,17 @@ async def main():
    return
  async with async_playwright() as pw:
   b=await pw.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(pw.devices['Pixel 5']);device.pop('default_browser_type',None);c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
+  url=os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle'
+  if release_base:
+   async with page.expect_response(lambda response: response.request.resource_type=='script'
+                                   and '/ui/engine.bundle.js?' in response.url) as bundle:
+    await page.goto(url,wait_until='domcontentloaded')
+   response=await bundle.value
+   asset=hashlib.sha256(await response.body()).hexdigest()
+   assert response.ok and any(row['path'].split('?')[0].removeprefix('./')=='ui/engine.bundle.js'
+                              and row['match'] and row['remoteSha256']==asset for row in delivery['results'])
+  else:
+   await page.goto(url,wait_until='domcontentloaded')
   async def ready():await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&window.PokecaImageRegistryStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
   async def snap():return await page.evaluate('PokecaMobile.port.getSnapshot()')
   await ready()
@@ -75,10 +85,6 @@ async def main():
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
-   if release_base:
-    assert not errors,errors
-    asset=await page.evaluate("async()=>{const b=await (await fetch('ui/engine.bundle.js')).arrayBuffer();return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)), x=>x.toString(16).padStart(2,'0')).join('')}")
-    assert any(row['path'].split('?')[0]=='ui/engine.bundle.js' and row['remoteSha256']==asset for row in delivery['results'])
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
@@ -90,7 +96,9 @@ async def main():
    after=await snap()
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'effectKind':f['kind'],'effectIndex':f['e'].get('effectIndex',0),'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
-   if release_base:save_receipt()
+   if release_base:
+    assert not errors,errors
+    save_receipt()
   if release_base:
    receipt['success']=True
    save_receipt()
