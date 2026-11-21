@@ -94,7 +94,7 @@ async def main():
    if f['kind']=='attack':
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
                and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
-   if m=='VANILLA_DAMAGE':
+   if m in ('VANILLA_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
