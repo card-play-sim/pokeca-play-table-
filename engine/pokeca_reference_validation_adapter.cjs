@@ -16,7 +16,7 @@ function create(manifest,{rng=Math.random,firstDeck=0,referenceIds={},firstPlaye
     fixtureNote:'公式参照版の効果検証。正式採用版未確定。未接続効果は停止。'};
    if(kind==='pokemon')Object.assign(card,copy(record.facts),{species:entry.name,attacks:copy(record.attacks),abilities:copy(record.abilities),prizeCount:record.facts.prizeCount});
    else if(kind==='energy'){
-    if(record.mainPlan?.mechanic==='BASIC_ENERGY')card.energyType=record.name.match(/^基本([炎超悪])エネルギー$/)[1];
+    if(record.mainPlan?.mechanic==='BASIC_ENERGY')card.energyType=record.facts.basicEnergyType||record.name.match(/^基本([炎超悪])エネルギー$/)[1];
     else {card.isSpecial=true;card.cardType='SPECIAL_ENERGY';}
    }else if(kind==='trainer')card.cardType=['support','supporter'].includes(entry.category)?'SUPPORTER':'ITEM';
    return card;

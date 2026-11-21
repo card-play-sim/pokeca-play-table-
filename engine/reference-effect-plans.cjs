@@ -115,7 +115,8 @@ function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
   attacks:r.attacks.map((a,i)=>({...a,effectId:`reference-${r.officialCardId}-attack-${i}`,plan:plan(a,'ATTACK')})),
   abilities:r.abilities.map((a,i)=>({...a,effectId:`reference-${r.officialCardId}-ability-${i}`,plan:plan(a,'ABILITY')})),
-  mainPlan:r.category==='energy'&&r.name.match(/^基本[炎超悪]エネルギー$/)?{mechanic:'BASIC_ENERGY',commands:['ATTACH_ENERGY']}:plan(r,'MAIN')
+  mainPlan:r.category==='energy'&&(/^基本[炎超悪]エネルギー$/.test(r.name)||
+    (/^[草炎水雷超闘悪鋼]$/.test(r.facts?.basicEnergyType)&&r.name===`基本${r.facts.basicEnergyType}エネルギー`))?{mechanic:'BASIC_ENERGY',commands:['ATTACH_ENERGY']}:plan(r,'MAIN')
  }))};
 }
 module.exports={ijMechanics,compile,norm,mainText};

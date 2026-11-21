@@ -56,8 +56,8 @@ function cli(script, args) {
     assert.equal(resumed.classifierCached, 2);
     assert.equal(resumed.run.processed, 66);
     assert.equal(resumed.run.counts.FAILED, 0);
-    assert.equal(resumed.run.counts.SUCCEEDED, 63);
-    assert.equal(resumed.run.counts.BLOCKED, 5);
+    assert.equal(resumed.run.counts.SUCCEEDED, 66);
+    assert.equal(resumed.run.counts.BLOCKED, 2);
     const repeat = JSON.parse(
       cli("process-shared-effect-batch.cjs", [dir, ...inputs]),
     );
@@ -96,7 +96,7 @@ function cli(script, args) {
       cli("process-shared-effect-batch.cjs", [dir, input]),
     );
     assert.equal(unknown.run.processed, 1);
-    assert.equal(unknown.run.counts.BLOCKED, 6);
+    assert.equal(unknown.run.counts.BLOCKED, 3);
     assert.equal(unknown.run.counts.FAILED, 0);
     const report = {
       status: "PASS",
