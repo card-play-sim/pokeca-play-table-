@@ -96,6 +96,9 @@ function plan(entry,kind){
  match=generic.match(/^自分の番に1回使える。自分の手札が([1-9][0-9]*)枚になるように、山札を引く。$/);
  if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HAND_LIMIT_DRAW_ABILITY',commands:['DRAW'],limit:Number(match[1])};
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
+ match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
+ const printed=String(entry.damage).normalize('NFKC');
+ if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
  if(kind==='ABILITY'&&generic==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。')return {mechanic:'BENCH_DAMAGE_PROTECTION',commands:['PREVENT_DAMAGE']};
  match=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー([1-9][0-9]*)個ぶんとしてはたらく。このカードをつけているポケモンが使うワザの、相手のポケモンへのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='MAIN'&&entry.category==='energy'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COLORLESS_MULTI_ENERGY',commands:['ATTACH_ENERGY','MODIFY_DAMAGE'],units:Number(match[1]),damagePenalty:Number(match[2])};

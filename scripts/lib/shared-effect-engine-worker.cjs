@@ -193,7 +193,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "COIN_BONUS_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -233,6 +233,22 @@ function prepare(r, e, kind) {
     return { port: p, sourceId: frame.sourceId, kind, passive: true };
   return { port: p, sourceId: frame.sourceId, kind };
 }
+function verifyPrintedAttack(before, after, effect, amount) {
+  const [own, opponent] = before.players;
+  const attacker = E.getReferenceEffectRecord(own.active);
+  const defender = E.getReferenceEffectRecord(opponent.active);
+  const hasType = rule => rule?.types.some(type => attacker.facts.types.includes(type));
+  if (hasType(defender.facts.weakness)) amount *= 2;
+  if (hasType(defender.facts.resistance))
+    amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
+  const changes = after.history.slice(before.history.length);
+  assert(changes.some(event => event.type === "attack" &&
+    event.details.effectId === effect.effectId &&
+    event.details.referenceOfficialCardId === attacker.officialCardId));
+  assert(changes.some(event => event.details?.command === "DAMAGE" &&
+    event.details.targetInstanceId === opponent.active.id && event.details.amount === amount));
+}
+
 function verifyCase(t, e) {
   if (t.blocked) return { status: "BLOCKED", reason: t.blocked };
   const p = t.port,
@@ -305,21 +321,23 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
-  if (e.plan.mechanic === "VANILLA_DAMAGE") {
-    const [own, opponent] = before.players;
-    const attacker = E.getReferenceEffectRecord(own.active);
-    const defender = E.getReferenceEffectRecord(opponent.active);
-    const hasType = rule => rule?.types.some(type => attacker.facts.types.includes(type));
-    let amount = Number(e.damage);
-    if (hasType(defender.facts.weakness)) amount *= 2;
-    if (hasType(defender.facts.resistance))
-      amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
-    const changes = after.history.slice(before.history.length);
-    assert(changes.some(event => event.type === "attack" &&
-      event.details.effectId === e.effectId &&
-      event.details.referenceOfficialCardId === attacker.officialCardId));
-    assert(changes.some(event => event.details?.command === "DAMAGE" &&
-      event.details.targetInstanceId === opponent.active.id && event.details.amount === amount));
+  if (e.plan.mechanic === "VANILLA_DAMAGE")
+    verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "COIN_BONUS_DAMAGE") {
+    for (const [seed, heads] of [[0, true], [682, false]]) {
+      const start = { ...before, referenceRngState: seed };
+      const replay = port(start);
+      assert(replay.dispatch("you", o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).filter(event =>
+        event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean");
+      assert.equal(flips.length, 1);
+      assert.equal(flips[0].details.heads, heads);
+      verifyPrintedAttack(start, end, e, Number.parseInt(e.damage.normalize("NFKC"), 10) + (heads ? e.plan.bonus : 0));
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
   }
   assert.deepEqual(S.identities(before), S.identities(after));
   const saved = p.getResumeSnapshot(),

@@ -73,9 +73,10 @@ for (const r of selected) {
       if (!(option && (option.ok ?? option.enabled))) continue;
       const game = p.getSnapshot();
       if (!p.dispatch("you", option.action).ok) continue;
-      const printedDamageEvents = e.plan.mechanic === "VANILLA_DAMAGE"
+      const printedDamageEvents = ["VANILLA_DAMAGE", "COIN_BONUS_DAMAGE"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event =>
-            event.details?.command === "DAMAGE" && event.details.targetInstanceId)
+            (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
+            (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))
         : undefined;
       fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents });
       patterns.set(e.plan.mechanic, (patterns.get(e.plan.mechanic) || 0) + 1);
