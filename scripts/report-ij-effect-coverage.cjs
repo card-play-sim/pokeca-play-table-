@@ -14,7 +14,7 @@ const ingested=new Map([...intake.records,...read('data/effect-extensions/intake
 const blockers=new Map([...intake.blocked,...compiled.blocked].map(row=>[row.officialCardId,row]));
 const executions=process.argv[3]?new Map(Object.entries(read(process.argv[3]))):new Map();
 const audit=saved.auditIJCoverage(cards,plans);
-const report={schemaVersion:1,scope:'I_J_EXACT_PRINTS',audit,counts:{I:{},J:{}},records:[]};
+const report={schemaVersion:2,scope:'I_J_EXACT_PRINTS',completionGate:'BATTLE_EXECUTION_PASS_REQUIRED',audit,counts:{I:{},J:{}},playability:{I:{total:0,playable:0,incomplete:0},J:{total:0,playable:0,incomplete:0}},records:[]};
 for(const [id,card] of cards){
   const mark=card.regulationMark;
   if(!Object.hasOwn(audit,mark))continue;
@@ -32,7 +32,14 @@ for(const [id,card] of cards){
       (proof?'EVIDENCE_UNVERIFIED':'EVIDENCE_MISSING');
   }
   report.counts[mark][status]=(report.counts[mark][status]||0)+1;
+  report.playability[mark].total++;
+  report.playability[mark][status==='EXECUTION_PASS'?'playable':'incomplete']++;
   report.records.push({id,name:card.name,mark,category:card.category,status,...(reason?{reason}:{}),...(proof?{proof}:{})});
 }
 fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({audit,counts:report.counts}));
+console.log(JSON.stringify({audit,counts:report.counts,playability:report.playability}));
+// --require-playable is the single end-to-end release gate; do not use for diagnostic-only CI.
+if(process.argv.includes('--require-playable') && Object.values(report.playability).some(v=>v.incomplete)) {
+  console.error('BATTLE_PLAYABILITY_INCOMPLETE: cards without verified battle execution remain');
+  process.exitCode=1;
+}
