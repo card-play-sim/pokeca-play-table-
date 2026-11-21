@@ -108,6 +108,11 @@ async def main():
    if m in ('VANILLA_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='RETREAT_LOCK_ATTACK':
+    defender=after['players'][1]['active']
+    assert defender['id']==before['players'][1]['active']['id']
+    assert defender['referenceCannotRetreatTurn']==before['turnNumber']+1
+    assert await page.evaluate("!Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),'ai').actions.some(a=>a.type==='retreat')")
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])

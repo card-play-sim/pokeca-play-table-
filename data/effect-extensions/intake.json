@@ -80542,6 +80542,113 @@
         "htmlSha256": "542824653b59bc88b0db5886ebbf926d663139351208f7253ba4ad552bc71328",
         "textSha256": "15a79ea0f3acb8fe13f5634c1846a34959a788558caedd71b40c2724f67ca51a"
       }
+    },
+    {
+      "officialCardId": "47971",
+      "name": "コマタナ",
+      "deckName": "コマタナ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47971",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047971_P_KOMATANA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おいつめる",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "10",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47971.json",
+        "sha256": "f4653401790b37fd978f56930af18a594a791bb06632b08f6bcccf03f71bf745",
+        "htmlSha256": "f4653401790b37fd978f56930af18a594a791bb06632b08f6bcccf03f71bf745",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48421",
+      "name": "フシギダネ",
+      "deckName": "フシギダネ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48421",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048421_P_FUSHIGIDANE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "しばりつける",
+          "cost": [
+            "草"
+          ],
+          "damage": "10",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48421.json",
+        "sha256": "5accada61ca43b993e4261592370580311a8c978d132cf1b8c5f22842cffb900",
+        "htmlSha256": "5accada61ca43b993e4261592370580311a8c978d132cf1b8c5f22842cffb900",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []

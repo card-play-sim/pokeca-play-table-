@@ -215,6 +215,14 @@ function prepare(r, e, kind) {
     for (const c of [...p.deck].filter(eligible).slice(0, e.plan.amount))
       p.discard.push(p.deck.splice(p.deck.indexOf(c), 1)[0]);
   }
+  if (m === "RETREAT_LOCK_ATTACK") {
+    const opponent = frame.game.players[1];
+    const cost = opponent.active.retreatCost;
+    const payment = opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial).slice(0, cost);
+    if (payment.length !== cost) return { blocked: "NO_RETREAT_PAYMENT_FIXTURE" };
+    for (const card of payment)
+      opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -337,6 +345,23 @@ function verifyCase(t, e) {
       assert.deepEqual(S.identities(start), S.identities(end));
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if (e.plan.mechanic === "RETREAT_LOCK_ATTACK") {
+    const opponent = after.players[1];
+    assert.equal(opponent.active.id, before.players[1].active.id);
+    assert.equal(opponent.active.referenceCannotRetreatTurn, before.turnNumber + 1);
+    // Compare the legal actions for the same state with and without the lock.
+    const unlocked = JSON.parse(JSON.stringify(after));
+    delete unlocked.players[1].active.referenceCannotRetreatTurn;
+    const candidates = E.getLegalActions(unlocked, "ai").actions.filter(a => a.type === "retreat");
+    assert(candidates.length > 0, "OPPONENT_MUST_BE_ABLE_TO_RETREAT_WITHOUT_EFFECT");
+    assert(E.getLegalActions(after, "ai").actions.every(a => a.type !== "retreat"));
+    const expired = { ...after, turnNumber: after.turnNumber + 2 };
+    assert(E.getLegalActions(expired, "ai").actions.some(a => a.type === "retreat"));
+    for (const action of candidates) {
+      assert.equal(p.dispatch("ai", action).ok, false);
+      assert.equal(JSON.stringify(p.getSnapshot()), JSON.stringify(after));
     }
   }
   assert.deepEqual(S.identities(before), S.identities(after));
