@@ -5,6 +5,7 @@ Detail HTML may be unavailable (403); no filenames or set codes determine catego
 import concurrent.futures, hashlib, json, re, threading, time, os, subprocess
 from pathlib import Path
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urljoin
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'data/deck-building';BASE='https://www.pokemon-card.com'
 QUERIES={
@@ -22,18 +23,25 @@ def sha(raw):return hashlib.sha256(raw).hexdigest()
 def save(path,value):
  path.parent.mkdir(parents=True,exist_ok=True);raw=(json.dumps(value,ensure_ascii=False,separators=(',',':'))+'\n').encode();tmp=path.with_suffix('.tmp');tmp.write_bytes(raw);tmp.replace(path);assert path.read_bytes()==raw
 lock=threading.Lock();next_request=[0.0]
-def snapshot(key):
- params,condition=QUERIES[key];reg='all' if key=='basic' else 'XY';folder=OUT/'search'/key
+def snapshot(key, folder_override=None):
+ params,condition=({},'レギュレーション：スタンダード') if key=='standard' else QUERIES[key];reg='all' if key=='basic' else 'XY';folder=folder_override or OUT/'search'/key
  def page(n):
   url=BASE+'/card-search/resultAPI.php?'+urlencode({'keyword':'','regulation_sidebar_form':reg,**params,'page':n})
   path=folder/(str(n)+'.json')
   if path.exists():raw=path.read_bytes()
   else:
-   with lock:
-    time.sleep(max(0,next_request[0]-time.monotonic()));next_request[0]=time.monotonic()+0.25
-   with urlopen(Request(url,headers={'User-Agent':'PokecaDeckClassification/1.0','Accept':'application/json'}),timeout=25) as response:
-    assert response.geturl()==url and response.headers.get_content_type()=='application/json','SEARCH_RESPONSE'
-    raw=response.read(2_000_001);assert len(raw)<=2_000_000
+   for attempt in range(3):
+    with lock:
+     time.sleep(max(0,next_request[0]-time.monotonic()));next_request[0]=time.monotonic()+0.25
+    try:
+     with urlopen(Request(url,headers={'User-Agent':'PokecaDeckClassification/1.0','Accept':'application/json'}),timeout=25) as response:
+      assert response.geturl()==url and response.headers.get_content_type()=='application/json','SEARCH_RESPONSE'
+      raw=response.read(2_000_001);assert len(raw)<=2_000_000
+     break
+    except (URLError, TimeoutError) as error:
+     if attempt==2 or isinstance(error,HTTPError) and error.code not in [429,500,502,503,504]:
+      raise
+     time.sleep(2**attempt)
    folder.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
   d=json.loads(raw)
   assert d.get('result')==1 and int(d['thisPage'])==n and d['regulation']==reg,'SEARCH_PAGE'
@@ -57,6 +65,31 @@ def snapshot(key):
    subprocess.run(['git','commit','-m','Checkpoint official category search: '+key],cwd=ROOT,check=True)
    subprocess.run(['git','push','origin','HEAD:refs/heads/'+branch],cwd=ROOT,check=True)
  return items
+
+def discover(output):
+ # Keep discovery evidence outside the protected classification and image
+ # registry. Standard search membership does not prove the printed mark.
+ items=snapshot('standard',ROOT/'work/official-standard-search')
+ registry={row['officialCardId']:row for row in json.loads((ROOT/'data/official-image-registry.json').read_bytes())['cards']}
+ classified={row['officialCardId'] for row in json.loads((OUT/'catalog.json').read_bytes())['records']}
+ records=[]
+ for ident,(candidate,proof) in sorted(items.items(),key=lambda row:int(row[0])):
+  if ident in classified:
+   continue
+  name=candidate['cardNameAltText']
+  image=urljoin(BASE,candidate['cardThumbFile'])
+  assert name and image.startswith(BASE+'/assets/images/card_images/large/'),'INVALID_SEARCH_IDENTITY'
+  known=registry.get(ident)
+  if not known:
+   reason='OFFICIAL_IMAGE_REGISTRY_ENTRY_REQUIRED'
+  elif name!=known['name'] or image!=known['imageSourceUrl']:
+   reason='OFFICIAL_SEARCH_IDENTITY_CONFLICT'
+  else:
+   reason='PRINTED_REGULATION_EVIDENCE_REQUIRED'
+  records.append({'officialCardId':ident,'name':name,'imageSourceUrl':image,
+                  'status':'BLOCKED','reason':reason,'source':proof})
+ save(output,{'schemaVersion':1,'officialStandardPrints':len(items),'unclassified':records})
+ print(json.dumps({'officialStandardPrints':len(items),'unclassified':len(records)}),flush=True)
 
 def main():
  raw=(ROOT/'data/official-image-registry.json').read_bytes();registry={r['officialCardId']:r for r in json.loads(raw)['cards']};assert len(registry)==23525
@@ -96,4 +129,12 @@ def main():
  save(OUT/'catalog.json',{'schemaVersion':1,'registryCount':len(registry),'registrySha256':sha(raw),'hijTarget':len(marks),'records':records,'blocked':blocked,'counts':counts,'basicEnergyRuleUrl':BASE+'/rules/regulation/'})
  assert (ROOT/'data/official-image-registry.json').read_bytes()==raw
  print(json.dumps({'classified':len(records),'blocked':blocked,'counts':counts},ensure_ascii=False),flush=True)
-if __name__=='__main__':main()
+if __name__=='__main__':
+ import argparse
+ parser=argparse.ArgumentParser()
+ parser.add_argument('--discover',action='store_true')
+ options=parser.parse_args()
+ if options.discover:
+  discover(ROOT/'reports/official-effect-continuation/discovery.json')
+ else:
+  main()

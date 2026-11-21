@@ -153,6 +153,34 @@ function prepare(r, e, kind) {
     d.cards.filter((c) => c.name === r.deckName).map(() => ({ deck: i })),
   );
   if (!locations.length) return { blocked: "NO_VERIFICATION_DECK_ADAPTER" };
+  if (kind === "attack") {
+    const cards = manifest.decks[locations[0].deck].cards;
+    const references = E.getReferenceEffectCatalog({ includeExtensions: true });
+    const needed = new Map();
+    for (const type of e.cost || []) {
+      if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
+    }
+    const basicType = entry => {
+      const id = entry.referenceOfficialCardId || references.defaultValidationReferences[entry.name];
+      const reference = records.get(id);
+      if (reference?.mainPlan?.mechanic !== "BASIC_ENERGY") return null;
+      return reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1];
+    };
+    for (const [type, count] of needed) {
+      const available = cards.filter(card => basicType(card) === type)
+        .reduce((total, card) => total + card.count, 0);
+      if (available >= count) continue;
+      const reference = [...records.values()].find(card => card.mainPlan?.mechanic === "BASIC_ENERGY"
+        && card.facts.basicEnergyType === type);
+      const donor = cards.find(card => card.category === "energy" && card.count >= count - available
+        && !needed.has(basicType(card)));
+      if (!reference || !donor) continue;
+      donor.count -= count - available;
+      cards.push({name:reference.name, category:"energy", count:count - available,
+        referenceOfficialCardId:reference.officialCardId});
+    }
+    manifest.decks[locations[0].deck].cards = cards.filter(card => card.count);
+  }
   const row = {
     cardName: r.deckName,
     category: r.category,

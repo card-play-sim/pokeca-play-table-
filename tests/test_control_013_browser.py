@@ -60,6 +60,11 @@ async def main():
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
    else:await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
    if r['category']=='tool':await page.locator(f'#self-active [data-card-id="{option["action"]["targetInstanceId"]}"]').tap()
+   elif r['category']=='energy':
+    to_active=option['action']['target']=='active'
+    container='#self-active' if to_active else '#self-bench'
+    index=0 if to_active else option['action']['target']
+    await page.locator(container+' [data-card-id]').nth(index).tap()
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     for req in option.get('requests',[]):

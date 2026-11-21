@@ -69,6 +69,8 @@ jobs:
               echo "Resumed legacy checkpoint"
             fi
           fi
+      - name: Discover unclassified prints using official standard search
+        run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official evidence and run approved local commands
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '50' }}
@@ -122,6 +124,7 @@ jobs:
           name: official-effect-continuation-checkpoint
           path: |
             work/card-auto-connect/
+            work/official-standard-search/
             data/official-effect-intake/
             reports/official-effect-continuation/
             test-results/control-013*.json
