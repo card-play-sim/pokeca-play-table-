@@ -30,6 +30,8 @@ jobs:
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
+      - name: Verify single battle-playability completion gate
+        run: node tests/ij-battle-playability-gate.test.cjs
       - name: Verify unchanged engine and PWA artifacts
         run: |
           node scripts/sync-reference-effects.cjs --check
