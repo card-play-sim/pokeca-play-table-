@@ -64,7 +64,11 @@ def run(base):
         image = page.locator('#cards img')
         expect(image).to_be_visible()
         page.wait_for_function("document.querySelector('#cards img').naturalWidth>0",timeout=60000)
+        # The bottom-sheet picker scrolls independently of the page. Ensure
+        # the thumbnail is inside the viewport before sending mouse events.
+        image.scroll_into_view_if_needed()
         box = image.bounding_box()
+        assert box and 0 <= box['y'] and box['y'] + box['height'] <= 700
         page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
         page.mouse.down()
         page.wait_for_timeout(650)
