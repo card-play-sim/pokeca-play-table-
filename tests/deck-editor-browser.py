@@ -17,7 +17,6 @@ def run(base):
         )
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.on("console", lambda message: print("DECK_BROWSER_CONSOLE",message.text,flush=True) if message.text.startswith("DECK_HOLD_") else None)
         page.goto(base + "/")
         page.get_by_role("link", name="新規デッキ").click()
         name = page.locator("#deck-name")
@@ -89,6 +88,8 @@ def run(base):
         expect(page.locator('#card-preview')).not_to_be_visible()
         image.click()
         expect(page.locator('#card-preview')).not_to_be_visible()
+        expect(page.locator('#total')).to_have_text('1 / 60枚')
+        expect(page.locator('#in-deck-47832')).to_have_text('デッキ内 1枚')
         # Touch release can generate a click on the new backdrop when the
         # original thumbnail is near the bottom edge of the viewport.
         page.locator('#query').fill('')
@@ -107,7 +108,7 @@ def run(base):
         expect(page.locator('#card-preview')).to_be_visible()
         page.touchscreen.tap(2,2)
         expect(page.locator('#card-preview')).not_to_be_visible()
-        expect(page.locator('#total')).to_have_text('0 / 60枚')
+        expect(page.locator('#total')).to_have_text('1 / 60枚')
         page.locator('#query').fill('47832')
         for _ in range(5):
             add.click()
@@ -252,12 +253,14 @@ def run(base):
         Path('test-results').mkdir(exist_ok=True)
         page.screenshot(path='test-results/deck-work-002-battle.png',full_page=True)
         match_id = page.evaluate("PokecaMobile.port.getSessionId()")
+        saved_game = page.evaluate("PokecaMobile.port.getResumeSnapshot().game")
         page.get_by_role("link", name="デッキ一覧").click()
         expect(tile).to_be_visible()
         page.reload()
         page.get_by_role("link", name="対戦・再開").click()
         expect(page.locator("#save-status")).to_have_text("自動保存済")
         assert page.evaluate("PokecaMobile.port.getSessionId()") == match_id
+        assert page.evaluate("PokecaMobile.port.getResumeSnapshot().game") == saved_game
         expect(page.locator("#self-active").get_by_role("button",name="マリル・HP 70")).to_be_visible()
         # Put the exact saved I print into hand without changing its physical identity,
         # then play it through the same UI controls as a normal drawn card.
