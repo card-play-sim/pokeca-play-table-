@@ -72,8 +72,9 @@ def run(base):
         page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
         page.mouse.down()
         page.wait_for_timeout(650)
+        expect(page.locator('#card-preview')).to_be_visible()  # must open while held
         page.mouse.up()
-        expect(page.locator('#card-preview')).to_be_visible()
+        expect(page.locator('#card-preview')).to_be_visible()  # must survive release
         expect(page.locator('#preview-image')).to_have_attribute('src',image.get_attribute('src'))
         assert page.locator('#preview-image').evaluate("img=>getComputedStyle(img).objectFit") == 'contain'
         assert page.locator('#preview-image').evaluate("img=>img.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true}))") is False
