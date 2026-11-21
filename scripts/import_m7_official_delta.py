@@ -58,6 +58,14 @@ def main():
         OUT.parent.mkdir(parents=True, exist_ok=True)
         OUT.write_text(json.dumps({"schemaVersion": 1, "status": "BLOCKED_NO_MATCHING_M7_IDENTITIES", "officialFound": 0, "new": 0, "sampleM7Thumbnails": observed_thumbnails, "evidence": evidence}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         raise RuntimeError(f"No M7 identities found; sample M7 thumbnails: {observed_thumbnails}")
+    # Validate official identity evidence before emitting a candidate delta.
+    for cid, record in found.items():
+        if not record["name"] or not isinstance(record["name"], str):
+            raise RuntimeError(f"Official M7 identity missing name: {cid}")
+        if not record["imageUrl"].startswith(BASE + "/assets/images/card_images/large/M7/"):
+            raise RuntimeError(f"Unexpected M7 image URL: {cid}")
+        if not re.fullmatch(r"[0-9a-f]{64}", record["sourceSha256"]):
+            raise RuntimeError(f"Invalid official source digest: {cid}")
     delta = [found[k] for k in sorted(found, key=int) if k not in known]
     result = {"schemaVersion": 1, "status": "OFFICIAL_IDENTITY_DELTA_REQUIRES_PRINT_AND_MARK_VERIFICATION", "pack": "M7", "knownM7": sum(x.get("pack") == "M7" for x in catalog["records"]), "officialFound": len(found), "new": len(delta), "records": delta, "evidence": evidence}
     OUT.parent.mkdir(parents=True, exist_ok=True)
