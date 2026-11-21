@@ -65,6 +65,9 @@ def run(base):
         page.locator('#query').fill('48597')
         expect(page.locator('#cards .builder-card')).to_have_count(1)
         expect(page.locator('#cards .print-chooser-open')).to_have_count(0)
+        page.locator('#query').fill('キチキギスex')
+        expect(page.locator('#cards .builder-card')).to_have_count(1)
+        expect(page.locator('#cards .print-chooser-open')).to_have_count(1)
         page.locator('#query').fill('')
         aces = [r for r in classification['records'] if r['aceSpec']]
         for index, ace in enumerate(aces[:2]):
