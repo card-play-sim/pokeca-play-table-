@@ -16,6 +16,8 @@ function requiredSlots(record) {
     effectName: entry.name,
     effectIndex: index,
     effectText: entry.text?.trim() || '',
+    printedDamage: kind === 'attack' && entry.plan?.mechanic === 'VANILLA_DAMAGE'
+      && /^\d+$/.test(entry.damage) ? entry.damage : undefined,
     officialTextSha256: B.hash(entry.text?.trim() || '')
   });
   return record.category === 'pokemon'
@@ -25,7 +27,7 @@ function requiredSlots(record) {
 }
 
 function allExecuted(slots, results) {
-  return slots.length > 0 && slots.every(slot => slot.effectText && results.get(B.slot(slot)) === 'SUCCEEDED');
+  return slots.length > 0 && slots.every(slot => (slot.effectText || slot.printedDamage !== undefined) && results.get(B.slot(slot)) === 'SUCCEEDED');
 }
 
 function run(baseCommit, directory) {
@@ -54,7 +56,9 @@ function run(baseCommit, directory) {
     if (reason) blockers.push({id, reason});
     else slotsById.set(id, requiredSlots(record));
   }
-  const evidence = [...slotsById.values()].filter(slots=>slots.length && slots.every(slot=>slot.effectText)).flat();
+  const slots = [...slotsById.values()].flat();
+  const evidence = slots.filter(slot => slot.effectText);
+  const printedDamage = slots.filter(slot => !slot.effectText && slot.printedDamage !== undefined);
   const results = new Map();
   fs.mkdirSync(directory, {recursive: true});
   if (evidence.length) {
@@ -70,6 +74,12 @@ function run(baseCommit, directory) {
     for (const job of Object.values(read(queue + '/queue.json').jobs)) {
       for (const test of job.summary?.cases || []) results.set(test.slot, test.status);
     }
+  }
+  if (printedDamage.length) {
+    const worker = require('./lib/shared-effect-engine-worker.cjs');
+    const outcomes = printedDamage.map(slot => worker.verifyPrintedDamage(slot));
+    B.atomic(directory + '/printed-damage-results.json', outcomes);
+    for (const outcome of outcomes) results.set(outcome.slot, outcome.status);
   }
   const qualified = [];
   for (const [id, slots] of slotsById) {

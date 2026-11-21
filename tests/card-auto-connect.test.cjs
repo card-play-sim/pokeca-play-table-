@@ -14,6 +14,13 @@ results.set(B.slot(slots[1]),'SUCCEEDED');
 assert(allExecuted(slots,results));
 assert(!allExecuted(requiredSlots({...record,attacks:[{...attack,text:''}]}),results));
 assert(!allExecuted([],results));
+const worker = require('../scripts/lib/shared-effect-engine-worker.cjs');
+const printedRecord = require('../data/effect-extensions/compiled.json').records
+  .find(row => row.officialCardId === '44454');
+const printedSlot = requiredSlots(printedRecord).find(slot => slot.printedDamage === '20');
+assert.equal(worker.verifyPrintedDamage(printedSlot).status, 'SUCCEEDED');
+assert.equal(worker.verifyPrintedDamage({...printedSlot, printedDamage:'30'}).status, 'BLOCKED');
+assert(!allExecuted([{...printedSlot, printedDamage:undefined}],new Map([[B.slot(printedSlot),'SUCCEEDED']])));
 const workflow=fs.readFileSync('.github/workflows/continue-official-effects.yml','utf8');
 assert.match(workflow,/comment\.user\.login == github\.repository_owner/);
 assert.match(workflow,/comment\.body == '\/card-auto-connect'/);

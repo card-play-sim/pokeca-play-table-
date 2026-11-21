@@ -1,5 +1,5 @@
 """New effect families via public DOM, persistent game state and offline restart."""
-import asyncio,json,os,subprocess,traceback
+import asyncio,hashlib,json,os,subprocess,traceback
 from pathlib import Path
 from playwright.async_api import async_playwright
 from test_fixed_deck_browser_images import session_ca_args
@@ -7,10 +7,40 @@ from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
 PREFIX=ROOT/os.environ.get('POKECA_INTAKE_PREFIX','reports/official-effect-continuation')
 async def main():
+ release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
+ if release_base:
+  delivery=json.loads((ROOT/'test-results/published-pwa-verification.json').read_text())
+  assert delivery['success'] and delivery['base']==os.environ['POKECA_TEST_URL']
+  commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+  receipt={'commit':commit,'baseCommit':release_base,'release':delivery['release'],
+           'publicUrl':delivery['base'],'results':cases,'success':False,'physicalAndroidVerified':False,
+           'expectedSlots':[{'print':f['r']['officialCardId'],'effectKind':f['kind'],
+                             'effectIndex':f['e'].get('effectIndex',0)} for f in fixtures]}
+  receipt_path=ROOT/'artifacts/published-intake-battles.json'
+  receipt_path.parent.mkdir(exist_ok=True)
+  def save_receipt():
+   temporary=receipt_path.with_suffix('.tmp')
+   temporary.write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+   temporary.replace(receipt_path)
+  save_receipt()
+  if not fixtures:
+   receipt['success']=True
+   save_receipt()
+   return
  async with async_playwright() as pw:
   b=await pw.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args());device=dict(pw.devices['Pixel 5']);device.pop('default_browser_type',None);c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
+  url=os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle'
+  if release_base:
+   async with page.expect_response(lambda response: response.request.resource_type=='script'
+                                   and '/ui/engine.bundle.js?' in response.url) as bundle:
+    await page.goto(url,wait_until='domcontentloaded')
+   response=await bundle.value
+   asset=hashlib.sha256(await response.body()).hexdigest()
+   assert response.ok and any(row['path'].split('?')[0].removeprefix('./')=='ui/engine.bundle.js'
+                              and row['match'] and row['remoteSha256']==asset for row in delivery['results'])
+  else:
+   await page.goto(url,wait_until='domcontentloaded')
   async def ready():await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&window.PokecaImageRegistryStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
   async def snap():return await page.evaluate('PokecaMobile.port.getSnapshot()')
   await ready()
@@ -25,7 +55,7 @@ async def main():
    if f['kind'] in ('attack','ability'):
     await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
     if f["kind"]=="attack":await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(f'#attack-actions [data-action-kind="attack"][data-attack-index="{option["action"]["attackIndex"]}"]').tap()
-    else:await page.locator('#pokemon-actions [data-action-kind="ability"]').first.tap()
+    else:await page.locator('#pokemon-actions [data-action-kind="ability"]').filter(has_text=option['label']).tap()
    elif r['category']=='stadium':
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
    else:await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
@@ -51,9 +81,17 @@ async def main():
        raise AssertionError(f"Missing target {target} for {r['officialCardId']} {m}; modal={await page.locator('#sheet-content').inner_text()} candidates={await page.locator('[data-selection-id]').evaluate_all('(els)=>els.map(e=>e.dataset.selectionId)')}")
       await selector.tap()
      await page.locator('#selection-confirm').tap()
-   if await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
+   if f['kind'] in ('attack','ability'):await page.locator('#confirm-ok').tap()
+   elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
+   events=after['history'][len(before.get('history',[])):]
+   if f['kind']=='attack':
+    assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
+               and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
+   if m=='VANILLA_DAMAGE':
+    assert f['printedDamageEvents']
+    assert all(event in events for event in f['printedDamageEvents'])
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
@@ -64,7 +102,14 @@ async def main():
     result=await page.evaluate('async()=>{const r=await Pokeca.runAITurn(PokecaMobile.port,"ai",{maxActions:80});return {ok:r.ok,stage:r.stage};}');assert result['ok'],result
    after=await snap()
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
-   cases.append({'print':r['officialCardId'],'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
+   cases.append({'print':r['officialCardId'],'effectKind':f['kind'],'effectIndex':f['e'].get('effectIndex',0),'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
+   if release_base:
+    assert not errors,errors
+    save_receipt()
+  if release_base:
+   receipt['success']=True
+   save_receipt()
+   return
   # Run the imported-deck match independently of any pending fixture choices.
   await c.close()
   c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
