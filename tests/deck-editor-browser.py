@@ -93,11 +93,14 @@ def run(base):
         # original thumbnail is near the bottom edge of the viewport.
         page.locator('#query').fill('')
         lower_card = page.locator('#cards img').nth(18)
-        lower_card.evaluate("img=>window.scrollBy(0,img.getBoundingClientRect().top+img.height/2-(innerHeight-15))")
+        lower_card.scroll_into_view_if_needed()
         box = lower_card.bounding_box()
+        assert box and 0 <= box['y'] and box['y']+box['height'] <= 700
         point = {'x':box['x']+box['width']/2,'y':box['y']+box['height']/2}
+        print('DECK_TOUCH_HIT_TARGET',json.dumps(page.evaluate("([x,y])=>({tag:document.elementFromPoint(x,y)?.tagName,alt:document.elementFromPoint(x,y)?.getAttribute('alt')})",[point['x'],point['y']]),ensure_ascii=False),flush=True)
         cdp = page.context.new_cdp_session(page)
         cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
+        page.wait_for_timeout(650)
         expect(page.locator('#card-preview')).to_be_visible()
         assert page.locator('#card-preview').evaluate("(dialog,y)=>y>dialog.getBoundingClientRect().bottom",point['y'])
         cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
