@@ -9,5 +9,7 @@ assert.match(section,/git cat-file -e FETCH_HEAD:data\/official-effect-intake\/c
 assert.match(section,/CHECKPOINT_FOUND=1/,"found checkpoint must stop fallback");
 assert.match(section,/if \[ "\$CHECKPOINT_FOUND" -eq 0 \]/,"legacy fallback only when no numbered checkpoint exists");
 assert.match(section,/if ! git fetch origin "\$CHECKPOINT_BRANCH"/,"deleted branches must not abort recovery");
-assert.match(section,/git restore --source=FETCH_HEAD -- data\/official-effect-intake\/checkpoint\.json/,"restore only the checkpoint file");
+assert.equal([...section.matchAll(/python scripts\/restore-official-intake-evidence\.py FETCH_HEAD --merge/g)].length,2,
+ "both current and legacy checkpoints must merge only verified evidence");
+assert.doesNotMatch(section,/git restore --source=FETCH_HEAD/,"do not replace current main checkpoint");
 console.log("INTAKE_CHECKPOINT_RECOVERY_CONTRACT PASS");
