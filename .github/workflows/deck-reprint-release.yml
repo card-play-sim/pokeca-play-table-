@@ -7,6 +7,7 @@ on:
       - ui/deck-builder.js
       - ui/deck-editor.css
       - deck-builder.html
+      - sw.js
       - .github/workflows/deck-reprint-release.yml
 permissions:
   contents: write
