@@ -73,15 +73,19 @@ function addImage(parent, card) {
   let startX = 0, startY = 0;
   let suppressNextClick = false;
   img.addEventListener('pointerdown',event=>{
+    console.info('DECK_HOLD_DOWN',event.pointerType,event.button,event.pointerId);
     if(event.pointerType==='mouse' && event.button!==0)return;
     if(activePointer!==null)return;
     activePointer=event.pointerId;
     startX=event.clientX;startY=event.clientY;
     held=false;
-    hold=setTimeout(()=>{held=true;suppressNextClick=true;showPreview(card);},500);
+    hold=setTimeout(()=>{console.info('DECK_HOLD_TIMER_FIRED',card?.name);held=true;suppressNextClick=true;showPreview(card);},500);
   });
   img.addEventListener('pointermove',event=>{
-    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12)clearTimeout(hold);
+    if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12){
+      console.info('DECK_HOLD_CANCEL_MOVE',event.clientX-startX,event.clientY-startY);
+      clearTimeout(hold);
+    }
   });
   // Opening a modal moves the pointer out of the thumbnail in Chromium.
   // A pointerleave must not cancel an otherwise stationary long press.
