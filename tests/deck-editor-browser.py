@@ -58,7 +58,7 @@ def run(base):
         expect(page.locator('#print-chooser')).to_be_visible()
         variant = page.locator('#chooser-cards .builder-card').filter(has_text='#48597')
         expect(variant).to_have_count(1)
-        variant.get_by_role('button', name='この版を選ぶ').click()
+        variant.get_by_role('button', name='ラティアスex #48597を選ぶ').click()
         expect(page.locator('#print-chooser')).not_to_be_visible()
         expect(page.locator('#cards .builder-card small').first).to_contain_text('#48597')
         expect(page.locator('#cards .builder-card img')).to_have_attribute('src', 'https://www.pokemon-card.com/assets/images/card_images/large/M2a/048597_P_RATEIASUEX.jpg')
