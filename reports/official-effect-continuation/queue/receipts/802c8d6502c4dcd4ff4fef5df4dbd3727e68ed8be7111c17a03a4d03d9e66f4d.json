@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_35BCB8A9D183C421:0ea3849ee2f53f0fa6367ad42f7da7089c3e66e5922dfe29d88d976cb25db020",
   "taskFingerprint": "0ea3849ee2f53f0fa6367ad42f7da7089c3e66e5922dfe29d88d976cb25db020",
-  "executionFingerprint": "38bf6b73cb95e87a0a613d1a05af49002957e46a9652ecf0cceae1782506d3f1",
-  "attemptId": "1352a57c-fb4b-491f-b79b-c2d73a46a4b4",
+  "executionFingerprint": "d00bf4d2cc1200cb7c0b4f0d2a33f9225ff9ba54ce6e04a04ba5a5afa686244f",
+  "attemptId": "71c52419-8e79-4715-8e91-db95db05cefd",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -15,8 +15,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50642:attack:ちょっとつっこむ:0",
@@ -24,8 +30,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45231:attack:ちょっとつっこむ:0",
@@ -48,8 +60,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45617:attack:とっしん:1",
@@ -67,8 +85,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45927:attack:とっしん:0",
@@ -91,8 +115,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46184:attack:とっしん:0",
@@ -100,8 +130,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46214:attack:とつげき:0",
@@ -114,8 +150,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46318:attack:ちょっとつっこむ:0",
@@ -123,8 +165,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46428:attack:とつげき:1",
@@ -177,8 +225,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46786:attack:とつげき:0",
@@ -191,8 +245,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47342:attack:ちょっとつっこむ:0",
@@ -215,8 +275,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47422:attack:とつげき:0",
@@ -224,8 +290,14 @@
         "commands": [
           "DAMAGE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47680:attack:とっしん:0",
@@ -259,5 +331,5 @@
       }
     ]
   },
-  "checksum": "95966d71c74b96f593f9ea9e7f50442b1363ecf4e772ddbfdbeb457e3a0f06a4"
+  "checksum": "8e72d5461472e5a6e5d2e80f70c954d209292a55c081f3b3dfd8aef433a7c972"
 }

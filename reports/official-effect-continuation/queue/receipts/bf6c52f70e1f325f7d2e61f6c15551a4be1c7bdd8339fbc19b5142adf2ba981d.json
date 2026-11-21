@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_8AA9C1D8A5CD59F1:a43794c7f30b207fa29a38bbfb5ea17a7620a661b8a50f49b22f4a3d1957c8fd",
   "taskFingerprint": "a43794c7f30b207fa29a38bbfb5ea17a7620a661b8a50f49b22f4a3d1957c8fd",
-  "executionFingerprint": "38bf6b73cb95e87a0a613d1a05af49002957e46a9652ecf0cceae1782506d3f1",
-  "attemptId": "bbab8e48-1e72-4702-898a-51a18472b7e8",
-  "status": "BLOCKED",
+  "executionFingerprint": "d00bf4d2cc1200cb7c0b4f0d2a33f9225ff9ba54ce6e04a04ba5a5afa686244f",
+  "attemptId": "5ee6d827-8c3c-47a6-abb5-359e57a46002",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50622:attack:いどにかくれる:0",
@@ -68,8 +67,14 @@
           "COIN_FLIP",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46251:attack:はねてかわす:0",
@@ -96,8 +101,14 @@
           "COIN_FLIP",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46554:attack:ステルスアタック:0",
@@ -158,8 +169,14 @@
           "COIN_FLIP",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47362:attack:ディープダイビング:0",
@@ -169,8 +186,14 @@
           "COIN_FLIP",
           "ADD_STATE"
         ],
-        "status": "BLOCKED",
-        "reason": "FIXED_DECK_ENERGY_UNAVAILABLE"
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45202:attack:あなをほる:1",
@@ -208,5 +231,5 @@
       }
     ]
   },
-  "checksum": "260d8e98ee01f36185c3d66073d02bdebad790da7ca524ba63120d170cd1f267"
+  "checksum": "1ae1fd3be96dc7bf3dbe459e38ed1cfebdcd7f7cd5a1880ba3ddaf7368834a57"
 }
