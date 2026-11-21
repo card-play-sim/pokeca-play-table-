@@ -68,34 +68,34 @@ function addImage(parent, card) {
   // Prevent Android's native image menu; use the app's own preview instead.
   img.addEventListener('contextmenu',event=>event.preventDefault());
   let hold;
-  let held = false;
   let activePointer = null;
   let startX = 0, startY = 0;
   let suppressNextClick = false;
   img.addEventListener('pointerdown',event=>{
-    console.info('DECK_HOLD_DOWN',event.pointerType,event.button,event.pointerId);
     if(event.pointerType==='mouse' && event.button!==0)return;
     if(activePointer!==null)return;
+    suppressNextClick=false;
     activePointer=event.pointerId;
     startX=event.clientX;startY=event.clientY;
-    held=false;
-    hold=setTimeout(()=>{console.info('DECK_HOLD_TIMER_FIRED',card?.name);held=true;suppressNextClick=true;showPreview(card);},500);
+    hold=setTimeout(()=>{suppressNextClick=true;showPreview(card);},500);
+    // The preview can receive the release instead of the thumbnail.
+    const endPress=release=>{
+      if(release.pointerId!==activePointer)return;
+      clearTimeout(hold);
+      activePointer=null;
+      window.removeEventListener('pointerup',endPress,true);
+      window.removeEventListener('pointercancel',endPress,true);
+    };
+    window.addEventListener('pointerup',endPress,true);
+    window.addEventListener('pointercancel',endPress,true);
   });
   img.addEventListener('pointermove',event=>{
     if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12){
-      console.info('DECK_HOLD_CANCEL_MOVE',event.clientX-startX,event.clientY-startY);
       clearTimeout(hold);
     }
   });
-  // Opening a modal moves the pointer out of the thumbnail in Chromium.
-  // A pointerleave must not cancel an otherwise stationary long press.
-  for(const name of ['pointerup','pointercancel'])
-    img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
-  // Do not cancel a stationary press on pointerleave: mobile browser
-  // scrolling/reflow can retarget the pointer even without finger movement.
-  // pointermove (distance threshold), pointerup and pointercancel own cancellation.
   img.addEventListener('click',event=>{
-    if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
+    if(suppressNextClick && event.detail){event.preventDefault();event.stopPropagation();suppressNextClick=false;}
   },true);
   img.addEventListener('dragstart',event=>event.preventDefault());
   parent.append(img);

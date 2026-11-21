@@ -94,6 +94,7 @@ async def main():
   evolution=next(c for c in (await snapshot())['players'][0]['hand'] if c['name']=='ドロンチ')
   await card_tap(evolution['id']);await target.tap()
   await page.wait_for_function('id=>PokecaMobile.port.getSnapshot().players[0].bench.find(c=>c.id===id).name==="ドロンチ"',arg=base['id']);operations.append('touch evolution');print('PASS touch evolution',flush=True)
+  assert await page.locator('#recent-actions .recent-description').inner_text() == '進化 · ドロンチ'
   await inspect(target,'bench-after-evolution')
   current=(await snapshot())['players'][0]['bench'][0];assert current['energyCards'][0]['id']==energy['id'];assert current['evolutionCards'][-1]['id']==evolution['id']
   await target.dispatch_event('contextmenu');await inspect(page.locator('.detail-art'),'evolved-detail')

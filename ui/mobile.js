@@ -627,7 +627,7 @@ window.PokecaMobileBuild='258';
     if(c==='demo_judge_hand_reset')return (d.targetPlayerId==='ai'?'相手':'自分')+'の手札を山札に戻してシャッフル → '+d.drawn+'枚引いた（戻した枚数 '+d.returned+'枚）';
     const labels={MODIFY_MAX_HP:'最大HPが増加',ATTACH_ENERGY:'エネルギーを付けた',MOVE_ENERGY:'エネルギーを付け替えた',DISCARD:'トラッシュした',RETURN_TO_HAND:'手札に戻した',RETURN_TO_DECK:'山札に戻した',HEAL:'ダメージを回復した',COIN_FLIP:'コインを投げた',MODIFY_DAMAGE:'ダメージを変更した',APPLY_STATUS:'特殊状態にした',DAMAGE:'ダメージ',PLACE_DAMAGE_COUNTERS:'ダメカン配置',DRAW:'ドロー',draw:'ドロー',SEARCH_DECK:'山札を検索',REVEAL:'カードを公開',ADD_TO_HAND:'山札から手札へ',SHUFFLE_DECK:'山札をシャッフル',ADD_STATE:'継続状態を付与',REMOVE_STATE:'継続状態を解除',PREVENT_DAMAGE:'ダメージ防止',PREVENT_EFFECT:'効果防止',attach_energy:'エネルギーを付けた',attach_tool:'どうぐ装着',evolve:'進化',ability_used:'特性使用',attack:'ワザ使用',end_turn:'ターン終了',retreat:'にげる',knockout:'きぜつ・サイド取得',SWITCH:'いれかえ',FORCE_SWITCH:'強制いれかえ',discard:'トラッシュ',return_to_deck:'山札へ戻す',bench_basic:'ベンチに出す',play_active_basic:'バトル場へ',supporter_used:'サポート使用',item_used:'グッズ使用',stadium_played:'スタジアム配置',practice_started:'操作練習開始'};
     const amount=d.counterCount!==undefined?d.counterCount+'個':d.amount!==undefined?d.amount+(['DAMAGE','HEAL','MODIFY_DAMAGE','MODIFY_MAX_HP'].includes(c)?' HP':''):d.count!==undefined?d.count+'枚':d.cardIds?d.cardIds.length+'枚':'';
-    const targetName=d.targetInstanceId&&getCard(d.targetInstanceId)?.card.name;
+    const targetName=c!=='evolve'&&d.targetInstanceId&&getCard(d.targetInstanceId)?.card.name;
     const target=targetName?' → '+targetName:'';
     return (Object.hasOwn(labels,c)?labels[c]:'カードの効果を処理した')+(d.name?' · '+d.name:'')+(d.cardName?' · '+d.cardName:'')+(d.cards?.length?' · '+d.cards.map(c=>c.name).join(' / '):'')+(amount?' · '+amount:'')+target+(d.prevented?'（防止）':'');
   }
