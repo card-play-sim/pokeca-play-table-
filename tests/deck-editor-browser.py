@@ -69,9 +69,14 @@ def run(base):
         image.scroll_into_view_if_needed()
         box = image.bounding_box()
         assert box and 0 <= box['y'] and box['y'] + box['height'] <= 700
-        page.mouse.move(box['x']+box['width']/2,box['y']+box['height']/2)
+        point_x,point_y=box['x']+box['width']/2,box['y']+box['height']/2
+        hit=page.evaluate("([x,y])=>{let e=document.elementFromPoint(x,y);return {tag:e?.tagName,cls:e?.className,alt:e?.getAttribute('alt'),imageRect:document.querySelector('#cards img')?.getBoundingClientRect().toJSON()}}",[point_x,point_y])
+        print('DECK_LONG_PRESS_HIT_TARGET',json.dumps(hit,ensure_ascii=False),flush=True)
+        page.evaluate("""()=>{window.__pressLog=[];for(let t of ['pointerdown','pointermove','pointerleave','pointercancel','pointerup','click'])document.addEventListener(t,e=>window.__pressLog.push({type:t,tag:e.target.tagName,cls:e.target.className,pointerType:e.pointerType}),true)}""")
+        page.mouse.move(point_x,point_y)
         page.mouse.down()
         page.wait_for_timeout(650)
+        print('DECK_LONG_PRESS_EVENTS',json.dumps(page.evaluate("window.__pressLog"),ensure_ascii=False),flush=True)
         expect(page.locator('#card-preview')).to_be_visible()  # must open while held
         page.mouse.up()
         expect(page.locator('#card-preview')).to_be_visible()  # must survive release
