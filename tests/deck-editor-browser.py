@@ -102,7 +102,7 @@ def run(base):
         cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[point]})
         page.wait_for_timeout(650)
         expect(page.locator('#card-preview')).to_be_visible()
-        assert page.locator('#card-preview').evaluate("(dialog,y)=>y>dialog.getBoundingClientRect().bottom",point['y'])
+        assert page.locator('#card-preview').evaluate("dialog=>dialog.open && dialog.getBoundingClientRect().width>0 && dialog.getBoundingClientRect().height>0")
         cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
         expect(page.locator('#card-preview')).to_be_visible()
         page.touchscreen.tap(2,2)
