@@ -1,25 +1,50 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_EE6441606EB9D493:54efe6a8788bb2dec4fbc7bf54d4f6954997c709cf778066a312022c369661c7",
   "taskFingerprint": "54efe6a8788bb2dec4fbc7bf54d4f6954997c709cf778066a312022c369661c7",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "081b7cc2-c490-4f8d-9f2d-4b01a7738daf",
-  "status": "BLOCKED",
+  "executionFingerprint": "51cb160ad5681a3ea7eeee9e5508ee8172dcef9ebe6d889c6de0fa61d22e0744",
+  "attemptId": "61ca5766-b8ba-424a-9ff8-cc7546ea6f7c",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "48340:item:メガシグナル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50502:item:メガシグナル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_MEGA_EVOLUTION_EX",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "ff83e3757e0785b44c4cf72b677ca2d258d16a420fd6fe8305f35955150eb414"
+  "checksum": "baaff813fdabd768187f7e56fc6121dc6743307706cd840be2b90494d6dc685a"
 }
