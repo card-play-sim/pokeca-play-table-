@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data/deck-building/catalog.json"
 OUT = ROOT / "reports/m7-official-delta.json"
 BASE = "https://www.pokemon-card.com"
-CATEGORIES = {"pokemon": "pokemon", "goods": "goods", "support": "support", "tool": "tool", "stadium": "stadium", "energy": "energy"}
+CATEGORIES = {"pokemon": {"se_ta": "pokemon"}, "goods": {"se_ta": "trainer", "sc_tr_tr": "1"}, "support": {"se_ta": "trainer", "sc_tr_sp": "1"}, "tool": {"se_ta": "trainer", "sc_tr_goods": "1"}, "stadium": {"se_ta": "trainer", "sc_tr_st": "1"}, "energy": {"se_ta": "energy"}}
 
 def fetch(url):
     request = urllib.request.Request(url, headers={"User-Agent": "PokecaCatalogAudit/1.0"})
@@ -28,10 +28,10 @@ def main():
     known = {str(x["officialCardId"]) for x in catalog["records"]}
     found = {}
     evidence = []
-    for category, param in CATEGORIES.items():
+    for category, params in CATEGORIES.items():
         page = 1
         while True:
-            qs = urllib.parse.urlencode({"keyword": "", "regulation_sidebar_form": "XY", "se_ta": param, "page": page})
+            qs = urllib.parse.urlencode({"keyword": "", "regulation_sidebar_form": "XY", **params, "page": page})
             url = BASE + "/card-search/resultAPI.php?" + qs
             payload, sha = fetch(url)
             if payload.get("result") != 1 or not isinstance(payload.get("cardList"), list):
