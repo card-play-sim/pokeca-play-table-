@@ -60,6 +60,11 @@ async def main():
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
    else:await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
    if r['category']=='tool':await page.locator(f'#self-active [data-card-id="{option["action"]["targetInstanceId"]}"]').tap()
+   elif r['category']=='energy':
+    to_active=option['action']['target']=='active'
+    container='#self-active' if to_active else '#self-bench'
+    index=0 if to_active else option['action']['target']
+    await page.locator(container+' [data-card-id]').nth(index).tap()
    elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     for req in option.get('requests',[]):
@@ -98,8 +103,12 @@ async def main():
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):
     after=await snap()
-    if after['status']=='finished' or after['turnPlayer']=='you':break
-    result=await page.evaluate('async()=>{const r=await Pokeca.runAITurn(PokecaMobile.port,"ai",{maxActions:80});return {ok:r.ok,stage:r.stage};}');assert result['ok'],result
+    pending=after.get('pendingPrizeSelection') or after.get('pendingReferenceChoice') or {}
+    actor=pending.get('playerId',after['turnPlayer'])
+    if after['status']=='finished' or actor=='you':break
+    result=await page.evaluate('async()=>{const r=await Pokeca.runAITurn(PokecaMobile.port,"ai",{maxActions:80});return {ok:r.ok,stage:r.stage};}')
+    assert result['ok'],result
+   else:raise AssertionError('AI choices did not settle before checking restoration')
    after=await snap()
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');await c.set_offline(True);await page.reload();await ready();assert await snap()==after;await c.set_offline(False)
    cases.append({'print':r['officialCardId'],'effectKind':f['kind'],'effectIndex':f['e'].get('effectIndex',0),'category':r['category'],'pattern':m,'commands':f['e']['plan']['commands'],'domExecuted':True,'aiParity':True,'offlineRestoreExact':True})
