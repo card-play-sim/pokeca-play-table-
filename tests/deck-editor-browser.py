@@ -24,7 +24,8 @@ def run(base):
         def open_search():
             page.get_by_role("link", name="カードを追加").click()
             expect(page.get_by_role("heading", name="カード検索・追加")).to_be_visible()
-            expect(page.locator("#deck-overview")).to_be_hidden()
+            expect(page.locator("#deck-overview")).to_be_visible()
+            expect(page.locator("#search-screen")).to_be_visible()
         def back_to_editor():
             page.locator("#builder-back").click()
             expect(page.locator("#deck-overview")).to_be_visible()
