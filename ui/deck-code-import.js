@@ -214,19 +214,11 @@ function readImports(storage) {
 // names/URLs/validation flags from prior versions still consume device quota.
 // Retain exact official print IDs and every source field needed by matchCatalog.
 function compactImport(deck) {
- return {...deck,
-  cards:deck.cards.map(row=>{
-   const copy={...row};
-   delete copy.imageUrl;
-   delete copy.identityStatus;
-   delete copy.reason;
-   delete copy.regulationMark;
-   return copy;
-  }),
-  blockedCount:undefined,
-  identityStatus:undefined,
-  playable:false
- };
+ return {...deck, cards:deck.cards.map(row=>{
+  const copy={...row};
+  delete copy.imageUrl;  // Re-derived from exact official print on reload.
+  return copy;
+ })};
 }
 function saveImport(storage, deck) {
  if (!validCode(deck?.deckCode) || deck.total !== 60 || !Array.isArray(deck.cards) ||
