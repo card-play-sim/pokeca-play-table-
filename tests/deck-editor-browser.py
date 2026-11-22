@@ -224,6 +224,16 @@ def run(base):
         page.locator('#code').fill('kbvV5V-TEZjLI-dVfVVk')
         page.locator('#html-file').set_input_files(str(Path(__file__).parent/'fixtures/deck-work-002/official-code.html'))
         expect(page.locator('#status')).to_contain_text('カードIDと公式画像を照合')
+        # An independently downloadable 60-card official-ID backup must still
+        # work even if the mobile browser refuses localStorage writes.
+        expect(page.locator('#export-import')).to_be_enabled()
+        with page.expect_download() as pending_backup:
+            page.locator('#export-import').click()
+        recovery = json.loads(Path(pending_backup.value.path()).read_text(encoding='utf-8'))
+        assert recovery['importedDeck']['total'] == 60
+        assert sum(row['count'] for row in recovery['importedDeck']['cards']) == 60
+        assert recovery['importedDeck']['deckCode'] == 'kbvV5V-TEZjLI-dVfVVk'
+        assert any(row.get('officialCardId')=='47832' for row in recovery['importedDeck']['cards'])
         page.locator('#edit').click()
         expect(page.locator('#total')).to_have_text('60 / 60枚')
         page.locator('#deck-name').fill('公式コード実測')

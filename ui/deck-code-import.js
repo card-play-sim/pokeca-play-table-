@@ -191,14 +191,44 @@ function matchCatalog(deck, cards) {
  return {...deck,cards:output,blockedCount,identityStatus:blockedCount?'BLOCKED':'CONFIRMED',playable:false};
 }
 function readImports(storage) {
- const saved = JSON.parse(storage.getItem(IMPORT_KEY) || '[]');
- return Array.isArray(saved) ? saved.filter(deck => validCode(deck?.deckCode) &&
+ let saved;
+ try {
+  const value = storage.getItem(IMPORT_KEY);
+  saved = value == null ? [] : JSON.parse(value);
+ } catch (error) {
+  if (error?.name === 'SecurityError') throw error;
+  const problem = Error('以前の公式デッキ取り込み履歴を読み込めません。元データは変更していません。');
+  problem.code = 'IMPORT_HISTORY_INVALID';
+  throw problem;
+ }
+ if (!Array.isArray(saved)) {
+  const problem = Error('公式デッキ取り込み履歴の形式が不正です。元データは変更していません。');
+  problem.code = 'IMPORT_HISTORY_INVALID';
+  throw problem;
+ }
+ return saved.filter(deck => validCode(deck?.deckCode) &&
   deck.total === 60 && Array.isArray(deck.cards) && deck.cards.every(row => row &&
-  Number.isInteger(row.count) && row.count > 0) && deck.cards.reduce((n,row)=>n+row.count,0)===60) : [];
+  Number.isInteger(row.count) && row.count > 0) && deck.cards.reduce((n,row)=>n+row.count,0)===60);
+}
+// A full-size official JPEG is not stored in this history, but repeated derived
+// names/URLs/validation flags from prior versions still consume device quota.
+// Retain exact official print IDs and every source field needed by matchCatalog.
+function compactImport(deck) {
+ return {...deck, cards:deck.cards.map(row=>{
+  const copy={...row};
+  delete copy.imageUrl;  // Re-derived from exact official print on reload.
+  return copy;
+ })};
 }
 function saveImport(storage, deck) {
+ if (!validCode(deck?.deckCode) || deck.total !== 60 || !Array.isArray(deck.cards) ||
+     deck.cards.reduce((n,row)=>n+row.count,0)!==60)
+  throw Error('60枚の公式デッキのみ保存できます。');
  const saved = readImports(storage).filter(entry => entry.deckCode !== deck.deckCode);
- storage.setItem(IMPORT_KEY,JSON.stringify([...saved,deck]));
+ const value = JSON.stringify([...saved,deck].map(compactImport));
+ storage.setItem(IMPORT_KEY,value);
+ // setItem normally throws on failure, but still verify actual write-back.
+ if (storage.getItem(IMPORT_KEY) !== value) throw Error('保存したデータを読み戻せませんでした。');
 }
 function reconcile(deck,officialRecords,imageRegistry){
  if(!deck||deck.total!==60||!Array.isArray(deck.cards))throw Error('60枚レシピが必要です');

@@ -113,3 +113,12 @@ textarea { width: 100%; }
 #print-chooser h2 { padding:.5rem 0; }
 #print-chooser .builder-card { min-width:0; }
 #print-chooser .builder-card button:not(.search-card-tap) { padding:.25rem; font-size:.75rem; }
+
+/* Exact-print battle diagnostics are hidden unless this deck has blockers. */
+.battle-diagnostics { padding:.45rem .7rem; margin:.35rem 0 .75rem; border:1px solid #9db8b0; border-radius:.65rem; background:#f5f8f6; color:#1d3f36; }
+.battle-diagnostics[hidden] { display:none !important; }
+.battle-diagnostics summary { min-height:38px; font-weight:650; padding:.25rem 0; }
+.battle-diagnostics ul { padding-left:1.35rem; margin:.4rem 0 .75rem; overflow-wrap:anywhere; }
+.battle-diagnostics li { margin:.35rem 0; font-size:.86rem; }
+.battle-diagnostics button { background:#235949; color:#fff; border-radius:.5rem; border:0; padding:.5rem .7rem; }
+.battle-diagnostics textarea:not([hidden]) { display:block; margin-top:.55rem; min-height:7rem; white-space:pre; font-size:.8rem; color:#173a33; background:white; }
