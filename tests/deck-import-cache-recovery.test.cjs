@@ -4,7 +4,7 @@ const html=fs.readFileSync('deck-code-import.html','utf8');
 const assets=['ui/deck-editor.css','ui/deck-code-import.js','ui/deck-import-page.js'];
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const sw=fs.readFileSync('sw.js','utf8');
-const match=sw.match(/const FILES=(\\{[\\s\\S]*?\\});\\nconst absolute/);
+const match=sw.match(/const FILES=(\{[\s\S]*?\});\nconst absolute/);
 assert(match,'generated PWA asset map is required');
 const files=JSON.parse(match[1]);
 for(const asset of assets){
