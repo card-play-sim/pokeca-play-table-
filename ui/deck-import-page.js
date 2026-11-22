@@ -154,6 +154,13 @@ $('save').onclick = () => save(false);
 $('export-import').onclick = exportImport;
 $('edit').onclick = () => save(true);
 $('open').href = recipeUrl();
+// Refresh the verified worker whenever the import page is opened. Old installed
+// PWAs otherwise keep serving their pre-fix JS forever on this subpage.
+// Never reload automatically: the user may have an unsaved 60-card recipe.
+if (window.isSecureContext && navigator.serviceWorker && navigator.onLine !== false) {
+  navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'})
+    .then(reg => reg.update()).catch(() => {});
+}
 try { history(); } catch (error) { status(saveFailureMessage(error)); }
 for (const id of ['code', 'lookup-submit', 'html-file', 'recipe', 'import']) {
   $(id).disabled = false;

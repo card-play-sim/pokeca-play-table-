@@ -14,6 +14,8 @@ on:
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-blocker-browser.py'
       - 'tests/deck-code-import.test.cjs'
+      - 'tests/deck-import-cache-recovery.test.cjs'
+      - 'scripts/build-pwa-release.cjs'
       - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
@@ -35,6 +37,8 @@ on:
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-blocker-browser.py'
       - 'tests/deck-code-import.test.cjs'
+      - 'tests/deck-import-cache-recovery.test.cjs'
+      - 'scripts/build-pwa-release.cjs'
       - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
@@ -49,6 +53,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node tests/deck-import-cache-recovery.test.cjs
       - run: node tests/deck-code-import.test.cjs
       - run: node tests/deck-blocker-diagnostics.test.cjs
       - run: node tests/imported-deck-match.test.cjs
