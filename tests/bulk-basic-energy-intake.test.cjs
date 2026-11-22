@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const {selectIds, verifiedBasicException} = require('../scripts/list-card-auto-connect-ids.cjs');
-const {allExecuted, verifiedBasicEnergy, requiredSlots} =
+const {allExecuted, verifiedBasicEnergy, verifyBasicEnergyRuntime, requiredSlots} =
   require('../scripts/stage-card-auto-connect.cjs');
 const B = require('../scripts/lib/shared-effect-batch.cjs');
 const basic = (id, overrides = {}) => ({
@@ -49,4 +49,13 @@ assert.equal(allExecuted(slots,succeeded),false,'empty-text print cannot pass th
 assert.equal(allExecuted(slots,succeeded,true),true,'a runtime-verified basic energy may pass');
 assert.equal(allExecuted(slots,new Map(),true),false,'no execution receipt must remain BLOCKED');
 assert.equal(allExecuted([{...slots[0],effectKind:'supporter'}],succeeded,true),false);
+// Exercise the real engine with an already approved original reference print.
+// New exceptions must pass this same physical-attachment check before release.
+const official = require('../data/reference-effects/plans.json').records.find(
+  r => r.officialCardId === '49460');
+assert(official && official.mainPlan.mechanic === 'BASIC_ENERGY');
+const worker = require('../scripts/lib/shared-effect-engine-worker.cjs');
+assert(verifyBasicEnergyRuntime(worker,
+  {...official,facts:{...official.facts,basicEnergyType:'炎'}}),
+  'existing approved basic Energy must attach by physical official ID');
 console.log('PASS: exact official basic energy intake/strict release scope; no unverified legacy card or no-op promotion');
