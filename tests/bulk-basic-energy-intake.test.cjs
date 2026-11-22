@@ -38,7 +38,7 @@ const source = {records:[
   {officialCardId:'45001', regulationMark:'H', legality:'printed-hij'},
   basic('42945'),
   basic('1'),
-  basic('42946',{name:'架空エネルギー'}),
+  basic('42946',{source:{...basic('42945').source,identityName:'架空エネルギー'}}),
   basic('42947',{basicEnergy:false}),
   basic('42948',{source:{heading:'特殊エネルギー'}}),
   basic('42949',{category:'support'}),
