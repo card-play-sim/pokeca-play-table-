@@ -193,7 +193,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -240,6 +240,24 @@ function prepare(r, e, kind) {
   }
   // The official active-only healing supporter needs a damaged Active fixture.
   if (m === "HEAL_ACTIVE_DAMAGE") frame.game.players[0].active.damage = 40;
+  if (m === "FULL_BENCH_REQUIRED_DAMAGE") {
+    const player = frame.game.players[0];
+    const basics = player.deck.filter(card => card.kind === "pokemon" && E.getReferenceEffectRecord(card).facts.basic);
+    for (const card of basics.slice(0, e.plan.minimum - player.bench.length)) {
+      player.deck.splice(player.deck.indexOf(card), 1);
+      player.bench.push({...card, cardId:card.id, enteredTurn:0, damage:0, energies:[], energyCards:[], tools:[]});
+    }
+    assert(player.bench.length >= e.plan.minimum);
+  }
+  if (m === "ACTIVE_TOP_SUPPORTER_SEARCH") {
+    const deck=frame.game.players[0].deck;
+    const supporters=deck.filter(card=>card.cardType==="SUPPORTER");
+    assert(supporters.length>=2);
+    for (const [card, position] of [[supporters[0],0],[supporters[1],6]]) {
+      deck.splice(deck.indexOf(card),1);
+      deck.splice(position,0,card);
+    }
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -348,6 +366,54 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   if (e.plan.mechanic === "VANILLA_DAMAGE")
     verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "ACTIVE_TOP_SUPPORTER_SEARCH") {
+    const action=t.action||o.action;
+    const [chosen]=action.selections.cards;
+    const own=before.players[0];
+    assert(own.deck.slice(0,6).some(card=>card.id===chosen&&card.cardType==="SUPPORTER"));
+    assert(o.requests[0].inspection.cards.length===6);
+    assert(after.players[0].hand.some(card=>card.id===chosen));
+    const events=after.history.slice(before.history.length).map(event=>event.details);
+    assert(events.some(step=>step?.command==="REVEAL"&&step.cardIds?.includes(chosen)));
+    assert(events.some(step=>step?.command==="SHUFFLE_DECK"));
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...action,selections:{cards:[own.deck[6].id]}}).ok,false);
+    assert.deepEqual(replay.getSnapshot(),before);
+    const swapped=JSON.parse(JSON.stringify(before));
+    const player=swapped.players[0];
+    [player.active,player.bench[0]]=[player.bench[0],player.active];
+    assert.equal(port(swapped).dispatch("you",action).ok,false);
+    assert.equal(p.dispatch("you",action).ok,false);
+  }
+  if (e.plan.mechanic === "FULL_BENCH_REQUIRED_DAMAGE") {
+    verifyPrintedAttack(before, after, e, Number(e.damage));
+    const start = JSON.parse(JSON.stringify(before));
+    const player = start.players[0];
+    player.deck.push(player.bench.pop());
+    const replay = port(start);
+    assert(replay.dispatch("you", (t.action || o.action)).ok);
+    const end = replay.getSnapshot();
+    assert.equal(end.players[1].active.damage, start.players[1].active.damage);
+    assert.notEqual(end.turnPlayer, start.turnPlayer);
+    assert.deepEqual(S.identities(start), S.identities(end));
+  }
+  if (e.plan.mechanic === "BENCH_COUNT_DAMAGE") {
+    const action = t.action || o.action;
+    const side = e.plan.side === "own" ? 0 : 1;
+    for (const count of [0, 1, 2]) {
+      const start = JSON.parse(JSON.stringify(before));
+      const player = start.players[side];
+      assert(player.bench.length >= count);
+      player.deck.push(...player.bench.splice(count));
+      const replay = port(start);
+      assert(replay.dispatch("you", action).ok);
+      const end = replay.getSnapshot();
+      verifyPrintedAttack(start, end, e, e.plan.base + count * e.plan.unit);
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
   if (e.plan.mechanic === "SELF_COUNTER_DAMAGE") {
     const base = e.damage.endsWith("+") ? Number.parseInt(e.damage, 10) : 0;
     const perCounter = Number(e.text.normalize("NFKC").match(/×(\d+)ダメージ/)[1]);

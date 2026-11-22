@@ -135,6 +135,16 @@ function plan(entry,kind){
   if(additional?/^\d{1,3}\+$/.test(printed):printed===unit+'×')
    return {mechanic:'COIN_UNTIL_TAILS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:additional?Number.parseInt(printed,10):0,unit};
  }
+ if(kind==='ATTACK'&&generic==='自分のベンチポケモンが4匹以下なら、このワザは失敗。'&&/^\d+$/.test(printed)&&Number(printed)>0)
+  return {mechanic:'FULL_BENCH_REQUIRED_DAMAGE',commands:['DAMAGE'],minimum:5};
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を上から6枚見て、その中からサポートを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。')
+  return {mechanic:'ACTIVE_TOP_SUPPORTER_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','RETURN_TO_DECK','SHUFFLE_DECK']};
+ const benchDamage=generic.match(/^(自分|相手)のベンチポケモンの数×([1-9][0-9]?)ダメージ(追加)?。$/);
+ if(kind==='ATTACK'&&benchDamage){
+  const unit=Number(benchDamage[2]),additional=Boolean(benchDamage[3]);
+  if(additional?/^\d{1,3}\+$/.test(printed):printed===unit+'×')
+   return {mechanic:'BENCH_COUNT_DAMAGE',commands:['DAMAGE'],side:benchDamage[1]==='自分'?'own':'opponent',unit,base:additional?Number.parseInt(printed,10):0};
+ }
  const counterDamage=generic.match(/^このポケモンにのっているダメカンの数×([1-9][0-9]?)ダメージ(追加)?。$/);
  if(kind==='ATTACK'&&counterDamage){
   const [,multiplier,additional]=counterDamage,perCounter=Number(multiplier);

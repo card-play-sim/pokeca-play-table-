@@ -105,7 +105,7 @@ async def main():
    if f['kind']=='attack':
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
                and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
-   if m in ('VANILLA_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
+   if m in ('VANILLA_DAMAGE','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='COIN_UNTIL_TAILS_DAMAGE':
@@ -126,6 +126,13 @@ async def main():
     bench_ids={card['id'] for card in after['players'][0]['bench']}
     deck_ids={card['id'] for card in after['players'][0]['deck']}
     assert set(selected)<=bench_ids and set(selected).isdisjoint(deck_ids)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ACTIVE_TOP_SUPPORTER_SEARCH':
+    chosen=option['action']['selections']['cards']
+    assert len(chosen)==1 and len(option['requests'][0]['inspection']['cards'])==6
+    assert any(card['id']==chosen[0] and card['cardType']=='SUPPORTER' for card in before['players'][0]['deck'][:6])
+    assert any(card['id']==chosen[0] for card in after['players'][0]['hand'])
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==chosen for ev in events)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='SEARCH_REVEAL_TO_HAND_ATTACK':
     selected=option['action']['selections']['cards']

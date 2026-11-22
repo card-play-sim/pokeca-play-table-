@@ -162,6 +162,7 @@ function isMegaEvolutionEx(card){return card.kind==='pokemon'&&String(record(car
 function typedRecoveryCandidate(c,plan){return c.kind==='pokemon'?record(c).facts.types.includes(plan.type):basicEnergy(c)&&c.energyType===plan.type;}
 // The same scope defines the private picker and its resolution.
 const topDeckEffects={
+ ACTIVE_TOP_SUPPORTER_SEARCH:{limit:6,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'},
  RECON:{limit:2,remainder:'bottom',reveal:false},
  TOP_SUPPORTER_SEARCH:{limit:7,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'}
 };
@@ -281,6 +282,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(zone==='HAND'||abilityEnabled(g,card),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
+ if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_HEAL_SELF')assert((card.damage||0)>0,'ABILITY_HEAL_UNAVAILABLE');
  if(m==='DASH')assert(p.active===card&&!p.turnLimits?.abilityNames?.DASH,'DASH_ACTIVE_AND_SHARED_LIMIT');
@@ -422,11 +424,12 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
    if(m==='COIN_BONUS_DAMAGE')amount=plan.base+(coin(g,actor)?plan.bonus:0);
+   if(m==='BENCH_COUNT_DAMAGE')amount=plan.base+plan.unit*(plan.side==='own'?p:o).bench.length;
    if(m==='SELF_COUNTER_DAMAGE')amount=plan.base+(card.damage||0)/10*plan.perCounter;
    if(m==='COMBO'||m==='COIN_UNTIL_TAILS_DAMAGE'){
     amount=m==='COMBO'?Number.parseInt(effect.damage,10):plan.base;
@@ -438,6 +441,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='EX_COUNT_DAMAGE')amount=60*field(o).filter(c=>record(c).facts.prizeCount>=2).length;
    if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE','ANY_DAMAGE'].includes(m)){mon=target();assert(mon,'TARGET_REQUIRED');options.bench=o.active!==mon;amount=m==='BENCH_COUNTER_DAMAGE'?(mon.damage||0)*2:m==='BENCH_EX_DAMAGE'?60:100;}
    if(m==='IGNORE_DEFENDER_EFFECTS')options.ignore=true;
+   if(m==='FULL_BENCH_REQUIRED_DAMAGE'&&p.bench.length<plan.minimum)break;
    damage(g,actor,mon,amount,options);
    if(m==='RECOIL_DAMAGE')command(g,actor,{command:'DAMAGE',amount:plan.amount},{targetIds:[id(card)]});
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
@@ -499,7 +503,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'ADRENA_BRAIN':{
    const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;moveDamageCounters(g,actor,source,to,count);break;
   }
-  case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
+  case 'ACTIVE_TOP_SUPPORTER_SEARCH':case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':searchSelectedDeck(g,actor,p,ids('cards'));p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
   case 'ULTRA_BALL':moveChosen(g,p,'hand',ids('discard'),'discard',false);searchSelectedDeck(g,actor,p,ids('cards'));break;
