@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_240087369B0F3732:2b6f9c87dda08cc72eb8b08ede6319d8e9c4ceea8d6b47b74be66ba4ecc33e44",
   "taskFingerprint": "2b6f9c87dda08cc72eb8b08ede6319d8e9c4ceea8d6b47b74be66ba4ecc33e44",
-  "executionFingerprint": "9bb67e4d8e26657a2e9e2b075875b853de5acb1362ff74fc657a5b733566893b",
-  "attemptId": "9c975e5a-9583-4f7e-a307-accda2ca44a1",
+  "executionFingerprint": "cc0fb33dfcaafbb2ff4f4d0d56f488a6b6c491a9afaaa52428157667e60ae1a1",
+  "attemptId": "3fd7b854-55e0-4f73-aa52-cc372cd7a26d",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,10 +11,17 @@
     "cases": [
       {
         "slot": "50782:item:エネルギーリサイクル:0",
+        "mechanic": "RECYCLE_BASIC_ENERGY",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
       }
     ]
   },
-  "checksum": "b5973422a41adb804964f5ba0b5fa59a3fee604fedefa05ca7944939f5dd4dd3"
+  "checksum": "00ee92b5a7e63beaea6313fe94f9ba3d9936ede2ea23bd979b7ce54e19cbd430"
 }

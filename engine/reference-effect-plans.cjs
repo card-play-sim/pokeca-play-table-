@@ -71,10 +71,13 @@ const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
+ if(kind==='ATTACK'&&text==='次の相手の番、このワザを受けたポケモンは、にげられない。'&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'RETREAT_LOCK_ATTACK',commands:['DAMAGE','ADD_STATE']};
  const draw=kind==='ATTACK'&&text.match(/^自分の山札を([1-9])枚引く。$/);
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const reduction=generic.match(/^次の相手の番、このポケモンが受けるワザのダメージは「-([1-9][0-9]*)」される。$/);
+ if(kind==='ATTACK'&&reduction&&/^\d+$/.test(String(entry.damage||'0'))&&Number.isSafeInteger(Number(reduction[1])))return {mechanic:'ATTACK_DAMAGE_REDUCTION',commands:['DAMAGE','ADD_STATE'],amount:Number(reduction[1])};
  let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
@@ -96,6 +99,12 @@ function plan(entry,kind){
  match=generic.match(/^自分の番に1回使える。自分の手札が([1-9][0-9]*)枚になるように、山札を引く。$/);
  if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HAND_LIMIT_DRAW_ABILITY',commands:['DRAW'],limit:Number(match[1])};
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
+ // Only exact official attack wording is eligible; other status variations stay BLOCKED.
+ if(kind==='ATTACK'&&/^コインを1回投げ、?オモテなら、相手のバトルポケモンをマヒにする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'COIN_PARALYZE_ATTACK',commands:['DAMAGE','COIN_FLIP','STATUS_CONDITION']};
+ if(kind==='ATTACK'&&generic==='このポケモンについているエネルギーをすべてトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'DISCARD_ALL_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
+ match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
+ const printed=String(entry.damage).normalize('NFKC');
+ if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
  if(kind==='ABILITY'&&generic==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。')return {mechanic:'BENCH_DAMAGE_PROTECTION',commands:['PREVENT_DAMAGE']};
  match=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー([1-9][0-9]*)個ぶんとしてはたらく。このカードをつけているポケモンが使うワザの、相手のポケモンへのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='MAIN'&&entry.category==='energy'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COLORLESS_MULTI_ENERGY',commands:['ATTACH_ENERGY','MODIFY_DAMAGE'],units:Number(match[1]),damagePenalty:Number(match[2])};
@@ -115,7 +124,8 @@ function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
   attacks:r.attacks.map((a,i)=>({...a,effectId:`reference-${r.officialCardId}-attack-${i}`,plan:plan(a,'ATTACK')})),
   abilities:r.abilities.map((a,i)=>({...a,effectId:`reference-${r.officialCardId}-ability-${i}`,plan:plan(a,'ABILITY')})),
-  mainPlan:r.category==='energy'&&r.name.match(/^基本[炎超悪]エネルギー$/)?{mechanic:'BASIC_ENERGY',commands:['ATTACH_ENERGY']}:plan(r,'MAIN')
+  mainPlan:r.category==='energy'&&(/^基本[炎超悪]エネルギー$/.test(r.name)||
+    (/^[草炎水雷超闘悪鋼]$/.test(r.facts?.basicEnergyType)&&r.name===`基本${r.facts.basicEnergyType}エネルギー`))?{mechanic:'BASIC_ENERGY',commands:['ATTACH_ENERGY']}:plan(r,'MAIN')
  }))};
 }
 module.exports={ijMechanics,compile,norm,mainText};

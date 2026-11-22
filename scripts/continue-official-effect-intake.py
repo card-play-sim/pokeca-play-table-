@@ -60,7 +60,8 @@ def main():
  # Persist before compilation/queue execution: interruptions never lose successful pages.
  C.save(file,{'schemaVersion':1,'records':list(records.values()),'blocked':list(blocked.values())})
  if a.adopt:
-  merged={r['officialCardId']:r for r in ext['records']};merged.update(records)
+  merged={r['officialCardId']:r for r in ext['records']}
+  for ident,row in records.items():merged.setdefault(ident,row)
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
  output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)

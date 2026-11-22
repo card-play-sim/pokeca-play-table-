@@ -104,3 +104,12 @@ textarea { width: 100%; }
 #close-picker { font-size:1.7rem; text-decoration:none; min-width:44px; text-align:center; }
 .search-card-tap { display:block; width:100%; min-height:0; border:0 !important; background:transparent !important; padding:0 !important; touch-action:pan-y; }
 .search-card-tap img { display:block; width:100%; height:auto; object-fit:contain; }
+
+/* Reprinted cards share a compact search tile; every official print remains selectable. */
+.print-chooser-open { min-height: 38px !important; margin-top: .2rem; padding: .2rem !important; font-size: .72rem !important; }
+#print-chooser { width:min(95vw,760px); max-height:90dvh; overflow-y:auto; background:white; color:#192f2d; border:0; border-radius:.8rem; padding:.75rem; }
+#print-chooser::backdrop { background:rgba(0,0,0,.75); }
+#print-chooser form { display:flex; justify-content:flex-end; }
+#print-chooser h2 { padding:.5rem 0; }
+#print-chooser .builder-card { min-width:0; }
+#print-chooser .builder-card button:not(.search-card-tap) { padding:.25rem; font-size:.75rem; }

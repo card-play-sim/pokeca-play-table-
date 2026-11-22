@@ -43,6 +43,8 @@ let current = fresh();
 let limit = 48;
 let store = {decks:[]};
 let storageReady = true;
+const selectedPrints = new Map();
+let refreshSearchCounts = () => {};
 
 try {
   store = savedDecks.read();
@@ -68,34 +70,34 @@ function addImage(parent, card) {
   // Prevent Android's native image menu; use the app's own preview instead.
   img.addEventListener('contextmenu',event=>event.preventDefault());
   let hold;
-  let held = false;
   let activePointer = null;
   let startX = 0, startY = 0;
   let suppressNextClick = false;
   img.addEventListener('pointerdown',event=>{
-    console.info('DECK_HOLD_DOWN',event.pointerType,event.button,event.pointerId);
     if(event.pointerType==='mouse' && event.button!==0)return;
     if(activePointer!==null)return;
+    suppressNextClick=false;
     activePointer=event.pointerId;
     startX=event.clientX;startY=event.clientY;
-    held=false;
-    hold=setTimeout(()=>{console.info('DECK_HOLD_TIMER_FIRED',card?.name);held=true;suppressNextClick=true;showPreview(card);},500);
+    hold=setTimeout(()=>{suppressNextClick=true;showPreview(card);},500);
+    // The preview can receive the release instead of the thumbnail.
+    const endPress=release=>{
+      if(release.pointerId!==activePointer)return;
+      clearTimeout(hold);
+      activePointer=null;
+      window.removeEventListener('pointerup',endPress,true);
+      window.removeEventListener('pointercancel',endPress,true);
+    };
+    window.addEventListener('pointerup',endPress,true);
+    window.addEventListener('pointercancel',endPress,true);
   });
   img.addEventListener('pointermove',event=>{
     if(event.pointerId===activePointer&&Math.hypot(event.clientX-startX,event.clientY-startY)>12){
-      console.info('DECK_HOLD_CANCEL_MOVE',event.clientX-startX,event.clientY-startY);
       clearTimeout(hold);
     }
   });
-  // Opening a modal moves the pointer out of the thumbnail in Chromium.
-  // A pointerleave must not cancel an otherwise stationary long press.
-  for(const name of ['pointerup','pointercancel'])
-    img.addEventListener(name,()=>{clearTimeout(hold);activePointer=null;});
-  // Do not cancel a stationary press on pointerleave: mobile browser
-  // scrolling/reflow can retarget the pointer even without finger movement.
-  // pointermove (distance threshold), pointerup and pointercancel own cancellation.
   img.addEventListener('click',event=>{
-    if(held||suppressNextClick){event.preventDefault();event.stopPropagation();held=false;suppressNextClick=false;}
+    if(suppressNextClick && event.detail){event.preventDefault();event.stopPropagation();suppressNextClick=false;}
   },true);
   img.addEventListener('dragstart',event=>event.preventDefault());
   parent.append(img);
@@ -221,9 +223,38 @@ function change(id,delta) {
     const amount = document.getElementById('in-deck-'+id);
     if (amount) amount.textContent = 'デッキ内 '+count+'枚';
     drawDeck();
+    refreshSearchCounts();
     say(cards.get(id).name+'を追加しました。');
   } else drawDeck();
   keepDraft();
+}
+
+function showPrintChooser(variants, select) {
+  const dialog = $('print-chooser');
+  const grid = $('chooser-cards');
+  $('chooser-title').textContent = variants[0].name + ' · 絵柄・収録版を選ぶ';
+  grid.replaceChildren();
+  for (const variant of variants) {
+    const tile = document.createElement('article');
+    tile.className = 'builder-card';
+    const imageButton = control('',variant.name+' #'+variant.id+'を選択',()=>{
+      select(variant);
+      dialog.close();
+    });
+    imageButton.className = 'search-card-tap';
+    addImage(imageButton,variant);
+    const meta = document.createElement('small');
+    meta.textContent = [variant.regulationMark || '基本エネルギー',variant.pack,variant.number,'#'+variant.id].filter(Boolean).join(' ');
+    const effect = document.createElement('small');
+    effect.textContent = plans.has(variant.id) ? '対戦対応' : '対戦未対応';
+    const choose = control('この版を選ぶ',variant.name+' #'+variant.id+'を選ぶ',()=>{
+      select(variant);
+      dialog.close();
+    });
+    tile.append(imageButton,meta,effect,choose);
+    grid.append(tile);
+  }
+  dialog.showModal();
 }
 
 function drawCards() {
@@ -234,7 +265,6 @@ function drawCards() {
     (!regulation || (regulation === 'basic' ? card.basicEnergy : card.regulationMark === regulation)) &&
     (!category || categoryOf(card,current.categories?.[card.id])===category) &&
     (card.name.toLowerCase().includes(query) || card.id.includes(query)));
-  // Keep print variants adjacent while preserving each official card ID.
   const categoryOrder = [...categories.keys()];
   const japanese = new Intl.Collator('ja', {numeric:true, sensitivity:'base'});
   matches.sort((a,b) =>
@@ -243,32 +273,66 @@ function drawCards() {
     japanese.compare(a.pack || '',b.pack || '') ||
     japanese.compare(a.number || '',b.number || '') ||
     japanese.compare(a.id,b.id));
-  $('catalog-info').textContent = matches.length + '種類';
-  $('more').hidden = matches.length<=limit;
+  // A visible result is a name/category, not a single printing. Never remove
+  // official print IDs: the chooser keeps every illustration, reprint and effect.
+  const groups = new Map();
+  for (const card of matches) {
+    const key = categoryOf(card) + '\u0000' + card.name;
+    if (!groups.has(key)) groups.set(key,[]);
+    groups.get(key).push(card);
+  }
+  $('catalog-info').textContent = groups.size + '種類（公式印刷版 '+matches.length+'件）';
+  $('more').hidden = groups.size<=limit;
   const grid = $('cards');
   grid.replaceChildren();
-  for (const card of matches.slice(0,limit)) {
-    const tile = document.createElement('div');
+  const counters = [];
+  for (const [key,variants] of [...groups].slice(0,limit)) {
+    let card = variants.find(variant => variant.id === selectedPrints.get(key)) ||
+      variants.find(variant => (current.cards[variant.id] || 0) > 0) ||
+      variants.find(variant => plans.has(variant.id)) || variants[0];
+    const tile = document.createElement('article');
     tile.className = 'builder-card';
     const imageButton = control('',card.name+'を1枚追加',()=>change(card.id,1));
     imageButton.className = 'search-card-tap';
-    addImage(imageButton,card);
-    tile.append(imageButton);
     const label = document.createElement('strong');
     label.textContent = card.name;
     const print = document.createElement('small');
-    print.textContent = [card.regulationMark || '基本エネルギー',card.pack,card.number,'#'+card.id].filter(Boolean).join(' ');
+    const effect = document.createElement('small');
     const amount = document.createElement('small');
-    amount.id = 'in-deck-'+card.id;
-    amount.textContent = 'デッキ内 '+(current.cards[card.id]||0)+'枚';
-    const add = control('＋ 追加',card.name+'を追加',() => change(card.id,1));
+    const combined = document.createElement('small');
+    const add = control('＋ 追加',card.name+'を追加',()=>change(card.id,1));
     add.className = 'add-card';
     add.disabled = !loaded;
-    const effect = document.createElement('small');
-    effect.textContent = plans.has(card.id) ? '対戦対応' : '対戦未対応';
-    tile.append(label,print,effect,amount,add);
+    const updateCount = () => {
+      const sameNameCount = Object.entries(current.cards).reduce((sum,[id,count]) => {
+        const entry = cards.get(id);
+        return sum + (entry && entry.name===card.name && entry.category===card.category ? count : 0);
+      },0);
+      amount.textContent = 'デッキ内 '+(current.cards[card.id]||0)+'枚';
+      combined.textContent = '同名合計 '+sameNameCount+'枚';
+    };
+    const selectPrint = selected => {
+      card = selected;
+      selectedPrints.set(key,selected.id);
+      amount.id = 'in-deck-'+card.id;
+      imageButton.replaceChildren();
+      addImage(imageButton,card);
+      imageButton.setAttribute('aria-label',card.name+' #'+card.id+'を1枚追加');
+      print.textContent = [card.regulationMark || '基本エネルギー',card.pack,card.number,'#'+card.id].filter(Boolean).join(' ');
+      effect.textContent = plans.has(card.id) ? '対戦対応' : '対戦未対応';
+      updateCount();
+    };
+    tile.append(imageButton,label,print,effect,amount,combined,add);
+    if (variants.length>1) {
+      const chooser = control('絵柄・収録版 '+variants.length+'種',card.name+'の絵柄・収録版を選ぶ',()=>showPrintChooser(variants,selectPrint));
+      chooser.className = 'print-chooser-open';
+      tile.append(chooser);
+    }
+    selectPrint(card);
+    counters.push(updateCount);
     grid.append(tile);
   }
+  refreshSearchCounts = () => counters.forEach(update => update());
 }
 
 function persist(decks, storeSnapshot) {

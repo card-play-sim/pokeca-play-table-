@@ -153,6 +153,32 @@ function prepare(r, e, kind) {
     d.cards.filter((c) => c.name === r.deckName).map(() => ({ deck: i })),
   );
   if (!locations.length) return { blocked: "NO_VERIFICATION_DECK_ADAPTER" };
+  if (kind === "attack") {
+    const cards = manifest.decks[locations[0].deck].cards;
+    const references = E.getReferenceEffectCatalog({ includeExtensions: true });
+    const needed = new Map();
+    for (const type of e.cost || []) {
+      if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
+    }
+    const basicType = reference => reference?.mainPlan?.mechanic === "BASIC_ENERGY"
+      ? reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1]
+      : null;
+    const entryType = entry => basicType(records.get(
+      entry.referenceOfficialCardId || references.defaultValidationReferences[entry.name]));
+    for (const [type, count] of needed) {
+      const available = cards.filter(card => entryType(card) === type)
+        .reduce((total, card) => total + card.count, 0);
+      if (available >= count) continue;
+      const reference = [...records.values()].find(card => basicType(card) === type);
+      const donor = cards.find(card => card.category === "energy" && card.count >= count - available
+        && !needed.has(entryType(card)));
+      if (!reference || !donor) continue;
+      donor.count -= count - available;
+      cards.push({name:reference.name, category:"energy", count:count - available,
+        referenceOfficialCardId:reference.officialCardId});
+    }
+    manifest.decks[locations[0].deck].cards = cards.filter(card => card.count);
+  }
   const row = {
     cardName: r.deckName,
     category: r.category,
@@ -167,7 +193,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "COIN_BONUS_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -189,6 +215,19 @@ function prepare(r, e, kind) {
     for (const c of [...p.deck].filter(eligible).slice(0, e.plan.amount))
       p.discard.push(p.deck.splice(p.deck.indexOf(c), 1)[0]);
   }
+  if (m === "RETREAT_LOCK_ATTACK") {
+    const opponent = frame.game.players[1];
+    const cost = opponent.active.retreatCost;
+    const payment = opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial).slice(0, cost);
+    if (payment.length !== cost) return { blocked: "NO_RETREAT_PAYMENT_FIXTURE" };
+    for (const card of payment)
+      opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
+  }
+  if (m === "ATTACK_DAMAGE_REDUCTION") {
+    const opponent = frame.game.players[1];
+    for (const card of opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial))
+      opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -207,6 +246,22 @@ function prepare(r, e, kind) {
     return { port: p, sourceId: frame.sourceId, kind, passive: true };
   return { port: p, sourceId: frame.sourceId, kind };
 }
+function verifyPrintedAttack(before, after, effect, amount) {
+  const [own, opponent] = before.players;
+  const attacker = E.getReferenceEffectRecord(own.active);
+  const defender = E.getReferenceEffectRecord(opponent.active);
+  const hasType = rule => rule?.types.some(type => attacker.facts.types.includes(type));
+  if (hasType(defender.facts.weakness)) amount *= 2;
+  if (hasType(defender.facts.resistance))
+    amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
+  const changes = after.history.slice(before.history.length);
+  assert(changes.some(event => event.type === "attack" &&
+    event.details.effectId === effect.effectId &&
+    event.details.referenceOfficialCardId === attacker.officialCardId));
+  assert(changes.some(event => event.details?.command === "DAMAGE" &&
+    event.details.targetInstanceId === opponent.active.id && event.details.amount === amount));
+}
+
 function verifyCase(t, e) {
   if (t.blocked) return { status: "BLOCKED", reason: t.blocked };
   const p = t.port,
@@ -279,6 +334,94 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if (e.plan.mechanic === "VANILLA_DAMAGE")
+    verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "COIN_BONUS_DAMAGE") {
+    for (const [seed, heads] of [[0, true], [682, false]]) {
+      const start = { ...before, referenceRngState: seed };
+      const replay = port(start);
+      assert(replay.dispatch("you", o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).filter(event =>
+        event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean");
+      assert.equal(flips.length, 1);
+      assert.equal(flips[0].details.heads, heads);
+      verifyPrintedAttack(start, end, e, Number.parseInt(e.damage.normalize("NFKC"), 10) + (heads ? e.plan.bonus : 0));
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
+    for (const [seed, heads] of [[0, true], [682, false]]) {
+      const start = { ...before, referenceRngState: seed };
+      const replay = port(start);
+      assert(replay.dispatch("you", t.action || o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).filter(event =>
+        event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean");
+      assert.equal(flips.length, 1);
+      assert.equal(flips[0].details.heads, heads);
+      assert.equal(end.players[1].active.statusCondition || null,
+        heads ? "PARALYZED" : (start.players[1].active.statusCondition || null));
+      verifyPrintedAttack(start, end, e, Number.parseInt(e.damage.normalize("NFKC"), 10) || 0);
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
+    const source = before.players[0].active;
+    const ids = (source.energyCards || []).map(card => card.id);
+    assert(ids.length > 0, "SELF_ENERGY_DISCARD_NEEDS_ATTACHED_ENERGY_FIXTURE");
+    assert.equal(after.players[0].active.energyCards.length, 0);
+    assert(ids.every(id => after.players[0].discard.some(card => card.id === id)));
+    verifyPrintedAttack(before, after, e, Number.parseInt(e.damage.normalize("NFKC"), 10) || 0);
+  }
+  if (e.plan.mechanic === "RETREAT_LOCK_ATTACK") {
+    const opponent = after.players[1];
+    assert.equal(opponent.active.id, before.players[1].active.id);
+    assert.equal(opponent.active.referenceCannotRetreatTurn, before.turnNumber + 1);
+    // Compare the legal actions for the same state with and without the lock.
+    const unlocked = JSON.parse(JSON.stringify(after));
+    delete unlocked.players[1].active.referenceCannotRetreatTurn;
+    const candidates = E.getLegalActions(unlocked, "ai").actions.filter(a => a.type === "retreat");
+    assert(candidates.length > 0, "OPPONENT_MUST_BE_ABLE_TO_RETREAT_WITHOUT_EFFECT");
+    assert(E.getLegalActions(after, "ai").actions.every(a => a.type !== "retreat"));
+    const expired = { ...after, turnNumber: after.turnNumber + 2 };
+    assert(E.getLegalActions(expired, "ai").actions.some(a => a.type === "retreat"));
+    for (const action of candidates) {
+      assert.equal(p.dispatch("ai", action).ok, false);
+      assert.equal(JSON.stringify(p.getSnapshot()), JSON.stringify(after));
+    }
+  }
+  if (e.plan.mechanic === "ATTACK_DAMAGE_REDUCTION") {
+    const active = after.players[0].active;
+    assert.equal(active.referenceDamageReduction.turn, after.turnNumber);
+    assert.equal(active.referenceDamageReduction.amount, e.plan.amount);
+    const baseline = JSON.parse(JSON.stringify(after));
+    delete baseline.players[0].active.referenceDamageReduction;
+    const incoming = E.getLegalActions(baseline, "ai").actions.filter(action =>
+      action.type === "attack_turn" &&
+      E.getReferenceEffectRecord(baseline.players[1].active).attacks[action.attackIndex].plan.mechanic !== "IGNORE_DEFENDER_EFFECTS");
+    const damage = (state, action) => {
+      const replay = port(state);
+      if (!replay.dispatch("ai", action).ok) return undefined;
+      return replay.getSnapshot().history.slice(state.history.length).find(event =>
+        event.details?.command === "DAMAGE" && event.details.targetInstanceId === active.id)?.details.amount;
+    };
+    let tested = false;
+    for (const action of incoming) {
+      const normal = damage(baseline, action);
+      if (!(normal > 0)) continue;
+      assert.equal(damage(after, action), Math.max(0, normal - e.plan.amount));
+      const expired = { ...after, turnNumber: after.turnNumber + 2 };
+      assert.equal(damage(expired, action), normal);
+      tested = true;
+      break;
+    }
+    assert(tested, "NO_INCOMING_ATTACK_DAMAGE_FIXTURE");
+  }
   assert.deepEqual(S.identities(before), S.identities(after));
   const saved = p.getResumeSnapshot(),
     expected = JSON.stringify(after);
@@ -295,8 +438,26 @@ function verifyCase(t, e) {
     ],
   };
 }
+function verifyPrintedDamage(evidence) {
+  const slot = B.slot(evidence);
+  const r = records.get(evidence.officialCardId);
+  const original = r?.attacks[evidence.effectIndex];
+  if (evidence.effectKind !== "attack" || r?.category !== "pokemon" ||
+      r.officialPageUrl !== evidence.officialPageUrl || !original ||
+      original.name !== evidence.effectName || original.text.trim() ||
+      original.plan?.mechanic !== "VANILLA_DAMAGE" ||
+      !/^\d+$/.test(original.damage) || original.damage !== evidence.printedDamage)
+    return { slot, status: "BLOCKED", reason: "OFFICIAL_PRINTED_DAMAGE_MISMATCH" };
+  const effect = { ...original, effectIndex: evidence.effectIndex };
+  try {
+    return { slot, ...verifyCase(prepare(r, effect, "attack"), effect) };
+  } catch (error) {
+    return { slot, status: "FAILED", reason: error.message };
+  }
+}
 module.exports = {
   prepare,
+  verifyPrintedDamage,
   version: "1",
   idempotent: true,
   contextFingerprint: B.hash(JSON.stringify(fileDigests)),

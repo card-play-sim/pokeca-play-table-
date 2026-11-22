@@ -6,21 +6,30 @@ on:
         description: Maximum new official pages
         default: "50"
         required: true
+  issue_comment:
+    types: [created]
   schedule:
     - cron: "15 20 * * *"
 permissions:
   contents: write
+  pull-requests: write
 concurrency:
   group: incremental-official-effect-intake
   cancel-in-progress: false
 jobs:
   continue:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.number == 122 && !github.event.issue.pull_request &&
+       github.event.comment.user.login == github.repository_owner &&
+       github.event.comment.body == '/card-auto-connect')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -44,8 +53,7 @@ jobs:
               continue
             fi
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
-              git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
-              python scripts/restore-official-intake-evidence.py FETCH_HEAD
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
               CHECKPOINT_FOUND=1
               echo "Resumed checkpoint from $CHECKPOINT_BRANCH"
               break
@@ -55,18 +63,27 @@ jobs:
              git ls-remote --exit-code --heads origin automation/control-013-intake >/dev/null; then
             git fetch origin automation/control-013-intake
             if git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then
-              git restore --source=FETCH_HEAD -- data/official-effect-intake/checkpoint.json
-              python scripts/restore-official-intake-evidence.py FETCH_HEAD
+              python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
               echo "Resumed legacy checkpoint"
             fi
           fi
+      - name: Discover unclassified prints using official standard search
+        run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official evidence and run approved local commands
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '50' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
-          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient
+          node scripts/list-card-auto-connect-ids.cjs /tmp/official-update-ids.json
+          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient --ids /tmp/official-update-ids.json
+          node scripts/stage-card-auto-connect.cjs "$(git rev-parse HEAD)" work/card-auto-connect
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
           node scripts/build-pwa-release.cjs
+          POKECA_INTAKE_RELEASE_BASE="$(git rev-parse HEAD)" POKECA_INTAKE_PREFIX=work/card-auto-connect/browser \
+            node scripts/build-intake-verification-fixtures.cjs
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
@@ -81,16 +98,35 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@users.noreply.github.com
-          git add data/effect-extensions data/official-effect-intake reports/official-effect-continuation ui/engine.bundle.js sw.js
+          git add data/effect-extensions/evidence data/official-effect-intake reports/official-effect-continuation
+          if [ "${{ job.status }}" = success ]; then
+            cp work/card-auto-connect/candidate.json reports/official-effect-continuation/candidate.json
+            git add reports/official-effect-continuation/candidate.json
+            git add data/effect-extensions/intake.json data/effect-extensions/compiled.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json
+          fi
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
             git push -u origin "$INTAKE_BRANCH"
           fi
+      - name: Open verified candidate pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          count=$(node -p "require('./work/card-auto-connect/candidate.json').qualified.length")
+          if [ "$count" -eq 0 ]; then
+            echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          gh pr create --base main --head "$INTAKE_BRANCH" \
+            --title "CARD-AUTO-CONNECT: $count verified candidate prints" \
+            --body "Refs #122. Every candidate effect passed the existing engine worker. Merge only after required CI; published battle verification is still pending. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: official-effect-continuation-checkpoint
           path: |
+            work/card-auto-connect/
+            work/official-standard-search/
             data/official-effect-intake/
             reports/official-effect-continuation/
             test-results/control-013*.json
