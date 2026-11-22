@@ -4,6 +4,7 @@ on:
     branches: [feat/m7-official-delta-intake]
     paths:
       - 'scripts/apply_m7_verified_catalog.py'
+      - 'scripts/report-ij-effect-coverage.cjs'
       - 'reports/m7-regulation-mark-review.json'
       - 'ui/deck-code-import.js'
       - 'scripts/build-pwa-release.cjs'
@@ -32,7 +33,11 @@ jobs:
       - name: Generate and validate PWA and classified deck search
         run: |
           node scripts/build-pwa-release.cjs
+          node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
           node scripts/build-pwa-release.cjs --check
+          node tests/ij-coverage.test.cjs
+          node tests/ij-effects.test.cjs /tmp/m7-ij-executions.json
+          cmp /tmp/m7-ij-executions.json reports/ij-effect-executions.json
           node --check ui/deck-code-import.js
           node --check ui/saved-decks.js
           node tests/deck-classification.test.cjs
@@ -42,7 +47,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/deck-building/catalog.json data/deck-building/m7-official-image-extension.json sw.js
+          git add data/deck-building/catalog.json data/deck-building/m7-official-image-extension.json reports/ij-effect-coverage.json sw.js
           if ! git diff --cached --quiet; then
             git commit -m 'catalog: add 78 hash-proven M7 J prints without altering baseline image registry'
             git push origin HEAD:feat/m7-official-delta-intake
