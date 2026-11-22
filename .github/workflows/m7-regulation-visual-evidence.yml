@@ -1,40 +1,50 @@
 name: M7 official image J mark visual audit
+
 on:
-  push:
-    branches: [feat/m7-official-delta-intake]
+  pull_request:
     paths:
       - 'scripts/audit_m7_regulation_images.py'
+      - 'scripts/verify_m7_image_audit.py'
       - '.github/workflows/m7-regulation-visual-evidence.yml'
+      - 'reports/m7-official-delta.json'
+      - 'reports/m7-full-print-number-audit.json'
+      - 'reports/m7-regulation-image-audit.json'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit_m7_regulation_images.py'
+      - 'scripts/verify_m7_image_audit.py'
+      - '.github/workflows/m7-regulation-visual-evidence.yml'
+      - 'reports/m7-official-delta.json'
+      - 'reports/m7-full-print-number-audit.json'
+      - 'reports/m7-regulation-image-audit.json'
   workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: read
+
 jobs:
   verify-official-images:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: feat/m7-official-delta-intake
-          persist-credentials: true
+        # Intentionally check out the actual PR or main commit; never an old
+        # feat/m7-official-delta-intake branch.
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: pip install Pillow==11.3.0
-      - name: Verify all 78 M7 official JPEG images and produce review sheet
-        env:
-          POKECA_EMIT_M7_IMAGE_BASE64: '1'
+      - name: Preserve the prior evidence as a read-only comparison baseline
+        run: cp reports/m7-regulation-image-audit.json "$RUNNER_TEMP/m7-baseline.json"
+      - name: Re-fetch all 78 original M7 official JPEG images
         run: python scripts/audit_m7_regulation_images.py
-      - name: Save source image hashes, not image binary data
+      - name: Fail on any official ID, JPEG hash or print number change
+        run: python scripts/verify_m7_image_audit.py "$RUNNER_TEMP/m7-baseline.json" reports/m7-regulation-image-audit.json
+      - name: Verify protected catalogs were never changed
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add reports/m7-regulation-image-audit.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'audit: preserve M7 official image hashes for regulation review'
-            git push origin HEAD:feat/m7-official-delta-intake
-          fi
-      - name: Upload temporary unmodified preview and mark contact sheet
+          git diff --exit-code -- data/official-image-registry.json data/deck-building/catalog.json data/reference-effects/catalog.json
+      - name: Upload unmodified image preview, mark review sheet and SHA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
