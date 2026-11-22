@@ -27,7 +27,10 @@ def sample(page_id):
             if len(items)>=8:break
             items.append(decoded[max(0,match.start()-40):min(len(decoded),match.end()+40)].replace("\r"," ").replace("\n"," "))
         excerpts[name]=items
-    return {"officialCardId":page_id,"url":url,"htmlSha256":hashlib.sha256(body).hexdigest(),"excerpts":excerpts}
+    mark_at=decoded.find('class="img-regulation"')
+    printed_region=decoded[max(0,mark_at-160):mark_at+700] if mark_at>=0 else ""
+    return {"officialCardId":page_id,"url":url,"htmlSha256":hashlib.sha256(body).hexdigest(),
+            "excerpts":excerpts,"printedRegion":printed_region.replace("\\r"," ").replace("\\n"," ")}
 def main():
     index=json.loads(INDEX.read_text(encoding="utf-8"))
     ids=[str(r["officialCardId"]) for r in index["records"]]
