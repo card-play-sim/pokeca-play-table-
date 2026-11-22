@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 concurrency:
   group: incremental-official-effect-intake
   cancel-in-progress: false
@@ -74,6 +75,7 @@ jobs:
           INTAKE_LIMIT: ${{ inputs.limit || '50' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
+          node tests/auto-connect-workflow-recovery.test.cjs
           node scripts/list-card-auto-connect-ids.cjs /tmp/official-update-ids.json
           python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient --ids /tmp/official-update-ids.json
           node scripts/stage-card-auto-connect.cjs "$(git rev-parse HEAD)" work/card-auto-connect
@@ -117,9 +119,19 @@ jobs:
             echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          gh pr create --base main --head "$INTAKE_BRANCH" \
+          # The repository currently denies pull-request creation by GITHUB_TOKEN.
+          # Preserve verified output and hand over the reviewable branch to Issue #122
+          # instead of failing after successfully collecting/validating official data.
+          if gh pr create --base main --head "$INTAKE_BRANCH" \
             --title "CARD-AUTO-CONNECT: $count verified candidate prints" \
-            --body "Refs #122. Every candidate effect passed the existing engine worker. Merge only after required CI; published battle verification is still pending. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            --body "Refs #122. Every candidate effect passed the existing engine worker. Merge only after required CI; published battle verification is still pending. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
+            echo "Candidate PR opened; merge only after CI and published battle checks." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::GitHub Actions cannot create this PR. Delivering the candidate branch to Issue #122."
+            body=$(printf 'AUTO_CONNECT_CANDIDATE_READY\nBranch: %s\nVerified candidate printings: %s\nWorkflow: %s/%s/actions/runs/%s\nReview action: create PR from this branch using a permitted GitHub connection, complete required CI, then publish and run real gameplay checks. Do not merge unverified intake.\n' "$INTAKE_BRANCH" "$count" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
+            gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="$body"
+            printf '%s\n' "$body" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
