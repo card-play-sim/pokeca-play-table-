@@ -732,6 +732,12 @@ window.PokecaMobileBuild='258';
   // Opt-in AI practice: legal actions are selected from the existing AI Port,
   // never applied directly to Game State. Manual opponent control remains available.
   let aiAutoMode=true;
+  const aiPauseKey=()=>'pokeca-ai-paused:'+port.getSessionId();
+  function restoreAIAutoMode(){
+    if(view().fixedDeckPractice)return false;
+    try{return localStorage.getItem(aiPauseKey())!=='off';}
+    catch{return true;}
+  }
   let aiPracticeRunning=false;
   // Session-only performance evidence: never written to the saved match.
   function showAiPerformance(message){
@@ -1167,7 +1173,9 @@ window.PokecaMobileBuild='258';
     list.append(button('中断・再開／保存データ',savesMenu));
     list.append(button('最新版を確認・更新',()=>{closeSheet();if(window.PokecaUpdates)void window.PokecaUpdates.checkForUpdate({userInitiated:true});else toast('更新の準備中です。少し待ってからもう一度お試しください');}));
     list.append(button(aiAutoMode?'AI自動応答：オン（タップでオフ）':'AI自動応答：オフ（タップでオン）',()=>{
-      aiAutoMode=!aiAutoMode;closeSheet();toast(aiAutoMode?'AI自動応答を有効にしました':'AI自動応答を無効にしました');
+      aiAutoMode=!aiAutoMode;
+      try{if(aiAutoMode)localStorage.removeItem(aiPauseKey());else localStorage.setItem(aiPauseKey(),'off');}catch{}
+      closeSheet();toast(aiAutoMode?'AI自動応答を有効にしました':'AI自動応答を無効にしました');
       if(aiAutoMode&&view().turnPlayer==='ai')void runOpponentPracticeTurn();
     }));
     list.append(button('相手AIの番を実行（練習版）',()=>{closeSheet();void runOpponentPracticeTurn();},{disabled:view().turnPlayer!=='ai'||aiPracticeRunning}));
@@ -1200,7 +1208,7 @@ window.PokecaMobileBuild='258';
     list.append(button('公式コード取り込み',()=>{location.href='deck-code-import.html';}));
     Pokeca.listPracticeScenarios().forEach(({index,label})=>list.append(button(label+'の実証を準備',async()=>{if(await confirmAction('現在の対戦を保存して、新しい実証盤面を準備します。保存失敗時は先に再開用JSONを書き出してください。')){if(!await protectBeforeNewMatch())return;closeSheet();selected=null;clearGesture();const result=port.loadGame(Pokeca.createPracticeGame(index));if(result.ok)toast(`実証${index+1}：${label}を準備しました`);else toast(result.errors.join(' / '));}})));
   };
-  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){for(const owner of playedCards.keys())clearPlayedCard(owner);if(view().fixedDeckPractice)aiAutoMode=false;selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
+  port=Pokeca.createUIPort({getGame:()=>game,setGame:next=>{game=next;},onChange:change=>{if(change.reason!=='action'){for(const owner of playedCards.keys())clearPlayedCard(owner);if(change.reason==='restore')aiAutoMode=restoreAIAutoMode();else if(view().fixedDeckPractice)aiAutoMode=false;selected=null;clearGesture();closeSheet();}render();},onSessionChange:()=>{void saveSession().catch(error=>toast('保存失敗：'+error.message+'。再開用JSONを書き出してください'));}});
   window.PokecaMobile={features:{manualOpening:true},prepareForUpdate:async()=>{if(aiPracticeRunning||!persistenceReady)throw Error('対戦の保存待ち');await saveSession(true);},port,metrics,dispatch,setAnimationsEnabled:enabled=>{animationsEnabled=!!enabled;},cancelAnimations:()=>{document.getAnimations().forEach(a=>a.cancel());},render};
   // Import all evidence-backed print images in one operation, independent of deck size.
   // Never modifies cards, saved matches, or print identities.
