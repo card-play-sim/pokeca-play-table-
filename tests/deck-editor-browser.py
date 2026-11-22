@@ -40,14 +40,38 @@ def run(base):
             page.locator('#regulation').select_option(mark)
             for category in labels:
                 page.locator('#category').select_option(category)
-                expected = sum(r['regulationMark']==mark and r['category']==category for r in classification['records'])
-                expect(page.locator('#catalog-info')).to_have_text(str(expected)+'種類')
-                expect(page.locator('#cards .builder-card')).to_have_count(min(expected,48))
+                matching = [r for r in classification['records'] if r['regulationMark']==mark and r['category']==category]
+                expected = len(matching)
+                unique_names = len({r['source']['identityName'] for r in matching})
+                expect(page.locator('#catalog-info')).to_have_text(f'{unique_names}種類（公式印刷版 {expected}件）')
+                expect(page.locator('#cards .builder-card')).to_have_count(min(unique_names,48))
                 if expected:
                     page.wait_for_function("document.querySelector('#cards img').naturalWidth>0",timeout=60000)
                     image_checks.append({'regulation':mark,'category':category,'imageUrl':page.locator('#cards img').first.get_attribute('src'),'success':True})
         page.locator('#regulation').select_option('')
         page.locator('#category').select_option('')
+        # Search results must not repeat same-name prints on the main grid,
+        # yet the chooser must keep each official printing selectable.
+        page.locator('#query').fill('ラティアスex')
+        # Partial matching also finds メガラティアスex; assert only the exact-name group.
+        latias = page.locator('#cards .builder-card').filter(has=page.get_by_text('ラティアスex', exact=True))
+        expect(latias).to_have_count(1)
+        latias.locator('.print-chooser-open').click()
+        expect(page.locator('#print-chooser')).to_be_visible()
+        variant = page.locator('#chooser-cards .builder-card').filter(has_text='#48597')
+        expect(variant).to_have_count(1)
+        variant.get_by_role('button', name='ラティアスex #48597を選ぶ').click()
+        expect(page.locator('#print-chooser')).not_to_be_visible()
+        expect(latias.locator('small').first).to_contain_text('#48597')
+        expect(latias.locator('img')).to_have_attribute('src', 'https://www.pokemon-card.com/assets/images/card_images/large/M2a/048597_P_RATEIASUEX.jpg')
+        page.locator('#query').fill('48597')
+        expect(page.locator('#cards .builder-card')).to_have_count(1)
+        expect(page.locator('#cards .print-chooser-open')).to_have_count(0)
+        page.locator('#query').fill('キチキギスex')
+        kichi = page.locator('#cards .builder-card').filter(has=page.get_by_text('キチキギスex', exact=True))
+        expect(kichi).to_have_count(1)
+        expect(kichi.locator('.print-chooser-open')).to_have_count(1)
+        page.locator('#query').fill('')
         aces = [r for r in classification['records'] if r['aceSpec']]
         for index, ace in enumerate(aces[:2]):
             page.locator('#query').fill(ace['officialCardId'])
