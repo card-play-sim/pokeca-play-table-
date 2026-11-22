@@ -69,6 +69,7 @@ def main():
     sample.save(PREVIEW,format='JPEG',quality=73)
     summary={'schemaVersion':1,'status':'OFFICIAL_IMAGE_HASH_VERIFIED_REGULATION_J_PENDING_VISUAL_REVIEW',
              'verifiedOfficialImages':len(collected),'sourcePack':'M7',
+             'contactSheetSha256':sha256(ARTIFACT.read_bytes()).hexdigest(),
              'catalogUnchanged':True,'verificationMode':'source-bytes-and-official-card-page-identity',
              'records':[x[0] for x in collected]}
     OUT.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
