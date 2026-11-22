@@ -90,13 +90,18 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
  const primary = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
   ...(Array.isArray(imageExtension.cards) ? imageExtension.cards : [])];
  const ids = new Set(primary.map(row => String(row.officialCardId)));
- const rows = [...primary, ...verifiedPrints.filter(row => !ids.has(String(row.officialCardId)))];
+ // The hash-bound official print may correct an older registry record with the
+ // same exact numerical ID. Keep the original registry unchanged; use the
+ // official page/JPEG evidence only inside the importer catalog view.
+ const overrides = new Map(verifiedPrints.map(row => [String(row.officialCardId),row]));
+ const rows = [...primary.map(row => overrides.get(String(row.officialCardId)) || row),
+  ...verifiedPrints.filter(row => !ids.has(String(row.officialCardId)))];
  const reviewed = new Map();
  for (const row of verifiedPrints) {
   const id = String(row.officialCardId);
-  const existing = classified.get(id);
-  if (existing && (existing.source?.identityName !== row.name ||
-      existing.source?.identityImageUrl !== row.imageSourceUrl)) continue;
+  // The official image and exact page digest are the authoritative identity
+  // for an added print. Do not silently change the protected classification
+  // JSON; replace only this read-only lookup's potentially stale record.
   classified.set(id,row);
   reviewed.set(id,row);
  }
