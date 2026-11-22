@@ -101,10 +101,20 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
  // Only exact official attack wording is eligible; other status variations stay BLOCKED.
  if(kind==='ATTACK'&&/^コインを1回投げ、?オモテなら、相手のバトルポケモンをマヒにする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'COIN_PARALYZE_ATTACK',commands:['DAMAGE','COIN_FLIP','STATUS_CONDITION']};
- if(kind==='ATTACK'&&generic==='このポケモンについているエネルギーをすべてトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'DISCARD_ALL_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
+ if(kind==='ATTACK'&&/^このポケモンについているエネルギーを、?すべてトラッシュする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'DISCARD_ALL_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
+ if(kind==='ATTACK'&&generic==='このポケモンについているエネルギーを1個選び、トラッシュする。'&&/^\d+$/.test(String(entry.damage||'0'))&&entry.cost?.length)return {mechanic:'DISCARD_ONE_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
  match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
  const printed=String(entry.damage).normalize('NFKC');
  if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
+ const counterDamage=generic.match(/^このポケモンにのっているダメカンの数×([1-9][0-9]?)ダメージ(追加)?。$/);
+ if(kind==='ATTACK'&&counterDamage){
+  const [,multiplier,additional]=counterDamage,perCounter=Number(multiplier);
+  const base=Number.parseInt(printed,10);
+  if(additional&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(base))
+   return {mechanic:'SELF_COUNTER_DAMAGE',commands:['DAMAGE'],base,perCounter};
+  if(!additional&&printed===perCounter+'×')
+   return {mechanic:'SELF_COUNTER_DAMAGE',commands:['DAMAGE'],base:0,perCounter};
+ }
  if(kind==='ABILITY'&&generic==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。')return {mechanic:'BENCH_DAMAGE_PROTECTION',commands:['PREVENT_DAMAGE']};
  match=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー([1-9][0-9]*)個ぶんとしてはたらく。このカードをつけているポケモンが使うワザの、相手のポケモンへのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='MAIN'&&entry.category==='energy'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COLORLESS_MULTI_ENERGY',commands:['ATTACH_ENERGY','MODIFY_DAMAGE'],units:Number(match[1]),damagePenalty:Number(match[2])};

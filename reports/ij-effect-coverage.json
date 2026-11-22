@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 297,
-      "missing": 1405
+      "connected": 302,
+      "missing": 1400
     },
     "J": {
       "total": 869,
-      "connected": 100,
-      "missing": 769
+      "connected": 104,
+      "missing": 765
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 291,
-      "MECHANIC_REQUIRED": 203,
+      "CONNECTED_UNTESTED": 296,
+      "MECHANIC_REQUIRED": 198,
       "EVIDENCE_UNVERIFIED": 14,
       "ENGINE_CONNECTION_REQUIRED": 108,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 99,
-      "MECHANIC_REQUIRED": 85,
+      "CONNECTED_UNTESTED": 103,
+      "MECHANIC_REQUIRED": 81,
       "EVIDENCE_UNVERIFIED": 13,
       "EVIDENCE_MISSING": 671,
       "EXECUTION_PASS": 1
@@ -813,8 +813,7 @@
       "name": "ピカチュウ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50658.json"
     },
     {
@@ -1138,8 +1137,7 @@
       "name": "テッポウオ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47027.json"
     },
     {
@@ -1378,8 +1376,7 @@
       "name": "Nのレシラム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47082.json"
     },
     {
@@ -1482,8 +1479,7 @@
       "name": "Nのレシラム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47229.json"
     },
     {
@@ -1689,8 +1685,7 @@
       "name": "ヒビキのヒノアラシ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47310.json"
     },
     {
@@ -2726,8 +2721,7 @@
       "name": "イシズマイ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47590.json"
     },
     {
@@ -19883,8 +19877,7 @@
       "name": "ヒトカゲ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50786.json"
     },
     {
@@ -19980,8 +19973,7 @@
       "name": "ポカブ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50798.json"
     },
     {
@@ -20078,8 +20070,7 @@
       "name": "ホゲータ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50810.json"
     },
     {

@@ -105,7 +105,7 @@ async def main():
    if f['kind']=='attack':
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
                and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
-   if m in ('VANILLA_DAMAGE','COIN_BONUS_DAMAGE'):
+   if m in ('VANILLA_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='COIN_PARALYZE_ATTACK':
@@ -121,6 +121,15 @@ async def main():
     assert before_ids
     assert not after['players'][0]['active'].get('energyCards',[])
     assert before_ids.issubset({card['id'] for card in after['players'][0]['discard']})
+   if m=='DISCARD_ONE_SELF_ENERGY_ATTACK':
+    chosen=option['action']['selections']['energy']
+    assert len(chosen)==1
+    own=before['players'][0]['active']
+    assert chosen[0] in {card['id'] for card in own['energyCards']}
+    discards=[ev['details']['cardIds'] for ev in events if ev.get('details',{}).get('command')=='DISCARD'
+              and ev['details'].get('sourceInstanceId')==own['id'] and 'cardIds' in ev['details']]
+    assert discards==[chosen]
+    assert chosen[0] in {card['id'] for card in after['players'][0]['discard']}
    if m=='RETREAT_LOCK_ATTACK':
     defender=after['players'][1]['active']
     assert defender['id']==before['players'][1]['active']['id']
