@@ -20,10 +20,16 @@ def official_stage_field(body):
     if anchor not in body:
         return None
     top=body.split(anchor,1)[1].split('<h2',1)[0]
-    fields=re.findall(r'<span class="type">\s*(たね|1進化|2進化)\s*</span>',top)
+    # Match the same stage field as the canonical reference parser; normalize
+    # its inline symbols through the canonical text() helper, not loose HTML stripping.
+    fields=re.findall(r'<span class="type">([\\s\\S]*?)</span>',top)
     if len(fields)!=1:
         return None
-    return {'たね':0,'1進化':1,'2進化':2}[fields[0]]
+    script="const fs=require('node:fs');process.stdout.write(require('./scripts/parse-official-pokemon-energy.cjs').text(fs.readFileSync(0,'utf8')))"
+    parsed=subprocess.run(['node','-e',script],input=fields[0],text=True,capture_output=True,timeout=15,cwd=ROOT)
+    if parsed.returncode!=0:
+        return None
+    return {'たね':0,'1進化':1,'2進化':2}.get(parsed.stdout.strip())
 
 def collect(row,number):
     url=number['officialPageUrl']
