@@ -12,7 +12,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
  for(const row of intake.records||[]){
   const ident=String(row.officialCardId||'');
   try{
-   if(!/^\d{4,8}$/.test(ident)||seen.has(ident)||base.has(ident))throw Error('DUPLICATE_OR_INVALID_PRINT');seen.add(ident);
+   if(!/^[1-9][0-9]{0,7}$/.test(ident)||seen.has(ident)||base.has(ident))throw Error('DUPLICATE_OR_INVALID_PRINT');seen.add(ident);
    const url='https://www.pokemon-card.com/card-search/details.php/card/'+ident;
    if(row.officialPageUrl!==url||!['item','supporter','tool','stadium','pokemon','energy'].includes(row.category)||row.deckPrintAdopted!==false)throw Error('INVALID_REFERENCE_BOUNDARY');
    if(!row.source?.path?.startsWith('data/effect-extensions/evidence/')||row.source.path.includes('..'))throw Error('INVALID_EVIDENCE_PATH');
