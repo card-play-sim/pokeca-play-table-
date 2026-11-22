@@ -6,7 +6,10 @@ const officialLayout='デッキコード[kbvV5V-TEZjLI-dVfVVk]のデッキレシ
 
 const registry = JSON.parse(fs.readFileSync('data/official-image-registry.json','utf8'));
 const formal = JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
-const catalog = api.catalogFrom(registry, formal, JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')));
+const catalog = api.catalogFrom(registry, formal, JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')), JSON.parse(fs.readFileSync('data/deck-building/m7-official-image-extension.json','utf8')));
+assert.equal([...catalog.values()].filter(card=>card.pack==='M7'&&card.regulationMark==='J').length,78,'All 78 verified official M7 J cards must be searchable');
+assert.equal(catalog.get('50856').name,'マダツボミ');
+assert.equal(catalog.get('50856').pokemonStage,0);
 assert.ok(catalog.size > 1000);
 assert.equal(catalog.get('47832').name,'ケーシィ');
 // Captured hidden fields from the official construction page for this code.
