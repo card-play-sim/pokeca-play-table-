@@ -18,6 +18,7 @@ OUTPUT = ROOT / "data/deck-building/official-import-verified-extension.json"
 OFFICIAL_PAGE = re.compile(r"^https://www\.pokemon-card\.com/card-search/details\.php/card/([1-9]\d*)$")
 OFFICIAL_IMAGE = re.compile(r"^https://www\.pokemon-card\.com/assets/images/card_images/large/[A-Za-z0-9]+/[A-Za-z0-9_]+\.jpg$")
 CATEGORIES = {"goods": "グッズ", "support": "サポート"}
+STANDARD_RULES = "https://www.pokemon-card.com/rules/regulation/"
 
 
 def download(url):
@@ -26,6 +27,19 @@ def download(url):
         if response.status != 200:
             raise RuntimeError("OFFICIAL_FETCH_FAILED")
         return response.read()
+
+
+def official_legacy_exception(name):
+    raw = download(STANDARD_RULES)
+    official = unescape(raw.decode("utf-8"))
+    plain = re.sub(r"\\s+", " ", re.sub(r"<[^>]+>", " ", official))
+    first = plain.find("過去のシリーズで使用できるカード")
+    end = plain.find("同じ効果の過去のシリーズ", first)
+    # Only the first explicit standard-format exception list qualifies.
+    if first < 0 or end < first or name not in plain[first:end]:
+        raise RuntimeError("STANDARD_LEGACY_EXCEPTION_NOT_VERIFIED:" + name)
+    return {"rulePageUrl": STANDARD_RULES, "rulePageSha256": sha256(raw).hexdigest(),
+            "ruleName": name, "method": "official-standard-older-print-list"}
 
 
 def audit(row):
@@ -64,12 +78,16 @@ def audit(row):
     # this exact JPEG digest; do not infer a mark from its package code.
     page_sha = sha256(html_bytes).hexdigest()
     image_sha = sha256(raw).hexdigest()
+    exception = (mark == "G" and category == "support" and name == "ボスの指令")
+    exception_proof = official_legacy_exception(name) if exception else None
     return {
         **row,
         "verified": True,
         "pack": row["set"],
         "number": number,
-        "legality": "printed-hij" if mark in ("H", "I", "J") else "archival-out-of-scope",
+        "legality": ("printed-hij" if mark in ("H", "I", "J") else
+                     "official-legacy-reprint-exception" if exception else "archival-out-of-scope"),
+        **({"exceptionEvidence": exception_proof} if exception_proof else {}),
         "markEvidence": {
             "imageSha256": image_sha,
             "method": "full-official-JPEG-manual-mark-review",
