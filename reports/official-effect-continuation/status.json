@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "registryHash": "f30bcd4eb6e5cab46a0809ed6166262c1be848cd5a95d2954b865c5fac4aca04",
+  "registryHash": "3f1246916092d7a82f39a8f207546c2325d4c4c25b96e75a2f38fd354bf53bd8",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
-  "officialPages": 2123,
-  "collectedNewPages": 1944,
-  "explicitEffects": 2284,
-  "noExplicitText": 898,
+  "officialPages": 2168,
+  "collectedNewPages": 1989,
+  "explicitEffects": 2343,
+  "noExplicitText": 905,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
     "supporter": {
-      "prints": 146,
-      "compiled": 41,
-      "notImplemented": 105,
+      "prints": 164,
+      "compiled": 42,
+      "notImplemented": 122,
       "blocked": 0,
       "executionVerifiedPrints": 25
     },
     "item": {
-      "prints": 127,
-      "compiled": 81,
+      "prints": 128,
+      "compiled": 82,
       "notImplemented": 46,
       "blocked": 0,
       "executionVerifiedPrints": 34
@@ -32,16 +32,16 @@
       "executionVerifiedPrints": 4
     },
     "stadium": {
-      "prints": 24,
+      "prints": 25,
       "compiled": 6,
-      "notImplemented": 18,
+      "notImplemented": 19,
       "blocked": 0,
       "executionVerifiedPrints": 5
     },
     "pokemon": {
-      "prints": 1754,
-      "compiled": 636,
-      "notImplemented": 1070,
+      "prints": 1779,
+      "compiled": 639,
+      "notImplemented": 1092,
       "blocked": 48,
       "executionVerifiedPrints": 279
     },
@@ -769,6 +769,41 @@
       "officialCardId": "46536",
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46536",
       "evidencePath": "data/effect-extensions/evidence/46536.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "46567",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46567",
+      "evidencePath": "data/effect-extensions/evidence/46567.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "46647",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46647",
+      "evidencePath": "data/effect-extensions/evidence/46647.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "46656",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46656",
+      "evidencePath": "data/effect-extensions/evidence/46656.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "46668",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46668",
+      "evidencePath": "data/effect-extensions/evidence/46668.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "46671",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46671",
+      "evidencePath": "data/effect-extensions/evidence/46671.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
     }
   ],
@@ -9402,13 +9437,393 @@
       "officialCardId": "46532",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46569",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46576",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46597",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46597.json",
+        "sha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
+        "htmlSha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46598",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46598.json",
+        "sha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
+        "htmlSha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46599",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46599.json",
+        "sha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
+        "htmlSha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46600",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46600.json",
+        "sha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
+        "htmlSha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46601",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46601.json",
+        "sha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
+        "htmlSha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46602",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46602.json",
+        "sha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
+        "htmlSha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46603",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46603.json",
+        "sha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
+        "htmlSha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46604",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46604.json",
+        "sha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
+        "htmlSha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46605",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46605.json",
+        "sha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
+        "htmlSha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
+    },
+    {
+      "officialCardId": "46606",
+      "name": "コック",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分のバトルポケモンのHPを「70」回復する。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46606.json",
+        "sha256": "d2478dd184a7349dd522b2001f99860fba98f7585c174f1851b688d9a15e3201",
+        "htmlSha256": "d2478dd184a7349dd522b2001f99860fba98f7585c174f1851b688d9a15e3201",
+        "textSha256": "99b0c3d11d6153dbcae9ebe432a6cb5c2e3610d164b85994bfb8456e9d088023"
+      }
+    },
+    {
+      "officialCardId": "46607",
+      "name": "ゴヨウ",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "おたがいのプレイヤーは、それぞれ自分の手札をすべてウラにして切り、山札の下にもどす。その後、おたがいのプレイヤーは、それぞれコインを1回投げ、オモテなら6枚、ウラなら3枚、山札を引く。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46607.json",
+        "sha256": "03a9d794fd9c76ac5e2a616d71269eb4dd4628be6480ded51dc01d7d04c14f7d",
+        "htmlSha256": "03a9d794fd9c76ac5e2a616d71269eb4dd4628be6480ded51dc01d7d04c14f7d",
+        "textSha256": "08bb50d3ffb54b81d06f72a38bcabda092f1f0306c5b29d9db41ecd8dd9921d8"
+      }
+    },
+    {
+      "officialCardId": "46613",
+      "name": "ドラセナ",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46613.json",
+        "sha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
+        "htmlSha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
+        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
+      }
+    },
+    {
+      "officialCardId": "46628",
+      "name": "マツバの確信",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46628.json",
+        "sha256": "af9ba65da529ce34e26ee9b32498a508f7b7ebaa2910de8c2beab977f487d331",
+        "htmlSha256": "af9ba65da529ce34e26ee9b32498a508f7b7ebaa2910de8c2beab977f487d331",
+        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
+      }
+    },
+    {
+      "officialCardId": "46630",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46632",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46635",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46639",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46643",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46644",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46646",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46649",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46651",
+      "name": "シトロンの機転",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分の[雷]ポケモン全員のHPを、それぞれ「60」回復する。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46651.json",
+        "sha256": "53dfbf9a01351a473ad842e1563a064dbea7da4dc635f9489b34ff5ad352a438",
+        "htmlSha256": "53dfbf9a01351a473ad842e1563a064dbea7da4dc635f9489b34ff5ad352a438",
+        "textSha256": "cf5bd47f4bed11e7662862518c953592a23fdc968d379fed057c2ed84e949160"
+      }
+    },
+    {
+      "officialCardId": "46652",
+      "name": "ミカンのまなざし",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "次の相手の番、自分のポケモン全員が、相手のポケモンから受けるワザのダメージは「-30」される。（新しく場に出したポケモンもふくむ。）",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46652.json",
+        "sha256": "15478b2dbb580e62ad3c54adc7e059a635431e5ea564cb8c274a61dd78122c84",
+        "htmlSha256": "15478b2dbb580e62ad3c54adc7e059a635431e5ea564cb8c274a61dd78122c84",
+        "textSha256": "9323de4dab631b20ef90e5585cf86e688172072d4f948da2a77d9720cd158f18"
+      }
+    },
+    {
+      "officialCardId": "46654",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46657",
+      "name": "シトロンの機転",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分の[雷]ポケモン全員のHPを、それぞれ「60」回復する。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46657.json",
+        "sha256": "8573816ebed4075c4db676d03018b3a6045bce9353ab6b7bf2b16144cc6c2556",
+        "htmlSha256": "8573816ebed4075c4db676d03018b3a6045bce9353ab6b7bf2b16144cc6c2556",
+        "textSha256": "cf5bd47f4bed11e7662862518c953592a23fdc968d379fed057c2ed84e949160"
+      }
+    },
+    {
+      "officialCardId": "46658",
+      "name": "ミカンのまなざし",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "次の相手の番、自分のポケモン全員が、相手のポケモンから受けるワザのダメージは「-30」される。（新しく場に出したポケモンもふくむ。）",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46658.json",
+        "sha256": "b211e7ede80ca6ca322cf6b3969e4cc4278333b820f4b9f3101dfb87489b8251",
+        "htmlSha256": "b211e7ede80ca6ca322cf6b3969e4cc4278333b820f4b9f3101dfb87489b8251",
+        "textSha256": "9323de4dab631b20ef90e5585cf86e688172072d4f948da2a77d9720cd158f18"
+      }
+    },
+    {
+      "officialCardId": "46661",
+      "name": "グラビティーマウンテン",
+      "category": "stadium",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "おたがいの場の2進化ポケモン全員の最大HPは、それぞれ「-30」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46661.json",
+        "sha256": "8fa738998e91301ed389edb386fdd2a237f276fc9acf2c5818f753070efd77dc",
+        "htmlSha256": "8fa738998e91301ed389edb386fdd2a237f276fc9acf2c5818f753070efd77dc",
+        "textSha256": "0efa1e5c186676bd40beee624dc72feb52f7ce8cf482aa0be97f4858741a14f7"
+      }
+    },
+    {
+      "officialCardId": "46663",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46664",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46666",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46670",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46673",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46675",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46679",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46680",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46683",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46690",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "46692",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     }
   ],
   "blockerSummary": {
     "fetch": [
       {
         "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-        "count": 75
+        "count": 80
       },
       {
         "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
@@ -9422,11 +9837,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1075
+        "count": 1097
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 201
+        "count": 219
       },
       {
         "reason": "PARSED_OFFICIAL_FACT_CONFLICT:facts",
@@ -9437,10 +9852,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "017dca6c40596b2ad2b1b701ccfdcb1f7962efe41dab215d8f99b2aee906037c",
+    "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 44025,
+    "seq": 48681,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,

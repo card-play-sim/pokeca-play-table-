@@ -28,4 +28,11 @@ assert.equal(attack('このポケモンについているエネルギーを2個�
 assert.equal(attack('相手のバトルポケモンをマヒにする。'),null);
 assert.equal(attack('このポケモンについている基本エネルギーを1個トラッシュする。'),null);
 assert.equal(attack('コインを1回投げオモテなら、相手のベンチポケモンをマヒにする。'),null);
+const selfBonus = 'このポケモンにのっているダメカンの数×10ダメージ追加。';
+const selfMultiply = 'このポケモンにのっているダメカンの数×20ダメージ。';
+assert.deepEqual(attack(selfBonus,'80＋'),{mechanic:'SELF_COUNTER_DAMAGE',commands:['DAMAGE'],base:80,perCounter:10});
+assert.deepEqual(attack(selfMultiply,'20×'),{mechanic:'SELF_COUNTER_DAMAGE',commands:['DAMAGE'],base:0,perCounter:20});
+assert.equal(attack(selfBonus,'80'),null);
+assert.equal(attack(selfMultiply,'10×'),null);
+assert.equal(attack(selfMultiply.replace('このポケモン','相手のバトルポケモン'),'20×'),null);
 console.log('PASS exact official attack matcher rejects near misses');

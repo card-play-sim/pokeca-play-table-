@@ -193,7 +193,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -201,6 +201,7 @@ function prepare(r, e, kind) {
         p.deck.push(energy);
       }
   }
+  if (m === "SELF_COUNTER_DAMAGE") frame.game.players[0].active.damage = 20;
   if (m === "HEAL_SELF_ATTACK")
     frame.game.players[0].active.damage = Math.min(
       40,
@@ -336,6 +337,20 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   if (e.plan.mechanic === "VANILLA_DAMAGE")
     verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "SELF_COUNTER_DAMAGE") {
+    const base = e.damage.endsWith("+") ? Number.parseInt(e.damage, 10) : 0;
+    const perCounter = Number(e.text.normalize("NFKC").match(/×(\d+)ダメージ/)[1]);
+    for (const damage of [0, 20]) {
+      const start = structuredClone(before);
+      start.players[0].active.damage = damage;
+      const replay = port(start);
+      assert(replay.dispatch("you", o.action).ok);
+      const end = replay.getSnapshot();
+      verifyPrintedAttack(start, end, e, base + damage / 10 * perCounter);
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
   if (e.plan.mechanic === "COIN_BONUS_DAMAGE") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
       const start = { ...before, referenceRngState: seed };
