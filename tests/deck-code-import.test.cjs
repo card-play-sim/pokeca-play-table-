@@ -7,6 +7,7 @@ const officialLayout='デッキコード[kbvV5V-TEZjLI-dVfVVk]のデッキレシ
 const registry = JSON.parse(fs.readFileSync('data/official-image-registry.json','utf8'));
 const formal = JSON.parse(fs.readFileSync('data/reference-effects/catalog.json','utf8'));
 const printExtension = JSON.parse(fs.readFileSync('data/deck-building/official-import-verified-extension.json','utf8'));
+assert.match(fs.readFileSync('sw.js','utf8'), /\.\/data\/deck-building\/official-import-verified-extension\.json/,'Offline PWA must cache the official-import image evidence');
 const catalog = api.catalogFrom(registry, formal, JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')), JSON.parse(fs.readFileSync('data/deck-building/m7-official-image-extension.json','utf8')), printExtension);
 if (printExtension.status === 'VERIFIED_OFFICIAL_PRINT_AND_IMAGE_HASH') {
  assert.equal(printExtension.records.length,2,'Both exact official print images must have audited JPEG hashes');
