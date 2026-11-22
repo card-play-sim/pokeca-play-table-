@@ -16,7 +16,7 @@ function play(t,adjust){
  const port=t.port;
  if(adjust){
   const g=port.getSnapshot();adjust(g);
-  assert(port.loadGame(g).ok,'modified deterministic match must load');
+  const loaded=port.loadGame(g);assert(loaded.ok,'modified deterministic match must load '+JSON.stringify(loaded)+' prizes='+g.players[1].prizes+' prizeCards='+g.players[1].prizeCards?.length);
  }
  const option=port.getHandOptions('you',t.sourceId).find(o=>o.ok&&o.action?.type==='play_supporter');
  assert(option,'legal supporter UI action');
