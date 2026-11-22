@@ -53,12 +53,43 @@ try {
 }
 
 function deckStatus() {
-  const unknown = blocked(current).length + rows(current).filter(([id]) => !cards.has(id)).length;
-  if (unknown) return 'BLOCKED · 照合できないカードが' + unknown + '行あります。';
-  const error = compositionError(current,cards,plans);
-  if (error) return error;
-  const unsupported = rows(current).filter(([id]) => !plans.has(id));
-  return unsupported.length ? '保存できます · 対戦未対応のカード効果 '+unsupported.length+'種類' : '';
+  const diagnosis = savedDecks.diagnoseDeck(current,cards,plans);
+  const unknown = diagnosis.issues.filter(item => !cards.has(item.id) ||
+    !['NO_EFFECT_PLAN','PRINT_IDENTITY_CONFLICT'].includes(item.reason)).length;
+  if (unknown) return 'BLOCKED · 公式印刷版を照合できないカードが' + unknown + '種類あります。';
+  if (diagnosis.compositionError) return diagnosis.compositionError;
+  if (diagnosis.issues.length) return '保存できます · 対戦未対応のカードが'+diagnosis.issues.length+'種類（下の原因一覧を確認）';
+  if (diagnosis.openingError) return '対戦開始にはたねポケモンが必要です。';
+  return '';
+}
+
+function drawDiagnostics() {
+  const diagnosis = savedDecks.diagnoseDeck(current,cards,plans);
+  const panel = $('battle-diagnostics');
+  const issues = diagnosis.issues;
+  panel.hidden = issues.length === 0 && !diagnosis.openingError && !diagnosis.compositionError;
+  if(panel.hidden) { panel.open = false; return; }
+  $('battle-diagnostics-title').textContent = issues.length ?
+    '対戦できないカード '+issues.length+'種類（名前・公式ID）' : '対戦開始前の確認';
+  const list = $('battle-diagnostics-items');
+  list.replaceChildren();
+  for(const item of issues) {
+    const li = document.createElement('li');
+    li.textContent = item.name+' ×'+item.count+' [ID '+item.id+'] — '+savedDecks.diagnosisReason(item.reason);
+    list.append(li);
+  }
+  if (diagnosis.compositionError) {
+    const li = document.createElement('li');
+    li.textContent = diagnosis.compositionError;
+    list.append(li);
+  }
+  if (diagnosis.openingError) {
+    const li = document.createElement('li');
+    li.textContent = 'たねポケモンを1枚以上入れてください。';
+    list.append(li);
+  }
+  // Never expose a deck report outside the device without an explicit click.
+  $('battle-diagnostics-text').hidden = true;
 }
 
 function addImage(parent, card) {
@@ -213,6 +244,7 @@ function drawDeck() {
       grid.append(tile);
     }
   }
+  drawDiagnostics();
   say(deckStatus());
 }
 
@@ -435,6 +467,22 @@ $('remove').onclick = () => {
   try { const latest=savedDecks.read(); persist(latest.decks.filter(deck=>deck.id!==current.id),latest); }
   catch { say('保存データを更新できませんでした。'); }
 };
+$('copy-battle-diagnostics').onclick = async () => {
+  const report = savedDecks.diagnosticText(current,cards,plans);
+  try {
+    if (!navigator.clipboard?.writeText) throw Error('CLIPBOARD_UNAVAILABLE');
+    await navigator.clipboard.writeText(report);
+    say('診断情報をコピーしました。');
+  } catch {
+    const box = $('battle-diagnostics-text');
+    box.value = report;
+    box.hidden = false;
+    box.focus();
+    box.select();
+    say('コピーできない端末では、下の選択済みテキストをコピーしてください。');
+  }
+};
+
 $('export').onclick = () => {
   const blob = new Blob([JSON.stringify({schemaVersion:1,deck:current},null,2)],{type:'application/json'});
   const url = URL.createObjectURL(blob);
