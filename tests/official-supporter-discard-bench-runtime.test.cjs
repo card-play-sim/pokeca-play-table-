@@ -1,0 +1,38 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const worker=require('../scripts/lib/shared-effect-engine-worker.cjs');
+const bundle=fs.readFileSync('ui/engine.bundle.js','utf8'),ctx={window:{},console,performance,Math,setTimeout};
+vm.runInNewContext(bundle,ctx);
+const records=ctx.window.Pokeca.getReferenceEffectCatalog({includeExtensions:true}).records;
+const ids=['45793','45215','45535','45540','46628'];
+for(const id of ids)assert(records.some(x=>String(x.officialCardId)===id&&x.mainPlan?.mechanic==='DISCARD_ONE_DRAW_OPP_BENCH'),'missing connected H print '+id);
+function sample(id){
+ const ref=records.find(x=>String(x.officialCardId)===id),t=worker.prepare(ref,{name:ref.name,text:ref.text,plan:ref.mainPlan,effectIndex:0},'main');
+ assert(!t.blocked,'fixture blocked '+id+': '+t.blocked);
+ const port=t.port,before=port.getSnapshot(),hand=before.players[0].hand;
+ const cost=hand.find(c=>c.id!==t.sourceId);
+ assert(cost,'fixture must have a second hand card');
+ const option=port.getHandOptions('you',t.sourceId).find(o=>o.action?.type==='play_supporter');
+ assert(option,'supporter UI menu entry');
+ const action={...option.action,selections:{...(option.action.selections||{}),discard:[cost.id]}};
+ assert(port.canDispatch('you',action),'legal one-card discard choice');
+ assert.equal(port.canDispatch('you',{...action,selections:{discard:[]}}),false,'missing discard choice must be rejected');
+ const fake={...action,selections:{discard:[t.sourceId]}};
+ assert.equal(port.canDispatch('you',fake),false,'cannot discard Supporter as its own cost');
+ assert.equal(port.dispatch('you',fake).ok,false);
+ assert.deepEqual(port.getSnapshot(),before,'invalid cost must not alter state');
+ assert.equal(port.dispatch('ai',action).ok,false,'wrong actor cannot play');
+ assert.deepEqual(port.getSnapshot(),before,'opponent action rollback');
+ assert(port.dispatch('you',action).ok,'legal supporter with exact cost must play');
+ const after=port.getSnapshot(),newEvents=after.history.slice(before.history.length);
+ assert(after.players[0].discard.some(c=>c.id===cost.id),'selected physical cost must enter discard');
+ assert(after.players[0].discard.some(c=>c.id===t.sourceId),'Supporter must enter discard');
+ assert(newEvents.some(e=>e.details?.command==='DISCARD'&&e.details.cardIds?.includes(cost.id)),'cost discard event');
+ const drawCount=before.players[1].bench.length;
+ assert.equal(after.players[0].hand.length,hand.length-2+drawCount,'draw must match opponent Bench size');
+ if(drawCount)assert(newEvents.some(e=>e.details?.command==='DRAW'),'draw event present');
+ assert(port.restoreSession(port.getResumeSnapshot()).ok,'session restore');
+ assert.deepEqual(port.getSnapshot(),after,'physical card conservation on resume');
+}
+for(const id of ids)sample(id);
+console.log('PASS five H Matsuba Supporters: costs/invalid choices, real deck draw from opposing bench and save/restore');
