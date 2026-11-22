@@ -7,7 +7,10 @@ const B = require('../scripts/lib/shared-effect-batch.cjs');
 const basic = (id, overrides = {}) => ({
   officialCardId:id, name:'基本炎エネルギー', category:'energy',
   regulationMark:'G', basicEnergy:true, legality:'official-basic-energy-exception',
-  source:{heading:'基本エネルギー'}, ...overrides
+  source:{kind:'official-filtered-search',heading:'基本エネルギー',
+    sha256:'a'.repeat(64),identityName:'基本炎エネルギー',
+    identityImageUrl:'https://www.pokemon-card.com/assets/images/card_images/large/ENE/000002_E_HONOOENERUGI.jpg'},
+  ...overrides
 });
 // The real authoritative catalog must contain a substantial high-volume
 // exception cohort. A selector that silently selects zero is not progress.
@@ -34,6 +37,7 @@ const source = {records:[
   {officialCardId:'46001', regulationMark:'I', legality:'printed-hij'},
   {officialCardId:'45001', regulationMark:'H', legality:'printed-hij'},
   basic('42945'),
+  basic('1'),
   basic('42946',{name:'架空エネルギー'}),
   basic('42947',{basicEnergy:false}),
   basic('42948',{source:{heading:'特殊エネルギー'}}),
@@ -43,7 +47,7 @@ const source = {records:[
   basic('42945')
 ]};
 const {ids,invalid} = selectIds(source, new Set(['46001']));
-assert.deepEqual(ids,['42945','50001','45001']);
+assert.deepEqual(ids,['42945','1','50001','45001']);
 assert.deepEqual(invalid.map(x=>x.officialCardId),['not-an-id']);
 assert(verifiedBasicException(basic('42945')));
 assert(!verifiedBasicException(basic('42947',{basicEnergy:false})));
