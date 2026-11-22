@@ -14,6 +14,11 @@ for(const asset of assets){
 }
 assert(fs.readFileSync('index.html','utf8').includes('deck-code-import.html?savefix=20261122a'));
 assert(fs.readFileSync('deck-builder.html','utf8').includes('deck-code-import.html?savefix=20261122a'));
+// Save/list PWA must include the J-effect compiled data from PR #158, not an
+// older generated service worker from the parallel merge.
+assert.equal(files['./data/effect-extensions/compiled.json'],
+ hash(fs.readFileSync('data/effect-extensions/compiled.json')),
+ 'verified PWA must retain all recently merged J battle effects');
 const worker=fs.readFileSync('scripts/pwa-worker-template.js','utf8');
 assert(worker.includes("const importPage=absolute('./deck-code-import.html')"),'offline import navigation required');
 assert(worker.includes("path===editor||path===importPage"),'navigate import must use verified latest shell');
