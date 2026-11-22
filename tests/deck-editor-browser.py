@@ -242,6 +242,18 @@ def run(base):
         card = page.locator('.deck-home-card').filter(has_text='取り込んだデッキ')
         expect(card).to_have_count(1)
         expect(card).to_contain_text('60 / 60枚')
+        # Reproduce old Android state: official recipe exists in import history,
+        # but its deck-home entry is missing. A single home visit must restore it.
+        page.evaluate("""() => {
+            const storage=JSON.parse(localStorage.getItem('pokeca.deck-builder.v1'));
+            storage.decks=storage.decks.filter(deck=>deck.id!=='official-kbvV5V-TEZjLI-dVfVVk');
+            localStorage.setItem('pokeca.deck-builder.v1',JSON.stringify(storage));
+            localStorage.removeItem('pokeca.import-to-deck-list.migration.v1');
+        }""")
+        page.reload()
+        card = page.locator('.deck-home-card').filter(has_text='取り込んだデッキ')
+        expect(card).to_have_count(1)
+        expect(card).to_contain_text('60 / 60枚')
         assert page.evaluate("""() => {
             const list=JSON.parse(localStorage.getItem('pokeca.deck-builder.v1'));
             const imported=list.decks.find(d=>d.sourceDeckCode==='kbvV5V-TEZjLI-dVfVVk');

@@ -283,6 +283,37 @@ function saveBuilderDeck(storage,deck,catalog) {
   throw Error('デッキ一覧への保存内容を読み戻せませんでした。');
  return {id:next.id,total:deck.total,blocked:next.blocked.length};
 }
+// One-time migration for imports saved by older builds only into history.
+// Keep user-edited decks untouched, never restore them repeatedly after a
+// deliberate deletion, and never modify any source history during migration.
+const IMPORT_LIST_MIGRATED = 'pokeca.import-to-deck-list.migration.v1';
+function migrateImports(storage,catalog) {
+ if(storage.getItem(IMPORT_LIST_MIGRATED)==='done')return 0;
+ if(!catalog?.get)throw Error('カード台帳を確認できません。');
+ const saved=readImports(storage);
+ const previousRaw=storage.getItem(BUILDER_KEY);
+ let previous;
+ try{previous=previousRaw==null?{decks:[]}:JSON.parse(previousRaw);}
+ catch{
+  const error=Error('デッキ一覧の既存データを読み込めません。');
+  error.code='DECK_LIST_INVALID';throw error;
+ }
+ if(!Array.isArray(previous?.decks)){
+  const error=Error('デッキ一覧の保存形式が不正です。');
+  error.code='DECK_LIST_INVALID';throw error;
+ }
+ const present=new Set(previous.decks.map(row=>row?.id));
+ let restored=0;
+ for(const recipe of saved){
+  const id='official-'+recipe.deckCode;
+  if(present.has(id))continue;
+  saveBuilderDeck(storage,recipe,catalog);
+  present.add(id);
+  restored++;
+ }
+ storage.setItem(IMPORT_LIST_MIGRATED,'done');
+ return restored;
+}
 function reconcile(deck,officialRecords,imageRegistry){
  if(!deck||deck.total!==60||!Array.isArray(deck.cards))throw Error('60枚レシピが必要です');
  const records=Array.isArray(officialRecords)?officialRecords:Object.values(officialRecords||{});
@@ -302,5 +333,5 @@ function reconcile(deck,officialRecords,imageRegistry){
  const blocked=output.filter(r=>r.identityStatus!=='CONFIRMED');
  return {...deck,cards:output,identityStatus:blocked.length?'BLOCKED':'CONFIRMED',playable:blocked.length===0,blockedCount:blocked.length};
 }
-root.PokecaDeckCodeImport=Object.freeze({validCode,parse,parseFields,parseHtml,reconcile,catalogFrom,loadCatalog,matchCatalog,readImports,saveImport,toBuilderDeck,saveBuilderDeck});
+root.PokecaDeckCodeImport=Object.freeze({validCode,parse,parseFields,parseHtml,reconcile,catalogFrom,loadCatalog,matchCatalog,readImports,saveImport,toBuilderDeck,saveBuilderDeck,migrateImports});
 })(typeof window!=='undefined'?window:globalThis);

@@ -11,6 +11,10 @@ on:
       - 'ui/deck-code-import.js'
       - 'tests/deck-code-import.test.cjs'
       - 'tests/deck-editor-browser.py'
+      - 'ui/deck-home.js'
+      - 'index.html'
+      - 'deck-builder.html'
+      - 'tests/deck-import-cache-recovery.test.cjs'
       - '.github/workflows/deck-import-cache-recovery-stage.yml'
   workflow_dispatch:
 permissions:
