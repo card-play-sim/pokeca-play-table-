@@ -45,7 +45,10 @@ const plans=saved.plansFrom(read('data/reference-effects/plans.json'),read('data
 assert(plans.size>=566);
 assert([...cards.keys()].filter(id=>plans.has(id)).length>=535);
 assert.equal(saved.matchEntries({cards:{'45796':4,'49465':56}},cards,plans).reduce((n,r)=>n+r.count,0),60);
-const basic=[...cards.values()].find(c=>c.basicEnergy);assert(basic);assert.equal(saved.compositionError({cards:{[basic.id]:60}},cards,plans),'');assert.match(saved.compositionError({cards:{[basic.id]:61}},cards,plans),/60枚/);
+const basic=[...cards.values()].find(c=>c.basicEnergy);assert(basic);
+const m7Unconnected=[...cards.values()].find(c=>c.pack==='M7'&&!plans.has(c.id));
+if(m7Unconnected)assert.throws(()=>saved.matchEntries({cards:{[m7Unconnected.id]:4,[basic.id]:56}},cards,plans),/BLOCKED.*\\[ID [0-9]+\\]/,'Unconnected M7 print must remain fail-closed for battle');
+assert.equal(saved.compositionError({cards:{[basic.id]:60}},cards,plans),'');assert.match(saved.compositionError({cards:{[basic.id]:61}},cards,plans),/60枚/);
 const ace=[...cards.values()].filter(c=>c.aceSpec);assert(ace.length>1);assert.match(saved.compositionError({cards:{[ace[0].id]:1,[ace[1].id]:1}},cards,plans),/ACE SPEC/);
 const groups=new Map();for(const c of cards.values())if(!c.basicEnergy){const a=groups.get(c.name)||[];a.push(c);groups.set(c.name,a);}
 const prints=[...groups.values()].find(a=>a.length>1&&!a[0].aceSpec);assert.match(saved.compositionError({cards:{[prints[0].id]:3,[prints[1].id]:2}},cards,plans),/同名4枚/);
