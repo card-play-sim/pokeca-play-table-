@@ -34,6 +34,7 @@ jobs:
           node scripts/build-pwa-release.cjs
           node scripts/build-pwa-release.cjs --check
           node --check ui/deck-code-import.js
+          node --check ui/saved-decks.js
           node tests/deck-classification.test.cjs
           node tests/deck-code-import.test.cjs
           git diff --stat
