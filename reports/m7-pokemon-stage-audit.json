@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "status": "OFFICIAL_STAGE_AUDIT_NOT_J_MARK_VERIFICATION",
   "expectedPokemon": 73,
-  "verifiedPokemon": 65,
-  "blockedPokemon": 8,
+  "verifiedPokemon": 66,
+  "blockedPokemon": 7,
   "strictStageAndEffects": 65,
-  "stageOnly": 0,
+  "stageOnly": 1,
   "verified": [
     {
       "officialCardId": "50856",
@@ -240,6 +240,16 @@
       "basic": false,
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50884",
       "officialPageSha256": "121f47c1175f6a05d800b8aa8a201455494b89f904ff69c3ad651e5d673482b2"
+    },
+    {
+      "officialCardId": "50885",
+      "status": "VERIFIED_OFFICIAL_STAGE_ONLY",
+      "pokemonStage": 0,
+      "evolvesFrom": null,
+      "basic": true,
+      "strictParserReason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50885",
+      "officialPageSha256": "0e8aeef37f86458e64b571ea732255d0691e60b407b3321ee743fe020d51ac5b"
     },
     {
       "officialCardId": "50886",
@@ -608,11 +618,6 @@
       "officialCardId": "50868",
       "status": "BLOCKED_OFFICIAL_STAGE_PARSER",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
-    },
-    {
-      "officialCardId": "50885",
-      "status": "BLOCKED_OFFICIAL_STAGE_PARSER",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
     },
     {
       "officialCardId": "50890",
