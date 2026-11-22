@@ -149,7 +149,9 @@ function drawDeck() {
   }
   blocked(current).forEach((row,index) => entries.push({
     key:'blocked-'+index,count:row.count,name:row.name || 'カードID '+row.officialCardId,
-    category:'blocked',change:()=>{
+    card:row.imageUrl?.startsWith('https://www.pokemon-card.com/assets/images/card_images/') ?
+      {id:String(row.officialCardId),name:row.name,url:row.imageUrl,category:row.category} : null,
+    reason:row.reason,category:'blocked',change:()=>{
       if (--row.count===0) current.blocked.splice(index,1);
       drawDeck();
       keepDraft();
@@ -200,6 +202,14 @@ function drawDeck() {
       plus.disabled = !cards.has(key);
       quantity.append(control('−',name+'を1枚減らす',()=>entry.change(-1)),amount,plus);
       tile.append(label,quantity);
+      if (entry.reason) {
+        const note = document.createElement('small');
+        note.textContent = entry.reason === 'OUT_OF_REGULATION' ?
+          '対象外のレギュレーション（この版は使用不可）' :
+          entry.reason === 'OFFICIAL_PRINT_UNVERIFIED' ?
+          '画像確認済み・印刷版の照合待ち' : '公式カードの照合待ち';
+        tile.append(note);
+      }
       grid.append(tile);
     }
   }
@@ -347,6 +357,29 @@ function persist(decks, storeSnapshot) {
   }
 }
 
+// Re-evaluate exact official IDs after a catalog update without changing a
+// print to a different illustration or bypassing any engine-effect BLOCKED.
+function refreshBlockedPrints() {
+  if (!Array.isArray(current.blocked) || !current.blocked.length) return;
+  const unresolved = [];
+  let changed = false;
+  for (const row of current.blocked) {
+    const exact = api.matchCatalog({source:'official-recipe-html',cards:[row]},cards).cards[0];
+    if (exact.identityStatus === 'CONFIRMED') {
+      const id = String(exact.officialCardId);
+      current.cards[id] = (current.cards[id] || 0) + row.count;
+      current.categories = current.categories || {};
+      current.categories[id] = categoryOf(null,row.category);
+      changed = true;
+    } else {
+      unresolved.push(exact);
+      if (exact.imageUrl !== row.imageUrl || exact.reason !== row.reason) changed = true;
+    }
+  }
+  current.blocked = unresolved;
+  if (changed) keepDraft();
+}
+
 function loadImport() {
   const deckId = params.get('deck');
   if (deckId) {
@@ -449,6 +482,7 @@ savedDecks.loadCatalog().then(catalog => {
   plans = catalog.plans;
   loadImport();
   restoreDraft();
+  refreshBlockedPrints();
   loaded = true;
   $('deck-name').disabled = $('save').disabled = false;
   drawHeader();

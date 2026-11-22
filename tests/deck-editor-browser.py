@@ -35,6 +35,10 @@ def run(base):
         assert len(classification['records']) == 5073, '4,995 protected + 78 M7 official J print records'
         assert not classification['blocked']
         assert len([r for r in classification['records'] if r['pack']=='M7' and r['regulationMark']=='J'])==78
+        extension = page.evaluate("async()=> (await (await fetch('data/deck-building/official-import-verified-extension.json')).json())")
+        protected_ids = {str(r['officialCardId']) for r in classification['records']}
+        newly_verified = [r for r in extension['records']
+            if r['legality']=='printed-hij' and str(r['officialCardId']) not in protected_ids]
         # Actual mobile DOM interaction: find an exact M7 print, load the official
         # full-size image, add the card, remove it, and continue normal deck tests.
         page.locator('#regulation').select_option('J')
@@ -50,7 +54,15 @@ def run(base):
         page.get_by_role('button',name='マダツボミを1枚減らす').click()
         expect(page.locator('#total')).to_have_text('0 / 60枚')
         open_search()
+        page.locator('#regulation').select_option('J')
+        page.locator('#category').select_option('goods')
+        page.locator('#query').fill('49573')
+        expect(page.locator('#cards .builder-card')).to_have_count(1)
+        expect(page.locator('#cards img')).to_have_attribute(
+            'src', 'https://www.pokemon-card.com/assets/images/card_images/large/MC/049573_T_POKEPADDO.jpg')
         page.locator('#query').fill('')
+        page.locator('#regulation').select_option('')
+        page.locator('#category').select_option('')
         labels = {'pokemon':'ポケモン','goods':'グッズ','support':'サポート','tool':'ポケモンのどうぐ','stadium':'スタジアム','energy':'エネルギー'}
         image_checks=[]
         for mark in ('H','I','J'):
@@ -58,6 +70,7 @@ def run(base):
             for category in labels:
                 page.locator('#category').select_option(category)
                 matching = [r for r in classification['records'] if r['regulationMark']==mark and r['category']==category]
+                matching += [r for r in newly_verified if r['regulationMark']==mark and r['category']==category]
                 expected = len(matching)
                 unique_names = len({r['source']['identityName'] for r in matching})
                 expect(page.locator('#catalog-info')).to_have_text(f'{unique_names}種類（公式印刷版 {expected}件）')

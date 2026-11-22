@@ -74,10 +74,37 @@ function parseHtml(html, code) {
  }
  return parseFields(values, code);
 }
-function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}) {
+function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}, printExtension = {records:[]}) {
+ // Additional official prints require exact official page/JPEG hash evidence.
+ // Historical G prints are accepted only where an explicit hash-bound
+ // current official standard-format legacy-card exception authorizes them.
+ const verifiedPrints = (Array.isArray(printExtension.records) ? printExtension.records : []).filter(row =>
+  row.verified === true && /^[1-9][0-9]*$/.test(String(row.officialCardId)) &&
+  row.source?.url === row.officialPageUrl && /^[a-f0-9]{64}$/.test(row.source?.sha256) &&
+  row.source?.identityName === row.name && row.source?.identityImageUrl === row.imageSourceUrl &&
+  /^[a-f0-9]{64}$/.test(row.markEvidence?.imageSha256) &&
+  row.officialPageUrl === 'https://www.pokemon-card.com/card-search/details.php/card/'+row.officialCardId &&
+  /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl) &&
+  ['G','H','I','J'].includes(row.regulationMark));
  const classified = new Map(classification.records.map(row => [String(row.officialCardId), row]));
- const rows = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
+ const primary = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
   ...(Array.isArray(imageExtension.cards) ? imageExtension.cards : [])];
+ const ids = new Set(primary.map(row => String(row.officialCardId)));
+ // The hash-bound official print may correct an older registry record with the
+ // same exact numerical ID. Keep the original registry unchanged; use the
+ // official page/JPEG evidence only inside the importer catalog view.
+ const overrides = new Map(verifiedPrints.map(row => [String(row.officialCardId),row]));
+ const rows = [...primary.map(row => overrides.get(String(row.officialCardId)) || row),
+  ...verifiedPrints.filter(row => !ids.has(String(row.officialCardId)))];
+ const reviewed = new Map();
+ for (const row of verifiedPrints) {
+  const id = String(row.officialCardId);
+  // The official image and exact page digest are the authoritative identity
+  // for an added print. Do not silently change the protected classification
+  // JSON; replace only this read-only lookup's potentially stale record.
+  classified.set(id,row);
+  reviewed.set(id,row);
+ }
  const formalById = new Map((Array.isArray(formal.records) ? formal.records : Object.values(formal.records || {}))
   .map(row => [String(row.officialCardId), row]));
  const duplicates = new Set();
@@ -92,7 +119,13 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
    !/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(url)) continue;
   if (seen.has(id)) { duplicates.add(id); continue; }
   seen.add(id);
-  cards.archive.set(id,{id,name:row.name,url,pack:row.set,number:row.cardNumber,category:'unknown'});
+  const reviewedPrint = reviewed.get(id);
+  const archiveVerified = reviewedPrint && reviewedPrint.name === row.name &&
+   reviewedPrint.imageSourceUrl === url && reviewedPrint.set === row.set &&
+   reviewedPrint.cardNumber === row.cardNumber;
+  cards.archive.set(id,{id,name:row.name,url,pack:row.set,number:row.cardNumber,
+    category:archiveVerified ? reviewedPrint.category : 'unknown',
+    regulationMark:archiveVerified ? reviewedPrint.regulationMark : undefined});
   const evidence = formalById.get(id);
   if (evidence && (evidence.name !== row.name ||
      (evidence.set && row.set && evidence.set !== row.set) ||
@@ -107,7 +140,12 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
       !(['H','I','J'].includes(proof.regulationMark) && proof.legality === 'printed-hij' &&
          /^[a-f0-9]{64}$/.test(proof.markEvidence?.imageSha256) ||
         proof.basicEnergy === true && proof.category === 'energy' &&
-         proof.source.heading === '基本エネルギー' && proof.legality === 'official-basic-energy-exception')) continue;
+         proof.source.heading === '基本エネルギー' && proof.legality === 'official-basic-energy-exception' ||
+        proof.regulationMark === 'G' && proof.name === 'ボスの指令' && proof.category === 'support' &&
+         proof.legality === 'official-legacy-reprint-exception' &&
+         proof.exceptionEvidence?.rulePageUrl === 'https://www.pokemon-card.com/rules/regulation/' &&
+         proof.exceptionEvidence?.ruleName === 'ボスの指令' &&
+         /^[a-f0-9]{64}$/.test(proof.exceptionEvidence?.rulePageSha256))) continue;
   cards.set(id, {id,name:row.name,url,category:proof.category,pack:proof.pack,number:proof.number,
     regulationMark:proof.regulationMark,basicEnergy:proof.basicEnergy,aceSpec:proof.aceSpec,
     pokemonStage:proof.pokemonStage});
@@ -121,11 +159,12 @@ async function loadCatalog() {
   if (!response.ok) throw Error('カード台帳を読み込めませんでした');
   return response.json();
  };
- const [registry, formal, classification, m7ImageExtension] = await Promise.all([
+ const [registry, formal, classification, m7ImageExtension, officialPrintExtension] = await Promise.all([
   read('data/official-image-registry.json'), read('data/reference-effects/catalog.json'),
-  read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json')
+  read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json'),
+  read('data/deck-building/official-import-verified-extension.json')
  ]);
- const cards = catalogFrom(registry, formal, classification, m7ImageExtension);
+ const cards = catalogFrom(registry, formal, classification, m7ImageExtension, officialPrintExtension);
  if (!cards.size) throw Error('照合可能なカードがありません');
  return cards;
 }
@@ -136,10 +175,15 @@ function matchCatalog(deck, cards) {
    [...cards.values()].filter(card => row.pack && row.number &&
     card.name === row.name && card.pack === row.pack &&
     card.number === row.number.replace(/\s/g,''));
-  if (matches.length !== 1) return {
-   ...row, identityStatus:'BLOCKED',
-   reason:matches.length ? 'AMBIGUOUS_PRINT' : 'OFFICIAL_PRINT_NOT_FOUND'
-  };
+  if (matches.length !== 1) {
+   const archived = exactId ? cards.archive?.get(String(row.officialCardId)) : null;
+   return {...row, name:archived?.name || row.name, imageUrl:archived?.url,
+    regulationMark:archived?.regulationMark,
+    identityStatus:'BLOCKED',
+    reason:matches.length ? 'AMBIGUOUS_PRINT' :
+     archived?.regulationMark && !['H','I','J'].includes(archived.regulationMark) ?
+      'OUT_OF_REGULATION' : archived ? 'OFFICIAL_PRINT_UNVERIFIED' : 'OFFICIAL_PRINT_NOT_FOUND'};
+  }
   const card = matches[0];
   return {...row, name:card.name, officialCardId:card.id, imageUrl:card.url, identityStatus:'CONFIRMED'};
  });
