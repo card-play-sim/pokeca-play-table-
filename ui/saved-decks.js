@@ -54,6 +54,68 @@
         (card.number&&record.cardNumber&&card.number!==record.cardNumber)) return 'PRINT_IDENTITY_CONFLICT';
     return '';
   }
+  // Diagnose the exact same card-print gate that matchEntries() uses. This
+  // never substitutes a same-name print or weakens its official proof rules.
+  function diagnoseDeck(deck,cards,plans) {
+    const issues = [];
+    const legal = new Set();
+    for (const [id,count] of rows(deck)) {
+      const card = cards.get(id);
+      const archive = cards.archive?.get(id);
+      const record = plans.get(id);
+      const reason = connectionError(id,card,record);
+      if (reason) issues.push({
+        id:String(id),count,name:card?.name || archive?.name || 'カードID '+id,
+        category:card?.category || archive?.category || 'unknown',reason
+      });
+      else if (record.category === 'pokemon' && record.facts?.basic === true) legal.add(String(id));
+    }
+    for (const item of blocked(deck)) {
+      issues.push({
+        id:String(item.officialCardId || ''),count:item.count,
+        name:item.name || 'カードID '+(item.officialCardId || ''),
+        category:item.category || 'unknown',reason:item.reason || 'OFFICIAL_PRINT_UNVERIFIED'
+      });
+    }
+    const count = total(deck);
+    const composition = compositionError(deck,cards,plans);
+    const opening = count===60 && !issues.length && !legal.size ? 'NO_BASIC_POKEMON' : '';
+    return {total:count,issues,compositionError:composition,
+      deckReady:count===60&&!issues.length&&!composition&&!opening,
+      openingError:opening};
+  }
+  const diagnosisReason = reason => ({
+    NO_EFFECT_PLAN:'公式効果の接続待ち',
+    PRINT_IDENTITY_CONFLICT:'印刷版・公式画像の照合不一致',
+    OFFICIAL_PRINT_UNVERIFIED:'公式印刷版を未照合',
+    OFFICIAL_PRINT_NOT_FOUND:'公式印刷版の登録待ち',
+    OUT_OF_REGULATION:'使用可能なレギュレーションの照合待ち',
+    AMBIGUOUS_PRINT:'公式印刷版を特定できません'
+  })[reason] || '公式カード情報の照合待ち';
+
+  // Text-only export is opt-in. No device deck data is sent to GitHub or any
+  // remote service automatically.
+  function diagnosticText(deck,cards,plans) {
+    const result=diagnoseDeck(deck,cards,plans);
+    const header=['ポケカ・デッキ対戦診断','デッキ: '+(deck.name||'名称未設定'),
+      '合計: '+result.total+'/60枚',
+      '未対応・未照合: '+result.issues.length+'種類'];
+    if(result.compositionError)header.push('デッキ構成: '+result.compositionError);
+    if(result.openingError)header.push('対戦開始: たねポケモンがありません');
+    header.push('', '未対応の公式印刷版:');
+    if(!result.issues.length)header.push('なし');
+    for(const item of result.issues)
+      header.push(item.name+' ×'+item.count+' [ID '+item.id+'] / '+diagnosisReason(item.reason));
+    header.push('','全カード構成（公式印刷版IDと枚数）:');
+    for(const [id,count] of rows(deck)) {
+      const card=cards.get(id)||cards.archive?.get(id);
+      header.push((card?.name||'カードID '+id)+' ×'+count+' [ID '+id+']');
+    }
+    for(const item of blocked(deck))
+      header.push((item.name||'カードID '+item.officialCardId)+' ×'+item.count+' [未照合ID '+item.officialCardId+']');
+    return header.join('\\n');
+  }
+
   // Audits only the current I/J priority scope. H and historical prints are excluded.
   // An existing plan is evidence of connection, not proof of successful execution.
   function auditIJCoverage(cards,plans) {
@@ -114,5 +176,5 @@
     if (!basics) throw Error('たねポケモンを1枚以上入れてください。');
     return entries;
   }
-  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,plansFrom,loadCatalog,connectionError,auditIJCoverage,compositionError,matchEntries};
+  window.PokecaSavedDecks = {key,read,rows,blocked,total,basicEnergy,cover,plansFrom,loadCatalog,connectionError,diagnoseDeck,diagnosisReason,diagnosticText,auditIJCoverage,compositionError,matchEntries};
 })();
