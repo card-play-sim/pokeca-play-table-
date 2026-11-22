@@ -50,7 +50,7 @@ def write(path,value):
     path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def main():
     source,prints,stages,images,review=map(read,(SOURCE,PRINTS,STAGES,IMAGES,REVIEW))
-    require(source['pack']=='M7' and source['officialFound']==78 and source['new']==78,'M7_OFFICIAL_FULL_SET_MISSING')
+    require(source['pack']=='M7' and source['officialFound']==78 and source['new'] in (0,78) and len(source['records'])==78,'M7_OFFICIAL_FULL_SET_MISSING')
     require(prints['verifiedPrints']==78,'M7_OFFICIAL_NUMBER_PROOF_MISSING')
     require(stages['expectedPokemon']==73 and stages['verifiedPokemon']==73 and stages['blockedPokemon']==0,'M7_POKEMON_STAGE_INCOMPLETE')
     require(images['verifiedOfficialImages']==78 and images['contactSheetSha256']==EXPECTED_CONTACT_SHEET_SHA,'M7_OFFICIAL_IMAGE_HASH_OR_CONTACT_SHEET_DRIFT')
