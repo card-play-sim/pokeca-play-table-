@@ -49,7 +49,7 @@ def audit(row):
     number_left, number_right = number.split("/")
     if name not in plain or CATEGORIES[category] not in plain:
         raise RuntimeError("OFFICIAL_PAGE_NAME_OR_CATEGORY_MISMATCH:" + card_id)
-    if not re.search(r"\b" + re.escape(str(int(number_left))) + r"\s*/\s*" + re.escape(str(int(number_right))) + r"\b", plain):
+    if not re.search(r"\b0*" + re.escape(str(int(number_left))) + r"\s*/\s*0*" + re.escape(str(int(number_right))) + r"\b", plain):
         raise RuntimeError("OFFICIAL_PAGE_PRINT_NUMBER_MISMATCH:" + card_id)
     if image_url not in html and image_url.split("www.pokemon-card.com", 1)[1] not in html:
         raise RuntimeError("OFFICIAL_PAGE_IMAGE_MISMATCH:" + card_id)
