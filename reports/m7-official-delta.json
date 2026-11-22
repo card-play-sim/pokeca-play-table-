@@ -1646,5 +1646,186 @@
       "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=energy&page=18",
       "sha256": "57b67d4ce5056120d26e234dd92743540e1e650d1bb843df88f6b49414551c9d"
     }
-  ]
+  ],
+  "jCatalogExamples": {
+    "pokemon": {
+      "officialCardId": "48717",
+      "category": "pokemon",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "MC",
+      "number": "001/742",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=pokemon&page=15",
+        "sha256": "5e690bc5d0353b3b611a609002f191e22de6d3e3e0b63056645f1874ac160be8",
+        "path": "data/deck-building/search/pokemon/15.json",
+        "searchCondition": [
+          "カードの種別：ポケモン",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "ポケモン",
+        "identityName": "エリカのナゾノクサ",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048717_P_ERIKANONAZONOKUSA.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "ddc6c8ed2e8903142d90a457113f6191f32ae717bac7e8037136da7332d48ee7",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-07.json"
+      }
+    },
+    "goods": {
+      "officialCardId": "49355",
+      "category": "goods",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "MC",
+      "number": "639/742",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=trainer&sc_tr_tr=1&page=2",
+        "sha256": "53e37d29134e07c0d74e30856924c14a86df238403a598ab0e13df067f9a3997",
+        "path": "data/deck-building/search/goods/2.json",
+        "searchCondition": [
+          "カードの種別：トレーナーズ",
+          "種類：グッズ",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "グッズ",
+        "identityName": "エネルギー転送",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049355_T_ENERUGITENSOU.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "3cac74cc6cac1ca706b828a0f6d75bce34e56bf80022ac30b4d5a57f2c33efcd",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-09.json"
+      }
+    },
+    "support": {
+      "officialCardId": "49416",
+      "category": "support",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "MC",
+      "number": "700/742",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=trainer&sc_tr_sp=1&page=2",
+        "sha256": "357b4976c04aaae4e4c22075681e1516f023ac68a58c5b318f862c787a97cd2d",
+        "path": "data/deck-building/search/support/2.json",
+        "searchCondition": [
+          "カードの種別：トレーナーズ",
+          "種類：サポート",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "サポート",
+        "identityName": "ウエートレス",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049416_T_UETORESU.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "84ee70ad113182cf6ada488d8b2d6a4e7bb8d898d98758d93fc7cc33ca128bdf",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-06.json"
+      }
+    },
+    "tool": {
+      "officialCardId": "49705",
+      "category": "tool",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "M3",
+      "number": "072/080",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=trainer&sc_tr_goods=1&page=1",
+        "sha256": "0e594bb22e2c5c5237d063cda2311170e5a31e415d11112c863271576740e988",
+        "path": "data/deck-building/search/tool/1.json",
+        "searchCondition": [
+          "カードの種別：トレーナーズ",
+          "種類：ポケモンのどうぐ",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "ポケモンのどうぐ",
+        "identityName": "コアメモリ",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049705_T_KOAMEMORI.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "6118cbe3dba24d4387ce366135ad345b988eeeca5a9faa88b4570b0fefc897e5",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-02.json"
+      }
+    },
+    "stadium": {
+      "officialCardId": "49710",
+      "category": "stadium",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "M3",
+      "number": "077/080",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=trainer&sc_tr_st=1&page=1",
+        "sha256": "d323735bac5d18ca4caf5dcae3179e148779eb3ffabd09216427044cfe722755",
+        "path": "data/deck-building/search/stadium/1.json",
+        "searchCondition": [
+          "カードの種別：トレーナーズ",
+          "種類：スタジアム",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "スタジアム",
+        "identityName": "ミアレシティ",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049710_T_MIARESHITEI.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "99b8a95240c1fc1298d34be6d3285cd89b64979387087f494d5af7f8d9d1ba91",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-07.json"
+      }
+    },
+    "energy": {
+      "officialCardId": "49711",
+      "category": "energy",
+      "basicEnergy": false,
+      "aceSpec": false,
+      "pokemonStage": null,
+      "pack": "M3",
+      "number": "078/080",
+      "regulationMark": "J",
+      "legality": "printed-hij",
+      "source": {
+        "kind": "official-filtered-search",
+        "url": "https://www.pokemon-card.com/card-search/resultAPI.php?keyword=&regulation_sidebar_form=XY&se_ta=energy&page=1",
+        "sha256": "6332b1fe33cb53afa17122f9f1754a9c03f114fb0be17bddc8af590377d92453",
+        "path": "data/deck-building/search/energy/1.json",
+        "searchCondition": [
+          "カードの種別：エネルギー",
+          "レギュレーション：スタンダード"
+        ],
+        "heading": "エネルギー",
+        "identityName": "グロウ草エネルギー",
+        "identityImageUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049711_E_GUROUKUSAENERUGI.jpg"
+      },
+      "markEvidence": {
+        "mark": "J",
+        "imageSha256": "5b703a010d47f37e057642168a5ccac50662a7577a8287b6c8721bea00e62ce1",
+        "evidencePath": "data/image-automation/hij-v246/confirmed-hij-04.json"
+      }
+    }
+  },
+  "catalogCountBefore": 4995
 }
