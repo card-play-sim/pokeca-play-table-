@@ -7,6 +7,7 @@ const printable = new Map(deck.records.map(r => [String(r.officialCardId),r]));
 const connected = new Map(extension.records.map(r => [String(r.officialCardId),r]));
 assert.deepEqual(checkpoint.qualified.map(String).sort(), ['46358','46379']);
 const withheld = new Set(checkpoint.blockers.map(row => String(row.id)));
+assert.equal(withheld.size,18, 'Unverified print exclusions must remain intact');
 for (const id of checkpoint.qualified.map(String)) {
   assert(!withheld.has(id), 'Qualified print cannot also be withheld: '+id);
   const print = printable.get(id);
