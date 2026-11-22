@@ -29,7 +29,11 @@ function render(next) {
     tile.append(label);
     if (row.identityStatus === 'BLOCKED') {
       const warning = document.createElement('small');
-      warning.textContent = 'BLOCKED · 印刷版または画像を照合できません';
+      warning.textContent = row.reason === 'OUT_OF_REGULATION' ?
+        'BLOCKED · このG印刷版はH/I/J対戦の対象外' :
+        row.reason === 'OFFICIAL_PRINT_UNVERIFIED' ?
+        'BLOCKED · 公式画像は確認済み・印刷版の照合待ち' :
+        'BLOCKED · 印刷版または画像を照合できません';
       tile.append(warning);
     }
     $('cards').append(tile);
