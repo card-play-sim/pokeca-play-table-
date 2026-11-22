@@ -32,8 +32,25 @@ def run(base):
             expect(page.locator("#cards")).to_be_hidden()
         open_search()
         classification = page.evaluate("async()=> (await (await fetch('data/deck-building/catalog.json')).json())")
-        assert len(classification['records']) > 4357
+        assert len(classification['records']) == 5073, '4,995 protected + 78 M7 official J print records'
         assert not classification['blocked']
+        assert len([r for r in classification['records'] if r['pack']=='M7' and r['regulationMark']=='J'])==78
+        # Actual mobile DOM interaction: find an exact M7 print, load the official
+        # full-size image, add the card, remove it, and continue normal deck tests.
+        page.locator('#regulation').select_option('J')
+        page.locator('#category').select_option('pokemon')
+        page.locator('#query').fill('50856')
+        expect(page.locator('#cards .builder-card')).to_have_count(1)
+        m7_image=page.locator('#cards .builder-card img')
+        expect(m7_image).to_have_attribute('src','https://www.pokemon-card.com/assets/images/card_images/large/M7/050856_P_MADATSUBOMI.jpg')
+        page.wait_for_function("document.querySelector('#cards img').naturalWidth>0",timeout=60000)
+        page.get_by_role('button',name='マダツボミを追加').click()
+        expect(page.locator('#total')).to_have_text('1 / 60枚')
+        back_to_editor()
+        page.get_by_role('button',name='マダツボミを1枚減らす').click()
+        expect(page.locator('#total')).to_have_text('0 / 60枚')
+        open_search()
+        page.locator('#query').fill('')
         labels = {'pokemon':'ポケモン','goods':'グッズ','support':'サポート','tool':'ポケモンのどうぐ','stadium':'スタジアム','energy':'エネルギー'}
         image_checks=[]
         for mark in ('H','I','J'):

@@ -44,7 +44,8 @@ function run(baseCommit, directory) {
   }
   const {PokecaDeckCodeImport: importer, PokecaSavedDecks: decks} = context.window;
   const formal = read('data/reference-effects/catalog.json');
-  const cards = importer.catalogFrom(read('data/official-image-registry.json'), formal, read('data/deck-building/catalog.json'));
+  const cards = importer.catalogFrom(read('data/official-image-registry.json'), formal,
+    read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json'));
   const candidates = read(compiledPath).records.filter(record => !baseCompiled.has(record.officialCardId));
   const slotsById = new Map();
   const blockers = [];
