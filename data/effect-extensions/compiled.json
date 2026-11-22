@@ -50098,6 +50098,272 @@
         ],
         "amount": 70
       }
+    },
+    {
+      "officialCardId": "46037",
+      "name": "タロ",
+      "deckName": "タロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46037",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046037_T_TARO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46037.json",
+        "sha256": "77301f5fe58b1880443190bd1241d59b986131b5d1fb4779e4b04c0db84d435f",
+        "htmlSha256": "77301f5fe58b1880443190bd1241d59b986131b5d1fb4779e4b04c0db84d435f",
+        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_PRIZE_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "normal": 4,
+        "threshold": 3,
+        "bonus": 8
+      }
+    },
+    {
+      "officialCardId": "46172",
+      "name": "タロ",
+      "deckName": "タロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46172",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046172_T_TARO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46172.json",
+        "sha256": "922339b6558e96ede16c1b734eac83658f75fe4c6c7145843b2eaa490562e78a",
+        "htmlSha256": "922339b6558e96ede16c1b734eac83658f75fe4c6c7145843b2eaa490562e78a",
+        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_PRIZE_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "normal": 4,
+        "threshold": 3,
+        "bonus": 8
+      }
+    },
+    {
+      "officialCardId": "46179",
+      "name": "タロ",
+      "deckName": "タロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46179",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046179_T_TARO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46179.json",
+        "sha256": "f7220b158022fc9d75ab35b96a22c1507bea46eddb2415987ec3e42dea6b30a9",
+        "htmlSha256": "f7220b158022fc9d75ab35b96a22c1507bea46eddb2415987ec3e42dea6b30a9",
+        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_PRIZE_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "normal": 4,
+        "threshold": 3,
+        "bonus": 8
+      }
+    },
+    {
+      "officialCardId": "46832",
+      "name": "タロ",
+      "deckName": "タロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46832",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046832_T_TARO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46832.json",
+        "sha256": "44fa5d4cd548c17c30fd5bed11758735d30a84eec4be9346290d093c26acfa0f",
+        "htmlSha256": "44fa5d4cd548c17c30fd5bed11758735d30a84eec4be9346290d093c26acfa0f",
+        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_PRIZE_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DRAW"
+        ],
+        "normal": 4,
+        "threshold": 3,
+        "bonus": 8
+      }
+    },
+    {
+      "officialCardId": "46291",
+      "name": "ドラセナ",
+      "deckName": "ドラセナ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46291",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046291_T_DORASENA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46291.json",
+        "sha256": "52d798aacd3ee6d70735f286c177712c46baa5f673f29147677666093db2b848",
+        "htmlSha256": "52d798aacd3ee6d70735f286c177712c46baa5f673f29147677666093db2b848",
+        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_COIN_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "heads": 8,
+        "tails": 3
+      }
+    },
+    {
+      "officialCardId": "46331",
+      "name": "ドラセナ",
+      "deckName": "ドラセナ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46331",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046331_T_DORASENA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46331.json",
+        "sha256": "a915958d7d0f00bc93be224046142f4d15b159eb9dc5a0d20eda90617d5c3a69",
+        "htmlSha256": "a915958d7d0f00bc93be224046142f4d15b159eb9dc5a0d20eda90617d5c3a69",
+        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_COIN_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "heads": 8,
+        "tails": 3
+      }
+    },
+    {
+      "officialCardId": "46613",
+      "name": "ドラセナ",
+      "deckName": "ドラセナ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46613",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046613_T_DORASENA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46613.json",
+        "sha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
+        "htmlSha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
+        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
+      },
+      "mainPlan": {
+        "mechanic": "RETURN_HAND_COIN_DRAW",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "heads": 8,
+        "tails": 3
+      }
     }
   ],
   "blocked": [
