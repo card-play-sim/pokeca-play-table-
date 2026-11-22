@@ -50534,6 +50534,75 @@
           "DRAW"
         ]
       }
+    },
+    {
+      "officialCardId": "49573",
+      "name": "ポケパッド",
+      "deckName": "ポケパッド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49573",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049573_T_POKEPADDO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からポケモン（「ルールを持つポケモン」をのぞく）を1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49573.json",
+        "sha256": "5edb9d78cec9b8132ce89462adc4061bdebd0cdf021b0d26ac7080c9ec21b36e",
+        "htmlSha256": "5edb9d78cec9b8132ce89462adc4061bdebd0cdf021b0d26ac7080c9ec21b36e",
+        "textSha256": "bee9df1588d74a7e1dd938fb7c9a4d4922ed9b573906689b4e126fcfb7073bf9"
+      },
+      "mainPlan": {
+        "mechanic": "POKEPAD",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47288",
+      "name": "ボスの指令",
+      "deckName": "ボスの指令",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47288",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOD/047288_T_BOSUNOSHIREI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47288.json",
+        "sha256": "721b565fec42cdfe3bdc46237d5a6b524080c89571414385559a1c15b456d8ed",
+        "htmlSha256": "721b565fec42cdfe3bdc46237d5a6b524080c89571414385559a1c15b456d8ed",
+        "textSha256": "db192bae6d53f8b3e697474e3525ec22c5a85c4ce34c9053bed124b2e770b732"
+      },
+      "mainPlan": {
+        "mechanic": "BOSS",
+        "commands": [
+          "FORCE_SWITCH"
+        ]
+      }
     }
   ],
   "blocked": [

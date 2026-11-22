@@ -1,0 +1,58 @@
+# Integrate PR #151 official import assets with the two verified battle effect plans.
+name: Stage verified official import print effects
+on:
+  push:
+    branches: [feat/exact-print-effects-49573-47288-20261122]
+    paths:
+      - '.github/workflows/exact-print-effects-stage.yml'
+      - 'tests/exact-print-effects.test.cjs'
+      - 'tests/exact-print-effects-runtime.test.cjs'
+      - 'tests/exact-print-import-to-battle.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/exact-print-effects-49573-47288-20261122
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Collect exact official HTML and SHA evidence for the two imported prints
+        run: python scripts/collect-effect-extensions.py 49573 47288
+      - name: Compile only verified official effects and regenerate the shared runtime and PWA
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Reject guessed identities and validate exact print gameplay plans
+        run: node tests/exact-print-effects.test.cjs
+      - name: Official 60-card recipe import to exact print battle gate
+        run: node tests/exact-print-import-to-battle.test.cjs
+      - name: Real Pokepad search and Boss opponent switch through physical print IDs
+        run: node tests/exact-print-effects-runtime.test.cjs
+      - name: Run existing deck and effect runtime regressions
+        run: |
+          node tests/deck-code-import.test.cjs
+          node tests/reference-effect-runtime-smoke.test.cjs
+          node tests/official-deck-gate.test.cjs
+      - name: Persist reviewed raw official HTML and generated runtime only on the feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/evidence/49573.json data/effect-extensions/evidence/47288.json data/effect-extensions/intake.json data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: connect exact imported Pokepad and legacy Boss printings to verified shared effects'
+            git push origin HEAD:feat/exact-print-effects-49573-47288-20261122
+          fi
