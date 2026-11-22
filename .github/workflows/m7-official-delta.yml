@@ -6,6 +6,7 @@ on:
   pull_request:
     paths:
       - scripts/import_m7_official_delta.py
+      - scripts/audit_m7_print_metadata.py
       - .github/workflows/m7-official-delta.yml
 permissions:
   contents: write
@@ -20,12 +21,14 @@ jobs:
           python-version: '3.12'
       - name: Collect M7 official delta (no catalog writes)
         run: python scripts/import_m7_official_delta.py
+      - name: Inspect printed number and regulation evidence on official card pages
+        run: python scripts/audit_m7_print_metadata.py
       - name: Save identity-only audit to branch (catalog remains untouched)
         if: github.event_name == 'push'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add reports/m7-official-delta.json
+          git add reports/m7-official-delta.json reports/m7-print-metadata-check.json
           if ! git diff --cached --quiet; then
             git commit -m 'audit: preserve official M7 identity delta'
             git push origin HEAD:feat/m7-official-delta-intake
@@ -34,5 +37,7 @@ jobs:
         if: always()
         with:
           name: m7-official-delta
-          path: reports/m7-official-delta.json
+          path: |
+            reports/m7-official-delta.json
+            reports/m7-print-metadata-check.json
           if-no-files-found: warn
