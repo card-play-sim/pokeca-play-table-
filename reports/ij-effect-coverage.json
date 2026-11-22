@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 328,
-      "missing": 1374
+      "connected": 331,
+      "missing": 1371
     },
     "J": {
       "total": 869,
@@ -16,8 +16,8 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 322,
-      "MECHANIC_REQUIRED": 185,
+      "CONNECTED_UNTESTED": 325,
+      "MECHANIC_REQUIRED": 182,
       "EVIDENCE_UNVERIFIED": 14,
       "ENGINE_CONNECTION_REQUIRED": 95,
       "EVIDENCE_MISSING": 1080,
@@ -2524,8 +2524,7 @@
       "name": "ビクティニ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47548.json"
     },
     {
@@ -19053,8 +19052,7 @@
       "name": "ビクティニ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47725.json"
     },
     {
@@ -19406,8 +19404,7 @@
       "name": "ビクティニ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49619.json"
     },
     {
