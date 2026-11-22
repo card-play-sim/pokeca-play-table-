@@ -160,11 +160,12 @@ assert.equal(homeJSON().decks[1].sourceDeckCode,verified.deckCode);
 assert.equal(Object.values(homeJSON().decks[1].cards).reduce((n,k)=>n+k,0)+
  homeJSON().decks[1].blocked.reduce((n,row)=>n+row.count,0),60);
 assert.equal(homeJSON().decks[1].cards['47832']>0,true,'exact official print preserved');
-const preview=homeJSON().decks[1];
+const modifiedHome=homeJSON();
+const preview=modifiedHome.decks[1];
 preview.name='自分で付けた名前';
 preview.coverCardId='47832';
-homeJSON().decks[1]=preview;
-homeStorage.setItem('pokeca.deck-builder.v1',JSON.stringify(homeJSON()));
+modifiedHome.decks[1]=preview;
+homeStorage.setItem('pokeca.deck-builder.v1',JSON.stringify(modifiedHome));
 api.saveBuilderDeck(homeStorage,verified,catalog);
 assert.equal(homeJSON().decks.length,2,'reimport must not duplicate the same deck');
 assert.equal(homeJSON().decks[1].name,'自分で付けた名前');
