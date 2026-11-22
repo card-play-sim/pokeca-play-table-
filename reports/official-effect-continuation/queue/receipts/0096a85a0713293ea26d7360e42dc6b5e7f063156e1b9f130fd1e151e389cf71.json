@@ -1,25 +1,54 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_CDB9BC98B7F21A90:7f8b43ac5d943b3acd4e2b7915c3f1dc4a1173a770a102faabd28614268723d3",
   "taskFingerprint": "7f8b43ac5d943b3acd4e2b7915c3f1dc4a1173a770a102faabd28614268723d3",
-  "executionFingerprint": "fd36f50ff873b9afe85d5139ce28f2d82f47e9078f9341841cbacefb9cfb075b",
-  "attemptId": "1a7cae3f-26f5-4501-ba2b-60486d085521",
-  "status": "BLOCKED",
+  "executionFingerprint": "1174a13ec9adc372b5e7d3efd56e582952c425d5eca0e7af8ce818982a04983a",
+  "attemptId": "f5fbff30-8bd2-458d-9ad4-539819320c81",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46295:ability:きゃくよせ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_TOP_SUPPORTER_SEARCH",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "47171:ability:きゃくよせ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_TOP_SUPPORTER_SEARCH",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "eae56bb9f983719336db0dec63ff2723031d2f90e55bd0cfb8544a612107484e"
+  "checksum": "20fc67d55a30f0fa938a85575aebe56fd781c21e19f388d0b177c2abb101be0c"
 }
