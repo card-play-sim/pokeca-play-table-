@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 297,
-      "missing": 1405
+      "connected": 298,
+      "missing": 1404
     },
     "J": {
       "total": 791,
-      "connected": 100,
-      "missing": 691
+      "connected": 103,
+      "missing": 688
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 291,
-      "MECHANIC_REQUIRED": 203,
+      "CONNECTED_UNTESTED": 292,
+      "MECHANIC_REQUIRED": 202,
       "EVIDENCE_UNVERIFIED": 14,
       "ENGINE_CONNECTION_REQUIRED": 108,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 99,
-      "MECHANIC_REQUIRED": 85,
+      "CONNECTED_UNTESTED": 102,
+      "MECHANIC_REQUIRED": 82,
       "EVIDENCE_UNVERIFIED": 13,
       "EVIDENCE_MISSING": 593,
       "EXECUTION_PASS": 1
@@ -1689,8 +1689,7 @@
       "name": "ヒビキのヒノアラシ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47310.json"
     },
     {
@@ -19883,8 +19882,7 @@
       "name": "ヒトカゲ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50786.json"
     },
     {
@@ -19980,8 +19978,7 @@
       "name": "ポカブ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50798.json"
     },
     {
@@ -20078,8 +20075,7 @@
       "name": "ホゲータ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50810.json"
     },
     {
