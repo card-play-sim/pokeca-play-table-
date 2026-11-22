@@ -113,6 +113,12 @@ function plan(entry,kind){
  match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
  const printed=String(entry.damage).normalize('NFKC');
  if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
+ const repeatCoin=generic.match(/^ウラが出るまでコインを投げ、オモテの数×([1-9][0-9]?)ダメージ(追加)?。$/);
+ if(kind==='ATTACK'&&repeatCoin){
+  const unit=Number(repeatCoin[1]),additional=Boolean(repeatCoin[2]);
+  if(additional?/^\d{1,3}\+$/.test(printed):printed===unit+'×')
+   return {mechanic:'COIN_UNTIL_TAILS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:additional?Number.parseInt(printed,10):0,unit};
+ }
  const counterDamage=generic.match(/^このポケモンにのっているダメカンの数×([1-9][0-9]?)ダメージ(追加)?。$/);
  if(kind==='ATTACK'&&counterDamage){
   const [,multiplier,additional]=counterDamage,perCounter=Number(multiplier);

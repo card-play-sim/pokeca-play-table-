@@ -108,6 +108,10 @@ async def main():
    if m in ('VANILLA_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='COIN_UNTIL_TAILS_DAMAGE':
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
+    assert flips and flips[-1] is False and all(flips[:-1])
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and 'targetInstanceId' in ev['details'] for ev in events)
    if m=='COIN_PARALYZE_ATTACK':
     # An actual RNG result and its immutable reference-command audit are separate
     # COIN_FLIP history entries; count only resolved results as real coin tosses.

@@ -35,4 +35,9 @@ assert.deepEqual(attack(selfMultiply,'20×'),{mechanic:'SELF_COUNTER_DAMAGE',com
 assert.equal(attack(selfBonus,'80'),null);
 assert.equal(attack(selfMultiply,'10×'),null);
 assert.equal(attack(selfMultiply.replace('このポケモン','相手のバトルポケモン'),'20×'),null);
+const repeatCoin = 'ウラが出るまでコインを投げ、オモテの数×20ダメージ';
+assert.deepEqual(attack(repeatCoin+'。','20×'),{mechanic:'COIN_UNTIL_TAILS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:0,unit:20});
+assert.deepEqual(attack(repeatCoin+'追加。','100＋'),{mechanic:'COIN_UNTIL_TAILS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:100,unit:20});
+assert.equal(attack(repeatCoin+'。','30×'),null);
+assert.equal(attack(repeatCoin+'追加。','100'),null);
 console.log('PASS exact official attack matcher rejects near misses');

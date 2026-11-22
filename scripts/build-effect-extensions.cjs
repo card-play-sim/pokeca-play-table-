@@ -9,6 +9,8 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
  const hijIds=new Set(JSON.parse(fs.readFileSync('data/deck-building/catalog.json')).records
   .filter(row=>row.legality==='printed-hij'&&['H','I','J'].includes(row.regulationMark))
   .map(row=>row.officialCardId));
+ const m7Ids=new Set(JSON.parse(fs.readFileSync('data/deck-building/m7-official-image-extension.json')).cards
+  .filter(row=>row.verified&&row.set==='M7').map(row=>row.officialCardId));
  for(const row of intake.records||[]){
   const ident=String(row.officialCardId||'');
   try{
@@ -26,6 +28,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
     if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl)||!body.includes(row.imageSourceUrl.replace('https://www.pokemon-card.com','')))throw Error('IMAGE_REFERENCE_MISMATCH');
     const record=compile({records:[row]}).records[0],effects=row.category==='pokemon'?[...record.attacks,...record.abilities]:[{plan:record.mainPlan}];
     if(effects.some(e=>!e.plan))throw Error('UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN');
+    if(effects.some(e=>e.plan.mechanic==='COIN_UNTIL_TAILS_DAMAGE')&&!hijIds.has(ident)&&!m7Ids.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
     records.push(record);continue;
    }
    const section=body.match(/<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)<\/h2>((?:\s*<p[^>]*>.*?<\/p>)+)/s),categories={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'};

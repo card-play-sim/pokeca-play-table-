@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 312,
-      "missing": 1390
+      "connected": 315,
+      "missing": 1387
     },
     "J": {
       "total": 869,
-      "connected": 107,
-      "missing": 762
+      "connected": 109,
+      "missing": 760
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 306,
-      "MECHANIC_REQUIRED": 188,
+      "CONNECTED_UNTESTED": 309,
+      "MECHANIC_REQUIRED": 185,
       "EVIDENCE_UNVERIFIED": 14,
       "ENGINE_CONNECTION_REQUIRED": 108,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 106,
-      "MECHANIC_REQUIRED": 78,
+      "CONNECTED_UNTESTED": 108,
+      "MECHANIC_REQUIRED": 76,
       "EVIDENCE_UNVERIFIED": 13,
       "EVIDENCE_MISSING": 671,
       "EXECUTION_PASS": 1
@@ -699,8 +699,7 @@
       "name": "ピカチュウ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50645.json"
     },
     {
@@ -1844,8 +1843,7 @@
       "name": "ドロバンコ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47340.json"
     },
     {
@@ -3253,8 +3251,7 @@
       "name": "バルキー",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47756.json"
     },
     {
@@ -19370,8 +19367,7 @@
       "name": "トウホクのピカチュウ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49617.json"
     },
     {
@@ -19570,8 +19566,7 @@
       "name": "ピカチュウ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50301.json"
     },
     {

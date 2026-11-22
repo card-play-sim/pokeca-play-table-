@@ -193,7 +193,7 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -356,6 +356,21 @@ function verifyCase(t, e) {
       assert(replay.dispatch("you", o.action).ok);
       const end = replay.getSnapshot();
       verifyPrintedAttack(start, end, e, base + damage / 10 * perCounter);
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if (e.plan.mechanic === "COIN_UNTIL_TAILS_DAMAGE") {
+    for (const [seed, heads] of [[682, 0], [3, 1], [0, 2]]) {
+      const start = {...before, referenceRngState:seed};
+      const replay = port(start);
+      assert(replay.dispatch("you", o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).map(event => event.details)
+        .filter(step => step?.command === "COIN_FLIP" && typeof step.heads === "boolean");
+      assert.deepEqual(Array.from(flips, step => step.heads), [...Array(heads).fill(true), false]);
+      verifyPrintedAttack(start, end, e, e.plan.base + heads * e.plan.unit);
+      assert.deepEqual(S.identities(start), S.identities(end));
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
     }
