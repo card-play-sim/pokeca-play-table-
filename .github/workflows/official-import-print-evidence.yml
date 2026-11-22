@@ -5,6 +5,10 @@ on:
     paths:
       - 'scripts/audit_official_import_print_images.py'
       - 'data/deck-building/official-import-print-evidence.json'
+      - 'ui/deck-import-page.js'
+      - 'ui/deck-builder.js'
+      - 'ui/deck-code-import.js'
+      - 'scripts/build-pwa-release.cjs'
       - '.github/workflows/official-import-print-evidence.yml'
   workflow_dispatch:
 permissions:
