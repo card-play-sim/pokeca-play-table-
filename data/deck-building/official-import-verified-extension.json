@@ -43,7 +43,13 @@
       "verified": true,
       "pack": "SVOD",
       "number": "017/018",
-      "legality": "archival-out-of-scope",
+      "legality": "official-legacy-reprint-exception",
+      "exceptionEvidence": {
+        "rulePageUrl": "https://www.pokemon-card.com/rules/regulation/",
+        "rulePageSha256": "7641d40165f6744063998adc0c0c770266587ed9722b0db423c768d380a349be",
+        "ruleName": "ボスの指令",
+        "method": "official-standard-older-print-list"
+      },
       "markEvidence": {
         "imageSha256": "6046d5d101db28f03f058876d6d25e71a041446d5dca85b46e74d92b8d47e254",
         "method": "full-official-JPEG-manual-mark-review",
