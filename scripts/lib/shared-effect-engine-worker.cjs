@@ -193,13 +193,22 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
         p.active.energyCards.splice(p.active.energyCards.indexOf(energy), 1);
         p.deck.push(energy);
       }
+  }
+  if (m === "SEARCH_REVEAL_TO_HAND_ATTACK" && e.plan.filter === "basicEnergy") {
+    const player = frame.game.players[0];
+    const attached = player.active.energyCards;
+    const required = new Set(e.cost);
+    const candidates = attached.filter(card => !card.isSpecial)
+      .sort((a, b) => Number(required.has(a.energyType)) - Number(required.has(b.energyType)));
+    for (const card of candidates.slice(0, e.plan.limit))
+      player.deck.push(attached.splice(attached.indexOf(card), 1)[0]);
   }
   if (m === "SELF_COUNTER_DAMAGE") frame.game.players[0].active.damage = 20;
   if (m === "HEAL_SELF_ATTACK")
@@ -351,6 +360,21 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(), end);
     }
   }
+  if (e.plan.mechanic === "COIN_UNTIL_TAILS_DAMAGE") {
+    for (const [seed, heads] of [[682, 0], [3, 1], [0, 2]]) {
+      const start = {...before, referenceRngState:seed};
+      const replay = port(start);
+      assert(replay.dispatch("you", o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).map(event => event.details)
+        .filter(step => step?.command === "COIN_FLIP" && typeof step.heads === "boolean");
+      assert.deepEqual(Array.from(flips, step => step.heads), [...Array(heads).fill(true), false]);
+      verifyPrintedAttack(start, end, e, e.plan.base + heads * e.plan.unit);
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
   if (e.plan.mechanic === "COIN_BONUS_DAMAGE") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
       const start = { ...before, referenceRngState: seed };
@@ -384,6 +408,45 @@ function verifyCase(t, e) {
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
     }
+  }
+  if (e.plan.mechanic === "SEARCH_BASIC_TO_BENCH_ATTACK") {
+    const action = t.action || o.action;
+    const chosen = action.selections.cards;
+    const own = before.players[0];
+    assert(chosen.length > 0 && chosen.length <= Math.min(e.plan.limit, 5 - own.bench.length));
+    for (const id of chosen) {
+      const card = own.deck.find(card => card.id === id);
+      assert(card && E.getReferenceEffectRecord(card).facts.basic);
+      assert(after.players[0].bench.some(card => card.id === id && card.enteredTurn === before.turnNumber));
+      assert(!after.players[0].deck.some(card => card.id === id));
+    }
+    assert(after.history.slice(before.history.length).some(event => event.details?.command === "SHUFFLE_DECK"));
+    const replay = port(before);
+    for (const ids of [[chosen[0], chosen[0]], [own.active.id]]) {
+      assert.equal(replay.dispatch("you", {...action, selections:{cards:ids}}).ok, false);
+      assert.deepEqual(replay.getSnapshot(), before);
+    }
+    assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+  }
+  if (e.plan.mechanic === "SEARCH_REVEAL_TO_HAND_ATTACK") {
+    const action = t.action || o.action;
+    const selected = action.selections.cards;
+    assert(selected.length > 0 && selected.length <= e.plan.limit);
+    for (const id of selected) {
+      const card = before.players[0].deck.find(card => card.id === id);
+      assert(card);
+      if (e.plan.filter === "basicEnergy") assert(card.kind === "energy" && !card.isSpecial);
+      else assert.equal(E.getReferenceEffectRecord(card).category, e.plan.filter);
+      assert(after.players[0].hand.some(card => card.id === id));
+      assert(!after.players[0].deck.some(card => card.id === id));
+    }
+    const steps = after.history.slice(before.history.length).map(event => event.details);
+    assert(steps.some(step => step?.command === "REVEAL" && JSON.stringify(step.cardIds) === JSON.stringify(selected)));
+    assert(steps.some(step => step?.command === "SHUFFLE_DECK"));
+    const replay = port(before);
+    assert.equal(replay.dispatch("you", {...action, selections:{cards:[selected[0], selected[0]]}}).ok, false);
+    assert.deepEqual(replay.getSnapshot(), before);
+    assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
   }
   if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
     const source = before.players[0].active;

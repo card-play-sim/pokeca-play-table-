@@ -99,6 +99,13 @@ function plan(entry,kind){
  match=generic.match(/^自分の番に1回使える。自分の手札が([1-9][0-9]*)枚になるように、山札を引く。$/);
  if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HAND_LIMIT_DRAW_ABILITY',commands:['DRAW'],limit:Number(match[1])};
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
+ match=generic.match(/^自分の山札からたねポケモンを(1枚|2枚まで)選び、ベンチに出す。そして山札を切る。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:match[1]==='1枚'?1:2};
+ match=generic.match(/^自分の山札から(ポケモン|グッズ|サポート|基本エネルギー)を(1枚|2枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0'))){
+  const filter={'ポケモン':'pokemon','グッズ':'item','サポート':'supporter','基本エネルギー':'basicEnergy'}[match[1]];
+  return {mechanic:'SEARCH_REVEAL_TO_HAND_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],filter,limit:match[2]==='1枚'?1:2};
+ }
  // Only exact official attack wording is eligible; other status variations stay BLOCKED.
  if(kind==='ATTACK'&&/^コインを1回投げ、?オモテなら、相手のバトルポケモンをマヒにする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'COIN_PARALYZE_ATTACK',commands:['DAMAGE','COIN_FLIP','STATUS_CONDITION']};
  if(kind==='ATTACK'&&/^このポケモンについているエネルギーを、?すべてトラッシュする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'DISCARD_ALL_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
@@ -106,6 +113,12 @@ function plan(entry,kind){
  match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
  const printed=String(entry.damage).normalize('NFKC');
  if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
+ const repeatCoin=generic.match(/^ウラが出るまでコインを投げ、オモテの数×([1-9][0-9]?)ダメージ(追加)?。$/);
+ if(kind==='ATTACK'&&repeatCoin){
+  const unit=Number(repeatCoin[1]),additional=Boolean(repeatCoin[2]);
+  if(additional?/^\d{1,3}\+$/.test(printed):printed===unit+'×')
+   return {mechanic:'COIN_UNTIL_TAILS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:additional?Number.parseInt(printed,10):0,unit};
+ }
  const counterDamage=generic.match(/^このポケモンにのっているダメカンの数×([1-9][0-9]?)ダメージ(追加)?。$/);
  if(kind==='ATTACK'&&counterDamage){
   const [,multiplier,additional]=counterDamage,perCounter=Number(multiplier);

@@ -108,6 +108,10 @@ async def main():
    if m in ('VANILLA_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='COIN_UNTIL_TAILS_DAMAGE':
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
+    assert flips and flips[-1] is False and all(flips[:-1])
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and 'targetInstanceId' in ev['details'] for ev in events)
    if m=='COIN_PARALYZE_ATTACK':
     # An actual RNG result and its immutable reference-command audit are separate
     # COIN_FLIP history entries; count only resolved results as real coin tosses.
@@ -116,6 +120,20 @@ async def main():
     audit=[entry for entry in flip_entries if entry.get('reference') is True and entry.get('sourceOfficialCardId')==r['officialCardId'] and entry.get('effectId')==f['e']['effectId']]
     assert len(flips)==1 and len(audit)==1, {'print':r['officialCardId'],'flipEntries':flip_entries,'events':events}
     assert (after['players'][1]['active'].get('statusCondition')=='PARALYZED')==flips[0]['heads']
+   if m=='SEARCH_BASIC_TO_BENCH_ATTACK':
+    selected=option['action']['selections']['cards']
+    assert 0<len(selected)<=f['e']['plan']['limit']
+    bench_ids={card['id'] for card in after['players'][0]['bench']}
+    deck_ids={card['id'] for card in after['players'][0]['deck']}
+    assert set(selected)<=bench_ids and set(selected).isdisjoint(deck_ids)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='SEARCH_REVEAL_TO_HAND_ATTACK':
+    selected=option['action']['selections']['cards']
+    assert 0<len(selected)<=f['e']['plan']['limit']
+    assert set(selected)<={card['id'] for card in after['players'][0]['hand']}
+    assert set(selected).isdisjoint(card['id'] for card in after['players'][0]['deck'])
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
     assert before_ids
