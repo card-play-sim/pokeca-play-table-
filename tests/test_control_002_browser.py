@@ -114,6 +114,18 @@ async def main():
   await page.wait_for_function('PokecaMobile.port.getSnapshot().status==="finished"')
   after=await snap();assert after['winner']=='you';assert after['players'][0]['prizes']==0;assert any(c['name']=='ドラメシヤ' for c in after['players'][1]['discard']);await restore(after)
   reports.append({'kind':'attack-knockout-prize','firstTurnAttackDisabled':True,'winner':'you','prizeTaken':True,'discard':True,'saveReloadExact':True})
+  # Pausing the opponent on a saved match survives a page restart.
+  await page.evaluate(FIXTURE,{})
+  await page.locator('#menu-open').tap()
+  await page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True).tap()
+  await page.locator('#end-turn').tap();await page.locator('#confirm-ok').tap()
+  await page.wait_for_function('PokecaMobile.port.getSnapshot().turnPlayer==="ai"')
+  paused=await snap();await restore(paused)
+  await page.locator('#menu-open').tap()
+  await page.get_by_role('button',name='AI自動応答：オフ（タップでオン）',exact=True).wait_for()
+  await page.locator('#sheet-close').tap()
+  assert await snap()==paused
+  reports.append({'kind':'paused-ai-resume','opponentStillPaused':True,'saveReloadExact':True})
   assert not errors,errors
   report={'url':page.url,'physicalAndroidVerified':False,'controlledEffectFixtures':True,'cases':reports,'javascriptErrors':errors}
   (ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/'artifacts/control-002-browser-results.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False),flush=True)
