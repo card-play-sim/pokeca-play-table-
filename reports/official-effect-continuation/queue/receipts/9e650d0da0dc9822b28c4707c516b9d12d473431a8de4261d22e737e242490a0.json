@@ -1,30 +1,62 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_1AF31A722C25BA1E:e920d5053980e3336cbfbf726dde01a5b614cb7206a3df6ab66090542a101c49",
   "taskFingerprint": "e920d5053980e3336cbfbf726dde01a5b614cb7206a3df6ab66090542a101c49",
-  "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
-  "attemptId": "ca3f6837-ec01-4f22-af26-fe195538096d",
-  "status": "BLOCKED",
+  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+  "attemptId": "3323bd17-cca5-42a5-af1c-b4e7ff72f6f2",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46294:attack:げきとうスパーク:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50301:attack:げきとうスパーク:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47756:attack:ボカボカなぐる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "4196d115f3f840e93c59ac7168b7800410ec98246a18afdb243b381147fa5059"
+  "checksum": "ceafe1bb4ef63ad69958bba33d046703ed8f324a075fcf26a7806ab83fce3727"
 }

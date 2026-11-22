@@ -1,30 +1,65 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_304C6D13E53B2176:caec0d9b56216b564ed7f1aa08482869e2d5e915303b29b544cc4904738891af",
   "taskFingerprint": "caec0d9b56216b564ed7f1aa08482869e2d5e915303b29b544cc4904738891af",
-  "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
-  "attemptId": "6a9c8a51-3a9a-475d-a3f0-0f75de48ab49",
-  "status": "BLOCKED",
+  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+  "attemptId": "c073ca55-dfba-4330-9252-9fd203ce97a0",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50786:attack:ひのこ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50798:attack:ひのこ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50810:attack:かえんほうしゃ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "1cd21afb2a9b47d517fb1ec05eddd607fa87b3fe24e69105245ba2816ae2a22d"
+  "checksum": "8ad8a3d508cd33aeb9a0de56e771599502e789c07342ae9120fa416412988688"
 }

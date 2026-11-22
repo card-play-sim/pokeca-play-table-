@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_1E821262A02776E1:88ac50b5d73e3a73201ab5351f5e7474148dad7bddced6f5149c3d69ff8cf69a",
   "taskFingerprint": "88ac50b5d73e3a73201ab5351f5e7474148dad7bddced6f5149c3d69ff8cf69a",
-  "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
-  "attemptId": "88027ce6-b6db-4178-b5ad-587f34598f3d",
+  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+  "attemptId": "f28516d9-60cd-4b7a-8c7d-f07a35ce119b",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,13 +11,39 @@
     "cases": [
       {
         "slot": "46253:attack:ちいさなおつかい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47606:attack:ちからをあつめる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45841:attack:やまあるき:0",
@@ -31,5 +57,5 @@
       }
     ]
   },
-  "checksum": "fb1d8a77d1b1959f9688970419d447e51faa1837c79d8c1bc9c9507801bbd617"
+  "checksum": "db471b8315ade90a34df3b071454581d78dc6fb5055e36140860e8c23bb73eec"
 }
