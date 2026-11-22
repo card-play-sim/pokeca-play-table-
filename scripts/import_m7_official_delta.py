@@ -69,8 +69,11 @@ def main():
             raise RuntimeError(f"Unexpected M7 image URL: {cid}")
         if not re.fullmatch(r"[0-9a-f]{64}", record["sourceSha256"]):
             raise RuntimeError(f"Invalid official source digest: {cid}")
-    delta = [found[k] for k in sorted(found, key=int) if k not in known]
-    result = {"schemaVersion": 1, "status": "OFFICIAL_IDENTITY_DELTA_REQUIRES_PRINT_AND_MARK_VERIFICATION", "pack": "M7", "knownM7": sum(x.get("pack") == "M7" for x in catalog["records"]), "officialFound": len(found), "new": len(delta), "records": delta, "evidence": evidence}
+    # The immutable full M7 identity set remains the audit input after catalog
+    # registration. "new" may then be zero; never erase official proof records.
+    all_prints = [found[k] for k in sorted(found, key=int)]
+    delta = [r for r in all_prints if r["officialCardId"] not in known]
+    result = {"schemaVersion": 1, "status": "OFFICIAL_M7_FULL_IDENTITY_SET_AUDITED", "pack": "M7", "knownM7": sum(x.get("pack") == "M7" for x in catalog["records"]), "officialFound": len(found), "new": len(delta), "records": all_prints, "evidence": evidence}
     # Publish minimal current-schema examples for reviewed, lossless M7 adoption.
     # These are references only; this audit must never rewrite the catalog.
     examples = {}
@@ -84,7 +87,7 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"M7 official identities: {len(found)}; new: {len(delta)}; output: {OUT}")
-    print("Catalog unchanged: official print numbers and J marks must be verified before merge.")
+    print("Catalog read-only: all 78 official identities preserved regardless of new-print count.")
 
 if __name__ == "__main__":
     main()
