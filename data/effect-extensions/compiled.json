@@ -42984,6 +42984,256 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46562",
+      "name": "チラチーノ",
+      "deckName": "チラチーノ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46562",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046562_P_CHIRACHINO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "しっぽでたたく",
+          "cost": [
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-46562-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "チラーミィ",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46562.json",
+        "sha256": "03376e0fed2897c70f1479adb8cfe44a3c40c795ab6af174b892c404a4d24c0b",
+        "htmlSha256": "03376e0fed2897c70f1479adb8cfe44a3c40c795ab6af174b892c404a4d24c0b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46572",
+      "name": "ヨクバリス",
+      "deckName": "ヨクバリス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46572",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046572_P_YOKUBARISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ごうよくテール",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "自分の山札を2枚引く。",
+          "effectId": "reference-46572-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 2
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ホシガリス",
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46572.json",
+        "sha256": "98a843e8af74b4f023bf325addfcd98e9a3dc7a567467b6ad6dd120506d9a037",
+        "htmlSha256": "98a843e8af74b4f023bf325addfcd98e9a3dc7a567467b6ad6dd120506d9a037",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46650",
+      "name": "シアノ",
+      "deckName": "シアノ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46650",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046650_T_SHIANO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「ポケモンex」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46650.json",
+        "sha256": "4c9d3fdee347e636c60d27692378fb45aaa282192837575967b350332bd993da",
+        "htmlSha256": "4c9d3fdee347e636c60d27692378fb45aaa282192837575967b350332bd993da",
+        "textSha256": "07e7803528f79895d11ed64aaf5c15c81220707ad0a31c84f4cd336226dd9ce6"
+      },
+      "mainPlan": {
+        "mechanic": "CYRANO",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
+    },
+    {
+      "officialCardId": "46660",
+      "name": "夜のタンカ",
+      "deckName": "夜のタンカ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46660",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046660_T_YORUNOTANKA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュからポケモンまたは基本エネルギーを1枚選び、相手に見せて、手札に加える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46660.json",
+        "sha256": "e8ced1c39463b81e96b7cc3ad8b6dc6f2fccae94d5f74db1ff8b091444ab3b5a",
+        "htmlSha256": "e8ced1c39463b81e96b7cc3ad8b6dc6f2fccae94d5f74db1ff8b091444ab3b5a",
+        "textSha256": "3a37e8e6fa70f140408a10eeb16ace5a9c6175fb355187d395ce86e2f01b142c"
+      },
+      "mainPlan": {
+        "mechanic": "STRETCHER",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ]
+      }
+    },
+    {
+      "officialCardId": "46694",
+      "name": "アリゲイツ",
+      "deckName": "アリゲイツ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46694",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046694_P_ARIGEITSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぎゃくふんしゃ",
+          "cost": [
+            "水"
+          ],
+          "damage": "30",
+          "text": "このポケモンをベンチポケモンと入れ替える。",
+          "effectId": "reference-46694-attack-0",
+          "plan": {
+            "mechanic": "SWITCH_SELF_ATTACK",
+            "commands": [
+              "SWITCH"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": "ワニノコ",
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46694.json",
+        "sha256": "d84c348e894d9d81d177741c00f21b3b1beb9483c527ee1581659f20f61fc8cc",
+        "htmlSha256": "d84c348e894d9d81d177741c00f21b3b1beb9483c527ee1581659f20f61fc8cc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
