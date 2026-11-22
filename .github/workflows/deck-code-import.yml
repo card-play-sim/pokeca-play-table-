@@ -13,6 +13,7 @@ on:
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'
+      - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
       - 'deck-code-import.html'
@@ -32,6 +33,7 @@ on:
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
       - 'tests/deck-code-import.test.cjs'
+      - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
       - 'deck-builder.html'
       - 'deck-code-import.html'
@@ -46,6 +48,7 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/deck-code-import.test.cjs
+      - run: node tests/deck-blocker-diagnostics.test.cjs
       - run: node tests/imported-deck-match.test.cjs
       - run: node --check ui/deck-builder.js && node --check ui/deck-import-page.js
       - uses: actions/setup-python@v5
