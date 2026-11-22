@@ -83,7 +83,7 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
   row.source?.url === row.officialPageUrl && /^[a-f0-9]{64}$/.test(row.source?.sha256) &&
   row.source?.identityName === row.name && row.source?.identityImageUrl === row.imageSourceUrl &&
   /^[a-f0-9]{64}$/.test(row.markEvidence?.imageSha256) &&
-  new RegExp('^https://www\\\\.pokemon-card\\\\.com/card-search/details\\\\.php/card/'+row.officialCardId+'(?:/|$)').test(row.officialPageUrl) &&
+  row.officialPageUrl === 'https://www.pokemon-card.com/card-search/details.php/card/'+row.officialCardId &&
   /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl) &&
   ['G','H','I','J'].includes(row.regulationMark));
  const classified = new Map(classification.records.map(row => [String(row.officialCardId), row]));
