@@ -6,6 +6,7 @@ Never modify the existing 23,525-image registry, formal DB or old 4,995 catalog 
 """
 from __future__ import annotations
 from copy import deepcopy
+from hashlib import sha256
 from pathlib import Path
 import json
 import re
@@ -21,6 +22,8 @@ CATALOG=ROOT/'data/deck-building/catalog.json'
 REGISTRY=ROOT/'data/official-image-registry.json'
 EXTENSION=ROOT/'data/deck-building/m7-official-image-extension.json'
 EXPECTED_CONTACT_SHEET_SHA='7c7ebcf077844987593d4a26257bb55bfa0252818a6d099a23400d90edc3601a'
+EXPECTED_BASE_CATALOG_SHA='742782b8bd20cdf621663080271af5b332184edb848260f6d41f77fa3f421545'
+EXPECTED_BASE_REGISTRY_SHA='59f39c87e13eecf6d92ad92711a3bd3786b588bb07fd5421fde41f0c986ed9ab'
 SHA=re.compile(r'^[a-f0-9]{64}$')
 VALID_CATEGORIES={'pokemon','goods','support','tool','stadium','energy'}
 HEADINGS={'pokemon':'ポケモン','goods':'グッズ','support':'サポート','tool':'ポケモンのどうぐ','stadium':'スタジアム','energy':'エネルギー'}
@@ -58,11 +61,13 @@ def main():
     require(len(ids)==78 and all(set(p)==ids for p in proofs),'M7_OFFICIAL_ID_JOIN_INCOMPLETE')
     stages_by_id=keyed(stages['verified'])
     require(len(stages_by_id)==73 and set(stages_by_id).issubset(ids),'M7_STAGE_ID_JOIN_MISMATCH')
+    require(sha256(CATALOG.read_bytes()).hexdigest()==EXPECTED_BASE_CATALOG_SHA,'CATALOG_BASELINE_CONTENT_SHA_DRIFT')
     original=read(CATALOG)
     require(len(original['records'])==4995,'CATALOG_BASELINE_CHANGED_REVIEW_REQUIRED')
     require(len(original.get('blocked',[]))==0,'EXISTING_CATALOG_BLOCKED_CHANGED')
     existing=keyed(original['records'])
     require(not(ids & set(existing)),'M7_ALREADY_IN_CLASSIFIED_CATALOG')
+    require(sha256(REGISTRY.read_bytes()).hexdigest()==EXPECTED_BASE_REGISTRY_SHA,'OFFICIAL_IMAGE_REGISTRY_SHA_DRIFT')
     registry=read(REGISTRY)
     require(len(registry['cards'])==23525,'IMAGE_REGISTRY_IMMUTABILITY_BASELINE_CHANGED')
     by_image=keyed(registry['cards'])
