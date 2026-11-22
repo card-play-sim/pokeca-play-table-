@@ -15,6 +15,12 @@
 </header>
 <main class="builder-main">
   <p id="message" role="status"></p>
+  <details id="battle-diagnostics" class="battle-diagnostics" hidden>
+    <summary id="battle-diagnostics-title">対戦できないカードを確認</summary>
+    <ul id="battle-diagnostics-items"></ul>
+    <button type="button" id="copy-battle-diagnostics">診断情報をコピー</button>
+    <textarea id="battle-diagnostics-text" readonly hidden aria-label="対戦できないカードの診断情報"></textarea>
+  </details>
   <section id="editor-screen">
     <label for="deck-name">デッキ名</label><input id="deck-name" maxlength="60" disabled>
     <h2 class="overview-title">デッキ全体</h2>
