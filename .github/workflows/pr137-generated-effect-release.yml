@@ -7,6 +7,7 @@ on:
       - 'engine/reference-effect-plans.cjs'
       - 'scripts/lib/shared-effect-engine-worker.cjs'
       - 'tests/auto-connect-shared-status-energy.test.cjs'
+      - 'sw.js'
       - '.github/workflows/pr137-generated-effect-release.yml'
   workflow_dispatch:
 permissions:
