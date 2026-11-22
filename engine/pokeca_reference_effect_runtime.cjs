@@ -123,6 +123,9 @@ function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);
 function damages(g,actor,mon,amount,{bench=false,ignore=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
  if(amount===0)return 0;
+ // Supporter bonus applies only to attack damage dealt to the opponent's Active Pokemon ex.
+ // Add it BEFORE weakness/resistance and special-energy penalties, and expire by turn number.
+ if(!bench&&find(g,id(mon))?.player.id===other.id&&record(mon)?.name.endsWith('ex')&&own.referenceExDamageBoost?.turn===g.turnNumber)amount+=own.referenceExDamageBoost.amount;
  const penalty=(source.energyCards||[]).reduce((sum,c)=>sum+(record(c)?.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY'?record(c).mainPlan.damagePenalty:0),0);
  if(find(g,id(mon))?.player.id!==actor)amount=Math.max(0,amount-penalty);
  if(!ignore){
@@ -503,6 +506,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'ENERGY_SWITCH':{
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
+  case 'BOOST_EX_DAMAGE_THIS_TURN':p.referenceExDamageBoost={turn:g.turnNumber,amount:plan.amount};break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':{const cards=p.hand.splice(0);p.discard.push(...cards);event(g,actor,'DISCARD',{cardIds:cards.map(id)});draw(g,p,plan.amount);break;}
   case 'RECOVER_TYPED_DISCARD':moveChosen(g,p,'discard',ids('cards'),'hand');break;

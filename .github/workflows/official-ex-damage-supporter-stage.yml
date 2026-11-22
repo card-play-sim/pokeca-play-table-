@@ -1,0 +1,51 @@
+name: Stage official active-ex supporter damage boost
+on:
+  push:
+    branches:
+      - feat/official-ex-damage-supporter-20261122
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'data/effect-extensions/intake.json'
+      - 'tests/official-ex-damage-supporter.test.cjs'
+      - 'tests/official-ex-damage-supporter-runtime.test.cjs'
+      - '.github/workflows/official-ex-damage-supporter-stage.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/official-ex-damage-supporter-20261122
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact printed supporter boundary
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/official-ex-damage-supporter.test.cjs
+      - name: Regenerate immutable official extension, bundled engine and PWA
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify source-matched active-ex damage and persistence in bundled gameplay
+        run: node tests/official-ex-damage-supporter-runtime.test.cjs
+      - name: Save exact generated output to the author branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: regenerate official ex-supporter effects, engine bundle and PWA'
+            git push origin HEAD:feat/official-ex-damage-supporter-20261122
+          fi

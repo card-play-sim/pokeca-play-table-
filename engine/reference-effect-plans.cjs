@@ -139,6 +139,8 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&match&&/^\d+×$/.test(String(entry.damage))&&Number.parseInt(entry.damage,10)===Number(match[2])&&Number.isSafeInteger(Number(match[2])))return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(match[1]),unit:Number(match[2])};
  match=generic.match(/^自分のトラッシュから\[([^\]]+)\]ポケモンと「基本\[([^\]]+)\]エネルギー」を合計([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&match[1]===match[2]&&['草','炎','水','雷','超','闘','悪','鋼','妖','竜','無色'].includes(match[1])&&Number.isSafeInteger(Number(match[3])))return {mechanic:'RECOVER_TYPED_DISCARD',commands:['REVEAL','ADD_TO_HAND'],type:match[1],amount:Number(match[3])};
+ // The active opponent Pokemon ex alone receives this turn's attack bonus, before weakness/resistance.
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。')return {mechanic:'BOOST_EX_DAMAGE_THIS_TURN',commands:['MODIFY_DAMAGE'],amount:40};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
  const p=byText.get(text);return p?{...p,commands:[...p.commands]}:null;
