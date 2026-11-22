@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 309,
-      "missing": 1393
+      "connected": 312,
+      "missing": 1390
     },
     "J": {
       "total": 869,
-      "connected": 104,
-      "missing": 765
+      "connected": 107,
+      "missing": 762
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 303,
-      "MECHANIC_REQUIRED": 191,
+      "CONNECTED_UNTESTED": 306,
+      "MECHANIC_REQUIRED": 188,
       "EVIDENCE_UNVERIFIED": 14,
       "ENGINE_CONNECTION_REQUIRED": 108,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 103,
-      "MECHANIC_REQUIRED": 81,
+      "CONNECTED_UNTESTED": 106,
+      "MECHANIC_REQUIRED": 78,
       "EVIDENCE_UNVERIFIED": 13,
       "EVIDENCE_MISSING": 671,
       "EXECUTION_PASS": 1
@@ -307,8 +307,7 @@
       "name": "ラプラス",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50623.json"
     },
     {
@@ -625,8 +624,7 @@
       "name": "ピカチュウ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50635.json"
     },
     {
@@ -2145,8 +2143,7 @@
       "name": "ロケット団のメリープ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47427.json"
     },
     {
@@ -2787,8 +2784,7 @@
       "name": "キバゴ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47606.json"
     },
     {
@@ -3116,8 +3112,7 @@
       "name": "ミネズミ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47692.json"
     },
     {
@@ -6947,8 +6942,7 @@
       "name": "モクロー",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49643.json"
     },
     {

@@ -201,6 +201,15 @@ function prepare(r, e, kind) {
         p.deck.push(energy);
       }
   }
+  if (m === "SEARCH_REVEAL_TO_HAND_ATTACK" && e.plan.filter === "basicEnergy") {
+    const player = frame.game.players[0];
+    const attached = player.active.energyCards;
+    const required = new Set(e.cost);
+    const candidates = attached.filter(card => !card.isSpecial)
+      .sort((a, b) => Number(required.has(a.energyType)) - Number(required.has(b.energyType)));
+    for (const card of candidates.slice(0, e.plan.limit))
+      player.deck.push(attached.splice(attached.indexOf(card), 1)[0]);
+  }
   if (m === "SELF_COUNTER_DAMAGE") frame.game.players[0].active.damage = 20;
   if (m === "HEAL_SELF_ATTACK")
     frame.game.players[0].active.damage = Math.min(
@@ -402,6 +411,26 @@ function verifyCase(t, e) {
       assert.equal(replay.dispatch("you", {...action, selections:{cards:ids}}).ok, false);
       assert.deepEqual(replay.getSnapshot(), before);
     }
+    assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+  }
+  if (e.plan.mechanic === "SEARCH_REVEAL_TO_HAND_ATTACK") {
+    const action = t.action || o.action;
+    const selected = action.selections.cards;
+    assert(selected.length > 0 && selected.length <= e.plan.limit);
+    for (const id of selected) {
+      const card = before.players[0].deck.find(card => card.id === id);
+      assert(card);
+      if (e.plan.filter === "basicEnergy") assert(card.kind === "energy" && !card.isSpecial);
+      else assert.equal(E.getReferenceEffectRecord(card).category, e.plan.filter);
+      assert(after.players[0].hand.some(card => card.id === id));
+      assert(!after.players[0].deck.some(card => card.id === id));
+    }
+    const steps = after.history.slice(before.history.length).map(event => event.details);
+    assert(steps.some(step => step?.command === "REVEAL" && JSON.stringify(step.cardIds) === JSON.stringify(selected)));
+    assert(steps.some(step => step?.command === "SHUFFLE_DECK"));
+    const replay = port(before);
+    assert.equal(replay.dispatch("you", {...action, selections:{cards:[selected[0], selected[0]]}}).ok, false);
+    assert.deepEqual(replay.getSnapshot(), before);
     assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
   }
   if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {

@@ -123,6 +123,13 @@ async def main():
     deck_ids={card['id'] for card in after['players'][0]['deck']}
     assert set(selected)<=bench_ids and set(selected).isdisjoint(deck_ids)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='SEARCH_REVEAL_TO_HAND_ATTACK':
+    selected=option['action']['selections']['cards']
+    assert 0<len(selected)<=f['e']['plan']['limit']
+    assert set(selected)<={card['id'] for card in after['players'][0]['hand']}
+    assert set(selected).isdisjoint(card['id'] for card in after['players'][0]['deck'])
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
     assert before_ids

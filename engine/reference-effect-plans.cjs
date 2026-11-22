@@ -101,6 +101,11 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
  match=generic.match(/^自分の山札からたねポケモンを(1枚|2枚まで)選び、ベンチに出す。そして山札を切る。$/);
  if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:match[1]==='1枚'?1:2};
+ match=generic.match(/^自分の山札から(ポケモン|グッズ|サポート|基本エネルギー)を(1枚|2枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0'))){
+  const filter={'ポケモン':'pokemon','グッズ':'item','サポート':'supporter','基本エネルギー':'basicEnergy'}[match[1]];
+  return {mechanic:'SEARCH_REVEAL_TO_HAND_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],filter,limit:match[2]==='1枚'?1:2};
+ }
  // Only exact official attack wording is eligible; other status variations stay BLOCKED.
  if(kind==='ATTACK'&&/^コインを1回投げ、?オモテなら、相手のバトルポケモンをマヒにする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'COIN_PARALYZE_ATTACK',commands:['DAMAGE','COIN_FLIP','STATUS_CONDITION']};
  if(kind==='ATTACK'&&/^このポケモンについているエネルギーを、?すべてトラッシュする。$/.test(generic)&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'DISCARD_ALL_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']};
