@@ -22,7 +22,7 @@ def official_stage_field(body):
     top=body.split(anchor,1)[1].split('<h2',1)[0]
     # Match the same stage field as the canonical reference parser; normalize
     # its inline symbols through the canonical text() helper, not loose HTML stripping.
-    fields=re.findall(r'<span class="type">([\\s\\S]*?)</span>',top)
+    fields=re.findall(r'<span class="type">([\s\S]*?)</span>',top)
     if len(fields)!=1:
         return None
     script="const fs=require('node:fs');process.stdout.write(require('./scripts/parse-official-pokemon-energy.cjs').text(fs.readFileSync(0,'utf8')))"
