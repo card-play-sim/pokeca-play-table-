@@ -68,6 +68,15 @@ def main():
             raise RuntimeError(f"Invalid official source digest: {cid}")
     delta = [found[k] for k in sorted(found, key=int) if k not in known]
     result = {"schemaVersion": 1, "status": "OFFICIAL_IDENTITY_DELTA_REQUIRES_PRINT_AND_MARK_VERIFICATION", "pack": "M7", "knownM7": sum(x.get("pack") == "M7" for x in catalog["records"]), "officialFound": len(found), "new": len(delta), "records": delta, "evidence": evidence}
+    # Publish minimal current-schema examples for reviewed, lossless M7 adoption.
+    # These are references only; this audit must never rewrite the catalog.
+    examples = {}
+    for existing in catalog["records"]:
+        group = existing.get("category")
+        if existing.get("regulationMark") == "J" and group not in examples:
+            examples[group] = existing
+    result["jCatalogExamples"] = examples
+    result["catalogCountBefore"] = len(catalog["records"])
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"M7 official identities: {len(found)}; new: {len(delta)}; output: {OUT}")
