@@ -18,7 +18,14 @@ def run(base):
         expect(page.locator("#save")).to_be_enabled(timeout=60000)
         ids=page.evaluate("""async () => {
           const {cards,plans}=await PokecaSavedDecks.loadCatalog();
-          const uncovered=[...cards.values()].filter(card => !plans.has(card.id) && card.category==='goods').slice(0,16);
+          // Pick distinct non-ACE names, so this 16-card fixture is not also
+          // invalid under composition rules (the purpose is effect coverage).
+          const names=new Set(),uncovered=[];
+          for(const card of cards.values()){
+            if(card.category!=='goods'||plans.has(card.id)||card.aceSpec===true||names.has(card.name))continue;
+            uncovered.push(card); names.add(card.name);
+            if(uncovered.length===16)break;
+          }
           if(uncovered.length!==16)throw Error('not enough unconnected official print fixtures');
           const values=Object.fromEntries(uncovered.map(card=>[card.id,1]));
           sessionStorage.setItem('pokeca.deck-draft.v1:new',JSON.stringify({
