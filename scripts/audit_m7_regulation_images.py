@@ -23,7 +23,7 @@ def download(record, number):
     with urllib.request.urlopen(req,timeout=45) as response:
         raw=response.read()
         content_type=response.headers.get('Content-Type','')
-    if not raw.startswith(b'\\xff\\xd8') and 'image' not in content_type:
+    if not raw.startswith(b'\xff\xd8') and 'image' not in content_type:
         raise RuntimeError('OFFICIAL_CARD_IMAGE_RESPONSE_INVALID:'+str(record['officialCardId']))
     im=Image.open(BytesIO(raw)).convert('RGB')
     if im.width<300 or im.height<400:
@@ -71,7 +71,7 @@ def main():
              'verifiedOfficialImages':len(collected),'sourcePack':'M7',
              'catalogUnchanged':True,'verificationMode':'source-bytes-and-official-card-page-identity',
              'records':[x[0] for x in collected]}
-    OUT.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+    OUT.write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('M7_IMAGE_AUDIT '+json.dumps({'images':len(collected),'sheet':str(ARTIFACT),
                    'size':sheet.size,'preview':str(PREVIEW)},ensure_ascii=False),flush=True)
     if os.environ.get('POKECA_EMIT_M7_IMAGE_BASE64')=='1':
