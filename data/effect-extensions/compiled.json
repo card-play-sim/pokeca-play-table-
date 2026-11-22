@@ -52947,6 +52947,594 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "49640",
+      "name": "コフキムシ",
+      "deckName": "コフキムシ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49640",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049640_P_KOFUKIMUSHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじる",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49640-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 40,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49640.json",
+        "sha256": "99baa92d23ca94ff72977ac1f47b92f60535471a04430fc053fcd59cf7aeb4d8",
+        "htmlSha256": "99baa92d23ca94ff72977ac1f47b92f60535471a04430fc053fcd59cf7aeb4d8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49648",
+      "name": "ヤトウモリ",
+      "deckName": "ヤトウモリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49648",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049648_P_YATOUMORI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ほのおのツメ",
+          "cost": [
+            "炎"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49648-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49648.json",
+        "sha256": "7f16108aa5ad4376686f2d8b2863d0c7444d6c89afe9f53cd64ee56457294783",
+        "htmlSha256": "7f16108aa5ad4376686f2d8b2863d0c7444d6c89afe9f53cd64ee56457294783",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49653",
+      "name": "ヒトデマン",
+      "deckName": "ヒトデマン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49653",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049653_P_HITODEMAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みずでっぽう",
+          "cost": [
+            "水"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49653-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49653.json",
+        "sha256": "31589216043c447e2b25b671a3ac719c570d5df48163e2780fc345504ab68871",
+        "htmlSha256": "31589216043c447e2b25b671a3ac719c570d5df48163e2780fc345504ab68871",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49658",
+      "name": "コリンク",
+      "deckName": "コリンク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49658",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049658_P_KORINKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダブルひっかき",
+          "cost": [
+            "雷"
+          ],
+          "damage": "10×",
+          "text": "コインを2回投げ、オモテの数×10ダメージ。",
+          "effectId": "reference-49658-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49658.json",
+        "sha256": "7346af7b3f1c8b79e11dab8bd0f2c9d4dc3db94943e621591a6d983f35d49177",
+        "htmlSha256": "7346af7b3f1c8b79e11dab8bd0f2c9d4dc3db94943e621591a6d983f35d49177",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49665",
+      "name": "ニャスパー",
+      "deckName": "ニャスパー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49665",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049665_P_NIXYASUPA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ひとやすみ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "このポケモンのHPを「20」回復する。",
+          "effectId": "reference-49665-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 20
+          }
+        },
+        {
+          "name": "ふむ",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-49665-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49665.json",
+        "sha256": "17492c7c3cb1ad65c45f1e88f36881ad579166ec1d23d222cbd0a18246d5be2e",
+        "htmlSha256": "17492c7c3cb1ad65c45f1e88f36881ad579166ec1d23d222cbd0a18246d5be2e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49688",
+      "name": "ヒトツキ",
+      "deckName": "ヒトツキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49688",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049688_P_HITOTSUKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "いあいぎり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-49688-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49688.json",
+        "sha256": "6bf829720ad8dfa2c2925c89f14458b38015780c0129d1984be2de761df0fa15",
+        "htmlSha256": "6bf829720ad8dfa2c2925c89f14458b38015780c0129d1984be2de761df0fa15",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49690",
+      "name": "ギルガルド",
+      "deckName": "ギルガルド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49690",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049690_P_GIRUGARUDO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きりさく",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "",
+          "effectId": "reference-49690-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "メタルスラッシュ",
+          "cost": [
+            "鋼",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "230",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-49690-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "ニダンギル",
+        "retreatCost": 3,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49690.json",
+        "sha256": "453cb680ea511e9c48bc050ad2d04477b78c25023f4553979cc73cea03ab1d16",
+        "htmlSha256": "453cb680ea511e9c48bc050ad2d04477b78c25023f4553979cc73cea03ab1d16",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49692",
+      "name": "コラッタ",
+      "deckName": "コラッタ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49692",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049692_P_KORATTA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "とっしん",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-49692-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 40,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49692.json",
+        "sha256": "5295b2c0c4b00bba1a6bc1cd30375e9693e962a0766b396ca48411f611765e3c",
+        "htmlSha256": "5295b2c0c4b00bba1a6bc1cd30375e9693e962a0766b396ca48411f611765e3c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49696",
+      "name": "ホルビー",
+      "deckName": "ホルビー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49696",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049696_P_HORUBI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "けとばす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-49696-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49696.json",
+        "sha256": "2d4980eee315beffa2797398bcf6f929fc4070b6908050d6fb3d8bb5ee3cc58c",
+        "htmlSha256": "2d4980eee315beffa2797398bcf6f929fc4070b6908050d6fb3d8bb5ee3cc58c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
