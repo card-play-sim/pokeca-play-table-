@@ -1,0 +1,57 @@
+name: M7 official delta audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/m7-official-delta-intake]
+    paths:
+      - scripts/import_m7_official_delta.py
+      - scripts/audit_m7_print_metadata.py
+      - scripts/audit_m7_all_print_numbers.py
+      - scripts/audit_m7_pokemon_stages.py
+      - .github/workflows/m7-official-delta.yml
+  pull_request:
+    paths:
+      - scripts/import_m7_official_delta.py
+      - scripts/audit_m7_print_metadata.py
+      - scripts/audit_m7_all_print_numbers.py
+      - scripts/audit_m7_pokemon_stages.py
+      - .github/workflows/m7-official-delta.yml
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect M7 official delta (no catalog writes)
+        run: python scripts/import_m7_official_delta.py
+      - name: Inspect printed number and regulation evidence on official card pages
+        run: python scripts/audit_m7_print_metadata.py
+      - name: Verify 78 official M7 printed numbers and images
+        run: python scripts/audit_m7_all_print_numbers.py
+      - name: Verify Pokemon evolution stages from immutable official pages
+        run: python scripts/audit_m7_pokemon_stages.py
+      - name: Save identity-only audit to branch (catalog remains untouched)
+        if: github.event_name == 'push'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reports/m7-official-delta.json reports/m7-print-metadata-check.json reports/m7-full-print-number-audit.json reports/m7-pokemon-stage-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit: preserve official M7 identity delta'
+            git push origin HEAD:feat/m7-official-delta-intake
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m7-official-delta
+          path: |
+            reports/m7-official-delta.json
+            reports/m7-print-metadata-check.json
+            reports/m7-full-print-number-audit.json
+            reports/m7-pokemon-stage-audit.json
+          if-no-files-found: warn

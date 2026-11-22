@@ -1,0 +1,54 @@
+name: Stage verified M7 J catalog on immutable registry
+on:
+  push:
+    branches: [feat/m7-official-delta-intake]
+    paths:
+      - 'scripts/apply_m7_verified_catalog.py'
+      - 'scripts/report-ij-effect-coverage.cjs'
+      - 'reports/m7-regulation-mark-review.json'
+      - 'ui/deck-code-import.js'
+      - 'scripts/build-pwa-release.cjs'
+      - 'tests/deck-classification.test.cjs'
+      - '.github/workflows/m7-verified-catalog-stage.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stage-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/m7-official-delta-intake
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify all 78 official M7 J image & card identity and safely add sidecar
+        run: python scripts/apply_m7_verified_catalog.py
+      - name: Generate and validate PWA and classified deck search
+        run: |
+          node scripts/build-pwa-release.cjs
+          node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
+          node scripts/build-pwa-release.cjs --check
+          node tests/ij-coverage.test.cjs
+          node tests/ij-effects.test.cjs /tmp/m7-ij-executions.json
+          cmp /tmp/m7-ij-executions.json reports/ij-effect-executions.json
+          node --check ui/deck-code-import.js
+          node --check ui/saved-decks.js
+          node tests/deck-classification.test.cjs
+          node tests/deck-code-import.test.cjs
+          git diff --stat
+      - name: Preserve generated catalog, isolated 78-card image sidecar and service worker
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/deck-building/catalog.json data/deck-building/m7-official-image-extension.json reports/ij-effect-coverage.json sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'catalog: add 78 hash-proven M7 J prints without altering baseline image registry'
+            git push origin HEAD:feat/m7-official-delta-intake
+          fi
