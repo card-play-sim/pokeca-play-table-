@@ -32,7 +32,7 @@ def download(url):
 def official_legacy_exception(name):
     raw = download(STANDARD_RULES)
     official = unescape(raw.decode("utf-8"))
-    plain = re.sub(r"\\s+", " ", re.sub(r"<[^>]+>", " ", official))
+    plain = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", official))
     first = plain.find("過去のシリーズで使用できるカード")
     end = plain.find("同じ効果の過去のシリーズ", first)
     # Only the first explicit standard-format exception list qualifies.
