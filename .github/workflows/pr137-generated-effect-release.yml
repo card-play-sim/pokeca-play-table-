@@ -1,0 +1,47 @@
+name: Refresh PR137 generated effect artifacts
+on:
+  push:
+    branches: [feat/auto-connect-status-energy-batch-20261122]
+    paths:
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'engine/reference-effect-plans.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/auto-connect-shared-status-energy.test.cjs'
+      - '.github/workflows/pr137-generated-effect-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/auto-connect-status-energy-batch-20261122
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate new exact-match mechanics
+        run: |
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check engine/reference-effect-plans.cjs
+          node tests/auto-connect-shared-status-energy.test.cjs
+      - name: Generate official effect extensions and source-synced PWA
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Preserve generated artifacts on the PR branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: regenerate verified shared-effects runtime, extension and PWA'
+            git push origin HEAD:feat/auto-connect-status-energy-batch-20261122
+          fi
