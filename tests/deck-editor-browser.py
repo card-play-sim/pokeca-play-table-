@@ -239,7 +239,8 @@ def run(base):
         page.locator('#save').click()
         expect(page.locator('#status')).to_contain_text('デッキ一覧にも反映しました')
         page.goto(base + "/")
-        card = page.locator('.deck-home-card').filter(has_text='取り込んだデッキ')
+        card = page.locator('.deck-home-card').filter(
+            has=page.locator('a[href*="official-kbvV5V-TEZjLI-dVfVVk"]'))
         expect(card).to_have_count(1)
         expect(card).to_contain_text('60 / 60枚')
         # Reproduce old Android state: official recipe exists in import history,
@@ -251,7 +252,8 @@ def run(base):
             localStorage.removeItem('pokeca.import-to-deck-list.migration.v1');
         }""")
         page.reload()
-        card = page.locator('.deck-home-card').filter(has_text='取り込んだデッキ')
+        card = page.locator('.deck-home-card').filter(
+            has=page.locator('a[href*="official-kbvV5V-TEZjLI-dVfVVk"]'))
         expect(card).to_have_count(1)
         expect(card).to_contain_text('60 / 60枚')
         assert page.evaluate("""() => {
