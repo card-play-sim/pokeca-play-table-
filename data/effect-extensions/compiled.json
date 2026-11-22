@@ -41704,6 +41704,145 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46358",
+      "name": "アチゲータ",
+      "deckName": "アチゲータ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46358",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046358_P_ACHIGETA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブレス",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "コインを1回投げオモテなら、50ダメージ追加。",
+          "effectId": "reference-46358-attack-0",
+          "plan": {
+            "mechanic": "COIN_BONUS_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 50
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": "ホゲータ",
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46358.json",
+        "sha256": "2ff62389c284d1d9b560d17081f2c914d1fbc93be74018539a8f08b1b4e066ca",
+        "htmlSha256": "2ff62389c284d1d9b560d17081f2c914d1fbc93be74018539a8f08b1b4e066ca",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46379",
+      "name": "ゼブライカ",
+      "deckName": "ゼブライカ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46379",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046379_P_ZEBURAIKA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "キック",
+          "cost": [
+            "雷"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46379-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷",
+            "雷",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "",
+          "effectId": "reference-46379-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": "シママ",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46379.json",
+        "sha256": "94daf1c1748353e0abbfae669de48492e4adda189eb38999a1e57bad999256d2",
+        "htmlSha256": "94daf1c1748353e0abbfae669de48492e4adda189eb38999a1e57bad999256d2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

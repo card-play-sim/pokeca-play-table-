@@ -1,0 +1,41 @@
+name: PR136 regenerate official verified effects and PWA
+on:
+  push:
+    branches: [automation/control-013-intake-44956715581]
+    paths:
+      - 'data/effect-extensions/intake.json'
+      - 'sw.js'
+      - '.github/workflows/pr136-generated-effect-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: automation/control-013-intake-44956715581
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact printable candidates and rebuild
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node tests/auto-connect-verified-two-print-scope.test.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Save immutable regenerated assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: release exact verified two-print effect batch'
+            git push origin HEAD:automation/control-013-intake-44956715581
+          fi

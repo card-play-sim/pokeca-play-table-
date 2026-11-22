@@ -1,0 +1,23 @@
+name: Verify PR136 official print scope
+on:
+  push:
+    branches: [automation/control-013-intake-44956715581]
+    paths:
+      - 'tests/auto-connect-verified-two-print-scope.test.cjs'
+      - '.github/workflows/pr136-verified-intake-scope.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tests/auto-connect-verified-two-print-scope.test.cjs'
+      - '.github/workflows/pr136-verified-intake-scope.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/auto-connect-verified-two-print-scope.test.cjs
