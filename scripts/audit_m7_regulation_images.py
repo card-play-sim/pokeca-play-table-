@@ -22,10 +22,12 @@ def download(record, number):
     req=urllib.request.Request(url,headers={'User-Agent':'PokecaCatalogAudit/1.0'})
     with urllib.request.urlopen(req,timeout=45) as response:
         raw=response.read()
-        content_type=response.headers.get('Content-Type','')
-    if not raw.startswith(b'\xff\xd8') and 'image' not in content_type:
-        raise RuntimeError('OFFICIAL_CARD_IMAGE_RESPONSE_INVALID:'+str(record['officialCardId']))
-    im=Image.open(BytesIO(raw)).convert('RGB')
+    if not raw.startswith(b'\xff\xd8'):
+        raise RuntimeError('OFFICIAL_CARD_IMAGE_NOT_JPEG:'+str(record['officialCardId']))
+    with Image.open(BytesIO(raw)) as original:
+        if original.format != 'JPEG':
+            raise RuntimeError('OFFICIAL_CARD_IMAGE_FORMAT_MISMATCH:'+str(record['officialCardId']))
+        im=original.convert('RGB')
     if im.width<300 or im.height<400:
         raise RuntimeError('OFFICIAL_IMAGE_TOO_SMALL:'+str(record['officialCardId']))
     n=number['number'].split('/')[0]
