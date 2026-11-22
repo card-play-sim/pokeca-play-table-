@@ -1,5 +1,12 @@
 name: Incremental official effect intake
 on:
+  # Run the repaired pipeline immediately after the recovery PR lands on main.
+  # Normal daily schedule remains; checkpoint branches never trigger this push.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/continue-official-effects.yml'
+      - 'scripts/list-card-auto-connect-ids.cjs'
   workflow_dispatch:
     inputs:
       limit:
