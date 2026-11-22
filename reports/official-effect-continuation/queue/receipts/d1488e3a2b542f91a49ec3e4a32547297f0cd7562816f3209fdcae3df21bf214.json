@@ -1,30 +1,62 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_10A0C609F007BCA6:b23bd6cab09c470f26e52d248a04062f151c18b7a097c275c90a84dd9d19fbc1",
   "taskFingerprint": "b23bd6cab09c470f26e52d248a04062f151c18b7a097c275c90a84dd9d19fbc1",
-  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
-  "attemptId": "0196bf8c-cb76-4da5-b74a-188ec8cadd94",
-  "status": "BLOCKED",
+  "executionFingerprint": "fd36f50ff873b9afe85d5139ce28f2d82f47e9078f9341841cbacefb9cfb075b",
+  "attemptId": "b23417ee-9524-46ba-a9e3-645bd2cb42b4",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45463:supporter:ピクニックガール:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_DRAW_CARDS",
+        "commands": [
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45487:supporter:ピクニックガール:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_DRAW_CARDS",
+        "commands": [
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45512:supporter:ピクニックガール:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_DRAW_CARDS",
+        "commands": [
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "f963f3633b865907938eb48a2123797acb039bb96ae0076ed234af74176d1bff"
+  "checksum": "696ed8badf573bfba2715fc5b8a942812f8e85e2f452c68f40b437a4b0720595"
 }
