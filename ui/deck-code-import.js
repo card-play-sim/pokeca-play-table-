@@ -74,9 +74,10 @@ function parseHtml(html, code) {
  }
  return parseFields(values, code);
 }
-function catalogFrom(registry, formal, classification = {records:[]}) {
+function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}) {
  const classified = new Map(classification.records.map(row => [String(row.officialCardId), row]));
- const rows = Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {});
+ const rows = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
+  ...(Array.isArray(imageExtension.cards) ? imageExtension.cards : [])];
  const formalById = new Map((Array.isArray(formal.records) ? formal.records : Object.values(formal.records || {}))
   .map(row => [String(row.officialCardId), row]));
  const duplicates = new Set();
@@ -120,11 +121,11 @@ async function loadCatalog() {
   if (!response.ok) throw Error('カード台帳を読み込めませんでした');
   return response.json();
  };
- const [registry, formal, classification] = await Promise.all([
+ const [registry, formal, classification, m7ImageExtension] = await Promise.all([
   read('data/official-image-registry.json'), read('data/reference-effects/catalog.json'),
-  read('data/deck-building/catalog.json')
+  read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json')
  ]);
- const cards = catalogFrom(registry, formal, classification);
+ const cards = catalogFrom(registry, formal, classification, m7ImageExtension);
  if (!cards.size) throw Error('照合可能なカードがありません');
  return cards;
 }
