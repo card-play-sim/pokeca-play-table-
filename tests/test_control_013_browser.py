@@ -110,7 +110,7 @@ async def main():
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='COIN_PARALYZE_ATTACK':
     flips=[ev.get('details',{}) for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP']
-    assert len(flips)==1 and isinstance(flips[0].get('heads'),bool)
+    assert len(flips)==1 and isinstance(flips[0].get('heads'),bool), {'print':r['officialCardId'],'effectId':f['e'].get('effectId'),'flipEvents':flips,'events':events,'preview':before.get('referenceEffectPreview'),'beforeStatus':before['players'][0]['active'].get('statusCondition'),'afterStatus':after['players'][0]['active'].get('statusCondition'),'beforeRng':before.get('referenceRngState'),'afterRng':after.get('referenceRngState')}
     assert (after['players'][1]['active'].get('statusCondition')=='PARALYZED')==flips[0]['heads']
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
