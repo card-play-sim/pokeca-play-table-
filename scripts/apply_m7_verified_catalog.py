@@ -61,12 +61,14 @@ def main():
     require(len(ids)==78 and all(set(p)==ids for p in proofs),'M7_OFFICIAL_ID_JOIN_INCOMPLETE')
     stages_by_id=keyed(stages['verified'])
     require(len(stages_by_id)==73 and set(stages_by_id).issubset(ids),'M7_STAGE_ID_JOIN_MISMATCH')
-    require(sha256(CATALOG.read_bytes()).hexdigest()==EXPECTED_BASE_CATALOG_SHA,'CATALOG_BASELINE_CONTENT_SHA_DRIFT')
     original=read(CATALOG)
-    require(len(original['records'])==4995,'CATALOG_BASELINE_CHANGED_REVIEW_REQUIRED')
+    already_staged=(len(original['records'])==5073 and EXTENSION.exists())
+    if not already_staged:
+        require(sha256(CATALOG.read_bytes()).hexdigest()==EXPECTED_BASE_CATALOG_SHA,'CATALOG_BASELINE_CONTENT_SHA_DRIFT')
+        require(len(original['records'])==4995,'CATALOG_BASELINE_CHANGED_REVIEW_REQUIRED')
     require(len(original.get('blocked',[]))==0,'EXISTING_CATALOG_BLOCKED_CHANGED')
-    existing=keyed(original['records'])
-    require(not(ids & set(existing)),'M7_ALREADY_IN_CLASSIFIED_CATALOG')
+    existing=keyed(original['records'][:4995])
+    require(not(ids & set(existing)),'M7_OFFICIAL_PRINT_COLLIDES_WITH_LEGACY')
     require(sha256(REGISTRY.read_bytes()).hexdigest()==EXPECTED_BASE_REGISTRY_SHA,'OFFICIAL_IMAGE_REGISTRY_SHA_DRIFT')
     registry=read(REGISTRY)
     require(len(registry['cards'])==23525,'IMAGE_REGISTRY_IMMUTABILITY_BASELINE_CHANGED')
@@ -128,13 +130,18 @@ def main():
         else:
             sidecar.append(image_record)
     require(len(additions)==78,'M7_INCOMPLETE_78_ADD')
-    before=deepcopy(original['records'])
-    original['records'].extend(additions)
-    require(original['records'][:4995]==before and len(original['records'])==5073,
-            'EXISTING_CATALOG_ROW_MUTATION_OR_NEW_TOTAL_MISMATCH')
-    write(CATALOG,original)
-    write(EXTENSION,{'schemaVersion':1,'source':'official-M7-exact-visual-J-review',
-        'catalogBaselineCount':4995,'sourcePack':'M7','cards':sidecar})
+    extension={'schemaVersion':1,'source':'official-M7-exact-visual-J-review',
+        'catalogBaselineCount':4995,'sourcePack':'M7','cards':sidecar}
+    if already_staged:
+        require(original['records'][4995:]==additions,'STAGED_M7_OFFICIAL_PROOFS_DRIFT')
+        require(read(EXTENSION)==extension,'STAGED_M7_IMAGE_SIDECAR_DRIFT')
+    else:
+        before=deepcopy(original['records'])
+        original['records'].extend(additions)
+        require(original['records'][:4995]==before and len(original['records'])==5073,
+                'EXISTING_CATALOG_ROW_MUTATION_OR_NEW_TOTAL_MISMATCH')
+        write(CATALOG,original)
+        write(EXTENSION,extension)
     print(json.dumps({'result':'PASS_M7_EXACT_OFFICIAL_78',
         'preservedBaselineCatalog':4995,'totalClassified':len(original['records']),
         'newM7':len(additions),'imageRegistryPreserved':len(by_image),
