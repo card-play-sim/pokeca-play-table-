@@ -18,7 +18,7 @@ def main():
  records={r['officialCardId']:r for r in prior['records']};blocked={r['officialCardId']:r for r in prior['blocked']}
  base=json.loads((ROOT/'data/reference-effects/catalog.json').read_text());ext=json.loads((ROOT/'data/effect-extensions/intake.json').read_text());adopted={r['officialCardId'] for r in base['records']+ext['records']}
  ids=json.loads(Path(a.ids).read_text()) if a.ids else [r['officialCardId'] for r in json.loads((ROOT/'data/official-image-registry.json').read_text())['cards']]
- ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 4<=len(i)<=8 for i in ids)
+ ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 1<=len(i)<=8 and i[0]!='0' for i in ids)
  pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked or (a.retry_transient and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' and blocked[i].get('attempts',1)<2))][:a.limit]
  transient_retries=sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending)
  def collect(i):

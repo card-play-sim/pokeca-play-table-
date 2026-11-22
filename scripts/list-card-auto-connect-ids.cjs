@@ -3,22 +3,41 @@
 // the entire automatic intake queue. I/J are the priority battle scope; H is last.
 const fs = require('node:fs');
 const read = path => JSON.parse(fs.readFileSync(path,'utf8'));
-const priority = {J:0,I:1,H:2};
+const priority = {J:1,I:2,H:3};
+const basicName = /^基本[草炎水雷超闘悪鋼]エネルギー$/;
+// The official standard rules explicitly permit basic-energy print exceptions.
+// Require the same independently catalogued official-print identity that the
+// deck-builder uses; never infer an arbitrary old card from a shared name.
+function verifiedBasicException(row) {
+  const source = row.source;
+  return row.legality === 'official-basic-energy-exception' &&
+    row.category === 'energy' && row.basicEnergy === true &&
+    source?.kind === 'official-filtered-search' &&
+    source.heading === '基本エネルギー' &&
+    /^[a-f0-9]{64}$/.test(source.sha256 || '') &&
+    /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(source.identityImageUrl || '') &&
+    basicName.test(source.identityName || '');
+}
 function selectIds(catalog,connected) {
   const ids=[],invalid=[],seen=new Set();
   const rows=Array.isArray(catalog.records)?catalog.records:[];
   for(const row of rows) {
-    if(row.legality!=='printed-hij'||!Object.hasOwn(priority,row.regulationMark))continue;
+    const basicException = verifiedBasicException(row);
+    if(!basicException && !(row.legality === 'printed-hij' &&
+      Object.hasOwn(priority,row.regulationMark)))continue;
     const id=String(row.officialCardId??'');
-    if(!/^[1-9][0-9]{3,7}$/.test(id)) {
+    // Some authentic legacy basic Energy cards have 1-3 digit official IDs.
+    // Other H/I/J prints retain the stricter 4-8 digit intake identity boundary.
+    const format = basicException ? /^[1-9][0-9]{0,7}$/ : /^[1-9][0-9]{3,7}$/;
+    if(!format.test(id)) {
       invalid.push({officialCardId:id,regulationMark:row.regulationMark});
       continue;
     }
     if(connected.has(id)||seen.has(id))continue;
     seen.add(id);
-    ids.push({id,mark:row.regulationMark});
+    ids.push({id,rank:basicException ? 0 : priority[row.regulationMark]});
   }
-  ids.sort((a,b)=>priority[a.mark]-priority[b.mark]||Number(a.id)-Number(b.id));
+  ids.sort((a,b)=>a.rank-b.rank||(a.rank===0 ? Number(b.id)-Number(a.id) : Number(a.id)-Number(b.id)));
   return {ids:ids.map(row=>row.id),invalid};
 }
 if(require.main===module) {
@@ -29,6 +48,6 @@ if(require.main===module) {
   if(!process.argv[2])throw Error('OUTPUT_FILE_REQUIRED');
   fs.writeFileSync(process.argv[2],JSON.stringify(ids)+'\n');
   if(invalid.length)console.warn('Excluded invalid official-print IDs from intake input: '+JSON.stringify(invalid.slice(0,25))+' (total '+invalid.length+')');
-  console.log('Battle intake queue: '+ids.length+' verified-format IDs; J/I before H.');
+  console.log('Battle intake queue: '+ids.length+' verified-format IDs; official basic-energy exceptions, then J/I/H.');
 }
-module.exports={selectIds};
+module.exports={selectIds,verifiedBasicException};

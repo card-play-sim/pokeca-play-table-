@@ -29,6 +29,7 @@ jobs:
           node tests/intake-checkpoint-recovery-contract.test.cjs
           node tests/card-auto-connect.test.cjs
           node tests/auto-connect-workflow-recovery.test.cjs
+          node tests/bulk-basic-energy-intake.test.cjs
           node tests/control-013-continuation.test.cjs
           node tests/control-014-shared-effects.test.cjs
           node tests/control-014-official-parser.test.cjs
