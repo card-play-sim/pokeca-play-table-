@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_7AC2D74318131EC3:56c57c3d4f2d2d50068fbaea41f339d2b1bf73661611a4a60d836269afd96569",
   "taskFingerprint": "56c57c3d4f2d2d50068fbaea41f339d2b1bf73661611a4a60d836269afd96569",
-  "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
-  "attemptId": "5d497610-5301-41a2-9679-0d8b8c3d12a2",
+  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+  "attemptId": "e58fceb5-21c8-40ff-af0c-59b8665c4fbb",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,48 +11,156 @@
     "cases": [
       {
         "slot": "48482:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "49593:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46254:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46507:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47052:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47226:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47568:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47745:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47811:attack:なかまをよぶ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+        "commands": [
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45999:attack:じんけいをくむ:0",
@@ -61,5 +169,5 @@
       }
     ]
   },
-  "checksum": "6007fa9ba7272c6d497153e564f453e4c148686b8cec390e465167a7cc8d5ea1"
+  "checksum": "0d3b0fb2df0d4e1e15c5611d3a76589570c33f33b89952fa96173d36375c8b2b"
 }

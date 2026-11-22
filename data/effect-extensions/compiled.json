@@ -1953,40 +1953,6 @@
       }
     },
     {
-      "officialCardId": "47731",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47731",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047731_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47731.json",
-        "sha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
-        "htmlSha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
-      }
-    },
-    {
       "officialCardId": "47732",
       "name": "ポケモンセンターのお姉さん",
       "deckName": "ポケモンセンターのお姉さん",
@@ -48083,19 +48049,1378 @@
       "mainPlan": null
     },
     {
-      "officialCardId": "46597",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
+      "officialCardId": "47940",
+      "name": "エモンガ",
+      "deckName": "エモンガ",
       "set": "OFFICIAL_PAGE_REFERENCE",
       "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46597",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046597_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47940",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047940_P_EMONGA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "なかまをよぶ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを2枚まで選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-47940-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 2
+          }
+        },
+        {
+          "name": "バチバチ",
+          "cost": [
+            "雷"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-47940-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 0,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47940.json",
+        "sha256": "c53f85b1ba2c3e0d0ac52e86862058f76a844b0e3a999cc598f549a6456d1d5d",
+        "htmlSha256": "c53f85b1ba2c3e0d0ac52e86862058f76a844b0e3a999cc598f549a6456d1d5d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47959",
+      "name": "イシズマイ",
+      "deckName": "イシズマイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47959",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047959_P_ISHIZUMAI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じたばた",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ。",
+          "effectId": "reference-47959-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 10
+          }
+        },
+        {
+          "name": "ツメをたてる",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-47959-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47959.json",
+        "sha256": "f4cba90d3f3a2fc48a232cf1ab6c49b98466a12275e860db801f7bcd06411258",
+        "htmlSha256": "f4cba90d3f3a2fc48a232cf1ab6c49b98466a12275e860db801f7bcd06411258",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47974",
+      "name": "キバゴ",
+      "deckName": "キバゴ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47974",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047974_P_KIBAGO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちからをあつめる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-47974-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "basicEnergy",
+            "limit": 2
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47974.json",
+        "sha256": "a6958baf345e8ee9eeca629ea7ab5b71a1b59875f229932784a4b2373d05a6db",
+        "htmlSha256": "a6958baf345e8ee9eeca629ea7ab5b71a1b59875f229932784a4b2373d05a6db",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48063",
+      "name": "ミネズミ",
+      "deckName": "ミネズミ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48063",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048063_P_MINEZUMI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょうたつ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からグッズを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48063-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "item",
+            "limit": 1
+          }
+        },
+        {
+          "name": "かじる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-48063-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48063.json",
+        "sha256": "d5335a9cc9420fd237670d08117fe3442fef2eeab6c6f39b42d807c84414da5f",
+        "htmlSha256": "d5335a9cc9420fd237670d08117fe3442fef2eeab6c6f39b42d807c84414da5f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48290",
+      "name": "ミミッキュ",
+      "deckName": "ミミッキュ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48290",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048290_P_MIMIKKIXYU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "なかまをよぶ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを1枚選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-48290-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 1
+          }
+        },
+        {
+          "name": "ひっかく",
+          "cost": [
+            "超"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48290-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48290.json",
+        "sha256": "a45186aaeb1d90d2cd6a6c19cda02504b222482e8705037442498dd2b9f20fb8",
+        "htmlSha256": "a45186aaeb1d90d2cd6a6c19cda02504b222482e8705037442498dd2b9f20fb8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48359",
+      "name": "カルボウ",
+      "deckName": "カルボウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48359",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048359_P_KARUBOU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちからをあつめる",
+          "cost": [
+            "炎"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48359-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "basicEnergy",
+            "limit": 2
+          }
+        },
+        {
+          "name": "チョップ",
+          "cost": [
+            "炎"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-48359-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48359.json",
+        "sha256": "e21c72c3e7fb936be2fecda2f6cf9546287cf52e980934b71c8418b397610881",
+        "htmlSha256": "e21c72c3e7fb936be2fecda2f6cf9546287cf52e980934b71c8418b397610881",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48367",
+      "name": "ポッチャマ",
+      "deckName": "ポッチャマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48367",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048367_P_POTCHIXYAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フレンドコール",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48367-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "supporter",
+            "limit": 1
+          }
+        },
+        {
+          "name": "たいあたり",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48367-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48367.json",
+        "sha256": "c4b663a5e0bef0fa8b62295766e9e053ad95cf061cf55bffb8bad483394755b4",
+        "htmlSha256": "c4b663a5e0bef0fa8b62295766e9e053ad95cf061cf55bffb8bad483394755b4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48396",
+      "name": "エレズン",
+      "deckName": "エレズン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48396",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048396_P_EREZUN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "なかまをよぶ",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを2枚まで選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-48396-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 2
+          }
+        },
+        {
+          "name": "やんちゃげり",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48396-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48396.json",
+        "sha256": "6e5fd2fa055627e7051cd1e748f194c210fd2d705692ba1e37a659d9c35b2233",
+        "htmlSha256": "6e5fd2fa055627e7051cd1e748f194c210fd2d705692ba1e37a659d9c35b2233",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48401",
+      "name": "トゲデマル",
+      "deckName": "トゲデマル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48401",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048401_P_TOGEDEMARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ともだちをさがす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48401-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "pokemon",
+            "limit": 1
+          }
+        },
+        {
+          "name": "かじる",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-48401-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48401.json",
+        "sha256": "26e6c52d7e9aff0f0e524cc8d3ff632e096edb4e39fbffa4b9847a73c4f6cb2d",
+        "htmlSha256": "26e6c52d7e9aff0f0e524cc8d3ff632e096edb4e39fbffa4b9847a73c4f6cb2d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48404",
+      "name": "プリン",
+      "deckName": "プリン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48404",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048404_P_PURIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たまころがり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "ウラが出るまでコインを投げ、オモテの数×20ダメージ。",
+          "effectId": "reference-48404-attack-0",
+          "plan": {
+            "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "base": 0,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48404.json",
+        "sha256": "6be98a38b0e752bf34956872da6b6a8ae54315fe48e0c6fa469f8f9175515f3c",
+        "htmlSha256": "6be98a38b0e752bf34956872da6b6a8ae54315fe48e0c6fa469f8f9175515f3c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48489",
+      "name": "カルボウ",
+      "deckName": "カルボウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48489",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048489_P_KARUBOU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちからをあつめる",
+          "cost": [
+            "炎"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48489-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "basicEnergy",
+            "limit": 2
+          }
+        },
+        {
+          "name": "チョップ",
+          "cost": [
+            "炎"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-48489-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48489.json",
+        "sha256": "f57571f92af8e05c0e282224c2abe5c77713f3a7e184c80313141ac0fced52a1",
+        "htmlSha256": "f57571f92af8e05c0e282224c2abe5c77713f3a7e184c80313141ac0fced52a1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48491",
+      "name": "ポッチャマ",
+      "deckName": "ポッチャマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48491",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048491_P_POTCHIXYAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フレンドコール",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48491-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "supporter",
+            "limit": 1
+          }
+        },
+        {
+          "name": "たいあたり",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48491-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48491.json",
+        "sha256": "ec536eb2128c5d6732607214768b8ce71895894754332051f3d4623361ec8594",
+        "htmlSha256": "ec536eb2128c5d6732607214768b8ce71895894754332051f3d4623361ec8594",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48496",
+      "name": "トゲデマル",
+      "deckName": "トゲデマル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48496",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048496_P_TOGEDEMARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ともだちをさがす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48496-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "pokemon",
+            "limit": 1
+          }
+        },
+        {
+          "name": "かじる",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-48496-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48496.json",
+        "sha256": "895b381a7b18cf89ccb3e9c68c5946e5e7886c04a3601c910655fb1cef2a9503",
+        "htmlSha256": "895b381a7b18cf89ccb3e9c68c5946e5e7886c04a3601c910655fb1cef2a9503",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45452",
+      "name": "ハカドッグex",
+      "deckName": "ハカドッグex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45452",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVI/045452_P_HAKADOGGUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ホラーファング",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "ウラが出るまでコインを投げ、オモテの数×20ダメージ追加。",
+          "effectId": "reference-45452-attack-0",
+          "plan": {
+            "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "base": 100,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "ボチ",
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45452.json",
+        "sha256": "7077c490f3867e024630c253edd048e3740cbeb32fa2e827733e76569c70d6e0",
+        "htmlSha256": "7077c490f3867e024630c253edd048e3740cbeb32fa2e827733e76569c70d6e0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45711",
+      "name": "ランプラー",
+      "deckName": "ランプラー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45711",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045711_P_RANPURA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ひだね",
+          "cost": [
+            "炎"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-45711-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "もえつくす",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "このポケモンについているエネルギーを、すべてトラッシュする。",
+          "effectId": "reference-45711-attack-1",
+          "plan": {
+            "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": "ヒトモシ",
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45711.json",
+        "sha256": "af534613fdcfe69ba6f6ae927693913cb6ab5c813687a7f2869fee04867f2795",
+        "htmlSha256": "af534613fdcfe69ba6f6ae927693913cb6ab5c813687a7f2869fee04867f2795",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46495",
+      "name": "アローラ ゴローニャ",
+      "deckName": "アローラ ゴローニャ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46495",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046495_P_ARORAGORONIXYA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "でんじカタパルト",
+          "cost": [
+            "雷"
+          ],
+          "damage": "70×",
+          "text": "ウラが出るまでコインを投げ、オモテの数×70ダメージ。",
+          "effectId": "reference-46495-attack-0",
+          "plan": {
+            "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "base": 0,
+            "unit": 70
+          }
+        },
+        {
+          "name": "メガトンフォール",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "このポケモンにも40ダメージ。",
+          "effectId": "reference-46495-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 40
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "アローラ ゴローン",
+        "retreatCost": 4,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46495.json",
+        "sha256": "8a85774221cd93f455ae80dfcc7f16cfdd72719a52357c6cc24c8c8cf0565cf6",
+        "htmlSha256": "8a85774221cd93f455ae80dfcc7f16cfdd72719a52357c6cc24c8c8cf0565cf6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46780",
+      "name": "ドロンチ",
+      "deckName": "ドロンチ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46780",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046780_P_DORONCHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リューズヘッド",
+          "cost": [
+            "炎",
+            "超"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-46780-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ていさつしれい",
+          "text": "自分の番に1回使える。自分の山札を上から2枚見て、どちらか1枚を選び、手札に加える。残りのカードは、山札の下にもどす。",
+          "effectId": "reference-46780-ability-0",
+          "plan": {
+            "mechanic": "RECON",
+            "commands": [
+              "SEARCH_DECK",
+              "ADD_TO_HAND",
+              "RETURN_TO_DECK"
+            ]
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": "ドラメシヤ",
+        "retreatCost": 1,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46780.json",
+        "sha256": "ce7906e147842b488769f9deb8ceb95d4d7666eaf2587455bf6ce85a501dc13b",
+        "htmlSha256": "ce7906e147842b488769f9deb8ceb95d4d7666eaf2587455bf6ce85a501dc13b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46781",
+      "name": "ドラパルトex",
+      "deckName": "ドラパルトex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46781",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046781_P_DORAPARUTOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットヘッド",
+          "cost": [
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-46781-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ファントムダイブ",
+          "cost": [
+            "炎",
+            "超"
+          ],
+          "damage": "200",
+          "text": "ダメカン6個を、相手のベンチポケモンに好きなようにのせる。",
+          "effectId": "reference-46781-attack-1",
+          "plan": {
+            "mechanic": "PHANTOM",
+            "commands": [
+              "DAMAGE",
+              "PLACE_DAMAGE_COUNTERS"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "ドロンチ",
+        "retreatCost": 1,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46781.json",
+        "sha256": "c21b1d72ecbfd465b96da6e69cc85542cb3e2d3e70bf1ab1a2d53ac1172deb87",
+        "htmlSha256": "c21b1d72ecbfd465b96da6e69cc85542cb3e2d3e70bf1ab1a2d53ac1172deb87",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46808",
+      "name": "なかよしポフィン",
+      "deckName": "なかよしポフィン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46808",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046808_T_NAKAYOSHIPOFUIN.jpg",
+      "category": "item",
       "deckPrintAdopted": false,
       "attacks": [],
       "abilities": [],
       "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "text": "自分の山札から、HPが「70」以下のたねポケモンを2枚まで選び、ベンチに出す。そして山札を切る。",
       "facts": {
         "prizeCount": 1,
         "rulePokemon": false,
@@ -48103,33 +49428,34 @@
       },
       "source": {
         "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46597.json",
-        "sha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
-        "htmlSha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+        "path": "data/effect-extensions/evidence/46808.json",
+        "sha256": "a6fea67a14ece322cbe75fbf76855a76c777dba97b12af4c2d2a326d5b200bd9",
+        "htmlSha256": "a6fea67a14ece322cbe75fbf76855a76c777dba97b12af4c2d2a326d5b200bd9",
+        "textSha256": "15a79ea0f3acb8fe13f5634c1846a34959a788558caedd71b40c2724f67ca51a"
       },
       "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
+        "mechanic": "POFFIN",
         "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
+          "SEARCH_DECK",
+          "BENCH_FROM_ZONE",
+          "SHUFFLE_DECK"
+        ]
       }
     },
     {
-      "officialCardId": "46598",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
+      "officialCardId": "46812",
+      "name": "夜のタンカ",
+      "deckName": "夜のタンカ",
       "set": "OFFICIAL_PAGE_REFERENCE",
       "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46598",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046598_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46812",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046812_T_YORUNOTANKA.jpg",
+      "category": "item",
       "deckPrintAdopted": false,
       "attacks": [],
       "abilities": [],
       "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "text": "自分のトラッシュからポケモンまたは基本エネルギーを1枚選び、相手に見せて、手札に加える。",
       "facts": {
         "prizeCount": 1,
         "rulePokemon": false,
@@ -48137,33 +49463,33 @@
       },
       "source": {
         "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46598.json",
-        "sha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
-        "htmlSha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+        "path": "data/effect-extensions/evidence/46812.json",
+        "sha256": "2525dfaff9294a1440122f73a7c9fe5d3493354e850cf070ff1d7457b8baa96d",
+        "htmlSha256": "2525dfaff9294a1440122f73a7c9fe5d3493354e850cf070ff1d7457b8baa96d",
+        "textSha256": "3a37e8e6fa70f140408a10eeb16ace5a9c6175fb355187d395ce86e2f01b142c"
       },
       "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
+        "mechanic": "STRETCHER",
         "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
+          "REVEAL",
+          "ADD_TO_HAND"
+        ]
       }
     },
     {
-      "officialCardId": "46599",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
+      "officialCardId": "46824",
+      "name": "アカマツ",
+      "deckName": "アカマツ",
       "set": "OFFICIAL_PAGE_REFERENCE",
       "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46599",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046599_T_KARATEOUNOKEIKO.jpg",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46824",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046824_T_AKAMATSU.jpg",
       "category": "supporter",
       "deckPrintAdopted": false,
       "attacks": [],
       "abilities": [],
       "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "text": "自分の山札から、それぞれちがうタイプの基本エネルギーを2枚まで選び、相手に見せて、どちらか1枚を手札に加え、残りのエネルギーを自分のポケモンにつける。そして山札を切る。",
       "facts": {
         "prizeCount": 1,
         "rulePokemon": false,
@@ -48171,33 +49497,36 @@
       },
       "source": {
         "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46599.json",
-        "sha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
-        "htmlSha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+        "path": "data/effect-extensions/evidence/46824.json",
+        "sha256": "0974737d86ad5ff20691742fa684ce3d379445c9b96b14c644cbde2539418fbd",
+        "htmlSha256": "0974737d86ad5ff20691742fa684ce3d379445c9b96b14c644cbde2539418fbd",
+        "textSha256": "52df0d109daa4fe0d4b7538f3227bac6f435a95bfac1cc38730a9ccb80f06a62"
       },
       "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
+        "mechanic": "AKAMATSU",
         "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK"
+        ]
       }
     },
     {
-      "officialCardId": "46600",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
+      "officialCardId": "46835",
+      "name": "パルデアの仲間たち",
+      "deckName": "パルデアの仲間たち",
       "set": "OFFICIAL_PAGE_REFERENCE",
       "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46600",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046600_T_KARATEOUNOKEIKO.jpg",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46835",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046835_T_PARUDEANONAKAMATACHI.jpg",
       "category": "supporter",
       "deckPrintAdopted": false,
       "attacks": [],
       "abilities": [],
       "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "text": "自分の山札を3枚引く。",
       "facts": {
         "prizeCount": 1,
         "rulePokemon": false,
@@ -48205,187 +49534,17 @@
       },
       "source": {
         "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46600.json",
-        "sha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
-        "htmlSha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+        "path": "data/effect-extensions/evidence/46835.json",
+        "sha256": "aa58be010451c2badc5f63d1a7d7840ac345f8f2144f2373f6e13f0452fedfcb",
+        "htmlSha256": "aa58be010451c2badc5f63d1a7d7840ac345f8f2144f2373f6e13f0452fedfcb",
+        "textSha256": "89cca6b463a22ef1f6b59c96ded75350e32a07b3844b65cbdeee74322c9cea43"
       },
       "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
+        "mechanic": "DRAW_CARDS",
         "commands": [
-          "MODIFY_DAMAGE"
+          "DRAW"
         ],
-        "amount": 40
-      }
-    },
-    {
-      "officialCardId": "46601",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46601",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046601_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46601.json",
-        "sha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
-        "htmlSha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
-      }
-    },
-    {
-      "officialCardId": "46602",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46602",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046602_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46602.json",
-        "sha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
-        "htmlSha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
-      }
-    },
-    {
-      "officialCardId": "46603",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46603",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046603_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46603.json",
-        "sha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
-        "htmlSha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
-      }
-    },
-    {
-      "officialCardId": "46604",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46604",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046604_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46604.json",
-        "sha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
-        "htmlSha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
-      }
-    },
-    {
-      "officialCardId": "46605",
-      "name": "からておうの稽古",
-      "deckName": "からておうの稽古",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46605",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046605_T_KARATEOUNOKEIKO.jpg",
-      "category": "supporter",
-      "deckPrintAdopted": false,
-      "attacks": [],
-      "abilities": [],
-      "rulesText": [],
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "facts": {
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46605.json",
-        "sha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
-        "htmlSha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      },
-      "mainPlan": {
-        "mechanic": "BOOST_EX_DAMAGE_THIS_TURN",
-        "commands": [
-          "MODIFY_DAMAGE"
-        ],
-        "amount": 40
+        "amount": 3
       }
     }
   ],
@@ -49219,6 +50378,21 @@
       "officialCardId": "47725",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "47731",
+      "name": "からておうの稽古",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47731.json",
+        "sha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
+        "htmlSha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
+        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
+      }
     },
     {
       "officialCardId": "47733",

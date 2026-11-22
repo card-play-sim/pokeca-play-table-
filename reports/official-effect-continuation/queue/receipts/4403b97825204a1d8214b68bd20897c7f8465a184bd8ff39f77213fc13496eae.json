@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_4EA3304AFD100A6B:4da4e1b3b25a5accb5fcc1753ff1cde1d89d9aaa0224e96ea668f8b1375622a6",
   "taskFingerprint": "4da4e1b3b25a5accb5fcc1753ff1cde1d89d9aaa0224e96ea668f8b1375622a6",
-  "executionFingerprint": "f5bd1c5f1089bf2a9979bbd7b27264c05dcaf50ae0c3f07474b50f057dae8a08",
-  "attemptId": "89a9571c-8e35-4e42-8668-b105ad901ff0",
+  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+  "attemptId": "4092ef8c-4b0d-4ab5-b80a-439be21347f6",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -47,8 +47,21 @@
       },
       {
         "slot": "50623:attack:れいとうビーム:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50629:attack:でんきショック:0",
@@ -88,8 +101,21 @@
       },
       {
         "slot": "45246:attack:ビリビリナックル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45547:attack:ねこだまし:0",
@@ -111,8 +137,21 @@
       },
       {
         "slot": "45603:attack:でんじは:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45694:attack:のしかかり:0",
@@ -206,13 +245,39 @@
       },
       {
         "slot": "46239:attack:れいとうビーム:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46498:attack:でんじは:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "47042:attack:ねんりき:1",
@@ -311,5 +376,5 @@
       }
     ]
   },
-  "checksum": "a69d0f3e0852e8d5b045e5500f8945f30ff42d0a568d7af7160267dd34f6ae94"
+  "checksum": "64c923a77f5c0fda0c0e9f28f31bb8e02cf6ad0dc39091ab871b9744c3f17a91"
 }
