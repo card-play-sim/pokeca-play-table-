@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "reports/m7-official-delta.json"
 PRINTS = ROOT / "reports/m7-full-print-number-audit.json"
 EXPECTED_STATUS = "OFFICIAL_IMAGE_HASH_VERIFIED_REGULATION_J_PENDING_VISUAL_REVIEW"
+VISUAL_REVIEW = ROOT / "reports/m7-regulation-mark-visual-review.json"
 HASH = re.compile(r"[0-9a-f]{64}\Z")
 IMAGE = re.compile(r"https://www\.pokemon-card\.com/assets/images/card_images/large/M7/[A-Za-z0-9_]+\.jpg\Z")
 
@@ -47,6 +48,21 @@ def verify(previous_path, next_path):
     numbers = keyed(prints["records"])
     if set(original) != set(rebuilt) or set(rebuilt) != set(delta) or set(delta) != set(numbers):
         raise AssertionError("M7_OFFICIAL_PRINT_IDENTITY_SET_DRIFT")
+    review = read(VISUAL_REVIEW)
+    if (review.get("status") != "AI_VISUAL_REVIEW_J_GLYPH_VISIBLE_78_OF_78_HUMAN_FINAL_SIGNOFF_PENDING"
+            or review.get("humanFinalApproval") is not False
+            or review.get("observedJMarks") != 78):
+        raise AssertionError("M7_VISUAL_MARK_EVIDENCE_INCOMPLETE")
+    if review.get("sourceContactSheetSha256") != previous["contactSheetSha256"]:
+        raise AssertionError("M7_VISUAL_REVIEW_SHEET_HASH_MISMATCH")
+    observations = keyed(review["observations"])
+    if set(observations) != set(rebuilt):
+        raise AssertionError("M7_VISUAL_MARK_ID_SET_MISMATCH")
+    for card_id, observation in observations.items():
+        if (observation["observedMark"] != "J"
+                or observation["imageSha256"] != rebuilt[card_id]["imageSha256"]
+                or observation["printedNumber"] != rebuilt[card_id]["printedNumber"]):
+            raise AssertionError("M7_VISUAL_MARK_BINDING_MISMATCH:" + card_id)
     for card_id, row in rebuilt.items():
         before, src, number = original[card_id], delta[card_id], numbers[card_id]
         url = row["imageUrl"]
