@@ -234,6 +234,23 @@ def run(base):
         assert sum(row['count'] for row in recovery['importedDeck']['cards']) == 60
         assert recovery['importedDeck']['deckCode'] == 'kbvV5V-TEZjLI-dVfVVk'
         assert any(row.get('officialCardId')=='47832' for row in recovery['importedDeck']['cards'])
+        # Save alone (without opening the editor) must immediately update
+        # the deck-home list; the old implementation saved only import history.
+        page.locator('#save').click()
+        expect(page.locator('#status')).to_contain_text('デッキ一覧にも反映しました')
+        page.goto(base + "/")
+        card = page.locator('.deck-home-card').filter(has_text='取り込んだデッキ')
+        expect(card).to_have_count(1)
+        expect(card).to_contain_text('60 / 60枚')
+        assert page.evaluate("""() => {
+            const list=JSON.parse(localStorage.getItem('pokeca.deck-builder.v1'));
+            const imported=list.decks.find(d=>d.sourceDeckCode==='kbvV5V-TEZjLI-dVfVVk');
+            return imported && Object.values(imported.cards).reduce((n,v)=>n+v,0)
+                + (imported.blocked||[]).reduce((n,r)=>n+r.count,0)===60;
+        }""")
+        page.goto(base + '/deck-code-import.html')
+        page.locator('#saved-decks button').filter(has_text='kbvV5V-TEZjLI-dVfVVk').click()
+        expect(page.locator('#status')).to_contain_text('カードIDと公式画像を照合')
         page.locator('#edit').click()
         expect(page.locator('#total')).to_have_text('60 / 60枚')
         page.locator('#deck-name').fill('公式コード実測')
