@@ -105,3 +105,38 @@ delete unapprovedG.exceptionEvidence;
 const illegal=api.catalogFrom({cards:[]},{records:[]},{records:[]},{cards:[]},{records:[unapprovedG]});
 assert.equal(illegal.get('47288'),undefined,'G is never permitted without named official reprint exception evidence');
 console.log('Official legacy Boss exception requires named official regulation rule proof');
+
+/* Android import save failure recovery: persisted exact-print records must
+ * not be silently lost or blocked by oversized redundant artwork URLs. */
+const compactStore=new Map();
+const constrained={
+ getItem:key=>compactStore.get(key)??null,
+ setItem:(key,value)=>{
+  if(value.length>50000){const err=Error('quota');err.name='QuotaExceededError';throw err;}
+  compactStore.set(key,value);
+ }
+};
+const oversized={...verified,cards:verified.cards.map(row=>({
+ ...row,imageUrl:'https://www.pokemon-card.com/assets/images/card_images/large/'+('X'.repeat(10000))
+}))};
+api.saveImport(constrained,oversized);
+const stored=api.readImports(constrained)[0];
+assert.equal(stored.total,60);
+assert.equal(stored.deckCode,officialFields.saveDeckID);
+assert.equal(stored.cards.map(row=>row.count).reduce((a,b)=>a+b,0),60);
+assert.equal(stored.cards.some(row=>Object.hasOwn(row,'imageUrl')),false,'redundant image URLs must not consume quota');
+assert.equal(stored.cards[0].officialCardId,verified.cards[0].officialCardId);
+assert.equal(stored.cards[0].identityStatus,verified.cards[0].identityStatus);
+const brokenValue='{corrupted';
+const brokenStore={
+ getItem:()=>brokenValue,
+ setItem:()=>assert.fail('Must not overwrite corrupt imports without user consent')
+};
+assert.throws(()=>api.saveImport(brokenStore,verified),err=>err.code==='IMPORT_HISTORY_INVALID');
+const blockedStore={getItem:()=>{const e=Error('denied');e.name='SecurityError';throw e;},setItem:()=>{}};
+assert.throws(()=>api.saveImport(blockedStore,verified),err=>err.name==='SecurityError');
+const deniedWrite={getItem:()=>null,setItem:()=>{const e=Error('full');e.name='QuotaExceededError';throw e;}};
+assert.throws(()=>api.saveImport(deniedWrite,verified),err=>err.name==='QuotaExceededError');
+const lyingStore={getItem:()=>null,setItem:()=>{}};
+assert.throws(()=>api.saveImport(lyingStore,verified),/読み戻せません/);
+console.log('PASS Android import save: compact history, exact print preservation, corrupt history and quota/security diagnostics');

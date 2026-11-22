@@ -11,7 +11,7 @@ let request = 0;
 
 function render(next) {
   deck = next;
-  $('save').disabled = $('edit').disabled = !deck;
+  $('save').disabled = $('edit').disabled = $('export-import').disabled = !deck;
   $('cards').replaceChildren();
   if (!deck) return;
   for (const row of deck.cards) {
@@ -73,15 +73,45 @@ function history() {
   }
 }
 
+function saveFailureMessage(error) {
+  if (error?.code === 'IMPORT_HISTORY_INVALID')
+    return '以前の取り込み履歴を読み込めません。元データは変更していません。下のJSON出力で今回の60枚を保護できます。';
+  if (error?.name === 'QuotaExceededError' || error?.code === 22 || error?.code === 1014)
+    return '端末の保存領域が不足しています。既存デッキは削除せず、下のJSON出力で今回の60枚を保存してください。';
+  if (error?.name === 'SecurityError')
+    return 'ブラウザが端末保存を許可していません。Chromeの通常タブで開くか、下のJSON出力を利用してください。';
+  return '保存時にエラーが発生しました（'+(error?.name || 'UNKNOWN')+'）。下のJSON出力で今回の60枚を保護できます。';
+}
 function save(edit) {
   if (!deck) return;
   try {
     api.saveImport(localStorage, deck);
-    if (edit) location.href = 'deck-builder.html?import=' + encodeURIComponent(deck.deckCode);
-    else { history(); status('端末に保存しました。'); }
-  } catch {
-    status('端末に保存できませんでした。');
+  } catch (error) {
+    status(saveFailureMessage(error));
+    return;
   }
+  if (edit) {
+    location.href = 'deck-builder.html?import=' + encodeURIComponent(deck.deckCode);
+    return;
+  }
+  try {
+    history();
+    status('端末に保存しました。');
+  } catch (error) {
+    status('60枚は保存できましたが履歴表示に失敗しました（'+(error?.name || 'UNKNOWN')+'）。');
+  }
+}
+function exportImport() {
+  if (!deck) return;
+  const text = JSON.stringify({schemaVersion:1,importedDeck:deck},null,2);
+  const blob = new Blob([text], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'pokeca-official-deck-'+deck.deckCode+'.json';
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status('今回の60枚をJSONで書き出しました。端末への通常保存に失敗しても、このファイルを保持できます。');
 }
 
 $('code').oninput = () => {
@@ -121,9 +151,10 @@ $('html-file').onchange = () => {
 $('import').onclick = () => inspect(value => api.parse($('recipe').value, value));
 $('recipe').oninput = () => { ++request; render(null); status(''); };
 $('save').onclick = () => save(false);
+$('export-import').onclick = exportImport;
 $('edit').onclick = () => save(true);
 $('open').href = recipeUrl();
-try { history(); } catch { status('取り込み履歴を読み込めませんでした。'); }
+try { history(); } catch (error) { status(saveFailureMessage(error)); }
 for (const id of ['code', 'lookup-submit', 'html-file', 'recipe', 'import']) {
   $(id).disabled = false;
 }
