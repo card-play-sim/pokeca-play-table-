@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_0DE5FDF15DFD17BB:01065cbb357a15f5e50d486024db10e4dd8a4a0c73c617c647f2039c5fce8982",
   "taskFingerprint": "01065cbb357a15f5e50d486024db10e4dd8a4a0c73c617c647f2039c5fce8982",
-  "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
-  "attemptId": "1f5089df-4b76-464b-a6ee-4abfba92deaf",
-  "status": "BLOCKED",
+  "executionFingerprint": "fd36f50ff873b9afe85d5139ce28f2d82f47e9078f9341841cbacefb9cfb075b",
+  "attemptId": "9c622f7e-3047-4e0d-8be1-1b46541ff1c2",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45793:supporter:マツバの確信:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_DRAW_OPP_BENCH",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "58a1de3dc35472d123c01173e766b01862df6addc59b7ab87fd181b665e75ce2"
+  "checksum": "6f739e0400814a534c0120cbc52cbd108d23f4999d8fac06a607a8f180d46725"
 }

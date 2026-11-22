@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
-  "registryHash": "b0df5d0617f0d310471a6b4a8537056fc740bcdaec5299a804e5ba1b27ff444f",
+  "registryHash": "56904c2b0c7f6345a3682bb9fa281bf9d008f9ce7c6da2a145c6945ecc3c049a",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
-  "officialPages": 2215,
-  "collectedNewPages": 2036,
-  "explicitEffects": 2399,
-  "noExplicitText": 912,
+  "officialPages": 2258,
+  "collectedNewPages": 2077,
+  "explicitEffects": 2451,
+  "noExplicitText": 927,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
     "supporter": {
-      "prints": 176,
-      "compiled": 44,
-      "notImplemented": 132,
+      "prints": 178,
+      "compiled": 73,
+      "notImplemented": 105,
       "blocked": 0,
-      "executionVerifiedPrints": 25
+      "executionVerifiedPrints": 30
     },
     "item": {
-      "prints": 139,
-      "compiled": 84,
-      "notImplemented": 55,
+      "prints": 142,
+      "compiled": 85,
+      "notImplemented": 57,
       "blocked": 0,
       "executionVerifiedPrints": 34
     },
@@ -39,9 +39,9 @@
       "executionVerifiedPrints": 5
     },
     "pokemon": {
-      "prints": 1798,
-      "compiled": 722,
-      "notImplemented": 1026,
+      "prints": 1836,
+      "compiled": 737,
+      "notImplemented": 1049,
       "blocked": 50,
       "executionVerifiedPrints": 343
     },
@@ -826,6 +826,69 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46789",
       "evidencePath": "data/effect-extensions/evidence/46789.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48718",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48718",
+      "evidencePath": "data/effect-extensions/evidence/48718.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48723",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48723",
+      "evidencePath": "data/effect-extensions/evidence/48723.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48734",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48734",
+      "evidencePath": "data/effect-extensions/evidence/48734.json",
+      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48801",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48801",
+      "evidencePath": "data/effect-extensions/evidence/48801.json",
+      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48829",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48829",
+      "evidencePath": "data/effect-extensions/evidence/48829.json",
+      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "48885",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48885",
+      "evidencePath": "data/effect-extensions/evidence/48885.json",
+      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "49191",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49191",
+      "evidencePath": "data/effect-extensions/evidence/49191.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "49307",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49307",
+      "evidencePath": "data/effect-extensions/evidence/49307.json",
+      "reason": "UNSUPPORTED_EVOLUTION_CHAIN"
+    },
+    {
+      "status": "BLOCKED",
+      "officialCardId": "49318",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49318",
+      "evidencePath": "data/effect-extensions/evidence/49318.json",
+      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION"
     }
   ],
   "compilerBlocked": [
@@ -1355,66 +1418,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45463",
-      "name": "ピクニックガール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら4枚、ウラなら2枚、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45463.json",
-        "sha256": "e17f1a5558826c325c65c14f3f7123d66475412d2aeb9e8e7631b061e4d0e8d7",
-        "htmlSha256": "e17f1a5558826c325c65c14f3f7123d66475412d2aeb9e8e7631b061e4d0e8d7",
-        "textSha256": "38391399ef0808fd2dcec2eb865cb39dfcf36c3386c65cca3dbe22b67acdd32f"
-      }
-    },
-    {
-      "officialCardId": "45487",
-      "name": "ピクニックガール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら4枚、ウラなら2枚、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45487.json",
-        "sha256": "6a984ba1726d326e39eb55b0d07370ec94df1604d1b9a6ea9c537b67db5ebb4f",
-        "htmlSha256": "6a984ba1726d326e39eb55b0d07370ec94df1604d1b9a6ea9c537b67db5ebb4f",
-        "textSha256": "38391399ef0808fd2dcec2eb865cb39dfcf36c3386c65cca3dbe22b67acdd32f"
-      }
-    },
-    {
-      "officialCardId": "45512",
-      "name": "ピクニックガール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら4枚、ウラなら2枚、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45512.json",
-        "sha256": "ac13c2a0366759a0b9a84642256e686c0acaa473dc1a01ce5451619f03d309eb",
-        "htmlSha256": "ac13c2a0366759a0b9a84642256e686c0acaa473dc1a01ce5451619f03d309eb",
-        "textSha256": "38391399ef0808fd2dcec2eb865cb39dfcf36c3386c65cca3dbe22b67acdd32f"
-      }
-    },
-    {
-      "officialCardId": "45793",
-      "name": "マツバの確信",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45793.json",
-        "sha256": "8ec019c1c0e5bbd842f60953098ddbb56d4b1ecc609f46f712de0f742434df75",
-        "htmlSha256": "8ec019c1c0e5bbd842f60953098ddbb56d4b1ecc609f46f712de0f742434df75",
-        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
-      }
-    },
-    {
       "officialCardId": "45797",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1658,21 +1661,6 @@
       "officialCardId": "47725",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47731",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47731.json",
-        "sha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
-        "htmlSha256": "d0d93f91da7ece84a2f767e4302e5ccc0ce3675c6cfb6b0b3b08ea2167786ec4",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
     },
     {
       "officialCardId": "47733",
@@ -6025,21 +6013,6 @@
       }
     },
     {
-      "officialCardId": "45215",
-      "name": "マツバの確信",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45215.json",
-        "sha256": "11bd7dc608001df0f724ca59d48d283f59d5e55bf66af7705a28d9aa8f3547d4",
-        "htmlSha256": "11bd7dc608001df0f724ca59d48d283f59d5e55bf66af7705a28d9aa8f3547d4",
-        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
-      }
-    },
-    {
       "officialCardId": "45222",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6295,36 +6268,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45439",
-      "name": "ピクニックガール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら4枚、ウラなら2枚、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45439.json",
-        "sha256": "c72142a1a3472d3dbbd4b3bf943b3e0636363aac02b5a6e6475fc94b8b4f0748",
-        "htmlSha256": "c72142a1a3472d3dbbd4b3bf943b3e0636363aac02b5a6e6475fc94b8b4f0748",
-        "textSha256": "38391399ef0808fd2dcec2eb865cb39dfcf36c3386c65cca3dbe22b67acdd32f"
-      }
-    },
-    {
-      "officialCardId": "45508",
-      "name": "コック",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンのHPを「70」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45508.json",
-        "sha256": "a8ccb65146647b6980691895fa7187e3dafd65440a19667c4074c0159093378e",
-        "htmlSha256": "a8ccb65146647b6980691895fa7187e3dafd65440a19667c4074c0159093378e",
-        "textSha256": "99b0c3d11d6153dbcae9ebe432a6cb5c2e3610d164b85994bfb8456e9d088023"
-      }
-    },
-    {
       "officialCardId": "45518",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6390,21 +6333,6 @@
       }
     },
     {
-      "officialCardId": "45535",
-      "name": "マツバの確信",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45535.json",
-        "sha256": "c57d930cbdeeeda0f3e6993b39203e5be4ce698cd05bbda4e47929177d8d1d0c",
-        "htmlSha256": "c57d930cbdeeeda0f3e6993b39203e5be4ce698cd05bbda4e47929177d8d1d0c",
-        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
-      }
-    },
-    {
       "officialCardId": "45539",
       "name": "ビワ",
       "category": "supporter",
@@ -6417,21 +6345,6 @@
         "sha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
         "htmlSha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
         "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
-      }
-    },
-    {
-      "officialCardId": "45540",
-      "name": "マツバの確信",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45540.json",
-        "sha256": "297aac3de310a0a67b006fda71fc676bfc2925ba867bdaf49fb1297a0ddd5b34",
-        "htmlSha256": "297aac3de310a0a67b006fda71fc676bfc2925ba867bdaf49fb1297a0ddd5b34",
-        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
       }
     },
     {
@@ -7775,21 +7688,6 @@
       }
     },
     {
-      "officialCardId": "46037",
-      "name": "タロ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46037.json",
-        "sha256": "77301f5fe58b1880443190bd1241d59b986131b5d1fb4779e4b04c0db84d435f",
-        "htmlSha256": "77301f5fe58b1880443190bd1241d59b986131b5d1fb4779e4b04c0db84d435f",
-        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
-      }
-    },
-    {
       "officialCardId": "46038",
       "name": "ハイダイ",
       "category": "supporter",
@@ -8060,21 +7958,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46172",
-      "name": "タロ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46172.json",
-        "sha256": "922339b6558e96ede16c1b734eac83658f75fe4c6c7145843b2eaa490562e78a",
-        "htmlSha256": "922339b6558e96ede16c1b734eac83658f75fe4c6c7145843b2eaa490562e78a",
-        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
-      }
-    },
-    {
       "officialCardId": "46173",
       "name": "ハイダイ",
       "category": "supporter",
@@ -8113,21 +7996,6 @@
       "officialCardId": "46177",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46179",
-      "name": "タロ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46179.json",
-        "sha256": "f7220b158022fc9d75ab35b96a22c1507bea46eddb2415987ec3e42dea6b30a9",
-        "htmlSha256": "f7220b158022fc9d75ab35b96a22c1507bea46eddb2415987ec3e42dea6b30a9",
-        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
-      }
     },
     {
       "officialCardId": "46180",
@@ -8475,21 +8343,6 @@
       }
     },
     {
-      "officialCardId": "46291",
-      "name": "ドラセナ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46291.json",
-        "sha256": "52d798aacd3ee6d70735f286c177712c46baa5f673f29147677666093db2b848",
-        "htmlSha256": "52d798aacd3ee6d70735f286c177712c46baa5f673f29147677666093db2b848",
-        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
-      }
-    },
-    {
       "officialCardId": "46292",
       "name": "ルチアのアピール",
       "category": "supporter",
@@ -8577,21 +8430,6 @@
         "sha256": "bb0e046ece23f137b7da3faf6e5d77f5f3e985f75bd38c7a0ce4cb76e01a26bc",
         "htmlSha256": "bb0e046ece23f137b7da3faf6e5d77f5f3e985f75bd38c7a0ce4cb76e01a26bc",
         "textSha256": "a04a101dbc5d60ec6a76ef0b3bdb522f2aa635c708e0a5b2db9f795fe3421e11"
-      }
-    },
-    {
-      "officialCardId": "46331",
-      "name": "ドラセナ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46331.json",
-        "sha256": "a915958d7d0f00bc93be224046142f4d15b159eb9dc5a0d20eda90617d5c3a69",
-        "htmlSha256": "a915958d7d0f00bc93be224046142f4d15b159eb9dc5a0d20eda90617d5c3a69",
-        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
       }
     },
     {
@@ -9065,156 +8903,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46597",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46597.json",
-        "sha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
-        "htmlSha256": "9d546f968019f04b52631d6893245ae7fd6f126fc9b67a8cffd616df52f8e7e5",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46598",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46598.json",
-        "sha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
-        "htmlSha256": "c451a8916d84b2d017c434f11d036a1bc00414e0403620bc4d0367ac9c8e6e81",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46599",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46599.json",
-        "sha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
-        "htmlSha256": "c5c421e583e9427c429fb1ac7076336bf647d21c7d911c1c46f4660db618b565",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46600",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46600.json",
-        "sha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
-        "htmlSha256": "214728bd8cb3e04a1d1b07b3cd2dc2263a7e28d7c020a0d0d490c44fae6e6623",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46601",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46601.json",
-        "sha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
-        "htmlSha256": "d5c76271de10a28088d743a8ed7b38d4c39804c170e69f91aa932628236cb132",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46602",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46602.json",
-        "sha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
-        "htmlSha256": "458167ccef8334fee3cd7e6521fe47c3e141bac04ac129629e2fd8efc9d43b3c",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46603",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46603.json",
-        "sha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
-        "htmlSha256": "1b51dac6cca30a5ec649155aac3d6ee81b573c7c5cd83e49b3b1b8401da0a613",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46604",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46604.json",
-        "sha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
-        "htmlSha256": "829b52db4dcd9fb17b1ecf8bf1b1bdf2a0e9cef02f4d40bbdd7708e5efc01821",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46605",
-      "name": "からておうの稽古",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46605.json",
-        "sha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
-        "htmlSha256": "4e3a665f8fe1098b3a818343e37b2cff952e66e060cbb73761b95e6295582766",
-        "textSha256": "e60d7d94421a93a8abbc23d80ea7f2bb4d3a69df1e10dadabd2302e4d47ff7a2"
-      }
-    },
-    {
-      "officialCardId": "46606",
-      "name": "コック",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンのHPを「70」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46606.json",
-        "sha256": "d2478dd184a7349dd522b2001f99860fba98f7585c174f1851b688d9a15e3201",
-        "htmlSha256": "d2478dd184a7349dd522b2001f99860fba98f7585c174f1851b688d9a15e3201",
-        "textSha256": "99b0c3d11d6153dbcae9ebe432a6cb5c2e3610d164b85994bfb8456e9d088023"
-      }
-    },
-    {
       "officialCardId": "46607",
       "name": "ゴヨウ",
       "category": "supporter",
@@ -9227,36 +8915,6 @@
         "sha256": "03a9d794fd9c76ac5e2a616d71269eb4dd4628be6480ded51dc01d7d04c14f7d",
         "htmlSha256": "03a9d794fd9c76ac5e2a616d71269eb4dd4628be6480ded51dc01d7d04c14f7d",
         "textSha256": "08bb50d3ffb54b81d06f72a38bcabda092f1f0306c5b29d9db41ecd8dd9921d8"
-      }
-    },
-    {
-      "officialCardId": "46613",
-      "name": "ドラセナ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら8枚、ウラなら3枚、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46613.json",
-        "sha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
-        "htmlSha256": "c3bf8e8fe8452ac7de6fc33506c7505ddd688cb760210eb6c39c361f1e996f63",
-        "textSha256": "5bc9671487a1cedf44fa231388f3061598b5a69a57b171491b1188893b53a0ee"
-      }
-    },
-    {
-      "officialCardId": "46628",
-      "name": "マツバの確信",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n相手のベンチポケモンの数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46628.json",
-        "sha256": "af9ba65da529ce34e26ee9b32498a508f7b7ebaa2910de8c2beab977f487d331",
-        "htmlSha256": "af9ba65da529ce34e26ee9b32498a508f7b7ebaa2910de8c2beab977f487d331",
-        "textSha256": "b45324da04764b538405ca4d7eb39f9c15c37ac9da9ad41159ea05ed79c11c4d"
       }
     },
     {
@@ -9835,21 +9493,6 @@
       }
     },
     {
-      "officialCardId": "46832",
-      "name": "タロ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべて山札にもどして切る。その後、山札を4枚引く。相手のサイドの残り枚数が3枚以下なら、引く枚数は8枚になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46832.json",
-        "sha256": "44fa5d4cd548c17c30fd5bed11758735d30a84eec4be9346290d093c26acfa0f",
-        "htmlSha256": "44fa5d4cd548c17c30fd5bed11758735d30a84eec4be9346290d093c26acfa0f",
-        "textSha256": "9e9d501b1d9661efe6f8027d7a0c7f0474ddde46bfe9063416b333fcc3cf0a8a"
-      }
-    },
-    {
       "officialCardId": "46833",
       "name": "探検家の先導",
       "category": "supporter",
@@ -9878,17 +9521,177 @@
         "htmlSha256": "1716aee14a6e8809d6c84dd2f1dc439af3f095f10d1982dd186d704d81c86a3b",
         "textSha256": "e5cb6b1541c8799ce34f6b267fdecc9c2f0519a89659fcd379cb8d397a6b83a0"
       }
+    },
+    {
+      "officialCardId": "48719",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48724",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48730",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48827",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48883",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48908",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48942",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "48949",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49000",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49013",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49083",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49110",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49116",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49141",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49215",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49230",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49293",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49302",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49308",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49324",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49335",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49355",
+      "name": "エネルギー転送",
+      "category": "item",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分の山札から基本エネルギーを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49355.json",
+        "sha256": "b3685f45ffd34355b47ff8f6c0cd2692de450ad0d8985038c89ddb89f705fb39",
+        "htmlSha256": "b3685f45ffd34355b47ff8f6c0cd2692de450ad0d8985038c89ddb89f705fb39",
+        "textSha256": "6edd5c53f888f583b9802c6d7ba36f1c6a4b81fb382df01355d071df9bb3271f"
+      }
+    },
+    {
+      "officialCardId": "49385",
+      "name": "モンスターボール",
+      "category": "item",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "コインを1回投げオモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49385.json",
+        "sha256": "ccb9b536ea8ca420c711206e81813e9d19a7460faf40d5b1ceb1726c1a4c747b",
+        "htmlSha256": "ccb9b536ea8ca420c711206e81813e9d19a7460faf40d5b1ceb1726c1a4c747b",
+        "textSha256": "49d3d81695738d1da86546e13e9987f7c37b323b75fbb41b19b80e4337a16ea9"
+      }
+    },
+    {
+      "officialCardId": "49416",
+      "name": "ウエートレス",
+      "category": "supporter",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "text": "自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。",
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49416.json",
+        "sha256": "7af355d076efc8310d7e72f4a6a9f36bee3fef12ee682f3605822744dbf5bc7a",
+        "htmlSha256": "7af355d076efc8310d7e72f4a6a9f36bee3fef12ee682f3605822744dbf5bc7a",
+        "textSha256": "a5c674a7163850a1071f6be65d09bb931c93883a3b8b8f299a466c0cd6f8b8e2"
+      }
+    },
+    {
+      "officialCardId": "49635",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+    },
+    {
+      "officialCardId": "49639",
+      "status": "BLOCKED",
+      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     }
   ],
   "blockerSummary": {
     "fetch": [
       {
         "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-        "count": 83
+        "count": 87
       },
       {
         "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
-        "count": 21
+        "count": 26
       },
       {
         "reason": "UNSUPPORTED_INLINE_MARKUP",
@@ -9898,11 +9701,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1031
+        "count": 1054
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 243
+        "count": 218
       },
       {
         "reason": "PARSED_OFFICIAL_FACT_CONFLICT:facts",
@@ -9917,17 +9720,17 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "d68e1371d9088a606f59f14936d74236005aef05adf0926dcb343f25cf33173f",
+    "executionFingerprint": "fd36f50ff873b9afe85d5139ce28f2d82f47e9078f9341841cbacefb9cfb075b",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 53337,
+    "seq": 57993,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 123,
+      "SUCCEEDED": 126,
       "FAILED": 0,
-      "BLOCKED": 653
+      "BLOCKED": 650
     },
     "categories": {
       "pokemon": {
@@ -9940,9 +9743,9 @@
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 16,
+        "SUCCEEDED": 19,
         "FAILED": 0,
-        "BLOCKED": 30
+        "BLOCKED": 27
       },
       "item": {
         "PENDING": 0,
