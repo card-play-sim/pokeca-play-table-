@@ -11,6 +11,9 @@ assert.match(fs.readFileSync('sw.js','utf8'), /\.\/data\/deck-building\/official
 const catalog = api.catalogFrom(registry, formal, JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')), JSON.parse(fs.readFileSync('data/deck-building/m7-official-image-extension.json','utf8')), printExtension);
 if (printExtension.status === 'VERIFIED_OFFICIAL_PRINT_AND_IMAGE_HASH') {
  assert.equal(printExtension.records.length,2,'Both exact official print images must have audited JPEG hashes');
+ const legacyBoss=printExtension.records.find(r=>r.officialCardId==='47288');
+ assert.equal(legacyBoss?.exceptionEvidence?.rulePageUrl,'https://www.pokemon-card.com/rules/regulation/');
+ assert.match(legacyBoss.exceptionEvidence.rulePageSha256,/^[a-f0-9]{64}$/,'Legacy exception must cite the actual official regulation HTML digest');
  assert.equal(catalog.get('49573')?.name,'ポケパッド','Official J Pokepad print must resolve');
  assert.equal(catalog.get('49573')?.url,'https://www.pokemon-card.com/assets/images/card_images/large/MC/049573_T_POKEPADDO.jpg');
  assert.equal(catalog.get('47288')?.name,'ボスの指令','Official standard rule permits the legacy Boss print');
