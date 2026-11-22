@@ -16,6 +16,7 @@ function sample(id){
  assert(option,'supporter UI menu entry');
  const action={...option.action,selections:{...(option.action.selections||{}),discard:[cost.id]}};
  assert(port.canDispatch('you',action),'legal one-card discard choice');
+ assert.equal(port.canDispatch('you',{...action,selections:{discard:[]}}),false,'missing discard choice must be rejected');
  const fake={...action,selections:{discard:[t.sourceId]}};
  assert.equal(port.canDispatch('you',fake),false,'cannot discard Supporter as its own cost');
  assert.equal(port.dispatch('you',fake).ok,false);
