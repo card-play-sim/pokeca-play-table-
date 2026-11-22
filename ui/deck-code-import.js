@@ -194,7 +194,7 @@ function readImports(storage) {
  let saved;
  try {
   const value = storage.getItem(IMPORT_KEY);
-  saved = value === null ? [] : JSON.parse(value);
+  saved = value == null ? [] : JSON.parse(value);
  } catch (error) {
   if (error?.name === 'SecurityError') throw error;
   const problem = Error('以前の公式デッキ取り込み履歴を読み込めません。元データは変更していません。');
