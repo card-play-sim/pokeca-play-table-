@@ -1,25 +1,50 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_4EA3304AFD100A6B:9448f6d8b88372dae584549280b44d16a39d93294c5b655c8720900be2bb7f52",
   "taskFingerprint": "9448f6d8b88372dae584549280b44d16a39d93294c5b655c8720900be2bb7f52",
-  "executionFingerprint": "cc0fb33dfcaafbb2ff4f4d0d56f488a6b6c491a9afaaa52428157667e60ae1a1",
-  "attemptId": "1136c002-a1e2-4e9f-bf0f-22a3f5615d30",
-  "status": "BLOCKED",
+  "executionFingerprint": "017dca6c40596b2ad2b1b701ccfdcb1f7962efe41dab215d8f99b2aee906037c",
+  "attemptId": "994c0282-cc16-4b71-9c88-ab3547bb58b1",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "49597:attack:でんきショック:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50787:attack:あわ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_PARALYZE_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "COIN_FLIP",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "ab8872f8385f47d29d57acdb65e9a11c7bd08e576e96d8f0641ef3f4b98f20f8"
+  "checksum": "df13035154bb8e18b5f941ad14553093a9eb27af4b31eaa43ac9ca6248f7c944"
 }
