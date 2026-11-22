@@ -1,0 +1,42 @@
+name: Diagnose published coin-paralysis attack
+on:
+  push:
+    branches: [fix/published-coin-paralysis-20261122]
+    paths:
+      - 'tests/test_control_013_browser.py'
+      - '.github/workflows/diagnose-published-coin-paralysis.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  published-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify exact published files and coin event
+        env:
+          POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
+          POKECA_INTAKE_RELEASE_BASE: 2a5809da07be47cb8468b0dd11d9ce896a37e3b4
+          POKECA_INTAKE_PREFIX: work/published-intake
+        run: |
+          node scripts/verify-published-pwa.cjs
+          python tests/test_control_013_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: published-coin-diagnostics
+          path: |
+            artifacts/
+            test-results/published-pwa-verification.json
+          if-no-files-found: warn
