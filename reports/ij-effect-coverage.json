@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 331,
-      "missing": 1371
+      "connected": 332,
+      "missing": 1370
     },
     "J": {
       "total": 869,
@@ -16,10 +16,10 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 325,
+      "CONNECTED_UNTESTED": 326,
       "MECHANIC_REQUIRED": 182,
       "EVIDENCE_UNVERIFIED": 14,
-      "ENGINE_CONNECTION_REQUIRED": 95,
+      "ENGINE_CONNECTION_REQUIRED": 94,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
@@ -3734,8 +3734,7 @@
       "name": "ビクティニ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47921.json"
     },
     {
