@@ -109,8 +109,12 @@ async def main():
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='COIN_PARALYZE_ATTACK':
-    flips=[ev.get('details',{}) for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP']
-    assert len(flips)==1 and isinstance(flips[0].get('heads'),bool)
+    # An actual RNG result and its immutable reference-command audit are separate
+    # COIN_FLIP history entries; count only resolved results as real coin tosses.
+    flip_entries=[ev.get('details',{}) for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP']
+    flips=[entry for entry in flip_entries if isinstance(entry.get('heads'),bool)]
+    audit=[entry for entry in flip_entries if entry.get('reference') is True and entry.get('sourceOfficialCardId')==r['officialCardId'] and entry.get('effectId')==f['e']['effectId']]
+    assert len(flips)==1 and len(audit)==1, {'print':r['officialCardId'],'flipEntries':flip_entries,'events':events}
     assert (after['players'][1]['active'].get('statusCondition')=='PARALYZED')==flips[0]['heads']
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
