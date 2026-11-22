@@ -36,6 +36,8 @@ jobs:
           node scripts/build-pwa-release.cjs --check
       - name: Reject guessed identities and validate exact print gameplay plans
         run: node tests/exact-print-effects.test.cjs
+      - name: Official 60-card recipe import to exact print battle gate
+        run: node tests/exact-print-import-to-battle.test.cjs
       - name: Real Pokepad search and Boss opponent switch through physical print IDs
         run: node tests/exact-print-effects-runtime.test.cjs
       - name: Run existing deck and effect runtime regressions
