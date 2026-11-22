@@ -19,6 +19,9 @@ assert(worker.includes("const importPage=absolute('./deck-code-import.html')"),'
 assert(worker.includes("path===editor||path===importPage"),'navigate import must use verified latest shell');
 const page=fs.readFileSync('ui/deck-import-page.js','utf8');
 assert(page.includes("navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'})"));
+assert(page.includes('api.saveBuilderDeck(localStorage,snapshot,exactCatalog)'),'Save must create visible deck-home entry');
+const home=fs.readFileSync('ui/deck-home.js','utf8');
+assert(home.includes('PokecaDeckCodeImport.migrateImports(localStorage,cards)'),'old history-only 60-card imports must migrate');
 assert(!page.includes('location.reload()')&&!page.includes('localStorage.clear()'),'must retain unsaved recipe and existing decks');
 assert(!page.includes("端末に保存できませんでした。"),'old hidden-error phrase is forbidden');
 assert(page.includes('JSON出力')&&page.includes('QuotaExceededError'),'existing backup and error diagnostics must survive');
