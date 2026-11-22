@@ -1,0 +1,46 @@
+name: M7 official image J mark visual audit
+on:
+  push:
+    branches: [feat/m7-official-delta-intake]
+    paths:
+      - 'scripts/audit_m7_regulation_images.py'
+      - '.github/workflows/m7-regulation-visual-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-official-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/m7-official-delta-intake
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install Pillow==11.3.0
+      - name: Verify all 78 M7 official JPEG images and produce review sheet
+        env:
+          POKECA_EMIT_M7_IMAGE_BASE64: '1'
+        run: python scripts/audit_m7_regulation_images.py
+      - name: Save source image hashes, not image binary data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reports/m7-regulation-image-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit: preserve M7 official image hashes for regulation review'
+            git push origin HEAD:feat/m7-official-delta-intake
+          fi
+      - name: Upload temporary unmodified preview and mark contact sheet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m7-official-image-mark-evidence
+          path: |
+            artifacts/m7-regulation-contact-sheet.png
+            artifacts/m7-regulation-first-full.jpg
+            reports/m7-regulation-image-audit.json
+          if-no-files-found: warn
