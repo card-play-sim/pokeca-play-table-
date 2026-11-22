@@ -406,7 +406,7 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
@@ -423,6 +423,12 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='NO_NEXT_ATTACK')card.referenceCannotAttackTurn=g.turnNumber+2;
    if(m==='RETREAT_LOCK_ATTACK')mon.referenceCannotRetreatTurn=g.turnNumber+1;
    if(m==='ATTACK_DAMAGE_REDUCTION')card.referenceDamageReduction={turn:g.turnNumber+1,amount:plan.amount};
+   if(m==='COIN_PARALYZE_ATTACK'&&coin(g,actor)){o.active.statusCondition='PARALYZED';event(g,actor,'STATUS_CONDITION',{status:'PARALYZED',targetInstanceId:id(o.active)});}
+   if(m==='DISCARD_ALL_SELF_ENERGY_ATTACK'){
+    const discarded=(card.energyCards||[]).splice(0);
+    p.discard.push(...discarded);
+    event(g,actor,'DISCARD',{cardIds:discarded.map(id),sourceInstanceId:id(card)});
+   }
    if(m==='CONFUSION'){o.active.statusCondition='CONFUSED';event(g,actor,'STATUS_CONDITION',{status:'CONFUSED',targetInstanceId:id(o.active)});}
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
