@@ -11610,6 +11610,67 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45720",
+      "name": "ヒンバス",
+      "deckName": "ヒンバス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45720",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045720_P_HINBASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じたばた",
+          "cost": [
+            "水"
+          ],
+          "damage": "10×",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ。",
+          "effectId": "reference-45720-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 30,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45720.json",
+        "sha256": "49dc75204a2d8c54aa64084b3806b98dabb032dc865f35d0d039662f0b4563a6",
+        "htmlSha256": "49dc75204a2d8c54aa64084b3806b98dabb032dc865f35d0d039662f0b4563a6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45725",
       "name": "ナミイルカ",
       "deckName": "ナミイルカ",
@@ -20488,6 +20549,67 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46696",
+      "name": "ヒンバス",
+      "deckName": "ヒンバス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46696",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046696_P_HINBASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じたばた",
+          "cost": [
+            "水"
+          ],
+          "damage": "10×",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ。",
+          "effectId": "reference-46696-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 30,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46696.json",
+        "sha256": "964743d3db6e81b77ed620839d5e7fa6237c267a56867347a1d61f1b81450447",
+        "htmlSha256": "964743d3db6e81b77ed620839d5e7fa6237c267a56867347a1d61f1b81450447",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46705",
       "name": "ナミイルカ",
       "deckName": "ナミイルカ",
@@ -20785,6 +20907,83 @@
         "path": "data/effect-extensions/evidence/46775.json",
         "sha256": "d3b95f3f5b0bac0454a44da2b4f70425fd8214d651f05886ca5b574923c5fcbb",
         "htmlSha256": "d3b95f3f5b0bac0454a44da2b4f70425fd8214d651f05886ca5b574923c5fcbb",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47027",
+      "name": "テッポウオ",
+      "deckName": "テッポウオ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47027",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047027_P_TEPPOUO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じたばた",
+          "cost": [
+            "水"
+          ],
+          "damage": "10×",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ。",
+          "effectId": "reference-47027-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 10
+          }
+        },
+        {
+          "name": "みずかけ",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-47027-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47027.json",
+        "sha256": "267280131a23a0fab95c64a40f68ac7191d260afaa73d36e318a49f9d172cf32",
+        "htmlSha256": "267280131a23a0fab95c64a40f68ac7191d260afaa73d36e318a49f9d172cf32",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -21524,6 +21723,81 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47082",
+      "name": "Nのレシラム",
+      "deckName": "Nのレシラム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47082",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047082_P_NNORESHIRAMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "パワーレイジ",
+          "cost": [
+            "炎",
+            "雷"
+          ],
+          "damage": "20×",
+          "text": "このポケモンにのっているダメカンの数×20ダメージ。",
+          "effectId": "reference-47082-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 20
+          }
+        },
+        {
+          "name": "イノセントフレイム",
+          "cost": [
+            "炎",
+            "炎",
+            "雷",
+            "無色"
+          ],
+          "damage": "170",
+          "text": "",
+          "effectId": "reference-47082-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47082.json",
+        "sha256": "88d76c693476dfe82b8f4381ea661da6b0ab0790718cf45571ee0e3b12d436f0",
+        "htmlSha256": "88d76c693476dfe82b8f4381ea661da6b0ab0790718cf45571ee0e3b12d436f0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47084",
       "name": "オタチ",
       "deckName": "オタチ",
@@ -21831,6 +22105,81 @@
         "path": "data/effect-extensions/evidence/47228.json",
         "sha256": "e37fc47d7c737a2a864f68d6a5190c41106b075dcf8bd4cbe0238b8a9096a2a5",
         "htmlSha256": "e37fc47d7c737a2a864f68d6a5190c41106b075dcf8bd4cbe0238b8a9096a2a5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47229",
+      "name": "Nのレシラム",
+      "deckName": "Nのレシラム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47229",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047229_P_NNORESHIRAMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "パワーレイジ",
+          "cost": [
+            "炎",
+            "雷"
+          ],
+          "damage": "20×",
+          "text": "このポケモンにのっているダメカンの数×20ダメージ。",
+          "effectId": "reference-47229-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 20
+          }
+        },
+        {
+          "name": "イノセントフレイム",
+          "cost": [
+            "炎",
+            "炎",
+            "雷",
+            "無色"
+          ],
+          "damage": "170",
+          "text": "",
+          "effectId": "reference-47229-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47229.json",
+        "sha256": "6669b15ca96e9e1c156e27d3298d1160e69eeda46f985f951602be7b12fdef27",
+        "htmlSha256": "6669b15ca96e9e1c156e27d3298d1160e69eeda46f985f951602be7b12fdef27",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -25350,6 +25699,83 @@
         "path": "data/effect-extensions/evidence/47586.json",
         "sha256": "1eb41af164ec1f6fa133809266d1c39ebbe09ab0f8393e343182b4fd227ce322",
         "htmlSha256": "1eb41af164ec1f6fa133809266d1c39ebbe09ab0f8393e343182b4fd227ce322",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47590",
+      "name": "イシズマイ",
+      "deckName": "イシズマイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47590",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047590_P_ISHIZUMAI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "じたばた",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ。",
+          "effectId": "reference-47590-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 0,
+            "perCounter": 10
+          }
+        },
+        {
+          "name": "ツメをたてる",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-47590-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47590.json",
+        "sha256": "931f8fec860ab9b4a3dae04ff7e2d2524f9c7eb0f12c3e5c964b205a8f6eb9df",
+        "htmlSha256": "931f8fec860ab9b4a3dae04ff7e2d2524f9c7eb0f12c3e5c964b205a8f6eb9df",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -28931,6 +29357,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47163",
+      "name": "ジュラルドン",
+      "deckName": "ジュラルドン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47163",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047163_P_JIXYURARUDON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちかます",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-47163-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "レイジングハンマー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-47163-attack-1",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 80,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47163.json",
+        "sha256": "eece2daa9d7704363558c37c754b58438e0d0a1f818b8afb0192983179f0ddad",
+        "htmlSha256": "eece2daa9d7704363558c37c754b58438e0d0a1f818b8afb0192983179f0ddad",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47167",
       "name": "ナンジャモのカイデン",
       "deckName": "ナンジャモのカイデン",
@@ -29472,6 +29981,67 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50658",
+      "name": "ピカチュウ",
+      "deckName": "ピカチュウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50658",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050658_P_PIKACHIXYUU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アンガーボルト",
+          "cost": [
+            "雷"
+          ],
+          "damage": "10+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-50658-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 10,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50658.json",
+        "sha256": "27f7313028ac651e89c1076eae7637fdc66ff106a4aecf5902b985c5bdbbf1f3",
+        "htmlSha256": "27f7313028ac651e89c1076eae7637fdc66ff106a4aecf5902b985c5bdbbf1f3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45194",
       "name": "ポチエナ",
       "deckName": "ポチエナ",
@@ -29530,6 +30100,81 @@
         "path": "data/effect-extensions/evidence/45194.json",
         "sha256": "3b35c63dbb3f5d75748ef50dbe2e4e7679343da87eab938af49ab93461a83ff8",
         "htmlSha256": "3b35c63dbb3f5d75748ef50dbe2e4e7679343da87eab938af49ab93461a83ff8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45300",
+      "name": "コライドンex",
+      "deckName": "コライドンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45300",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVHK/045300_P_KORAIDONEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ほうふくてっつい",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-45300-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 20,
+            "perCounter": 10
+          }
+        },
+        {
+          "name": "カイザータックル",
+          "cost": [
+            "炎",
+            "闘",
+            "闘"
+          ],
+          "damage": "280",
+          "text": "このポケモンにも60ダメージ。",
+          "effectId": "reference-45300-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 60
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45300.json",
+        "sha256": "aa618aa49633213730cfedf8c6d0d50169ad2e9ffc921c19a8139a8e05902f55",
+        "htmlSha256": "aa618aa49633213730cfedf8c6d0d50169ad2e9ffc921c19a8139a8e05902f55",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -30079,6 +30724,156 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46011",
+      "name": "ジュラルドン",
+      "deckName": "ジュラルドン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46011",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046011_P_JIXYURARUDON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちかます",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46011-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "レイジングハンマー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-46011-attack-1",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 80,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46011.json",
+        "sha256": "4e0400162443378928084b786694468f64d74ee13ae1cff031e0c95f13c32323",
+        "htmlSha256": "4e0400162443378928084b786694468f64d74ee13ae1cff031e0c95f13c32323",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46191",
+      "name": "レジスチル",
+      "deckName": "レジスチル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46191",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVLS/046191_P_REJISUCHIRU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "レイジングハンマー",
+          "cost": [
+            "鋼",
+            "無色"
+          ],
+          "damage": "60+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-46191-attack-0",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 60,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46191.json",
+        "sha256": "e03c21b592a2e7aea07cb290e4e484cae9fd58c536b78a41a4f62b99d761fea1",
+        "htmlSha256": "e03c21b592a2e7aea07cb290e4e484cae9fd58c536b78a41a4f62b99d761fea1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46242",
       "name": "クワッス",
       "deckName": "クワッス",
@@ -30616,6 +31411,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46542",
+      "name": "ジュラルドン",
+      "deckName": "ジュラルドン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46542",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046542_P_JIXYURARUDON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちかます",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46542-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "レイジングハンマー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-46542-attack-1",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 80,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46542.json",
+        "sha256": "ed51c20fc24d35a26d834ed1c357d85ef25b058aaf9f5cbd6a44437c73fe89f0",
+        "htmlSha256": "ed51c20fc24d35a26d834ed1c357d85ef25b058aaf9f5cbd6a44437c73fe89f0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46548",
       "name": "カビゴンex",
       "deckName": "カビゴンex",
@@ -30693,6 +31571,89 @@
         "path": "data/effect-extensions/evidence/46548.json",
         "sha256": "6070b986088307e1e81e52dcb98f30235a2eb29313ae6a556345da9bd9310cb8",
         "htmlSha256": "6070b986088307e1e81e52dcb98f30235a2eb29313ae6a556345da9bd9310cb8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46773",
+      "name": "ジュラルドン",
+      "deckName": "ジュラルドン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46773",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046773_P_JIXYURARUDON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちかます",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46773-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "レイジングハンマー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンにのっているダメカンの数×10ダメージ追加。",
+          "effectId": "reference-46773-attack-1",
+          "plan": {
+            "mechanic": "SELF_COUNTER_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 80,
+            "perCounter": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46773.json",
+        "sha256": "99b8c9c2c73699cc75eb2a019dfee383d3d58a7cc70db2eaa139b8f2167926eb",
+        "htmlSha256": "99b8c9c2c73699cc75eb2a019dfee383d3d58a7cc70db2eaa139b8f2167926eb",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -45632,11 +46593,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45720",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45722",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -46267,11 +47223,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46696",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46698",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -46377,11 +47328,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47027",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47036",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -46447,11 +47393,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47082",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47083",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -46488,11 +47429,6 @@
     },
     {
       "officialCardId": "47226",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47229",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -46788,11 +47724,6 @@
     },
     {
       "officialCardId": "47579",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47590",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -47242,11 +48173,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47163",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47295",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -47372,11 +48298,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50658",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50659",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -47498,11 +48419,6 @@
     },
     {
       "officialCardId": "45299",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45300",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -47832,11 +48748,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46011",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46013",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -47918,11 +48829,6 @@
     },
     {
       "officialCardId": "46186",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46191",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -48052,11 +48958,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46542",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46543",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -48178,11 +49079,6 @@
     },
     {
       "officialCardId": "46766",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46773",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

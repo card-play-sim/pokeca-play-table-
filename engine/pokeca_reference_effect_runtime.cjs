@@ -407,11 +407,12 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
    if(m==='COIN_BONUS_DAMAGE')amount=plan.base+(coin(g,actor)?plan.bonus:0);
+   if(m==='SELF_COUNTER_DAMAGE')amount=plan.base+(card.damage||0)/10*plan.perCounter;
    if(m==='COMBO'){amount=Number.parseInt(effect.damage,10);let flips=0;while(coin(g,actor)){amount+=50;assert(++flips<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');}}
    if(m==='MOON_RONDO')amount=Number.parseInt(effect.damage,10)+20*(p.bench.length+o.bench.length);
    if(m==='EX_COUNT_DAMAGE')amount=60*field(o).filter(c=>record(c).facts.prizeCount>=2).length;

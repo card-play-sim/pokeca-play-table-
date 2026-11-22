@@ -73,7 +73,7 @@ for (const r of selected) {
       if (!(option && (option.ok ?? option.enabled))) continue;
       const game = p.getSnapshot();
       if (!p.dispatch("you", option.action).ok) continue;
-      const printedDamageEvents = ["VANILLA_DAMAGE", "COIN_BONUS_DAMAGE"].includes(e.plan.mechanic)
+      const printedDamageEvents = ["VANILLA_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event =>
             (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
             (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))
