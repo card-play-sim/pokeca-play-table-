@@ -1,7 +1,7 @@
 name: Incremental official effect intake
 on:
-  # Run the repaired pipeline immediately after the recovery PR lands on main.
-  # Normal daily schedule remains; checkpoint branches never trigger this push.
+  # Accelerate only exact official print/effect intake; preserve all fail-closed gates.
+  # Scheduled checkpoints resume missing prints without changing existing decks.
   push:
     branches: [main]
     paths:
@@ -10,13 +10,13 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Maximum new official pages
-        default: "50"
+        description: Maximum new official pages per checkpoint (official ID and effect verification required)
+        default: "400"
         required: true
   issue_comment:
     types: [created]
   schedule:
-    - cron: "15 20 * * *"
+    - cron: "*/20 * * * *"
 permissions:
   contents: write
   pull-requests: write
@@ -32,7 +32,7 @@ jobs:
        github.event.comment.user.login == github.repository_owner &&
        github.event.comment.body == '/card-auto-connect')
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,10 +79,11 @@ jobs:
         run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official evidence and run approved local commands
         env:
-          INTAKE_LIMIT: ${{ inputs.limit || '50' }}
+          INTAKE_LIMIT: ${{ inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
+          node tests/bulk-basic-energy-intake.test.cjs
           node scripts/list-card-auto-connect-ids.cjs /tmp/official-update-ids.json
           python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient --ids /tmp/official-update-ids.json
           node scripts/stage-card-auto-connect.cjs "$(git rev-parse HEAD)" work/card-auto-connect
