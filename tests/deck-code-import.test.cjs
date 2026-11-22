@@ -190,7 +190,7 @@ const migrationStorage={
  setItem:(key,value)=>migrationMemory.set(key,value)
 };
 api.saveImport(migrationStorage,verified);
-migrationStorage.set('pokeca.deck-builder.v1',JSON.stringify({decks:[
+migrationStorage.setItem('pokeca.deck-builder.v1',JSON.stringify({decks:[
  {id:'personal-untouched',name:'元からあるデッキ',cards:{'49011':3}}
 ]}));
 assert.equal(api.migrateImports(migrationStorage,catalog),1);
