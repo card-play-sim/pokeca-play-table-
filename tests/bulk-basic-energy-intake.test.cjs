@@ -15,6 +15,14 @@ const realCatalog = require('../data/deck-building/catalog.json');
 const exceptions = realCatalog.records.filter(row =>
   row.legality === 'official-basic-energy-exception');
 const verifiedExceptions = exceptions.filter(verifiedBasicException);
+console.log('OFFICIAL_BASIC_ENERGY_CATALOG_DIAG', JSON.stringify({
+  total:exceptions.length, verified:verifiedExceptions.length,
+  sample:exceptions.slice(0,4).map(row => ({
+    id:row.officialCardId,name:row.name,category:row.category,
+    basicEnergy:row.basicEnergy,legality:row.legality,
+    source:row.source,regulationMark:row.regulationMark
+  }))
+}));
 assert(exceptions.length >= 500,
   'basic-energy exception cohort unexpectedly missing from official catalog');
 assert(verifiedExceptions.length >= 500,
