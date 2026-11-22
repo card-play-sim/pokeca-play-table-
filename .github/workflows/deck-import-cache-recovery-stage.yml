@@ -1,4 +1,5 @@
 name: Stage safe import cache recovery
+# Rebuild PWA after merging J15 official effects (PR #158) with save/list recovery.
 on:
   push:
     branches: [fix/deck-import-stale-service-worker-20261122]
