@@ -9,6 +9,18 @@ const basic = (id, overrides = {}) => ({
   regulationMark:'G', basicEnergy:true, legality:'official-basic-energy-exception',
   source:{heading:'基本エネルギー'}, ...overrides
 });
+// The real authoritative catalog must contain a substantial high-volume
+// exception cohort. A selector that silently selects zero is not progress.
+const realCatalog = require('../data/deck-building/catalog.json');
+const exceptions = realCatalog.records.filter(row =>
+  row.legality === 'official-basic-energy-exception');
+const verifiedExceptions = exceptions.filter(verifiedBasicException);
+assert(exceptions.length >= 500,
+  'basic-energy exception cohort unexpectedly missing from official catalog');
+assert(verifiedExceptions.length >= 500,
+  'official basic-energy eligibility rejected most real catalog printings');
+console.log('OFFICIAL_BASIC_ENERGY_EXCEPTION_COHORT', JSON.stringify({
+  available:exceptions.length, verified:verifiedExceptions.length}));
 const source = {records:[
   {officialCardId:'50001', regulationMark:'J', legality:'printed-hij'},
   {officialCardId:'46001', regulationMark:'I', legality:'printed-hij'},
