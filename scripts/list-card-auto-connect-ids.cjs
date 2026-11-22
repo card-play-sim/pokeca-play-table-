@@ -9,9 +9,14 @@ const basicName = /^基本[草炎水雷超闘悪鋼]エネルギー$/;
 // Require the same independently catalogued official-print identity that the
 // deck-builder uses; never infer an arbitrary old card from a shared name.
 function verifiedBasicException(row) {
+  const source = row.source;
   return row.legality === 'official-basic-energy-exception' &&
     row.category === 'energy' && row.basicEnergy === true &&
-    row.source?.heading === '基本エネルギー' && basicName.test(row.name || '');
+    source?.kind === 'official-filtered-search' &&
+    source.heading === '基本エネルギー' &&
+    /^[a-f0-9]{64}$/.test(source.sha256 || '') &&
+    /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(source.identityImageUrl || '') &&
+    basicName.test(source.identityName || '');
 }
 function selectIds(catalog,connected) {
   const ids=[],invalid=[],seen=new Set();
@@ -21,7 +26,10 @@ function selectIds(catalog,connected) {
     if(!basicException && !(row.legality === 'printed-hij' &&
       Object.hasOwn(priority,row.regulationMark)))continue;
     const id=String(row.officialCardId??'');
-    if(!/^[1-9][0-9]{3,7}$/.test(id)) {
+    // Some authentic legacy basic Energy cards have 1-3 digit official IDs.
+    // Other H/I/J prints retain the stricter 4-8 digit intake identity boundary.
+    const format = basicException ? /^[1-9][0-9]{0,7}$/ : /^[1-9][0-9]{3,7}$/;
+    if(!format.test(id)) {
       invalid.push({officialCardId:id,regulationMark:row.regulationMark});
       continue;
     }
@@ -29,7 +37,7 @@ function selectIds(catalog,connected) {
     seen.add(id);
     ids.push({id,rank:basicException ? 0 : priority[row.regulationMark]});
   }
-  ids.sort((a,b)=>a.rank-b.rank||Number(a.id)-Number(b.id));
+  ids.sort((a,b)=>a.rank-b.rank||(a.rank===0 ? Number(b.id)-Number(a.id) : Number(a.id)-Number(b.id)));
   return {ids:ids.map(row=>row.id),invalid};
 }
 if(require.main===module) {
