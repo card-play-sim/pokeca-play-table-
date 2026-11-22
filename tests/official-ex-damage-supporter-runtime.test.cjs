@@ -28,6 +28,7 @@ assert(p.dispatch('you',action.action).ok,'official supporter use must succeed')
 const after=p.getSnapshot();
 assert.equal(after.players[0].referenceExDamageBoost?.turn,after.turnNumber);
 assert.equal(after.players[0].referenceExDamageBoost?.amount,40);
+assert.equal(after.players[1].referenceExDamageBoost,undefined,'supporter bonus must not leak to opponent');
 assert(p.restoreSession(p.getResumeSnapshot()).ok);
 assert.deepEqual(p.getSnapshot(),after,'supporter boost must survive exact session restore');
 const active=after.players[1].active;
