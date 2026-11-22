@@ -29,7 +29,7 @@ function selectIds(catalog,connected) {
     seen.add(id);
     ids.push({id,rank:basicException ? 0 : priority[row.regulationMark]});
   }
-  ids.sort((a,b)=>a.rank-b.rank||Number(a.id)-Number(b.id);
+  ids.sort((a,b)=>a.rank-b.rank||Number(a.id)-Number(b.id));
   return {ids:ids.map(row=>row.id),invalid};
 }
 if(require.main===module) {
