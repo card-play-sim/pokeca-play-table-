@@ -17,7 +17,7 @@ PARSER=ROOT/'scripts/parse-official-pokemon-energy.cjs'
 def official_stage_field(body):
     # Stage-only fallback; never parse or accept gameplay effect text in this path.
     anchor='<div class="RightBox-inner">'
-    if body.count(anchor)!=1:
+    if anchor not in body:
         return None
     top=body.split(anchor,1)[1].split('<h2',1)[0]
     fields=re.findall(r'<span class="type">\s*(たね|1進化|2進化)\s*</span>',top)
