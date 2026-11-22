@@ -12,6 +12,7 @@ on:
       - 'scripts/pwa-worker-template.js'
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
+      - 'tests/deck-blocker-browser.py'
       - 'tests/deck-code-import.test.cjs'
       - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
@@ -32,6 +33,7 @@ on:
       - 'scripts/pwa-worker-template.js'
       - 'ui/deck-editor.css'
       - 'tests/deck-editor-browser.py'
+      - 'tests/deck-blocker-browser.py'
       - 'tests/deck-code-import.test.cjs'
       - 'tests/deck-blocker-diagnostics.test.cjs'
       - 'ui/imported-deck-match.js'
@@ -57,3 +59,4 @@ jobs:
       - run: pip install playwright==1.56.0
       - run: python -m playwright install --with-deps chromium
       - run: python tests/deck-editor-browser.py
+      - run: python tests/deck-blocker-browser.py
