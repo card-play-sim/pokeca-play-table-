@@ -113,7 +113,7 @@
     }
     for(const item of blocked(deck))
       header.push((item.name||'カードID '+item.officialCardId)+' ×'+item.count+' [未照合ID '+item.officialCardId+']');
-    return header.join('\\n');
+    return header.join('\n');
   }
 
   // Audits only the current I/J priority scope. H and historical prints are excluded.
