@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 296,
-      "missing": 1406
+      "connected": 297,
+      "missing": 1405
     },
     "J": {
       "total": 869,
@@ -16,10 +16,10 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 290,
+      "CONNECTED_UNTESTED": 291,
       "MECHANIC_REQUIRED": 203,
       "EVIDENCE_UNVERIFIED": 14,
-      "ENGINE_CONNECTION_REQUIRED": 109,
+      "ENGINE_CONNECTION_REQUIRED": 108,
       "EVIDENCE_MISSING": 1080,
       "EXECUTION_PASS": 6
     },
@@ -4329,8 +4329,7 @@
       "name": "モノズ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48054.json"
     },
     {
