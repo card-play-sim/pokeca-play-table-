@@ -12,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 INPUT=ROOT/"reports/m7-official-delta.json"
 OUTPUT=ROOT/"reports/m7-full-print-number-audit.json"
 DETAIL="https://www.pokemon-card.com/card-search/details.php/card/"
-NUM=re.compile(r'<img[^>]+src="/assets/images/card/regulation_logo_1/M7\\.gif"[^>]*>\\s*([0-9]{3})\\s*/\\s*([0-9]{3})',re.I)
+NUM=re.compile(r'<img[^>]+src="/assets/images/card/regulation_logo_1/M7\.gif"[^>]*>\s*([0-9]{3})\s*/\s*([0-9]{3})',re.I)
 
 def verify(record):
     cid=str(record["officialCardId"])
