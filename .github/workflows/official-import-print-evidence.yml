@@ -1,0 +1,52 @@
+name: Verify official imported print JPEGs
+on:
+  push:
+    branches: [fix/official-import-print-evidence-49573-47288-20261122]
+    paths:
+      - 'scripts/audit_official_import_print_images.py'
+      - 'data/deck-building/official-import-print-evidence.json'
+      - 'ui/deck-import-page.js'
+      - 'ui/deck-builder.js'
+      - 'ui/deck-code-import.js'
+      - 'scripts/build-pwa-release.cjs'
+      - '.github/workflows/official-import-print-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/official-import-print-evidence-49573-47288-20261122
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install Pillow==11.3.0
+      - name: Audit both exact official page IDs and original JPEG hashes
+        run: python scripts/audit_official_import_print_images.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build the byte-verified offline PWA shell with this evidence
+        run: node scripts/build-pwa-release.cjs
+      - name: Save reviewed proof and updated PWA bytes to the branch (not main)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/deck-building/official-import-verified-extension.json sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit: bind verified official imported print JPEG hashes'
+            git push origin HEAD:fix/official-import-print-evidence-49573-47288-20261122
+          fi
+      - name: Attach validation evidence to run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-import-verified-print-evidence
+          path: |
+            data/deck-building/official-import-print-evidence.json
+            data/deck-building/official-import-verified-extension.json
