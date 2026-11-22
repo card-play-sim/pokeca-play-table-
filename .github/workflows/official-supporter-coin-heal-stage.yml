@@ -1,0 +1,53 @@
+name: Stage H supporter coin draw and active-only heal
+on:
+  push:
+    branches:
+      - feat/h-supporter-coin-heal-20261122
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/build-effect-extensions.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'data/effect-extensions/intake.json'
+      - 'tests/official-supporter-coin-heal.test.cjs'
+      - 'tests/official-supporter-coin-heal-runtime.test.cjs'
+      - '.github/workflows/official-supporter-coin-heal-stage.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/h-supporter-coin-heal-20261122
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate exact H official text and source before generation
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/official-supporter-coin-heal.test.cjs
+      - name: Generate official extension and release files
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Exercise real bundled gameplay, both coin outcomes and restore
+        run: node tests/official-supporter-coin-heal-runtime.test.cjs
+      - name: Save verified generated artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: connect H supporter coin draw and active-only heal to PWA'
+            git push origin HEAD:feat/h-supporter-coin-heal-20261122
+          fi

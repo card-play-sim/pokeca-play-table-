@@ -83,6 +83,19 @@ function plan(entry,kind){
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')return {mechanic:'COIN_FORCE_SWITCH',commands:['COIN_FLIP','FORCE_SWITCH']};
+ // A shuffled hand draw may depend on remaining opposing Prize cards, with the
+ // source Supporter itself already removed from the hand by canonical dispatch.
+ match=generic.match(/^自分の手札をすべて山札にもどして切る。その後、山札を([1-9][0-9]*)枚引く。相手のサイドの残り枚数が([1-9][0-9]*)枚以下なら、引く枚数は([1-9][0-9]*)枚になる。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'RETURN_HAND_PRIZE_DRAW',commands:['RETURN_TO_DECK','SHUFFLE_DECK','DRAW'],normal:Number(match[1]),threshold:Number(match[2]),bonus:Number(match[3])};
+ // Coin is flipped only AFTER the returned hand has been shuffled into the deck.
+ match=generic.match(/^自分の手札をすべて山札にもどして切る。その後、コインを1回投げ、オモテなら([1-9][0-9]*)枚、ウラなら([1-9][0-9]*)枚、山札を引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'RETURN_HAND_COIN_DRAW',commands:['RETURN_TO_DECK','SHUFFLE_DECK','COIN_FLIP','DRAW'],heads:Number(match[1]),tails:Number(match[2])};
+ // Official H supporters: a single coin decides how many cards to draw.
+ match=generic.match(/^コインを1回投げる。オモテなら([1-9][0-9]*)枚、ウラなら([1-9][0-9]*)枚、自分の山札を引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COIN_DRAW_CARDS',commands:['COIN_FLIP','DRAW'],heads:Number(match[1]),tails:Number(match[2])};
+ // A heal affecting the Active Pokemon only is not an arbitrary-target heal.
+ match=generic.match(/^自分のバトルポケモンのHPを「([1-9][0-9]*)」回復する。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  match=generic.match(/^自分の手札をすべてトラッシュし、山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DISCARD_HAND_DRAW',commands:['DISCARD','DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のトラッシュから基本エネルギーを([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);
