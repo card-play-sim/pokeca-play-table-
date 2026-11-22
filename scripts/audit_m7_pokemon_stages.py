@@ -20,7 +20,7 @@ def official_stage_field(body):
     if body.count(anchor)!=1:
         return None
     top=body.split(anchor,1)[1].split('<h2',1)[0]
-    fields=re.findall(r'<span class="type">\\s*(たね|1進化|2進化)\\s*</span>',top)
+    fields=re.findall(r'<span class="type">\s*(たね|1進化|2進化)\s*</span>',top)
     if len(fields)!=1:
         return None
     return {'たね':0,'1進化':1,'2進化':2}[fields[0]]
