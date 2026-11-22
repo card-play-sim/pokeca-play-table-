@@ -74,10 +74,32 @@ function parseHtml(html, code) {
  }
  return parseFields(values, code);
 }
-function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}) {
+function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}, printExtension = {records:[]}) {
+ // Additional official prints are accepted only with an exact official page,
+ // original JPEG digest and a bound HTML digest. G prints are archived for
+ // display, never adopted as H/I/J cards.
+ const verifiedPrints = (Array.isArray(printExtension.records) ? printExtension.records : []).filter(row =>
+  row.verified === true && /^[1-9][0-9]*$/.test(String(row.officialCardId)) &&
+  row.source?.url === row.officialPageUrl && /^[a-f0-9]{64}$/.test(row.source?.sha256) &&
+  row.source?.identityName === row.name && row.source?.identityImageUrl === row.imageSourceUrl &&
+  /^[a-f0-9]{64}$/.test(row.markEvidence?.imageSha256) &&
+  new RegExp('^https://www\\\\.pokemon-card\\\\.com/card-search/details\\\\.php/card/'+row.officialCardId+'(?:/|$)').test(row.officialPageUrl) &&
+  /^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl) &&
+  ['G','H','I','J'].includes(row.regulationMark));
  const classified = new Map(classification.records.map(row => [String(row.officialCardId), row]));
- const rows = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
+ const primary = [...(Array.isArray(registry.cards) ? registry.cards : Object.values(registry.imageByOfficialCardId || {})),
   ...(Array.isArray(imageExtension.cards) ? imageExtension.cards : [])];
+ const ids = new Set(primary.map(row => String(row.officialCardId)));
+ const rows = [...primary, ...verifiedPrints.filter(row => !ids.has(String(row.officialCardId)))];
+ const reviewed = new Map();
+ for (const row of verifiedPrints) {
+  const id = String(row.officialCardId);
+  const existing = classified.get(id);
+  if (existing && (existing.source?.identityName !== row.name ||
+      existing.source?.identityImageUrl !== row.imageSourceUrl)) continue;
+  classified.set(id,row);
+  reviewed.set(id,row);
+ }
  const formalById = new Map((Array.isArray(formal.records) ? formal.records : Object.values(formal.records || {}))
   .map(row => [String(row.officialCardId), row]));
  const duplicates = new Set();
@@ -92,7 +114,13 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
    !/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\//.test(url)) continue;
   if (seen.has(id)) { duplicates.add(id); continue; }
   seen.add(id);
-  cards.archive.set(id,{id,name:row.name,url,pack:row.set,number:row.cardNumber,category:'unknown'});
+  const reviewedPrint = reviewed.get(id);
+  const archiveVerified = reviewedPrint && reviewedPrint.name === row.name &&
+   reviewedPrint.imageSourceUrl === url && reviewedPrint.set === row.set &&
+   reviewedPrint.cardNumber === row.cardNumber;
+  cards.archive.set(id,{id,name:row.name,url,pack:row.set,number:row.cardNumber,
+    category:archiveVerified ? reviewedPrint.category : 'unknown',
+    regulationMark:archiveVerified ? reviewedPrint.regulationMark : undefined});
   const evidence = formalById.get(id);
   if (evidence && (evidence.name !== row.name ||
      (evidence.set && row.set && evidence.set !== row.set) ||
@@ -121,11 +149,12 @@ async function loadCatalog() {
   if (!response.ok) throw Error('カード台帳を読み込めませんでした');
   return response.json();
  };
- const [registry, formal, classification, m7ImageExtension] = await Promise.all([
+ const [registry, formal, classification, m7ImageExtension, officialPrintExtension] = await Promise.all([
   read('data/official-image-registry.json'), read('data/reference-effects/catalog.json'),
-  read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json')
+  read('data/deck-building/catalog.json'), read('data/deck-building/m7-official-image-extension.json'),
+  read('data/deck-building/official-import-verified-extension.json')
  ]);
- const cards = catalogFrom(registry, formal, classification, m7ImageExtension);
+ const cards = catalogFrom(registry, formal, classification, m7ImageExtension, officialPrintExtension);
  if (!cards.size) throw Error('照合可能なカードがありません');
  return cards;
 }
@@ -136,10 +165,15 @@ function matchCatalog(deck, cards) {
    [...cards.values()].filter(card => row.pack && row.number &&
     card.name === row.name && card.pack === row.pack &&
     card.number === row.number.replace(/\s/g,''));
-  if (matches.length !== 1) return {
-   ...row, identityStatus:'BLOCKED',
-   reason:matches.length ? 'AMBIGUOUS_PRINT' : 'OFFICIAL_PRINT_NOT_FOUND'
-  };
+  if (matches.length !== 1) {
+   const archived = exactId ? cards.archive?.get(String(row.officialCardId)) : null;
+   return {...row, name:archived?.name || row.name, imageUrl:archived?.url,
+    regulationMark:archived?.regulationMark,
+    identityStatus:'BLOCKED',
+    reason:matches.length ? 'AMBIGUOUS_PRINT' :
+     archived?.regulationMark && !['H','I','J'].includes(archived.regulationMark) ?
+      'OUT_OF_REGULATION' : archived ? 'OFFICIAL_PRINT_UNVERIFIED' : 'OFFICIAL_PRINT_NOT_FOUND'};
+  }
   const card = matches[0];
   return {...row, name:card.name, officialCardId:card.id, imageUrl:card.url, identityStatus:'CONFIRMED'};
  });
