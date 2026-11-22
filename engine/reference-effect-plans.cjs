@@ -83,6 +83,9 @@ function plan(entry,kind){
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')return {mechanic:'COIN_FORCE_SWITCH',commands:['COIN_FLIP','FORCE_SWITCH']};
+ // A Supporter that first discards one other physical hand card draws as many
+ // cards as the opponent currently has Benched Pokemon. Exact official text only.
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='このカードは、自分の手札を1枚トラッシュしなければ使えない。相手のベンチポケモンの数ぶん、自分の山札を引く。')return {mechanic:'DISCARD_ONE_DRAW_OPP_BENCH',commands:['DISCARD','DRAW']};
  // A shuffled hand draw may depend on remaining opposing Prize cards, with the
  // source Supporter itself already removed from the hand by canonical dispatch.
  match=generic.match(/^自分の手札をすべて山札にもどして切る。その後、山札を([1-9][0-9]*)枚引く。相手のサイドの残り枚数が([1-9][0-9]*)枚以下なら、引く枚数は([1-9][0-9]*)枚になる。$/);

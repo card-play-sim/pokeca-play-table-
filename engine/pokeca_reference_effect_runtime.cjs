@@ -218,6 +218,7 @@ function requests(g,actor,card,effect){
   }
  }
  if(m==='SEARCH_MEGA_EVOLUTION_EX')deckRequest('cards',p.deck.filter(isMegaEvolutionEx),0,1);
+ if(m==='DISCARD_ONE_DRAW_OPP_BENCH')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
  if(m==='RECYCLE_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='HEAL_AND_CLEAR_STATUS')cardRequest('cards',own.filter(canHealOrClearStatus),1,1);
  if(m==='RECOVER_TYPED_DISCARD'){const pool=p.discard.filter(c=>typedRecoveryCandidate(c,effect.plan));cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
@@ -327,6 +328,7 @@ function preflight(g,actor,action){
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&g.turnNumber!==1&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
+   if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
    if(m==='RECYCLE_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');
@@ -508,6 +510,14 @@ function applyPlan(g,actor,card,effect,action){
    const source=field(p).find(c=>(c.energyCards||[]).some(e=>id(e)===ids('energy')[0])),to=find(g,ids('attachTo')[0]).card;assert(source!==to,'ENERGY_SWITCH_SAME_POKEMON');moveAttachedEnergy(g,actor,source,to,ids('energy')[0]);break;
   }
   case 'BOOST_EX_DAMAGE_THIS_TURN':p.referenceExDamageBoost={turn:g.turnNumber,amount:plan.amount};break;
+  case 'DISCARD_ONE_DRAW_OPP_BENCH':{
+   const discardId=ids('discard')[0],index=p.hand.findIndex(c=>id(c)===discardId);
+   assert(index>=0,'SUPPORTER_DISCARD_COST_MISSING');
+   p.discard.push(p.hand.splice(index,1)[0]);
+   event(g,actor,'DISCARD',{cardIds:[discardId],fromZone:'hand',privateTo:actor});
+   if(o.bench.length>0)draw(g,p,o.bench.length);
+   break;
+  }
   case 'RETURN_HAND_PRIZE_DRAW':resetHand(g,p,o.prizes<=plan.threshold?plan.bonus:plan.normal);break;
   case 'RETURN_HAND_COIN_DRAW':resetHand(g,p,()=>coin(g,actor)?plan.heads:plan.tails);break;
   case 'COIN_DRAW_CARDS':draw(g,p,coin(g,actor)?plan.heads:plan.tails);break;
