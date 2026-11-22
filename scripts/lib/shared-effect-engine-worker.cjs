@@ -249,6 +249,15 @@ function prepare(r, e, kind) {
     }
     assert(player.bench.length >= e.plan.minimum);
   }
+  if (m === "ACTIVE_TOP_SUPPORTER_SEARCH") {
+    const deck=frame.game.players[0].deck;
+    const supporters=deck.filter(card=>card.cardType==="SUPPORTER");
+    assert(supporters.length>=2);
+    for (const [card, position] of [[supporters[0],0],[supporters[1],6]]) {
+      deck.splice(deck.indexOf(card),1);
+      deck.splice(position,0,card);
+    }
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -357,6 +366,25 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   if (e.plan.mechanic === "VANILLA_DAMAGE")
     verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "ACTIVE_TOP_SUPPORTER_SEARCH") {
+    const action=t.action||o.action;
+    const [chosen]=action.selections.cards;
+    const own=before.players[0];
+    assert(own.deck.slice(0,6).some(card=>card.id===chosen&&card.cardType==="SUPPORTER"));
+    assert(o.requests[0].inspection.cards.length===6);
+    assert(after.players[0].hand.some(card=>card.id===chosen));
+    const events=after.history.slice(before.history.length).map(event=>event.details);
+    assert(events.some(step=>step?.command==="REVEAL"&&step.cardIds?.includes(chosen)));
+    assert(events.some(step=>step?.command==="SHUFFLE_DECK"));
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...action,selections:{cards:[own.deck[6].id]}}).ok,false);
+    assert.deepEqual(replay.getSnapshot(),before);
+    const swapped=JSON.parse(JSON.stringify(before));
+    const player=swapped.players[0];
+    [player.active,player.bench[0]]=[player.bench[0],player.active];
+    assert.equal(port(swapped).dispatch("you",action).ok,false);
+    assert.equal(p.dispatch("you",action).ok,false);
+  }
   if (e.plan.mechanic === "FULL_BENCH_REQUIRED_DAMAGE") {
     verifyPrintedAttack(before, after, e, Number(e.damage));
     const start = JSON.parse(JSON.stringify(before));
