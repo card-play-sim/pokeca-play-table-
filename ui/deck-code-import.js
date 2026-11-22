@@ -75,9 +75,9 @@ function parseHtml(html, code) {
  return parseFields(values, code);
 }
 function catalogFrom(registry, formal, classification = {records:[]}, imageExtension = {cards:[]}, printExtension = {records:[]}) {
- // Additional official prints are accepted only with an exact official page,
- // original JPEG digest and a bound HTML digest. G prints are archived for
- // display, never adopted as H/I/J cards.
+ // Additional official prints require exact official page/JPEG hash evidence.
+ // Historical G prints are accepted only where an explicit hash-bound
+ // current official standard-format legacy-card exception authorizes them.
  const verifiedPrints = (Array.isArray(printExtension.records) ? printExtension.records : []).filter(row =>
   row.verified === true && /^[1-9][0-9]*$/.test(String(row.officialCardId)) &&
   row.source?.url === row.officialPageUrl && /^[a-f0-9]{64}$/.test(row.source?.sha256) &&
@@ -135,7 +135,12 @@ function catalogFrom(registry, formal, classification = {records:[]}, imageExten
       !(['H','I','J'].includes(proof.regulationMark) && proof.legality === 'printed-hij' &&
          /^[a-f0-9]{64}$/.test(proof.markEvidence?.imageSha256) ||
         proof.basicEnergy === true && proof.category === 'energy' &&
-         proof.source.heading === '基本エネルギー' && proof.legality === 'official-basic-energy-exception')) continue;
+         proof.source.heading === '基本エネルギー' && proof.legality === 'official-basic-energy-exception' ||
+        proof.regulationMark === 'G' && proof.name === 'ボスの指令' && proof.category === 'support' &&
+         proof.legality === 'official-legacy-reprint-exception' &&
+         proof.exceptionEvidence?.rulePageUrl === 'https://www.pokemon-card.com/rules/regulation/' &&
+         proof.exceptionEvidence?.ruleName === 'ボスの指令' &&
+         /^[a-f0-9]{64}$/.test(proof.exceptionEvidence?.rulePageSha256))) continue;
   cards.set(id, {id,name:row.name,url,category:proof.category,pack:proof.pack,number:proof.number,
     regulationMark:proof.regulationMark,basicEnergy:proof.basicEnergy,aceSpec:proof.aceSpec,
     pokemonStage:proof.pokemonStage});
