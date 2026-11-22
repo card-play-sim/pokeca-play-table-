@@ -385,6 +385,25 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(), end);
     }
   }
+  if (e.plan.mechanic === "SEARCH_BASIC_TO_BENCH_ATTACK") {
+    const action = t.action || o.action;
+    const chosen = action.selections.cards;
+    const own = before.players[0];
+    assert(chosen.length > 0 && chosen.length <= Math.min(e.plan.limit, 5 - own.bench.length));
+    for (const id of chosen) {
+      const card = own.deck.find(card => card.id === id);
+      assert(card && E.getReferenceEffectRecord(card).facts.basic);
+      assert(after.players[0].bench.some(card => card.id === id && card.enteredTurn === before.turnNumber));
+      assert(!after.players[0].deck.some(card => card.id === id));
+    }
+    assert(after.history.slice(before.history.length).some(event => event.details?.command === "SHUFFLE_DECK"));
+    const replay = port(before);
+    for (const ids of [[chosen[0], chosen[0]], [own.active.id]]) {
+      assert.equal(replay.dispatch("you", {...action, selections:{cards:ids}}).ok, false);
+      assert.deepEqual(replay.getSnapshot(), before);
+    }
+    assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+  }
   if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
     const source = before.players[0].active;
     const ids = (source.energyCards || []).map(card => card.id);
