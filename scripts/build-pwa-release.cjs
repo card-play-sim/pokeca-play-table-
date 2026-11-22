@@ -11,7 +11,7 @@ for(const [,version] of html.matchAll(/(?:src|href)=\"[^\" ]+\?build=(\d+)\"/g))
 const importHtml=fs.readFileSync('deck-code-import.html','utf8');
 // Versioned subpage assets bypass an old installed worker and are also cached
 // in the *new* verified offline shell. Preserve every ordinary release entry.
-const importAssets=Array.from(importHtml.matchAll(/(?:src|href)="([^" ]+\\?savefix=[^" ]+)"/g),m=>'./'+m[1]);
+const importAssets=Array.from(importHtml.matchAll(/(?:src|href)="([^" ]+\?savefix=[^" ]+)"/g),m=>'./'+m[1]);
 const urls=['./','./index.html',...importAssets,...Array.from(html.matchAll(/(?:src|href)="([^" ]+\?build=\d+)"/g),m=>'./'+m[1]),'./data/fixed-test-decks.json','./data/official-image-registry.json','./data/fixed-deck-preview-bindings.json','./data/fixed-deck-practice-facts.json','./ui/card-back.svg','./manifest.webmanifest','./icon.svg','./deck-builder.html','./deck-code-import.html','./ui/deck-code-import.js','./ui/deck-builder.js','./ui/deck-import-page.js','./ui/deck-editor.css','./ui/saved-decks.js','./data/reference-effects/plans.json','./data/reference-effects/catalog.json','./data/deck-building/catalog.json','./data/deck-building/m7-official-image-extension.json','./data/deck-building/official-import-verified-extension.json','./data/effect-extensions/compiled.json'];
 const files=Object.fromEntries([...new Set(urls)].map(url=>[url,crypto.createHash('sha256').update(fs.readFileSync(url==='./'?'index.html':url.split('?')[0])).digest('hex')]));
 const releaseId=crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex').slice(0,16);
