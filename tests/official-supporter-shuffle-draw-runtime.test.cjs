@@ -36,7 +36,7 @@ for(const id of ['46037','46172','46179','46832']){
 }
 for(const count of [6,3]){
  const t=fixture('46037','RETURN_HAND_PRIZE_DRAW');
- const {after,events}=play(t,g=>{g.players[1].prizes=count;});
+ const {after,events}=play(t,g=>{const o=g.players[1];o.hand.push(...o.prizeCards.splice(0,o.prizeCards.length-count));o.prizes=count;});
  assert.equal(after.players[0].hand.length,count<=3?8:4,'correct conditional draw count');
  assert(events.some(e=>e.details?.command==='SHUFFLE_DECK'));
  assert(events.some(e=>e.details?.command==='RETURN_TO_DECK'));
