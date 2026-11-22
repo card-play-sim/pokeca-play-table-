@@ -3,6 +3,12 @@ on:
   workflow_dispatch:
   push:
     branches: [feat/m7-official-delta-intake]
+    paths:
+      - scripts/import_m7_official_delta.py
+      - scripts/audit_m7_print_metadata.py
+      - scripts/audit_m7_all_print_numbers.py
+      - scripts/audit_m7_pokemon_stages.py
+      - .github/workflows/m7-official-delta.yml
   pull_request:
     paths:
       - scripts/import_m7_official_delta.py
