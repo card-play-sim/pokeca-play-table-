@@ -35,7 +35,7 @@ jobs:
           node scripts/build-pwa-release.cjs --check
       - name: Reject guessed identities and validate exact print gameplay plans
         run: node tests/exact-print-effects.test.cjs
-      - name: Run existing deck and effect runtime regressions
+      - name: Real Pokepad search and Boss opponent switch through physical print IDs\n        run: node tests/exact-print-effects-runtime.test.cjs\n      - name: Run existing deck and effect runtime regressions
         run: |
           node tests/deck-code-import.test.cjs
           node tests/reference-effect-runtime-smoke.test.cjs
