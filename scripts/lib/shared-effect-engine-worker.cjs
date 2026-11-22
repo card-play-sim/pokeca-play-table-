@@ -352,6 +352,32 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(), end);
     }
   }
+  if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
+    for (const [seed, heads] of [[0, true], [682, false]]) {
+      const start = { ...before, referenceRngState: seed };
+      const replay = port(start);
+      assert(replay.dispatch("you", t.action || o.action).ok);
+      const end = replay.getSnapshot();
+      const flips = end.history.slice(start.history.length).filter(event =>
+        event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean");
+      assert.equal(flips.length, 1);
+      assert.equal(flips[0].details.heads, heads);
+      assert.equal(end.players[1].active.statusCondition || null,
+        heads ? "PARALYZED" : (start.players[1].active.statusCondition || null));
+      verifyPrintedAttack(start, end, e, Number.parseInt(e.damage.normalize("NFKC"), 10) || 0);
+      assert.deepEqual(S.identities(start), S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
+    const source = before.players[0].active;
+    const ids = (source.energyCards || []).map(card => card.id);
+    assert(ids.length > 0, "SELF_ENERGY_DISCARD_NEEDS_ATTACHED_ENERGY_FIXTURE");
+    assert.equal(after.players[0].active.energyCards.length, 0);
+    assert(ids.every(id => after.players[0].discard.some(card => card.id === id)));
+    verifyPrintedAttack(before, after, e, Number.parseInt(e.damage.normalize("NFKC"), 10) || 0);
+  }
   if (e.plan.mechanic === "RETREAT_LOCK_ATTACK") {
     const opponent = after.players[1];
     assert.equal(opponent.active.id, before.players[1].active.id);
