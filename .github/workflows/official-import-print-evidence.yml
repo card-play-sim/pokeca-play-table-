@@ -24,11 +24,16 @@ jobs:
       - run: pip install Pillow==11.3.0
       - name: Audit both exact official page IDs and original JPEG hashes
         run: python scripts/audit_official_import_print_images.py
-      - name: Save reviewed J/G proof to the branch (not main)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build the byte-verified offline PWA shell with this evidence
+        run: node scripts/build-pwa-release.cjs
+      - name: Save reviewed proof and updated PWA bytes to the branch (not main)
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/deck-building/official-import-verified-extension.json
+          git add data/deck-building/official-import-verified-extension.json sw.js
           if ! git diff --cached --quiet; then
             git commit -m 'audit: bind verified official imported print JPEG hashes'
             git push origin HEAD:fix/official-import-print-evidence-49573-47288-20261122
