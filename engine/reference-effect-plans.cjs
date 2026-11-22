@@ -83,6 +83,12 @@ function plan(entry,kind){
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='コインを1回投げオモテなら、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')return {mechanic:'COIN_FORCE_SWITCH',commands:['COIN_FLIP','FORCE_SWITCH']};
+ // Official H supporters: a single coin decides how many cards to draw.
+ match=generic.match(/^コインを1回投げる。オモテなら([1-9][0-9]*)枚、ウラなら([1-9][0-9]*)枚、自分の山札を引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COIN_DRAW_CARDS',commands:['COIN_FLIP','DRAW'],heads:Number(match[1]),tails:Number(match[2])};
+ // A heal affecting the Active Pokemon only is not an arbitrary-target heal.
+ match=generic.match(/^自分のバトルポケモンのHPを「([1-9][0-9]*)」回復する。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
  match=generic.match(/^自分の手札をすべてトラッシュし、山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DISCARD_HAND_DRAW',commands:['DISCARD','DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のトラッシュから基本エネルギーを([1-9][0-9]*)枚まで選び、相手に見せて、手札に加える。$/);

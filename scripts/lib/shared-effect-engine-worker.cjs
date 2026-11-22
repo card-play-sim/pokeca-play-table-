@@ -238,6 +238,8 @@ function prepare(r, e, kind) {
     for (const card of opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial))
       opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
   }
+  // The official active-only healing supporter needs a damaged Active fixture.
+  if (m === "HEAL_ACTIVE_DAMAGE") frame.game.players[0].active.damage = 40;
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
