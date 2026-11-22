@@ -16,6 +16,13 @@ if (printExtension.status === 'VERIFIED_OFFICIAL_PRINT_AND_IMAGE_HASH') {
  assert.match(legacyBoss.exceptionEvidence.rulePageSha256,/^[a-f0-9]{64}$/,'Legacy exception must cite the actual official regulation HTML digest');
  assert.equal(catalog.get('49573')?.name,'ポケパッド','Official J Pokepad print must resolve');
  assert.equal(catalog.get('49573')?.url,'https://www.pokemon-card.com/assets/images/card_images/large/MC/049573_T_POKEPADDO.jpg');
+ console.log('LEGACY_BOSS_DIAGNOSTIC',JSON.stringify({
+  fromRegistry: (Array.isArray(registry.cards)?registry.cards:Object.values(registry.imageByOfficialCardId||{})).filter(x=>String(x.officialCardId)==='47288').slice(0,2),
+  classified: JSON.parse(fs.readFileSync('data/deck-building/catalog.json','utf8')).records.filter(x=>String(x.officialCardId)==='47288').slice(0,2),
+  fromArchive: catalog.archive.get('47288'),
+  found: catalog.get('47288'),
+  verifiedEvidence: printExtension.records.find(x=>x.officialCardId==='47288')
+ }));
  assert.equal(catalog.get('47288')?.name,'ボスの指令','Official standard rule permits the legacy Boss print');
  assert.equal(catalog.archive.get('47288')?.name,'ボスの指令');
  assert.equal(api.matchCatalog({source:'official-recipe-html',cards:[{officialCardId:'47288',category:'support',count:3}]},catalog).cards[0].identityStatus,'CONFIRMED');
