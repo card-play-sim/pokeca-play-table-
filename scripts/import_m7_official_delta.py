@@ -29,6 +29,7 @@ def main():
     found = {}
     evidence = []
     observed_thumbnails = []
+    official_api_samples = {}
     for category, params in CATEGORIES.items():
         page = 1
         while True:
@@ -46,6 +47,8 @@ def main():
                         observed_thumbnails.append(thumb)
                     continue
                 cid = str(card["cardID"])
+                if category not in official_api_samples:
+                    official_api_samples[category] = card
                 if cid in found and found[cid]["imageUrl"] != BASE + thumb:
                     raise RuntimeError(f"Conflicting official identity: {cid}")
                 found[cid] = {"officialCardId": cid, "name": card.get("cardNameViewText") or card.get("cardNameAltText"), "category": category, "pack": "M7", "imageUrl": BASE + thumb, "sourceUrl": url, "sourceSha256": sha}
@@ -76,6 +79,7 @@ def main():
         if existing.get("regulationMark") == "J" and group not in examples:
             examples[group] = existing
     result["jCatalogExamples"] = examples
+    result["officialApiSamples"] = official_api_samples
     result["catalogCountBefore"] = len(catalog["records"])
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
