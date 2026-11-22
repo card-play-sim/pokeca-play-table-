@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/exact-print-effects-stage.yml'
       - 'tests/exact-print-effects.test.cjs'
+      - 'tests/exact-print-effects-runtime.test.cjs'
+      - 'tests/exact-print-import-to-battle.test.cjs'
   workflow_dispatch:
 permissions:
   contents: write
