@@ -140,3 +140,73 @@ assert.throws(()=>api.saveImport(deniedWrite,verified),err=>err.name==='QuotaExc
 const lyingStore={getItem:()=>null,setItem:()=>{}};
 assert.throws(()=>api.saveImport(lyingStore,verified),/読み戻せません/);
 console.log('PASS Android import save: compact history, exact print preservation, corrupt history and quota/security diagnostics');
+
+
+// Official recipe Save must be visible in deck-home, not just in the separate
+// official import history. It must not replace unrelated existing decks.
+const deckHomeMap=new Map([['pokeca.deck-builder.v1',JSON.stringify({
+ decks:[{id:'personal-1',name:'保持するデッキ',cards:{'49011':4}}],
+ userSetting:'keep'
+})]]);
+const homeStorage={getItem:key=>deckHomeMap.get(key)??null,
+ setItem:(key,value)=>deckHomeMap.set(key,value)};
+const importedSave=api.saveBuilderDeck(homeStorage,verified,catalog);
+assert.equal(importedSave.id,'official-'+verified.deckCode);
+const homeJSON=()=>JSON.parse(homeStorage.getItem('pokeca.deck-builder.v1'));
+assert.equal(homeJSON().userSetting,'keep');
+assert.equal(homeJSON().decks.length,2);
+assert.equal(homeJSON().decks[0].name,'保持するデッキ');
+assert.equal(homeJSON().decks[1].sourceDeckCode,verified.deckCode);
+assert.equal(Object.values(homeJSON().decks[1].cards).reduce((n,k)=>n+k,0)+
+ homeJSON().decks[1].blocked.reduce((n,row)=>n+row.count,0),60);
+assert.equal(homeJSON().decks[1].cards['47832']>0,true,'exact official print preserved');
+const modifiedHome=homeJSON();
+const preview=modifiedHome.decks[1];
+preview.name='自分で付けた名前';
+preview.coverCardId='47832';
+modifiedHome.decks[1]=preview;
+homeStorage.setItem('pokeca.deck-builder.v1',JSON.stringify(modifiedHome));
+api.saveBuilderDeck(homeStorage,verified,catalog);
+assert.equal(homeJSON().decks.length,2,'reimport must not duplicate the same deck');
+assert.equal(homeJSON().decks[1].name,'自分で付けた名前');
+assert.equal(homeJSON().decks[1].coverCardId,'47832');
+api.saveBuilderDeck(homeStorage,unresolved,catalog);
+assert.equal(homeJSON().decks[1].blocked.length>0,true,'unverified print remains BLOCKED, not silently removed');
+const malformed='{bad previous deck data';
+const corruptDeckStorage={getItem:()=>malformed,setItem:()=>assert.fail('Do not overwrite a corrupt deck list')};
+assert.throws(()=>api.saveBuilderDeck(corruptDeckStorage,verified,catalog),e=>e.code==='DECK_LIST_INVALID');
+const quotaDeckStorage={getItem:()=>null,setItem:()=>{const e=Error('quota');e.name='QuotaExceededError';throw e;}};
+assert.throws(()=>api.saveBuilderDeck(quotaDeckStorage,verified,catalog),e=>e.name==='QuotaExceededError');
+const lyingHome={getItem:()=>null,setItem:()=>{}};
+assert.throws(()=>api.saveBuilderDeck(lyingHome,verified,catalog),/読み戻せません/);
+console.log('PASS Save propagates 60-card import to deck-home, preserves other decks and denies unsafe mutations');
+
+
+// Migrate legacy official imports that were only in "import history".
+// Migration is one-shot, additive, never overwrites manually edited decks.
+const migrationMemory=new Map();
+const migrationStorage={
+ getItem:key=>migrationMemory.get(key)??null,
+ setItem:(key,value)=>migrationMemory.set(key,value)
+};
+api.saveImport(migrationStorage,verified);
+migrationStorage.setItem('pokeca.deck-builder.v1',JSON.stringify({decks:[
+ {id:'personal-untouched',name:'元からあるデッキ',cards:{'49011':3}}
+]}));
+assert.equal(api.migrateImports(migrationStorage,catalog),1);
+assert.equal(api.migrateImports(migrationStorage,catalog),0,'migration must not duplicate 60-card decks');
+let migrated=JSON.parse(migrationStorage.getItem('pokeca.deck-builder.v1'));
+assert.equal(migrated.decks.length,2);
+assert.equal(migrated.decks[0].name,'元からあるデッキ');
+assert.equal(migrated.decks[1].id,'official-'+verified.deckCode);
+assert.equal(Object.values(migrated.decks[1].cards).reduce((s,n)=>s+n,0)
+ + migrated.decks[1].blocked.reduce((s,r)=>s+r.count,0),60);
+migrated.decks=migrated.decks.filter(x=>x.id!=='official-'+verified.deckCode);
+migrationStorage.setItem('pokeca.deck-builder.v1',JSON.stringify(migrated));
+assert.equal(api.migrateImports(migrationStorage,catalog),0,'deliberately deleted decks must not reappear after migration');
+assert.equal(JSON.parse(migrationStorage.getItem('pokeca.deck-builder.v1')).decks.length,1);
+const legacyDamaged=new Map([['pokeca.official-deck-imports.v1',JSON.stringify([verified])],
+ ['pokeca.deck-builder.v1','{damaged-existing-data']]);
+const corruptMigration={getItem:k=>legacyDamaged.get(k)??null,setItem:()=>assert.fail('Never overwrite damaged deck data')};
+assert.throws(()=>api.migrateImports(corruptMigration,catalog),e=>e.code==='DECK_LIST_INVALID');
+console.log('PASS one-time migration of historically saved 60-card official decks into home without data loss');

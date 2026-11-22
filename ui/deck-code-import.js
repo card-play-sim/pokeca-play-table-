@@ -230,6 +230,90 @@ function saveImport(storage, deck) {
  // setItem normally throws on failure, but still verify actual write-back.
  if (storage.getItem(IMPORT_KEY) !== value) throw Error('保存したデータを読み戻せませんでした。');
 }
+// The official-import history and the deck-home list are independent stores.
+// A successful Save must also create/update the corresponding 60-card editable
+// deck; otherwise it appears successful but is invisible on the home screen.
+const BUILDER_KEY = 'pokeca.deck-builder.v1';
+function toBuilderDeck(deck,catalog) {
+ if (!validCode(deck?.deckCode) || deck.total!==60 || !Array.isArray(deck.cards) ||
+     deck.cards.some(row=>!row||!Number.isSafeInteger(row.count)||row.count<1) ||
+     deck.cards.reduce((n,row)=>n+row.count,0)!==60 || !catalog?.get)
+  throw Error('60枚の公式レシピとカード台帳が必要です。');
+ const checked=matchCatalog(deck,catalog);
+ const result={id:'official-'+deck.deckCode,name:deck.name||'取り込んだデッキ',
+  sourceDeckCode:deck.deckCode,cards:{},categories:{},blocked:[]};
+ const names={item:'goods',supporter:'support'};
+ for(const row of checked.cards) {
+  const id=String(row.officialCardId||'');
+  const exact=catalog.get(id);
+  if(row.identityStatus==='CONFIRMED' && exact && String(exact.id)===id) {
+   result.cards[id]=(result.cards[id]||0)+row.count;
+   result.categories[id]=names[row.category]||row.category||exact.category||'unclassified';
+  } else result.blocked.push({...row});
+ }
+ return result;
+}
+function saveBuilderDeck(storage,deck,catalog) {
+ const next=toBuilderDeck(deck,catalog);
+ const raw=storage.getItem(BUILDER_KEY);
+ let previous;
+ try { previous=raw==null?{decks:[]}:JSON.parse(raw); }
+ catch {
+  const error=Error('デッキ一覧の既存データを読み込めません。既存データは変更していません。');
+  error.code='DECK_LIST_INVALID'; throw error;
+ }
+ if(!previous||typeof previous!=='object'||!Array.isArray(previous.decks)) {
+  const error=Error('デッキ一覧の保存形式が不正です。既存データは変更していません。');
+  error.code='DECK_LIST_INVALID';throw error;
+ }
+ const found=previous.decks.findIndex(entry=>entry.id===next.id);
+ // Keep an existing user's chosen deck title and cover, but an explicit
+ // re-import replaces *that source code's* card quantities and print IDs.
+ if(found>=0) {
+  const old=previous.decks[found];
+  if(old?.name)next.name=old.name;
+  if(old?.coverCardId && next.cards[old.coverCardId]>0)
+   next.coverCardId=old.coverCardId;
+ }
+ const decks=previous.decks.slice();
+ if(found>=0)decks[found]=next;else decks.push(next);
+ const value=JSON.stringify({...previous,decks});
+ storage.setItem(BUILDER_KEY,value);
+ if(storage.getItem(BUILDER_KEY)!==value)
+  throw Error('デッキ一覧への保存内容を読み戻せませんでした。');
+ return {id:next.id,total:deck.total,blocked:next.blocked.length};
+}
+// One-time migration for imports saved by older builds only into history.
+// Keep user-edited decks untouched, never restore them repeatedly after a
+// deliberate deletion, and never modify any source history during migration.
+const IMPORT_LIST_MIGRATED = 'pokeca.import-to-deck-list.migration.v1';
+function migrateImports(storage,catalog) {
+ if(storage.getItem(IMPORT_LIST_MIGRATED)==='done')return 0;
+ if(!catalog?.get)throw Error('カード台帳を確認できません。');
+ const saved=readImports(storage);
+ const previousRaw=storage.getItem(BUILDER_KEY);
+ let previous;
+ try{previous=previousRaw==null?{decks:[]}:JSON.parse(previousRaw);}
+ catch{
+  const error=Error('デッキ一覧の既存データを読み込めません。');
+  error.code='DECK_LIST_INVALID';throw error;
+ }
+ if(!Array.isArray(previous?.decks)){
+  const error=Error('デッキ一覧の保存形式が不正です。');
+  error.code='DECK_LIST_INVALID';throw error;
+ }
+ const present=new Set(previous.decks.map(row=>row?.id));
+ let restored=0;
+ for(const recipe of saved){
+  const id='official-'+recipe.deckCode;
+  if(present.has(id))continue;
+  saveBuilderDeck(storage,recipe,catalog);
+  present.add(id);
+  restored++;
+ }
+ storage.setItem(IMPORT_LIST_MIGRATED,'done');
+ return restored;
+}
 function reconcile(deck,officialRecords,imageRegistry){
  if(!deck||deck.total!==60||!Array.isArray(deck.cards))throw Error('60枚レシピが必要です');
  const records=Array.isArray(officialRecords)?officialRecords:Object.values(officialRecords||{});
@@ -249,5 +333,5 @@ function reconcile(deck,officialRecords,imageRegistry){
  const blocked=output.filter(r=>r.identityStatus!=='CONFIRMED');
  return {...deck,cards:output,identityStatus:blocked.length?'BLOCKED':'CONFIRMED',playable:blocked.length===0,blockedCount:blocked.length};
 }
-root.PokecaDeckCodeImport=Object.freeze({validCode,parse,parseFields,parseHtml,reconcile,catalogFrom,loadCatalog,matchCatalog,readImports,saveImport});
+root.PokecaDeckCodeImport=Object.freeze({validCode,parse,parseFields,parseHtml,reconcile,catalogFrom,loadCatalog,matchCatalog,readImports,saveImport,toBuilderDeck,saveBuilderDeck,migrateImports});
 })(typeof window!=='undefined'?window:globalThis);

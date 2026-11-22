@@ -114,7 +114,16 @@
   $('deck-home-search').oninput = render;
   window.addEventListener('hashchange', () => route(true));
   window.addEventListener('pageshow', () => route(false));
-  catalog.then(result => { cards = result.cards; if (!home.hidden) render(); })
-    .catch(error => { status.textContent = error.message; });
+  catalog.then(result => {
+    cards = result.cards;
+    let restored=0, migrationError=null;
+    try {restored=window.PokecaDeckCodeImport.migrateImports(localStorage,cards);}
+    catch(error){migrationError=error;}
+    if(!home.hidden) {
+      render();
+      if(migrationError)status.textContent='取り込み履歴の一覧反映を確認できません（'+migrationError.message+'）。保存履歴は変更していません。';
+      else if(restored)status.textContent='保存済みの公式デッキ '+restored+'件を一覧に反映しました。';
+    }
+  }).catch(error => { status.textContent = error.message; });
   route(false);
 })();

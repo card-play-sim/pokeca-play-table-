@@ -74,6 +74,8 @@ function history() {
 }
 
 function saveFailureMessage(error) {
+  if (error?.code === 'DECK_LIST_INVALID')
+    return '既存のデッキ一覧を安全に読み込めません。元データは変更せず、60枚のJSON出力を残してください。';
   if (error?.code === 'IMPORT_HISTORY_INVALID')
     return '以前の取り込み履歴を読み込めません。元データは変更していません。下のJSON出力で今回の60枚を保護できます。';
   if (error?.name === 'QuotaExceededError' || error?.code === 22 || error?.code === 1014)
@@ -82,23 +84,33 @@ function saveFailureMessage(error) {
     return 'ブラウザが端末保存を許可していません。Chromeの通常タブで開くか、下のJSON出力を利用してください。';
   return '保存時にエラーが発生しました（'+(error?.name || 'UNKNOWN')+'）。下のJSON出力で今回の60枚を保護できます。';
 }
-function save(edit) {
+async function save(edit) {
   if (!deck) return;
+  const snapshot=deck;
+  $('save').disabled=$('edit').disabled=true;
+  let historySaved=false;
   try {
-    api.saveImport(localStorage, deck);
-  } catch (error) {
-    status(saveFailureMessage(error));
-    return;
-  }
-  if (edit) {
-    location.href = 'deck-builder.html?import=' + encodeURIComponent(deck.deckCode);
-    return;
-  }
-  try {
-    history();
-    status('端末に保存しました。');
-  } catch (error) {
-    status('60枚は保存できましたが履歴表示に失敗しました（'+(error?.name || 'UNKNOWN')+'）。');
+    // Use the same verified print catalog as the displayed 60-card recipe.
+    const exactCatalog=await catalog;
+    if(snapshot!==deck)return;
+    api.saveImport(localStorage,snapshot);
+    historySaved=true;
+    const result=api.saveBuilderDeck(localStorage,snapshot,exactCatalog);
+    if(edit) {
+      location.href='deck-builder.html?deck='+encodeURIComponent(result.id);
+      return;
+    }
+    try {
+      history();
+      status('60枚を保存し、デッキ一覧にも反映しました。');
+    } catch(error) {
+      status('デッキ一覧には保存できましたが、取り込み履歴の表示に失敗しました（'+(error?.name||'UNKNOWN')+'）。');
+    }
+  } catch(error) {
+    const prefix=historySaved?'取り込み履歴は保存済みですが、デッキ一覧に反映できません。':'';
+    status(prefix+saveFailureMessage(error));
+  } finally {
+    if(snapshot===deck)$('save').disabled=$('edit').disabled=false;
   }
 }
 function exportImport() {
@@ -154,6 +166,13 @@ $('save').onclick = () => save(false);
 $('export-import').onclick = exportImport;
 $('edit').onclick = () => save(true);
 $('open').href = recipeUrl();
+// Refresh the verified worker whenever the import page is opened. Old installed
+// PWAs otherwise keep serving their pre-fix JS forever on this subpage.
+// Never reload automatically: the user may have an unsaved 60-card recipe.
+if (window.isSecureContext && navigator.serviceWorker && navigator.onLine !== false) {
+  navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'})
+    .then(reg => reg.update()).catch(() => {});
+}
 try { history(); } catch (error) { status(saveFailureMessage(error)); }
 for (const id of ['code', 'lookup-submit', 'html-file', 'recipe', 'import']) {
   $(id).disabled = false;
