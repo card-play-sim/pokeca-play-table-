@@ -1,0 +1,38 @@
+name: Official bench-target attack DOM Chromium smoke
+on:
+  pull_request:
+    paths:
+      - 'tests/test_control_013_browser.py'
+      - 'tests/test_published_targeted_attack_browser.py'
+      - '.github/workflows/published-bench-attack-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bench-target-attack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Execute exact official bench attack in smartphone Chromium
+        env:
+          POKECA_TEST_URL: http://127.0.0.1:8765/
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-test-server.log 2>&1 &
+          curl --retry 20 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:8765/ >/dev/null
+          python tests/test_published_targeted_attack_browser.py
+      - name: Preserve exact attack and DOM evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-48564-bench-attack-browser
+          path: artifacts/published-bench-attack-smoke.json
+          if-no-files-found: warn
+          retention-days: 14

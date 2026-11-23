@@ -11,6 +11,11 @@ async def main():
   browser=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_EXECUTABLE'),args=session_ca_args())
   device=dict(p.devices['Pixel 5']);device.pop('default_browser_type',None)
   context=await browser.new_context(**device);page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+  async def wait_for_saved_match():
+   await page.wait_for_function(
+    'window.PokecaMobile&&window.PokecaImageRegistryStatus?.state==="ready"'
+    '&&document.getElementById("save-status").textContent==="自動保存済"'
+    '&&PokecaMobile.port.getSnapshot().referenceEffectValidation')
   await page.goto(os.environ.get('POKECA_TEST_URL','https://card-play-sim.github.io/pokeca-play-table-/')+'#battle',wait_until='domcontentloaded')
   await page.wait_for_function('navigator.serviceWorker.controller&&window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
   await page.wait_for_timeout(500)
@@ -20,7 +25,7 @@ async def main():
   await page.locator('#reference-match-choices button').first.tap()
   await page.locator('#confirm-ok').tap()
   await finish_opening(page)
-  await page.wait_for_function('PokecaMobile.port.getSnapshot().referenceEffectValidation&&document.getElementById("save-status").textContent==="自動保存済"')
+  await wait_for_saved_match()
   snapshot=await page.evaluate('PokecaMobile.port.getSnapshot()')
   assert snapshot['status']=='active' and snapshot.get('referenceEffectValidation')
   assert not snapshot.get('fixedDeckPractice') and not snapshot.get('demo')
@@ -31,11 +36,11 @@ async def main():
    assert len(cards)==60 and len({card['id'] for card in cards})==60
   controller=await page.evaluate('navigator.serviceWorker.controller.scriptURL')
   await context.set_offline(True);await page.reload(wait_until='domcontentloaded')
-  await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"')
-  assert await page.evaluate('PokecaMobile.port.getSnapshot()')==snapshot
+  await wait_for_saved_match()
+  assert await page.evaluate('PokecaMobile.port.getSnapshot()')==snapshot, 'offline match state differs'
   await context.set_offline(False);await page.reload(wait_until='domcontentloaded')
-  await page.wait_for_function('window.PokecaMobile&&PokecaImageRegistryStatus.state==="ready"')
-  assert await page.evaluate('PokecaMobile.port.getSnapshot()')==snapshot
+  await wait_for_saved_match()
+  assert await page.evaluate('PokecaMobile.port.getSnapshot()')==snapshot, 'online match state differs'
   report={'url':page.url,'serviceWorkerController':controller,'serviceWorkersBlocked':False,'offlineSessionReloadPass':True,'onlineRestorePass':True,'offlineOfficialImagesVerified':False,'physicalAndroidVerified':False,'officialMatchPass':False,'fixed120ReferenceMatchPass':True,'bothReferenceDecks60Cards':True,'javascriptErrors':errors}
   (ROOT/'artifacts/published-pwa-result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');assert not errors;print(json.dumps(report,ensure_ascii=False))
   await browser.close()

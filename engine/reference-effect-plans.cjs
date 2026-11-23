@@ -76,6 +76,8 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='ATTACK'&&generic==='場に出ているスタジアムをトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))
+  return {mechanic:'ATTACK_DISCARD_STADIUM',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'DISCARD']};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の手札を3枚トラッシュしなければ使えない。自分の山札から「グッズ」「ポケモンのどうぐ」「サポート」「スタジアム」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')
   return {mechanic:'DISCARD_TO_SEARCH_DISTINCT_CATEGORIES',commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],cost:3,categories:['item','tool','supporter','stadium']};
  // Match complete, verified attack text. Printed damage and counter/damage units are separate.
@@ -101,6 +103,12 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_TAKEN_PRIZES_DAMAGE',commands:['DAMAGE'],unit:Number(takenPrizes[1])};
  const statusBonus=generic.match(/^相手のバトルポケモンが特殊状態なら、([1-9][0-9]{0,2})ダメージ追加。$/);
  const printedBonus=String(entry.damage).normalize('NFKC');
+ const undamagedBonus=generic.match(/^このポケモンにダメカンがのっていないなら、([1-9][0-9]{0,2})ダメージ追加。$/);
+ if(kind==='ATTACK'&&undamagedBonus&&/^\d{1,3}\+$/.test(printedBonus))
+  return {mechanic:'ATTACK_UNDAMAGED_BONUS',commands:['DAMAGE'],base:Number.parseInt(printedBonus,10),bonus:Number(undamagedBonus[1])};
+ const attachedToolDamage=generic.match(/^(自分の|おたがいの)ポケモン全員についている「ポケモンのどうぐ」の数×([1-9][0-9]{0,2})ダメージ。$/);
+ if(kind==='ATTACK'&&attachedToolDamage&&printedBonus===attachedToolDamage[2]+'×')
+  return {mechanic:'ATTACK_ATTACHED_TOOL_COUNT',commands:['DAMAGE'],bothSides:attachedToolDamage[1]==='おたがいの',unit:Number(attachedToolDamage[2])};
  if(kind==='ATTACK'&&statusBonus&&/^\d{1,3}\+$/.test(printedBonus))
   return {mechanic:'ATTACK_STATUS_BONUS_DAMAGE',commands:['DAMAGE'],base:Number.parseInt(printedBonus,10),bonus:Number(statusBonus[1])};
 
