@@ -34,3 +34,22 @@ html.deck-home-active, html.deck-home-active body { height: auto; max-height: no
 #deck-home button.deck-cover { display: block; width: 100%; padding: 0; border: 0; background: transparent; }
 #deck-home-details { width: min(92vw,420px); max-height: 80dvh; }
 #deck-detail-cards { padding-inline-start: 1.25rem; }
+
+#deck-home-opponent {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: .6rem;
+  margin: .4rem 0 .6rem;
+  border: 1px solid #53716e;
+  border-radius: .6rem;
+  background: white;
+  color: #172d32;
+  font: inherit;
+}
+#deck-home-match-status {
+  min-height: 2.8rem;
+  margin: .5rem 0 1rem;
+  overflow-wrap: anywhere;
+}
+#deck-home-confirm button:disabled { opacity: .5; }
