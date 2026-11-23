@@ -405,7 +405,7 @@ function verifyCase(t, e) {
       event.details?.command==='REVEAL'&&event.details.privateTo==='you'&&
       event.details.fromZone==='hand');
     assert(reveal,'OPPONENT_HAND_PRIVATE_REVEAL_MISSING');
-    assert.deepEqual(Array.from(reveal.details.cardIds),before.players.find(player=>player.id!=='you').hand.map(card=>card.id),
+    assert.deepEqual(Array.from(reveal.details.cardIds),Array.from(before.players.find(player=>player.id!=='you').hand,card=>card.id),
       'OPPONENT_HAND_REVEAL_NOT_EXACT');
     verifyPrintedAttack(before,after,e,Number(e.damage)||0);
   }
