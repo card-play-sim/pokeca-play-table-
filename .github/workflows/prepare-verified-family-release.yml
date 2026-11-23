@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           ref: feat/battle-verified-damage-stadium-20261123
       - uses: actions/setup-node@v4
         with:
