@@ -1,0 +1,43 @@
+name: Replay all 50 published intake slots on Pixel 5 Chromium
+on:
+  push:
+    branches: [verify/published-battle-intake-36-20261123]
+    paths: ['.github/workflows/replay-verified-public-intake.yml']
+permissions:
+  contents: read
+jobs:
+  published:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
+      POKECA_INTAKE_RELEASE_BASE: 422d3aa7768e602ad37df45dff068f72de905c17
+      POKECA_INTAKE_PREFIX: work/published-intake
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Pin deployed files and overlay only browser validation changes
+        env:
+          TEST_SHA: ${{ github.sha }}
+        run: |
+          git checkout --detach 1a2fca7e41dd531acb99718997cc58433e4d1164
+          git restore --source="$TEST_SHA" -- tests/test_control_013_browser.py scripts/build-intake-verification-fixtures.cjs
+          git diff --exit-code -- index.html sw.js ui data
+          node scripts/verify-published-pwa.cjs
+      - name: Verify public battle, effect receipts and offline persistence
+        run: |
+          python tests/test_control_013_browser.py
+          python tests/test_published_pwa_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-published-intake-replay
+          path: |
+            artifacts/
+            test-results/published-pwa-verification.json
