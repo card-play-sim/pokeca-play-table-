@@ -57,4 +57,10 @@ for(const [category,kind,body,minimum] of [
 const runtime=fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8');
 for(const mechanic of ['TOOL_RETREAT_DISCOUNT_TWO','SUPPORTER_DISCARD_ONE_DRAW_TO_SIX','ATTACK_REVEAL_OPPONENT_HAND'])
  assert(runtime.includes(mechanic),'MISSING_ENGINE_CONNECTION:'+mechanic);
+// The UI must reveal cards only in response to the exact private effect event.
+const mobile=fs.readFileSync('ui/mobile.js','utf8');
+assert(mobile.includes('showVerifiedOpponentHandReveal(playerId,previousHistoryLength)'));
+assert(mobile.includes("entry.details.privateTo==='you'&&entry.details.fromZone==='hand'"));
+assert(mobile.includes("openSheet('相手の手札を確認',html)"));
+assert(mobile.includes("cards.map(card=>"));
 console.log('PASS: three exact official families compile safely and are wired to battle execution');
