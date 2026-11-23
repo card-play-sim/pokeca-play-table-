@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "instruction": "IMG-LEDGER-017",
+  "status": "EXTERNAL_ORIGINAL_ATTACHMENT_REQUIRED",
+  "expected": {
+    "catalogPath": "pokeca_card_catalog_HIJ/card_catalog.json",
+    "catalogSha256": "6a6ba0837d3fc3392bfc41537d6666c19719ab554921d4e64fdb1bbbb615a790",
+    "catalogBytes": 5059408,
+    "archiveSha256": "181388bf2912f0e96cac3f98b559dd330f1b77451b537460427a211744dd759c",
+    "archiveName": "pokeca_image_registry_work3_checkpoint_1945_formal-1(5)(1).zip"
+  },
+  "github": {
+    "developmentRepo": "card-play-sim/pokeca-card-simulator",
+    "privateBranch": "data/formal-1945-readonly",
+    "inventory": "source-inventory/formal-1945-upload-inventory.json",
+    "inventorySaysUploaded": false,
+    "allCurrentBranchesScanned": 11,
+    "releasesCount": 0,
+    "lfsPointersFoundInCurrentTrees": 0,
+    "originalActionsRunsInspected": 583,
+    "retainedArtifactZipsInspected": 173,
+    "originalFound": false
+  },
+  "sourceTrace": {
+    "lastKnown": "ChatGPT conversation upload around 2026-11-07; variants of original 36 MB ZIP were attached and inspected",
+    "slimMetadataArchive": "pokeca_1945_codex_evidence_slim.zip (~1.32 MiB), produced in prior conversation 2026-11-08; contents SHA not yet confirmed",
+    "formalMembershipCaveat": "Prior reports conflict between 1940 catalog entries and formal 1945; verify actual bytes and unique IDs before acceptance"
+  },
+  "local": {
+    "mountedArtifactsScanned": 29,
+    "matchingCatalogFound": false
+  },
+  "nextAction": "Retrieve existing original attachment or metadata-only slim ZIP from prior chat, verify exact catalog SHA-256, count and official IDs; do not synthesize original",
+  "protect": [
+    "main",
+    "PR19",
+    "PR27",
+    "formal DB",
+    "image registry"
+  ]
+}
