@@ -32,7 +32,7 @@ assert.equal(compiledDefender.abilities[0].plan.mechanic,'PASSIVE_INCOMING_ATTAC
 assert.equal(compiledDefender.abilities[0].plan.amount,30);
 assert.equal(compiledSupporter.mainPlan.mechanic,'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW');
 assert.equal(compiledSupporter.mainPlan.amount,5);
-assert.equal(compiled.records.find(r=>r.officialCardId==='990004').mainPlan,null);
+assert.equal(compiled.records.find(r=>r.officialCardId==='990004').mainPlan.mechanic,'DISCARD_HAND_DRAW');
 // Similar but semantically different source cannot be guessed as the same mechanic.
 const unknown=compile({records:[rec(990006,'別の特性','pokemon',{
  abilities:[{name:'追加条件つき',text:'このポケモンがバトル場にいるなら、このポケモンが受けるワザのダメージは「-30」される。'}]
