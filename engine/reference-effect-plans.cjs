@@ -76,6 +76,16 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ // Exact printed abilities are continuous (not manually activated) and their
+ // damage reduction applies after weakness/resistance, unless ignored by an attack.
+ const incomingReduction=generic.match(/^このポケモンが受けるワザのダメージは「-([1-9][0-9]{0,2})」される。$/);
+ if(kind==='ABILITY'&&incomingReduction)
+  return {mechanic:'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],amount:Number(incomingReduction[1])};
+ // Some officially printed supporters alone are legal on the first player's
+ // first turn. Never relax the restriction for other supporters.
+ const firstTurnDraw=generic.match(/^このカードは、先攻プレイヤーの最初の番でも使える。自分の手札をすべてトラッシュし、山札を([1-9][0-9]?)枚引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&firstTurnDraw)
+  return {mechanic:'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW',commands:['DISCARD','DRAW'],amount:Number(firstTurnDraw[1])};
  if(kind==='ATTACK'&&generic==='場に出ているスタジアムをトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_DISCARD_STADIUM',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'DISCARD']};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の手札を3枚トラッシュしなければ使えない。自分の山札から「グッズ」「ポケモンのどうぐ」「サポート」「スタジアム」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')
