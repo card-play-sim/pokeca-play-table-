@@ -42,17 +42,20 @@ for(const row of refused){
  assert.equal(row.mainPlan,null);
  for(const attack of row.attacks)assert.equal(attack.plan,null);
 }
-// The source worklist must identify more than one printing per shared body.
-const work=JSON.parse(fs.readFileSync('reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json','utf8'));
-const groups=work.groups||[];
+// Successful intake removes resolved effects from the worklist. Test against
+// the official source records, which retain coverage after promotion.
+const evidence=JSON.parse(fs.readFileSync('data/official-effect-intake/checkpoint.json','utf8')).records;
 for(const [category,kind,body,minimum] of [
  ['tool','tool',bodies.tool,10],
  ['supporter','supporter',bodies.supporter,9],
  ['pokemon','attack',bodies.attack,7]
 ]){
- const matches=groups.filter(g=>g.category===category&&g.effectKind===kind&&norm(g.exampleOfficialText)===norm(body));
- assert(matches.reduce((n,g)=>n+g.effectSlots,0)>=minimum,
-  'INSUFFICIENT_OFFICIAL_EVIDENCE_FOR_SHARED_FAMILY:'+category);
+ let slots=0;
+ for(const row of evidence.filter(row=>row.category===category)){
+  const effects=kind==='attack'?row.attacks:[row];
+  slots+=effects.filter(effect=>norm(effect.text)===norm(body)).length;
+ }
+ assert(slots>=minimum,'INSUFFICIENT_OFFICIAL_EVIDENCE_FOR_SHARED_FAMILY:'+category);
 }
 const runtime=fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8');
 for(const mechanic of ['TOOL_RETREAT_DISCOUNT_TWO','SUPPORTER_DISCARD_ONE_DRAW_TO_SIX','ATTACK_REVEAL_OPPONENT_HAND'])

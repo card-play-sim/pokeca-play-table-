@@ -137896,6 +137896,1524 @@
         "htmlSha256": "70e99c549af53bac9a804e0d258879d6c14e6e2bcec2dee0656d96fee19d50ca",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "47977",
+      "name": "マメパト",
+      "deckName": "マメパト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47977",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047977_P_MAMEPATO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さぐる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見る。"
+        },
+        {
+          "name": "ふむ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47977.json",
+        "sha256": "0b7e653d2f71e2fec030598ba0f7c78d4f763fc2cba9537b41a8b1fc7c34a0c5",
+        "htmlSha256": "0b7e653d2f71e2fec030598ba0f7c78d4f763fc2cba9537b41a8b1fc7c34a0c5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48425",
+      "name": "リオル",
+      "deckName": "リオル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48425",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048425_P_RIORU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かそくづき",
+          "cost": [
+            "闘"
+          ],
+          "damage": "30",
+          "text": "次の自分の番、このポケモンは「かそくづき」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48425.json",
+        "sha256": "9aa1bde8fbbf90198c4e08545a4e4b730bdd9c3e0ba8ec51b622698fbd0d6ff8",
+        "htmlSha256": "9aa1bde8fbbf90198c4e08545a4e4b730bdd9c3e0ba8ec51b622698fbd0d6ff8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "45238",
+      "name": "ニャヒート",
+      "deckName": "ニャヒート",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45238",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045238_P_NIXYAHITO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かみつく",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": ""
+        },
+        {
+          "name": "フレアストライク",
+          "cost": [
+            "炎",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "次の自分の番、このポケモンは「フレアストライク」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ニャビー",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45238.json",
+        "sha256": "ecd8d77a12e0d3cbdf9cd1eeb5a02368b2dcc343af1a82b37850c927f0a8d807",
+        "htmlSha256": "ecd8d77a12e0d3cbdf9cd1eeb5a02368b2dcc343af1a82b37850c927f0a8d807",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "50352",
+      "name": "コータス",
+      "deckName": "コータス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50352",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050352_P_KOTASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "やきこがす",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手のバトルポケモンをやけどにする。"
+        },
+        {
+          "name": "かえんばく",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "次の自分の番、このポケモンは「かえんばく」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50352.json",
+        "sha256": "d8e6087fa27fdc5f9dc0954da92118c56951ee8e2e43236855608a086f8fc241",
+        "htmlSha256": "d8e6087fa27fdc5f9dc0954da92118c56951ee8e2e43236855608a086f8fc241",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "50417",
+      "name": "ミライドン",
+      "deckName": "ミライドン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50417",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050417_P_MIRAIDON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ツメできりさく",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "50",
+          "text": ""
+        },
+        {
+          "name": "フラッシュボルト",
+          "cost": [
+            "雷",
+            "雷",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "次の自分の番、このポケモンは「フラッシュボルト」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50417.json",
+        "sha256": "1f64aae82085ee7e4b307d3b80f99fe88fda69ca6b69979cc4e0ee95092cae0a",
+        "htmlSha256": "1f64aae82085ee7e4b307d3b80f99fe88fda69ca6b69979cc4e0ee95092cae0a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "47102",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47102",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047102_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47102.json",
+        "sha256": "befea03aa7c7143696bbf7f6041220712fdf9daeb208978c66bb852af3b2ad6c",
+        "htmlSha256": "befea03aa7c7143696bbf7f6041220712fdf9daeb208978c66bb852af3b2ad6c",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "47241",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47241",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047241_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47241.json",
+        "sha256": "b0a6829a275fff91a56a8e1dc92617ecf191e8ac0531a76a4d85c401ea812d67",
+        "htmlSha256": "b0a6829a275fff91a56a8e1dc92617ecf191e8ac0531a76a4d85c401ea812d67",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "47618",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47618",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047618_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47618.json",
+        "sha256": "e87f525f7e96c97bdab02446ccd5483104a73195c832629e867f50532ec68bbb",
+        "htmlSha256": "e87f525f7e96c97bdab02446ccd5483104a73195c832629e867f50532ec68bbb",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "47889",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47889",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047889_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47889.json",
+        "sha256": "6b48051c6b195cff53bc744284d92bb0745d0d68f14fa044b1a4d15d847320da",
+        "htmlSha256": "6b48051c6b195cff53bc744284d92bb0745d0d68f14fa044b1a4d15d847320da",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48279",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48279",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBG/048279_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48279.json",
+        "sha256": "aee8c11571c39c79a4c3aa104a8e44bedd563cfa256bc29fb0c7cf44b7cec401",
+        "htmlSha256": "aee8c11571c39c79a4c3aa104a8e44bedd563cfa256bc29fb0c7cf44b7cec401",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48280",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48280",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBG/048280_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48280.json",
+        "sha256": "51fef039a30ae6587e517db74c64d2f45d11539d783f72c8384fc5967ec9e27f",
+        "htmlSha256": "51fef039a30ae6587e517db74c64d2f45d11539d783f72c8384fc5967ec9e27f",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "48301",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48301",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048301_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48301.json",
+        "sha256": "07bfed013e21d8d70c9d112b1d5b3d14f2e075eb8788e6ef67bc887de10712fc",
+        "htmlSha256": "07bfed013e21d8d70c9d112b1d5b3d14f2e075eb8788e6ef67bc887de10712fc",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48302",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48302",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048302_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48302.json",
+        "sha256": "a061dd0c41fa0c005563d6111a2df3e41aada5045118fbd169735d569a96362d",
+        "htmlSha256": "a061dd0c41fa0c005563d6111a2df3e41aada5045118fbd169735d569a96362d",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "48441",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48441",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048441_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48441.json",
+        "sha256": "2a239af5a651382e90c1565447f75cbda0cc3542c474dd7390d07ae9bb8f6f66",
+        "htmlSha256": "2a239af5a651382e90c1565447f75cbda0cc3542c474dd7390d07ae9bb8f6f66",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48564",
+      "name": "ブリザポス",
+      "deckName": "ブリザポス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48564",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048564_P_BURIZAPOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アイスショット",
+          "cost": [
+            "水"
+          ],
+          "damage": "20",
+          "text": "相手のベンチポケモン1匹にも、20ダメージ。［ベンチは弱点・抵抗力を計算しない。］"
+        },
+        {
+          "name": "フロストタイフーン",
+          "cost": [
+            "水",
+            "水",
+            "水"
+          ],
+          "damage": "130",
+          "text": "次の自分の番、このポケモンは「フロストタイフーン」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48564.json",
+        "sha256": "c2d615b97ac8c7aae2695ea335c90fbb71ee2f6c3598efc0d2b4190aa2346130",
+        "htmlSha256": "c2d615b97ac8c7aae2695ea335c90fbb71ee2f6c3598efc0d2b4190aa2346130",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48613",
+      "name": "リオル",
+      "deckName": "リオル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48613",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048613_P_RIORU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かそくづき",
+          "cost": [
+            "闘"
+          ],
+          "damage": "30",
+          "text": "次の自分の番、このポケモンは「かそくづき」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48613.json",
+        "sha256": "d059822122b5a8fe8225371a89bfe5658f525f3dd291383a2de5c99067a38edd",
+        "htmlSha256": "d059822122b5a8fe8225371a89bfe5658f525f3dd291383a2de5c99067a38edd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48645",
+      "name": "ホップのザシアンex",
+      "deckName": "ホップのザシアンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48645",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048645_P_HOPPUNOZASHIANEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "せつなぎり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］"
+        },
+        {
+          "name": "ブレイブスラッシュ",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "240",
+          "text": "次の自分の番、このポケモンは「ブレイブスラッシュ」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48645.json",
+        "sha256": "481addb0f40393bbfa8b3904373849dfdf45f7b52e09a5735276757b36c57ff8",
+        "htmlSha256": "481addb0f40393bbfa8b3904373849dfdf45f7b52e09a5735276757b36c57ff8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48687",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48687",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048687_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48687.json",
+        "sha256": "007ea13d6568bbef8040d87fbe08a2f340a4f60314a76efcc80ec2b4752dc6ec",
+        "htmlSha256": "007ea13d6568bbef8040d87fbe08a2f340a4f60314a76efcc80ec2b4752dc6ec",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48690",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48690",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048690_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48690.json",
+        "sha256": "0726f52ef8110bf30261bb62be1caee208930b8e39b0d968250521f3923ab563",
+        "htmlSha256": "0726f52ef8110bf30261bb62be1caee208930b8e39b0d968250521f3923ab563",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "49243",
+      "name": "ホップのザシアンex",
+      "deckName": "ホップのザシアンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49243",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049243_P_HOPPUNOZASHIANEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "せつなぎり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］"
+        },
+        {
+          "name": "ブレイブスラッシュ",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "240",
+          "text": "次の自分の番、このポケモンは「ブレイブスラッシュ」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49243.json",
+        "sha256": "50dfdf08fc3f451532b9f493a91143b75767978dfcdf2cc19d25e5523f7d0856",
+        "htmlSha256": "50dfdf08fc3f451532b9f493a91143b75767978dfcdf2cc19d25e5523f7d0856",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49314",
+      "name": "マメパト",
+      "deckName": "マメパト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49314",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049314_P_MAMEPATO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さぐる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見る。"
+        },
+        {
+          "name": "ふむ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49314.json",
+        "sha256": "f2a1e38863f59554f155e946822d9e91d314869b685ae38819c1ccb631b53faf",
+        "htmlSha256": "f2a1e38863f59554f155e946822d9e91d314869b685ae38819c1ccb631b53faf",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49404",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49404",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049404_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49404.json",
+        "sha256": "40d86b2212ce20e786ff67ea2e26847ece8353bbb2e41c31d9f20e270bd3e1f0",
+        "htmlSha256": "40d86b2212ce20e786ff67ea2e26847ece8353bbb2e41c31d9f20e270bd3e1f0",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "49410",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49410",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049410_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49410.json",
+        "sha256": "c45f60ec677f27d654ceed5b387701a91442d14d27018508e83d836bcdbd4ff0",
+        "htmlSha256": "c45f60ec677f27d654ceed5b387701a91442d14d27018508e83d836bcdbd4ff0",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "50007",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50007",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/050007_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50007.json",
+        "sha256": "4cc46bcdd17f976ca1aa316875d36567188d0373e6a85b314086b54028d8ac1a",
+        "htmlSha256": "4cc46bcdd17f976ca1aa316875d36567188d0373e6a85b314086b54028d8ac1a",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "50425",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50425",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050425_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50425.json",
+        "sha256": "32f1b3eb31d7bc39db894f52923b97fed6c39a4bbe9068c9bda01a3ad02f6d91",
+        "htmlSha256": "32f1b3eb31d7bc39db894f52923b97fed6c39a4bbe9068c9bda01a3ad02f6d91",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "50445",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50445",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050445_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50445.json",
+        "sha256": "77a055245d905b5ba5868c80dd9b15928ee5e0e9727c2d94f88ea468ccdc6fc2",
+        "htmlSha256": "77a055245d905b5ba5868c80dd9b15928ee5e0e9727c2d94f88ea468ccdc6fc2",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "50446",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50446",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050446_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50446.json",
+        "sha256": "c5b908a5b38a1e5e38d34aad5718e6e683bec440baf3589710a29a5f2fd2ab81",
+        "htmlSha256": "c5b908a5b38a1e5e38d34aad5718e6e683bec440baf3589710a29a5f2fd2ab81",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "50464",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50464",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEM/050464_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50464.json",
+        "sha256": "54c7504eab15ddbede608911802759d6deb5fa309554269e4b40a7eb8aefd890",
+        "htmlSha256": "54c7504eab15ddbede608911802759d6deb5fa309554269e4b40a7eb8aefd890",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "50601",
+      "name": "アイリスの闘志",
+      "deckName": "アイリスの闘志",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50601",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MF/050601_T_AIRISUNOTOUSHI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50601.json",
+        "sha256": "bf3d89b39ef57382edc1231a50b19baa42d745b8b6ded43748b3546573a915cd",
+        "htmlSha256": "bf3d89b39ef57382edc1231a50b19baa42d745b8b6ded43748b3546573a915cd",
+        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
+      }
+    },
+    {
+      "officialCardId": "50820",
+      "name": "ブリザポス",
+      "deckName": "ブリザポス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50820",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050820_P_BURIZAPOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アイスショット",
+          "cost": [
+            "水"
+          ],
+          "damage": "20",
+          "text": "相手のベンチポケモン1匹にも、20ダメージ。［ベンチは弱点・抵抗力を計算しない。］"
+        },
+        {
+          "name": "フロストタイフーン",
+          "cost": [
+            "水",
+            "水",
+            "水"
+          ],
+          "damage": "130",
+          "text": "次の自分の番、このポケモンは「フロストタイフーン」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50820.json",
+        "sha256": "bfcc4674b3bf7513789d2ea4634a0664c1fd58537e71276b05cde275f11081e9",
+        "htmlSha256": "bfcc4674b3bf7513789d2ea4634a0664c1fd58537e71276b05cde275f11081e9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "50848",
+      "name": "ふうせん",
+      "deckName": "ふうせん",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50848",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050848_T_FUUSEN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50848.json",
+        "sha256": "4c90e2a4e14ab3621a5d8a178ce0760da1696f934e6abd41c13cea9fc4307c5e",
+        "htmlSha256": "4c90e2a4e14ab3621a5d8a178ce0760da1696f934e6abd41c13cea9fc4307c5e",
+        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
+      }
+    },
+    {
+      "officialCardId": "48731",
+      "name": "ストライク",
+      "deckName": "ストライク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48731",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048731_P_SUTORAIKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きる",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": ""
+        },
+        {
+          "name": "スラッシュダウン",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "次の自分の番、このポケモンは「スラッシュダウン」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48731.json",
+        "sha256": "b16a551e1648e297e537b9b886acda05f0e013b93161488485390fa2598292b1",
+        "htmlSha256": "b16a551e1648e297e537b9b886acda05f0e013b93161488485390fa2598292b1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48847",
+      "name": "ニャヒート",
+      "deckName": "ニャヒート",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48847",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048847_P_NIXYAHITO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かみつく",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": ""
+        },
+        {
+          "name": "フレアストライク",
+          "cost": [
+            "炎",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "次の自分の番、このポケモンは「フレアストライク」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ニャビー",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48847.json",
+        "sha256": "4d50357e0f1515d2ba17be60df59845d25e4fe9d64818ed553c7805f21f775fa",
+        "htmlSha256": "4d50357e0f1515d2ba17be60df59845d25e4fe9d64818ed553c7805f21f775fa",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48960",
+      "name": "コリンク",
+      "deckName": "コリンク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48960",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048960_P_KORINKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "こうきしん",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見る。"
+        },
+        {
+          "name": "バチバチ",
+          "cost": [
+            "雷",
+            "雷"
+          ],
+          "damage": "30",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48960.json",
+        "sha256": "4cc42e31dc420cbb70a438f29a5a3026db9413de31ecde5432e80ddac9353fa0",
+        "htmlSha256": "4cc42e31dc420cbb70a438f29a5a3026db9413de31ecde5432e80ddac9353fa0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49047",
+      "name": "ニャスパー",
+      "deckName": "ニャスパー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49047",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049047_P_NIXYASUPA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みすかす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見る。"
+        },
+        {
+          "name": "サイコショット",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "20",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49047.json",
+        "sha256": "7d46b31d2c68746d76b1c751dbeb7e7186064ffa211a4a50eab049b1cc0d3a8c",
+        "htmlSha256": "7d46b31d2c68746d76b1c751dbeb7e7186064ffa211a4a50eab049b1cc0d3a8c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49073",
+      "name": "テツノブジン",
+      "deckName": "テツノブジン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49073",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049073_P_TETSUNOBUJIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェミニレーザー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "相手のベンチポケモン1匹にも、20ダメージ。［ベンチは弱点・抵抗力を計算しない。］"
+        },
+        {
+          "name": "しねんのやいば",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "次の自分の番、このポケモンは「しねんのやいば」が使えない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49073.json",
+        "sha256": "b32f0e41ffac713749cf923cce2c7c83bc7e8a610d107a63e9a7392427061b85",
+        "htmlSha256": "b32f0e41ffac713749cf923cce2c7c83bc7e8a610d107a63e9a7392427061b85",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []

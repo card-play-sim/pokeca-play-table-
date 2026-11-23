@@ -1,25 +1,46 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_BA8A6F1D484EB04A:577e2455f6849e4feac34a83eaea148ea0ad22d1e4eb2c6c102150d0a0b5eaea",
   "taskFingerprint": "577e2455f6849e4feac34a83eaea148ea0ad22d1e4eb2c6c102150d0a0b5eaea",
-  "executionFingerprint": "50691405556e746e9b50785766ccff681693cfe114daeda032506734836df778",
-  "attemptId": "a4606130-76c3-405f-9194-6f9506c518dc",
-  "status": "BLOCKED",
+  "executionFingerprint": "bf5d2ce7db93740e4effd31826971da8860f37859cbe67bba472f9f299690db1",
+  "attemptId": "1d5a85d8-323c-4de0-9a6e-de1fffa693b4",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47499:supporter:アイリスの闘志:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SUPPORTER_DISCARD_ONE_DRAW_TO_SIX",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "49604:supporter:アイリスの闘志:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SUPPORTER_DISCARD_ONE_DRAW_TO_SIX",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "8f9b71fc18ddb0d4a7777dcd043447d221d6534bb93feabb188b7673c1664d63"
+  "checksum": "84f3c9e3264fd7abf864e4c3c73fd52d54c7ee7f834b4ba3277f3b909c35962e"
 }

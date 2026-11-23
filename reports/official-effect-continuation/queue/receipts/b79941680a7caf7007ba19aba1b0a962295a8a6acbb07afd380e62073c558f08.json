@@ -1,50 +1,126 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B8E04BAE26AB7E4A:96bd91b3051718c11dbce087d558bd74625a955ad1091daeab3a89f2f1ab7c0b",
   "taskFingerprint": "96bd91b3051718c11dbce087d558bd74625a955ad1091daeab3a89f2f1ab7c0b",
-  "executionFingerprint": "50691405556e746e9b50785766ccff681693cfe114daeda032506734836df778",
-  "attemptId": "ced60f57-0ab9-49ac-9473-e6fc47af10f5",
-  "status": "BLOCKED",
+  "executionFingerprint": "bf5d2ce7db93740e4effd31826971da8860f37859cbe67bba472f9f299690db1",
+  "attemptId": "aa43d0b5-8d45-43d0-b966-8e48acff0fce",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46124:attack:サイレントウイング:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50632:attack:のぞきこむ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45200:attack:サイレントウイング:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45730:attack:こうきしん:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45891:attack:ぶきみなしせん:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46393:attack:みすかす:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47609:attack:さぐる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_REVEAL_OPPONENT_HAND",
+        "commands": [
+          "DAMAGE",
+          "REVEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "8c66a7b33e08825701e9e101c56947390a7fe64011f17cdf56e9ca6a99604ce8"
+  "checksum": "8c67b701b5d8b9bce4db637220a00b3acabe74ff38b3c1b4ae01f155794f2bd4"
 }
