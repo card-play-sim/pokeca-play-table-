@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_63A37AB205739D6F:e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
   "taskFingerprint": "e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
-  "executionFingerprint": "bf5d2ce7db93740e4effd31826971da8860f37859cbe67bba472f9f299690db1",
-  "attemptId": "0da64cc1-5de7-4b73-ada5-1c12fb64be19",
+  "executionFingerprint": "8525cbb9680091e87df8adc0614a3709d76d5a09f66a710fa4bf0bd7352569c7",
+  "attemptId": "c80b27f2-b4f7-432b-a97d-9cf5e12266a3",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -21,20 +21,50 @@
       },
       {
         "slot": "47397:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47414:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47421:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "b27414a4eba620f704581b8a0dafb69efbc8f12e7b9b3eddf9c7f4178e2731c0"
+  "checksum": "d766dd3a06ad63d738208dd0d7f07044b1b26eb7466a377e8cc0e18e59efeb14"
 }
