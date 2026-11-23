@@ -581,7 +581,7 @@ function verifyCase(t, e) {
     const replay=port(future);
     const sameAttack=t.action||o.action;
     assert.equal(replay.dispatch('you',sameAttack).ok,false);
-    assert.deepEqual(replay.getSnapshot(),future);
+    assert.deepEqual(B.canonical(replay.getSnapshot()),B.canonical(future));
     assert(p.restoreSession(p.getResumeSnapshot()).ok);
     assert.deepEqual(p.getSnapshot(),after);
   }
