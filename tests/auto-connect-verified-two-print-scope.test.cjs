@@ -11,7 +11,14 @@ assert(ids.length > 0, 'Candidate batch must contain verified scoped prints');
 assert.equal(new Set(ids).size, ids.length, 'Duplicate candidate official print IDs');
 const withheld = new Set(checkpoint.blockers.map(row => String(row.id)));
 assert.equal(withheld.size, checkpoint.blockers.length, 'Duplicate withheld official print IDs');
-for (const row of checkpoint.blockers) assert.equal(row.reason, 'UNVERIFIED_HIJ_SCOPE', 'Unreviewed blocker reason must remain explicit');
+const blockedReasons = new Set([
+  'UNVERIFIED_HIJ_SCOPE', 'PRINT_IDENTITY_CONFLICT',
+  'ENGINE_EXECUTION_FAILED', 'EXECUTION_EVIDENCE_INCOMPLETE'
+]);
+for (const row of checkpoint.blockers) {
+  assert(blockedReasons.has(row.reason), 'Unknown blocker reason: '+row.reason);
+  assert(!connected.has(String(row.id)), 'Withheld candidate must stay out of the release: '+row.id);
+}
 for (const id of checkpoint.qualified.map(String)) {
   assert(!withheld.has(id), 'Qualified print cannot also be withheld: '+id);
   const print = printable.get(id);
