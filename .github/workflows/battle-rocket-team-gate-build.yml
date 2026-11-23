@@ -6,6 +6,7 @@ on:
       - 'engine/reference-effect-plans.cjs'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'tests/battle-rocket-team-gate.test.cjs'
+      - 'tests/battle-rocket-team-exact-print.test.cjs'
       - '.github/workflows/battle-rocket-team-gate-build.yml'
 permissions:
   contents: write
@@ -36,6 +37,7 @@ jobs:
           node scripts/sync-reference-effects.cjs --check
           node scripts/build-pwa-release.cjs --check
           node tests/battle-rocket-team-gate.test.cjs
+          node tests/battle-rocket-team-exact-print.test.cjs
           node tests/reference-runtime-source-parity.test.cjs
       - name: Save compiled exact-print and runtime artifacts to branch
         run: |
