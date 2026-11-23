@@ -7,6 +7,18 @@ on:
     paths:
       - '.github/workflows/continue-official-effects.yml'
       - 'scripts/list-card-auto-connect-ids.cjs'
+      # A parser/Mechanic patch must automatically reopen the same blocked
+      # official printings and rerun their full battle execution gate.
+      - 'scripts/continue-official-effect-intake.py'
+      - 'scripts/collect-effect-extensions.py'
+      - 'scripts/parse-official-pokemon-energy.cjs'
+      - 'scripts/build-effect-extensions.cjs'
+      - 'scripts/stage-card-auto-connect.cjs'
+      - 'scripts/atomic-battle-connection-ledger.cjs'
+      - 'scripts/run-atomic-official-battle-intake.cjs'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'ui/engine.bundle.js'
   workflow_dispatch:
     inputs:
       limit:
@@ -77,32 +89,18 @@ jobs:
           fi
       - name: Discover unclassified prints using official standard search
         run: python tools/classify-deck-search.py --discover
-      - name: Collect incremental official evidence and run approved local commands
+      - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
+          python -m unittest discover -s tests -p test_atomic_parser_retry.py
           node tests/bulk-basic-energy-intake.test.cjs
-          node scripts/list-card-auto-connect-ids.cjs /tmp/official-update-ids.json
-          python scripts/continue-official-effect-intake.py --limit "$INTAKE_LIMIT" --adopt --retry-transient --ids /tmp/official-update-ids.json
-          node scripts/stage-card-auto-connect.cjs "$(git rev-parse HEAD)" work/card-auto-connect
-          git restore --source=HEAD -- data/effect-extensions/compiled.json
-          node scripts/build-effect-extensions.cjs
-          node scripts/sync-reference-effects.cjs
-          node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
-          node scripts/build-pwa-release.cjs
-          POKECA_INTAKE_RELEASE_BASE="$(git rev-parse HEAD)" POKECA_INTAKE_PREFIX=work/card-auto-connect/browser \
-            node scripts/build-intake-verification-fixtures.cjs
-          node tests/control-013-continuation.test.cjs
-          node tests/control-014-shared-effects.test.cjs
-          node tests/control-014-official-parser.test.cjs
-          node tests/control-008-extensions.test.cjs
-          node tests/control-009-expansion.test.cjs
-          node tests/control-010-effects.test.cjs
-          node tests/control-011-engine-batch.test.cjs
-          node scripts/sync-reference-effects.cjs --check
-          node scripts/build-pwa-release.cjs --check
+          # One command owns official acquisition, shared mechanic compilation, execution,
+          # print-specific release, and persistent unresolved effect work units.
+          node tests/atomic-official-to-battle.test.cjs
+          node scripts/run-atomic-official-battle-intake.cjs
       - name: Save checkpoint and outcomes on the automation branch for review
         if: always()
         run: |
@@ -146,6 +144,8 @@ jobs:
           name: official-effect-continuation-checkpoint
           path: |
             work/card-auto-connect/
+            reports/official-effect-continuation/atomic-battle-connection.json
+            reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json
             work/official-standard-search/
             data/official-effect-intake/
             reports/official-effect-continuation/

@@ -4,6 +4,18 @@ No model API. Run again with the same state files to process new IDs only.
 import argparse,concurrent.futures,hashlib,importlib.util,json,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+# Parser-rejected saved official HTML stays in the same work unit and must
+# automatically retry whenever the shared official parser changes. Never
+# refetch unchanged pages or permanently lose failed official ID candidates.
+PARSER_PATHS=('scripts/collect-effect-extensions.py','scripts/parse-official-pokemon-energy.cjs')
+def parser_fingerprint():
+ h=hashlib.sha256()
+ for path in PARSER_PATHS:h.update((ROOT/path).read_bytes())
+ return h.hexdigest()
+def cached_parser_retry(ident,old,fingerprint):
+ if not old or old.get('reason')=='COLLECTOR_EXCEPTION':return False
+ proof=ROOT/f'data/effect-extensions/evidence/{ident}.json'
+ return proof.exists() and old.get('parserFingerprint')!=fingerprint
 spec=importlib.util.spec_from_file_location('existing_collector',ROOT/'scripts/collect-effect-extensions.py')
 C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
 def node(*args):
@@ -19,8 +31,17 @@ def main():
  base=json.loads((ROOT/'data/reference-effects/catalog.json').read_text());ext=json.loads((ROOT/'data/effect-extensions/intake.json').read_text());adopted={r['officialCardId'] for r in base['records']+ext['records']}
  ids=json.loads(Path(a.ids).read_text()) if a.ids else [r['officialCardId'] for r in json.loads((ROOT/'data/official-image-registry.json').read_text())['cards']]
  ids=list(dict.fromkeys(str(i) for i in ids));assert all(i.isdigit() and 1<=len(i)<=8 and i[0]!='0' for i in ids)
- pending=[i for i in ids if i not in adopted and i not in records and (a.retry_blocked or i not in blocked or (a.retry_transient and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' and blocked[i].get('attempts',1)<2))][:a.limit]
+ fingerprint=parser_fingerprint()
+ def due(i):
+  if i in adopted or i in records:return False
+  state=blocked.get(i)
+  if not state:return True
+  if a.retry_blocked:return True
+  if a.retry_transient and state.get('reason')=='COLLECTOR_EXCEPTION' and state.get('attempts',1)<2:return True
+  return cached_parser_retry(i,state,fingerprint)
+ pending=[i for i in ids if due(i)][:a.limit]
  transient_retries=sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending)
+ automatic_parser_rechecks=sum(cached_parser_retry(i,blocked.get(i),fingerprint) for i in pending)
  def collect(i):
   # Existing saved official HTML is preferred, including previously unparsed pages.
   path=ROOT/f'data/effect-extensions/evidence/{i}.json'
@@ -41,6 +62,8 @@ def main():
   else:
    old=blocked.get(r['officialCardId'],{})
    if r.get('reason')=='COLLECTOR_EXCEPTION':r={**r,'attempts':old.get('attempts',0)+1}
+   elif (ROOT/f"data/effect-extensions/evidence/{r['officialCardId']}.json").exists():
+    r={**r,'parserFingerprint':fingerprint}
    blocked[r['officialCardId']]=r
   C.save(file,{'schemaVersion':1,'records':list(records.values()),'blocked':list(blocked.values())})
  for r in results:persist(r)
@@ -65,7 +88,7 @@ def main():
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
  output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)
- print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
+ print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'automaticParserRechecks':automatic_parser_rechecks,'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
 if __name__=='__main__':
  import fcntl
  (ROOT/'work').mkdir(exist_ok=True)
