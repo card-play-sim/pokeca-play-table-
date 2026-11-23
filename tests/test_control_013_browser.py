@@ -9,6 +9,16 @@ PREFIX=ROOT/os.environ.get('POKECA_INTAKE_PREFIX','reports/official-effect-conti
 async def select_effect_targets(page, option):
  action=option['action']
  selections=action.get('selections',{})
+ # Some attack and ability actions expose their legal Pokemon candidates as
+ # option.targets, before any structured requests. The public UI prompts for
+ # this selection before opening the final attack confirmation dialog.
+ # Never choose a candidate by inference: replay the exact legal engine action.
+ if option.get('targets'):
+  target_ids=action.get('targetIds') or []
+  assert len(target_ids)==1 and target_ids[0] in option['targets'], (
+   'INVALID_LEGAL_TARGET_FIXTURE',target_ids,option['targets'])
+  await page.locator(f'#selection-cards [data-selection-id="{target_ids[0]}"]').tap(timeout=12000)
+  await page.locator('#selection-confirm').tap()
  for request in option.get('requests',[]):
   key=request['key']
   kind=request['kind']
