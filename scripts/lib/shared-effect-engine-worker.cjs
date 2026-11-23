@@ -193,13 +193,22 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
         p.active.energyCards.splice(p.active.energyCards.indexOf(energy), 1);
         p.deck.push(energy);
       }
+  }
+  if (m === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
+    const own = frame.game.players[0];
+    // Leave the source in hand and add usable costs without hiding deck categories.
+    while (own.hand.length <= e.plan.cost) {
+      const index = own.deck.findIndex(card => card.kind === "pokemon" || card.kind === "energy");
+      if (index < 0) return { blocked: "NO_HAND_DISCARD_FIXTURE_RESOURCE" };
+      own.hand.push(own.deck.splice(index, 1)[0]);
+    }
   }
   if (m === "SEARCH_REVEAL_TO_HAND_ATTACK" && e.plan.filter === "basicEnergy") {
     const player = frame.game.players[0];
@@ -281,8 +290,8 @@ function verifyPrintedAttack(before, after, effect, amount) {
   const attacker = E.getReferenceEffectRecord(own.active);
   const defender = E.getReferenceEffectRecord(opponent.active);
   const hasType = rule => rule?.types.some(type => attacker.facts.types.includes(type));
-  if (hasType(defender.facts.weakness)) amount *= 2;
-  if (hasType(defender.facts.resistance))
+  if (!effect.plan.skipWeakness && hasType(defender.facts.weakness)) amount *= 2;
+  if (!effect.plan.skipResistance && hasType(defender.facts.resistance))
     amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
   const changes = after.history.slice(before.history.length);
   assert(changes.some(event => event.type === "attack" &&
@@ -366,6 +375,70 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   if (e.plan.mechanic === "VANILLA_DAMAGE")
     verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
+    const action = t.action || o.action;
+    const { discard, cards } = action.selections;
+    const [own] = before.players;
+    const [resolved] = after.players;
+    assert.equal(discard.length, e.plan.cost);
+    assert(discard.every(id => own.hand.some(card => card.id === id && id !== action.cardId)));
+    assert([action.cardId, ...discard].every(id => resolved.discard.some(card => card.id === id)));
+    const selected = cards.map(id => own.deck.find(card => card.id === id));
+    const categories = selected.map(card => E.getReferenceEffectRecord(card).category);
+    assert(categories.length > 0 && categories.every(category => e.plan.categories.includes(category)));
+    assert.equal(new Set(categories).size, categories.length);
+    assert(cards.every(id => resolved.hand.some(card => card.id === id)));
+    const events = after.history.slice(before.history.length).map(event => event.details);
+    assert(events.some(step => step?.command === "REVEAL" && JSON.stringify(step.cardIds) === JSON.stringify(cards)));
+    assert(events.some(step => step?.command === "SHUFFLE_DECK"));
+    const replay = port(before);
+    const byCategory = own.deck.filter(card => E.getReferenceEffectRecord(card).category === categories[0]);
+    assert(byCategory.length >= 2, "DISTINCT_CATEGORY_FIXTURE_NEEDS_DUPLICATES");
+    for (const selections of [
+      {cards, discard: discard.slice(1)},
+      {cards, discard: [action.cardId, ...discard.slice(1)]},
+      {cards: byCategory.slice(0, 2).map(card => card.id), discard},
+      {cards: [own.active.id], discard},
+    ]) {
+      assert.equal(replay.dispatch("you", {...action, selections}).ok, false);
+      assert.deepEqual(replay.getSnapshot(), before);
+    }
+    assert(replay.dispatch("you", {...action, selections: {cards: [], discard}}).ok);
+    const skipped = replay.getSnapshot();
+    assert.equal(skipped.players[0].hand.length, own.hand.length - 1 - e.plan.cost);
+    assert(skipped.history.slice(before.history.length).some(event => event.details?.command === "SHUFFLE_DECK"));
+  }
+  if (e.plan.mechanic === "ATTACK_SPLASH_DAMAGE") {
+    verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
+    const target = before.players[1].bench.find(card => card.id === (t.action || o.action).targetIds?.[0]);
+    assert(target, "SPLASH_DAMAGE_NEEDS_BENCH_FIXTURE");
+    const events = after.history.slice(before.history.length);
+    assert(events.some(event => event.details?.command === "DAMAGE" &&
+      event.details.targetInstanceId === target.id && event.details.amount === e.plan.benchDamage));
+  }
+  if (e.plan.mechanic === "ATTACK_DISCARD_OPPONENT_DECK_TOP") {
+    verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
+    const expected = before.players[1].deck.slice(0, e.plan.amount).map(card => card.id);
+    assert(expected.length > 0, "DISCARD_ATTACK_NEEDS_OPPONENT_DECK_FIXTURE");
+    assert.deepEqual(Array.from(after.players[1].discard
+      .slice(before.players[1].discard.length, before.players[1].discard.length + expected.length),
+      card => card.id), Array.from(expected));
+  }
+  if (e.plan.mechanic === "ATTACK_DISCARD_HAND_DRAW") {
+    verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
+    const own = before.players[0], resolved = after.players[0];
+    assert(own.hand.length > 0 && own.deck.length > 0);
+    assert(own.hand.every(card => resolved.discard.some(discarded => discarded.id === card.id)));
+    assert.deepEqual(Array.from(resolved.hand, card => card.id),
+      Array.from(own.deck.slice(0, e.plan.amount), card => card.id));
+  }
+  if (e.plan.mechanic === "ATTACK_IGNORE_DAMAGE_RULES") {
+    const protectedStart = JSON.parse(JSON.stringify(before));
+    protectedStart.players[1].active.referenceProtection = {opponentTurn:before.turnNumber};
+    const replay = port(protectedStart);
+    assert(replay.dispatch("you", t.action || o.action).ok);
+    verifyPrintedAttack(protectedStart, replay.getSnapshot(), e, e.plan.ignore ? Number(e.damage) || 0 : 0);
+  }
   if (e.plan.mechanic === "ACTIVE_TOP_SUPPORTER_SEARCH") {
     const action=t.action||o.action;
     const [chosen]=action.selections.cards;

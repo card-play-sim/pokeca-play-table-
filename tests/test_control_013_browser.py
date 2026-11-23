@@ -105,7 +105,8 @@ async def main():
    if f['kind']=='attack':
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
                and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
-   if m in ('VANILLA_DAMAGE','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE'):
+   if m in ('VANILLA_DAMAGE','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
+            'ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='COIN_UNTIL_TAILS_DAMAGE':
@@ -126,6 +127,21 @@ async def main():
     bench_ids={card['id'] for card in after['players'][0]['bench']}
     deck_ids={card['id'] for card in after['players'][0]['deck']}
     assert set(selected)<=bench_ids and set(selected).isdisjoint(deck_ids)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='BASIC_ENERGY':
+    own=after['players'][0]
+    target=option['action']['target']
+    pokemon=own['active'] if target=='active' else own['bench'][target]
+    assert any(card['id']==ident and card['validationReference']['officialCardId']==r['officialCardId']
+               for card in pokemon['energyCards'])
+    assert all(card['id']!=ident for card in own['hand'])
+   if m=='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES':
+    own=after['players'][0]
+    selections=option['action']['selections']
+    assert len(selections['discard'])==f['e']['plan']['cost']
+    assert {ident,*selections['discard']}<={card['id'] for card in own['discard']}
+    assert set(selections['cards'])<={card['id'] for card in own['hand']}
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selections['cards'] for ev in events)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='ACTIVE_TOP_SUPPORTER_SEARCH':
     chosen=option['action']['selections']['cards']

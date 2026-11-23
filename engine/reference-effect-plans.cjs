@@ -76,6 +76,26 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の手札を3枚トラッシュしなければ使えない。自分の山札から「グッズ」「ポケモンのどうぐ」「サポート」「スタジアム」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')
+  return {mechanic:'DISCARD_TO_SEARCH_DISTINCT_CATEGORIES',commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],cost:3,categories:['item','tool','supporter','stadium']};
+ // Match complete, verified attack text. Printed damage and counter/damage units are separate.
+ const printedAmount=/^\d+$/.test(String(entry.damage||'0'));
+ const benchHit=text.normalize('NFKC').match(/^相手のベンチポケモン1匹にも、([1-9][0-9]{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(kind==='ATTACK'&&printedAmount&&benchHit)
+  return {mechanic:'ATTACK_SPLASH_DAMAGE',commands:['DAMAGE'],benchDamage:Number(benchHit[1])};
+ const mill=generic.match(/^相手の山札を上から([1-9][0-9]?)枚トラッシュする。$/);
+ if(kind==='ATTACK'&&printedAmount&&mill)
+  return {mechanic:'ATTACK_DISCARD_OPPONENT_DECK_TOP',commands:['DAMAGE','DISCARD'],amount:Number(mill[1])};
+ const damageRules={
+  'このワザのダメージは抵抗力を計算しない。':{skipResistance:true},
+  'このワザのダメージは、弱点・抵抗力を計算しない。':{skipWeakness:true,skipResistance:true},
+  'このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。':{skipWeakness:true,skipResistance:true,ignore:true},
+ };
+ if(kind==='ATTACK'&&printedAmount&&Object.hasOwn(damageRules,generic))
+  return {mechanic:'ATTACK_IGNORE_DAMAGE_RULES',commands:['DAMAGE'],...damageRules[generic]};
+ const discardDraw=generic.match(/^自分の手札をすべてトラッシュし、山札を([1-9][0-9]?)枚引く。$/);
+ if(kind==='ATTACK'&&printedAmount&&discardDraw)
+  return {mechanic:'ATTACK_DISCARD_HAND_DRAW',commands:['DAMAGE','DISCARD','DRAW'],amount:Number(discardDraw[1])};
  const reduction=generic.match(/^次の相手の番、このポケモンが受けるワザのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='ATTACK'&&reduction&&/^\d+$/.test(String(entry.damage||'0'))&&Number.isSafeInteger(Number(reduction[1])))return {mechanic:'ATTACK_DAMAGE_REDUCTION',commands:['DAMAGE','ADD_STATE'],amount:Number(reduction[1])};
  let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
