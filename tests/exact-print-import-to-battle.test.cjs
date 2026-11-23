@@ -39,3 +39,56 @@ assert(entries.some(e=>e.category==='pokemon'),'valid Basic Pokémon is required
 const fake={...catalog.get('47288'),url:'https://example.invalid/fake.jpg'};
 assert.equal(gate.connectionError('47288',fake,plans.get('47288')),'PRINT_IDENTITY_CONFLICT');
 console.log('PASS official-form recipe -> 60-card catalog -> two exact print effects -> match entries (plus image-conflict rejection)');
+
+const engineContext={window:{},console,performance,Math,setTimeout};
+vm.runInNewContext(fs.readFileSync('ui/engine.bundle.js','utf8'),engineContext);
+const E=engineContext.window.Pokeca;
+const exactDeck={name:'シークレットボックスの60枚対戦',cards:{
+  47847:4,49573:4,47288:3,45786:1,48711:2,45783:1,42945:45
+},blocked:[]};
+const exactCards=gate.matchEntries(exactDeck,catalog,plans);
+assert.equal(gate.diagnoseDeck(exactDeck,catalog,plans).deckReady,true);
+const tooManyAce={...exactDeck,cards:{...exactDeck.cards,45783:2,42945:44}};
+assert.throws(()=>gate.matchEntries(tooManyAce,catalog,plans),/ACE SPEC/);
+const revealId=card=>card.validationReference?.officialCardId;
+const manifest={decks:[{name:exactDeck.name,total:60,cards:exactCards},
+  {name:'対戦相手',total:60,cards:entries}]};
+const s=Array.from({length:250},(_,index)=>index+1).find(seed=>{
+  const trial=start(seed);
+  if(!trial.ok||trial.game.pendingReferenceChoice||trial.game.turnPlayer!=='you')return false;
+  const p=trial.game.players[0];
+  return p.hand.some(card=>revealId(card)==='45783')&&p.hand.filter(card=>revealId(card)==='42945').length>=4&&
+    [49573,47288,45786,48711].every(id=>p.deck.some(card=>revealId(card)===String(id)));
+});
+assert(s,'opening seed for exact prints and all four search categories');
+function start(seed){
+  let state=seed;
+  return E.createReferenceValidationMatch(manifest,{firstDeck:0,startingBench:{you:[]},rng:()=>{
+    state=(Math.imul(state,1664525)+1013904223)>>>0;
+    return state/4294967296;
+  }});
+}
+let {game}=start(s);
+const port=E.createUIPort({getGame:()=>game,setGame:next=>{game=next;}});
+assert(port.loadGame(game).ok);
+const initial=port.getSnapshot(),own=initial.players[0];
+const box=own.hand.find(card=>revealId(card)==='45783');
+const fire=own.hand.find(card=>revealId(card)==='42945');
+const attach=port.getHandOptions('you',fire.id).find(o=>o.ok&&o.action.target==='active');
+assert(attach&&port.dispatch('you',attach.action).ok);
+assert(port.getSnapshot().players[0].active.energyCards.some(card=>card.id===fire.id&&revealId(card)==='42945'));
+const use=port.getHandOptions('you',box.id).find(o=>o.ok&&o.action.type==='play_item');
+assert(use);
+const beforeBox=port.getSnapshot();
+const {cards:selected,discard}=use.action.selections;
+assert.equal(discard.length,3);
+assert.equal(selected.length,4);
+assert.equal(port.dispatch('you',{...use.action,selections:{cards:selected,discard:[box.id,...discard.slice(1)]}}).ok,false);
+assert.deepEqual(port.getSnapshot(),beforeBox);
+assert(port.dispatch('you',use.action).ok);
+const afterBox=port.getSnapshot();
+assert([box.id,...discard].every(id=>afterBox.players[0].discard.some(card=>card.id===id)));
+assert(selected.every(id=>afterBox.players[0].hand.some(card=>card.id===id)));
+assert(port.restoreSession(port.getResumeSnapshot()).ok);
+assert.deepEqual(port.getSnapshot(),afterBox);
+console.log('PASS exact prints 45783 and 42945 in the same 60-card match, four category search, ACE SPEC and save/restore');

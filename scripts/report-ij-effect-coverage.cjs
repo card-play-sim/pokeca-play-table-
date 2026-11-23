@@ -1,5 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm');
+const {verifiedBasicException}=require('./list-card-auto-connect-ids.cjs');
 const read=path=>JSON.parse(fs.readFileSync(path,'utf8'));
 const out=process.argv[2]||'reports/ij-effect-coverage.json';
 const context={window:{}};
@@ -7,7 +8,7 @@ for(const file of ['deck-code-import','saved-decks'])vm.runInNewContext(fs.readF
 const {PokecaDeckCodeImport:importer,PokecaSavedDecks:saved}=context.window;
 const classification=read('data/deck-building/catalog.json');
 const images=read('data/deck-building/m7-official-image-extension.json');
-const cards=importer.catalogFrom(read('data/official-image-registry.json'),read('data/reference-effects/catalog.json'),classification,images);
+const cards=importer.catalogFrom(read('data/official-image-registry.json'),read('data/reference-effects/catalog.json'),classification,images,read('data/deck-building/official-import-verified-extension.json'));
 const compiled=read('data/effect-extensions/compiled.json');
 const plans=saved.plansFrom(read('data/reference-effects/plans.json'),compiled);
 const intake=read('data/official-effect-intake/checkpoint.json');
@@ -39,8 +40,35 @@ for(const [id,card] of cards){
   if(status==='EXECUTION_PASS')report.playability[mark].executionVerified++;
   report.records.push({id,name:card.name,mark,category:card.category,status,...(reason?{reason}:{}),...(proof?{proof}:{})});
 }
+// The public deck gate is the source of truth for actual resolution by print ID.
+const verifiedInput=require('./build-effect-extensions.cjs').build({records:[...ingested.values()]});
+const coverageBlockers=new Map([...blockers,...verifiedInput.blocked.map(row=>[row.officialCardId,row])]);
+const scope={H:{},I:{},J:{},basicEnergyException:{}};
+const regulations=new Set(['H','I','J']);
+const seen=new Set();
+for(const row of classification.records){
+  const id=String(row.officialCardId),card=cards.get(id),record=plans.get(id);
+  const group=verifiedBasicException(row)?'basicEnergyException':
+    row.legality==='printed-hij'&&regulations.has(row.regulationMark)?row.regulationMark:null;
+  if(!group||seen.has(id))continue;
+  seen.add(id);
+  const mismatch=saved.connectionError(id,card,record);
+  const source=ingested.get(id),blocker=coverageBlockers.get(id);
+  const semanticBlock=blocker?.reason==='UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN'||blocker?.reason==='UNSUPPORTED_EFFECT_PATTERN';
+  const status=!card||mismatch==='PRINT_IDENTITY_CONFLICT'?'PRINT_IDENTITY_CONFLICT':
+    !mismatch?'ENGINE_CONNECTED':
+    semanticBlock?'MECHANIC_REQUIRED':
+    blocker?.evidencePath||blocker&&source?'EVIDENCE_UNVERIFIED':
+    source?'ENGINE_CONNECTION_REQUIRED':'EVIDENCE_MISSING';
+  const bucket=scope[group];
+  bucket.total=(bucket.total||0)+1;
+  bucket[status]=(bucket[status]||0)+1;
+}
+report.battleScope={groups:scope,total:seen.size,
+  engineConnected:Object.values(scope).reduce((sum,group)=>sum+(group.ENGINE_CONNECTED||0),0)};
+report.battleScope.unconnected=report.battleScope.total-report.battleScope.engineConnected;
 fs.writeFileSync(out,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({audit,counts:report.counts,playability:report.playability}));
+console.log(JSON.stringify({audit,counts:report.counts,playability:report.playability,battleScope:report.battleScope}));
 // --require-playable is the single end-to-end release gate; do not use for diagnostic-only CI.
 if(process.argv.includes('--require-playable') && Object.values(report.playability).some(v=>v.incomplete)) {
   console.error('BATTLE_PLAYABILITY_INCOMPLETE: cards without verified battle execution remain');

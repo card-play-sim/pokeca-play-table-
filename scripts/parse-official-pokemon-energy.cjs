@@ -8,6 +8,21 @@ function text(s){
  assert(!/<[^>]+>/.test(s),'UNSUPPORTED_INLINE_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,'').trim();
 }
 function label(s){assert(!/<[^>]*>/.test(s),'UNSUPPORTED_NAME_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();}
+function predecessor(right,stage,name){
+ if(stage===0)return null;
+ const evolution=right.match(/<h2[^>]*>進化<\/h2>([\s\S]*?)\n\s*<\/div>\s*<\/div>\s*<div class="clear">/)?.[1]||'';
+ const linkedRows=[...evolution.matchAll(/<div class="evolution (ev_on|ev_off)">\s*<a\b[^>]*>([^<]+)<\/a>\s*(<div class="arrow_(on|off)"><\/div>)?\s*<\/div>/g)];
+ // An unlinked row above the current Pokémon is an evolution, not its predecessor.
+ // Use the official arrow-marked chain only when all three rows have this exact layout.
+ if(stage===1&&linkedRows.length===3&&linkedRows.map(r=>r[0]).join('').replace(/\s/g,'')===evolution.replace(/\s/g,'')){
+  const [next,current,previous]=linkedRows;
+  if(next[1]==='ev_off'&&!next[3]&&current[1]==='ev_on'&&current[4]==='on'&&label(current[2])===name&&previous[1]==='ev_off'&&previous[4]==='off')
+   return label(previous[2]);
+ }
+ const ordinary=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));
+ assert(ordinary.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
+ return ordinary[0];
+}
 function parse(html,{enableTeraRule=false}={}){
  const right=html.slice(html.indexOf('<div class="RightBox-inner">'));assert(right.startsWith('<div'),'OFFICIAL_DETAIL_LAYOUT');
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
@@ -32,8 +47,8 @@ function parse(html,{enableTeraRule=false}={}){
   const d=m[2].match(/<span class="f_right Text-fjalla">([^<]*)<\/span>/),header=m[2].replace(/<span class="f_right Text-fjalla">[^<]*<\/span>/,'');const cost=tokens(header),name=label(header.replace(/<span[^>]*><\/span>/g,'')),damage=d?text(d[1]).replace(/＋/g,'+').replace(/[－−]/g,'-'):'0';assert(name&&/^\d+[-+×]?$/.test(damage),'UNSUPPORTED_ATTACK_HEADER');attacks.push({name,cost,damage,text:text(m[3])});
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
- const evo=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));assert(stage===0||evo.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
- return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom:stage?evo[0]:null,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
+ const evolvesFrom=predecessor(right,stage,label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''));
+ return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}
 module.exports={parse,text};
