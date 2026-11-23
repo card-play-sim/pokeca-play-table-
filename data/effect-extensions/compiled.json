@@ -122960,6 +122960,827 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48829",
+      "name": "メガエンブオーex",
+      "deckName": "メガエンブオーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48829",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048829_P_MENBUOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "クリムゾンボム",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "320",
+          "text": "このポケモンにも60ダメージ。",
+          "effectId": "reference-48829-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 60
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 380,
+        "evolvesFrom": "チャオブー",
+        "retreatCost": 4,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48829.json",
+        "sha256": "9b19a42c6e1e07203363a14ee9992b1f133b795143866d925cf6710c7557b66c",
+        "htmlSha256": "9b19a42c6e1e07203363a14ee9992b1f133b795143866d925cf6710c7557b66c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49716",
+      "name": "メガエルレイドex",
+      "deckName": "メガエルレイドex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49716",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/049716_P_MERUREIDOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はやてぎり",
+          "cost": [
+            "闘"
+          ],
+          "damage": "50+",
+          "text": "このポケモンにダメカンがのっていないなら、150ダメージ追加。",
+          "effectId": "reference-49716-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 50,
+            "bonus": 150
+          }
+        },
+        {
+          "name": "マーベラスエッジ",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "240",
+          "text": "",
+          "effectId": "reference-49716-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "キルリア",
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49716.json",
+        "sha256": "286c7ea8b5d59869080659c5c967511f8469cd6d8b4687aa0bacc117d9360fd0",
+        "htmlSha256": "286c7ea8b5d59869080659c5c967511f8469cd6d8b4687aa0bacc117d9360fd0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50030",
+      "name": "メガエンブオーex",
+      "deckName": "メガエンブオーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50030",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/050030_P_MENBUOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "クリムゾンボム",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "320",
+          "text": "このポケモンにも60ダメージ。",
+          "effectId": "reference-50030-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 60
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 380,
+        "evolvesFrom": "チャオブー",
+        "retreatCost": 4,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50030.json",
+        "sha256": "a2cdae206bd2c8b18d5f85d1a03c90e47510b5df0deba94ca355dd980f11bd08",
+        "htmlSha256": "a2cdae206bd2c8b18d5f85d1a03c90e47510b5df0deba94ca355dd980f11bd08",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50062",
+      "name": "メガスターミーex",
+      "deckName": "メガスターミーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50062",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/050062_P_MSUTAMIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットブロー",
+          "cost": [
+            "水"
+          ],
+          "damage": "120",
+          "text": "相手のベンチポケモン1匹にも、50ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50062-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 50
+          }
+        },
+        {
+          "name": "ネビュラビーム",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-50062-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "ヒトデマン",
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50062.json",
+        "sha256": "8257308353e1533b34cee7816eed5ce5532fdab277888a1ec81417482376ed63",
+        "htmlSha256": "8257308353e1533b34cee7816eed5ce5532fdab277888a1ec81417482376ed63",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50078",
+      "name": "メガスターミーex",
+      "deckName": "メガスターミーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50078",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/050078_P_MSUTAMIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットブロー",
+          "cost": [
+            "水"
+          ],
+          "damage": "120",
+          "text": "相手のベンチポケモン1匹にも、50ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50078-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 50
+          }
+        },
+        {
+          "name": "ネビュラビーム",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-50078-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "ヒトデマン",
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50078.json",
+        "sha256": "43f681dcd9cf01fdc69a33e514b5404e65196f31f404bedb34f32ce5fa0b660f",
+        "htmlSha256": "43f681dcd9cf01fdc69a33e514b5404e65196f31f404bedb34f32ce5fa0b660f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50386",
+      "name": "メガカラマネロex",
+      "deckName": "メガカラマネロex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50386",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050386_P_MKARAMANEROIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイコマリオネット",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "70×",
+          "text": "相手のベンチポケモンの数×70ダメージ。",
+          "effectId": "reference-50386-attack-0",
+          "plan": {
+            "mechanic": "BENCH_COUNT_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "side": "opponent",
+            "unit": 70,
+            "base": 0
+          }
+        },
+        {
+          "name": "ぶきみなねんぱ",
+          "cost": [
+            "悪",
+            "悪",
+            "悪"
+          ],
+          "damage": "200",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-50386-attack-1",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "マーイーカ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50386.json",
+        "sha256": "d17d1807b29f4b495f7c0f55bbf23edd0670c2db833d18d56fdff1ca7689b04a",
+        "htmlSha256": "d17d1807b29f4b495f7c0f55bbf23edd0670c2db833d18d56fdff1ca7689b04a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50471",
+      "name": "メガシャリタツex",
+      "deckName": "メガシャリタツex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50471",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050471_P_MSHIXYARITATSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サンカンヘッド",
+          "cost": [
+            "水",
+            "水",
+            "水"
+          ],
+          "damage": "150×",
+          "text": "コインを3回投げ、オモテの数×150ダメージ。",
+          "effectId": "reference-50471-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 150
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50471.json",
+        "sha256": "41e33d7338824645aca0246ac83fb7e15664a11aca2afdd9299d56f31ce6a558",
+        "htmlSha256": "41e33d7338824645aca0246ac83fb7e15664a11aca2afdd9299d56f31ce6a558",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50488",
+      "name": "メガエルレイドex",
+      "deckName": "メガエルレイドex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50488",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050488_P_MERUREIDOIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はやてぎり",
+          "cost": [
+            "闘"
+          ],
+          "damage": "50+",
+          "text": "このポケモンにダメカンがのっていないなら、150ダメージ追加。",
+          "effectId": "reference-50488-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 50,
+            "bonus": 150
+          }
+        },
+        {
+          "name": "マーベラスエッジ",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "240",
+          "text": "",
+          "effectId": "reference-50488-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "キルリア",
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50488.json",
+        "sha256": "55b0bdb1caff5b6ee34be51da23a5f377755dfd91e2307b18c4b0664ec628ad3",
+        "htmlSha256": "55b0bdb1caff5b6ee34be51da23a5f377755dfd91e2307b18c4b0664ec628ad3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50535",
+      "name": "メガカラマネロex",
+      "deckName": "メガカラマネロex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50535",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050535_P_MKARAMANEROIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイコマリオネット",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "70×",
+          "text": "相手のベンチポケモンの数×70ダメージ。",
+          "effectId": "reference-50535-attack-0",
+          "plan": {
+            "mechanic": "BENCH_COUNT_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "side": "opponent",
+            "unit": 70,
+            "base": 0
+          }
+        },
+        {
+          "name": "ぶきみなねんぱ",
+          "cost": [
+            "悪",
+            "悪",
+            "悪"
+          ],
+          "damage": "200",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-50535-attack-1",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "マーイーカ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50535.json",
+        "sha256": "ba0b615dddd0691ed4e9d1b6aaf3f2d608a861f598325f2ce89b466e0b597efc",
+        "htmlSha256": "ba0b615dddd0691ed4e9d1b6aaf3f2d608a861f598325f2ce89b466e0b597efc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50537",
+      "name": "ファイアローex",
+      "deckName": "ファイアローex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50537",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050537_P_FUAIAROIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かぎづめハント",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "150",
+          "text": "のぞむなら、自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
+          "effectId": "reference-50537-attack-0",
+          "plan": {
+            "mechanic": "HUNT",
+            "commands": [
+              "DAMAGE",
+              "SEARCH_DECK",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "エキサイトダイブ",
+          "text": "自分の番に、このカードが手札にあり、自分の場に[無色]タイプの「メガシンカex」がいるなら、1回使える。このカードをベンチに出す。",
+          "effectId": "reference-50537-ability-0",
+          "plan": {
+            "mechanic": "EXCITE_DIVE",
+            "commands": [
+              "ABILITY_TRIGGER",
+              "BENCH_FROM_ZONE"
+            ]
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヒノヤコマ",
+        "retreatCost": 0,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50537.json",
+        "sha256": "ab25c73e223611d70b9b47ea4a3a91ff5b50101805a9cb8cdc024881b680c044",
+        "htmlSha256": "ab25c73e223611d70b9b47ea4a3a91ff5b50101805a9cb8cdc024881b680c044",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50172",
+      "name": "メガガルーラex",
+      "deckName": "メガガルーラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50172",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050172_P_MGARURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マシンガンコンボ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "200+",
+          "text": "ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。",
+          "effectId": "reference-50172-attack-0",
+          "plan": {
+            "mechanic": "COMBO",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "おつかいダッシュ",
+          "text": "このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。",
+          "effectId": "reference-50172-ability-0",
+          "plan": {
+            "mechanic": "DASH",
+            "commands": [
+              "DRAW"
+            ]
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50172.json",
+        "sha256": "f917c33b0d684cb7bfeb4f260746ca389daebc0e21239925c9baf94c4502533f",
+        "htmlSha256": "f917c33b0d684cb7bfeb4f260746ca389daebc0e21239925c9baf94c4502533f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
