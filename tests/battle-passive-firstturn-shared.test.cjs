@@ -45,7 +45,7 @@ const catalog={
  defaultValidationReferences:{}
 };
 const runtimeFile=fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8');
-const exports={exports:{}};
+const mockedModule={exports:{}};
 const effects={
  apply(game,command,{playerId}){
   if(command.command!=='DRAW')throw Error('UNEXPECTED_COMMAND:'+command.command);
@@ -63,8 +63,8 @@ const fakeRequire=name=>{
  throw Error('UNEXPECTED_IMPORT:'+name);
 };
 const factory=vm.runInNewContext('(function(require,module,exports){\n'+runtimeFile+'\n})',{console});
-factory(fakeRequire,exports,exports.exports);
-const engine=exports.exports;
+factory(fakeRequire,mockedModule,mockedModule.exports);
+const engine=mockedModule.exports;
 function card(row,ident,kind){
  return {id:ident,name:row.name,kind,
   cardType:row.category==='supporter'?'SUPPORTER':undefined,
