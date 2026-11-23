@@ -5,6 +5,7 @@ writing bytes from the checkpoint commit. Fail closed on missing/conflicting pro
 """
 import argparse
 import hashlib
+import re
 import json
 import subprocess
 import tempfile
@@ -21,7 +22,7 @@ def recover_records(commit, records):
     pending = []
     for record in records:
         official_id = str(record["officialCardId"])
-        if not official_id.isdigit() or not 4 <= len(official_id) <= 8:
+        if not re.fullmatch(r"[1-9][0-9]{0,7}", official_id):
             raise ValueError("INVALID_OFFICIAL_ID")
         rel = f"data/effect-extensions/evidence/{official_id}.json"
         if record["source"]["path"] != rel:

@@ -79,6 +79,35 @@ class RecoveryTest(unittest.TestCase):
                 module.merge_checkpoint("test-ref", self.checkpoint)
         self.assertEqual(json.loads(self.checkpoint.read_text()), current)
 
+    def test_short_exact_official_ids_restore_from_saved_html(self):
+        # The official catalog includes genuine early print IDs 1 and 2.
+        # Their official URL, SHA and exact evidence path remain mandatory.
+        for ident in ("1", "2"):
+            with self.subTest(ident=ident):
+                rel = f"data/effect-extensions/evidence/{ident}.json"
+                url = f"https://www.pokemon-card.com/card-search/details.php/card/{ident}"
+                html = f'<meta property="og:url" content="{url}">'
+                proof = {"html": html, "htmlSha256": hashlib.sha256(html.encode()).hexdigest(), "url": url}
+                row = {"officialCardId": ident, "officialPageUrl": url,
+                       "source": {"path": rel, "sha256": proof["htmlSha256"]}}
+                self.checkpoint.write_text(json.dumps({"records": [row]}))
+                with patch.object(module.subprocess, "check_output", return_value=json.dumps(proof).encode()) as fetch:
+                    self.assertEqual(module.recover("test-ref", self.checkpoint), 1)
+                    fetch.assert_called_once()
+                self.assertEqual(json.loads((self.root / rel).read_text()), proof)
+
+    def test_invalid_and_ambiguous_official_ids_are_rejected(self):
+        for ident in ("0", "01", "0001", "123456789", "１２３４", "-1", "1/2"):
+            with self.subTest(ident=ident):
+                row = {**self.record, "officialCardId": ident,
+                       "source": {"path": f"data/effect-extensions/evidence/{ident}.json",
+                                  "sha256": self.proof["htmlSha256"]}}
+                self.checkpoint.write_text(json.dumps({"records": [row]}))
+                with patch.object(module.subprocess, "check_output") as fetch:
+                    with self.assertRaisesRegex(ValueError, "INVALID_OFFICIAL_ID"):
+                        module.recover("test-ref", self.checkpoint)
+                    fetch.assert_not_called()
+
     def test_path_substitution_rejected(self):
         self.record["source"]["path"] = "../../data/official-image-registry.json"
         self.checkpoint.write_text(json.dumps({"records": [self.record]}))
