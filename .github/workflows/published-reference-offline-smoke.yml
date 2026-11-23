@@ -1,0 +1,38 @@
+name: Published reference match offline restore smoke
+on:
+  pull_request:
+    paths:
+      - 'tests/test_published_pwa_browser.py'
+      - '.github/workflows/published-reference-offline-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  published-reference-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify real 60-card match survives offline and online reload
+        env:
+          POKECA_TEST_URL: http://127.0.0.1:8765/
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-test-server.log 2>&1 &
+          curl --retry 20 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:8765/ >/dev/null
+          python tests/test_published_pwa_browser.py
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-reference-offline-browser
+          path: |
+            artifacts/published-pwa-result.json
+          if-no-files-found: warn
+          retention-days: 14
