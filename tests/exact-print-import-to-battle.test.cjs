@@ -92,3 +92,63 @@ assert(selected.every(id=>afterBox.players[0].hand.some(card=>card.id===id)));
 assert(port.restoreSession(port.getResumeSnapshot()).ok);
 assert.deepEqual(port.getSnapshot(),afterBox);
 console.log('PASS exact prints 45783 and 42945 in the same 60-card match, four category search, ACE SPEC and save/restore');
+
+async function verifyExactPrintsThroughFinishedMatch(){
+ const ownDeck={name:'対戦接続回帰',cards:{
+ 47847:4,49262:4,49263:4,49264:3,49573:4,47288:3,45786:1,48711:2,45783:1,42945:18,49460:16
+ },blocked:[]};
+ assert.equal(gate.total(ownDeck),60);
+ const both={decks:[{...ownDeck,cards:gate.matchEntries(ownDeck,catalog,plans)},
+  {name:'対戦相手',total:60,cards:entries}]};
+ // Fixed shuffle that opens both issue #164 prints and the evolution line.
+ const seed=191089423;
+ let n=seed;
+ const create=(opening={})=>E.createReferenceValidationMatch(both,{firstDeck:0,
+  rng:()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;},
+  startingBench:{you:[]},...opening});
+ let result=create();
+ assert(result.ok&&!result.game.pendingReferenceChoice&&result.game.turnPlayer==='you');
+ const first=result.game.players[0];
+ const opening=[first.active,...first.hand];
+ assert.equal(opening.length,7);
+ const active=opening.find(card=>revealId(card)==='47847');
+ const bench=opening.find(card=>revealId(card)==='49262');
+ assert(active&&bench&&opening.some(card=>revealId(card)==='45783')&&
+   opening.some(card=>revealId(card)==='42945'));
+ n=seed;
+ result=create({startingActive:{you:active.id},startingBench:{you:[bench.id]}});
+ assert(result.ok);
+ let game=result.game;
+ const p=E.createUIPort({getGame:()=>game,setGame:next=>{game=next;}});
+ assert(p.loadGame(game).ok);
+ const initial=p.getSnapshot();
+ assert.equal(revealId(initial.players[0].active),'47847');
+ assert.equal(revealId(initial.players[0].bench[0]),'49262');
+ const play=(id,type,condition=()=>true)=>{
+  const card=p.getSnapshot().players[0].hand.find(card=>revealId(card)===id);
+  const option=card&&p.getHandOptions('you',card.id).find(o=>o.ok&&o.action.type===type&&condition(o.action));
+  return Boolean(option&&p.dispatch('you',option.action).ok);
+ };
+ assert(play('42945','attach_energy',action=>action.target==='active'));
+ assert(!E.getLegalActions(p.getSnapshot(),'you').actions.some(action=>action.type==='attack_turn'));
+ const dash=p.getPokemonActions('you',active.id).find(option=>option.kind==='ability'&&option.enabled);
+ assert(dash&&p.dispatch('you',dash.action).ok);
+ assert(play('45783','play_item',action=>action.selections.discard.length===3));
+ assert(!E.getLegalActions(p.getSnapshot(),'you').actions.some(action=>action.type==='evolve'));
+ for(let i=0;i<100&&p.getSnapshot().status==='active';i++){
+  const current=p.getSnapshot();
+  const actor=(current.pendingPrizeSelection||current.pendingReferenceChoice||{}).playerId||current.turnPlayer;
+  const next=await E.runAITurn(p,actor,{maxActions:80});
+  assert(next.ok,JSON.stringify(next));
+  const snap=p.getSnapshot();
+  assert(p.restoreSession(p.getResumeSnapshot()).ok);
+  assert.deepEqual(p.getSnapshot(),snap);
+ }
+ const end=p.getSnapshot();
+ const events=new Set(end.history.map(event=>event.type));
+ assert.equal(end.status,'finished');
+ for(const type of ['attack','evolve','ability_used','knockout'])assert(events.has(type),type);
+ assert(end.players.some(player=>player.prizes<6));
+ console.log('PASS issue #164 exact prints through a finished 60-card match, evolution, ability, attack, prize and restore');
+}
+verifyExactPrintsThroughFinishedMatch().catch(error=>{console.error(error);process.exitCode=1;});
