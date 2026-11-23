@@ -83,11 +83,17 @@ jobs:
         run: |
           node scripts/check-reference-bundle-sync.cjs
           node scripts/build-pwa-release.cjs --check
-  chromium-gameplay:
+  # Every test remains mandatory, but independent Chromium tests no longer
+  # serialize the entire candidate batch behind one twenty-minute job.
+  chromium-suites:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -95,28 +101,43 @@ jobs:
           python-version: '3.12'
       - run: pip install playwright==1.56.0
       - run: python -m playwright install --with-deps chromium
-      - name: Exercise candidate gameplay and exact save-resume in Chromium
+      - name: Exercise assigned, disjoint gameplay suite in Chromium
         run: |
+          set -euo pipefail
           mkdir -p artifacts
           python -m http.server 8765 --bind 127.0.0.1 >/tmp/pokeca-gameplay-server.log 2>&1 &
-          python tests/test_shared_operation_browser.py
-          python tests/test_control_014_browser.py
-          python tests/test_control_013_browser.py
-          python tests/test_control_010_browser.py
-          python tests/test_control_009_browser.py
-          python tests/test_control_008_extensions_browser.py
-          python tests/test_control_006_browser.py
-          python tests/test_ui_control_008_browser.py
-          python tests/test_control_002_browser.py
-          python tests/test_g_base_008_browser.py
-          python tests/test_reference_match_browser.py
-          POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
-          POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_release_delivery_browser.py
-      - name: Preserve candidate gameplay evidence
+          shard="${{ matrix.shard }}"
+          if [ "$shard" -lt 4 ]; then
+            POKECA_BROWSER_SHARD_COUNT=4 POKECA_BROWSER_SHARD_INDEX="$shard" python tests/test_control_013_browser.py
+          else
+            case "$shard" in
+              4)
+                python tests/test_shared_operation_browser.py
+                python tests/test_control_014_browser.py
+                python tests/test_control_010_browser.py
+                ;;
+              5)
+                python tests/test_control_009_browser.py
+                python tests/test_control_008_extensions_browser.py
+                python tests/test_control_006_browser.py
+                ;;
+              6)
+                python tests/test_ui_control_008_browser.py
+                python tests/test_control_002_browser.py
+                python tests/test_g_base_008_browser.py
+                ;;
+              7)
+                python tests/test_reference_match_browser.py
+                POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_published_pwa_browser.py
+                POKECA_TEST_URL=http://127.0.0.1:8765/ python tests/test_release_delivery_browser.py
+                ;;
+            esac
+          fi
+      - name: Preserve exact, disjoint candidate gameplay evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: candidate-gameplay-evidence
+          name: candidate-gameplay-evidence-shard-${{ matrix.shard }}
           path: |
             artifacts/shared-operation-*
             artifacts/control-014-*
@@ -133,6 +154,18 @@ jobs:
             artifacts/published-pwa-result.json
           if-no-files-found: warn
 
+  # Keep the stable required-check name; success requires EVERY browser shard.
+  chromium-gameplay:
+    needs: [chromium-suites]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail unless all eight gameplay shards pass
+        env:
+          RESULT: ${{ needs.chromium-suites.result }}
+        run: |
+          test "$RESULT" = "success"
   installed-pwa-upgrade:
     runs-on: ubuntu-24.04
     timeout-minutes: 15

@@ -36,6 +36,14 @@ async def select_effect_targets(page, option):
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
+ shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
+ shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
+ assert 1<=shard_count<=16 and 0<=shard_index<shard_count,'INVALID_BROWSER_SHARD'
+ total_fixtures=len(fixtures)
+ all_official_ids={f['r']['officialCardId'] for f in fixtures}
+ fixtures=[case for index,case in enumerate(fixtures) if index%shard_count==shard_index]
+ print(json.dumps({'browserShard':shard_index,'shardCount':shard_count,
+                   'totalFixtures':total_fixtures,'selectedFixtures':len(fixtures)}),flush=True)
  if release_base:
   delivery=json.loads((ROOT/'test-results/published-pwa-verification.json').read_text())
   assert delivery['success'] and delivery['base']==os.environ['POKECA_TEST_URL']
@@ -201,6 +209,19 @@ async def main():
    receipt['success']=True
    save_receipt()
    return
+  # Each partition checks its own physical exact-print actions and save-resume.
+  # Only partition zero runs the unchanged whole-deck AI match, which may use
+  # any official print from the complete source fixture, not only this shard.
+  if shard_count>1 and shard_index!=0:
+   assert not errors,errors
+   report={'url':page.url,'browserShard':shard_index,'totalFixtures':total_fixtures,
+           'newPrints':len({f['r']['officialCardId'] for f in fixtures}),
+           'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False}
+   (ROOT/'artifacts').mkdir(exist_ok=True)
+   (ROOT/('artifacts/'+os.environ.get('POKECA_INTAKE_ARTIFACT','control-013')+'-browser.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2))
+   print(json.dumps(report,ensure_ascii=False))
+   await c.close();await b.close()
+   return
   # Run the imported-deck match independently of any pending fixture choices.
   await c.close()
   c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
@@ -227,7 +248,7 @@ async def main():
    actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
    result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return {ok:r.ok,actions:r.actions,stage:r.stage};}',actor);assert result['ok'],result
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
-  final=await snap();assert final['status']=='finished';new_ids={f['r']['officialCardId'] for f in fixtures};used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
+  final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
   await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
   assert not errors,errors
   report={'url':page.url,'expandedAIMatch':match,'newPrints':len({f['r']['officialCardId'] for f in fixtures}),'newPatterns':len(set(f['e']['plan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/('artifacts/'+os.environ.get('POKECA_INTAKE_ARTIFACT','control-013')+'-browser.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
