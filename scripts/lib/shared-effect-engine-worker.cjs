@@ -532,6 +532,40 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(), end);
     }
   }
+
+  if (e.plan.mechanic === "ATTACK_APPLY_STATUS") {
+    const events=after.history.slice(before.history.length);
+    assert.equal(after.players[1].active.statusCondition,e.plan.status);
+    assert(events.some(ev=>ev.details?.command==='STATUS_CONDITION'
+      &&ev.details.status===e.plan.status
+      &&ev.details.targetInstanceId===before.players[1].active.id));
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),after);
+  }
+  if (e.plan.mechanic === "ATTACK_HEAL_TEAM") {
+    const events=after.history.slice(before.history.length);
+    for(const card of [before.players[0].active,...before.players[0].bench].filter(Boolean)){
+      const expected=Math.min(card.damage||0,e.plan.amount);
+      assert(events.some(ev=>ev.details?.command==='HEAL'
+        &&ev.details.targetInstanceId===card.id&&ev.details.amount===expected));
+    }
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),after);
+  }
+  if (e.plan.mechanic === "ATTACK_TAKEN_PRIZES_DAMAGE") {
+    const count=6-before.players[1].prizes;
+    assert(Number.isInteger(count)&&count>=0&&count<=6);
+    if(count>0)verifyPrintedAttack(before,after,e,count*e.plan.unit);
+    else assert(after.history.slice(before.history.length).some(ev=>ev.type==='attack'
+      &&ev.details.effectId===e.effectId));
+  }
+  if (e.plan.mechanic === "ATTACK_STATUS_BONUS_DAMAGE") {
+    verifyPrintedAttack(before,after,e,e.plan.base+
+      (before.players[1].active.statusCondition?e.plan.bonus:0));
+  }
+
   if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
       const start = { ...before, referenceRngState: seed };
