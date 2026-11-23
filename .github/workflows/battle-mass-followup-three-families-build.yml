@@ -1,0 +1,48 @@
+name: Rebuild three exact official battle effect families
+on:
+  push:
+    branches: [feat/battle-mass-followup-three-families-20261123]
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/battle-mass-followup-three-families.test.cjs'
+      - '.github/workflows/battle-mass-followup-three-families-build.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/battle-mass-followup-three-families-20261123
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact official text and executable engine before rebuilding
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/battle-mass-followup-three-families.test.cjs
+      - name: Build every saved official print against all three new shared families
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node tests/battle-mass-followup-three-families.test.cjs
+      - name: Commit verified compiled source and published engine to review branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: three official shared effect families and their battle engine bundle'
+            git push origin HEAD:feat/battle-mass-followup-three-families-20261123
+          fi
