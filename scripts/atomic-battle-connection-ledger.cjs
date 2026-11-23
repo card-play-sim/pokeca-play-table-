@@ -33,6 +33,7 @@ function rawSlots(row) {
 }
 function makeWorklist(records,blocked,ids) {
   const groups = new Map();
+  const seenPrints = new Map();
   const source = new Map(records.map(row => [String(row.officialCardId),row]));
   for (const failure of blocked) {
     const id = String(failure.officialCardId);
@@ -49,7 +50,9 @@ function makeWorklist(records,blocked,ids) {
         cost:e.cost || [],damage:e.damage === undefined ? null : e.damage
       };
       const key = hash(JSON.stringify(signature)).slice(0,20);
-      if (!groups.has(key)) groups.set(key,{
+      if (!groups.has(key)) {
+        seenPrints.set(key,new Set());
+        groups.set(key,{
         sharedTaskId:'OFFICIAL_SHARED_MECHANIC_'+key.toUpperCase(),
         category:row.category,effectKind:slot.kind,
         exampleOfficialText:text.slice(0,1600),
@@ -59,10 +62,13 @@ function makeWorklist(records,blocked,ids) {
         officialEvidencePaths:[],
         printCount:0,
         effectSlots:0
-      });
+        });
+      }
       const group = groups.get(key);
       group.effectSlots++;
-      if (!group.officialCardIds.includes(id)) {
+      const alreadyCounted = seenPrints.get(key).has(id);
+      if (!alreadyCounted) {
+        seenPrints.get(key).add(id);
         group.printCount++;
         if (group.officialCardIds.length < 30) group.officialCardIds.push(id);
         if (row.source?.path && group.officialEvidencePaths.length < 30)
