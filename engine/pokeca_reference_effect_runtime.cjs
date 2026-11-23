@@ -198,6 +198,10 @@ function requests(g,actor,card,effect){
  if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
+ if(m==='ATTACK_DISCARD_BENCH_ENERGY_BONUS'){
+  const attached=p.bench.flatMap(mon=>mon.energyCards||[]);
+  cardRequest('energy',attached,0,Math.min(effect.plan.maxDiscard,attached.length));
+ }
  if(m==='DECK_ENERGY_TO_GRASS_BENCH'){
   const energies=p.deck.filter(c=>c.kind==='energy'),targets=p.bench.filter(c=>record(c).facts.types.includes('草'));
   const count=energies.length&&targets.length?1:0;
@@ -550,7 +554,21 @@ function applyPlan(g,actor,card,effect,action){
    if(action.targetIds?.length)damage(g,actor,target(),plan.benchDamage,{bench:true});
    break;
   case 'ATTACK_IGNORE_DAMAGE_RULES':damage(g,actor,o.active,Number(effect.damage)||0,plan);break;
-  case 'ATTACK_DISCARD_OPPONENT_DECK_TOP':{
+  case 'ATTACK_DISCARD_BENCH_ENERGY_BONUS':{
+    const chosen=ids('energy');
+    assert(chosen.length<=plan.maxDiscard,'BENCH_ENERGY_TOO_MANY');
+    for(const energyId of chosen){
+     const source=p.bench.find(mon=>(mon.energyCards||[]).some(e=>id(e)===energyId));
+     assert(source,'BENCH_ENERGY_SELECTION_CHANGED');
+     const i=source.energyCards.findIndex(e=>id(e)===energyId);
+     const [discarded]=source.energyCards.splice(i,1);
+     p.discard.push(discarded);
+     event(g,actor,'DISCARD',{cardIds:[energyId],sourceInstanceId:id(source),fromZone:'attached'});
+    }
+    damage(g,actor,o.active,plan.base+chosen.length*plan.unit);
+    break;
+   }
+   case 'ATTACK_DISCARD_OPPONENT_DECK_TOP':{
    damage(g,actor,o.active,Number(effect.damage)||0);
    const moved=o.deck.splice(0,plan.amount);
    o.discard.push(...moved);
