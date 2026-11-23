@@ -10,6 +10,10 @@
   let pending;
   let preparing = false;
   let matchData;
+  const opponentSelect = $('deck-home-opponent');
+  const matchStatus = $('deck-home-match-status');
+  const startButton = $('deck-home-start');
+  let chosen = null;
 
   async function json(path) {
     const response = await fetch(path);
@@ -62,30 +66,114 @@
       (query ? '該当するデッキがありません。' : '＋からデッキを作成できます。');
   }
 
+  // Assemble both *chosen* 60-card print lists using the same official
+  // readiness gate. Never swap a same-name print or silently use a fixed AI deck.
+  function selectedManifest() {
+    if (!chosen || !opponentSelect.value) throw Error('対戦相手のデッキを選んでください。');
+    const savedDecks = saved.read().decks;
+    const mine = savedDecks.find(deck => deck.id === chosen.ownId);
+    if (!mine) throw Error('自分の保存デッキが見つかりません。');
+    const mineCards = saved.matchEntries(mine,chosen.cards,chosen.plans);
+    let opponent;
+    if (opponentSelect.value.startsWith('saved:')) {
+      const otherId = opponentSelect.value.slice('saved:'.length);
+      const other = savedDecks.find(deck => deck.id === otherId);
+      if (!other) throw Error('相手の保存デッキが見つかりません。');
+      opponent = {id:other.id,name:other.name,cards:saved.matchEntries(other,chosen.cards,chosen.plans)};
+    } else if (opponentSelect.value.startsWith('fixed:')) {
+      const index = Number(opponentSelect.value.slice('fixed:'.length));
+      if (!Number.isInteger(index) || index<0 || index>1 || !chosen.fixed.decks[index])
+        throw Error('相手の固定デッキが見つかりません。');
+      opponent = chosen.fixed.decks[index];
+    } else throw Error('対戦相手のデッキを選んでください。');
+    return {decks:[{id:mine.id,name:mine.name,cards:mineCards},opponent]};
+  }
+
+  function refreshOpponent() {
+    pending = null;
+    startButton.disabled = true;
+    if (!opponentSelect.value) {
+      matchStatus.textContent = '対戦相手を選んでください。';
+      return;
+    }
+    try {
+      const manifest = selectedManifest();
+      pending = manifest;
+      const [mine,opponent] = manifest.decks;
+      matchStatus.textContent = mine.name+'（60枚） 対 '+opponent.name+'（60枚）';
+      startButton.disabled = false;
+    } catch (error) {
+      matchStatus.textContent = error.message;
+    }
+  }
+
   async function prepare(id,button) {
     if (preparing || confirm.open) return;
     preparing = true;
     button.disabled = true;
     try {
-      const deck = saved.read().decks.find(entry => entry.id === id);
+      const decks = saved.read().decks;
+      const deck = decks.find(entry => entry.id === id);
       if (!deck) throw Error('デッキが見つかりません。');
       matchData ||= Promise.all([catalog,json('./data/fixed-test-decks.json')])
         .catch(error => { matchData = null; throw error; });
       const [{cards,plans},fixed] = await matchData;
-      const entries = saved.matchEntries(deck,cards,plans);
-      const opponent = fixed.decks[1];
-      pending = {decks:[{id:deck.id,name:deck.name,cards:entries},opponent]};
-      $('deck-home-selection').textContent = deck.name + '（60枚） · 相手は ' + opponent.name;
+      chosen = {ownId:id,cards,plans,fixed};
+      pending = null;
+      startButton.disabled = true;
+      opponentSelect.replaceChildren();
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = '相手のデッキを選択';
+      opponentSelect.append(placeholder);
+      const savedGroup = document.createElement('optgroup');
+      savedGroup.label = '保存済みデッキ';
+      for (const opponent of decks) {
+        const option = document.createElement('option');
+        option.value = 'saved:'+opponent.id;
+        option.textContent = opponent.name+'（'+saved.total(opponent)+'/60枚）';
+        savedGroup.append(option);
+      }
+      opponentSelect.append(savedGroup);
+      // Preset decks remain optional test opponents, never the implicit default.
+      const fixedGroup = document.createElement('optgroup');
+      fixedGroup.label = '固定参照デッキ（検証用）';
+      fixed.decks.forEach((opponent,index) => {
+        const option = document.createElement('option');
+        option.value = 'fixed:'+index;
+        option.textContent = opponent.name+'（60枚・検証用）';
+        fixedGroup.append(option);
+      });
+      opponentSelect.append(fixedGroup);
+      $('deck-home-selection').textContent = '自分：'+deck.name+'（'+saved.total(deck)+'/60枚）';
+      matchStatus.textContent = '相手のデッキを選んでください。';
       confirm.returnValue = '';
       confirm.showModal();
-    } catch (error) { status.textContent = error.message; }
-    finally { preparing = false; button.disabled = false; }
+    } catch (error) {
+      chosen = null;
+      pending = null;
+      status.textContent = error.message;
+    } finally {
+      preparing = false;
+      button.disabled = false;
+    }
   }
 
+  opponentSelect.addEventListener('change',refreshOpponent);
   confirm.addEventListener('close',async () => {
-    const manifest = pending;
+    const proceed = confirm.returnValue === 'start' && pending;
     pending = null;
-    if (confirm.returnValue !== 'start' || !manifest) return;
+    if (!proceed) { chosen = null; return; }
+    let manifest;
+    try {
+      // Re-check saved print identity in case another tab edited either deck.
+      manifest = selectedManifest();
+    } catch (error) {
+      status.textContent = '対戦開始できません：'+error.message;
+      chosen = null;
+      return;
+    }
+    chosen = null;
     history.pushState(null,'','#battle');
     route(false);
     try { await window.PokecaMobile.startSavedDeck(manifest); }
