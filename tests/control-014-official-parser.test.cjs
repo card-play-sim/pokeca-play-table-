@@ -41,6 +41,27 @@ assert.equal(parse(teraProof).facts.teraBenchProtection,false);
 assert.equal(parse(teraHtml).facts.teraBenchProtection,false);
 assert.equal(parse(teraHtml,{enableTeraRule:true}).facts.teraBenchProtection,true);
 assert.throws(()=>parse(teraHtml.replace(topRule,'このポケモンは、すべてのダメージを受けない。')),/UNSUPPORTED_TOP_RULE/);
+// Verify boxed evolution chains against independently saved official pages.
+const crypto = require("node:crypto");
+for (const [id, expectedPredecessor, prizes] of [
+  ["49191", "バルチャイ", 2],
+  ["50062", "ヒトデマン", 3],
+  ["50099", "シシコ", 3],
+  ["50106", "ゲコガシラ", 3],
+  ["50174", "テールナー", 3],
+]) {
+  const evidence = JSON.parse(fs.readFileSync("data/effect-extensions/evidence/" + id + ".json"));
+  assert.equal(crypto.createHash("sha256").update(evidence.html).digest("hex"), evidence.htmlSha256);
+  assert(evidence.url.endsWith("/card/" + id));
+  const facts = parse(evidence.html).facts;
+  assert.equal(facts.prizeCount, prizes);
+  assert.equal(facts.rulePokemon, true);
+  assert.equal(facts.evolvesFrom, expectedPredecessor);
+  if (prizes === 3) {
+    const changed = evidence.html.replace("相手はサイドを3枚とる。", "相手はサイドを4枚とる。");
+    assert.throws(() => parse(changed), /UNSUPPORTED_POKEMON_RULE_SECTION/);
+  }
+}
 assert(stageTwo >= 2);
 assert(iconProofs >= 3);
 for (const id of ["45944", "46371", "47589"]) {
