@@ -21,12 +21,18 @@ assert(fixture.port&&!fixture.blocked,"fixture preparation failed: "+fixture.blo
 const option=fixture.port.getPokemonActions("you",fixture.sourceId)
  .find(o=>o.kind==="attack"&&o.action?.attackIndex===index);
 assert(option&&option.enabled,"printed attack is not legal");
-assert(Array.isArray(option.targets)&&option.targets.length>0,"no legal bench target candidates");
-assert(Array.isArray(option.action.targetIds)&&option.action.targetIds.length===1,"no selected legal bench target");
-assert(option.targets.includes(option.action.targetIds[0]),"selected target is not legal");
-process.stdout.write(JSON.stringify({game:fixture.port.getSnapshot(),option,
+// The official Ice Shot bench splash is resolved by the common engine without
+// an extra target picker. Assert exact expected events from a real legal action.
+const before=fixture.port.getSnapshot();
+assert(fixture.port.dispatch("you",option.action).ok,"engine could not execute official attack");
+const after=fixture.port.getSnapshot();
+const benchIds=new Set(before.players[1].bench.map(card=>card.id));
+const benchHit=after.history.slice(before.history.length).find(event=>
+ event.details?.command==="DAMAGE"&&benchIds.has(event.details.targetInstanceId));
+assert(benchHit&&benchHit.details.amount===20,"expected 20 official bench damage");
+process.stdout.write(JSON.stringify({game:before,option,
  sourceId:fixture.sourceId,officialCardId:print.officialCardId,effectId:effect.effectId,
- attackIndex:index,selectedTarget:option.action.targetIds[0]}));
+ attackIndex:index,benchTarget:benchHit.details.targetInstanceId}));
 '''
 
 async def main():
@@ -69,13 +75,13 @@ async def main():
   events=after['history'][len(before['history']):]
   assert any(e.get('type')=='attack' and e.get('details',{}).get('effectId')==fixture['effectId']
              and e['details'].get('referenceOfficialCardId')=='48564' for e in events),events
-  bench=fixture['selectedTarget']
+  bench=fixture['benchTarget']
   damage=[e for e in events if e.get('details',{}).get('command')=='DAMAGE'
           and e['details'].get('targetInstanceId')==bench]
   assert damage and any(e['details'].get('amount')==20 for e in damage),events
   assert not errors,errors
   receipt={'officialCardId':'48564','mechanic':'ACTIVE_AND_BENCH_DAMAGE',
-           'selectedTarget':bench,'effectId':fixture['effectId'],
+           'benchTarget':bench,'effectId':fixture['effectId'],
            'domAttackExecuted':True,'benchDamage20':True,'errors':errors,
            'physicalAndroidVerified':False}
   (ROOT/'artifacts/published-bench-attack-smoke.json').write_text(
