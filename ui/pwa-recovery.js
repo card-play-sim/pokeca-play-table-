@@ -9,24 +9,40 @@
   channel.port1.onmessage=event=>{clearTimeout(timer);channel.port1.close();resolve(event.data);};
   try{worker.postMessage({type:'RELEASE_INFO'},[channel.port2]);}catch(error){clearTimeout(timer);resolve(null);}
  });}
+ // Different complete releases can share the same visible build number. Fetch
+ // the generated SW over the network; never accept an older cached release
+ // merely because both say v258 (or v256).
+ async function desiredRelease(){
+  const response=await fetch('./sw.js?recovery-check='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('最新の公開版を取得できませんでした。');
+  const source=await response.text();
+  const version=source.match(/^const BUILD="(\d+)";$/m)?.[1];
+  const name=source.match(/^const CACHE='(pokeca-first-playable-v\d+-[a-f0-9]{16})';$/m)?.[1];
+  if(!version||!name||Number(version)<Number(build)||!name.startsWith('pokeca-first-playable-v'+version+'-'))
+   throw Error('公開版の識別情報を確認できませんでした。');
+  return {build:version,cacheName:name};
+ }
  async function update(){
   button.disabled=true;
   try{
    if(!isSecureContext||!navigator.serviceWorker)throw Error('この画面はHTTPSのChromeで開いてください。');
-   if(navigator.onLine===false)throw Error('オンラインで更新をお試しください。保存対戦は保持されています。');
-   progress.textContent='更新ファイルを確認しています。保存対戦は保持しています。';
+   if(navigator.onLine===false)throw Error('オフラインです。保存データは保持されています。');
+   progress.textContent='最新リリースの配信内容を確認しています。保存データは保持します。';
+   const target=await desiredRelease();
    const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
-   // An install may already be waiting when the browser opens this page. Drive
-   // activation while checking the network rather than waiting on a second update.
-   if(!reg.waiting&&!reg.installing)void reg.update().catch(()=>{});
+   // Verify the *actual* activated cache identity, not only BUILD or UI text.
+   // An old v258 worker with missing basic-energy data must not pass.
+   await reg.update();
    const until=Date.now()+90000;
    while(Date.now()<until){
     reg.waiting?.postMessage({type:'ACTIVATE_UPDATE'});
     const active=await info(reg.active);
-    if(active&&Number(active.build)>=Number(build)&&active.files?.['./ui/mobile.js?build='+active.build]){
-     window.PokecaRecoveryResult={build:active.build,cacheName:active.cacheName,savedDataTouched:false};
-     progress.textContent='v'+active.build+'を受信しました。保存した対戦を保持してアプリへ戻ります。';
-     location.replace('./?updated='+encodeURIComponent(active.build)+'#battle');return;
+    if(active?.build===target.build&&active.cacheName===target.cacheName&&
+       active.files?.['./data/effect-extensions/compiled.json']&&
+       active.files?.['./ui/saved-decks.js?build='+target.build]){
+     window.PokecaRecoveryResult={build:target.build,cacheName:active.cacheName,savedDataTouched:false,releaseVerified:true};
+     progress.textContent='最新版 v'+target.build+'を確認しました。保存データを保持してアプリへ戻ります。';
+     location.replace('./?updated='+encodeURIComponent(target.build)+'&release='+encodeURIComponent(target.cacheName)+'#battle');return;
     }
     await delay(500);
    }
