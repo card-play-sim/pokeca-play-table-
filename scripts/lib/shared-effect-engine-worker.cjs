@@ -568,8 +568,9 @@ function verifyCase(t, e) {
 
   if (e.plan.mechanic === "ATTACK_NAMED_NEXT_TURN_LOCK") {
     verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
-    assert.deepEqual(after.players[0].active.referenceNamedAttackLock,
-      {turn:before.turnNumber+2,attackName:e.plan.attackName});
+    const lock=after.players[0].active.referenceNamedAttackLock;
+    assert.equal(lock?.turn,before.turnNumber+2,'NAMED_ATTACK_LOCK_WRONG_TURN');
+    assert.equal(lock?.attackName,e.plan.attackName,'NAMED_ATTACK_LOCK_WRONG_ATTACK');
     const future=structuredClone(after);
     future.turnNumber=before.turnNumber+2;
     future.turnPlayer='you';
