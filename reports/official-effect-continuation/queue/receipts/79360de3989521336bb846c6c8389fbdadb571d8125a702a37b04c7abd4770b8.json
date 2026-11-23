@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_762BBC86E0FAD6ED:fd5ebecdf9ed3b30e4e24a19244aebc3bc8e0d0e4bdc62615fb0aea0e7be31eb",
   "taskFingerprint": "fd5ebecdf9ed3b30e4e24a19244aebc3bc8e0d0e4bdc62615fb0aea0e7be31eb",
-  "executionFingerprint": "66e729a5ead7ccb43a198de77217a8fcdb10b4d908ba19b03b382c28dc3af27d",
-  "attemptId": "2a667753-62c8-4aea-9eb0-d6baa096e77a",
+  "executionFingerprint": "a92c4194757e0c9436a02f0931cbbe5fd45f16da27da89e26ffb8929d22171ee",
+  "attemptId": "48988919-986d-45e9-96fe-02a24a5744c6",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,15 +11,25 @@
     "cases": [
       {
         "slot": "45149:ability:かたいこうら:0",
+        "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+        "commands": [
+          "PREVENT_DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
       },
       {
         "slot": "46564:ability:ファーコート:0",
+        "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+        "commands": [
+          "PREVENT_DAMAGE"
+        ],
         "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+        "details": []
       }
     ]
   },
-  "checksum": "17cb857cd6b6c013b19ad8d728d0c984b991ef16346b80fda2e1de9f6684be7a"
+  "checksum": "1f95806c3776f12b9c2cbe3c4607693c15e62127de90fb9916295e10fb231db3"
 }
