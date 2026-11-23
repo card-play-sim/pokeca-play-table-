@@ -36,6 +36,13 @@ async def select_effect_targets(page, option):
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
+ shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
+ shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
+ assert 1<=shard_count<=16 and 0<=shard_index<shard_count,'INVALID_BROWSER_SHARD'
+ total_fixtures=len(fixtures)
+ fixtures=[case for index,case in enumerate(fixtures) if index%shard_count==shard_index]
+ print(json.dumps({'browserShard':shard_index,'shardCount':shard_count,
+                   'totalFixtures':total_fixtures,'selectedFixtures':len(fixtures)}),flush=True)
  if release_base:
   delivery=json.loads((ROOT/'test-results/published-pwa-verification.json').read_text())
   assert delivery['success'] and delivery['base']==os.environ['POKECA_TEST_URL']
