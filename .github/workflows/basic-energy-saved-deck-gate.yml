@@ -1,0 +1,23 @@
+name: Saved official basic-energy print 42945 gate diagnosis
+on:
+  pull_request:
+    paths:
+      - 'tests/user-basic-energy-42945-diagnostic.test.cjs'
+      - 'ui/saved-decks.js'
+      - 'ui/deck-home.js'
+      - 'ui/deck-code-import.js'
+      - '.github/workflows/basic-energy-saved-deck-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  basic-energy-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Diagnose actual official 42945 and engine coverage
+        run: node tests/user-basic-energy-42945-diagnostic.test.cjs
