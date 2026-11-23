@@ -49,6 +49,14 @@ assert.throws(()=>buildLedger({...original,compiled:{records:[]}}),
   'a plan candidate absent from public bundle cannot pass');
 assert.throws(()=>buildLedger({...original,candidate:{...original.candidate,state:'DONE'}}),
   /BATTLE_EXECUTION_CANDIDATE_GATE_REQUIRED/);
+const many=Array.from({length:41},(_,i)=>unknown(String(10000+i),'全印刷版で同じ未対応共通効果。'));
+const manyGroups=makeWorklist(many,many.map(row=>({
+  officialCardId:row.officialCardId,reason:'UNSUPPORTED_EFFECT_PATTERN'
+})),new Set(many.map(row=>row.officialCardId)));
+assert.equal(manyGroups.length,1);
+assert.equal(manyGroups[0].printCount,41,
+  'shared print counting must not stop at the 30-ID evidence preview limit');
+assert.equal(manyGroups[0].officialCardIds.length,30);
 const base='a'.repeat(40);
 const steps=commands({base,limit:400});
 const names=steps.map(([name])=>name);
