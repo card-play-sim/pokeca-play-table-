@@ -1548,6 +1548,41 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46132",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46132",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046132_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46132.json",
+        "sha256": "69117abeb866c7f0f6611ef03032f2996870b1206f0e48df4288c58765f16029",
+        "htmlSha256": "69117abeb866c7f0f6611ef03032f2996870b1206f0e48df4288c58765f16029",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
       "officialCardId": "46295",
       "name": "シャリタツ",
       "deckName": "シャリタツ",
@@ -7406,6 +7441,80 @@
         "path": "data/effect-extensions/evidence/50623.json",
         "sha256": "63e5d377423eaf10d093b423943fb9adbe45fa7ea4119286638cab52673df532",
         "htmlSha256": "63e5d377423eaf10d093b423943fb9adbe45fa7ea4119286638cab52673df532",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45149",
+      "name": "ナエトル",
+      "deckName": "ナエトル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45149",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045149_P_NAETORU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "このは",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-45149-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "かたいこうら",
+          "text": "このポケモンが受けるワザのダメージは「-20」される。",
+          "effectId": "reference-45149-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 20
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45149.json",
+        "sha256": "9a11770c99a46bb047e2d37ca8ec9b668152b98a1bb7cc0fcb9dd2b72281aee8",
+        "htmlSha256": "9a11770c99a46bb047e2d37ca8ec9b668152b98a1bb7cc0fcb9dd2b72281aee8",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -24330,6 +24439,80 @@
         "path": "data/effect-extensions/evidence/46561.json",
         "sha256": "b10cf7d399adc542158eb1fce27309010439a7d3c8a9d296a6c96a411bfff19a",
         "htmlSha256": "b10cf7d399adc542158eb1fce27309010439a7d3c8a9d296a6c96a411bfff19a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46564",
+      "name": "トリミアン",
+      "deckName": "トリミアン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46564",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046564_P_TORIMIAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かみつく",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "",
+          "effectId": "reference-46564-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ファーコート",
+          "text": "このポケモンが受けるワザのダメージは「-20」される。",
+          "effectId": "reference-46564-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 20
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46564.json",
+        "sha256": "84f6b8e4735cd149be9ce321cea1e7831ce3363745e195ac84768f17b29c7121",
+        "htmlSha256": "84f6b8e4735cd149be9ce321cea1e7831ce3363745e195ac84768f17b29c7121",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -124365,21 +124548,6 @@
       }
     },
     {
-      "officialCardId": "46132",
-      "name": "ゼイユ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46132.json",
-        "sha256": "69117abeb866c7f0f6611ef03032f2996870b1206f0e48df4288c58765f16029",
-        "htmlSha256": "69117abeb866c7f0f6611ef03032f2996870b1206f0e48df4288c58765f16029",
-        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
-      }
-    },
-    {
       "officialCardId": "46148",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -124826,11 +124994,6 @@
     },
     {
       "officialCardId": "45147",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45149",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -125816,11 +125979,6 @@
     },
     {
       "officialCardId": "46560",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46564",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
