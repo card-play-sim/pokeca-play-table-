@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "e7df5495e030c1ff5b5fea52e65c3497c9c35dee26caf2909d10cb007cc6bc15",
+  "registryHash": "30296e10e2a19acd541c50d5d5b614d1a9fa32b7461239c303e2b16e2740c80e",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,10 +12,10 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 117,
-      "notImplemented": 257,
+      "compiled": 128,
+      "notImplemented": 246,
       "blocked": 0,
-      "executionVerifiedPrints": 30
+      "executionVerifiedPrints": 32
     },
     "item": {
       "prints": 299,
@@ -26,10 +26,10 @@
     },
     "tool": {
       "prints": 100,
-      "compiled": 7,
-      "notImplemented": 93,
+      "compiled": 19,
+      "notImplemented": 81,
       "blocked": 0,
-      "executionVerifiedPrints": 4
+      "executionVerifiedPrints": 5
     },
     "stadium": {
       "prints": 68,
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3418,
-      "compiled": 1366,
-      "notImplemented": 2002,
+      "compiled": 1398,
+      "notImplemented": 1970,
       "blocked": 50,
-      "executionVerifiedPrints": 387
+      "executionVerifiedPrints": 402
     },
     "energy": {
       "prints": 665,
@@ -2822,11 +2822,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46124",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46131",
       "name": "ビリオとネア",
       "category": "supporter",
@@ -2987,21 +2982,6 @@
       }
     },
     {
-      "officialCardId": "47499",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47499.json",
-        "sha256": "689361fb62e2ac1c72fb6776f5cb467c06c25fc880769bd6b9653f945fac08a5",
-        "htmlSha256": "689361fb62e2ac1c72fb6776f5cb467c06c25fc880769bd6b9653f945fac08a5",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
-    },
-    {
       "officialCardId": "47733",
       "name": "エキサイトスタジアム",
       "category": "stadium",
@@ -3038,11 +3018,6 @@
     },
     {
       "officialCardId": "48258",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48260",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3092,39 +3067,9 @@
       }
     },
     {
-      "officialCardId": "48485",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48485.json",
-        "sha256": "4866a12cf52d635dbc79f46bc381feac1f52bb1834507aa83a3a44b83264fff5",
-        "htmlSha256": "4866a12cf52d635dbc79f46bc381feac1f52bb1834507aa83a3a44b83264fff5",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "49595",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49604",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49604.json",
-        "sha256": "c2290bb908e125323874794479c6b6cebf4f0685bfe60e428b98e0536348d72b",
-        "htmlSha256": "c2290bb908e125323874794479c6b6cebf4f0685bfe60e428b98e0536348d72b",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
     },
     {
       "officialCardId": "49605",
@@ -3292,11 +3237,6 @@
       }
     },
     {
-      "officialCardId": "50492",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50558",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3423,11 +3363,6 @@
     },
     {
       "officialCardId": "50628",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50632",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3632,11 +3567,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45200",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45204",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3660,11 +3590,6 @@
         "htmlSha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
         "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
       }
-    },
-    {
-      "officialCardId": "45218",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45225",
@@ -3733,11 +3658,6 @@
     },
     {
       "officialCardId": "45295",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45351",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3932,11 +3852,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45730",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45733",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4018,11 +3933,6 @@
     },
     {
       "officialCardId": "45884",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45891",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4293,11 +4203,6 @@
     },
     {
       "officialCardId": "46389",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46393",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4877,11 +4782,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47609",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47612",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4958,11 +4858,6 @@
     },
     {
       "officialCardId": "47760",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47761",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6167,11 +6062,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47077",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47122",
       "status": "BLOCKED",
       "reason": "PARSED_OFFICIAL_FACT_CONFLICT:facts"
@@ -6257,17 +6147,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47238",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47244",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47248",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6477,11 +6357,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49337",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49667",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6603,11 +6478,6 @@
     },
     {
       "officialCardId": "47973",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47977",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6872,11 +6742,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48425",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48426",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7133,11 +6998,6 @@
     },
     {
       "officialCardId": "45235",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45238",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -12282,11 +12142,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50352",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50353",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12563,11 +12418,6 @@
     },
     {
       "officialCardId": "50416",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50417",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -13512,21 +13362,6 @@
       }
     },
     {
-      "officialCardId": "47102",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47102.json",
-        "sha256": "befea03aa7c7143696bbf7f6041220712fdf9daeb208978c66bb852af3b2ad6c",
-        "htmlSha256": "befea03aa7c7143696bbf7f6041220712fdf9daeb208978c66bb852af3b2ad6c",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
-    },
-    {
       "officialCardId": "47103",
       "name": "怖いお兄さん",
       "category": "supporter",
@@ -13630,21 +13465,6 @@
       "officialCardId": "47239",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47241",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47241.json",
-        "sha256": "b0a6829a275fff91a56a8e1dc92617ecf191e8ac0531a76a4d85c401ea812d67",
-        "htmlSha256": "b0a6829a275fff91a56a8e1dc92617ecf191e8ac0531a76a4d85c401ea812d67",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
     },
     {
       "officialCardId": "47242",
@@ -14642,21 +14462,6 @@
       }
     },
     {
-      "officialCardId": "47618",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47618.json",
-        "sha256": "e87f525f7e96c97bdab02446ccd5483104a73195c832629e867f50532ec68bbb",
-        "htmlSha256": "e87f525f7e96c97bdab02446ccd5483104a73195c832629e867f50532ec68bbb",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "47619",
       "name": "Nの筋書き",
       "category": "supporter",
@@ -15207,21 +15012,6 @@
       }
     },
     {
-      "officialCardId": "47889",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47889.json",
-        "sha256": "6b48051c6b195cff53bc744284d92bb0745d0d68f14fa044b1a4d15d847320da",
-        "htmlSha256": "6b48051c6b195cff53bc744284d92bb0745d0d68f14fa044b1a4d15d847320da",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "47899",
       "name": "ミツルの思いやり",
       "category": "supporter",
@@ -15617,36 +15407,6 @@
       }
     },
     {
-      "officialCardId": "48279",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48279.json",
-        "sha256": "aee8c11571c39c79a4c3aa104a8e44bedd563cfa256bc29fb0c7cf44b7cec401",
-        "htmlSha256": "aee8c11571c39c79a4c3aa104a8e44bedd563cfa256bc29fb0c7cf44b7cec401",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
-      "officialCardId": "48280",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48280.json",
-        "sha256": "51fef039a30ae6587e517db74c64d2f45d11539d783f72c8384fc5967ec9e27f",
-        "htmlSha256": "51fef039a30ae6587e517db74c64d2f45d11539d783f72c8384fc5967ec9e27f",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
-    },
-    {
       "officialCardId": "48286",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -15669,36 +15429,6 @@
         "sha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
         "htmlSha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
         "textSha256": "59400b4dc69e8d1d10364fe7777ce405c00799d2fb6cf613bda1682d0b0234c0"
-      }
-    },
-    {
-      "officialCardId": "48301",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48301.json",
-        "sha256": "07bfed013e21d8d70c9d112b1d5b3d14f2e075eb8788e6ef67bc887de10712fc",
-        "htmlSha256": "07bfed013e21d8d70c9d112b1d5b3d14f2e075eb8788e6ef67bc887de10712fc",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
-      "officialCardId": "48302",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48302.json",
-        "sha256": "a061dd0c41fa0c005563d6111a2df3e41aada5045118fbd169735d569a96362d",
-        "htmlSha256": "a061dd0c41fa0c005563d6111a2df3e41aada5045118fbd169735d569a96362d",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
       }
     },
     {
@@ -16039,21 +15769,6 @@
         "sha256": "1769102a4735037d4a063c1e3187c8340b46de512ed29242424654209a54d1c7",
         "htmlSha256": "1769102a4735037d4a063c1e3187c8340b46de512ed29242424654209a54d1c7",
         "textSha256": "3dff3f249558a59a5dd3e90364062ade581fe2797850b5cba2218b48fb4d4706"
-      }
-    },
-    {
-      "officialCardId": "48441",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48441.json",
-        "sha256": "2a239af5a651382e90c1565447f75cbda0cc3542c474dd7390d07ae9bb8f6f66",
-        "htmlSha256": "2a239af5a651382e90c1565447f75cbda0cc3542c474dd7390d07ae9bb8f6f66",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
       }
     },
     {
@@ -16437,11 +16152,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48564",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48570",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -16562,11 +16272,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48613",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48619",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -16638,11 +16343,6 @@
     },
     {
       "officialCardId": "48642",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48645",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -16827,21 +16527,6 @@
       }
     },
     {
-      "officialCardId": "48687",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48687.json",
-        "sha256": "007ea13d6568bbef8040d87fbe08a2f340a4f60314a76efcc80ec2b4752dc6ec",
-        "htmlSha256": "007ea13d6568bbef8040d87fbe08a2f340a4f60314a76efcc80ec2b4752dc6ec",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "48688",
       "name": "ブレイブバングル",
       "category": "tool",
@@ -16869,21 +16554,6 @@
         "sha256": "1bd801eef17f460a8ac1e8b24432ce8b1a07e6e659ca130f8025e86008c754db",
         "htmlSha256": "1bd801eef17f460a8ac1e8b24432ce8b1a07e6e659ca130f8025e86008c754db",
         "textSha256": "fb0e7f7218cd1e20fe829c27c6ce51a61b0e0567d6d0be048f7d3a11102c5aad"
-      }
-    },
-    {
-      "officialCardId": "48690",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48690.json",
-        "sha256": "0726f52ef8110bf30261bb62be1caee208930b8e39b0d968250521f3923ab563",
-        "htmlSha256": "0726f52ef8110bf30261bb62be1caee208930b8e39b0d968250521f3923ab563",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
       }
     },
     {
@@ -17612,11 +17282,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49243",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49245",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -17678,11 +17343,6 @@
     },
     {
       "officialCardId": "49310",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49314",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -17942,21 +17602,6 @@
       }
     },
     {
-      "officialCardId": "49404",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49404.json",
-        "sha256": "40d86b2212ce20e786ff67ea2e26847ece8353bbb2e41c31d9f20e270bd3e1f0",
-        "htmlSha256": "40d86b2212ce20e786ff67ea2e26847ece8353bbb2e41c31d9f20e270bd3e1f0",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "49405",
       "name": "ブレイブバングル",
       "category": "tool",
@@ -17999,21 +17644,6 @@
         "sha256": "999eb5f483ccf75ba94c084eb59bd31ee7e72299922414d755d78288166a7774",
         "htmlSha256": "999eb5f483ccf75ba94c084eb59bd31ee7e72299922414d755d78288166a7774",
         "textSha256": "f8e4f86aa146a4ed807f736bfca92e90ee941b528be5d31bde5126c01f64cf76"
-      }
-    },
-    {
-      "officialCardId": "49410",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49410.json",
-        "sha256": "c45f60ec677f27d654ceed5b387701a91442d14d27018508e83d836bcdbd4ff0",
-        "htmlSha256": "c45f60ec677f27d654ceed5b387701a91442d14d27018508e83d836bcdbd4ff0",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
       }
     },
     {
@@ -18300,21 +17930,6 @@
       "officialCardId": "50005",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50007",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50007.json",
-        "sha256": "4cc46bcdd17f976ca1aa316875d36567188d0373e6a85b314086b54028d8ac1a",
-        "htmlSha256": "4cc46bcdd17f976ca1aa316875d36567188d0373e6a85b314086b54028d8ac1a",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
     },
     {
       "officialCardId": "50008",
@@ -18652,21 +18267,6 @@
       }
     },
     {
-      "officialCardId": "50425",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50425.json",
-        "sha256": "32f1b3eb31d7bc39db894f52923b97fed6c39a4bbe9068c9bda01a3ad02f6d91",
-        "htmlSha256": "32f1b3eb31d7bc39db894f52923b97fed6c39a4bbe9068c9bda01a3ad02f6d91",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
       "officialCardId": "50428",
       "name": "ヒカリ",
       "category": "supporter",
@@ -18682,36 +18282,6 @@
       }
     },
     {
-      "officialCardId": "50445",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50445.json",
-        "sha256": "77a055245d905b5ba5868c80dd9b15928ee5e0e9727c2d94f88ea468ccdc6fc2",
-        "htmlSha256": "77a055245d905b5ba5868c80dd9b15928ee5e0e9727c2d94f88ea468ccdc6fc2",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
-      }
-    },
-    {
-      "officialCardId": "50446",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50446.json",
-        "sha256": "c5b908a5b38a1e5e38d34aad5718e6e683bec440baf3589710a29a5f2fd2ab81",
-        "htmlSha256": "c5b908a5b38a1e5e38d34aad5718e6e683bec440baf3589710a29a5f2fd2ab81",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
-    },
-    {
       "officialCardId": "50462",
       "name": "ふしぎなアメ",
       "category": "item",
@@ -18724,21 +18294,6 @@
         "sha256": "2d3b1c356b417238524907fe2b314a6264049ccf4cbbcfde2a74e9436ecc79e8",
         "htmlSha256": "2d3b1c356b417238524907fe2b314a6264049ccf4cbbcfde2a74e9436ecc79e8",
         "textSha256": "b12f2483ab2afc1437f85c0feb05354b27dcc1b7be6b9fb2de6b24d3cdda1283"
-      }
-    },
-    {
-      "officialCardId": "50464",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50464.json",
-        "sha256": "54c7504eab15ddbede608911802759d6deb5fa309554269e4b40a7eb8aefd890",
-        "htmlSha256": "54c7504eab15ddbede608911802759d6deb5fa309554269e4b40a7eb8aefd890",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
       }
     },
     {
@@ -18982,26 +18537,6 @@
       }
     },
     {
-      "officialCardId": "50601",
-      "name": "アイリスの闘志",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。\n\n自分の手札が6枚になるように、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50601.json",
-        "sha256": "bf3d89b39ef57382edc1231a50b19baa42d745b8b6ded43748b3546573a915cd",
-        "htmlSha256": "bf3d89b39ef57382edc1231a50b19baa42d745b8b6ded43748b3546573a915cd",
-        "textSha256": "2dd3f40f281a8c3e59407e664cea2bb7b303de08478a4a3e75578c279e6e5a14"
-      }
-    },
-    {
-      "officialCardId": "50820",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50821",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19039,21 +18574,6 @@
         "sha256": "30862bd3355419b1943fac7b7f6a61860aaf01bbc9c97268f1aad294e2007c4b",
         "htmlSha256": "30862bd3355419b1943fac7b7f6a61860aaf01bbc9c97268f1aad294e2007c4b",
         "textSha256": "b12f2483ab2afc1437f85c0feb05354b27dcc1b7be6b9fb2de6b24d3cdda1283"
-      }
-    },
-    {
-      "officialCardId": "50848",
-      "name": "ふうせん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50848.json",
-        "sha256": "4c90e2a4e14ab3621a5d8a178ce0760da1696f934e6abd41c13cea9fc4307c5e",
-        "htmlSha256": "4c90e2a4e14ab3621a5d8a178ce0760da1696f934e6abd41c13cea9fc4307c5e",
-        "textSha256": "11130ade88b63ccb601158c0605d173e9e210b4003606a7602da11b3dcb82a6c"
       }
     },
     {
@@ -19777,11 +19297,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48731",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48736",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19913,11 +19428,6 @@
     },
     {
       "officialCardId": "48838",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48847",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -20127,11 +19637,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48960",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48964",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -20282,11 +19787,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49047",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49048",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -20333,11 +19833,6 @@
     },
     {
       "officialCardId": "49071",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49073",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -21519,11 +21014,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 2028
+        "count": 1996
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 589
+        "count": 566
       },
       {
         "reason": "PARSED_OFFICIAL_FACT_CONFLICT:facts",
@@ -21542,32 +21037,32 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "50691405556e746e9b50785766ccff681693cfe114daeda032506734836df778",
+    "executionFingerprint": "bf5d2ce7db93740e4effd31826971da8860f37859cbe67bba472f9f299690db1",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 76617,
+    "seq": 81273,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 139,
+      "SUCCEEDED": 149,
       "FAILED": 0,
-      "BLOCKED": 637
+      "BLOCKED": 627
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 87,
+        "SUCCEEDED": 95,
         "FAILED": 0,
-        "BLOCKED": 584
+        "BLOCKED": 576
       },
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 19,
+        "SUCCEEDED": 20,
         "FAILED": 0,
-        "BLOCKED": 27
+        "BLOCKED": 26
       },
       "item": {
         "PENDING": 0,
@@ -21586,9 +21081,9 @@
       "tool": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 3,
+        "SUCCEEDED": 4,
         "FAILED": 0,
-        "BLOCKED": 9
+        "BLOCKED": 8
       },
       "energy": {
         "PENDING": 0,
