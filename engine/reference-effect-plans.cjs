@@ -98,6 +98,13 @@ function plan(entry,kind){
  // Match complete, verified attack text. Printed damage and counter/damage units are separate.
  const printedAmount=/^\d+$/.test(String(entry.damage||'0'));
 
+ // Optional physical-energy discard from any of your Benched Pokemon must
+ // select the actual attached cards, not a count or a card-name shortcut.
+ const benchEnergyBonus=generic.match(/^のぞむなら、自分のベンチポケモンについているエネルギーを([1-5])枚までトラッシュし、その枚数×([1-9][0-9]{0,2})ダメージ追加。$/);
+ const attackDamage=String(entry.damage||'').normalize('NFKC');
+ if(kind==='ATTACK'&&benchEnergyBonus&&/^([1-9][0-9]{0,2})\+$/.test(attackDamage))
+  return {mechanic:'ATTACK_DISCARD_BENCH_ENERGY_BONUS',commands:['DISCARD','DAMAGE'],
+   base:Number.parseInt(attackDamage,10),maxDiscard:Number(benchEnergyBonus[1]),unit:Number(benchEnergyBonus[2])};
  // Lock ONLY the explicitly named attack on the next own turn.
  // This differs from NO_NEXT_ATTACK, which disables all attacks.
  const namedLock=text.normalize('NFKC').match(/^次の自分の番、このポケモンは「([^」]+)」が使えない。$/);
