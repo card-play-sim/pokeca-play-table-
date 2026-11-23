@@ -93,7 +93,7 @@ game.stadium=stadium;
 assert.equal(engine.damages(game,'you',defender,100),100,'suppressed ability must not reduce damage');
 delete game.stadium;
 const first={type:'play_supporter',cardId:'special'};
-assert.deepEqual(engine.preflight(game,'you',first).errors,[],'printed first-turn exception must be legal');
+assert.equal(engine.preflight(game,'you',first).errors.length,0,'printed first-turn exception must be legal');
 game.players[0].hand.unshift(regular);
 assert.match(engine.preflight(game,'you',{type:'play_supporter',cardId:'regular'}).errors.join(';'),/SUPPORTER_NOT_ALLOWED/);
 game.players[0].hand.shift();
