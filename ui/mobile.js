@@ -595,12 +595,32 @@ window.PokecaMobileBuild='258';
     }
     return result;
   }
-  function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=dispatchWithPlayedCard(playerId,action);
+  // Only the player's own verified REVEAL effect may expose the opponent's hand.
+  // The ordinary opponent-hand display stays face down.
+  function showVerifiedOpponentHandReveal(playerId,previousHistoryLength){
+    if(playerId!=='you')return;
+    const snapshot=port.getSnapshot();
+    const event=snapshot.history.slice(previousHistoryLength).find(entry=>
+      entry.player==='you'&&entry.details?.command==='REVEAL'&&
+      entry.details.privateTo==='you'&&entry.details.fromZone==='hand');
+    if(!event)return;
+    const opponent=snapshot.players.find(p=>p.id!=='you');
+    const ids=event.details.cardIds||[];
+    const cards=opponent?.hand.filter(card=>ids.includes(idOf(card)))||[];
+    if(cards.length!==ids.length)return;
+    const html=cards.length
+      ?'<div class="selection-grid">'+cards.map(card=>
+        '<div class="card" aria-label="'+esc(card.name)+'">'+cardArt(card)+'</div>').join('')+'</div>'
+      :'<p>相手の手札は0枚です。</p>';
+    openSheet('相手の手札を確認',html);
+  }
+  function dispatch(playerId,action){if(referenceStopped())return {ok:false,errors:['未接続効果のため検証を停止中です']};if(fixedImageBoard)return {ok:false,errors:['画像確認盤面では対戦操作できません']};const before=view();const previousHistoryLength=before.history.length;if(playerId==='you'&&before.turnPlayer!=='you'&&action.type!=='take_prizes'&&!(action.type==='resolve_reference_choice'&&before.pendingReferenceChoice?.playerId==='you')){toast('今は相手の番です。自分のカードは操作できません');return {ok:false,errors:['相手の番です']};}const result=dispatchWithPlayedCard(playerId,action);
     if(!result.ok){referenceStop(result.errors);toast((result.errors || ['操作できません']).map(e=>e==='Action player is not the current turn player'?'今は相手の番です':e).join(' / '));return result;}
     selected=null;highlight();$('interaction-hint').textContent='カードをタップで操作・長押しで拡大';
     if(result.persistenceError)toast('自動保存できませんでした。メニューから再開用JSONを書き出してください');
     if(result.viewError)toast('処理は確定しました。表示を再読み込みしてください');
     try{animateEvents(before,view());}catch(_){metrics.animationErrors++;}
+    showVerifiedOpponentHandReveal(playerId,previousHistoryLength);
     resumeReferenceAI();
     return result;
   }
