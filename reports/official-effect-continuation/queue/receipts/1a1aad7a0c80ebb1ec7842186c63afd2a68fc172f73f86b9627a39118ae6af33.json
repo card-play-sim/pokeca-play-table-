@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_648110D9AE0862D9:fd0b7bf171bcdec75674748fa351e454755b5fd231a393532aab20702402c53f",
   "taskFingerprint": "fd0b7bf171bcdec75674748fa351e454755b5fd231a393532aab20702402c53f",
-  "executionFingerprint": "8a7f42bd6b2df710bfc79f0d49b6f4f8ac7df3e5a317c420ae81f3c4ff142e6f",
-  "attemptId": "57dd22db-f5ae-4466-8286-b5b43be42494",
+  "executionFingerprint": "50691405556e746e9b50785766ccff681693cfe114daeda032506734836df778",
+  "attemptId": "2c7b4f6f-59bc-4828-a1cc-892453ba0194",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -11,18 +11,54 @@
     "cases": [
       {
         "slot": "48256:attack:ねつでこがす:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_APPLY_STATUS",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50804:attack:ほのおのキバ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_APPLY_STATUS",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45588:attack:あついマグマ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_APPLY_STATUS",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46235:attack:こがす:0",
@@ -36,8 +72,20 @@
       },
       {
         "slot": "46357:attack:ねつでこがす:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_APPLY_STATUS",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "47316:attack:やきこがす:1",
@@ -56,5 +104,5 @@
       }
     ]
   },
-  "checksum": "4977f5e721d632eba9dabaf44aa30467bb5ab26b1e7abfffd46f7985d7f12173"
+  "checksum": "bc550c7f12f79cfb36804bc15fb572a3b3f146bd054373ab792c186b2a2dfb29"
 }
