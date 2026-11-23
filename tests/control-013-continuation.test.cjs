@@ -62,6 +62,15 @@ assert.equal(
 let report = JSON.parse(
   fs.readFileSync("reports/official-effect-continuation/status.json"),
 );
+if(report.queue.counts.FAILED){
+ const file="reports/official-effect-continuation/queue/queue.json";
+ const queue=JSON.parse(fs.readFileSync(file,"utf8"));
+ const failed=Object.values(queue.jobs||{}).filter(job=>job.status==="FAILED").map(job=>({
+  taskId:job.task?.taskId,officialPrints:job.task?.prints,summary:job.summary,
+  receipt:job.receipt
+ }));
+ console.error("BATTLE_ENGINE_SHARED_EFFECT_FAILURES",JSON.stringify(failed).slice(0,24000));
+}
 assert.equal(report.queue.counts.FAILED, 0);
 assert(report.queue.counts.SUCCEEDED >= 25);
 assert(report.queue.counts.BLOCKED > 0);

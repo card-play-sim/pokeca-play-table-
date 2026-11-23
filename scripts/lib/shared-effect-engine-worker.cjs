@@ -566,6 +566,25 @@ function verifyCase(t, e) {
       (before.players[1].active.statusCondition?e.plan.bonus:0));
   }
 
+  if (e.plan.mechanic === "ATTACK_NAMED_NEXT_TURN_LOCK") {
+    verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
+    const lock=after.players[0].active.referenceNamedAttackLock;
+    assert.equal(lock?.turn,before.turnNumber+2,'NAMED_ATTACK_LOCK_WRONG_TURN');
+    assert.equal(lock?.attackName,e.plan.attackName,'NAMED_ATTACK_LOCK_WRONG_ATTACK');
+    const future=structuredClone(after);
+    future.turnNumber=before.turnNumber+2;
+    future.turnPlayer='you';
+    future.status=before.status;
+    delete future.pendingPrizeSelection;
+    delete future.pendingReferenceChoice;
+    delete future.referenceAttackTurnPending;
+    const replay=port(future);
+    const sameAttack=t.action||o.action;
+    assert.equal(replay.dispatch('you',sameAttack).ok,false);
+    assert.equal(JSON.stringify(B.canonical(replay.getSnapshot())),JSON.stringify(B.canonical(future)));
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.equal(JSON.stringify(B.canonical(p.getSnapshot())),JSON.stringify(B.canonical(after)));
+  }
   if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
       const start = { ...before, referenceRngState: seed };
