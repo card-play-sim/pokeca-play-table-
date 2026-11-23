@@ -193,6 +193,14 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
+    const player=frame.game.players[0];
+    if(!player.hand.some(card=>card.id!==frame.sourceId)){
+      const donor=player.deck.shift();
+      if(!donor)return {blocked:'NO_HAND_DISCARD_FIXTURE_RESOURCE'};
+      player.hand.push(donor);
+    }
+  }
   if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
@@ -373,6 +381,34 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if(e.plan.mechanic==='TOOL_RETREAT_DISCOUNT_TWO'){
+    const action=t.action||o.action;
+    const findMon=state=>[state.players[0].active,...state.players[0].bench]
+      .filter(Boolean).find(mon=>mon.id===action.targetInstanceId);
+    const previous=findMon(before),current=findMon(after);
+    assert(previous&&current,'TOOL_RETREAT_TARGET_MISSING');
+    assert.equal(current.retreatCost,Math.max(0,previous.retreatCost-e.plan.amount),
+      'TOOL_RETREAT_DISCOUNT_INCORRECT');
+  }
+  if(e.plan.mechanic==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
+    const action=t.action||o.action,chosen=action.selections?.discard;
+    assert(chosen?.length===1,'SUPPORTER_DISCARD_SELECTION_MISSING');
+    assert(before.players[0].hand.some(card=>card.id===chosen[0]));
+    assert(after.players[0].discard.some(card=>card.id===chosen[0]));
+    assert(after.players[0].discard.some(card=>card.id===action.cardId));
+    const initial=before.players[0].hand.length-2;
+    const expected=initial+Math.min(before.players[0].deck.length,Math.max(0,e.plan.limit-initial));
+    assert.equal(after.players[0].hand.length,expected,'SUPPORTER_DRAW_TO_SIX_INCORRECT');
+  }
+  if(e.plan.mechanic==='ATTACK_REVEAL_OPPONENT_HAND'){
+    const reveal=after.history.slice(before.history.length).find(event=>
+      event.details?.command==='REVEAL'&&event.details.privateTo==='you'&&
+      event.details.fromZone==='hand');
+    assert(reveal,'OPPONENT_HAND_PRIVATE_REVEAL_MISSING');
+    assert.deepEqual(Array.from(reveal.details.cardIds),before.players[1].hand.map(card=>card.id),
+      'OPPONENT_HAND_REVEAL_NOT_EXACT');
+    verifyPrintedAttack(before,after,e,Number(e.damage)||0);
+  }
   if (e.plan.mechanic === "VANILLA_DAMAGE")
     verifyPrintedAttack(before, after, e, Number(e.damage));
   if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
