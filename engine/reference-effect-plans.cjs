@@ -78,6 +78,11 @@ function plan(entry,kind){
  const generic=text.normalize('NFKC');
  // Exact printed abilities are continuous (not manually activated) and their
  // damage reduction applies after weakness/resistance, unless ignored by an attack.
+ // A printed Rocket Team minimum-size condition is a continuous attack gate.
+ // It must be checked when an attack is declared, not as a one-time ability.
+ const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
+ if(kind==='ABILITY'&&rocketGate)
+  return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};
  const incomingReduction=generic.match(/^このポケモンが受けるワザのダメージは「-([1-9][0-9]{0,2})」される。$/);
  if(kind==='ABILITY'&&incomingReduction)
   return {mechanic:'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],amount:Number(incomingReduction[1])};
