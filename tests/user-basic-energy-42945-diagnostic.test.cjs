@@ -35,3 +35,18 @@ console.log('USER_BASIC_ENERGY_42945_DIAGNOSTIC '+JSON.stringify({
 }));
 assert(card&&card.name==='基本炎エネルギー','official 42945 not in deck builder');
 assert(classification&&classification.basicEnergy===true,'basic-energy classification missing');
+assert(verifiedBasicException(classification),'official basic-energy exception is not verified');
+assert(record&&record.officialCardId===id&&record.mainPlan?.mechanic==='BASIC_ENERGY',
+ 'real physical print 42945 must have the common official BASIC_ENERGY engine plan');
+assert.equal(deckApi.connectionError(id,card,plans.get(id)),'',
+ 'a valid basic-energy print may not be blocked in a saved 60-card deck');
+const sw=fs.readFileSync('sw.js','utf8');
+const releaseMatch=sw.match(/const FILES=(\{[\s\S]*?\});\nconst absolute/);
+assert(releaseMatch,'PWA complete release manifest must exist');
+const hashes=JSON.parse(releaseMatch[1]);
+const crypto=require('node:crypto');
+const hash=path=>crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex');
+assert.equal(hashes['./data/effect-extensions/compiled.json'],hash('data/effect-extensions/compiled.json'),
+ 'offline PWA must cache the official 42945 BASIC_ENERGY plan');
+assert.equal(hashes['./ui/saved-decks.js?build=258'],hash('ui/saved-decks.js'),
+ 'offline PWA must cache the corresponding saved-deck readiness logic');
