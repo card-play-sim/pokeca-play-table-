@@ -566,6 +566,24 @@ function verifyCase(t, e) {
       (before.players[1].active.statusCondition?e.plan.bonus:0));
   }
 
+  if (e.plan.mechanic === "ATTACK_NAMED_NEXT_TURN_LOCK") {
+    verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
+    assert.deepEqual(after.players[0].active.referenceNamedAttackLock,
+      {turn:before.turnNumber+2,attackName:e.plan.attackName});
+    const future=structuredClone(after);
+    future.turnNumber=before.turnNumber+2;
+    future.turnPlayer='you';
+    future.status=before.status;
+    delete future.pendingPrizeSelection;
+    delete future.pendingReferenceChoice;
+    delete future.referenceAttackTurnPending;
+    const replay=port(future);
+    const sameAttack=t.action||o.action;
+    assert.equal(replay.dispatch('you',sameAttack).ok,false);
+    assert.deepEqual(replay.getSnapshot(),future);
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),after);
+  }
   if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
       const start = { ...before, referenceRngState: seed };
