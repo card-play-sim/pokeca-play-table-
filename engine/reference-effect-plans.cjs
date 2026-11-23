@@ -80,6 +80,24 @@ function plan(entry,kind){
   return {mechanic:'DISCARD_TO_SEARCH_DISTINCT_CATEGORIES',commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],cost:3,categories:['item','tool','supporter','stadium']};
  // Match complete, verified attack text. Printed damage and counter/damage units are separate.
  const printedAmount=/^\d+$/.test(String(entry.damage||'0'));
+
+ // Match complete printed effect slots only; unknown official text still fails closed.
+ const directStatus=generic.match(/^相手のバトルポケモンを(やけど|どく|ねむり|こんらん)にする。$/);
+ if(kind==='ATTACK'&&printedAmount&&directStatus){
+  const status={'やけど':'BURNED','どく':'POISONED','ねむり':'ASLEEP','こんらん':'CONFUSED'}[directStatus[1]];
+  return {mechanic:'ATTACK_APPLY_STATUS',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'STATUS_CONDITION'],status};
+ }
+ const healTeam=generic.match(/^自分のポケモン全員のHPを、それぞれ「([1-9][0-9]{0,2})」回復する。$/);
+ if(kind==='ATTACK'&&printedAmount&&healTeam)
+  return {mechanic:'ATTACK_HEAL_TEAM',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'HEAL'],amount:Number(healTeam[1])};
+ const takenPrizes=generic.match(/^相手がすでにとったサイドの枚数×([1-9][0-9]{0,2})ダメージ。$/);
+ if(kind==='ATTACK'&&takenPrizes&&String(entry.damage).normalize('NFKC')===takenPrizes[1]+'×')
+  return {mechanic:'ATTACK_TAKEN_PRIZES_DAMAGE',commands:['DAMAGE'],unit:Number(takenPrizes[1])};
+ const statusBonus=generic.match(/^相手のバトルポケモンが特殊状態なら、([1-9][0-9]{0,2})ダメージ追加。$/);
+ const printedBonus=String(entry.damage).normalize('NFKC');
+ if(kind==='ATTACK'&&statusBonus&&/^\d{1,3}\+$/.test(printedBonus))
+  return {mechanic:'ATTACK_STATUS_BONUS_DAMAGE',commands:['DAMAGE'],base:Number.parseInt(printedBonus,10),bonus:Number(statusBonus[1])};
+
  const benchHit=text.normalize('NFKC').match(/^相手のベンチポケモン1匹にも、([1-9][0-9]{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(kind==='ATTACK'&&printedAmount&&benchHit)
   return {mechanic:'ATTACK_SPLASH_DAMAGE',commands:['DAMAGE'],benchDamage:Number(benchHit[1])};
