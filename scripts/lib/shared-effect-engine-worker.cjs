@@ -583,7 +583,7 @@ function verifyCase(t, e) {
     assert.equal(replay.dispatch('you',sameAttack).ok,false);
     assert.deepEqual(B.canonical(replay.getSnapshot()),B.canonical(future));
     assert(p.restoreSession(p.getResumeSnapshot()).ok);
-    assert.deepEqual(p.getSnapshot(),after);
+    assert.deepEqual(B.canonical(p.getSnapshot()),B.canonical(after));
   }
   if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
