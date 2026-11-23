@@ -1,0 +1,48 @@
+name: Build bulk shared official attack effects
+on:
+  push:
+    branches: [feat/battle-mass-shared-attacks-v2-20261123]
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/battle-mass-shared-attacks.test.cjs'
+      - '.github/workflows/battle-bulk-shared-attacks-build.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/battle-mass-shared-attacks-v2-20261123
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify four shared mechanics on official unresolved text
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/battle-mass-shared-attacks.test.cjs
+      - name: Recompile every official record and rebuild released runtime
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node tests/battle-mass-shared-attacks.test.cjs
+      - name: Save generated artifacts for full CI and gameplay verification
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: compile all four shared attack mechanics into verified engine and PWA'
+            git push origin HEAD:feat/battle-mass-shared-attacks-v2-20261123
+          fi
