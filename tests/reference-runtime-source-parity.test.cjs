@@ -15,7 +15,10 @@ const contract=[
  "case 'COIN_FAILURE_DAMAGE':",
  "if(bench&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='BENCH_DAMAGE_PROTECTION'))return 0;",
  "if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)",
- "const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION']);",
+ "const passive=new Set([",
+ "'SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION',",
+ "'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'",
+
  "if(bench&&!record(mon).facts.rulePokemon&&field(other).some",
  "if(m==='SWITCH_SELF_ATTACK')add('targetIds'",
  "if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds'",
