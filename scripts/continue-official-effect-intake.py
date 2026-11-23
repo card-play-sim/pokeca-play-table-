@@ -41,6 +41,7 @@ def main():
   return cached_parser_retry(i,state,fingerprint)
  pending=[i for i in ids if due(i)][:a.limit]
  transient_retries=sum(i in blocked and blocked[i].get('reason')=='COLLECTOR_EXCEPTION' for i in pending)
+ automatic_parser_rechecks=sum(cached_parser_retry(i,blocked.get(i),fingerprint) for i in pending)
  def collect(i):
   # Existing saved official HTML is preferred, including previously unparsed pages.
   path=ROOT/f'data/effect-extensions/evidence/{i}.json'
@@ -87,7 +88,7 @@ def main():
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
  output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)
- print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'automaticParserRechecks':sum(i in blocked and i in saved for i in pending),'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
+ print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'automaticParserRechecks':automatic_parser_rechecks,'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
 if __name__=='__main__':
  import fcntl
  (ROOT/'work').mkdir(exist_ok=True)
