@@ -1,0 +1,47 @@
+name: Rebuild official passive and first-turn shared mechanics
+on:
+  push:
+    branches: [feat/battle-passive-firstturn-20261124]
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'tests/battle-passive-firstturn-shared.test.cjs'
+      - '.github/workflows/battle-passive-firstturn-build.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/battle-passive-firstturn-20261124
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute shared mechanics against synthetic battle state
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/battle-passive-firstturn-shared.test.cjs
+      - name: Compile all saved official print evidence and rebuild live engine
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node tests/battle-passive-firstturn-shared.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+      - name: Commit synchronized release artifacts to the same PR branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: verified official passive and first-turn effects into battle bundle'
+            git push origin HEAD:feat/battle-passive-firstturn-20261124
+          fi
