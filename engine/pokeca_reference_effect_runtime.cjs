@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -149,7 +149,16 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   if(!skipWeakness&&weakness?.types.some(t=>types.includes(t))){assert(weakness.value==='×2','UNSUPPORTED_WEAKNESS');amount*=2;}
   if(!skipResistance&&resistance?.types.some(t=>types.includes(t))){const n=Number(resistance.value.replace('－','-'));assert(Number.isFinite(n),'UNSUPPORTED_RESISTANCE');amount=Math.max(0,amount+n);}
  }
- if(!ignore&&find(g,id(mon))?.player.id===other.id&&mon.referenceDamageReduction?.turn===g.turnNumber)amount=Math.max(0,amount-mon.referenceDamageReduction.amount);
+ if(!ignore&&find(g,id(mon))?.player.id===other.id){
+  // Printed continuous abilities reduce damage taken from an attack after
+  // weakness/resistance. Suppressed abilities do not apply.
+  const reduction=enabledAbilities(g,mon)
+   .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION')
+   .reduce((sum,a)=>sum+a.plan.amount,0);
+  amount=Math.max(0,amount-reduction);
+  if(mon.referenceDamageReduction?.turn===g.turnNumber)
+   amount=Math.max(0,amount-mon.referenceDamageReduction.amount);
+ }
  if(ignore&&!skipWeakness&&typesConflictForIgnore(g,own,mon,source))stop(mon,{name:'弱点変更との相互作用'},'OFFICIAL_WEAKNESS_MODIFICATION_RULING_REQUIRED');
  return amount;
 }
@@ -345,7 +354,7 @@ function preflight(g,actor,action){
    const card=p.hand.find(c=>id(c)===action.cardId),r=record(card);assert(card&&r,'HAND_CARD_MISSING');requirePlan(card,{name:r.name,plan:r.mainPlan});
    if(action.type==='attach_tool')assert(card.kind==='tool'&&field(p).some(c=>id(c)===action.targetInstanceId&&!(c.tools||[]).length),'TOOL_ATTACHMENT_NOT_ALLOWED');
    if(action.type==='play_item')assert(card.cardType==='ITEM'&&!itemLocked(g,actor),'ITEM_NOT_ALLOWED');
-   if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&g.turnNumber!==1&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
+   if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&(g.turnNumber!==1||r.mainPlan.mechanic==='SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW')&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
    if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
@@ -606,7 +615,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'COIN_DRAW_CARDS':draw(g,p,coin(g,actor)?plan.heads:plan.tails);break;
   case 'HEAL_ACTIVE_DAMAGE':heal(g,actor,p.active,plan.amount);break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
-  case 'DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
+  case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
   case 'RECOVER_TYPED_DISCARD':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'RECOVER_BASIC_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'HEAL_AND_CLEAR_STATUS':{
