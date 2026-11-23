@@ -201,7 +201,33 @@ function prepare(r, e, kind) {
       player.hand.push(donor);
     }
   }
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
+  if (m === "ATTACK_DISCARD_STADIUM") {
+    const owner = frame.game.players[1];
+    const zone = [owner.deck, owner.hand, owner.prizeCards]
+      .find(cards => cards.some(card => card.kind === "stadium"));
+    if (!zone) return {blocked:"NO_STADIUM_FIXTURE_RESOURCE"};
+    const [stadium] = zone.splice(zone.findIndex(card => card.kind === "stadium"), 1);
+    frame.game.stadium = stadium;
+    frame.game.stadiumOwner = owner.id;
+  }
+  if (m === "ATTACK_ATTACHED_TOOL_COUNT") {
+    const [own, opponent] = frame.game.players;
+    let attached = false;
+    for (const side of e.plan.bothSides ? [opponent, own] : [own]) {
+      if (side.active.tools?.length) {
+        attached = true;
+        continue;
+      }
+      const zone = [side.deck, side.hand, side.prizeCards]
+        .find(cards => cards.some(card => card.kind === "tool"));
+      if (!zone) continue;
+      const [tool] = zone.splice(zone.findIndex(card => card.kind === "tool"), 1);
+      side.active.tools = [tool];
+      attached = true;
+    }
+    if (!attached) return {blocked:"NO_ATTACHED_TOOL_FIXTURE_RESOURCE"};
+  }
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -596,6 +622,31 @@ function verifyCase(t, e) {
     if(count>0)verifyPrintedAttack(before,after,e,count*e.plan.unit);
     else assert(after.history.slice(before.history.length).some(ev=>ev.type==='attack'
       &&ev.details.effectId===e.effectId));
+  }
+  if (e.plan.mechanic === "ATTACK_DISCARD_STADIUM") {
+    assert(before.stadium && before.stadiumOwner);
+    assert.equal(after.stadium, null);
+    assert.equal(after.stadiumOwner, null);
+    const discard = after.players.find(side => side.id === before.stadiumOwner).discard;
+    assert(discard.some(card => card.id === before.stadium.id));
+    if (Number(e.damage) > 0) verifyPrintedAttack(before, after, e, Number(e.damage));
+  }
+  if (e.plan.mechanic === "ATTACK_UNDAMAGED_BONUS") {
+    for (const damage of [0, 10]) {
+      const start = structuredClone(before);
+      start.players[0].active.damage = damage;
+      const replay = port(start);
+      assert(replay.dispatch("you", t.action || o.action).ok);
+      verifyPrintedAttack(start, replay.getSnapshot(), e,
+        e.plan.base + (damage === 0 ? e.plan.bonus : 0));
+    }
+  }
+  if (e.plan.mechanic === "ATTACK_ATTACHED_TOOL_COUNT") {
+    const eligible = e.plan.bothSides ? before.players : before.players.slice(0, 1);
+    const count = eligible.flatMap(side => [side.active, ...side.bench])
+      .filter(Boolean).reduce((total, card) => total + (card.tools || []).length, 0);
+    assert(count > 0, "ATTACHED_TOOL_COUNT_FIXTURE_NEEDS_TOOL");
+    verifyPrintedAttack(before, after, e, count * e.plan.unit);
   }
   if (e.plan.mechanic === "ATTACK_STATUS_BONUS_DAMAGE") {
     verifyPrintedAttack(before,after,e,e.plan.base+

@@ -13712,6 +13712,80 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45617",
+      "name": "ヒスイ ガーディ",
+      "deckName": "ヒスイ ガーディ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45617",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045617_P_HISUIGADEI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "まるやけ",
+          "cost": [],
+          "damage": "0",
+          "text": "場に出ているスタジアムをトラッシュする。",
+          "effectId": "reference-45617-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_STADIUM",
+            "commands": [
+              "DISCARD"
+            ]
+          }
+        },
+        {
+          "name": "とっしん",
+          "cost": [
+            "闘",
+            "無色"
+          ],
+          "damage": "40",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-45617-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45617.json",
+        "sha256": "9728299b7ff5c68909e1151f27d5be0001cae70fbc582b0c785bf050373e6677",
+        "htmlSha256": "9728299b7ff5c68909e1151f27d5be0001cae70fbc582b0c785bf050373e6677",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45624",
       "name": "カジッチュ",
       "deckName": "カジッチュ",
@@ -13782,6 +13856,80 @@
         "path": "data/effect-extensions/evidence/45624.json",
         "sha256": "1f7043ad779f22d14f89b402b76a95f4023c1de93f943e3612b0e78372228446",
         "htmlSha256": "1f7043ad779f22d14f89b402b76a95f4023c1de93f943e3612b0e78372228446",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45670",
+      "name": "ヒスイ ガーディ",
+      "deckName": "ヒスイ ガーディ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45670",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045670_P_HISUIGADEI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "まるやけ",
+          "cost": [],
+          "damage": "0",
+          "text": "場に出ているスタジアムをトラッシュする。",
+          "effectId": "reference-45670-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_STADIUM",
+            "commands": [
+              "DISCARD"
+            ]
+          }
+        },
+        {
+          "name": "とっしん",
+          "cost": [
+            "闘",
+            "無色"
+          ],
+          "damage": "40",
+          "text": "このポケモンにも10ダメージ。",
+          "effectId": "reference-45670-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 10
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45670.json",
+        "sha256": "d6f309ea0595446acfac3d37aadee63e762362a53924f498dc069f37ec9b0bd0",
+        "htmlSha256": "d6f309ea0595446acfac3d37aadee63e762362a53924f498dc069f37ec9b0bd0",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -15045,6 +15193,88 @@
         "path": "data/effect-extensions/evidence/45759.json",
         "sha256": "1f7ad3d5fa7abb456f75f0d22388e4afabc332f95945485de947a786ef7cb6fe",
         "htmlSha256": "1f7ad3d5fa7abb456f75f0d22388e4afabc332f95945485de947a786ef7cb6fe",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45763",
+      "name": "エアームド",
+      "deckName": "エアームド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45763",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045763_P_EAMUDO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "カッターウインド",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-45763-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "おおあらし",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "場に出ているスタジアムをトラッシュする。",
+          "effectId": "reference-45763-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_STADIUM",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45763.json",
+        "sha256": "6f8e174619980b97536ddf35a36348a0ce82dcb8e4d369fcf1670b47448f0256",
+        "htmlSha256": "6f8e174619980b97536ddf35a36348a0ce82dcb8e4d369fcf1670b47448f0256",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -28872,6 +29102,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47397",
+      "name": "カットロトム",
+      "deckName": "カットロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47397",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047397_P_KATTOROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かりとりカッター",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "場に出ているスタジアムをトラッシュする。",
+          "effectId": "reference-47397-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_STADIUM",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        },
+        {
+          "name": "ガジェットショー",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30×",
+          "text": "自分のポケモン全員についている「ポケモンのどうぐ」の数×30ダメージ。",
+          "effectId": "reference-47397-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": false,
+            "unit": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47397.json",
+        "sha256": "4e931447003c0dd56bceaef8419f9d338d355a20fe2fc6ea6b4f9af0b1ff14f2",
+        "htmlSha256": "4e931447003c0dd56bceaef8419f9d338d355a20fe2fc6ea6b4f9af0b1ff14f2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47398",
       "name": "カリキリ",
       "deckName": "カリキリ",
@@ -29260,6 +29568,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47414",
+      "name": "ヒートロトム",
+      "deckName": "ヒートロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47414",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047414_P_HITOROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "こがす",
+          "cost": [
+            "炎"
+          ],
+          "damage": "0",
+          "text": "相手のバトルポケモンをやけどにする。",
+          "effectId": "reference-47414-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED"
+          }
+        },
+        {
+          "name": "ガジェットショー",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30×",
+          "text": "自分のポケモン全員についている「ポケモンのどうぐ」の数×30ダメージ。",
+          "effectId": "reference-47414-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": false,
+            "unit": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47414.json",
+        "sha256": "a071789bef33f9dc25db04ea161f66daf35f673f5300a1238675a8551f8fcf8d",
+        "htmlSha256": "a071789bef33f9dc25db04ea161f66daf35f673f5300a1238675a8551f8fcf8d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47416",
       "name": "パールル",
       "deckName": "パールル",
@@ -29393,6 +29779,85 @@
         "path": "data/effect-extensions/evidence/47419.json",
         "sha256": "5e820048e4b9fd912171c16ca934ebc25a3cfa42887e973a69589d99c784b084",
         "htmlSha256": "5e820048e4b9fd912171c16ca934ebc25a3cfa42887e973a69589d99c784b084",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47421",
+      "name": "ウォッシュロトム",
+      "deckName": "ウォッシュロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47421",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047421_P_UOSSHIXYUROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "もみあらう",
+          "cost": [
+            "水"
+          ],
+          "damage": "20",
+          "text": "自分のポケモン全員のHPを、それぞれ「10」回復する。",
+          "effectId": "reference-47421-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_HEAL_TEAM",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 10
+          }
+        },
+        {
+          "name": "ガジェットショー",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30×",
+          "text": "自分のポケモン全員についている「ポケモンのどうぐ」の数×30ダメージ。",
+          "effectId": "reference-47421-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": false,
+            "unit": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47421.json",
+        "sha256": "3aec843c2a5ee684c486297a3cd26e1c1078e44f45de48de1d5eb689448f5278",
+        "htmlSha256": "3aec843c2a5ee684c486297a3cd26e1c1078e44f45de48de1d5eb689448f5278",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -36321,6 +36786,86 @@
         "path": "data/effect-extensions/evidence/49592.json",
         "sha256": "90c7dc9c1c35ab90a1be753a003d29bfd15d9c319e186ad81873f395b8cbb225",
         "htmlSha256": "90c7dc9c1c35ab90a1be753a003d29bfd15d9c319e186ad81873f395b8cbb225",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49615",
+      "name": "ペパーのマフィティフex",
+      "deckName": "ペパーのマフィティフex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49615",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/049615_P_PEPANOMAFUITEIFUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハッスルタックル",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "このポケモンにダメカンがのっていないなら、120ダメージ追加。",
+          "effectId": "reference-49615-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 120
+          }
+        },
+        {
+          "name": "おやぶんヘッド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "次の自分の番、このポケモンは「おやぶんヘッド」が使えない。",
+          "effectId": "reference-49615-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "おやぶんヘッド"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "ペパーのオラチフ",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49615.json",
+        "sha256": "feae6fd615f1d7997471b22b3f1119f9b69dc1fb440023ee7a24dce0c4ba1dbe",
+        "htmlSha256": "feae6fd615f1d7997471b22b3f1119f9b69dc1fb440023ee7a24dce0c4ba1dbe",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -122010,6 +122555,411 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47347",
+      "name": "ペパーのマフィティフex",
+      "deckName": "ペパーのマフィティフex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47347",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047347_P_PEPANOMAFUITEIFUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハッスルタックル",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "このポケモンにダメカンがのっていないなら、120ダメージ追加。",
+          "effectId": "reference-47347-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 120
+          }
+        },
+        {
+          "name": "おやぶんヘッド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "次の自分の番、このポケモンは「おやぶんヘッド」が使えない。",
+          "effectId": "reference-47347-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "おやぶんヘッド"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "ペパーのオラチフ",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47347.json",
+        "sha256": "83e6116b07ccea6f0f0e8719f25a5641e22d3e5bfe9075d7035acebfcb0717f3",
+        "htmlSha256": "83e6116b07ccea6f0f0e8719f25a5641e22d3e5bfe9075d7035acebfcb0717f3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47382",
+      "name": "ペパーのマフィティフex",
+      "deckName": "ペパーのマフィティフex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47382",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047382_P_PEPANOMAFUITEIFUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハッスルタックル",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "このポケモンにダメカンがのっていないなら、120ダメージ追加。",
+          "effectId": "reference-47382-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 120
+          }
+        },
+        {
+          "name": "おやぶんヘッド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "次の自分の番、このポケモンは「おやぶんヘッド」が使えない。",
+          "effectId": "reference-47382-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "おやぶんヘッド"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "ペパーのオラチフ",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47382.json",
+        "sha256": "5914439e74228d5d6e9ecc6fa0c3fcb8d3823ae41ec666e4a9f81420c656b6ed",
+        "htmlSha256": "5914439e74228d5d6e9ecc6fa0c3fcb8d3823ae41ec666e4a9f81420c656b6ed",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47389",
+      "name": "ペパーのマフィティフex",
+      "deckName": "ペパーのマフィティフex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47389",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047389_P_PEPANOMAFUITEIFUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハッスルタックル",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "このポケモンにダメカンがのっていないなら、120ダメージ追加。",
+          "effectId": "reference-47389-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 120
+          }
+        },
+        {
+          "name": "おやぶんヘッド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "次の自分の番、このポケモンは「おやぶんヘッド」が使えない。",
+          "effectId": "reference-47389-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "おやぶんヘッド"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "ペパーのオラチフ",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47389.json",
+        "sha256": "b5516865cdd19b87e7477ff6f61ab18f77d82e79df5581c4ef23d002d9e70101",
+        "htmlSha256": "b5516865cdd19b87e7477ff6f61ab18f77d82e79df5581c4ef23d002d9e70101",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48400",
+      "name": "ドータクン",
+      "deckName": "ドータクン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48400",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048400_P_DOTAKUN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "トリプルドロー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札を3枚引く。",
+          "effectId": "reference-48400-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 3
+          }
+        },
+        {
+          "name": "どうぐおとし",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "40×",
+          "text": "おたがいのポケモン全員についている「ポケモンのどうぐ」の数×40ダメージ。",
+          "effectId": "reference-48400-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": true,
+            "unit": 40
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ドーミラー",
+        "retreatCost": 3,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48400.json",
+        "sha256": "b13d1d5b14dbb65895557dd509f7c87c7c5005bcee939db3f8e133864f8af72c",
+        "htmlSha256": "b13d1d5b14dbb65895557dd509f7c87c7c5005bcee939db3f8e133864f8af72c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49200",
+      "name": "ペパーのマフィティフex",
+      "deckName": "ペパーのマフィティフex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49200",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049200_P_PEPANOMAFUITEIFUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハッスルタックル",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "このポケモンにダメカンがのっていないなら、120ダメージ追加。",
+          "effectId": "reference-49200-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_UNDAMAGED_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 30,
+            "bonus": 120
+          }
+        },
+        {
+          "name": "おやぶんヘッド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "次の自分の番、このポケモンは「おやぶんヘッド」が使えない。",
+          "effectId": "reference-49200-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "おやぶんヘッド"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "ペパーのオラチフ",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49200.json",
+        "sha256": "014c2e2dce8d62715bcb333b67f906b2f7074c169bae38016ff13e4f4aa586ad",
+        "htmlSha256": "014c2e2dce8d62715bcb333b67f906b2f7074c169bae38016ff13e4f4aa586ad",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -123529,11 +124479,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45617",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45619",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -123570,11 +124515,6 @@
     },
     {
       "officialCardId": "45667",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45670",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -123640,11 +124580,6 @@
     },
     {
       "officialCardId": "45755",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45763",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -124384,22 +125319,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47397",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47400",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47414",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47421",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -124970,11 +125890,6 @@
     },
     {
       "officialCardId": "49614",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49615",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

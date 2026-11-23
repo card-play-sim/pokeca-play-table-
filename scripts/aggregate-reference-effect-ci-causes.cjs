@@ -6,6 +6,21 @@ const root=process.argv[2]||'reports/ci-artifacts';
 const output=process.argv[3]||'reports/reference-effect-codex-batch.json';
 const expected=['smoke','opening-actions','opening-rejection','multi-turn','extended-gameplay','cross-category','provenance'];
 const issues=new Map(),gaps=[],jobs=[];
+const artifactDirs=fs.existsSync(root)?fs.readdirSync(root,{withFileTypes:true})
+ .filter(entry=>entry.isDirectory()).map(entry=>entry.name):[];
+function currentArtifact(base){
+ const prefix=base+'-attempt-';
+ let latest=0;
+ for(const name of artifactDirs){
+  if(!name.startsWith(prefix))continue;
+  const suffix=name.slice(prefix.length);
+  if(!/^[1-9][0-9]*$/.test(suffix))continue;
+  const attempt=Number(suffix);
+  if(Number.isSafeInteger(attempt))latest=Math.max(latest,attempt);
+ }
+ return latest?prefix+latest:base;
+}
+
 // GitHub job conclusions are independent of the failure-log artifacts.
 // A failed provenance check must never be reported as a clean batch.
 const conclusionsText=process.env.REFERENCE_CI_JOB_CONCLUSIONS;
@@ -17,7 +32,7 @@ for(const job of expected){
  const conclusion=conclusions?.[job]?.result;
  if(conclusion!=='success')gaps.push({job,reason:'JOB_NOT_SUCCESSFUL',conclusion:typeof conclusion==='string'?conclusion:'MISSING'});
  const dir=job==='provenance'?'reference-effect-coverage':'reference-runtime-causes-'+job;
- const file=path.join(root,dir,'reference-effect-runtime-causes.json');
+ const file=path.join(root,currentArtifact(dir),'reference-effect-runtime-causes.json');
  if(!fs.existsSync(file)){gaps.push({job,reason:'MISSING_JOB_CAUSE_ARTIFACT'});jobs.push({job,status:'BLOCKED'});continue;}
  let report;
  try{report=JSON.parse(fs.readFileSync(file,'utf8'));}catch(e){gaps.push({job,reason:'MALFORMED_JOB_CAUSE_ARTIFACT'});jobs.push({job,status:'BLOCKED'});continue;}

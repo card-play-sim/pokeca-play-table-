@@ -73,8 +73,8 @@ for (const r of selected) {
       if (!(option && (option.ok ?? option.enabled))) continue;
       const game = p.getSnapshot();
       if (!p.dispatch("you", option.action).ok) continue;
-      const printedDamageEvents = ["VANILLA_DAMAGE", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE",
-          "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      const printedDamageEvents = ["VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE",
+          "ACTIVE_AND_BENCH_DAMAGE", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP",
           "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event =>
             (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||

@@ -106,21 +106,20 @@ async def main():
    if f['kind'] in ('attack','ability'):
     await select_effect_targets(page,option)
    if f['kind'] in ('attack','ability'):
-    # Some attacks commit immediately after the legal attack choice; in those
-    # cases the confirm dialog is gone. Never silently skip execution: a
-    # recorded action must already exist or the test still fails below.
+    # The selection sheet closes asynchronously. Wait for the next
+    # confirmation or a committed action before deciding what to tap.
+    history_before=len(before.get('history',[]))
+    await page.wait_for_function(
+     "n=>document.querySelector('#confirm-dialog').open||PokecaMobile.port.getSnapshot().history.length>n",
+     arg=history_before,timeout=12000)
     confirm=page.locator('#confirm-ok')
     if await confirm.is_visible():
      try:
       await confirm.tap(timeout=8000)
      except PlaywrightTimeoutError:
       current=await snap()
-      assert len(current['history'])>len(before.get('history',[])), (
+      assert len(current['history'])>history_before, (
        'ATTACK_CONFIRM_DISAPPEARED_WITHOUT_EXECUTION',r['officialCardId'],m)
-    else:
-     current=await snap()
-     assert len(current['history'])>len(before.get('history',[])), (
-      'ATTACK_MISSING_CONFIRM_AND_EXECUTION',r['officialCardId'],m)
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
@@ -128,10 +127,14 @@ async def main():
    if f['kind']=='attack':
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
                and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
-   if m in ('VANILLA_DAMAGE','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
-            'ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES'):
+   if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
+            'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_DISCARD_STADIUM':
+    assert before['stadium'] and after['stadium'] is None
+    owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])
+    assert before['stadium']['id'] in {card['id'] for card in owner['discard']}
    if m=='COIN_UNTIL_TAILS_DAMAGE':
     flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
     assert flips and flips[-1] is False and all(flips[:-1])

@@ -133,7 +133,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-smoke
+          name: reference-runtime-causes-smoke-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -155,7 +155,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-opening-actions
+          name: reference-runtime-causes-opening-actions-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -177,7 +177,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-opening-rejection
+          name: reference-runtime-causes-opening-rejection-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -199,7 +199,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-multi-turn
+          name: reference-runtime-causes-multi-turn-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -221,7 +221,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-extended-gameplay
+          name: reference-runtime-causes-extended-gameplay-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -249,7 +249,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-runtime-causes-cross-category
+          name: reference-runtime-causes-cross-category-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-runtime-causes.json
             reports/reference-effect-runtime.log
@@ -331,7 +331,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-effect-coverage
+          name: reference-effect-coverage-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-coverage.json
             reports/reference-effect-failure-causes.json
@@ -365,7 +365,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reference-effect-codex-batch
+          name: reference-effect-codex-batch-attempt-${{ github.run_attempt }}
           path: |
             reports/reference-effect-codex-batch.json
             reports/reference-effect-codex-tasks.json

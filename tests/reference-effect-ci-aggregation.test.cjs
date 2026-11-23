@@ -3,10 +3,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('nod
 const script=path.resolve(__dirname,'../scripts/aggregate-reference-effect-ci-causes.cjs');
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'pokeca-aggregate-')),root=path.join(dir,'artifacts'),out=path.join(dir,'batch.json');
 const names=['smoke','opening-actions','opening-rejection','multi-turn','extended-gameplay','cross-category','provenance'];
-const artifact=n=>path.join(root,n==='provenance'?'reference-effect-coverage':'reference-runtime-causes-'+n,'reference-effect-runtime-causes.json');
+const artifact=(n,attempt=0)=>path.join(root,(n==='provenance'?'reference-effect-coverage':'reference-runtime-causes-'+n)+(attempt?'-attempt-'+attempt:''),'reference-effect-runtime-causes.json');
 const run=(conclusions=Object.fromEntries(names.map(n=>[n,{result:'success'}])))=>spawnSync(process.execPath,[script,root,out],{encoding:'utf8',env:{...process.env,...(conclusions===null?{}:{REFERENCE_CI_JOB_CONCLUSIONS:JSON.stringify(conclusions)})}});
 const empty=()=>({purpose:'CODEX_RUNTIME_FAILURE_CAUSE_HANDOFF',structuredFailures:0,malformedRecords:0,safetyStopRequired:false,issues:[],malformed:[]});
-const write=(n,x)=>{const f=artifact(n);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,JSON.stringify(x));};
+const write=(n,x,attempt)=>{const f=artifact(n,attempt);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,JSON.stringify(x));};
 try{
  assert.equal(run().status,2,'missing every job must block');
  assert.equal(JSON.parse(fs.readFileSync(out)).gaps.length,7);
@@ -33,5 +33,14 @@ try{
  write('smoke',{...empty(),safetyStopRequired:false,structuredFailures:1,issues:[issue('smoke')]});
  assert.equal(run().status,2,'contradictory evidence must block');
  assert.ok(JSON.parse(fs.readFileSync(out)).gaps.some(x=>x.reason==='INVALID_JOB_CAUSE_SCHEMA'));
+ // A failed-only retry uses the newest report for each job and preserves
+ // reports from successful jobs that did not run again.
+ write('smoke',{...empty(),structuredFailures:1,safetyStopRequired:true,issues:[issue('smoke')]},2);
+ write('smoke',empty(),10);
+ write('multi-turn',empty(),1);
+ assert.equal(run().status,0,'newest per-job attempt must replace the failed evidence');
+ write('smoke',{...empty(),purpose:'invalid'},11);
+ assert.equal(run().status,2,'malformed current evidence must not fall back to an older pass');
+ assert.ok(JSON.parse(fs.readFileSync(out)).gaps.some(x=>x.job==='smoke'&&x.reason==='INVALID_JOB_CAUSE_SCHEMA'));
  console.log('CODEX_CROSS_JOB_CAUSE_AGGREGATION_GATE PASS');
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
