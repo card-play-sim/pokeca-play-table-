@@ -81,6 +81,12 @@ function plan(entry,kind){
  // Match complete, verified attack text. Printed damage and counter/damage units are separate.
  const printedAmount=/^\d+$/.test(String(entry.damage||'0'));
 
+ // Lock ONLY the explicitly named attack on the next own turn.
+ // This differs from NO_NEXT_ATTACK, which disables all attacks.
+ const namedLock=text.normalize('NFKC').match(/^次の自分の番、このポケモンは「([^」]+)」が使えない。$/);
+ if(kind==='ATTACK'&&namedLock&&/^\\d+$/.test(String(entry.damage||'0'))
+    &&String(entry.name||'')===namedLock[1])
+  return {mechanic:'ATTACK_NAMED_NEXT_TURN_LOCK',commands:['DAMAGE','ADD_STATE'],attackName:namedLock[1]};
  // Match complete printed effect slots only; unknown official text still fails closed.
  const directStatus=generic.match(/^相手のバトルポケモンを(やけど|どく|ねむり|こんらん)にする。$/);
  if(kind==='ATTACK'&&printedAmount&&directStatus){
