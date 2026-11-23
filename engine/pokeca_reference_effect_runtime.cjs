@@ -101,6 +101,15 @@ function refresh(g){
  }
  for(const p of g.players){
   if(field(p).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='SKYLINE')))for(const c of field(p))if(record(c).facts.basic)c.retreatCost=0;
+  // Continuous tool modifier is recomputed after every action, never cached.
+  // Jamming Tower suppresses tools, and retreat cannot have a negative cost.
+  if(toolEnabled(g))for(const c of field(p)){
+   const discount=(c.tools||[]).reduce((total,tool)=>{
+    const plan=record(tool)?.mainPlan;
+    return total+(plan?.mechanic==='TOOL_RETREAT_DISCOUNT_TWO'?plan.amount:0);
+   },0);
+   c.retreatCost=Math.max(0,c.retreatCost-discount);
+  }
   for(const c of field(p)){
    for(const e of [...(c.energyCards||[])])if(record(e)?.mainPlan?.mechanic==='ROCKET_ENERGY'&&!record(c).name.startsWith('ロケット団の')){
     c.energyCards.splice(c.energyCards.indexOf(e),1);p.discard.push(e);event(g,p.id,'DISCARD',{cardIds:[id(e)]});
@@ -229,6 +238,7 @@ function requests(g,actor,card,effect){
  }
  if(m==='SEARCH_MEGA_EVOLUTION_EX')deckRequest('cards',p.deck.filter(isMegaEvolutionEx),0,1);
  if(m==='DISCARD_ONE_DRAW_OPP_BENCH')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
+ if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
  if(m==='RECYCLE_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='HEAL_AND_CLEAR_STATUS')cardRequest('cards',own.filter(canHealOrClearStatus),1,1);
  if(m==='RECOVER_TYPED_DISCARD'){const pool=p.discard.filter(c=>typedRecoveryCandidate(c,effect.plan));cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
@@ -339,6 +349,8 @@ function preflight(g,actor,action){
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&g.turnNumber!==1&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
+   if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
+    assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -443,7 +455,7 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
@@ -475,6 +487,8 @@ function applyPlan(g,actor,card,effect,action){
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }
    if(m==='ATTACK_DRAW')draw(g,p,plan.draw);
+   if(m==='ATTACK_REVEAL_OPPONENT_HAND')
+    event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
    if(m==='NO_NEXT_ATTACK')card.referenceCannotAttackTurn=g.turnNumber+2;
    if(m==='RETREAT_LOCK_ATTACK')mon.referenceCannotRetreatTurn=g.turnNumber+1;
    if(m==='ATTACK_DAMAGE_REDUCTION')card.referenceDamageReduction={turn:g.turnNumber+1,amount:plan.amount};
@@ -564,6 +578,15 @@ function applyPlan(g,actor,card,effect,action){
    p.discard.push(p.hand.splice(index,1)[0]);
    event(g,actor,'DISCARD',{cardIds:[discardId],fromZone:'hand',privateTo:actor});
    if(o.bench.length>0)draw(g,p,o.bench.length);
+   break;
+  }
+  case 'SUPPORTER_DISCARD_ONE_DRAW_TO_SIX':{
+   const discardId=ids('discard')[0],index=p.hand.findIndex(c=>id(c)===discardId);
+   assert(index>=0,'SUPPORTER_DISCARD_COST_MISSING');
+   p.discard.push(p.hand.splice(index,1)[0]);
+   event(g,actor,'DISCARD',{cardIds:[discardId],fromZone:'hand',privateTo:actor});
+   const count=Math.max(0,plan.limit-p.hand.length);
+   if(count>0)draw(g,p,count);
    break;
   }
   case 'RETURN_HAND_PRIZE_DRAW':resetHand(g,p,o.prizes<=plan.threshold?plan.bonus:plan.normal);break;
