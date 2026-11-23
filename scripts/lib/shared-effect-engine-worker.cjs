@@ -335,6 +335,20 @@ function verifyPrintedAttack(before, after, effect, amount) {
     event.details.targetInstanceId === opponent.active.id && event.details.amount === amount));
 }
 
+function effectOption(t, e) {
+  if (t.option) return t.option;
+  const p = t.port;
+  if (t.kind === "ability") {
+    const inHand = p.getSnapshot().players[0].hand.some(card => card.id === t.sourceId);
+    const options = inHand ? p.getHandOptions("you", t.sourceId) : p.getPokemonActions("you", t.sourceId);
+    return options.find(o => o.kind === "ability" && o.action.abilityId === e.effectId);
+  }
+  if (t.kind === "attack") {
+    return p.getPokemonActions("you", t.sourceId)
+      .find(o => o.kind === "attack" && o.action.attackIndex === e.effectIndex);
+  }
+  return p.getHandOptions("you", t.sourceId).find(o => o.ok);
+}
 function verifyCase(t, e) {
   if (t.blocked) return { status: "BLOCKED", reason: t.blocked };
   const p = t.port,
@@ -354,18 +368,7 @@ function verifyCase(t, e) {
       .entries.find((x) => x.id === e.effectId);
     assert.equal(info.active, true);
   } else {
-    if (!o && !t.action)
-      o = ["attack", "ability"].includes(t.kind)
-        ? p
-            .getPokemonActions("you", t.sourceId)
-            .find(
-              (o) =>
-                o.kind === t.kind &&
-                (t.kind !== "attack" ||
-                  o.action.attackIndex === e.effectIndex) &&
-                (t.kind !== "ability" || o.action.abilityId === e.effectId),
-            )
-        : p.getHandOptions("you", t.sourceId).find((o) => o.ok);
+    if (!o && !t.action) o = effectOption(t, e);
     if (!t.action && !(o && (o.ok ?? o.enabled)))
       return {
         status: "BLOCKED",
@@ -407,6 +410,13 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if(e.plan.mechanic==='EXCITE_DIVE'){
+    const source=before.players[0].hand.find(card=>card.id===t.sourceId);
+    const entered=after.players[0].bench.find(card=>card.id===t.sourceId);
+    assert(source&&entered&&entered.stage===source.stage);
+    assert.equal(entered.validationReference.officialCardId,source.validationReference.officialCardId);
+    assert(!after.players[0].hand.some(card=>card.id===t.sourceId));
+  }
   if(e.plan.mechanic==='TOOL_RETREAT_DISCOUNT_TWO'){
     const action=t.action||o.action;
     const findMon=state=>[state.players[0].active,...state.players[0].bench]
@@ -831,6 +841,7 @@ function verifyPrintedDamage(evidence) {
 }
 module.exports = {
   prepare,
+  effectOption,
   verifyPrintedDamage,
   version: "1",
   idempotent: true,

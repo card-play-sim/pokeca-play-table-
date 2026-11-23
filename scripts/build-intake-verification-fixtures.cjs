@@ -64,13 +64,9 @@ for (const r of selected) {
       const t = W.prepare(r, e, kind);
       if (t.blocked || !t.port) continue;
       const p = t.port;
-      const option = ["attack", "ability"].includes(kind)
-        ? p.getPokemonActions("you", t.sourceId).find(o =>
-            o.kind === kind && (kind === "attack"
-              ? o.action.attackIndex === e.effectIndex
-              : o.label === e.name))
-        : p.getHandOptions("you", t.sourceId).find(o => o.ok);
+      const option = W.effectOption(t, e);
       if (!(option && (option.ok ?? option.enabled))) continue;
+      if (kind === "ability" && option.action.type !== "use_ability") continue;
       const game = p.getSnapshot();
       if (!p.dispatch("you", option.action).ok) continue;
       const printedDamageEvents = ["VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE",

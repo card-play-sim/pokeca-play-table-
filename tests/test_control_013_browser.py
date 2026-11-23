@@ -87,7 +87,12 @@ async def main():
    else:await page.locator('#sheet-close').tap()
    before=await snap();option=f['option'];assert option
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
-   if f['kind'] in ('attack','ability'):
+   hand_ability=(f['kind']=='ability' and
+                 any(card['id']==ident for card in before['players'][0]['hand']))
+   if hand_ability:
+    await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
+    await page.locator('#hand-actions [data-action-type="use_ability"]').filter(has_text=option['label']).tap()
+   elif f['kind'] in ('attack','ability'):
     await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
     if f["kind"]=="attack":await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(f'#attack-actions [data-action-kind="attack"][data-attack-index="{option["action"]["attackIndex"]}"]').tap()
     else:await page.locator('#pokemon-actions [data-action-kind="ability"]').filter(has_text=option['label']).tap()
@@ -135,6 +140,13 @@ async def main():
     assert before['stadium'] and after['stadium'] is None
     owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])
     assert before['stadium']['id'] in {card['id'] for card in owner['discard']}
+   if m=='EXCITE_DIVE':
+    assert hand_ability
+    before_source=next(card for card in before['players'][0]['hand'] if card['id']==ident)
+    entered=next(card for card in after['players'][0]['bench'] if card['id']==ident)
+    assert entered['validationReference']['officialCardId']==r['officialCardId']
+    assert entered['stage']==before_source['stage']
+    assert all(card['id']!=ident for card in after['players'][0]['hand'])
    if m=='COIN_UNTIL_TAILS_DAMAGE':
     flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
     assert flips and flips[-1] is False and all(flips[:-1])

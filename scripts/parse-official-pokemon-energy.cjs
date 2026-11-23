@@ -20,6 +20,20 @@ function predecessor(right,stage,name){
    return label(previous[2]);
  }
  const ordinary=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));
+ if(ordinary.length!==stage){
+  // Some final evolutions share a display row with alternate print families
+  // or a later BREAK evolution. The predecessor is the arrow-linked row
+  // below the one marked as current, never an alternate inside the same box.
+  const current=[...evolution.matchAll(/<div class="(?:in-box|evolution) ev_on">\s*<a\b[^>]*>([^<]+)<\/a>/g)];
+  const boxedCurrent=/<div class="in-box ev_on">\s*<a\b[^>]*>([^<]+)<\/a>\s*<\/div>\s*<\/div>/g;
+  const boxed=[...evolution.matchAll(boxedCurrent)];
+  if(current.length===1&&boxed.length===1&&label(boxed[0][1])===name){
+   const tail=evolution.slice(boxed[0].index+boxed[0][0].length);
+   const rows=[...tail.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>\s*<div class="arrow_off"><\/div>\s*<\/div>/g)];
+   if(rows.length===stage&&rows.map(row=>row[0]).join('').replace(/\s/g,'')===tail.replace(/\s/g,''))
+    return label(rows[0][1]);
+  }
+ }
  assert(ordinary.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
  return ordinary[0];
 }
@@ -28,12 +42,16 @@ function parse(html,{enableTeraRule=false}={}){
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
  if(/^<h2[^>]*>基本エネルギー<\/h2>\s*<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
  if(/<h2[^>]*>特殊エネルギー<\/h2>/.test(right.slice(first,first+90))){const section=right.slice(first).match(/^<h2[^>]*>特殊エネルギー<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/div>/);assert(section,'UNSUPPORTED_ENERGY_PARAGRAPHS');return {category:'energy',text:text(section[1]),attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false}};}
- // Recognize only the exact official ex prize rule; other special rules fail closed.
+ // These exact official rules affect prize count, which the battle engine already enforces.
  const special=right.match(/<h2[^>]*>特別なルール<\/h2>\s*<p><p>([^<]*)<\/p><\/p>/);
- const exPrizeRule='ポケモンexがきぜつしたとき、相手はサイドを2枚とる。';
+ const prizeRules=new Map([
+  ['ポケモンexがきぜつしたとき、相手はサイドを2枚とる。',2],
+  ['メガシンカexがきぜつしたとき、相手はサイドを3枚とる。',3]
+ ]);
+ const prizeCount=special&&prizeRules.get(special[1].trim());
  if(/<h[234][^>]*>特別なルール<\/h[234]>/.test(right))
-  assert(special&&special[1].trim()===exPrizeRule,'UNSUPPORTED_POKEMON_RULE_SECTION');
- const rulePokemon=Boolean(special);
+  assert(prizeCount,'UNSUPPORTED_POKEMON_RULE_SECTION');
+ const rulePokemon=Boolean(prizeCount);
  const top=right.slice(0,first),stageText=text(top.match(/<span class="type">(.*?)<\/span>/s)?.[1]||'').replace(/\s/g,''),stage=stageText==='たね'?0:stageText==='1進化'?1:stageText==='2進化'?2:null;assert(stage!==null,'UNSUPPORTED_POKEMON_STAGE');
  const topParagraphs=[...top.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)].map(m=>text(m[1]));assert(topParagraphs.every(t=>t==='このポケモンは、ベンチにいるかぎり、ワザのダメージを受けない。'),'UNSUPPORTED_TOP_RULE');const teraBenchProtection=enableTeraRule&&topParagraphs.length>0;
  const hp=Number(top.match(/<span class="hp-num">(\d+)<\/span>/)?.[1]);assert(hp>0&&Number.isSafeInteger(hp),'MISSING_PRINTED_HP');const types=tokens(top);assert(types.length===1,'UNSUPPORTED_POKEMON_TYPES');
@@ -48,7 +66,7 @@ function parse(html,{enableTeraRule=false}={}){
  }
  assert(!block.slice(cursor).trim()&&attacks.length,'UNPARSED_EFFECT_BOUNDARY');
  const evolvesFrom=predecessor(right,stage,label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''));
- return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:rulePokemon?2:1,rulePokemon,teraBenchProtection}};
+ return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:prizeCount||1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}
 module.exports={parse,text};
