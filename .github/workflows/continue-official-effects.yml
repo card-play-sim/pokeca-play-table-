@@ -7,6 +7,18 @@ on:
     paths:
       - '.github/workflows/continue-official-effects.yml'
       - 'scripts/list-card-auto-connect-ids.cjs'
+      # A parser/Mechanic patch must automatically reopen the same blocked
+      # official printings and rerun their full battle execution gate.
+      - 'scripts/continue-official-effect-intake.py'
+      - 'scripts/collect-effect-extensions.py'
+      - 'scripts/parse-official-pokemon-energy.cjs'
+      - 'scripts/build-effect-extensions.cjs'
+      - 'scripts/stage-card-auto-connect.cjs'
+      - 'scripts/atomic-battle-connection-ledger.cjs'
+      - 'scripts/run-atomic-official-battle-intake.cjs'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'ui/engine.bundle.js'
   workflow_dispatch:
     inputs:
       limit:
@@ -77,12 +89,13 @@ jobs:
           fi
       - name: Discover unclassified prints using official standard search
         run: python tools/classify-deck-search.py --discover
-      - name: Atomically acquire official cards and connect all executable effects to real battle
+      - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
           INTAKE_LIMIT: ${{ inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
+          python -m unittest discover -s tests -p test_atomic_parser_retry.py
           node tests/bulk-basic-energy-intake.test.cjs
           # One command owns official acquisition, shared mechanic compilation, execution,
           # print-specific release, and persistent unresolved effect work units.
