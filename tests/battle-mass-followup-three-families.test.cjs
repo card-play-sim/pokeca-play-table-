@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
-const {compile}=require('../engine/reference-effect-plans.cjs');
+const {compile,norm}=require('../engine/reference-effect-plans.cjs');
 
 // These are verbatim complete official effect bodies, not a partial-word parser.
 const bodies={
@@ -50,7 +50,7 @@ for(const [category,kind,body,minimum] of [
  ['supporter','supporter',bodies.supporter,9],
  ['pokemon','attack',bodies.attack,7]
 ]){
- const matches=groups.filter(g=>g.category===category&&g.effectKind===kind&&g.exampleOfficialText===body);
+ const matches=groups.filter(g=>g.category===category&&g.effectKind===kind&&norm(g.exampleOfficialText)===norm(body));
  assert(matches.reduce((n,g)=>n+g.effectSlots,0)>=minimum,
   'INSUFFICIENT_OFFICIAL_EVIDENCE_FOR_SHARED_FAMILY:'+category);
 }
