@@ -5,28 +5,28 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 613,
-      "missing": 1089
+      "connected": 625,
+      "missing": 1077
     },
     "J": {
       "total": 870,
-      "connected": 306,
-      "missing": 564
+      "connected": 309,
+      "missing": 561
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 607,
-      "MECHANIC_REQUIRED": 173,
+      "CONNECTED_UNTESTED": 619,
+      "MECHANIC_REQUIRED": 167,
       "EVIDENCE_UNVERIFIED": 99,
-      "ENGINE_CONNECTION_REQUIRED": 817,
+      "ENGINE_CONNECTION_REQUIRED": 811,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 305,
-      "MECHANIC_REQUIRED": 73,
+      "CONNECTED_UNTESTED": 308,
+      "MECHANIC_REQUIRED": 72,
       "EVIDENCE_UNVERIFIED": 106,
-      "ENGINE_CONNECTION_REQUIRED": 385,
+      "ENGINE_CONNECTION_REQUIRED": 383,
       "EXECUTION_PASS": 1
     }
   },
@@ -1343,8 +1343,7 @@
       "name": "ホップのザシアンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47077.json"
     },
     {
@@ -1504,8 +1503,7 @@
       "name": "ホップのザシアンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47238.json"
     },
     {
@@ -1522,8 +1520,7 @@
       "name": "ホップのザシアンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47248.json"
     },
     {
@@ -3274,8 +3271,7 @@
       "name": "リオル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47761.json"
     },
     {
@@ -4884,8 +4880,7 @@
       "name": "リオル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48425.json"
     },
     {
@@ -5269,8 +5264,7 @@
       "name": "ブリザポス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48564.json"
     },
     {
@@ -5458,8 +5452,7 @@
       "name": "リオル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48613.json"
     },
     {
@@ -5587,8 +5580,7 @@
       "name": "ホップのザシアンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48645.json"
     },
     {
@@ -6718,8 +6710,7 @@
       "name": "ホップのザシアンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49243.json"
     },
     {
@@ -6956,8 +6947,7 @@
       "name": "ジジーロン",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49337.json"
     },
     {
@@ -8387,8 +8377,7 @@
       "name": "コータス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50352.json"
     },
     {
@@ -8679,8 +8668,7 @@
       "name": "ミライドン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50417.json"
     },
     {
@@ -19853,8 +19841,7 @@
       "name": "ブリザポス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50820.json"
     },
     {
@@ -20268,8 +20255,7 @@
       "name": "リオル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48260.json"
     },
     {
@@ -20864,8 +20850,7 @@
       "name": "リオル",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50492.json"
     },
     {
@@ -22236,21 +22221,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1134,
-        "ENGINE_CONNECTED": 665,
+        "MECHANIC_REQUIRED": 1128,
+        "ENGINE_CONNECTED": 671,
         "EVIDENCE_UNVERIFIED": 65
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 613,
-        "MECHANIC_REQUIRED": 987,
+        "ENGINE_CONNECTED": 625,
+        "MECHANIC_REQUIRED": 975,
         "EVIDENCE_UNVERIFIED": 99,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 305,
-        "MECHANIC_REQUIRED": 452,
+        "ENGINE_CONNECTED": 308,
+        "MECHANIC_REQUIRED": 449,
         "EVIDENCE_UNVERIFIED": 109,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
@@ -22261,7 +22246,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2212,
-    "unconnected": 2861
+    "engineConnected": 2233,
+    "unconnected": 2840
   }
 }
