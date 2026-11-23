@@ -502,7 +502,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -830,6 +830,14 @@ function preflight(g,actor,action){
    assert(g.turnNumber!==1,'FIRST_PLAYER_FIRST_TURN_ATTACK');assert(mon.referenceCannotAttackTurn!==g.turnNumber,'ATTACK_DISABLED_THIS_TURN');assert(!(mon.referenceNamedAttackLock?.turn===g.turnNumber&&mon.referenceNamedAttackLock.attackName===a.name),'NAMED_ATTACK_LOCKED_THIS_TURN');
    assert(!['ASLEEP','PARALYZED'].includes(mon.statusCondition),'ATTACK_BLOCKED_BY_STATUS');
    if(!a.cost.every(t=>[...basicTypes,'無色'].includes(t)))stop(mon,a,'UNREVIEWED_ENERGY_SYMBOL');
+   // Continuous Rocket Team ability: include the attacking Pokemon itself.
+   // Suppressed abilities must not block a legitimate attack.
+   for(const ability of enabledAbilities(g,mon)){
+    if(ability.plan.mechanic==='PASSIVE_ROCKET_TEAM_ATTACK_GATE'){
+     const available=field(p).filter(c=>record(c).name.startsWith('ロケット団の')).length;
+     assert(available>=ability.plan.required,'ROCKET_TEAM_ATTACK_REQUIREMENT');
+    }
+   }
    assert(pays(mon,cost(g,mon,a)),'INSUFFICIENT_VERIFIED_ENERGY');verifyRequests(g,actor,mon,a,action);
 
   }else if(action.type==='use_ability'){
