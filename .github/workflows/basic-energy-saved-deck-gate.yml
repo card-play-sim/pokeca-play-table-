@@ -5,6 +5,9 @@ on:
       - 'tests/user-basic-energy-42945-diagnostic.test.cjs'
       - 'ui/saved-decks.js'
       - 'ui/deck-home.js'
+      - 'ui/pwa-recovery.js'
+      - 'update.html'
+      - 'tests/pwa-recovery-exact-release.test.cjs'
       - 'ui/deck-code-import.js'
       - '.github/workflows/basic-energy-saved-deck-gate.yml'
   workflow_dispatch:
@@ -20,4 +23,6 @@ jobs:
         with:
           node-version: '22'
       - name: Diagnose actual official 42945 and engine coverage
-        run: node tests/user-basic-energy-42945-diagnostic.test.cjs
+        run: |
+          node tests/user-basic-energy-42945-diagnostic.test.cjs
+          node tests/pwa-recovery-exact-release.test.cjs
