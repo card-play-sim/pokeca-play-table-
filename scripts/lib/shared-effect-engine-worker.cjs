@@ -581,9 +581,9 @@ function verifyCase(t, e) {
     const replay=port(future);
     const sameAttack=t.action||o.action;
     assert.equal(replay.dispatch('you',sameAttack).ok,false);
-    assert.deepEqual(B.canonical(replay.getSnapshot()),B.canonical(future));
+    assert.equal(JSON.stringify(B.canonical(replay.getSnapshot())),JSON.stringify(B.canonical(future)));
     assert(p.restoreSession(p.getResumeSnapshot()).ok);
-    assert.deepEqual(B.canonical(p.getSnapshot()),B.canonical(after));
+    assert.equal(JSON.stringify(B.canonical(p.getSnapshot())),JSON.stringify(B.canonical(after)));
   }
   if (e.plan.mechanic === "COIN_PARALYZE_ATTACK") {
     for (const [seed, heads] of [[0, true], [682, false]]) {
