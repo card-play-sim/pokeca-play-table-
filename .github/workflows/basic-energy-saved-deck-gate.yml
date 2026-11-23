@@ -8,6 +8,7 @@ on:
       - 'ui/pwa-recovery.js'
       - 'update.html'
       - 'tests/pwa-recovery-exact-release.test.cjs'
+      - 'tests/test_basic_energy_42945_recovery_browser.py'
       - 'ui/deck-code-import.js'
       - '.github/workflows/basic-energy-saved-deck-gate.yml'
   workflow_dispatch:
@@ -26,3 +27,23 @@ jobs:
         run: |
           node tests/user-basic-energy-42945-diagnostic.test.cjs
           node tests/pwa-recovery-exact-release.test.cjs
+  basic-energy-android-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Recover same-build old PWA and start real 42945 reference match
+        run: python tests/test_basic_energy_42945_recovery_browser.py
+      - name: Preserve original official print and upgrade evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: basic-energy-42945-android-recovery
+          path: artifacts/basic-energy-42945-recovery-browser.json
+          if-no-files-found: warn
+          retention-days: 14
