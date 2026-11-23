@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 651,
-      "missing": 1051
+      "connected": 660,
+      "missing": 1042
     },
     "J": {
       "total": 870,
@@ -16,10 +16,10 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 645,
-      "MECHANIC_REQUIRED": 163,
+      "CONNECTED_UNTESTED": 654,
+      "MECHANIC_REQUIRED": 159,
       "EVIDENCE_UNVERIFIED": 99,
-      "ENGINE_CONNECTION_REQUIRED": 789,
+      "ENGINE_CONNECTION_REQUIRED": 784,
       "EXECUTION_PASS": 6
     },
     "J": {
@@ -1990,8 +1990,7 @@
       "name": "カットロトム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47397.json"
     },
     {
@@ -2065,8 +2064,7 @@
       "name": "ヒートロトム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47414.json"
     },
     {
@@ -2099,8 +2097,7 @@
       "name": "ウォッシュロトム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47421.json"
     },
     {
@@ -9996,8 +9993,7 @@
       "name": "ペパーのマフィティフex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47347.json"
     },
     {
@@ -10139,8 +10135,7 @@
       "name": "ペパーのマフィティフex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47382.json"
     },
     {
@@ -10184,8 +10179,7 @@
       "name": "ペパーのマフィティフex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47389.json"
     },
     {
@@ -13492,8 +13486,7 @@
       "name": "ドータクン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48400.json"
     },
     {
@@ -15707,8 +15700,7 @@
       "name": "ペパーのマフィティフex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49200.json"
     },
     {
@@ -20481,8 +20473,7 @@
       "name": "ペパーのマフィティフex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49615.json"
     },
     {
@@ -22194,14 +22185,14 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1121,
-        "ENGINE_CONNECTED": 678,
+        "MECHANIC_REQUIRED": 1118,
+        "ENGINE_CONNECTED": 681,
         "EVIDENCE_UNVERIFIED": 65
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 651,
-        "MECHANIC_REQUIRED": 949,
+        "ENGINE_CONNECTED": 660,
+        "MECHANIC_REQUIRED": 940,
         "EVIDENCE_UNVERIFIED": 99,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
@@ -22219,7 +22210,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2267,
-    "unconnected": 2806
+    "engineConnected": 2279,
+    "unconnected": 2794
   }
 }
