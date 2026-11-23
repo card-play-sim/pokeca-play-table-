@@ -211,7 +211,7 @@ function plan(entry,kind){
   return {mechanic:'TOOL_RETREAT_DISCOUNT_TWO',commands:['MODIFY_RETREAT_COST'],amount:2};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='このカードは、自分の手札を1枚トラッシュしなければ使えない。自分の手札が6枚になるように、山札を引く。')
   return {mechanic:'SUPPORTER_DISCARD_ONE_DRAW_TO_SIX',commands:['DISCARD','DRAW'],limit:6};
- if(kind==='ATTACK'&&generic==='相手の手札を見る。'&&/^\\d+$/.test(String(entry.damage||'0')))
+ if(kind==='ATTACK'&&generic==='相手の手札を見る。'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_REVEAL_OPPONENT_HAND',commands:['DAMAGE','REVEAL']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
