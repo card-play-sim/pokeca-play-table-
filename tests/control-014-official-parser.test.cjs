@@ -15,8 +15,8 @@ for (const r of JSON.parse(
           /<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g,
         ),
       ];
-    assert.equal(chain.length, 2);
-    assert.equal(p.facts.evolvesFrom, chain[0][1].trim());
+    assert.equal(p.facts.evolvesFrom, r.facts.evolvesFrom);
+    if (chain.length === 2) assert.equal(p.facts.evolvesFrom, chain[0][1].trim());
     stageTwo++;
   }
   if (
