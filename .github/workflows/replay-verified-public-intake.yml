@@ -1,4 +1,4 @@
-name: Replay all 50 published intake slots on Pixel 5 Chromium
+name: Verify exact Issue 164 prints via the published saved-deck UI
 on:
   push:
     branches: [verify/published-battle-intake-36-20261123]
@@ -31,16 +31,15 @@ jobs:
         run: |
           git checkout --detach 1a2fca7e41dd531acb99718997cc58433e4d1164
           git restore --source="$TEST_SHA" -- tests/test_control_013_browser.py scripts/build-intake-verification-fixtures.cjs
+          git show "$TEST_SHA":tests/test_issue_164_public_browser.py > tests/test_issue_164_public_browser.py
           git diff --exit-code -- index.html sw.js ui data
           node scripts/verify-published-pwa.cjs
-      - name: Verify public battle, effect receipts and offline persistence
-        run: |
-          python tests/test_control_013_browser.py
-          python tests/test_published_pwa_browser.py
+      - name: Verify both Issue 164 cards through the real saved-deck UI
+        run: python tests/test_issue_164_public_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: exact-published-intake-replay
+          name: issue-164-published-saved-deck
           path: |
             artifacts/
             test-results/published-pwa-verification.json
