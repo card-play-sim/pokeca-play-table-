@@ -312,7 +312,7 @@ def run(base):
         page.locator("#deck-home-search").fill("マリル")
         expect(page.locator(".deck-home-card")).to_have_count(1)
         tile.get_by_role("button",name="対戦する").click()
-        expect(page.locator("#deck-home-selection")).to_contain_text("選択デッキ（60枚）")
+        expect(page.locator("#deck-home-selection")).to_contain_text("自分：選択デッキ（60/60枚）")
         expect(page.locator("#deck-home-start")).to_be_disabled()
         page.locator("#deck-home-opponent").select_option("fixed:1")
         expect(page.locator("#deck-home-start")).to_be_enabled()
