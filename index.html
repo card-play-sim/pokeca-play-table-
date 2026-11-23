@@ -20,9 +20,14 @@
     <form method="dialog"><button>閉じる</button></form>
   </dialog>
   <dialog id="deck-home-confirm" aria-labelledby="deck-home-confirm-title">
-    <h2 id="deck-home-confirm-title">このデッキで対戦</h2>
+    <h2 id="deck-home-confirm-title">対戦相手を選ぶ</h2>
     <p id="deck-home-selection"></p>
-    <form method="dialog"><button>キャンセル</button><button value="start">対戦準備へ</button></form>
+    <label for="deck-home-opponent">相手のデッキ</label>
+    <select id="deck-home-opponent" aria-describedby="deck-home-match-status" required>
+      <option value="">相手のデッキを選択</option>
+    </select>
+    <p id="deck-home-match-status" role="status">相手のデッキを選んでください。</p>
+    <form method="dialog"><button value="cancel">キャンセル</button><button id="deck-home-start" value="start" disabled>対戦準備へ</button></form>
   </dialog>
 </main>
 <div class="app" id="app" hidden>
