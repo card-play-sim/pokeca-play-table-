@@ -56,8 +56,8 @@ function cli(script, args) {
     assert.equal(resumed.classifierCached, 2);
     assert.equal(resumed.run.processed, 66);
     assert.equal(resumed.run.counts.FAILED, 0);
-    assert.equal(resumed.run.counts.SUCCEEDED, 66);
-    assert.equal(resumed.run.counts.BLOCKED, 2);
+    assert.equal(resumed.run.counts.SUCCEEDED, 67);
+    assert.equal(resumed.run.counts.BLOCKED, 1);
     const repeat = JSON.parse(
       cli("process-shared-effect-batch.cjs", [dir, ...inputs]),
     );
@@ -67,6 +67,9 @@ function cli(script, args) {
     store.close();
     const cases = jobs.flatMap((j) => j.summary.cases);
     assert.equal(cases.length, 140);
+    const handAbilities = cases.filter(c => c.mechanic === "EXCITE_DIVE");
+    assert.ok(handAbilities.length > 0 && handAbilities.every(c => c.status === "SUCCEEDED"));
+
     const blocked = cases.filter((c) => c.status === "BLOCKED");
     assert(
       blocked.every((c) =>
@@ -96,7 +99,7 @@ function cli(script, args) {
       cli("process-shared-effect-batch.cjs", [dir, input]),
     );
     assert.equal(unknown.run.processed, 1);
-    assert.equal(unknown.run.counts.BLOCKED, 3);
+    assert.equal(unknown.run.counts.BLOCKED, 2);
     assert.equal(unknown.run.counts.FAILED, 0);
     const report = {
       status: "PASS",
