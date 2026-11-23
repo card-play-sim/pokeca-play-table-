@@ -1,7 +1,7 @@
 """New effect families via public DOM, persistent game state and offline restart."""
 import asyncio,hashlib,json,os,subprocess,traceback
 from pathlib import Path
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 from test_fixed_deck_browser_images import session_ca_args
 from browser_opening import finish_opening
 ROOT=Path(__file__).resolve().parents[1]
@@ -105,7 +105,22 @@ async def main():
     await select_effect_targets(page,option)
    if f['kind'] in ('attack','ability'):
     await select_effect_targets(page,option)
-   if f['kind'] in ('attack','ability'):await page.locator('#confirm-ok').tap()
+   if f['kind'] in ('attack','ability'):
+    # Some attacks commit immediately after the legal attack choice; in those
+    # cases the confirm dialog is gone. Never silently skip execution: a
+    # recorded action must already exist or the test still fails below.
+    confirm=page.locator('#confirm-ok')
+    if await confirm.is_visible():
+     try:
+      await confirm.tap(timeout=8000)
+     except PlaywrightTimeoutError:
+      current=await snap()
+      assert len(current['history'])>len(before.get('history',[])), (
+       'ATTACK_CONFIRM_DISAPPEARED_WITHOUT_EXECUTION',r['officialCardId'],m)
+    else:
+     current=await snap()
+     assert len(current['history'])>len(before.get('history',[])), (
+      'ATTACK_MISSING_CONFIRM_AND_EXECUTION',r['officialCardId'],m)
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
