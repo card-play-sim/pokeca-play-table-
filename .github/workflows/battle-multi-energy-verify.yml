@@ -1,0 +1,57 @@
+name: Verify official multi-Energy discard batch
+on:
+  push:
+    branches: [battle/shared-exact-energy-payments-20261124]
+    paths:
+      - '.github/workflows/battle-multi-energy-verify.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-and-rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: battle/shared-exact-energy-payments-20261124
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile all official evidence with HIJ only and strict provenance
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/control-014-official-parser.test.cjs
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify official multi-print battle execution and failure isolation
+        run: |
+          node tests/battle-multi-self-energy-official.test.cjs
+          node tests/control-014-shared-effects.test.cjs
+          node tests/control-011-engine-batch.test.cjs
+          node tests/reference-runtime-source-parity.test.cjs
+          node tests/card-auto-connect.test.cjs
+      - name: Commit reproducible effect data and bundled PWA without workflow changes
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: compile and bundle verified multi-Energy official attacks'
+            git push origin HEAD:battle/shared-exact-energy-payments-20261124
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-multi-energy-battle-audit
+          path: |
+            test-results/battle-multi-self-energy-official.json
+            test-results/control-014-shared-effects.json
+          if-no-files-found: warn
