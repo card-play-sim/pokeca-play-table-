@@ -71,6 +71,9 @@ const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function additionalAttackPlan(entry,text){
  const printed=String(entry.damage).normalize('NFKC');
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
+ const discardBasic=text.match(/^自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(discardBasic&&printed===discardBasic[1]+'×')
+  return {mechanic:'ATTACK_DISCARD_FIELD_BASIC',commands:['DISCARD','DAMAGE'],unit:Number(discardBasic[1])};
  const additionalFlips=text.match(/^コインを([1-9]\d?)回投げ、オモテの数×([1-9]\d{0,2})ダメージ追加。$/);
  if(additionalFlips&&base!==null&&printed.endsWith('+'))
   return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(additionalFlips[1]),unit:Number(additionalFlips[2]),base};
@@ -85,6 +88,30 @@ function additionalAttackPlan(entry,text){
   };
   return {mechanic:'CONDITIONAL_ATTACK_BONUS',commands:['DAMAGE'],predicate:predicates[conditional[1]],base,bonus:Number(conditional[2])};
  }
+ const specific=text.match(/^(相手のバトルポケモンがどくなら|このポケモンがどくなら|このポケモンにダメカンがのっているなら|このポケモンに「ポケモンのどうぐ」がついているなら|相手のバトルポケモンに「ポケモンのどうぐ」がついているなら|自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら)、([1-9]\d{0,2})ダメージ追加。$/);
+ if(specific&&base!==null&&printed.endsWith('+')){
+  const predicates={
+   '相手のバトルポケモンがどくなら':'opponentPoisoned','このポケモンがどくなら':'ownPoisoned',
+   'このポケモンにダメカンがのっているなら':'ownDamaged',
+   'このポケモンに「ポケモンのどうぐ」がついているなら':'ownTool',
+   '相手のバトルポケモンに「ポケモンのどうぐ」がついているなら':'opponentTool',
+   '自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら':'ownMorePrizes'
+  };
+  return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate:predicates[specific[1]],base,bonus:Number(specific[2])};
+ }
+ const context=text.match(/^(相手のサイドの残り枚数が([1-6])枚以下なら|相手の手札が([1-9]\d?)枚以下なら|相手のバトルポケモンが([12])進化ポケモンなら|このワザを使うためのエネルギーより、([1-6])個多くエネルギーがついているなら|このポケモンに\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギーがついているなら)、([1-9]\d{0,2})ダメージ追加。$/);
+ if(context&&base!==null&&printed.endsWith('+')){
+  const [, ,prizes,hand,stage,extraEnergy,type,bonus]=context;
+  const predicate=prizes?'opponentPrizes':hand?'opponentHand':stage?'opponentStage':extraEnergy?'extraEnergy':'ownEnergyType';
+  return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate,base,bonus:Number(bonus),
+   ...(type?{type}:{threshold:Number(prizes||hand||stage||extraEnergy)})};
+ }
+ const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
+ if(numeric&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};
+ const prizeRecoil=text.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。このポケモンにも([1-9]\d{0,2})ダメージ。$/);
+ if(prizeRecoil&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'ATTACK_PRIZE_BONUS_RECOIL',commands:['DAMAGE'],base,unit:Number(prizeRecoil[1]),recoil:Number(prizeRecoil[2])};
  const scaled=text.match(/^(相手のバトルポケモンにのっているダメカン|(?:このポケモン|相手のバトルポケモン|相手のポケモン全員)についている(?:\[(?:草|炎|水|雷|超|闘|悪|鋼)\])?エネルギー|自分の場のポケモン)の数×([1-9]\d{0,2})ダメージ(追加)?。$/);
  if(scaled&&(scaled[3]?base!==null&&printed.endsWith('+'):printed===scaled[2]+'×')){
   const source=scaled[1],type=source.match(/\[([^\]]+)\]/)?.[1]||null;
@@ -92,6 +119,28 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
  }
  if(base===null||printed.endsWith('+'))return null;
+ const deal=base?['DAMAGE']:[];
+ const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);
+ const hiddenReturn=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、そのカードのオモテを見て、相手の山札にもどして切る。$/);
+ if(hiddenDiscard||hiddenReturn)
+  return {mechanic:'ATTACK_BLIND_HAND_CHOICE',commands:[...deal,...(hiddenReturn?['REVEAL','RETURN_TO_DECK','SHUFFLE_DECK']:['DISCARD'])],
+   amount:Number((hiddenDiscard||hiddenReturn)[1]),destination:hiddenReturn?'deck':'discard'};
+ const spread=text.match(/^(相手のポケモン|相手のベンチポケモン|自分のベンチポケモン)(全員|[1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(spread&&((spread[3]==='にも')===(base>0))&&!(spread[1]==='相手のポケモン'&&(base||spread[2]==='1匹')))
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:spread[1]==='相手のポケモン'?'opponent':spread[1].startsWith('自分')?'ownBench':'opponentBench',
+   amount:Number(spread[4]),count:spread[2]==='全員'?null:Number.parseInt(spread[2],10)};
+ const optionalDraw=text.match(/^のぞむなら、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
+ if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
+ const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
+ if(discardHand)return {mechanic:'ATTACK_DISCARD_HAND_DRAW',commands:[...deal,'DISCARD','DRAW'],amount:Number(discardHand[1]),sharedWording:true};
+ const discardEnergy=text.match(/^相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
+ if(discardEnergy)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:Boolean(discardEnergy[1])};
+ const healTarget=text.match(/^自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
+ if(healTarget)return {mechanic:'ATTACK_HEAL_OWN_TARGET',commands:[...deal,'HEAL'],amount:Number(healTarget[1])};
+ const friendlySplash=text.match(/^自分のベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(friendlySplash&&base>0)return {mechanic:'ATTACK_SPLASH_OWN_BENCH',commands:['DAMAGE'],benchDamage:Number(friendlySplash[1])};
+ if(text==='相手のバトルポケモンが持つワザを1つ選ぶ。次の相手の番、このワザを受けたポケモンは、選ばれたワザが使えない。')
+  return {mechanic:'ATTACK_DISABLE_SELECTED_MOVE',commands:[...deal,'ADD_STATE']};
  const chosenTarget=text.match(/^相手のポケモン1匹に、([1-9]\d{0,2})ダメージ。(?:\[ベンチは弱点・抵抗力を計算しない。\]|ベンチは弱点・抵抗力を計算しない。)$/);
  if(chosenTarget&&base===0)return {mechanic:'ANY_DAMAGE',commands:['DAMAGE'],amount:Number(chosenTarget[1])};
  const reset=text.match(/^自分の手札をすべて山札にもどして切る。その後、山札を([1-9]\d?)枚引く。$/);

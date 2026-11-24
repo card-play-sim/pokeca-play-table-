@@ -176,7 +176,7 @@ function prepare(r, e, kind) {
   const rocketTeamCount = kind === "attack"
     ? r.abilities.find(ability => ability.plan?.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE")?.plan.required
     : undefined;
-  if (kind === "attack") {
+  if (kind === "attack" || m === "RECOVER_TYPED_DISCARD") {
     const cards = manifest.decks[locations[0].deck].cards;
     if (rocketTeamCount) {
       const teammate = [...records.values()].find(record =>
@@ -196,6 +196,7 @@ function prepare(r, e, kind) {
     for (const type of e.cost || []) {
       if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
     }
+    if (m === "RECOVER_TYPED_DISCARD") needed.set(e.plan.type, e.plan.amount);
     const basicType = reference => reference?.mainPlan?.mechanic === "BASIC_ENERGY"
       ? reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1]
       : null;
@@ -206,14 +207,30 @@ function prepare(r, e, kind) {
         .reduce((total, card) => total + card.count, 0);
       if (available >= count) continue;
       const reference = [...records.values()].find(card => basicType(card) === type);
-      const donor = cards.find(card => card.category === "energy" && card.count >= count - available
-        && !needed.has(entryType(card)));
-      if (!reference || !donor) continue;
-      donor.count -= count - available;
+      const donors = cards.filter(card => card.category === "energy" && !needed.has(entryType(card)));
+      if (!reference || donors.reduce((total, card) => total + card.count, 0) < count - available) continue;
+      let missing = count - available;
+      for (const donor of donors) {
+        const moved = Math.min(missing, donor.count);
+        donor.count -= moved;
+        missing -= moved;
+      }
       cards.push({name:reference.name, category:"energy", count:count - available,
         referenceOfficialCardId:reference.officialCardId});
     }
     manifest.decks[locations[0].deck].cards = cards.filter(card => card.count);
+  }
+  if (m === "ATTACK_DISCARD_DEFENDER_ENERGY" && e.plan.specialOnly) {
+    const opponentEntries = manifest.decks[1-locations[0].deck].cards;
+    const ignition = [...records.values()].find(record => record.mainPlan?.mechanic === "IGNITION");
+    if (!ignition) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
+    if (!opponentEntries.some(card => card.name === ignition.deckName)) {
+      const donor = opponentEntries.find(card => card.category === "energy" && card.count > 1);
+      if (!donor) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
+      donor.count--;
+      opponentEntries.push({name:ignition.deckName,category:"energy",count:1,
+        referenceOfficialCardId:ignition.officialCardId});
+    }
   }
   const row = {
     cardName: r.deckName,
@@ -296,14 +313,20 @@ function prepare(r, e, kind) {
       40,
       frame.game.players[0].active.hp - 10,
     );
-  if (m === "RECOVER_TYPED_DISCARD") {
+  if (m === "HEAL_DAMAGE") frame.game.players[0].active.damage = 40;
+  if (["RECOVER_TYPED_DISCARD", "RECOVER_BASIC_ENERGY"].includes(m)) {
     const p = frame.game.players[0],
       eligible = (c) =>
         c.kind === "pokemon"
-          ? E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)
-          : c.kind === "energy" && !c.isSpecial && c.energyType === e.plan.type;
-    for (const c of [...p.deck].filter(eligible).slice(0, e.plan.amount))
-      p.discard.push(p.deck.splice(p.deck.indexOf(c), 1)[0]);
+          ? m === "RECOVER_TYPED_DISCARD" && E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)
+          : c.kind === "energy" && !c.isSpecial && (!e.plan.type || c.energyType === e.plan.type);
+    const resources = [p.deck, p.hand, p.prizeCards];
+    while (p.discard.filter(eligible).length < e.plan.amount) {
+      const zone = resources.find(cards => cards.some(eligible));
+      if (!zone) break;
+      p.discard.push(zone.splice(zone.findIndex(eligible), 1)[0]);
+    }
+    while (p.prizeCards.length < p.prizes && p.deck.length) p.prizeCards.push(p.deck.shift());
   }
   if (m === "RETREAT_LOCK_ATTACK") {
     const opponent = frame.game.players[1];
@@ -357,6 +380,47 @@ function prepare(r, e, kind) {
       if (!energy.isSpecial) continue;
       own.active.energyCards.splice(own.active.energyCards.indexOf(energy), 1);
       own.deck.push(energy);
+    }
+    if (e.plan.metric === "ownDiscardEnergy") {
+      const index = own.deck.findIndex(card => card.kind === "energy");
+      if (index >= 0) own.discard.push(own.deck.splice(index, 1)[0]);
+    }
+  }
+  if (["ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_HEAL_OWN_TARGET","ATTACK_DISCARD_DEFENDER_ENERGY",
+    "ATTACK_DISCARD_FIELD_BASIC","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
+    const [own, other] = frame.game.players;
+    if (m === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
+      own.deck.push(...own.hand.splice(Math.max(0,e.plan.limit-1)));
+    }
+    if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
+    if (m === "ATTACK_DISCARD_DEFENDER_ENERGY") {
+      const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly;
+      const zone = [other.deck, other.hand, other.prizeCards].find(cards => cards.some(eligible));
+      if (!zone) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
+      other.active.energyCards.push(zone.splice(zone.findIndex(eligible), 1)[0]);
+      if (zone === other.prizeCards && other.deck.length) other.prizeCards.push(other.deck.shift());
+    }
+    if (m === "ATTACK_DISCARD_FIELD_BASIC" && own.bench.length) {
+      const energies = own.active.energyCards.filter(card => !card.isSpecial);
+      if (energies.length > e.cost.length) {
+        const energy = energies.find(card => !e.cost.includes(card.energyType));
+        if (energy) own.bench[0].energyCards.push(own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1)[0]);
+      }
+    }
+    if (m === "CONTEXT_ATTACK_BONUS") {
+      if (e.plan.predicate === "opponentPoisoned") other.active.statusCondition = "POISONED";
+      if (e.plan.predicate === "ownPoisoned") own.active.statusCondition = "POISONED";
+      if (e.plan.predicate === "ownDamaged") own.active.damage = 10;
+      const side = e.plan.predicate === "ownTool" ? own : e.plan.predicate === "opponentTool" ? other : null;
+      if (side) {
+        const index = side.deck.findIndex(card => E.getReferenceEffectRecord(card)?.mainPlan?.mechanic === "CIRCULATOR");
+        if (index >= 0) side.active.tools.push(side.deck.splice(index,1)[0]);
+      }
+    }
+    if (["CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL","ATTACK_OPTIONAL_DRAW_TO_LIMIT"].includes(m)) {
+      const specials=own.active.energyCards.filter(energy=>energy.isSpecial);
+      own.active.energyCards=own.active.energyCards.filter(energy=>!energy.isSpecial);
+      own.deck.push(...specials);
     }
   }
   const p = port(frame.game);
@@ -472,6 +536,69 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if (e.plan.mechanic === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
+    const chosen=o.action.selections.drawChoice;
+    assert.deepEqual(Array.from(chosen),["draw"]);
+    const amount=Math.min(attackingSide.deck.length,e.plan.limit-attackingSide.hand.length);
+    assert.equal(after.players[0].hand.length,attackingSide.hand.length+amount);
+    const replay=port(before);
+    assert(replay.dispatch("you",{...o.action,selections:{drawChoice:["skip"]}}).ok);
+    assert.equal(replay.getSnapshot().players[0].hand.length,attackingSide.hand.length);
+  }
+  if (e.plan.mechanic === "ATTACK_HEAL_OWN_TARGET") {
+    const target=o.action.selections.healTarget[0];
+    const original=[attackingSide.active,...attackingSide.bench].find(card=>card.id===target);
+    assert(effectEvents.some(step=>step?.command==="HEAL"&&step.targetInstanceId===target&&step.amount===Math.min(original.damage,e.plan.amount)));
+  }
+  if (["ATTACK_DISCARD_FIELD_BASIC","ATTACK_DISCARD_DEFENDER_ENERGY"].includes(e.plan.mechanic)) {
+    const own=e.plan.mechanic==="ATTACK_DISCARD_FIELD_BASIC",side=own?0:1,energy=o.action.selections.energy;
+    assert(energy.length>0);
+    for(const id of energy) {
+      assert(after.players[side].discard.some(card=>card.id===id));
+      assert(effectEvents.some(step=>step?.command==="DISCARD"&&step.fromZone==="attached"&&step.cardIds?.includes(id)));
+    }
+    if(own)assert(effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ATTACK_DISABLE_SELECTED_MOVE") {
+    const move=E.getReferenceEffectRecord(defendingSide.active).attacks.find(attack=>attack.effectId===o.action.selections.attackChoice[0]);
+    const target=[after.players[1].active,...after.players[1].bench].find(card=>card?.id===defendingSide.active.id);
+    if(target) {
+      assert.equal(target.referenceNamedAttackLock?.turn,before.turnNumber+1);
+      assert.equal(target.referenceNamedAttackLock?.attackName,move.name);
+    } else assert(after.players[1].discard.some(card=>card.id===defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ATTACK_BLIND_HAND_CHOICE") {
+    assert(o.requests[0].candidates.every(c=>/^hand-slot-\d+$/.test(c.id)&&!c.validationReference));
+    const prior=defendingSide.hand;
+    const moved=prior.filter(card=>!after.players[1].hand.some(now=>now.id===card.id));
+    assert.equal(moved.length,Math.min(e.plan.amount,prior.length));
+    assert(moved.every(card=>after.players[1][e.plan.destination].some(now=>now.id===card.id)));
+    if(e.plan.destination==="deck") assert(effectEvents.some(step=>step?.command==="REVEAL"&&
+      step.privateTo==="you"&&moved.every(card=>step.cardIds.includes(card.id))));
+  }
+  if (["ATTACK_SPLASH_OWN_BENCH","ATTACK_SPREAD_DAMAGE"].includes(e.plan.mechanic)) {
+    const targets=e.plan.mechanic==="ATTACK_SPLASH_OWN_BENCH"||e.plan.scope==="ownBench" ? attackingSide.bench :
+      e.plan.scope==="opponentBench" ? defendingSide.bench : [defendingSide.active,...defendingSide.bench];
+    const chosen=e.plan.count==null?targets.map(card=>card.id):o.action.targetIds;
+    assert(chosen.length>0);
+    assert(chosen.every(id=>effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===id)));
+  }
+  if (e.plan.mechanic === "ATTACK_PRIZE_BONUS_RECOIL") {
+    verifyPrintedAttack(before,after,e,e.plan.base+(6-defendingSide.prizes)*e.plan.unit);
+    assert(effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===attackingSide.active.id&&step.amount===e.plan.recoil));
+  }
+  if (e.plan.mechanic === "CONTEXT_ATTACK_BONUS") {
+    const print=E.getReferenceEffectRecord(defendingSide.active);
+    const conditions={
+      opponentPoisoned:defendingSide.active.statusCondition==="POISONED",ownPoisoned:attackingSide.active.statusCondition==="POISONED",
+      ownDamaged:attackingSide.active.damage>0,ownTool:!!attackingSide.active.tools.length,opponentTool:!!defendingSide.active.tools.length,
+      ownMorePrizes:attackingSide.prizes>defendingSide.prizes,opponentPrizes:defendingSide.prizes<=e.plan.threshold,
+      opponentHand:defendingSide.hand.length<=e.plan.threshold,opponentStage:print.facts.stage===e.plan.threshold,
+      extraEnergy:attackingSide.active.energyCards.length>=e.cost.length+e.plan.threshold,
+      ownEnergyType:attackingSide.active.energyCards.some(card=>card.energyType===e.plan.type),
+    };
+    verifyPrintedAttack(before,after,e,e.plan.base+(conditions[e.plan.predicate]?e.plan.bonus:0));
+  }
   if (e.plan.mechanic === "CONDITIONAL_ATTACK_BONUS") {
     const print = E.getReferenceEffectRecord(defendingSide.active);
     const conditions = {
@@ -494,6 +621,8 @@ function verifyCase(t, e) {
     const metrics = {
       opponentCounters: defendingSide.active.damage / 10,
       ownPokemon: 1 + attackingSide.bench.length,
+      opponentRetreat: defendingSide.active.retreatCost,
+      ownDiscardEnergy: attackingSide.discard.filter(card=>card.kind==="energy").length,
       ownEnergy: count([attackingSide.active]),
       opponentEnergy: count([defendingSide.active]),
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
