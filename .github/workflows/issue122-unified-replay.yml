@@ -41,7 +41,33 @@ jobs:
               if ! git apply --3way --index "/tmp/issue122-replay/$sha.patch"; then
                 git status --short
                 git diff --cc
-                exit 1
+                # Resolve only the three reviewed, additive conflicts of the first source patch.
+                if [ "$sha" != "8d0f5c36214fb7ca17226fad7a22067a5ecee236" ]; then exit 1; fi
+                python <<'PY'
+          import pathlib, re, subprocess
+          expected = {
+              'engine/pokeca_reference_effect_runtime.cjs': ('case \'TRAINER_SWITCH_OR_EX_V_BOOST\':', "case 'MASS_EFFECT_SEQUENCE':"),
+              'scripts/build-intake-verification-fixtures.cjs': ('"TOOL_PRIZE_COST_DISCOUNT"', '"MASS_EFFECT_SEQUENCE"'),
+              'tests/test_control_013_browser.py': ("if m=='PASSIVE_TYPED_ATTACK_IMMUNITY':", "if m=='MASS_EFFECT_SEQUENCE':"),
+          }
+          conflicts=set(subprocess.check_output(['git','diff','--name-only','--diff-filter=U'],text=True).splitlines())
+          assert conflicts==set(expected), conflicts
+          pattern=re.compile(r'^<<<<<<< ours\n(.*?)^=======\n(.*?)^>>>>>>> theirs\n',re.M|re.S)
+          for name,(left,right) in expected.items():
+              p=pathlib.Path(name); source=p.read_text()
+              found=list(pattern.finditer(source))
+              assert len(found)==1,(name,len(found))
+              match=found[0]; ours,theirs=match.groups()
+              assert left in ours and right in theirs,(name,ours,theirs)
+              if name.endswith('build-intake-verification-fixtures.cjs'):
+                  assert '"MASS_EFFECT_SEQUENCE"' not in ours and '].includes(e.plan.mechanic)' in ours
+                  merged=ours.replace('].includes(e.plan.mechanic)', ',"MASS_EFFECT_SEQUENCE"].includes(e.plan.mechanic)')
+              else:
+                  merged=ours+theirs
+              p.write_text(source[:match.start()]+merged+source[match.end():])
+              subprocess.check_call(['git','add',name])
+          assert not subprocess.check_output(['git','diff','--name-only','--diff-filter=U'],text=True)
+          PY
               fi
               git diff --cached --check
               if ! git diff --cached --quiet; then
