@@ -983,12 +983,14 @@ window.PokecaMobileBuild='258';
     }
   }
   function selectReferenceCounters(request){return new Promise(resolve=>{
+    const required=request.min;
+    if(!Number.isSafeInteger(required)||required<=0||request.max!==required||!request.candidates?.length){resolve(null);return;}
     const allocation=Object.fromEntries(request.candidates.map(c=>[c.id,0]));
-    openSheet('ダメカン6個をベンチにのせる','<p>合計6個を指定してください。対象はエンジンが許可した相手のベンチだけです。</p><div id="reference-counter-choices"></div><div id="reference-counter-submit"></div>');
+    openSheet('ダメカン'+required+'個をのせる','<p>合計'+required+'個を指定してください。対象はエンジンが許可したポケモンだけです。</p><div id="reference-counter-choices"></div><div id="reference-counter-submit"></div>');
     const paint=()=>{
       const total=Object.values(allocation).reduce((a,b)=>a+b,0);$('reference-counter-choices').replaceChildren();
-      for(const c of request.candidates){const row=document.createElement('div');row.className='counter-target';const art=document.createElement('span');art.className='selection-card-art';art.innerHTML=selectionArt(c);row.append(art,document.createTextNode(c.name+'：'+allocation[c.id]+'個 '));row.append(button('−',()=>{allocation[c.id]--;paint();},{disabled:allocation[c.id]===0}),button('＋',()=>{allocation[c.id]++;paint();},{disabled:total===6}));$('reference-counter-choices').append(row);}
-      $('reference-counter-submit').replaceChildren(button('この配分で決定',()=>{closeSheet();resolve(allocation);},{disabled:total!==6}),button('キャンセル',()=>{closeSheet();resolve(null);}));
+      for(const c of request.candidates){const row=document.createElement('div');row.className='counter-target';const art=document.createElement('span');art.className='selection-card-art';art.innerHTML=selectionArt(c);row.append(art,document.createTextNode(c.name+'：'+allocation[c.id]+'個 '));row.append(button('−',()=>{allocation[c.id]--;paint();},{disabled:allocation[c.id]===0}),button('＋',()=>{allocation[c.id]++;paint();},{disabled:total>=required}));$('reference-counter-choices').append(row);}
+      $('reference-counter-submit').replaceChildren(button('この配分で決定',()=>{closeSheet();resolve(allocation);},{disabled:total!==required}),button('キャンセル',()=>{closeSheet();resolve(null);}));
     };paint();
   });}
   async function fixedPracticeMenu(){
