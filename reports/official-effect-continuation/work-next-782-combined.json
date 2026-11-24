@@ -1,0 +1,2431 @@
+{
+  "stage": "PREPUBLICATION_ENGINE_PASS",
+  "baseline": 218,
+  "batchTarget": 782,
+  "officialPrintingScope": 2557,
+  "compiledCandidates": 187,
+  "passed": 184,
+  "totalEnginePass": 402,
+  "targetRemaining": 598,
+  "unverifiedRemaining": 2373,
+  "publishedInBatch": 0,
+  "effectSlots": 295,
+  "parser": {
+    "reviewed": 127,
+    "parsed": 122,
+    "passed": 21,
+    "remainingWithAmbiguousPredecessor": 5,
+    "commit": "82cd8e905f76d5db0de32ea55197237175b68a3f"
+  },
+  "pending": [
+    {
+      "id": "44431",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    },
+    {
+      "id": "44446",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    },
+    {
+      "id": "44449",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    }
+  ],
+  "exactBattleReceipts": [
+    {
+      "officialCardId": "49633",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "FIXED_COIN_HITS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50176",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50178",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50680",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45204",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45236",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_RESET_HAND"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45291",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45524",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45610",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45612",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45722",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45994",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46472",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_RESET_HAND"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46488",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46490",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46558",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46698",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47255",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47275",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47334",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_ATTACHED_TOOL_COUNT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47375",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_ATTACHED_TOOL_COUNT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47434",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47464",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47471",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "FIXED_COIN_HITS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47510",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47513",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "FIXED_COIN_HITS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47612",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48481",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49614",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50620",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50662",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50697",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45199",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45532",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45538",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45543",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45622",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46238",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46274",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "COIN_BONUS_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46351",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46785",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47143",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47573",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47604",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47654",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49667",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47973",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47980",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47985",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47993",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47998",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48027",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48379",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48402",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48406",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48493",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45620",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45671",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45749",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45960",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45995",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46189",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46356",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46532",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49110",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49691",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49697",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49706",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "RECOVER_TYPED_DISCARD",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50026",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50072",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "RECOVER_TYPED_DISCARD",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50118",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50278",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50385",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50526",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50595",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "HEAL_DAMAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50678",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50876",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50879",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47062",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47070",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "NO_NEXT_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47324",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47326",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "NO_NEXT_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47330",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47333",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47339",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47380",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47381",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47388",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47392",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47404",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47594",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47675",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47701",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "RECOVER_BASIC_ENERGY",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47775",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47798",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "HEAL_SELF_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47850",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47963",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48047",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48573",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48612",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48624",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48631",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48786",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48910",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "NO_NEXT_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48953",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48959",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48975",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_PRIZE_BONUS_RECOIL"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49094",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49163",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49179",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49195",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISABLE_SELECTED_MOVE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "NO_NEXT_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49210",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49275",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "FIXED_COIN_HITS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49310",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49317",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49352",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "RECOVER_BASIC_ENERGY",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50203",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "RECOVER_BASIC_ENERGY",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47124",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48553",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48809",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48822",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_RESET_HAND"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48852",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48857",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48866",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48902",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48907",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48912",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49017",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49044",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_HEAL_OWN_TARGET"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49270",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_HAND_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_DISCARD_FIELD_BASIC"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49191",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ANY_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_BLIND_HAND_CHOICE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50282",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50321",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48391",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48504",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48519",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DRAW"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46412",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46647",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46656",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50349",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "RECOIL_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48368",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_SPREAD_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48653",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "COIN_PROTECT"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONTEXT_ATTACK_BONUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49641",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "COIN_PROTECT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49646",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49654",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_SPLASH_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "ATTACK_IGNORE_DAMAGE_RULES"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49655",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "ATTACK_APPLY_STATUS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49676",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SELF_COUNTER_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "47683",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "FIXED_COIN_HITS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49193",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "FIXED_COIN_HITS"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45177",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "FIXED_COIN_HITS"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45186",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "COIN_BONUS_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45201",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "HUNT"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45731",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45765",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RECOIL_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "45942",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46004",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46007",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RECOIL_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46023",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46152",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48844",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "NO_NEXT_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48923",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48924",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "COIN_BONUS_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "48961",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "RETREAT_LOCK_ATTACK"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50126",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50188",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SCALED_ATTACK_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50887",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "CONFUSION"
+        }
+      ]
+    },
+    {
+      "officialCardId": "49313",
+      "effects": [
+        {
+          "kind": "attack",
+          "index": 0,
+          "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK"
+        },
+        {
+          "kind": "attack",
+          "index": 1,
+          "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46290",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "46330",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48417",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48512",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48521",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50428",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50466",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50852",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48693",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "49424",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50009",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "45279",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "46809",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47195",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47881",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48274",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "49372",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_A400D25D5B0AD5DA:47cb16029ea0e22a5b830d3daea327b447e55e5f476d73a502637272331ca30e",
   "taskFingerprint": "47cb16029ea0e22a5b830d3daea327b447e55e5f476d73a502637272331ca30e",
-  "executionFingerprint": "66e729a5ead7ccb43a198de77217a8fcdb10b4d908ba19b03b382c28dc3af27d",
-  "attemptId": "80f37809-7e2a-4e1a-a0a3-72d2abdf3a39",
-  "status": "BLOCKED",
+  "executionFingerprint": "1ed97267df42f4658ae8ae80e67ba658c74481f34d95197cb155065c8c5bca3f",
+  "attemptId": "172d4d99-f342-4ee7-8275-901ec70da8fa",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50625:attack:ハイドロポンプ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "0f01c278f2fdeb4ce48aa8d5bec187711474463d167d8b3d6ffd6ad5a3b52442"
+  "checksum": "b07cc1b675523cca0c10b0912f709d2d187f3e8110a62650fb921a81baf910e8"
 }
