@@ -1294,9 +1294,16 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==='TRAINER_SWITCH_OR_EX_V_BOOST'){
     const action=t.action||o.action;
     assert.equal(action.selections.mode[0],'boost');
-    assert.deepEqual(after.players[0].referenceExVDamageBoost,{turn:before.turnNumber,amount:e.plan.amount});
+    assert.equal(after.players[0].referenceExVDamageBoost?.turn,before.turnNumber);
+    assert.equal(after.players[0].referenceExVDamageBoost?.amount,e.plan.amount);
     if(before.players[0].bench.length){
       const replay=port(before),target=before.players[0].bench[0].id;
+      // The selected option changes the required target, not just the label.
+      const requests=o.requests||[];
+      const benchRequest=requests.find(r=>r.key==='ownBench');
+      assert(benchRequest?.dependencies?.some(r=>r.kind==='countWhenSelected'&&r.value==='switch'));
+      assert.equal(replay.dispatch('you',{...action,selections:{mode:['switch'],ownBench:[]}}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
       assert(replay.dispatch('you',{...action,selections:{mode:['switch'],ownBench:[target]}}).ok);
       assert.equal(replay.getSnapshot().players[0].active.id,target);
       assert(!replay.getSnapshot().players[0].referenceExVDamageBoost);
@@ -2016,6 +2023,7 @@ module.exports = {
           slot: B.slot(evidence),
           status: "FAILED",
           reason: e.message,
+          details: {mechanic:effect.plan.mechanic,stack:String(e.stack||'').slice(0,1800)},
         });
       }
     }

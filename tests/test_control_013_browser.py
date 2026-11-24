@@ -12,7 +12,16 @@ async def select_effect_targets(page, option):
  for request in option.get('requests',[]):
   key=request['key']
   kind=request['kind']
-  if request['min']==request['max']==0 and not (request.get('inspection') or {}).get('cards'):
+  # The live engine resolves each dependency against earlier picks. A zero
+  # target step is skipped by the UI and must also be skipped by the test.
+  resolved=dict(request)
+  for dependency in request.get('dependencies',[]):
+   prior=selections.get(dependency['key'],[])
+   if dependency['kind']=='countWhenSelected':
+    resolved['min']=resolved['max']=dependency['count'] if dependency['value'] in prior else 0
+   elif dependency['kind']=='countFromSelection':
+    resolved['min']=resolved['max']=dependency['count'] if len(prior)>=dependency['threshold'] else 0
+  if resolved['min']==resolved['max']==0 and not (resolved.get('inspection') or {}).get('cards'):
    continue
   if kind=='COUNTERS':
    allocation=selections[key]

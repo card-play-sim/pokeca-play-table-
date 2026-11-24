@@ -423,6 +423,7 @@ function requests(g,actor,card,effect){
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'){
   add('mode','CARD',[{id:'boost',name:'ダメージを+30'},{id:'switch',name:'バトル場とベンチを入れ替える'}].filter(c=>c.id==='boost'||p.bench.length),1,1);
   cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
+  if(p.bench.length)out.at(-1).dependencies=[{kind:'countWhenSelected',key:'mode',value:'switch',count:1}];
  }
  if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){

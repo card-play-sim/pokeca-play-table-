@@ -30,6 +30,12 @@ function resolve(request,requests,selections={}){
    if(count>out.candidates.length)throw Error('IMPOSSIBLE_SELECTION_COUNT');
    out.min=out.max=count;
   }
+  else if(rule.kind==='countWhenSelected'){
+   if(typeof rule.value!=='string'||!prior.candidates.some(c=>id(c)===rule.value)||!Number.isInteger(rule.count)||rule.count<0)throw Error('INVALID_SELECTION_VALUE_RULE');
+   const count=ids.includes(rule.value)?rule.count:0;
+   if(count>out.candidates.length)throw Error('IMPOSSIBLE_SELECTION_COUNT');
+   out.min=out.max=count;
+  }
   else if(rule.kind==='excludeSelectedField')out.candidates=out.candidates.filter(c=>!chosen.some(source=>source[rule.field]===id(c)));
   else if(rule.kind==='maxFromSelection'){
    if(!Number.isFinite(rule.divisor)||rule.divisor<=0)throw Error('INVALID_SELECTION_DIVISOR');

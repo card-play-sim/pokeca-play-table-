@@ -137,7 +137,7 @@ function run(baseCommit, directory) {
   const slots = [...slotsById.values()].flat();
   const evidence = slots.filter(slot => slot.effectText);
   const printedDamage = slots.filter(slot => !slot.effectText && slot.printedDamage !== undefined);
-  const results = new Map();
+  const results = new Map(),diagnostics = new Map();
   fs.mkdirSync(directory, {recursive: true});
   if (evidence.length) {
     const path = directory + '/candidate-evidence.json';
@@ -150,14 +150,14 @@ function run(baseCommit, directory) {
     {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
     if (result.status !== 0) throw Error(result.stderr || result.stdout);
     for (const job of Object.values(read(queue + '/queue.json').jobs)) {
-      for (const test of job.summary?.cases || []) results.set(test.slot, test.status);
+      for (const test of job.summary?.cases || []) {results.set(test.slot, test.status);diagnostics.set(test.slot,{status:test.status,reason:test.reason||null,details:test.details||null});}
     }
   }
   if (printedDamage.length) {
     const worker = require('./lib/shared-effect-engine-worker.cjs');
     const outcomes = printedDamage.map(slot => worker.verifyPrintedDamage(slot));
     B.atomic(directory + '/printed-damage-results.json', outcomes);
-    for (const outcome of outcomes) results.set(outcome.slot, outcome.status);
+    for (const outcome of outcomes) {results.set(outcome.slot, outcome.status);diagnostics.set(outcome.slot,{status:outcome.status,reason:outcome.reason||null,details:outcome.details||null});}
   }
   if (basicCandidates.size) {
     const worker = require('./lib/shared-effect-engine-worker.cjs');
@@ -172,6 +172,8 @@ function run(baseCommit, directory) {
     else blockers.push({id, reason: slots.some(slot=>results.get(B.slot(slot))==='FAILED')
       ? 'ENGINE_EXECUTION_FAILED' : 'EXECUTION_EVIDENCE_INCOMPLETE'});
   }
+  const executionGaps=[...slotsById].flatMap(([id,slots])=>slots.filter(s=>results.get(B.slot(s))!=='SUCCEEDED').map(s=>({id,kind:s.effectKind,index:s.effectIndex,slot:B.slot(s),...diagnostics.get(B.slot(s)),status:results.get(B.slot(s))||'NO_RECEIPT'})));
+  B.atomic(directory+'/execution-gaps.json',{baseCommit,scope:'DIAGNOSTIC_NOT_BATTLE_APPROVAL',gaps:executionGaps});
   const report = {baseCommit, state:'PREPUBLICATION', qualified, blockers, publicBattleVerified:[]};
   B.atomic(directory + '/candidate.json', report);
   console.log(JSON.stringify(report));
