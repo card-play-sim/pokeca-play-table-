@@ -1,0 +1,30 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_53B3BFFF25255278:549dbe18f57c6564c62b76db1519b3d2dfdb620931d506e9cb264c5b362ae3d5",
+  "taskFingerprint": "549dbe18f57c6564c62b76db1519b3d2dfdb620931d506e9cb264c5b362ae3d5",
+  "executionFingerprint": "4fb9fa575b4ca5b50015d8e71e7513751c69fa6d9fe881644eea6d70defcdebf",
+  "attemptId": "4026da92-7a41-4f7b-86af-1b2b7e95bf43",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "46343:ability:いきなりけずる:0",
+        "status": "FAILED",
+        "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n"
+      },
+      {
+        "slot": "46642:ability:いきなりけずる:0",
+        "status": "FAILED",
+        "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n"
+      },
+      {
+        "slot": "46653:ability:いきなりけずる:0",
+        "status": "FAILED",
+        "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n"
+      }
+    ]
+  },
+  "checksum": "94788e84c1298d04000277108e88ee64e6d334beff712eab04acfcb5893c413b"
+}

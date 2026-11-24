@@ -1,0 +1,753 @@
+{
+  "baseCommit": "8d0f5c36214fb7ca17226fad7a22067a5ecee236",
+  "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
+  "gaps": [
+    {
+      "id": "46343",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46343:ability:いきなりけずる:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n",
+      "details": null
+    },
+    {
+      "id": "46642",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46642:ability:いきなりけずる:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n",
+      "details": null
+    },
+    {
+      "id": "46653",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46653:ability:いきなりけずる:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n",
+      "details": null
+    },
+    {
+      "id": "45395",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45395:attack:みずくみ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45843",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45843:attack:もぎとる:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "47494",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47494:ability:あんやのはばたき:0",
+      "status": "BLOCKED",
+      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+      "details": []
+    },
+    {
+      "id": "50643",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50643:attack:エナジーテール:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "50654",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50654:attack:ためこむ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50698",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50698:attack:はじきおとす:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45179",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45179:ability:あんやのはばたき:0",
+      "status": "BLOCKED",
+      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+      "details": []
+    },
+    {
+      "id": "45519",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45519:ability:あんやのはばたき:0",
+      "status": "BLOCKED",
+      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+      "details": []
+    },
+    {
+      "id": "45704",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45704:attack:おちゃだし:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46233",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46233:attack:はかいのイカリ:1",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46733",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46733:ability:あんやのはばたき:0",
+      "status": "BLOCKED",
+      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+      "details": []
+    },
+    {
+      "id": "47322",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47322:attack:いっしょにおよぐ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47349",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47349:attack:かじりとる:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47373",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47373:attack:いっしょにおよぐ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47554",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47554:attack:つつきおとす:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47638",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47638:attack:ベロベロキャッチ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "47785",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47785:attack:ついばむ:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49613",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49613:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "49717",
+      "kind": "item",
+      "index": 0,
+      "slot": "49717:item:パワープロテイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45228",
+      "kind": "attack",
+      "index": 1,
+      "slot": "45228:attack:スチールアンカー:1",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46027",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46027:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46170",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46170:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46178",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46178:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46181",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46181:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46381",
+      "kind": "attack",
+      "index": 0,
+      "slot": "46381:attack:かみなりをよぶ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "46797",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46797:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47147",
+      "kind": "attack",
+      "index": 1,
+      "slot": "47147:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47158",
+      "kind": "attack",
+      "index": 1,
+      "slot": "47158:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47315",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47315:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "47378",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47378:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "47387",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47387:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "47391",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47391:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "47927",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47927:attack:つつきおとす:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48013",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48013:attack:ベロベロキャッチ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "48267",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48267:attack:いきりクロー:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48431",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48431:attack:ついばむ:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48543",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48543:ability:こんじきのほのお:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "45641",
+      "kind": "item",
+      "index": 0,
+      "slot": "45641:item:ハイパーアロマ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45718",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45718:attack:つつきおとす:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46195",
+      "kind": "item",
+      "index": 0,
+      "slot": "46195:item:テラスタルオーブ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "46217",
+      "kind": "item",
+      "index": 0,
+      "slot": "46217:item:テラスタルオーブ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "46258",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46258:attack:ドリルスマッシュ:1",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46429",
+      "kind": "attack",
+      "index": 0,
+      "slot": "46429:attack:パラボラチャージ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "46443",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "46443:supporter:シトロンの機転:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46651",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "46651:supporter:シトロンの機転:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46657",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "46657:supporter:シトロンの機転:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46806",
+      "kind": "item",
+      "index": 0,
+      "slot": "46806:item:テラスタルオーブ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "49709",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "49709:supporter:ユカリ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50075",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "50075:supporter:ユカリ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50083",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "50083:supporter:ユカリ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47097",
+      "kind": "item",
+      "index": 0,
+      "slot": "47097:item:Nのポイントアップ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "47338",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47338:ability:おうじゃのよびごえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47791",
+      "kind": "item",
+      "index": 0,
+      "slot": "47791:item:パワープロテイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47833",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47833:ability:サイコドロー:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-58',\n        cardName: 'ユンゲラー',\n        targetInstanceId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'evolve'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47833-ability-0',\n            name: 'サイコドロー',\n            plan: {\n              activeOnly: false,\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'MASS_EFFECT_SEQUENCE',\n              origin: 'evolve',\n              sharedWording: true,\n              steps: [\n                {\n                  amount: 2,\n                  op: 'draw'\n                }\n              ]\n            },\n            text: '自分の番に、このカードを手札から出して進化させたとき、1回使える。自分の山札を2枚引く。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '超'\n            ],\n            damage: '30',\n            effectId: 'reference-47833-attack-0',\n...}\n",
+      "details": null
+    },
+    {
+      "id": "48418",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "48418:supporter:ひふきやろう:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48438",
+      "kind": "item",
+      "index": 0,
+      "slot": "48438:item:パワープロテイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48513",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "48513:supporter:ひふきやろう:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48611",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48611:ability:おうじゃのよびごえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48668",
+      "kind": "item",
+      "index": 0,
+      "slot": "48668:item:Nのポイントアップ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "48676",
+      "kind": "item",
+      "index": 0,
+      "slot": "48676:item:パワープロテイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48836",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48836:attack:ベロベロキャッチ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "48876",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48876:attack:いっしょにおよぐ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49093",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49093:ability:おうじゃのよびごえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49273",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49273:attack:ついばむ:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49351",
+      "kind": "item",
+      "index": 0,
+      "slot": "49351:item:Nのポイントアップ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "49368",
+      "kind": "item",
+      "index": 0,
+      "slot": "49368:item:パワープロテイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49974",
+      "kind": "item",
+      "index": 0,
+      "slot": "49974:item:Nのポイントアップ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_ROUTE_TARGET",
+      "details": null
+    },
+    {
+      "id": "50830",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50830:attack:いきりクロー:0",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47190",
+      "kind": "item",
+      "index": 0,
+      "slot": "47190:item:テラスタルオーブ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "48667",
+      "kind": "attack",
+      "index": 1,
+      "slot": "48667:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48674",
+      "kind": "item",
+      "index": 0,
+      "slot": "48674:item:テラスタルオーブ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "48768",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48768:ability:いきなりけずる:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardId: 'reference-0-59'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'bench_basic'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47847-ability-0',\n            name: 'おつかいダッシュ',\n            plan: {\n              commands: [\n                'DRAW'\n              ],\n              mechanic: 'DASH'\n            },\n            text: 'このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を2枚引く。この特性は別の「おつかいダッシュ」を使った番は使えない。'\n          }\n        ],\n        attacks: [\n          {\n            cost: [\n              '無色',\n              '無色',\n              '無色'\n            ],\n            damage: '200＋',\n            effectId: 'reference-47847-attack-0',\n            name: 'マシンガンコンボ',\n            plan: {\n              commands: [\n                'COIN_FLIP',\n                'DAMAGE'\n              ],\n              mechanic: 'COMBO'\n            },\n            text: 'ウラが出るまでコインを投げ、オモテの数×50ダメージ追加。'\n...}\n",
+      "details": null
+    },
+    {
+      "id": "48776",
+      "kind": "attack",
+      "index": 1,
+      "slot": "48776:attack:スチールアンカー:1",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48794",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48794:attack:おちゃだし:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48981",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48981:attack:かみなりをよぶ:0",
+      "status": "BLOCKED",
+      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "49071",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49071:ability:あんやのはばたき:0",
+      "status": "BLOCKED",
+      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+      "details": []
+    },
+    {
+      "id": "49102",
+      "kind": "attack",
+      "index": 1,
+      "slot": "49102:attack:ドリルスマッシュ:1",
+      "status": "BLOCKED",
+      "reason": "NO_TYPED_BENCH_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49346",
+      "kind": "attack",
+      "index": 1,
+      "slot": "49346:attack:クラウンオパール:1",
+      "status": "BLOCKED",
+      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49366",
+      "kind": "item",
+      "index": 0,
+      "slot": "49366:item:ハイパーアロマ:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49426",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "49426:supporter:シトロンの機転:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_HEAL_FIXTURE",
+      "details": null
+    }
+  ]
+}
