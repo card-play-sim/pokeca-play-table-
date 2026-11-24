@@ -40,6 +40,10 @@ const hashes = [
   "data/official-image-registry.json",
   "data/reference-effects/plans.json",
 ].map((p) => [p, B.hash(fs.readFileSync(p))]);
+// This test replays the complete catalog after the release bundle changes.
+// Budget the outer subprocess for the actual catalog scale; the worker
+// still enforces its per-task timeout and the CI job retains its hard limit.
+const replayBudgetMs=Math.max(120000,Math.min(1800000,raw.records.length*300));
 const run = spawnSync(
   "python",
   [
@@ -49,9 +53,9 @@ const run = spawnSync(
     "--limit",
     "100",
   ],
-  { encoding: "utf8", timeout: 120000, maxBuffer: 16 * 1024 * 1024 },
+  { encoding: "utf8", timeout: replayBudgetMs, maxBuffer: 32 * 1024 * 1024 },
 );
-assert.equal(run.status, 0, run.stderr);
+assert.equal(run.status, 0, run.error?.message || run.stderr || run.stdout?.slice(-2000));
 const tail = JSON.parse(run.stdout.trim().split("\n").at(-1));
 assert.equal(tail.newAttempts, 0);
 assert.equal(tail.newNetworkRequests, 0);
@@ -82,9 +86,9 @@ assert.equal(Object.keys(report.categories).length, 6);
 const again = spawnSync(
   process.execPath,
   ["scripts/connect-official-effect-intake.cjs"],
-  { encoding: "utf8", timeout: 120000, maxBuffer: 16 * 1024 * 1024 },
+  { encoding: "utf8", timeout: replayBudgetMs, maxBuffer: 32 * 1024 * 1024 },
 );
-assert.equal(again.status, 0, again.stderr);
+assert.equal(again.status, 0, again.error?.message || again.stderr || again.stdout?.slice(-2000));
 report = JSON.parse(again.stdout);
 assert.equal(report.queue.processed, 0);
 for (const [file, hash] of hashes)
@@ -103,7 +107,7 @@ try {
     const r = spawnSync(
       process.execPath,
       ["scripts/process-shared-effect-batch.cjs", dir, input, ...extra],
-      { encoding: "utf8", timeout: 120000, maxBuffer: 16 * 1024 * 1024 },
+      { encoding: "utf8", timeout: replayBudgetMs, maxBuffer: 32 * 1024 * 1024 },
     );
     assert.equal(r.status, 0, r.stderr);
     return JSON.parse(r.stdout);

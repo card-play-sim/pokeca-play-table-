@@ -1,50 +1,126 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_787CA11FA7FC3D54:8e40486d7161cdf0297abfc6f7fcaef07e896fd9650479ee15fb836fddbdc1d0",
   "taskFingerprint": "8e40486d7161cdf0297abfc6f7fcaef07e896fd9650479ee15fb836fddbdc1d0",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "7c01f858-f324-4f88-9e8e-0986797b0647",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "cf99082e-4cee-496e-af66-98835a5e9dbb",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45707:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45856:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45867:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45873:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46681:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47122:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47155:ability:みどりのまい:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ABILITY_ATTACH_SELF_DRAW",
+        "commands": [
+          "ATTACH_ENERGY",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "ae2b7804400d73e060cde7460fda472f488d516620dd108ce83c3a12dd65f9e6"
+  "checksum": "093e39de02b66c1890af7975c5e267c54930b4093d877a516d65d442d96014a9"
 }

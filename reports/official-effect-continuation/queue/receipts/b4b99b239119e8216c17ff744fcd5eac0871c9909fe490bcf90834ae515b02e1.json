@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_6F2DEB8499ACC129:f491bf76a9dafb1ef43b45c978e671273bb870502defa499d883d0b6b35b252b",
   "taskFingerprint": "f491bf76a9dafb1ef43b45c978e671273bb870502defa499d883d0b6b35b252b",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "1f04c744-1258-488b-98bb-4ad955bfdac2",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "3bbb38a4-a9a9-4e34-a4b5-c115cde7a118",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -118,10 +118,22 @@
       },
       {
         "slot": "47328:attack:バブルドレイン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "b30e5d5aead33470e785b3a56d80a6edad4c36c19e1f02f59dfbfc0e10ec6293"
+  "checksum": "87d8e4295c477291a1dff54dfd4697e9420b9fcfa79d803449a65283d1aad6ab"
 }

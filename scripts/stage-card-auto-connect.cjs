@@ -76,6 +76,32 @@ function verifyBasicEnergyRuntime(worker, record) {
   } catch { return false; }
 }
 
+// Never remove a previously compiled print. Only newly compilable rows that
+// failed the current proof gate are deferred; raw records remain retryable.
+function deferUnverifiedPromotions(intake, checkpoint, baseIntake, baseCompiled, qualified, blockers) {
+  const allowed = new Set(qualified);
+  const blocked = new Map(blockers.map(row => [row.id,row]));
+  const raw = new Map(checkpoint.records.map(row => [row.officialCardId,row]));
+  const deferred = [];
+  for (const row of intake.records) {
+    const id = row.officialCardId;
+    if (baseCompiled.has(id) || !blocked.has(id)) continue;
+    if (!baseIntake.has(id)) continue;
+    if (allowed.has(id)) throw Error('CONFLICTING_EXECUTION_GATE:'+id);
+    const prior = raw.get(id);
+    if (prior && require('node:util').isDeepStrictEqual(prior,row) === false)
+      throw Error('DEFERRED_EVIDENCE_CONFLICT:'+id);
+    raw.set(id,row);
+    deferred.push(blocked.get(id));
+  }
+  const deferredIds = new Set(deferred.map(row => row.id));
+  checkpoint.records = [...raw.values()];
+  intake.records = intake.records.filter(row => baseCompiled.has(row.officialCardId) ||
+    allowed.has(row.officialCardId) ||
+    (baseIntake.has(row.officialCardId) && !deferredIds.has(row.officialCardId)));
+  return deferred;
+}
+
 function run(baseCommit, directory) {
   const gitRead = path => {
     const result = spawnSync('git', ['show', baseCommit + ':' + path], {encoding: 'utf8', maxBuffer: 32 * 1024 * 1024});
@@ -149,16 +175,20 @@ function run(baseCommit, directory) {
   const report = {baseCommit, state:'PREPUBLICATION', qualified, blockers, publicBattleVerified:[]};
   B.atomic(directory + '/candidate.json', report);
   console.log(JSON.stringify(report));
-  // An engine change can compile previously unsupported rows already in the
-  // release input. Preserve that input and stop if any such row is unverified.
-  const promotedWithoutProof = blockers.filter(({id}) => baseIntake.has(id));
-  if (promotedWithoutProof.length)
-    throw Error('EXISTING_INTAKE_PROMOTION_BLOCKED: ' + promotedWithoutProof.map(row => row.id).join(', '));
-  const allowed = new Set(qualified);
   const intake = read(intakePath);
-  // Keep raw evidence in the existing checkpoint. Only qualified additions go
-  // into the release compiler input, alongside the entire original intake.
-  intake.records = intake.records.filter(record => baseIntake.has(record.officialCardId) || allowed.has(record.officialCardId));
+  const checkpointPath = 'data/official-effect-intake/checkpoint.json';
+  const checkpoint = read(checkpointPath);
+  // A newly compilable but unverified old intake row must not stop unrelated
+  // proven prints or become playable. Preserve exact source in the retry
+  // checkpoint before excluding that row from the release compiler input.
+  const deferred = deferUnverifiedPromotions(intake, checkpoint, baseIntake,
+    baseCompiled, qualified, blockers);
+  if (deferred.length) {
+    const checkpointTemp = checkpointPath + '.candidate-' + process.pid;
+    fs.writeFileSync(checkpointTemp, JSON.stringify(checkpoint,null,2)+'\n', {flag:'wx'});
+    fs.renameSync(checkpointTemp,checkpointPath);
+    B.atomic(directory + '/deferred-promotions.json', deferred);
+  }
   const temporary = intakePath + '.candidate-' + process.pid;
   fs.writeFileSync(temporary, JSON.stringify(intake,null,2)+'\n', {flag:'wx'});
   fs.renameSync(temporary,intakePath);
@@ -166,4 +196,4 @@ function run(baseCommit, directory) {
 }
 
 if (require.main === module) run(process.argv[2], process.argv[3]);
-module.exports = {requiredSlots, allExecuted, verifiedBasicEnergy, verifyBasicEnergyRuntime};
+module.exports = {requiredSlots, allExecuted, verifiedBasicEnergy, verifyBasicEnergyRuntime, deferUnverifiedPromotions};

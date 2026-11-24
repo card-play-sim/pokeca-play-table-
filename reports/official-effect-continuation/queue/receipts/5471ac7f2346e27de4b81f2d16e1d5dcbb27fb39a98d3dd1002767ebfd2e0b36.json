@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_304C6D13E53B2176:737ff1963f46e922f3ecab36bb4e25d7a6331eba8213e742c30bf6b0f3952a4d",
   "taskFingerprint": "737ff1963f46e922f3ecab36bb4e25d7a6331eba8213e742c30bf6b0f3952a4d",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "b01f2715-7161-44ba-a310-d517728eaeab",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "4bf03c36-51a8-486b-bfc9-631402544b5c",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -59,8 +59,19 @@
       },
       {
         "slot": "50666:attack:サイコドライブ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45246:attack:ストロングボルト:1",
@@ -112,8 +123,19 @@
       },
       {
         "slot": "46187:attack:ひばな:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46360:attack:かえんほうしゃ:1",
@@ -149,8 +171,19 @@
       },
       {
         "slot": "47572:attack:ディザスターボルト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "44387:attack:ダークエッジ:1",
@@ -185,5 +218,5 @@
       }
     ]
   },
-  "checksum": "8008692ed4532f7bb2fad772aef1d40d2b85ac2488d4336b49df07ffc1c706fc"
+  "checksum": "5c88a14e0fa4abb28dbeda91e222128a69e713e88ce8f15a32a8321fbda280a9"
 }

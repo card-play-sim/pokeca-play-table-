@@ -276,8 +276,24 @@ async def main():
     assert 0<len(selected)<=f['e']['plan']['limit']
     assert set(selected)<={card['id'] for card in after['players'][0]['hand']}
     assert set(selected).isdisjoint(card['id'] for card in after['players'][0]['deck'])
-    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    revealed=any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    assert revealed==f['e']['plan'].get('reveal',True)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_ACCELERATE_BASIC_ENERGY':
+    plan=f['e']['plan']
+    choices=option['action']['selections']
+    selected=choices['energy']
+    target_id=before['players'][0]['active']['id'] if plan['target']=='self' else choices['attachTo'][0]
+    old=before['players'][0]
+    new=after['players'][0]
+    target=next(c for c in [new['active'],*new['bench']] if c and c['id']==target_id)
+    assert 0<len(selected)<=plan['limit']
+    assert set(selected)<={c['id'] for c in old[plan['zone']]}
+    assert set(selected).isdisjoint(c['id'] for c in new[plan['zone']])
+    assert set(selected)<={c['id'] for c in target['energyCards']}
+    for ident in selected:
+     assert any(ev.get('details',{}).get('command')=='ATTACH_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target_id and ev['details'].get('fromZone')==plan['zone'] for ev in events)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==(plan['zone']=='deck')
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
     assert before_ids
@@ -302,6 +318,70 @@ async def main():
     assert state=={'turn':before['turnNumber']+1,'amount':f['e']['plan']['amount']}
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
+   if m in ('ABILITY_DISCARD_DRAW','ABILITY_ATTACH_SELF_DRAW'):
+    plan=f['e']['plan']
+    own,resolved=before['players'][0],after['players'][0]
+    key='discard' if m=='ABILITY_DISCARD_DRAW' else 'energy'
+    selected=option['action']['selections'][key]
+    assert len(selected)==(plan['cost'] if key=='discard' else 1)
+    assert set(selected)<={card['id'] for card in own['hand']}
+    assert not set(selected)&{card['id'] for card in resolved['hand']}
+    drawn=[card['id'] for card in own['deck'][:plan['amount']]]
+    assert set(drawn)<={card['id'] for card in resolved['hand']}
+    if key=='discard':
+     assert set(selected)<={card['id'] for card in resolved['discard']}
+    else:
+     source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
+     assert selected[0] in {card['id'] for card in source['energyCards']}
+     assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
+   if m in ('TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'):
+    plan=f['e']['plan']
+    picked=set(option['action']['selections']['cards'])
+    assert picked<={card['id'] for card in before['players'][0]['deck'][:plan['limit']]}
+    assert picked<={card['id'] for card in after['players'][0]['hand']}
+    assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE':
+    tools={card['id'] for card in before['players'][1]['active']['tools']}
+    assert tools and tools<={card['id'] for card in after['players'][1]['discard']}
+    discard_index=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='DISCARD' and tools<=set(ev['details'].get('cardIds',[])))
+    damage_index=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==before['players'][1]['active']['id'])
+    assert discard_index<damage_index
+   if m=='RECOVER_NON_RULE_AND_ENERGY':
+    picked=set(option['action']['selections']['cards'])
+    assert picked<={card['id'] for card in after['players'][0]['hand']}
+    assert not picked&{card['id'] for card in after['players'][0]['discard']}
+   if m=='HEAL_LOW_HP_FULL':
+    picked=option['action']['selections']['cards'][0]
+    mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c and c['id']==picked)
+    assert mon['damage']==0
+   if m in ('ATTACK_EVOLUTION_BONUS_DISCARD','ATTACK_PRIZE_BONUS_DISCARD'):
+    chosen=option['action'].get('selections',{}).get('energy',[]) if m=='ATTACK_PRIZE_BONUS_DISCARD' else [card['id'] for card in before['players'][0]['active']['energyCards']] if before['players'][1]['active']['stage']>0 else []
+    assert set(chosen)<={card['id'] for card in after['players'][0]['discard']}
+    assert not set(chosen)&{card['id'] for card in after['players'][0]['active']['energyCards']}
+   if m=='TRAINER_DISCARD_SPECIAL_ENERGY':
+    picked=option['action']['selections']['energy']
+    assert len(picked)==1
+    assert any(card['id']==picked[0] and card['isSpecial'] for mon in [before['players'][1]['active'],*before['players'][1]['bench']] for card in mon['energyCards'])
+    assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
+   if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
+    assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='TOOL_LOW_HP_RETREAT_DISCOUNT':
+    target=option['action']['targetInstanceId']
+    old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)
+    mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
+    plan=f['e']['plan']
+    assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='ABILITY_SWITCH_OWN':
+    assert after['players'][0]['active']['id']==option['action']['selections']['ownBench'][0]
+    assert before['players'][0]['active']['id'] in {card['id'] for card in after['players'][0]['bench']}
+   if m in ('ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'):
+    picked=set(option['action']['selections']['cards'])
+    assert picked and picked<={card['id'] for card in after['players'][0]['hand']}
+    assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+   if m=='TRAINER_TYPED_DAMAGE_BOOST':
+    plan=f['e']['plan']
+    assert {'turn':before['turnNumber'],'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTypedDamageBoosts']
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):

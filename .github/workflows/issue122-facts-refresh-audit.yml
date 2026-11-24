@@ -1,0 +1,61 @@
+name: Issue122 official fact repair and shared mechanic priority audit
+on:
+  push:
+    branches: [battle/issue122-facts-refresh-20261125]
+    paths:
+      - '.github/workflows/issue122-facts-refresh-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Recover exact saved official evidence
+        run: |
+          git fetch origin 9ea92e420a8776100390252b14e8ee8c040f63c5
+          python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+      - name: Reparse uncompiled derived facts and protect existing published records
+        run: |
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/control-014-official-parser.test.cjs
+      - name: Measure actual compiler improvement and prioritize remaining shared effect groups
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {build}=require('./scripts/build-effect-extensions.cjs');
+          const {makeWorklist}=require('./scripts/atomic-battle-connection-ledger.cjs');
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const raw=read('data/official-effect-intake/checkpoint.json');
+          const intake=read('data/effect-extensions/intake.json');
+          const previous=read('data/effect-extensions/compiled.json');
+          const input={...intake,records:[...new Map([...raw.records,...intake.records].map(r=>[r.officialCardId,r])).values()]};
+          const result=build(input);
+          const old=new Map(previous.records.map(r=>[r.officialCardId,r]));
+          const next=new Map(result.records.map(r=>[r.officialCardId,r]));
+          for(const [id,row] of old)assert.deepEqual(next.get(id),row,'EXISTING_COMPILED_CONFLICT:'+id);
+          const ids=new Set(read('data/deck-building/catalog.json').records.filter(r=>r.legality==='printed-hij'&&['H','I','J'].includes(r.regulationMark)).map(r=>r.officialCardId).filter(id=>!next.has(id)));
+          const groups=makeWorklist(input.records,result.blocked,ids);
+          const repairs=read('reports/official-effect-continuation/official-fact-refresh.json');
+          const improved=repairs.changes.filter(r=>next.has(r.officialCardId)&&!old.has(r.officialCardId)).map(r=>r.officialCardId);
+          const top={state:'AUDIT_ONLY_NO_BATTLE_APPROVAL',refreshed:repairs.changes.length,compilerNewlyEligibleFromFactRepair:improved,topSharedMechanicGroups:groups.slice(0,40),totalGroups:groups.length,compilerBlocked:result.blocked.reduce((a,r)=>(a[r.reason]=(a[r.reason]||0)+1,a),{})};
+          fs.writeFileSync('reports/official-effect-continuation/issue122-fact-and-mechanic-audit.json',JSON.stringify(top,null,2)+'\n');
+          console.log(JSON.stringify(top));
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-fact-and-mechanic-audit
+          path: |
+            reports/official-effect-continuation/official-fact-refresh.json
+            reports/official-effect-continuation/issue122-fact-and-mechanic-audit.json
+          if-no-files-found: warn

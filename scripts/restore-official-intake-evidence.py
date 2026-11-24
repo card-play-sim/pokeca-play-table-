@@ -66,7 +66,23 @@ def merge_checkpoint(commit, checkpoint):
         for row in source["records"]:
             ident = row["officialCardId"]
             if ident in records and records[ident] != row:
-                raise ValueError("CHECKPOINT_RECORD_CONFLICT:" + ident)
+                previous = records[ident]
+                # Permit only a derived-facts repair verified against the same
+                # immutable official HTML. Everything else is still a conflict.
+                if {k:v for k,v in previous.items() if k != "facts"} != {k:v for k,v in row.items() if k != "facts"}:
+                    raise ValueError("CHECKPOINT_RECORD_CONFLICT:" + ident)
+                try:
+                    rel = previous["source"]["path"]
+                    if not re.fullmatch(r"[1-9][0-9]{0,7}", str(ident)) or rel != f"data/effect-extensions/evidence/{ident}.json":
+                        raise ValueError("UNSAFE_EVIDENCE_PATH")
+                    target = ROOT / rel
+                    proof = json.loads(target.read_bytes() if target.exists() else subprocess.check_output(["git", "show", f"{commit}:{rel}"], cwd=ROOT))
+                    resolved = subprocess.run(["node", "scripts/refresh-uncompiled-official-facts.cjs", "--verify-pair"],
+                        input=json.dumps({"a":previous,"b":row,"proof":proof}, ensure_ascii=False),
+                        cwd=ROOT, text=True, capture_output=True, check=True)
+                    row = json.loads(resolved.stdout)
+                except (ValueError, KeyError, OSError, subprocess.CalledProcessError) as exc:
+                    raise ValueError("CHECKPOINT_RECORD_CONFLICT:" + ident) from exc
             records[ident] = row
         for row in source["blocked"]:
             ident = row["officialCardId"]

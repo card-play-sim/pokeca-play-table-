@@ -1,0 +1,63 @@
+name: Verify exact printed deck search batch
+on:
+  push:
+    branches: [battle/shared-deck-search-batch-20261124]
+    paths:
+      - '.github/workflows/battle-deck-search-verify.yml'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'scripts/stage-battle-deck-search-official.cjs'
+      - 'tests/battle-deck-search-official.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Stage saved official evidence and build
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/control-014-official-parser.test.cjs
+          node scripts/stage-battle-deck-search-official.cjs
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Execute exact-print attacks and regression tests
+        run: |
+          node tests/battle-deck-search-official.test.cjs
+          node tests/control-014-shared-effects.test.cjs
+          node tests/control-011-engine-batch.test.cjs
+          node tests/reference-runtime-source-parity.test.cjs
+          node tests/card-auto-connect.test.cjs
+      - name: Save generated files on isolated branch
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/official-effect-continuation/deck-search-bulk-intake.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: exact-print deck search batch verified output'
+            git push origin HEAD:battle/shared-deck-search-batch-20261124
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deck-search-exact-print-evidence
+          path: |
+            reports/official-effect-continuation/deck-search-bulk-intake.json
+            test-results/battle-deck-search-official.json
+          if-no-files-found: warn

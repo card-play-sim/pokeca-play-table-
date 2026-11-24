@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_DCCA748165F9CEF2:3998c6b8626482c185425c0befb30b104420ea3ee35f1c3c3e85b9fa145b28cf",
   "taskFingerprint": "3998c6b8626482c185425c0befb30b104420ea3ee35f1c3c3e85b9fa145b28cf",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "7d3289a6-05f9-4381-aa2f-e78901b8eb9a",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "68dd5c27-ea86-46f7-a1bb-79756b7081e4",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -21,18 +21,51 @@
       },
       {
         "slot": "45590:attack:ほのおのうず:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45664:attack:ほのおのうず:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46265:attack:ジュラルビーム:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46427:attack:スマッシュヘッド:1",
@@ -46,8 +79,19 @@
       },
       {
         "slot": "47364:attack:ストラムサンダー:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45258:attack:パワースタンプ:1",
@@ -86,5 +130,5 @@
       }
     ]
   },
-  "checksum": "5999a52c8fa70ed70b1dc59d77cf7079e4de8ae358c67c0f3d6f0ded4262c565"
+  "checksum": "069cabfb1aac732f27797bf304936c1c83782b6f6b9d61b153368028d23f57d2"
 }

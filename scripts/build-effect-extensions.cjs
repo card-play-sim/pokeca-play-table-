@@ -4,8 +4,8 @@ const input=process.argv[2]&&!process.argv[2].startsWith('--')?process.argv[2]:'
 const output=process.argv[3]&&!process.argv[3].startsWith('--')?process.argv[3]:'data/effect-extensions/compiled.json';
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();
-const sharedAttackMechanics=new Set(['CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE',
- 'ATTACK_RESET_HAND','ATTACK_DISCARD_OWN_DECK_TOP','ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER']);
+const sharedAttackMechanics=new Set(['ATTACK_ACCELERATE_BASIC_ENERGY','CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE',
+ 'ATTACK_RESET_HAND','ATTACK_DISCARD_OWN_DECK_TOP','ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER','ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY']);
 for(const mechanic of ['ATTACK_DISCARD_FIELD_BASIC','ATTACK_OPTIONAL_DRAW_TO_LIMIT','ATTACK_DISCARD_DEFENDER_ENERGY',
  'ATTACK_HEAL_OWN_TARGET','ATTACK_SPLASH_OWN_BENCH','ATTACK_DISABLE_SELECTED_MOVE','CONTEXT_ATTACK_BONUS',
  'ATTACK_PRIZE_BONUS_RECOIL','ATTACK_BLIND_HAND_CHOICE','ATTACK_SPREAD_DAMAGE'])sharedAttackMechanics.add(mechanic);
@@ -59,7 +59,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
    if(mainText(row.text)!==norm(row.text))throw Error('EMBEDDED_USAGE_RULE_NOT_SUPPORTED');
    const clean={...row,attacks:[],abilities:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false},rulesText:[],set:'OFFICIAL_PAGE_REFERENCE',cardNumber:''};
    const record=compile({records:[clean]}).records[0];if(!record.mainPlan){blocked.push({officialCardId:ident,name,category:row.category,status:'BLOCKED',reason:'UNSUPPORTED_EFFECT_PATTERN',text:row.text,source:row.source});continue;}
-   if((ijMechanics.has(record.mainPlan.mechanic)||['COIN_DRAW_CARDS','HEAL_ACTIVE_DAMAGE','RETURN_HAND_PRIZE_DRAW','RETURN_HAND_COIN_DRAW','DISCARD_ONE_DRAW_OPP_BENCH'].includes(record.mainPlan.mechanic))&&!hijIds.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
+   if((record.mainPlan.sharedWording===true||ijMechanics.has(record.mainPlan.mechanic)||['COIN_DRAW_CARDS','HEAL_ACTIVE_DAMAGE','RETURN_HAND_PRIZE_DRAW','RETURN_HAND_COIN_DRAW','DISCARD_ONE_DRAW_OPP_BENCH'].includes(record.mainPlan.mechanic))&&!hijIds.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
    records.push(record);
   }catch(e){blocked.push({officialCardId:ident,status:'BLOCKED',reason:e.message});}
  }

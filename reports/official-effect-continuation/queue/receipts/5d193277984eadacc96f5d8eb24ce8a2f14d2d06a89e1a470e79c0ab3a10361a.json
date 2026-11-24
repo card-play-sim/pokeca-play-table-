@@ -1,20 +1,32 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_9789055D79F8E4F7:4fd9d538282337e60e1ee58a108be05bcf626479062115db894e71c6130f3b4b",
   "taskFingerprint": "4fd9d538282337e60e1ee58a108be05bcf626479062115db894e71c6130f3b4b",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "afb78791-6f76-4ebe-ac40-bb5a01bd6514",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "0357b8dd-0ea8-4cf9-b718-b050a9fb3da9",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47175:supporter:カキツバタ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "TRAINER_TOP_POKEMON_TRAINER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "1b88a40c7ff98d5f57b6f8016289a0e882b13dd1d0f9b99bd7bb078e5042b154"
+  "checksum": "e294e141fb061ac7c2066b437be38285afa254febcb43116f3e7622e0f245a4d"
 }

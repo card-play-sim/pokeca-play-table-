@@ -125,8 +125,63 @@ function additionalAttackPlan(entry,text){
   const metric=source.endsWith('ダメカン')?'opponentCounters':source==='自分の場のポケモン'?'ownPokemon':source.startsWith('このポケモン')?'ownEnergy':source.startsWith('相手のバトルポケモン')?'opponentEnergy':'opponentTeamEnergy';
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
  }
+ // Search uses the same physical-card picker for every exact printed filter.
+ const searchCount=text.match(/^自分の山札から(ポケモン|グッズ|サポート|基本エネルギー|エネルギー|「ポケモンのどうぐ」|スタジアム)を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const typedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const typedEnergySearch=text.match(/^自分の山札から「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const mixedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼)\]ポケモンと「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const stadiumSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンとスタジアムを合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const privateSearch=text.match(/^自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
+ const typedBench=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]タイプのたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+ const basicBench=text.match(/^自分の山札からたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+ if(/^\d+$/.test(printed)){
+  const hand=(filter,limit,extra={})=>({mechanic:'SEARCH_REVEAL_TO_HAND_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK',...(extra.reveal===false?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],filter,limit,batchSearch:true,sharedWording:true,...extra});
+  if(searchCount&&(Number.parseInt(searchCount[2],10)>2||['エネルギー','「ポケモンのどうぐ」','スタジアム'].includes(searchCount[1])))return hand({'ポケモン':'pokemon','グッズ':'item','サポート':'supporter','基本エネルギー':'basicEnergy','エネルギー':'energy','「ポケモンのどうぐ」':'tool','スタジアム':'stadium'}[searchCount[1]],Number.parseInt(searchCount[2],10));
+  if(typedSearch)return hand('typedPokemon',Number.parseInt(typedSearch[2],10),{type:typedSearch[1]});
+  if(typedEnergySearch)return hand('typedBasicEnergy',Number.parseInt(typedEnergySearch[2],10),{type:typedEnergySearch[1]});
+  if(mixedSearch&&mixedSearch[1]===mixedSearch[2])return hand('typedPokemonOrBasicEnergy',Number(mixedSearch[3]),{type:mixedSearch[1]});
+  if(stadiumSearch)return hand('typedPokemonOrStadium',Number(stadiumSearch[2]),{type:stadiumSearch[1]});
+  if(privateSearch)return hand('any',Number.parseInt(privateSearch[1],10),{reveal:false});
+  if(typedBench||basicBench&&['4枚まで','5枚まで','好きなだけ'].includes(basicBench[1])){
+   const count=typedBench?typedBench[2]:basicBench[1];
+   return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:count==='好きなだけ'?5:Number.parseInt(count,10),...(typedBench?{type:typedBench[1]}:{}),batchSearch:true,sharedWording:true};
+  }
+ }
+ // Exact one-holder acceleration; multi-holder distribution is a separate mechanic.
+ const acceleration=text.match(/^自分の(山札|トラッシュ)から(基本エネルギー|「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」)を(1枚|[2-9]枚まで)選び、(このポケモン|自分のポケモン1匹|ベンチポケモン1匹|自分のポケモン|ベンチポケモン|自分の\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモン)につける。(そして山札を切る。)?$/);
+ if(acceleration&&/^\d+$/.test(printed)&&Boolean(acceleration[7])===(acceleration[1]==='山札')){
+  const [,zone,,type,count,holder,holderType]=acceleration,limit=Number.parseInt(count,10);
+  if(limit===1||holder==='このポケモン'||holder.endsWith('1匹')){
+   const target=holder==='このポケモン'?'self':holder.startsWith('ベンチ')?'bench':'own';
+   return {mechanic:'ATTACK_ACCELERATE_BASIC_ENERGY',commands:[...(base?['DAMAGE']:[]),...(zone==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(zone==='山札'?['SHUFFLE_DECK']:[])],zone:zone==='山札'?'deck':'discard',type:type||null,limit,target,holderType:holderType||null,sharedWording:true};
+  }
+ }
+ // The following exact official patterns use the same board-count calculation.
+ const decreasing=text.match(/^(このポケモンにのっているダメカン|相手のバトルポケモンのにげるためのエネルギー|相手のバトルポケモンについているエネルギー)の数×([1-9]\d{0,2})ダメージぶん、このワザのダメージは小さくなる。$/);
+ if(decreasing&&/^\d{1,3}-$/.test(printed)){
+  const metric=({'このポケモンにのっているダメカン':'ownCounters','相手のバトルポケモンのにげるためのエネルギー':'opponentRetreat','相手のバトルポケモンについているエネルギー':'opponentEnergy'})[decreasing[1]];
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type:null,unit:Number(decreasing[2]),base:Number.parseInt(printed,10),subtract:true};
+ }
+ const boardCount=text.match(/^(自分の手札の枚数|相手の手札の枚数|自分がすでにとったサイドの枚数|自分の場のたねポケモンの数|相手の場のたねポケモンの数|自分の場の1進化ポケモンの数|自分の場の進化ポケモンの数|相手の場の進化ポケモンの数|自分のベンチの2進化ポケモンの数|ダメカンがのっている自分のベンチポケモンの数|相手のポケモン全員にのっているダメカンの数|おたがいのバトルポケモンについているエネルギーの数|おたがいのポケモン全員についているエネルギーの数|相手のバトルポケモンのにげるためのエネルギーの数)×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(boardCount&&(boardCount[3]?base!==null&&printed.endsWith('+'):printed===boardCount[2]+'×')){
+  const metrics={'自分の手札の枚数':'ownHand','相手の手札の枚数':'opponentHand','自分がすでにとったサイドの枚数':'ownPrizesTaken','自分の場のたねポケモンの数':'ownBasicCount','相手の場のたねポケモンの数':'opponentBasicCount','自分の場の1進化ポケモンの数':'ownStageOneCount','自分の場の進化ポケモンの数':'ownEvolvedCount','相手の場の進化ポケモンの数':'opponentEvolvedCount','自分のベンチの2進化ポケモンの数':'ownBenchStageTwoCount','ダメカンがのっている自分のベンチポケモンの数':'ownDamagedBenchCount','相手のポケモン全員にのっているダメカンの数':'opponentTeamCounters','おたがいのバトルポケモンについているエネルギーの数':'bothActiveEnergy','おたがいのポケモン全員についているエネルギーの数':'bothTeamEnergy','相手のバトルポケモンのにげるためのエネルギーの数':'opponentRetreat'};
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:metrics[boardCount[1]],type:null,unit:Number(boardCount[2]),base:boardCount[3]?base:0};
+ }
+ const typedCount=text.match(/^自分の場の\[(草|炎|水|雷|超|闘|悪|鋼|無色|竜)\]ポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedCount&&printed===typedCount[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTypedPokemonCount',type:typedCount[1],unit:Number(typedCount[2]),base:0};
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
+ // Physical basic Energy moves from the player's hand, not the once-per-turn
+ // manual attachment slot. Other text variants remain unconnected.
+ const handEnergy=text.match(/^自分の手札から基本エネルギーを1枚選び、(このポケモン|自分のポケモン)につける。$/);
+ if(handEnergy&&base===0)
+  return {mechanic:'ATTACK_ATTACH_BASIC_FROM_HAND',commands:['ATTACH_ENERGY'],target:handEnergy[1]==='このポケモン'?'self':'own'};
+ // The printed attack is unusable until its Pokemon actually leaves the Active Spot.
+ // This is not the ordinary next-turn attack lock and must survive turn changes.
+ const untilSwitch=text.match(/^このワザを使ったなら、このポケモンは、バトル場をはなれるまで「([^「」]{1,40})」が使えない。$/);
+ if(untilSwitch&&base>0&&untilSwitch[1]===String(entry.name).normalize('NFKC'))
+  return {mechanic:'ATTACK_LOCK_UNTIL_SWITCH',commands:['DAMAGE','ADD_STATE'],attackName:untilSwitch[1]};
  const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);
  const hiddenReturn=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、そのカードのオモテを見て、相手の山札にもどして切る。$/);
  if(hiddenDiscard||hiddenReturn)
@@ -148,6 +203,17 @@ function additionalAttackPlan(entry,text){
  if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
  const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
  if(discardHand)return {mechanic:'ATTACK_DISCARD_HAND_DRAW',commands:[...deal,'DISCARD','DRAW'],amount:Number(discardHand[1]),sharedWording:true};
+ // Official printings select an exact number of physical attached Energy cards.
+ // All energy choices must be resolved by the common engine picker rather than
+ // inventing card-specific actions; a zero-attachment case discards zero.
+ const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
+ if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
+  return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
+ // The official coin result determines whether the selected physical Energy
+ // is discarded. Always roll through match-owned deterministic RNG.
+ const coinDiscard=text.match(/^コインを1回投げオモテなら、相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
+ if(coinDiscard&&base!==null&&!printed.endsWith('+'))
+  return {mechanic:'ATTACK_COIN_DISCARD_DEFENDER_ENERGY',commands:[...deal,'COIN_FLIP','DISCARD'],specialOnly:Boolean(coinDiscard[1])};
  const discardEnergy=text.match(/^相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
  if(discardEnergy)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:Boolean(discardEnergy[1])};
  const healTarget=text.match(/^自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
@@ -177,6 +243,53 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
+  return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],sharedWording:true};
+ const typedEvolution=generic.match(/^自分の番に1回使える。自分の山札から\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ if(kind==='ABILITY'&&typedEvolution)
+  return {mechanic:'ABILITY_SEARCH_TYPED_EVOLUTION',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],type:typedEvolution[1],limit:parseInt(typedEvolution[2],10),sharedWording:true};
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。')
+  return {mechanic:'TRAINER_SEARCH_TERA',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:1,sharedWording:true};
+ const typedBoost=generic.match(/^この番、自分の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&typedBoost)
+  return {mechanic:'TRAINER_TYPED_DAMAGE_BOOST',commands:['MODIFY_DAMAGE'],type:typedBoost[1],amount:Number(typedBoost[2]),sharedWording:true};
+ const openingBench=generic.match(/^このワザは、後攻プレイヤーの最初の番には使えない。自分のベンチポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(kind==='ATTACK'&&openingBench&&String(entry.damage).normalize('NFKC')===openingBench[1]+'×')
+  return {mechanic:'BENCH_COUNT_DAMAGE',commands:['DAMAGE'],side:'own',unit:Number(openingBench[1]),base:0,noSecondPlayerFirstTurn:true,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='次の相手の番、このポケモンはたねポケモン([無色]ポケモンをのぞく)からワザのダメージを受けない。'&&/^\d+$/.test(String(entry.damage)))
+  return {mechanic:'ATTACK_BASIC_DAMAGE_PROTECTION',commands:['DAMAGE','PREVENT_DAMAGE'],exceptType:'無色',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。')
+  return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],sharedWording:true};
+ const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
+  return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
+ const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
+  return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};
+ const topDistinct=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中からポケモンとトレーナーズを1枚ずつ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topDistinct)
+  return {mechanic:'TRAINER_TOP_POKEMON_TRAINER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topDistinct[1]),amount:2,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='ダメージを与える前に、相手のバトルポケモンについている「ポケモンのどうぐ」をトラッシュする。'&&/^\d+$/.test(String(entry.damage)))
+  return {mechanic:'ATTACK_DISCARD_TOOL_BEFORE_DAMAGE',commands:['DISCARD','DAMAGE'],sharedWording:true};
+ const recovery=generic.match(/^自分のトラッシュからポケモン\(「ルールを持つポケモン」をのぞく\)と基本エネルギーを合計([1-9])枚まで選び、相手に見せて、手札に加える。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&recovery)
+  return {mechanic:'RECOVER_NON_RULE_AND_ENERGY',commands:['REVEAL','ADD_TO_HAND'],amount:Number(recovery[1]),sharedWording:true};
+ const fullHeal=generic.match(/^残りHPが「([1-9]\d{0,2})」以下の自分のポケモン1匹のHPを、すべて回復する。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&fullHeal)
+  return {mechanic:'HEAL_LOW_HP_FULL',commands:['HEAL'],threshold:Number(fullHeal[1]),sharedWording:true};
+ const evoDiscard=generic.match(/^相手のバトルポケモンが進化ポケモンなら、([1-9]\d{0,2})ダメージ追加。その場合、このポケモンについているエネルギーを、すべてトラッシュする。$/);
+ if(kind==='ATTACK'&&evoDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_EVOLUTION_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),bonus:Number(evoDiscard[1]),sharedWording:true};
+ const prizeDiscard=generic.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。このポケモンについているエネルギーを1個選び、トラッシュする。$/);
+ if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
+ // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&discardDrawAbility)
+  return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};
+ const attachDrawAbility=generic.match(/^自分の番に1回使える。自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、このポケモンにつける。その後、自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&attachDrawAbility)
+  return {mechanic:'ABILITY_ATTACH_SELF_DRAW',commands:['ATTACH_ENERGY','DRAW'],type:attachDrawAbility[1],amount:Number(attachDrawAbility[2]),sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
@@ -184,6 +297,10 @@ function plan(entry,kind){
  // damage reduction applies after weakness/resistance, unless ignored by an attack.
  // A printed Rocket Team minimum-size condition is a continuous attack gate.
  // It must be checked when an attack is declared, not as a one-time ability.
+ // Suppress only the opposing Active Pokemon's abilities, except the named
+ // official ability itself. This is continuous and never a manual action.
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性(「あんやのはばたき」をのぞく)は、すべてなくなる。')
+  return {mechanic:'ACTIVE_OPPONENT_ABILITY_SUPPRESSION',commands:['ADD_STATE'],exceptAbilityName:'あんやのはばたき'};
  const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
  if(kind==='ABILITY'&&rocketGate)
   return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};

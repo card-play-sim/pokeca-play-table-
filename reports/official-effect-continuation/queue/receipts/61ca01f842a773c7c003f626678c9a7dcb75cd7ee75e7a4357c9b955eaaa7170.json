@@ -1,25 +1,48 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_E2B9726C7F4FE3CF:18420af2b2e54624f95ea5a505cc48a947f89ed90df744ebce232d18695fe62a",
   "taskFingerprint": "18420af2b2e54624f95ea5a505cc48a947f89ed90df744ebce232d18695fe62a",
-  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
-  "attemptId": "3b6f0f3b-8042-48c8-9194-b342ef24e16d",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "d63cda52-f746-4ec8-8caa-7c4c8b3b0a90",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47026:attack:つめたいはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ACCELERATE_BASIC_ENERGY",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47222:attack:つめたいはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ACCELERATE_BASIC_ENERGY",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "b567fbea2909217948d9204f8b91af33ba96e4a1fdd918c7828a22e4028d1e6a"
+  "checksum": "476906112f1036dbd64f43c391a981d06441bc605fb521b322a1371902dc933e"
 }
