@@ -1,0 +1,63 @@
+name: Verify official board-count attack damage
+on:
+  push:
+    branches: [battle/shared-board-count-damage-20261124]
+    paths:
+      - '.github/workflows/battle-board-count-damage-verify.yml'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/battle-board-count-damage-official.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-and-rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build exact official print effects and runtime
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/control-014-official-parser.test.cjs
+          node scripts/stage-battle-board-count-official.cjs
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Execute official board count attacks and preserve existing effects
+        run: |
+          node tests/battle-board-count-damage-official.test.cjs
+          node tests/battle-multi-self-energy-official.test.cjs
+          node tests/control-014-shared-effects.test.cjs
+          node tests/control-011-engine-batch.test.cjs
+          node tests/reference-runtime-source-parity.test.cjs
+          node tests/card-auto-connect.test.cjs
+      - name: Preserve generated output on this branch only
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/intake.json reports/official-effect-continuation/board-count-bulk-intake.json data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: verified board-count attack damage data'
+            git push origin HEAD:battle/shared-board-count-damage-20261124
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-board-count-damage-battle-evidence
+          path: |
+            test-results/battle-board-count-damage-official.json
+            reports/official-effect-continuation/board-count-bulk-intake.json
+          if-no-files-found: warn

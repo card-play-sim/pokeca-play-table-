@@ -395,8 +395,12 @@ function prepare(r, e, kind) {
         own.bench[0].energyCards.push(own.active.energyCards.splice(index,1)[0]);
     }
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
-    if (["opponentEnergy", "opponentTeamEnergy"].includes(e.plan.metric)) {
-      const targets = e.plan.metric === "opponentEnergy" ? [opponent.active] : [opponent.active, ...opponent.bench];
+    if (e.plan.metric === "ownCounters") own.active.damage = 20;
+    if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if (e.plan.metric === "ownDamagedBenchCount" && own.bench.length) own.bench[0].damage=10;
+    if (e.plan.metric === "ownPrizesTaken" && own.prizeCards.length>1) {own.prizes--;own.hand.push(own.prizeCards.pop());}
+    if (["opponentEnergy", "opponentTeamEnergy", "bothActiveEnergy", "bothTeamEnergy"].includes(e.plan.metric)) {
+      const targets = ["opponentEnergy","bothActiveEnergy"].includes(e.plan.metric) ? [opponent.active] : [opponent.active, ...opponent.bench];
       for (const target of targets) {
         const index = opponent.deck.findIndex(card => card.kind === "energy" && !card.isSpecial);
         if (index >= 0) target.energyCards.push(opponent.deck.splice(index, 1)[0]);
@@ -696,6 +700,21 @@ function verifyCase(t, e) {
       !e.plan.type || [e.plan.type,e.plan.secondType].includes(energy.energyType)).length;
     const metrics = {
       opponentCounters: defendingSide.active.damage / 10,
+      ownCounters: attackingSide.active.damage / 10,
+      ownHand: attackingSide.hand.length,
+      opponentHand: defendingSide.hand.length,
+      ownPrizesTaken: 6-attackingSide.prizes,
+      ownBasicCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic).length,
+      opponentBasicCount: [defendingSide.active,...defendingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic).length,
+      ownStageOneCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage===1).length,
+      ownEvolvedCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage>0).length,
+      opponentEvolvedCount: [defendingSide.active,...defendingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage>0).length,
+      ownBenchStageTwoCount: attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).facts.stage===2).length,
+      ownDamagedBenchCount: attackingSide.bench.filter(c=>c.damage>0).length,
+      opponentTeamCounters: [defendingSide.active,...defendingSide.bench].reduce((n,c)=>n+c.damage/10,0),
+      ownTypedPokemonCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).length,
+      bothActiveEnergy: count([attackingSide.active,defendingSide.active]),
+      bothTeamEnergy: count([attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench]),
       ownPokemon: 1 + attackingSide.bench.length,
       opponentRetreat: defendingSide.active.retreatCost,
       ownDiscardEnergy: attackingSide.discard.filter(card=>card.kind==="energy").length,
@@ -706,7 +725,12 @@ function verifyCase(t, e) {
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
-    verifyPrintedAttack(before, after, e, e.plan.base + e.plan.unit * metrics[e.plan.metric]);
+    assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
+    verifyPrintedAttack(before, after, e, Math.max(0,e.plan.base+(e.plan.subtract?-1:1)*e.plan.unit*metrics[e.plan.metric]));
+    if (e.plan.subtract) {
+      assert(p.restoreSession(p.getResumeSnapshot()).ok);
+      assert.deepEqual(p.getSnapshot(),after);
+    }
   }
   if (e.plan.mechanic === "ATTACK_RESET_HAND") {
     assert.equal(after.players[0].hand.length, Math.min(e.plan.amount, attackingSide.hand.length + attackingSide.deck.length));
