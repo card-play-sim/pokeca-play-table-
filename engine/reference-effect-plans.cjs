@@ -126,6 +126,32 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate,base,bonus:Number(bonus),
    ...(type?{type}:{threshold:Number(prizes||hand||stage||extraEnergy)})};
  }
+ // Exact printed board predicates. Unknown clauses never fall back to damage only.
+ if(base!==null&&printed.endsWith('+')){
+  const boardBonus=text.match(/^(.+)、([1-9]\d{0,2})ダメージ追加。$/);
+  if(boardBonus){
+   const clause=boardBonus[1],bonus=Number(boardBonus[2]);
+   const patterns=[
+    ['ownHandEmpty',/^自分の手札が1枚もないなら$/],
+    ['ownPrizesExact',/^自分のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
+    ['opponentPrizesExact',/^相手のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
+    ['ownDeckAtMost',/^自分の山札の残り枚数が([1-9]\d?)枚以下なら$/,'threshold'],
+    ['allDamagedBench',/^自分のベンチポケモン全員にダメカンがのっているなら$/],
+    ['ownBenchNamed',/^自分のベンチに「([^「」]{1,40})」がいるなら$/,'name'],
+    ['ownBenchContains',/^自分のベンチに、名前に「([^「」]{1,40})」とつくポケモンがいるなら$/,'name'],
+    ['ownStadium',/^場に自分のスタジアムが出ているなら$/],
+    ['stadiumContains',/^名前に「([^「」]{1,40})」とつくスタジアムが場に出ているなら$/,'name'],
+    ['opponentType',/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら$/,'type'],
+    ['opponentResistance',/^相手のバトルポケモンの抵抗力が\[([草炎水雷超闘悪鋼竜無色])\]タイプなら$/,'type'],
+    ['opponentTera',/^相手のバトルポケモンが「テラスタル」のポケモンなら$/],
+    ['ownSpecialEnergy',/^このポケモンに特殊エネルギーがついているなら$/]
+   ];
+   for(const [predicate,regex,key] of patterns){
+    const match=clause.match(regex);
+    if(match)return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate,base,bonus,...(key?{[key]:key==='threshold'?Number(match[1]):match[1]}:{}),sharedWording:true};
+   }
+  }
+ }
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};
