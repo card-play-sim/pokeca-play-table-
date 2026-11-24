@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 859,
-      "missing": 843
+      "connected": 865,
+      "missing": 837
     },
     "J": {
       "total": 870,
@@ -16,16 +16,16 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 853,
-      "MECHANIC_REQUIRED": 111,
-      "ENGINE_CONNECTION_REQUIRED": 728,
+      "CONNECTED_UNTESTED": 859,
+      "MECHANIC_REQUIRED": 107,
+      "ENGINE_CONNECTION_REQUIRED": 726,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
       "CONNECTED_UNTESTED": 426,
-      "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 389,
+      "MECHANIC_REQUIRED": 52,
+      "ENGINE_CONNECTION_REQUIRED": 390,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -1023,8 +1023,8 @@
       "name": "ザマゼンタ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50698.json"
     },
     {
@@ -1862,8 +1862,8 @@
       "name": "ペパーのホシガリス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47349.json"
     },
     {
@@ -2498,8 +2498,8 @@
       "name": "メラルバ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47554.json"
     },
     {
@@ -2825,8 +2825,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47639.json"
     },
     {
@@ -3332,8 +3331,8 @@
       "name": "オニスズメ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47785.json"
     },
     {
@@ -4300,8 +4299,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48072.json"
     },
     {
@@ -4326,8 +4324,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48080.json"
     },
     {
@@ -4352,8 +4349,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48086.json"
     },
     {
@@ -5143,8 +5139,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48551.json"
     },
     {
@@ -5805,8 +5800,7 @@
       "name": "レシラムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48842.json"
     },
     {
@@ -21869,22 +21863,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 967,
-        "ENGINE_CONNECTED": 868,
-        "ENGINE_CONNECTION_REQUIRED": 29
+        "MECHANIC_REQUIRED": 927,
+        "ENGINE_CONNECTED": 910,
+        "ENGINE_CONNECTION_REQUIRED": 27
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 859,
-        "MECHANIC_REQUIRED": 812,
-        "ENGINE_CONNECTION_REQUIRED": 27,
+        "ENGINE_CONNECTED": 865,
+        "MECHANIC_REQUIRED": 800,
+        "ENGINE_CONNECTION_REQUIRED": 33,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
         "ENGINE_CONNECTED": 426,
-        "MECHANIC_REQUIRED": 431,
-        "ENGINE_CONNECTION_REQUIRED": 8,
+        "MECHANIC_REQUIRED": 430,
+        "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21893,7 +21887,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2791,
-    "unconnected": 2282
+    "engineConnected": 2839,
+    "unconnected": 2234
   }
 }

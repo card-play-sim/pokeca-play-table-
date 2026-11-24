@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_EA7D7E958AF14E7A:a9abe7e877206b9854094d24e4821c9a55807eb7d4ff4ddf4f84bc7f3e47c69e",
   "taskFingerprint": "a9abe7e877206b9854094d24e4821c9a55807eb7d4ff4ddf4f84bc7f3e47c69e",
-  "executionFingerprint": "796ec6df0ec82bc8709a38d4493f00cc218d77efe9a1792a23a2e8e56b186bac",
-  "attemptId": "e2aec127-716b-480f-9686-e2c985f056e8",
-  "status": "BLOCKED",
+  "executionFingerprint": "9b80cad368c0b50e57c0b59b3b66d4a96e0f23642db87ef6781b017afba8d579",
+  "attemptId": "bdbeb6f3-31db-4d41-a28f-c2e76ad2a614",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47639:attack:ブレイズバースト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_PRIZE_BONUS_DISCARD",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "7b3f6bce44fd6ae01a341de31740e9acf12fa490dcda19f91bc7b69a0940d320"
+  "checksum": "39d69d49dee35f11b5965a1aa0ab6486913bfa2e3d903284fbfa2800336e038d"
 }
