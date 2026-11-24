@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:70f558e7a61605db4e6b3655ff83e94d4ce77fb185007b537fd706c97479f39b",
   "taskFingerprint": "70f558e7a61605db4e6b3655ff83e94d4ce77fb185007b537fd706c97479f39b",
-  "executionFingerprint": "49c2f84ff204ad6fddaa813bc1c729405a483830e67bdf1905415b0c3165ed38",
-  "attemptId": "5491366c-1d2f-46ad-bfa5-421a14f13c4e",
+  "executionFingerprint": "ab05f794f474c44e7158719d954ba80c9f67ce6885926f76bf63692b904ce3f3",
+  "attemptId": "78760be3-638f-4ef7-b805-b79b7d0517de",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -32,8 +32,19 @@
       },
       {
         "slot": "45843:attack:ハンマーウィップ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45725:attack:アクアスラッシュ:0",
@@ -361,5 +372,5 @@
       }
     ]
   },
-  "checksum": "6cedb7b6f3a788d22fcf78d1d6f2cd0390e0f09756d91b1b414c5e256e6fc493"
+  "checksum": "9e20c1552191319bacc684738b979a77ca6ee2e8aaf53ecde61e0c88b10d20c6"
 }
