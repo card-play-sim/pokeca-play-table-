@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 940,
-      "missing": 762
+      "connected": 944,
+      "missing": 758
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 934,
-      "MECHANIC_REQUIRED": 98,
-      "ENGINE_CONNECTION_REQUIRED": 660,
+      "CONNECTED_UNTESTED": 938,
+      "MECHANIC_REQUIRED": 96,
+      "ENGINE_CONNECTION_REQUIRED": 658,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9676,8 +9676,7 @@
       "name": "イワパレス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47303.json"
     },
     {
@@ -9890,8 +9889,7 @@
       "name": "イワパレス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47368.json"
     },
     {
@@ -13970,8 +13968,7 @@
       "name": "イワパレス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48536.json"
     },
     {
@@ -14766,8 +14763,7 @@
       "name": "イワパレス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48762.json"
     },
     {
@@ -19889,8 +19885,8 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48331.json"
     },
     {
@@ -20228,8 +20224,8 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50039.json"
     },
     {
@@ -21770,15 +21766,15 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 859,
-        "ENGINE_CONNECTED": 967,
-        "ENGINE_CONNECTION_REQUIRED": 38
+        "MECHANIC_REQUIRED": 816,
+        "ENGINE_CONNECTED": 979,
+        "ENGINE_CONNECTION_REQUIRED": 69
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 940,
-        "MECHANIC_REQUIRED": 724,
-        "ENGINE_CONNECTION_REQUIRED": 34,
+        "ENGINE_CONNECTED": 944,
+        "MECHANIC_REQUIRED": 714,
+        "ENGINE_CONNECTION_REQUIRED": 40,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21794,7 +21790,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2989,
-    "unconnected": 2084
+    "engineConnected": 3005,
+    "unconnected": 2068
   }
 }
