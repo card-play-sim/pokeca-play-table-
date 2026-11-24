@@ -37,4 +37,15 @@ assert(phantom,'official 90-damage printed attack');
 assert.equal(phantom.damage,'90');
 assert.equal(phantom.plan.mechanic,'PHANTOM');
 assert.equal(phantom.plan.counterCount,2);
-console.log('PASS official until-switch attack lock, fail-closed tamper, and two-counter bench attack');
+// Seven remaining printings share two precisely checked variants of this attack.
+for (const [id, wording, target] of [
+ ['47700','自分の手札から基本エネルギーを1枚選び、このポケモンにつける。','self'],
+ ['45775','自分の手札から基本エネルギーを1枚選び、自分のポケモンにつける。','own'],
+]) {
+ const row=officialPrint(id);
+ const attack=compiled(row).attacks.find(a=>a.text===wording);
+ assert(attack,id+': exact attack text');
+ assert.equal(attack.damage,'0',id+': printed non-damage attack');
+ assert.deepEqual(attack.plan,{mechanic:'ATTACK_ATTACH_BASIC_FROM_HAND',commands:['ATTACH_ENERGY'],target},id);
+}
+console.log('PASS official until-switch lock, two counters, and physical basic-Energy attachment');
