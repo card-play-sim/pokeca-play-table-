@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D7368DD184D269F:c3d412908df1c4151e9e7f4d9cee49ac7d96855d518959ced8c4e2538b85cadf",
   "taskFingerprint": "c3d412908df1c4151e9e7f4d9cee49ac7d96855d518959ced8c4e2538b85cadf",
-  "executionFingerprint": "20d52600c15c30e7c65d515cbea2574c7ebba63eeec11e9720bd0975e9ec6d75",
-  "attemptId": "690247b9-21e7-4cbc-8244-c4fd607bae07",
-  "status": "BLOCKED",
+  "executionFingerprint": "e252a58e1dd0f79b92089c8658c6897bcf04dba35a3e7b734f87fa0869e5a143",
+  "attemptId": "84b3254b-b8d3-4cda-abbd-19a7b4657f46",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46537:attack:メタルブラスト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "d3250e98c22ef1057d9306f54f3ab67bc4960f233455e92ea8f8c770a4951c66"
+  "checksum": "6736485b10d66c9b122641c756ae162b9542a28307d20cd3924596f14e851b7d"
 }
