@@ -19,6 +19,7 @@ function linkedPredecessor(chain,stage,name){
   const body=boxed?html.slice(row[0].length).replace(/<\/div\/?>\s*$/,''):html;
   const linked=[...body.matchAll(entry)];
   if(!linked.length||linked.map(x=>x[0]).join('').replace(/\s/g,'')!==body.replace(/\s/g,''))return null;
+  if(linked.some(link=>link[3]&&link[1]!==`ev_${link[3]}`))return null;
   return linked;
  });
  if(parsed.includes(null))return null;
