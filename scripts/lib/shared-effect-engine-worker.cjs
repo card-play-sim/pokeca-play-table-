@@ -90,21 +90,27 @@ function fixtureResources(manifest,deckIndex,source,e){
  const legal=[...records.values()].filter(r=>r.officialCardId!==source.officialCardId&&(r.category==='pokemon'?r.attacks.length>0&&r.attacks.every(a=>a.plan)&&r.abilities.every(a=>a.plan):r.mainPlan));
  const normalize=c=>({goods:'item',support:'supporter'}[c]||c);
  const sameName=(a,b)=>a===b;
+ const reservedPrints=new Map();
  function ensure(index,record,count=1){
-  if(!record)return false;
-  const deck=manifest.decks[index],cards=deck.cards;
+  if(!record||!Number.isInteger(count)||count<1)return false;
+  const deck=manifest.decks[index],cards=deck.cards.map(c=>({...c}));
+  const total=deck.cards.reduce((n,c)=>n+c.count,0);
+  const reserved=reservedPrints.get(index)||new Set();
+  const protect=c=>lookup(c)?.officialCardId===source.officialCardId||reserved.has(lookup(c)?.officialCardId);
+  const mark=()=>{reserved.add(record.officialCardId);reservedPrints.set(index,reserved);};
   const exact=cards.filter(c=>lookup(c)?.officialCardId===record.officialCardId).reduce((n,c)=>n+c.count,0);
-  if(exact>=count)return true;
+  if(exact>=count){mark();return true;}
   let needed=count-exact;
   const named=cards.filter(c=>sameName(c.name,record.deckName));
-  // Replace another print of the same name only in the test manifest.
-  for(const donor of named.filter(c=>lookup(c)?.officialCardId!==record.officialCardId)){
+  // All tentative substitutions are on a private copy. No failed request
+  // can remove physical cards or invalidate an earlier successful reservation.
+  for(const donor of named.filter(c=>lookup(c)?.officialCardId!==record.officialCardId&&!protect(c))){
    const n=Math.min(needed,donor.count);donor.count-=n;needed-=n;
    if(!needed)break;
   }
   const remainingNamed=cards.filter(c=>c.name===record.deckName).reduce((n,c)=>n+c.count,0);
-  if(record.category!=='energy'&&remainingNamed+count-exact>4)return false;
-  const donorOK=c=>c.count>0&&c.name!==source.deckName&&c.name!==record.deckName&&
+  if(record.mainPlan?.mechanic!=='BASIC_ENERGY'&&remainingNamed+count-exact>4)return false;
+  const donorOK=c=>c.count>0&&!protect(c)&&c.name!==source.deckName&&c.name!==record.deckName&&
    (record.category==='energy'?normalize(c.category)==='energy':normalize(c.category)!=='energy'&&normalize(c.category)!=='pokemon');
   while(needed){
    const donor=cards.filter(donorOK).sort((a,b)=>b.count-a.count)[0];
@@ -114,7 +120,9 @@ function fixtureResources(manifest,deckIndex,source,e){
   const existing=cards.find(c=>c.referenceOfficialCardId===record.officialCardId);
   if(existing)existing.count+=count-exact;
   else cards.push({name:record.deckName,category:record.category,count:count-exact,referenceOfficialCardId:record.officialCardId});
+  if(cards.reduce((n,c)=>n+c.count,0)!==total||cards.some(c=>!Number.isInteger(c.count)||c.count<0))return false;
   deck.cards=cards.filter(c=>c.count>0);
+  mark();
   return true;
  }
  function pick(predicate,index=deckIndex){
