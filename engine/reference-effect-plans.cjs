@@ -148,6 +148,12 @@ function additionalAttackPlan(entry,text){
  if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
  const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
  if(discardHand)return {mechanic:'ATTACK_DISCARD_HAND_DRAW',commands:[...deal,'DISCARD','DRAW'],amount:Number(discardHand[1]),sharedWording:true};
+ // Official printings select an exact number of physical attached Energy cards.
+ // All energy choices must be resolved by the common engine picker rather than
+ // inventing card-specific actions; a zero-attachment case discards zero.
+ const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
+ if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
+  return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
  const discardEnergy=text.match(/^相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
  if(discardEnergy)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:Boolean(discardEnergy[1])};
  const healTarget=text.match(/^自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
