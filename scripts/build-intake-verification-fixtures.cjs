@@ -85,7 +85,7 @@ for (const r of selected) {
       const sharedAttackEvents = ["ATTACK_DISCARD_FIELD_BASIC","ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_DISCARD_DEFENDER_ENERGY",
         "ATTACK_HEAL_OWN_TARGET","ATTACK_SPLASH_OWN_BENCH","ATTACK_DISABLE_SELECTED_MOVE","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL",
         "ATTACK_BLIND_HAND_CHOICE","ATTACK_SPREAD_DAMAGE","PHANTOM","TRAINER_SWITCH_BOTH",
-        "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT","SUPPORTER_SEARCH_BY_STAGE"].includes(e.plan.mechanic)
+        "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT","SUPPORTER_SEARCH_BY_STAGE","ATTACK_ACCELERATE_BASIC_ENERGY","SEARCH_REVEAL_TO_HAND_ATTACK","SEARCH_BASIC_TO_BENCH_ATTACK"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event=>event.type==="attack"||event.details?.command&&!event.details.reference)
         : undefined;
       fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents, sharedAttackEvents, trigger: t.trigger });

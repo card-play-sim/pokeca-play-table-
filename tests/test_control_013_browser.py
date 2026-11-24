@@ -276,8 +276,24 @@ async def main():
     assert 0<len(selected)<=f['e']['plan']['limit']
     assert set(selected)<={card['id'] for card in after['players'][0]['hand']}
     assert set(selected).isdisjoint(card['id'] for card in after['players'][0]['deck'])
-    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    revealed=any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
+    assert revealed==f['e']['plan'].get('reveal',True)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_ACCELERATE_BASIC_ENERGY':
+    plan=f['e']['plan']
+    choices=option['action']['selections']
+    selected=choices['energy']
+    target_id=before['players'][0]['active']['id'] if plan['target']=='self' else choices['attachTo'][0]
+    old=before['players'][0]
+    new=after['players'][0]
+    target=next(c for c in [new['active'],*new['bench']] if c and c['id']==target_id)
+    assert 0<len(selected)<=plan['limit']
+    assert set(selected)<={c['id'] for c in old[plan['zone']]}
+    assert set(selected).isdisjoint(c['id'] for c in new[plan['zone']])
+    assert set(selected)<={c['id'] for c in target['energyCards']}
+    for ident in selected:
+     assert any(ev.get('details',{}).get('command')=='ATTACH_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target_id and ev['details'].get('fromZone')==plan['zone'] for ev in events)
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==(plan['zone']=='deck')
    if m=='DISCARD_ALL_SELF_ENERGY_ATTACK':
     before_ids={card['id'] for card in before['players'][0]['active'].get('energyCards',[])}
     assert before_ids

@@ -345,7 +345,7 @@ function verifyRequests(g,actor,card,effect,action){
   const r=Selection.resolve(original,req,action.selections);
   if(r.kind==='COUNTERS'){
    const allocation=action.selections?.allocation;assert(allocation&&typeof allocation==='object'&&!Array.isArray(allocation),'COUNTER_ALLOCATION_REQUIRED');
-   const entries=Object.entries(allocation);assert(entries.every(([key,n])=>r.candidates.some(c=>c.id===key)&&Number.isInteger(n)&&n>=0)&&entries.reduce((s,[,n])=>s+n,0)===6,'INVALID_COUNTER_ALLOCATION');continue;
+   const entries=Object.entries(allocation);assert(entries.every(([key,n])=>r.candidates.some(c=>c.id===key)&&Number.isInteger(n)&&n>=0)&&entries.reduce((s,[,n])=>s+n,0)===r.min&&r.min===r.max,'INVALID_COUNTER_ALLOCATION');continue;
   }
   if(r.kind==='COUNT'){const n=action.selections?.count;assert(Number.isInteger(n)&&n>=r.min&&n<=r.max,'INVALID_COUNTER_COUNT');continue;}
   const ids=r.kind==='POKEMON'?(action.targetIds||[]):selected(action,r.key);
@@ -1060,7 +1060,7 @@ function completeAction(g,actor,option){
  for(const original of option.requests||[]){
   const r=Selection.resolve(original,option.requests,action.selections);
   if(r.kind==='POKEMON')action.targetIds=r.candidates.slice(0,r.min).map(c=>c.instanceId);
-  else if(r.kind==='COUNTERS'){action.selections||={};action.selections.allocation=r.candidates.length?{[r.candidates[0].id]:6}:{};}
+  else if(r.kind==='COUNTERS'){action.selections||={};action.selections.allocation=r.candidates.length?{[r.candidates[0].id]:r.min}:{};}
   else if(r.kind==='COUNT'){action.selections||={};const source=find(g,action.selections.source?.[0])?.card;action.selections.count=Math.min(r.max,Math.floor((source?.damage||0)/10));}
   else {
    action.selections||={};
