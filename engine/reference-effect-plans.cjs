@@ -125,6 +125,20 @@ function additionalAttackPlan(entry,text){
   const metric=source.endsWith('ダメカン')?'opponentCounters':source==='自分の場のポケモン'?'ownPokemon':source.startsWith('このポケモン')?'ownEnergy':source.startsWith('相手のバトルポケモン')?'opponentEnergy':'opponentTeamEnergy';
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
  }
+ // The following exact official patterns use the same board-count calculation.
+ const decreasing=text.match(/^(このポケモンにのっているダメカン|相手のバトルポケモンのにげるためのエネルギー|相手のバトルポケモンについているエネルギー)の数×([1-9]\d{0,2})ダメージぶん、このワザのダメージは小さくなる。$/);
+ if(decreasing&&/^\d{1,3}-$/.test(printed)){
+  const metric=({'このポケモンにのっているダメカン':'ownCounters','相手のバトルポケモンのにげるためのエネルギー':'opponentRetreat','相手のバトルポケモンについているエネルギー':'opponentEnergy'})[decreasing[1]];
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type:null,unit:Number(decreasing[2]),base:Number.parseInt(printed,10),subtract:true};
+ }
+ const boardCount=text.match(/^(自分の手札の枚数|相手の手札の枚数|自分がすでにとったサイドの枚数|自分の場のたねポケモンの数|相手の場のたねポケモンの数|自分の場の1進化ポケモンの数|自分の場の進化ポケモンの数|相手の場の進化ポケモンの数|自分のベンチの2進化ポケモンの数|ダメカンがのっている自分のベンチポケモンの数|相手のポケモン全員にのっているダメカンの数|おたがいのバトルポケモンについているエネルギーの数|おたがいのポケモン全員についているエネルギーの数|相手のバトルポケモンのにげるためのエネルギーの数)×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(boardCount&&(boardCount[3]?base!==null&&printed.endsWith('+'):printed===boardCount[2]+'×')){
+  const metrics={'自分の手札の枚数':'ownHand','相手の手札の枚数':'opponentHand','自分がすでにとったサイドの枚数':'ownPrizesTaken','自分の場のたねポケモンの数':'ownBasicCount','相手の場のたねポケモンの数':'opponentBasicCount','自分の場の1進化ポケモンの数':'ownStageOneCount','自分の場の進化ポケモンの数':'ownEvolvedCount','相手の場の進化ポケモンの数':'opponentEvolvedCount','自分のベンチの2進化ポケモンの数':'ownBenchStageTwoCount','ダメカンがのっている自分のベンチポケモンの数':'ownDamagedBenchCount','相手のポケモン全員にのっているダメカンの数':'opponentTeamCounters','おたがいのバトルポケモンについているエネルギーの数':'bothActiveEnergy','おたがいのポケモン全員についているエネルギーの数':'bothTeamEnergy','相手のバトルポケモンのにげるためのエネルギーの数':'opponentRetreat'};
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:metrics[boardCount[1]],type:null,unit:Number(boardCount[2]),base:boardCount[3]?base:0};
+ }
+ const typedCount=text.match(/^自分の場の\[(草|炎|水|雷|超|闘|悪|鋼|無色|竜)\]ポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedCount&&printed===typedCount[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTypedPokemonCount',type:typedCount[1],unit:Number(typedCount[2]),base:0};
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
  const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);

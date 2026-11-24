@@ -542,11 +542,24 @@ function attackBonusApplies(predicate,own,defender){
 }
 function attackMetric(plan,own,other){
  if(plan.metric==='opponentCounters')return (other.active.damage||0)/10;
+ if(plan.metric==='ownCounters')return (own.active.damage||0)/10;
+ if(plan.metric==='ownHand')return own.hand.length;
+ if(plan.metric==='opponentHand')return other.hand.length;
+ if(plan.metric==='ownPrizesTaken')return 6-own.prizes;
+ if(plan.metric==='ownBasicCount')return field(own).filter(c=>record(c).facts.basic).length;
+ if(plan.metric==='opponentBasicCount')return field(other).filter(c=>record(c).facts.basic).length;
+ if(plan.metric==='ownStageOneCount')return field(own).filter(c=>record(c).facts.stage===1).length;
+ if(plan.metric==='ownEvolvedCount')return field(own).filter(c=>record(c).facts.stage>0).length;
+ if(plan.metric==='opponentEvolvedCount')return field(other).filter(c=>record(c).facts.stage>0).length;
+ if(plan.metric==='ownBenchStageTwoCount')return own.bench.filter(c=>record(c).facts.stage===2).length;
+ if(plan.metric==='ownDamagedBenchCount')return own.bench.filter(c=>c.damage>0).length;
+ if(plan.metric==='opponentTeamCounters')return field(other).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownTypedPokemonCount')return field(own).filter(c=>record(c).facts.types.includes(plan.type)).length;
  if(plan.metric==='ownPokemon')return field(own).length;
  if(plan.metric==='opponentPrizesTaken')return 6-other.prizes;
  if(plan.metric==='opponentRetreat')return other.active.retreatCost;
  if(plan.metric==='ownDiscardEnergy')return own.discard.filter(card=>card.kind==='energy').length;
- const holders={ownEnergy:[own.active],ownTeamEnergy:field(own),opponentEnergy:[other.active],opponentTeamEnergy:field(other)}[plan.metric];
+ const holders={ownEnergy:[own.active],ownTeamEnergy:field(own),opponentEnergy:[other.active],opponentTeamEnergy:field(other),bothActiveEnergy:[own.active,other.active],bothTeamEnergy:[...field(own),...field(other)]}[plan.metric];
  assert(holders,'UNKNOWN_ATTACK_DAMAGE_METRIC');
  return holders.flatMap(energyUnits).filter(unit=>!plan.type||unit.includes(plan.type)||Boolean(plan.secondType&&unit.includes(plan.secondType))).length;
 }
@@ -659,7 +672,7 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
    break;
   case 'SCALED_ATTACK_DAMAGE':
-   damage(g,actor,o.active,plan.base+plan.unit*attackMetric(plan,p,o));
+   damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
    break;
   case 'ATTACK_RESET_HAND':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
