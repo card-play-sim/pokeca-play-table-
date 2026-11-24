@@ -249,7 +249,7 @@ function prepare(r, e, kind) {
       });
     }
   }
-  if (m === "ATTACK_DISCARD_DEFENDER_ENERGY" && e.plan.specialOnly) {
+  if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m) && e.plan.specialOnly) {
     const opponentEntries = manifest.decks[1-locations[0].deck].cards;
     const ignition = [...records.values()].find(record => record.mainPlan?.mechanic === "IGNITION");
     if (!ignition) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
@@ -407,8 +407,12 @@ function prepare(r, e, kind) {
         own.bench[0].energyCards.push(own.active.energyCards.splice(index,1)[0]);
     }
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
-    if (["opponentEnergy", "opponentTeamEnergy"].includes(e.plan.metric)) {
-      const targets = e.plan.metric === "opponentEnergy" ? [opponent.active] : [opponent.active, ...opponent.bench];
+    if (e.plan.metric === "ownCounters") own.active.damage = 20;
+    if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if (e.plan.metric === "ownDamagedBenchCount" && own.bench.length) own.bench[0].damage=10;
+    if (e.plan.metric === "ownPrizesTaken" && own.prizeCards.length>1) {own.prizes--;own.hand.push(own.prizeCards.pop());}
+    if (["opponentEnergy", "opponentTeamEnergy", "bothActiveEnergy", "bothTeamEnergy"].includes(e.plan.metric)) {
+      const targets = ["opponentEnergy","bothActiveEnergy"].includes(e.plan.metric) ? [opponent.active] : [opponent.active, ...opponent.bench];
       for (const target of targets) {
         const index = opponent.deck.findIndex(card => card.kind === "energy" && !card.isSpecial);
         if (index >= 0) target.energyCards.push(opponent.deck.splice(index, 1)[0]);
@@ -429,13 +433,13 @@ function prepare(r, e, kind) {
     }
   }
   if (["ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_HEAL_OWN_TARGET","ATTACK_DISCARD_DEFENDER_ENERGY",
-    "ATTACK_DISCARD_FIELD_BASIC","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
+    "ATTACK_DISCARD_FIELD_BASIC","ATTACK_COIN_DISCARD_DEFENDER_ENERGY","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
     const [own, other] = frame.game.players;
     if (m === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
       own.deck.push(...own.hand.splice(Math.max(0,e.plan.limit-1)));
     }
     if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
-    if (m === "ATTACK_DISCARD_DEFENDER_ENERGY") {
+    if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m)) {
       const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly;
       const zone = [other.deck, other.hand, other.prizeCards].find(cards => cards.some(eligible));
       if (!zone) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
@@ -727,6 +731,21 @@ function verifyCase(t, e) {
       !e.plan.type || [e.plan.type,e.plan.secondType].includes(energy.energyType)).length;
     const metrics = {
       opponentCounters: defendingSide.active.damage / 10,
+      ownCounters: attackingSide.active.damage / 10,
+      ownHand: attackingSide.hand.length,
+      opponentHand: defendingSide.hand.length,
+      ownPrizesTaken: 6-attackingSide.prizes,
+      ownBasicCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic).length,
+      opponentBasicCount: [defendingSide.active,...defendingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic).length,
+      ownStageOneCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage===1).length,
+      ownEvolvedCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage>0).length,
+      opponentEvolvedCount: [defendingSide.active,...defendingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.stage>0).length,
+      ownBenchStageTwoCount: attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).facts.stage===2).length,
+      ownDamagedBenchCount: attackingSide.bench.filter(c=>c.damage>0).length,
+      opponentTeamCounters: [defendingSide.active,...defendingSide.bench].reduce((n,c)=>n+c.damage/10,0),
+      ownTypedPokemonCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).length,
+      bothActiveEnergy: count([attackingSide.active,defendingSide.active]),
+      bothTeamEnergy: count([attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench]),
       ownPokemon: 1 + attackingSide.bench.length,
       opponentRetreat: defendingSide.active.retreatCost,
       ownDiscardEnergy: attackingSide.discard.filter(card=>card.kind==="energy").length,
@@ -737,7 +756,12 @@ function verifyCase(t, e) {
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
-    verifyPrintedAttack(before, after, e, e.plan.base + e.plan.unit * metrics[e.plan.metric]);
+    assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
+    verifyPrintedAttack(before, after, e, Math.max(0,e.plan.base+(e.plan.subtract?-1:1)*e.plan.unit*metrics[e.plan.metric]));
+    if (e.plan.subtract) {
+      assert(p.restoreSession(p.getResumeSnapshot()).ok);
+      assert.deepEqual(p.getSnapshot(),after);
+    }
   }
   if (e.plan.mechanic === "ATTACK_RESET_HAND") {
     assert.equal(after.players[0].hand.length, Math.min(e.plan.amount, attackingSide.hand.length + attackingSide.deck.length));
@@ -1238,6 +1262,35 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(),before);
     }
     assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+  }
+  if(e.plan.mechanic==="ATTACK_DISCARD_MULTIPLE_SELF_ENERGY"){
+    const source=before.players[0].active,chosen=(t.action||o.action).selections.energy||[];
+    const attached=source.energyCards||[];
+    assert(chosen.length>0&&chosen.every(id=>attached.some(c=>c.id===id)),"MISSING_SELF_ENERGY_DISCARD_FIXTURE");
+    assert(chosen.every(id=>after.players[0].discard.some(c=>c.id===id)),"SELF_ENERGY_NOT_DISCARDED");
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...(t.action||o.action),selections:{...(t.action||o.action).selections,energy:[chosen[0],chosen[0]]}}).ok,false);
+    assert.deepEqual(replay.getSnapshot(),before);
+    verifyPrintedAttack(before,after,e,Number(e.damage)||0);
+  }
+  if(e.plan.mechanic==="ATTACK_COIN_DISCARD_DEFENDER_ENERGY"){
+    const chosen=(t.action||o.action).selections.energy||[];
+    assert(chosen.length===1,"MISSING_DEFENDER_ENERGY_DISCARD_FIXTURE");
+    const flips=effectEvents.filter(ev=>ev?.command==="COIN_FLIP"&&typeof ev.heads==="boolean");
+    assert.equal(flips.length,1);
+    const discarded=effectEvents.some(ev=>ev?.command==="DISCARD"&&ev.fromZone==="attached"&&ev.cardIds?.includes(chosen[0]));
+    assert.equal(discarded,flips[0].heads&&before.players[1].active.referenceProtection?.opponentTurn!==before.turnNumber);
+    if(discarded)assert(after.players[1].discard.some(c=>c.id===chosen[0]));
+    verifyPrintedAttack(before,after,e,Number(e.damage)||0);
+  }
+  if(e.plan.mechanic==="ATTACK_ATTACH_BASIC_FROM_HAND"){
+    const action=t.action||o.action,chosen=action.selections.energy||[];
+    assert.equal(chosen.length,1,"MISSING_HAND_ATTACHMENT_FIXTURE");
+    const targetId=e.plan.target==="self"?before.players[0].active.id:action.selections.attachTo[0];
+    const target=[after.players[0].active,...after.players[0].bench].find(c=>c?.id===targetId);
+    assert(before.players[0].hand.some(c=>c.id===chosen[0]&&c.kind==="energy"&&!c.isSpecial));
+    assert(target?.energyCards.some(c=>c.id===chosen[0]));
+    assert(!after.players[0].hand.some(c=>c.id===chosen[0]));
   }
   if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
     const source = before.players[0].active;
