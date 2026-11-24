@@ -3,7 +3,7 @@ on:
   # Accelerate only exact official print/effect intake; preserve all fail-closed gates.
   # Scheduled checkpoints resume missing prints without changing existing decks.
   push:
-    branches: [main]
+    branches: [main, work/issue122-bulk-resume-20261124]
     paths:
       - '.github/workflows/continue-official-effects.yml'
       - 'scripts/list-card-auto-connect-ids.cjs'
@@ -23,7 +23,7 @@ on:
     inputs:
       limit:
         description: Maximum new official pages per checkpoint (official ID and effect verification required)
-        default: "400"
+        default: "1000"
         required: true
   issue_comment:
     types: [created]
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref_name == 'work/issue122-bulk-resume-20261124' && github.ref_name || 'main' }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -91,7 +91,7 @@ jobs:
         run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
-          INTAKE_LIMIT: ${{ inputs.limit || '400' }}
+          INTAKE_LIMIT: ${{ inputs.limit || '1000' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
@@ -123,6 +123,10 @@ jobs:
           count=$(node -p "require('./work/card-auto-connect/candidate.json').qualified.length")
           if [ "$count" -eq 0 ]; then
             echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [ "$GITHUB_REF_NAME" = work/issue122-bulk-resume-20261124 ] && [ "$count" -lt 500 ]; then
+            echo "Saved $count candidate prints on branch $INTAKE_BRANCH. Continue the bulk batch before opening a PR." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           # The repository currently denies pull-request creation by GITHUB_TOKEN.
