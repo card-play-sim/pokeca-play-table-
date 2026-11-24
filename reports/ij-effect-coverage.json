@@ -22174,23 +22174,24 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1124,
-        "ENGINE_CONNECTED": 681,
-        "EVIDENCE_UNVERIFIED": 59
+        "MECHANIC_REQUIRED": 1110,
+        "ENGINE_CONNECTED": 690,
+        "EVIDENCE_UNVERIFIED": 59,
+        "ENGINE_CONNECTION_REQUIRED": 5
       },
       "I": {
         "total": 1702,
         "ENGINE_CONNECTED": 661,
-        "MECHANIC_REQUIRED": 975,
+        "MECHANIC_REQUIRED": 973,
         "EVIDENCE_UNVERIFIED": 63,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTION_REQUIRED": 5
       },
       "J": {
         "total": 869,
         "ENGINE_CONNECTED": 319,
-        "MECHANIC_REQUIRED": 495,
+        "MECHANIC_REQUIRED": 494,
         "EVIDENCE_UNVERIFIED": 52,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTION_REQUIRED": 4
       },
       "basicEnergyException": {
         "total": 638,
@@ -22199,7 +22200,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2290,
-    "unconnected": 2783
+    "engineConnected": 2299,
+    "unconnected": 2774
   }
 }
