@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 661,
-      "missing": 1041
+      "connected": 671,
+      "missing": 1031
     },
     "J": {
       "total": 870,
-      "connected": 320,
-      "missing": 550
+      "connected": 321,
+      "missing": 549
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 655,
-      "MECHANIC_REQUIRED": 159,
-      "ENGINE_CONNECTION_REQUIRED": 819,
+      "CONNECTED_UNTESTED": 665,
+      "MECHANIC_REQUIRED": 154,
+      "ENGINE_CONNECTION_REQUIRED": 814,
       "EVIDENCE_UNVERIFIED": 63,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 319,
+      "CONNECTED_UNTESTED": 320,
       "MECHANIC_REQUIRED": 71,
-      "ENGINE_CONNECTION_REQUIRED": 430,
+      "ENGINE_CONNECTION_REQUIRED": 429,
       "EVIDENCE_UNVERIFIED": 49,
       "EXECUTION_PASS": 1
     }
@@ -2145,8 +2145,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47432.json"
     },
     {
@@ -2411,8 +2410,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47518.json"
     },
     {
@@ -2438,8 +2436,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47529.json"
     },
     {
@@ -2447,8 +2444,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47534.json"
     },
     {
@@ -5341,8 +5337,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48585.json"
     },
     {
@@ -6172,8 +6167,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49006.json"
     },
     {
@@ -7324,8 +7318,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49997.json"
     },
     {
@@ -9975,8 +9968,7 @@
       "name": "バンバドロ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47341.json"
     },
     {
@@ -15523,8 +15515,7 @@
       "name": "バンバドロ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49122.json"
     },
     {
@@ -17352,8 +17343,7 @@
       "name": "コクーン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50086.json"
     },
     {
@@ -20231,8 +20221,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48330.json"
     },
     {
@@ -22174,21 +22163,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1124,
-        "ENGINE_CONNECTED": 681,
+        "MECHANIC_REQUIRED": 1110,
+        "ENGINE_CONNECTED": 695,
         "EVIDENCE_UNVERIFIED": 59
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 661,
-        "MECHANIC_REQUIRED": 975,
+        "ENGINE_CONNECTED": 671,
+        "MECHANIC_REQUIRED": 965,
         "EVIDENCE_UNVERIFIED": 63,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 319,
-        "MECHANIC_REQUIRED": 495,
+        "ENGINE_CONNECTED": 320,
+        "MECHANIC_REQUIRED": 494,
         "EVIDENCE_UNVERIFIED": 52,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
@@ -22199,7 +22188,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2290,
-    "unconnected": 2783
+    "engineConnected": 2315,
+    "unconnected": 2758
   }
 }

@@ -124379,6 +124379,1058 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "45788",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45788",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045788_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45788.json",
+        "sha256": "0c0bb8dcbd87f14bf1f03b3d28a9af87851be9dcd7b789ab2844c19f34a72813",
+        "htmlSha256": "0c0bb8dcbd87f14bf1f03b3d28a9af87851be9dcd7b789ab2844c19f34a72813",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "45865",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45865",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045865_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45865.json",
+        "sha256": "75a030634934d090316917a3b64e3e69a51b1dd7a1b6d280a5d1b0adfe0ba783",
+        "htmlSha256": "75a030634934d090316917a3b64e3e69a51b1dd7a1b6d280a5d1b0adfe0ba783",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "45872",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45872",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045872_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45872.json",
+        "sha256": "c5a654c896e147629afba0485c9a995e18cd2bf2b8b479c1c596c51dbbc2a369",
+        "htmlSha256": "c5a654c896e147629afba0485c9a995e18cd2bf2b8b479c1c596c51dbbc2a369",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "46246",
+      "name": "ハルクジラ",
+      "deckName": "ハルクジラ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46246",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046246_P_HARUKUJIRA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "デンジャーマウス",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "150",
+          "text": "",
+          "effectId": "reference-46246-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がっちりボディ",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-46246-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "アルクジラ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46246.json",
+        "sha256": "c5e329bf5438e94aa11a3ada2d2286bef4c836aca6d796533c1123866c28a51b",
+        "htmlSha256": "c5e329bf5438e94aa11a3ada2d2286bef4c836aca6d796533c1123866c28a51b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46315",
+      "name": "ハルクジラ",
+      "deckName": "ハルクジラ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46315",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046315_P_HARUKUJIRA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "デンジャーマウス",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "150",
+          "text": "",
+          "effectId": "reference-46315-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がっちりボディ",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-46315-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "アルクジラ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46315.json",
+        "sha256": "eb1c8d9132595fee3c65edc5557abed1cd0b032a4b37b7c82ff5bf60762755aa",
+        "htmlSha256": "eb1c8d9132595fee3c65edc5557abed1cd0b032a4b37b7c82ff5bf60762755aa",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46831",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46831",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046831_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46831.json",
+        "sha256": "1668ffa5238f9e5d28808b40cc141b007f7385c39cfa692cdcf1cab55e7260cd",
+        "htmlSha256": "1668ffa5238f9e5d28808b40cc141b007f7385c39cfa692cdcf1cab55e7260cd",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "50086",
+      "name": "コクーン",
+      "deckName": "コクーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50086",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050086_P_KOKUN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶらさがる",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-50086-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "かたいからだ",
+          "text": "このポケモンが受けるワザのダメージは「-20」される。",
+          "effectId": "reference-50086-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 20
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": "ビードル",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50086.json",
+        "sha256": "40e4b564aee649e35d0252826ce8a4e68c25de49fa762989bcf0b65c74299846",
+        "htmlSha256": "40e4b564aee649e35d0252826ce8a4e68c25de49fa762989bcf0b65c74299846",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47341",
+      "name": "バンバドロ",
+      "deckName": "バンバドロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47341",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047341_P_BANBADORO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヘビーインパクト",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "",
+          "effectId": "reference-47341-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "マッドコート",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-47341-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "ドロバンコ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47341.json",
+        "sha256": "7faa792f147de28f92844eeded020590a5fd3ade19dac11d704e28989ac77cba",
+        "htmlSha256": "7faa792f147de28f92844eeded020590a5fd3ade19dac11d704e28989ac77cba",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48585",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48585",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048585_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-48585-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-48585-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48585.json",
+        "sha256": "7f467ea75a9bd3227627df9b83becdf275e64431d5a9ffd2efaca2ea07fb8ece",
+        "htmlSha256": "7f467ea75a9bd3227627df9b83becdf275e64431d5a9ffd2efaca2ea07fb8ece",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49006",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49006",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049006_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-49006-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-49006-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49006.json",
+        "sha256": "7f0653106ead89d46909be4df434d043dd02ae25da8a8df6b33e747df28e6b7b",
+        "htmlSha256": "7f0653106ead89d46909be4df434d043dd02ae25da8a8df6b33e747df28e6b7b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49122",
+      "name": "バンバドロ",
+      "deckName": "バンバドロ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49122",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049122_P_BANBADORO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヘビーインパクト",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "",
+          "effectId": "reference-49122-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "マッドコート",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-49122-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "ドロバンコ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49122.json",
+        "sha256": "a76bb29ae8d84d7ef29f3a11deda825a2fabf02c41e79f738e68bc4e3f13f3fc",
+        "htmlSha256": "a76bb29ae8d84d7ef29f3a11deda825a2fabf02c41e79f738e68bc4e3f13f3fc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49997",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49997",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049997_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-49997-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-49997-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49997.json",
+        "sha256": "2cc66ecf7c52866b1707d1a87defbd2819e73fd8492519a17c2f26b3c2e82985",
+        "htmlSha256": "2cc66ecf7c52866b1707d1a87defbd2819e73fd8492519a17c2f26b3c2e82985",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47208",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47208",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVN/047208_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47208.json",
+        "sha256": "049af5624e9330be5e0d5d09ae7b887efb0a3b46a9e1969265aa6de5a041b197",
+        "htmlSha256": "049af5624e9330be5e0d5d09ae7b887efb0a3b46a9e1969265aa6de5a041b197",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
+    },
+    {
+      "officialCardId": "48750",
+      "name": "ナエトル",
+      "deckName": "ナエトル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48750",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048750_P_NAETORU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "このは",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-48750-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "かたいこうら",
+          "text": "このポケモンが受けるワザのダメージは「-20」される。",
+          "effectId": "reference-48750-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 20
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48750.json",
+        "sha256": "bdd0fb79b79ca5ef626f3e67edec3a4a3674bed3048888805000142dda21ab84",
+        "htmlSha256": "bdd0fb79b79ca5ef626f3e67edec3a4a3674bed3048888805000142dda21ab84",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48934",
+      "name": "ハルクジラ",
+      "deckName": "ハルクジラ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48934",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048934_P_HARUKUJIRA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "デンジャーマウス",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "150",
+          "text": "",
+          "effectId": "reference-48934-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がっちりボディ",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-48934-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "アルクジラ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48934.json",
+        "sha256": "dd49f0e4e0a1aa59fb00154353006c8d98dace35881db2f9baf45eedf3a4bf23",
+        "htmlSha256": "dd49f0e4e0a1aa59fb00154353006c8d98dace35881db2f9baf45eedf3a4bf23",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49328",
+      "name": "トリミアン",
+      "deckName": "トリミアン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49328",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049328_P_TORIMIAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かみつく",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "",
+          "effectId": "reference-49328-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ファーコート",
+          "text": "このポケモンが受けるワザのダメージは「-20」される。",
+          "effectId": "reference-49328-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 20
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49328.json",
+        "sha256": "44c4279b6ed79a98882378b70c461151b8b80f8d326b68ee9e2743d4a99acfac",
+        "htmlSha256": "44c4279b6ed79a98882378b70c461151b8b80f8d326b68ee9e2743d4a99acfac",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49431",
+      "name": "ゼイユ",
+      "deckName": "ゼイユ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49431",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049431_T_ZEIYU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49431.json",
+        "sha256": "db9917c7341978c4b3d0d0acf29c3567233bd4ab5c4aa9c86852eeb427bcdfc8",
+        "htmlSha256": "db9917c7341978c4b3d0d0acf29c3567233bd4ab5c4aa9c86852eeb427bcdfc8",
+        "textSha256": "d8d9734b8f946ac2ad3b626f3a4ffb4e32f46dd50e49be7dcaf9b114e37a2774"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "amount": 5
+      }
     }
   ],
   "blocked": [
