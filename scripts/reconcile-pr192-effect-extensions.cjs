@@ -21,15 +21,13 @@ const after = new Map(regenerated.records.map(r => [String(r.officialCardId), r]
 const blocked = new Map(regenerated.blocked.map(r => [String(r.officialCardId), r]));
 const newlyRejected = [...before.keys()].filter(id => !after.has(id));
 const unexpectedAdditions = [...after.keys()].filter(id => !before.has(id));
-const expectedAmbiguousEvolution = new Set(["50096", "50399", "50585", "48055", "45470", "45600", "46411"]);
-assert.deepEqual([...newlyRejected].sort(), [...expectedAmbiguousEvolution].sort(),
-  "Official parser reconciliation affected unexpected accepted printings");
+// A source-compatible parser upgrade must NOT silently drop previously
+// accepted official printings, even if their evolution page contains BREAK
+// or alternate ex rows. Any later source correction requires explicit review.
+assert.deepEqual(newlyRejected, [],
+  "Previously accepted official printing disappeared after parser update");
 assert.deepEqual(unexpectedAdditions, [],
-  "Unexpected new accepted printing; review its proof in a separate batch");
-for (const id of newlyRejected) {
-  assert.equal(blocked.get(id)?.reason, "UNSUPPORTED_EVOLUTION_CHAIN",
-    "An accepted printing was removed for a reason other than ambiguous evolution");
-}
+  "New official printing requires a separate, evidenced review batch");
 const modified = [];
 for (const [id, next] of after) {
   const prior = before.get(id);
@@ -38,6 +36,8 @@ for (const [id, next] of after) {
   assert.deepEqual(prior.source, next.source, "Official evidence changed without review: " + id);
   modified.push(id);
 }
+assert.deepEqual(modified, [],
+  "Official compiled effects changed without an independently reviewed print diff");
 assert.equal(regenerated.records.length + regenerated.blocked.length,
   intake.records.length + (intake.blocked || []).length,
   "One official printing did not receive exactly one resolution");
@@ -49,7 +49,7 @@ const audit = {
   originalBlocked: old.blocked.length,
   currentBlocked: regenerated.blocked.length,
   newlyRejected,
-  newlyRejectedReason: "UNSUPPORTED_EVOLUTION_CHAIN",
+  newlyRejectedReason: null,
   changedAcceptedIds: modified,
   previousSha256: hash(old),
   regeneratedSha256: hash(regenerated),
