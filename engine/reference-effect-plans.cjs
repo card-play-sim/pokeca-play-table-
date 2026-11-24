@@ -127,6 +127,11 @@ function additionalAttackPlan(entry,text){
  }
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
+ // Physical basic Energy moves from the player's hand, not the once-per-turn
+ // manual attachment slot. Other text variants remain unconnected.
+ const handEnergy=text.match(/^自分の手札から基本エネルギーを1枚選び、(このポケモン|自分のポケモン)につける。$/);
+ if(handEnergy&&base===0)
+  return {mechanic:'ATTACK_ATTACH_BASIC_FROM_HAND',commands:['ATTACH_ENERGY'],target:handEnergy[1]==='このポケモン'?'self':'own'};
  // The printed attack is unusable until its Pokemon actually leaves the Active Spot.
  // This is not the ordinary next-turn attack lock and must survive turn changes.
  const untilSwitch=text.match(/^このワザを使ったなら、このポケモンは、バトル場をはなれるまで「([^「」]{1,40})」が使えない。$/);
