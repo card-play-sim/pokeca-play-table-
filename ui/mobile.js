@@ -945,6 +945,23 @@ window.PokecaMobileBuild='258';
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
+    if(choice.kind==='DECK_POKEMON_SEARCH'){
+      openSheet('山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
+      const owner=port.getSnapshot().players.find(player=>player.id==='you');
+      for(const cardId of choice.options){
+        const card=owner.deck.find(candidate=>idOf(candidate)===cardId);
+        const label=card?.name||'選ばずに山札を切る';
+        const item=button(label,()=>{
+          if(dispatch('you',{type:'resolve_reference_choice',deckCardId:cardId}).ok){closeSheet();render();}
+        });
+        if(card){
+          item.className='selection-card-art';item.dataset.selectionId=cardId;
+          item.setAttribute('aria-label',label);item.innerHTML=selectionArt(card);
+        }
+        $('reference-choice').append(item);
+      }
+      return;
+    }
     const mulligan=choice.kind==='MULLIGAN';
     openSheet(mulligan?'引き直し':'効果の対象を選ぶ',`<div class="${mulligan?'menu-list':'selection-grid'}" id="reference-choice"></div>`);
     for(const value of choice.options){

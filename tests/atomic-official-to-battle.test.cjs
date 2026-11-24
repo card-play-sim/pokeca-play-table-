@@ -55,8 +55,9 @@ const manyGroups=makeWorklist(many,many.map(row=>({
 })),new Set(many.map(row=>row.officialCardId)));
 assert.equal(manyGroups.length,1);
 assert.equal(manyGroups[0].printCount,41,
-  'shared print counting must not stop at the 30-ID evidence preview limit');
-assert.equal(manyGroups[0].officialCardIds.length,30);
+  'shared print counting includes every official printing');
+assert.deepEqual(manyGroups[0].officialCardIds,many.map(row=>row.officialCardId));
+assert.deepEqual(manyGroups[0].officialEvidencePaths,many.map(row=>row.source.path));
 const base='a'.repeat(40);
 const steps=commands({base,limit:400});
 const names=steps.map(([name])=>name);

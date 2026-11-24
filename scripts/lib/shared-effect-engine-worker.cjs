@@ -449,6 +449,63 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if (e.plan.mechanic === "COIN_SEARCH_POKEMON") {
+    const action = o.action;
+    const choice = after.pendingReferenceChoice;
+    assert.equal(choice?.kind, "DECK_POKEMON_SEARCH");
+    assert.equal(choice.playerId, "you");
+    assert(after.players[0].discard.some(card => card.id === t.sourceId));
+    assert.equal(p.getView("ai").pendingReferenceChoice.options, undefined);
+    const saved = p.getResumeSnapshot();
+    assert(p.restoreSession(saved).ok);
+    assert.deepEqual(p.getSnapshot(), after);
+    const deckCardId = choice.options[0];
+    const selection = { type: "resolve_reference_choice", deckCardId };
+    const actions = E.getLegalActions(after, "you").actions;
+    assert(actions.some(candidate => JSON.stringify(candidate) === JSON.stringify(selection)));
+    assert(actions.every(candidate => candidate.type === selection.type));
+    const invalid = after.players[0].deck.find(card => card.kind !== "pokemon");
+    assert.equal(p.dispatch("you", { ...selection, deckCardId: invalid.id }).ok, false);
+    assert.equal(p.dispatch("you", { type: "end_turn" }).ok, false);
+    assert.deepEqual(p.getSnapshot(), after);
+    assert(p.dispatch("you", selection).ok);
+    const resolved = p.getSnapshot();
+    assert(!resolved.pendingReferenceChoice);
+    assert(resolved.players[0].hand.some(card => card.id === deckCardId));
+    assert(!resolved.players[0].deck.some(card => card.id === deckCardId));
+    assert(resolved.history.some(event => event.details?.command === "REVEAL" &&
+      event.details.cardIds?.includes(deckCardId)));
+    assert(resolved.history.some(event => event.details?.command === "SHUFFLE_DECK"));
+    assert.deepEqual(S.identities(before), S.identities(resolved));
+    assert(p.restoreSession(saved).ok);
+
+    const skipped = port(after);
+    assert(skipped.dispatch("you", { ...selection, deckCardId: null }).ok);
+    assert.deepEqual(skipped.getSnapshot().players[0].hand, after.players[0].hand);
+    assert(skipped.getSnapshot().history.some(event => event.details?.command === "SHUFFLE_DECK"));
+
+    const tails = port({ ...before, referenceRngState: 682 });
+    assert(tails.dispatch("you", action).ok);
+    const tailResult = tails.getSnapshot();
+    assert(!tailResult.pendingReferenceChoice);
+    assert.deepEqual(tailResult.players[0].deck, before.players[0].deck);
+    const steps = tailResult.history.slice(before.history.length).map(event => event.details);
+    assert(steps.some(step => step?.command === "COIN_FLIP" && step.heads === false));
+    assert(steps.every(step => !["REVEAL", "SEARCH_DECK", "SHUFFLE_DECK"].includes(step?.command)));
+
+    const noPokemon = structuredClone(before);
+    const own = noPokemon.players[0];
+    own.hand.push(...own.deck.filter(card => card.kind === "pokemon"));
+    own.deck = own.deck.filter(card => card.kind !== "pokemon");
+    const emptyOfPokemon = port(noPokemon);
+    assert(emptyOfPokemon.dispatch("you", action).ok);
+    const noChoice = emptyOfPokemon.getSnapshot();
+    assert(!noChoice.pendingReferenceChoice);
+    assert(noChoice.history.some(event => event.details?.command === "SHUFFLE_DECK"));
+    own.hand.push(...own.deck.splice(0));
+    const emptyDeck = port(noPokemon);
+    assert.equal(emptyDeck.dispatch("you", action).ok, false);
+  }
   if (e.plan.mechanic === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
     const defender = E.getReferenceEffectRecord(before.players[1].active);
     assert(defender.abilities.some(ability => ability.effectId === e.effectId));

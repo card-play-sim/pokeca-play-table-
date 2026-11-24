@@ -148,6 +148,23 @@ async def main():
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
+   if m=='COIN_SEARCH_POKEMON':
+    choice=after['pendingReferenceChoice']
+    assert choice['kind']=='DECK_POKEMON_SEARCH'
+    picked=choice['options'][0]
+    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
+    await c.set_offline(True)
+    await page.reload()
+    await ready()
+    assert await snap()==after
+    await c.set_offline(False)
+    await page.locator(f'#reference-choice [data-selection-id="{picked}"]').tap()
+    await page.wait_for_function('!PokecaMobile.port.getSnapshot().pendingReferenceChoice')
+    after=await snap()
+    assert any(card['id']==picked for card in after['players'][0]['hand'])
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and picked in ev['details']['cardIds']
+               for ev in after['history'])
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in after['history'])
    events=after['history'][len(before.get('history',[])):]
    if kind=='attack':
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
@@ -276,7 +293,7 @@ async def main():
   # Each partition checks its own physical exact-print actions and save-resume.
   # Only partition zero runs the unchanged whole-deck AI match, which may use
   # any official print from the complete source fixture, not only this shard.
-  if shard_count>1 and shard_index!=0:
+  if os.environ.get('POKECA_BROWSER_SLOTS_ONLY')=='1' or (shard_count>1 and shard_index!=0):
    assert not errors,errors
    report={'url':page.url,'browserShard':shard_index,'totalFixtures':total_fixtures,
            'newPrints':len({f['r']['officialCardId'] for f in fixtures}),

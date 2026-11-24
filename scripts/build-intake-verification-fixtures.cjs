@@ -67,7 +67,7 @@ for (const r of selected) {
       const option = W.effectOption(t, e);
       if (!(option && (option.ok ?? option.enabled))) continue;
       if (kind === "ability" && !t.trigger && option.action.type !== "use_ability") continue;
-      if (t.trigger || e.plan.mechanic === "ATTACK_DISCARD_BENCH_ENERGY_BONUS") {
+      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON"].includes(e.plan.mechanic)) {
         const verification = W.verifyCase(W.prepare(r, e, kind), e);
         if (verification.status !== "SUCCEEDED") continue;
       }

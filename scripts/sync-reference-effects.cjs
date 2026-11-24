@@ -33,6 +33,9 @@ put('pokeca_reference_effect_runtime',fs.readFileSync('engine/pokeca_reference_e
 put('pokeca_reference_validation_adapter',fs.readFileSync('engine/pokeca_reference_validation_adapter.cjs','utf8'));
 if(!bundle.includes('isSelectionAllowed:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={isSelectionAllowed:req("pokeca_selection_constraints").allows,');
 if(!bundle.includes('resolveReferenceRequest:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={resolveReferenceRequest:req("pokeca_selection_constraints").resolve,');
+bundle=bundle.replace(
+ 'add({type:\'resolve_reference_choice\',...(game.pendingReferenceChoice.kind===\'MULLIGAN\'?{drawCount:value}:game.pendingReferenceChoice.kind===\'CIRCULATOR\'?value:{benchInstanceId:value})})',
+ "add(require('./pokeca_reference_effect_runtime').referenceChoiceAction(game.pendingReferenceChoice,value))");
 bundle=bundle.replace('getReferenceEffectCatalog:()=>JSON.parse(JSON.stringify(req(\'pokeca_reference_effect_data\')))',"getReferenceEffectCatalog:(options={})=>JSON.parse(JSON.stringify(options.includeExtensions?req('pokeca_reference_effect_runtime').fullCatalog:req('pokeca_reference_effect_data')))");
 if(process.argv.includes('--check')){
  if(bundle!==fs.readFileSync('ui/engine.bundle.js','utf8')||plans!==fs.readFileSync('data/reference-effects/plans.json','utf8'))throw Error('REFERENCE_BUNDLE_STALE');
