@@ -9,7 +9,7 @@ on:
       - 'tests/issue122-effect-lock-and-counter-allocation.test.cjs'
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   official-shared-effect-smoke:
     runs-on: ubuntu-latest
@@ -26,8 +26,18 @@ jobs:
           node tests/issue122-effect-lock-and-counter-allocation.test.cjs
       - name: Regenerate runtime from official evidence without relaxing gates
         run: |
+          node scripts/build-effect-extensions.cjs
           node scripts/build-effect-extensions.cjs --check
           node scripts/sync-reference-effects.cjs
           node scripts/build-pwa-release.cjs
           node tests/control-011-engine-batch.test.cjs
           node tests/battle-rocket-team-exact-print.test.cjs
+      - name: Persist deterministically regenerated official runtime for PR review
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: regenerate evidenced effect bundle and PWA manifests'
+            git push origin HEAD:chatgpt/issue122-effects-batch-20261124
+          fi
