@@ -2451,6 +2451,83 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47494",
+      "name": "ハバタクカミ",
+      "deckName": "ハバタクカミ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47494",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047494_P_HABATAKUKAMI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたりとばす",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "ダメカン2個を、相手のベンチポケモンに好きなようにのせる。",
+          "effectId": "reference-47494-attack-0",
+          "plan": {
+            "mechanic": "PHANTOM",
+            "commands": [
+              "DAMAGE",
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "counterCount": 2,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "あんやのはばたき",
+          "text": "このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性（「あんやのはばたき」をのぞく）は、すべてなくなる。",
+          "effectId": "reference-47494-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "exceptAbilityName": "あんやのはばたき"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47494.json",
+        "sha256": "50331665d38686d6ed8a2c4e5d2df5580573802da5195221dbf4f343a0135003",
+        "htmlSha256": "50331665d38686d6ed8a2c4e5d2df5580573802da5195221dbf4f343a0135003",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47496",
       "name": "夜のタンカ",
       "deckName": "夜のタンカ",
@@ -4719,6 +4796,88 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "49633",
+      "name": "ロケット団のニャース",
+      "deckName": "ロケット団のニャース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49633",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/049633_P_ROKETTODANNONIXYASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ねこばば",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-49633-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        },
+        {
+          "name": "みだれひっかき",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "コインを3回投げ、オモテの数×20ダメージ。",
+          "effectId": "reference-49633-attack-1",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49633.json",
+        "sha256": "b41aa1b9ad90f3d32a605b9f6a3586ffb9e88b573722591e5ec1b1804e82548a",
+        "htmlSha256": "b41aa1b9ad90f3d32a605b9f6a3586ffb9e88b573722591e5ec1b1804e82548a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "49714",
       "name": "ラルトス",
       "deckName": "ラルトス",
@@ -5058,6 +5217,117 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50176",
+      "name": "シュシュプ",
+      "deckName": "シュシュプ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50176",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050176_P_SHIXYUSHIXYUPU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あまいかおり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のポケモン1匹のHPを「30」回復する。",
+          "effectId": "reference-50176-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_HEAL_OWN_TARGET",
+            "commands": [
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        },
+        {
+          "name": "ぶつかる",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-50176-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50176.json",
+        "sha256": "8a21efea4937928cdc0e41cd9ea83d0046d58ea546e9be88987b92b47f6f0132",
+        "htmlSha256": "8a21efea4937928cdc0e41cd9ea83d0046d58ea546e9be88987b92b47f6f0132",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50178",
+      "name": "ヒカリ",
+      "deckName": "ヒカリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50178",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050178_T_HIKARI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「たねポケモン」「1進化ポケモン」「2進化ポケモン」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50178.json",
+        "sha256": "6196da4eb92a15fed06ef7c72cfd82db48dd8a3de26e98a4feb5a3befbe9ed4d",
+        "htmlSha256": "6196da4eb92a15fed06ef7c72cfd82db48dd8a3de26e98a4feb5a3befbe9ed4d",
+        "textSha256": "cae0b08fd92dcff0c5bb1e0a2cbb895fd1135ceb55b573a6cf5a4ef97a0d026d"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ]
+      }
     },
     {
       "officialCardId": "50472",
@@ -9421,6 +9691,72 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50680",
+      "name": "グラードン",
+      "deckName": "グラードン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50680",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050680_P_GURADON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グラウンドブレイク",
+          "cost": [
+            "闘",
+            "闘",
+            "闘",
+            "闘",
+            "闘"
+          ],
+          "damage": "250",
+          "text": "自分のベンチポケモン全員にも、それぞれ20ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50680-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "ownBench",
+            "amount": 20,
+            "count": null
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": null,
+        "retreatCost": 4,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50680.json",
+        "sha256": "cca55fffd60642d57f37bde775a5385c36b21380682ef8191192df3f6d53fe25",
+        "htmlSha256": "cca55fffd60642d57f37bde775a5385c36b21380682ef8191192df3f6d53fe25",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50685",
       "name": "ニドラン♀",
       "deckName": "ニドラン♀",
@@ -10038,6 +10374,83 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45179",
+      "name": "ハバタクカミ",
+      "deckName": "ハバタクカミ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45179",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045179_P_HABATAKUKAMI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたりとばす",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "ダメカン2個を、相手のベンチポケモンに好きなようにのせる。",
+          "effectId": "reference-45179-attack-0",
+          "plan": {
+            "mechanic": "PHANTOM",
+            "commands": [
+              "DAMAGE",
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "counterCount": 2,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "あんやのはばたき",
+          "text": "このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性（「あんやのはばたき」をのぞく）は、すべてなくなる。",
+          "effectId": "reference-45179-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "exceptAbilityName": "あんやのはばたき"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45179.json",
+        "sha256": "4799a20087db381ee8fa1742da6e9e164bfea5363d37503dc07cef0087576506",
+        "htmlSha256": "4799a20087db381ee8fa1742da6e9e164bfea5363d37503dc07cef0087576506",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45183",
       "name": "ドロバンコ",
       "deckName": "ドロバンコ",
@@ -10250,6 +10663,89 @@
         "path": "data/effect-extensions/evidence/45200.json",
         "sha256": "2d5a330aff344dc24e637dc33d7ef9cf57771f7f66a573271f6565320084bbbf",
         "htmlSha256": "2d5a330aff344dc24e637dc33d7ef9cf57771f7f66a573271f6565320084bbbf",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45204",
+      "name": "ペラップ",
+      "deckName": "ペラップ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45204",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045204_P_PERAPPU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アカペラ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを3枚まで選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-45204-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "かぜおこし",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-45204-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45204.json",
+        "sha256": "234f5da36ae17469a81e930bc2b290559c82677663f55b9a1c02b9689c0218b6",
+        "htmlSha256": "234f5da36ae17469a81e930bc2b290559c82677663f55b9a1c02b9689c0218b6",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -10663,6 +11159,85 @@
         "path": "data/effect-extensions/evidence/45231.json",
         "sha256": "62638728d5c6314620dd08ee1cf2e48d775a93ce71f6f2caaa11cd353ccef30a",
         "htmlSha256": "62638728d5c6314620dd08ee1cf2e48d775a93ce71f6f2caaa11cd353ccef30a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45236",
+      "name": "ビクティニ",
+      "deckName": "ビクティニ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45236",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045236_P_BIKUTEINI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぱたぱた",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべて山札にもどして切る。その後、山札を6枚引く。",
+          "effectId": "reference-45236-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_RESET_HAND",
+            "commands": [
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "やきおとす",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": "相手のバトルポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-45236-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "specialOnly": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45236.json",
+        "sha256": "259f3909ea3db0e967faacc72b7e457295cd493144e28d19b9f6bca07e7fb3e1",
+        "htmlSha256": "259f3909ea3db0e967faacc72b7e457295cd493144e28d19b9f6bca07e7fb3e1",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -11380,6 +11955,86 @@
         "path": "data/effect-extensions/evidence/45289.json",
         "sha256": "de162f5b4ab557e8c072832a7ddfa201b9715c52ca75e48874f0ea25c46f0a02",
         "htmlSha256": "de162f5b4ab557e8c072832a7ddfa201b9715c52ca75e48874f0ea25c46f0a02",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45291",
+      "name": "バクガメス",
+      "deckName": "バクガメス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45291",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVHK/045291_P_BAKUGAMESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はきだしショット",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手のベンチポケモン1匹に、40ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-45291-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "opponentBench",
+            "amount": 40,
+            "count": 1
+          }
+        },
+        {
+          "name": "ばくねつほう",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "",
+          "effectId": "reference-45291-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45291.json",
+        "sha256": "de7a30d7defd041c7daee6759dfa06204fbcd252207898d5451c7d1dfa7c959a",
+        "htmlSha256": "de7a30d7defd041c7daee6759dfa06204fbcd252207898d5451c7d1dfa7c959a",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -13457,6 +14112,166 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45519",
+      "name": "ハバタクカミ",
+      "deckName": "ハバタクカミ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45519",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045519_P_HABATAKUKAMI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたりとばす",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "ダメカン2個を、相手のベンチポケモンに好きなようにのせる。",
+          "effectId": "reference-45519-attack-0",
+          "plan": {
+            "mechanic": "PHANTOM",
+            "commands": [
+              "DAMAGE",
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "counterCount": 2,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "あんやのはばたき",
+          "text": "このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性（「あんやのはばたき」をのぞく）は、すべてなくなる。",
+          "effectId": "reference-45519-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "exceptAbilityName": "あんやのはばたき"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45519.json",
+        "sha256": "296f3799278978863e85214084c43e6e24f5a4bbb0249c8e453000dcfa7c28c2",
+        "htmlSha256": "296f3799278978863e85214084c43e6e24f5a4bbb0249c8e453000dcfa7c28c2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45524",
+      "name": "ペラップ",
+      "deckName": "ペラップ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45524",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045524_P_PERAPPU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アカペラ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを3枚まで選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-45524-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "かぜおこし",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-45524-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45524.json",
+        "sha256": "b54c81171587a2f3a2551c0ee794887aae9989a29448d3823f842ba09fd968a0",
+        "htmlSha256": "b54c81171587a2f3a2551c0ee794887aae9989a29448d3823f842ba09fd968a0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45547",
       "name": "ニャビー",
       "deckName": "ニャビー",
@@ -14191,6 +15006,148 @@
         "path": "data/effect-extensions/evidence/45607.json",
         "sha256": "76c4f213bf3119ebb0309074bd56e7a5715ad69ff1336a90723a0b84b47f6f5e",
         "htmlSha256": "76c4f213bf3119ebb0309074bd56e7a5715ad69ff1336a90723a0b84b47f6f5e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45610",
+      "name": "キリンリキ",
+      "deckName": "キリンリキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45610",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045610_P_KIRINRIKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "どっちもヘッド",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "自分のベンチポケモン1匹にも、10ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-45610-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "ownBench",
+            "amount": 10,
+            "count": 1
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45610.json",
+        "sha256": "24ac71acc6e3bb80b9a586c79204549dcffc7f0d5d4ebfb5c7975e18f7e09058",
+        "htmlSha256": "24ac71acc6e3bb80b9a586c79204549dcffc7f0d5d4ebfb5c7975e18f7e09058",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45612",
+      "name": "フラベベ",
+      "deckName": "フラベベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45612",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045612_P_FURABEBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きずをなおす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のポケモン1匹のHPを「30」回復する。",
+          "effectId": "reference-45612-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_HEAL_OWN_TARGET",
+            "commands": [
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        },
+        {
+          "name": "ようせいのかぜ",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-45612-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 40,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45612.json",
+        "sha256": "a42526c9b6c2c83bd8334dd53b5cfc9b69b54aac28502b9b644e48a3dfce1b0b",
+        "htmlSha256": "a42526c9b6c2c83bd8334dd53b5cfc9b69b54aac28502b9b644e48a3dfce1b0b",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -15067,6 +16024,71 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45722",
+      "name": "ユキワラシ",
+      "deckName": "ユキワラシ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45722",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045722_P_YUKIWARASHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おどろかす",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-45722-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45722.json",
+        "sha256": "9273a2123e6abf5e462a4ce613f817b77ce63a0a8ace6de17fd1c0f5786af3c9",
+        "htmlSha256": "9273a2123e6abf5e462a4ce613f817b77ce63a0a8ace6de17fd1c0f5786af3c9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45725",
       "name": "ナミイルカ",
       "deckName": "ナミイルカ",
@@ -15900,6 +16922,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45775",
+      "name": "ラッキー",
+      "deckName": "ラッキー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45775",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045775_P_RAKKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ラッキーアタッチ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、自分のポケモンにつける。",
+          "effectId": "reference-45775-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "own"
+          }
+        },
+        {
+          "name": "そこぢから",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-45775-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45775.json",
+        "sha256": "d9b5ab16f608eedad7bfdc3779f1e687276bde784da2c4ac1b3dec275e0f7562",
+        "htmlSha256": "d9b5ab16f608eedad7bfdc3779f1e687276bde784da2c4ac1b3dec275e0f7562",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45777",
       "name": "エイパム",
       "deckName": "エイパム",
@@ -16249,6 +17349,84 @@
         "path": "data/effect-extensions/evidence/45854.json",
         "sha256": "c22de3225528eb85294837582e64ea86f877de5542e4793248e979255c5c07b8",
         "htmlSha256": "c22de3225528eb85294837582e64ea86f877de5542e4793248e979255c5c07b8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45855",
+      "name": "ラッキー",
+      "deckName": "ラッキー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45855",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045855_P_RAKKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ラッキーアタッチ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、自分のポケモンにつける。",
+          "effectId": "reference-45855-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "own"
+          }
+        },
+        {
+          "name": "そこぢから",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-45855-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45855.json",
+        "sha256": "a6bd613e269e2f1c459d8cde33a474633a75df66f82a87e1207718410e358110",
+        "htmlSha256": "a6bd613e269e2f1c459d8cde33a474633a75df66f82a87e1207718410e358110",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -18164,6 +19342,68 @@
         "path": "data/effect-extensions/evidence/45992.json",
         "sha256": "eac5e57757e4d22c6248d20d1bdfbceec62dacb248a0eb29730a76bef1a15163",
         "htmlSha256": "eac5e57757e4d22c6248d20d1bdfbceec62dacb248a0eb29730a76bef1a15163",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45994",
+      "name": "コジョフー",
+      "deckName": "コジョフー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45994",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/045994_P_KOJIXYOFU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はたきおとす",
+          "cost": [
+            "闘"
+          ],
+          "damage": "10",
+          "text": "相手の手札からオモテを見ないで1枚選び、トラッシュする。",
+          "effectId": "reference-45994-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "amount": 1,
+            "destination": "discard"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45994.json",
+        "sha256": "9b5285c50f775bcf9a420078b94115b4d09a864085557fd976368a9297eda57b",
+        "htmlSha256": "9b5285c50f775bcf9a420078b94115b4d09a864085557fd976368a9297eda57b",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -23153,6 +24393,85 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46472",
+      "name": "ビクティニ",
+      "deckName": "ビクティニ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46472",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046472_P_BIKUTEINI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぱたぱた",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべて山札にもどして切る。その後、山札を6枚引く。",
+          "effectId": "reference-46472-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_RESET_HAND",
+            "commands": [
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "やきおとす",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": "相手のバトルポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-46472-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "specialOnly": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46472.json",
+        "sha256": "b5325438f97a1d8f463be8dbf8f84dab606df13350cbdfdbe951217d953fb38a",
+        "htmlSha256": "b5325438f97a1d8f463be8dbf8f84dab606df13350cbdfdbe951217d953fb38a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46474",
       "name": "メラルバ",
       "deckName": "メラルバ",
@@ -23500,6 +24819,151 @@
         "path": "data/effect-extensions/evidence/46486.json",
         "sha256": "10895ceb307c52a7315eece8b4ac9e9aa2ac2d636cb2989123dd10c5f86494c3",
         "htmlSha256": "10895ceb307c52a7315eece8b4ac9e9aa2ac2d636cb2989123dd10c5f86494c3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46488",
+      "name": "ユキワラシ",
+      "deckName": "ユキワラシ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46488",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046488_P_YUKIWARASHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おどろかす",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-46488-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46488.json",
+        "sha256": "1db3a7a4bd5b236041aa48f8499f223aca2cac877f4a4039f3cc15b4525d48ac",
+        "htmlSha256": "1db3a7a4bd5b236041aa48f8499f223aca2cac877f4a4039f3cc15b4525d48ac",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46490",
+      "name": "レジアイス",
+      "deckName": "レジアイス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46490",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046490_P_REJIAISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "つらら",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46490-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ふぶき",
+          "cost": [
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "相手のベンチポケモン全員にも、それぞれ10ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46490-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "opponentBench",
+            "amount": 10,
+            "count": null
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46490.json",
+        "sha256": "77deeabc448fcc67e73e2fe5f5b1879c9416c5285088dde101d3cb4775f0290a",
+        "htmlSha256": "77deeabc448fcc67e73e2fe5f5b1879c9416c5285088dde101d3cb4775f0290a",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -25002,6 +26466,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46558",
+      "name": "ペラップ",
+      "deckName": "ペラップ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46558",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046558_P_PERAPPU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アカペラ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンを3枚まで選び、ベンチに出す。そして山札を切る。",
+          "effectId": "reference-46558-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_BASIC_TO_BENCH_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "BENCH_FROM_ZONE",
+              "SHUFFLE_DECK"
+            ],
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "かぜおこし",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-46558-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46558.json",
+        "sha256": "b11d5dff56c8f31b618d43221f9c94cc3ae31060c9c25c942140f18bd5a8b217",
+        "htmlSha256": "b11d5dff56c8f31b618d43221f9c94cc3ae31060c9c25c942140f18bd5a8b217",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46561",
       "name": "チラーミィ",
       "deckName": "チラーミィ",
@@ -26311,6 +27858,71 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46698",
+      "name": "ユキワラシ",
+      "deckName": "ユキワラシ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46698",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046698_P_YUKIWARASHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おどろかす",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-46698-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46698.json",
+        "sha256": "77228cfab6a3b24c19d576a7d73cf397e85ad4af3813d3220250cae7a954e6da",
+        "htmlSha256": "77228cfab6a3b24c19d576a7d73cf397e85ad4af3813d3220250cae7a954e6da",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46703",
       "name": "ウミディグダ",
       "deckName": "ウミディグダ",
@@ -26447,6 +28059,83 @@
         "path": "data/effect-extensions/evidence/46705.json",
         "sha256": "0a95feb8dec9c5b6601eb1ede639f907776226bdf93739ab687e72437143ec51",
         "htmlSha256": "0a95feb8dec9c5b6601eb1ede639f907776226bdf93739ab687e72437143ec51",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46733",
+      "name": "ハバタクカミ",
+      "deckName": "ハバタクカミ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46733",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046733_P_HABATAKUKAMI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたりとばす",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "ダメカン2個を、相手のベンチポケモンに好きなようにのせる。",
+          "effectId": "reference-46733-attack-0",
+          "plan": {
+            "mechanic": "PHANTOM",
+            "commands": [
+              "DAMAGE",
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "counterCount": 2,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "あんやのはばたき",
+          "text": "このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性（「あんやのはばたき」をのぞく）は、すべてなくなる。",
+          "effectId": "reference-46733-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "exceptAbilityName": "あんやのはばたき"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46733.json",
+        "sha256": "bf3b69536934c8e42645e63d863d3f08943dbe5d50b8b36ac1c2ac2f591f1abf",
+        "htmlSha256": "bf3b69536934c8e42645e63d863d3f08943dbe5d50b8b36ac1c2ac2f591f1abf",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -28471,6 +30160,69 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47255",
+      "name": "マリィのズルッグ",
+      "deckName": "マリィのズルッグ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47255",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOM/047255_P_MARIINOZURUGGU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かみくだく",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "相手のバトルポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-47255-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "specialOnly": false
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47255.json",
+        "sha256": "c22bc4ff7e087dec4dde9b52c4e3104c4232cf5e286d692d97119fb947819b1d",
+        "htmlSha256": "c22bc4ff7e087dec4dde9b52c4e3104c4232cf5e286d692d97119fb947819b1d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47257",
       "name": "マリィのベロバー",
       "deckName": "マリィのベロバー",
@@ -28542,6 +30294,91 @@
         "path": "data/effect-extensions/evidence/47257.json",
         "sha256": "0d2f795675e480f726e8e7870a57d881a8bb31916cacfdb99d944386592b8357",
         "htmlSha256": "0d2f795675e480f726e8e7870a57d881a8bb31916cacfdb99d944386592b8357",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47275",
+      "name": "ダイゴのエアームド",
+      "deckName": "ダイゴのエアームド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47275",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOD/047275_P_DAIGONOEAMUDO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "するどいはね",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-47275-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ツインソニック",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手のポケモン2匹に、それぞれ50ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-47275-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "opponent",
+            "amount": 50,
+            "count": 2
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47275.json",
+        "sha256": "ce00c57e28b3338c14f47fe4fc4a019e055b5f4050ef3aa69e721cfedca96275",
+        "htmlSha256": "ce00c57e28b3338c14f47fe4fc4a019e055b5f4050ef3aa69e721cfedca96275",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -29450,6 +31287,88 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47334",
+      "name": "ロトム",
+      "deckName": "ロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47334",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047334_P_ROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おどろかす",
+          "cost": [
+            "雷"
+          ],
+          "damage": "20",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-47334-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        },
+        {
+          "name": "ガジェットショー",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30×",
+          "text": "自分のポケモン全員についている「ポケモンのどうぐ」の数×30ダメージ。",
+          "effectId": "reference-47334-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": false,
+            "unit": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47334.json",
+        "sha256": "f29938904edffa79a9974d39917b112c0a80902d1d9bee021d76767439777052",
+        "htmlSha256": "f29938904edffa79a9974d39917b112c0a80902d1d9bee021d76767439777052",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47337",
       "name": "シロナのフカマル",
       "deckName": "シロナのフカマル",
@@ -29859,6 +31778,88 @@
         "path": "data/effect-extensions/evidence/47374.json",
         "sha256": "46ad62cd68cc1f9f1650e89d2448abcf1b3bc3cddea1e0e580f5d2073aa4a72f",
         "htmlSha256": "46ad62cd68cc1f9f1650e89d2448abcf1b3bc3cddea1e0e580f5d2073aa4a72f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47375",
+      "name": "ロトム",
+      "deckName": "ロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47375",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047375_P_ROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おどろかす",
+          "cost": [
+            "雷"
+          ],
+          "damage": "20",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-47375-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        },
+        {
+          "name": "ガジェットショー",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30×",
+          "text": "自分のポケモン全員についている「ポケモンのどうぐ」の数×30ダメージ。",
+          "effectId": "reference-47375-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+            "commands": [
+              "DAMAGE"
+            ],
+            "bothSides": false,
+            "unit": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47375.json",
+        "sha256": "c150fecbbeda040ad8a86a6d71a21441bea37b7d5af158a299b45ecc7278c9e8",
+        "htmlSha256": "c150fecbbeda040ad8a86a6d71a21441bea37b7d5af158a299b45ecc7278c9e8",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -31027,6 +33028,70 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47434",
+      "name": "ロケット団のリーシャン",
+      "deckName": "ロケット団のリーシャン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47434",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047434_P_ROKETTODANNORISHIXYAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リンリンさわぐ",
+          "cost": [],
+          "damage": "0",
+          "text": "相手の手札からオモテを見ないで1枚選び、トラッシュする。",
+          "effectId": "reference-47434-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "DISCARD"
+            ],
+            "amount": 1,
+            "destination": "discard"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 30,
+        "evolvesFrom": null,
+        "retreatCost": 0,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47434.json",
+        "sha256": "b2a91b5f5c67044599dae075e058bc1c4f04c694ad9eaeb1eb51625e490b16a6",
+        "htmlSha256": "b2a91b5f5c67044599dae075e058bc1c4f04c694ad9eaeb1eb51625e490b16a6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47438",
       "name": "マンキー",
       "deckName": "マンキー",
@@ -31500,6 +33565,92 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47464",
+      "name": "ロケット団のヤミカラス",
+      "deckName": "ロケット団のヤミカラス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47464",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047464_P_ROKETTODANNOYAMIKARASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たぶらかす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-47464-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "supporter",
+            "limit": 1
+          }
+        },
+        {
+          "name": "いちゃもん",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手のバトルポケモンが持つワザを1つ選ぶ。次の相手の番、このワザを受けたポケモンは、選ばれたワザが使えない。",
+          "effectId": "reference-47464-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47464.json",
+        "sha256": "93bcd5c3f7e209efc9902dc2f69ce9fa7b25f4a348c36b61a2e2736c6925b7ca",
+        "htmlSha256": "93bcd5c3f7e209efc9902dc2f69ce9fa7b25f4a348c36b61a2e2736c6925b7ca",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47469",
       "name": "ロケット団のコラッタ",
       "deckName": "ロケット団のコラッタ",
@@ -31556,6 +33707,88 @@
         "path": "data/effect-extensions/evidence/47469.json",
         "sha256": "08c32faf977165563102cd278bb3a73d2b1d857e84e2d9b494b6d06a0459d16f",
         "htmlSha256": "08c32faf977165563102cd278bb3a73d2b1d857e84e2d9b494b6d06a0459d16f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47471",
+      "name": "ロケット団のニャース",
+      "deckName": "ロケット団のニャース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47471",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047471_P_ROKETTODANNONIXYASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ねこばば",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-47471-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        },
+        {
+          "name": "みだれひっかき",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "コインを3回投げ、オモテの数×20ダメージ。",
+          "effectId": "reference-47471-attack-1",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47471.json",
+        "sha256": "649a614fd3b5a5af5352eaa0d7f3dff0f3bab1696b94b53defb78edbbc4344b8",
+        "htmlSha256": "649a614fd3b5a5af5352eaa0d7f3dff0f3bab1696b94b53defb78edbbc4344b8",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -31761,6 +33994,174 @@
         "path": "data/effect-extensions/evidence/47506.json",
         "sha256": "74ae0165c9a5d4a1c4b6faec29f73e04615186585b160a69e04b5b16e882da13",
         "htmlSha256": "74ae0165c9a5d4a1c4b6faec29f73e04615186585b160a69e04b5b16e882da13",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47510",
+      "name": "ロケット団のヤミカラス",
+      "deckName": "ロケット団のヤミカラス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47510",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047510_P_ROKETTODANNOYAMIKARASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たぶらかす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-47510-attack-0",
+          "plan": {
+            "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "filter": "supporter",
+            "limit": 1
+          }
+        },
+        {
+          "name": "いちゃもん",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手のバトルポケモンが持つワザを1つ選ぶ。次の相手の番、このワザを受けたポケモンは、選ばれたワザが使えない。",
+          "effectId": "reference-47510-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47510.json",
+        "sha256": "311838e1ac40cea15d5bc9d8afea998399d89971e45876af5b1d6bdaf3374d1f",
+        "htmlSha256": "311838e1ac40cea15d5bc9d8afea998399d89971e45876af5b1d6bdaf3374d1f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47513",
+      "name": "ロケット団のニャース",
+      "deckName": "ロケット団のニャース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47513",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047513_P_ROKETTODANNONIXYASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ねこばば",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札からオモテを見ないで1枚選び、そのカードのオモテを見て、相手の山札にもどして切る。",
+          "effectId": "reference-47513-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+            "commands": [
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "amount": 1,
+            "destination": "deck"
+          }
+        },
+        {
+          "name": "みだれひっかき",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "コインを3回投げ、オモテの数×20ダメージ。",
+          "effectId": "reference-47513-attack-1",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 3,
+            "unit": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47513.json",
+        "sha256": "9b93b5d2bd3a40235565546308cecc9cd3a6287053051f85540e7120b2ef8841",
+        "htmlSha256": "9b93b5d2bd3a40235565546308cecc9cd3a6287053051f85540e7120b2ef8841",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -33211,6 +35612,67 @@
         "path": "data/effect-extensions/evidence/47609.json",
         "sha256": "61cd092376cab24d6c0df361a32d0881d6eddacf44b8bc08a0880a4080c541a5",
         "htmlSha256": "61cd092376cab24d6c0df361a32d0881d6eddacf44b8bc08a0880a4080c541a5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47612",
+      "name": "タブンネ",
+      "deckName": "タブンネ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47612",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047612_P_TABUNNE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんがえし",
+          "cost": [
+            "無色"
+          ],
+          "damage": "30",
+          "text": "のぞむなら、自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-47612-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "limit": 6
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47612.json",
+        "sha256": "ab80a06eef823ad11cfadec62272d7baa5f0e645c5de32a743ab82dddd8b5845",
+        "htmlSha256": "ab80a06eef823ad11cfadec62272d7baa5f0e645c5de32a743ab82dddd8b5845",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -37753,6 +40215,87 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "48481",
+      "name": "ワルビアルex",
+      "deckName": "ワルビアルex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48481",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048481_P_WARUBIARUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おいつめる",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。",
+          "effectId": "reference-48481-attack-0",
+          "plan": {
+            "mechanic": "RETREAT_LOCK_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        },
+        {
+          "name": "ストロングバイト",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "140+",
+          "text": "このポケモンに「ポケモンのどうぐ」がついているなら、140ダメージ追加。",
+          "effectId": "reference-48481-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownTool",
+            "base": 140,
+            "bonus": 140
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "ワルビル",
+        "retreatCost": 3,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48481.json",
+        "sha256": "2143e00c4a54d63f583b67643bb3740047d23c8d8988550b60272dce11f92451",
+        "htmlSha256": "2143e00c4a54d63f583b67643bb3740047d23c8d8988550b60272dce11f92451",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "49592",
       "name": "ピカチュウex",
       "deckName": "ピカチュウex",
@@ -37810,6 +40353,84 @@
         "path": "data/effect-extensions/evidence/49592.json",
         "sha256": "90c7dc9c1c35ab90a1be753a003d29bfd15d9c319e186ad81873f395b8cbb225",
         "htmlSha256": "90c7dc9c1c35ab90a1be753a003d29bfd15d9c319e186ad81873f395b8cbb225",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49614",
+      "name": "シロナのガブリアスex",
+      "deckName": "シロナのガブリアスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49614",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/049614_P_SHIRONANOGABURIASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スクリューダイブ",
+          "cost": [
+            "闘"
+          ],
+          "damage": "100",
+          "text": "のぞむなら、自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-49614-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "limit": 6
+          }
+        },
+        {
+          "name": "リューノバスター",
+          "cost": [
+            "闘",
+            "闘"
+          ],
+          "damage": "260",
+          "text": "このポケモンについているエネルギーを、すべてトラッシュする。",
+          "effectId": "reference-49614-attack-1",
+          "plan": {
+            "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "シロナのガバイト",
+        "retreatCost": 0,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49614.json",
+        "sha256": "bfeed737b8c413f276e0a4b601871c0abc32be841b2fe399ce1fa392732b41e4",
+        "htmlSha256": "bfeed737b8c413f276e0a4b601871c0abc32be841b2fe399ce1fa392732b41e4",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -38104,6 +40725,166 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45158",
+      "name": "ウガツホムラex",
+      "deckName": "ウガツホムラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45158",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045158_P_UGATSUHOMURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-45158-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "れっかばくしん",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "このワザを使ったなら、このポケモンは、バトル場をはなれるまで「れっかばくしん」が使えない。",
+          "effectId": "reference-45158-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_LOCK_UNTIL_SWITCH",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "れっかばくしん"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45158.json",
+        "sha256": "b45906780204d118aa7d2f645a349276d41b460c397a18c966839810c573f340",
+        "htmlSha256": "b45906780204d118aa7d2f645a349276d41b460c397a18c966839810c573f340",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50620",
+      "name": "レシラム",
+      "deckName": "レシラム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50620",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050620_P_RESHIRAMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きりさく",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-50620-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "レーザーフレイム",
+          "cost": [
+            "炎",
+            "無色",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンに[雷]エネルギーがついているなら、80ダメージ追加。",
+          "effectId": "reference-50620-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownEnergyType",
+            "base": 80,
+            "bonus": 80,
+            "type": "雷"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50620.json",
+        "sha256": "7dd3ff692a7485ec7a2961286930e8e371f8d140b79e8f882e60d6e2e0c77e60",
+        "htmlSha256": "7dd3ff692a7485ec7a2961286930e8e371f8d140b79e8f882e60d6e2e0c77e60",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50625",
       "name": "カイオーガ",
       "deckName": "カイオーガ",
@@ -38357,6 +41138,87 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50662",
+      "name": "ゼクロム",
+      "deckName": "ゼクロム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50662",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050662_P_ZEKUROMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きりさく",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-50662-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ニトロサンダー",
+          "cost": [
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンに[炎]エネルギーがついているなら、80ダメージ追加。",
+          "effectId": "reference-50662-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownEnergyType",
+            "base": 80,
+            "bonus": 80,
+            "type": "炎"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50662.json",
+        "sha256": "d7d76cd44150a9c113fcbc80d59c99b2f06e7538c4a9e7a3247cbff049669388",
+        "htmlSha256": "d7d76cd44150a9c113fcbc80d59c99b2f06e7538c4a9e7a3247cbff049669388",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50668",
       "name": "ミュウ",
       "deckName": "ミュウ",
@@ -38511,6 +41373,92 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50697",
+      "name": "ザシアン",
+      "deckName": "ザシアン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50697",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050697_P_ZASHIAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハードブレード",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "20+",
+          "text": "このポケモンに「ポケモンのどうぐ」がついているなら、40ダメージ追加。",
+          "effectId": "reference-50697-attack-0",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownTool",
+            "base": 20,
+            "bonus": 40
+          }
+        },
+        {
+          "name": "スラッシュダウン",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "次の自分の番、このポケモンは「スラッシュダウン」が使えない。",
+          "effectId": "reference-50697-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "スラッシュダウン"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50697.json",
+        "sha256": "b993892c13e203d4a79512ba0de661ac9d7ffcf01ebe296fa5fec43a5085ffb2",
+        "htmlSha256": "b993892c13e203d4a79512ba0de661ac9d7ffcf01ebe296fa5fec43a5085ffb2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45194",
       "name": "ポチエナ",
       "deckName": "ポチエナ",
@@ -38569,6 +41517,81 @@
         "path": "data/effect-extensions/evidence/45194.json",
         "sha256": "3b35c63dbb3f5d75748ef50dbe2e4e7679343da87eab938af49ab93461a83ff8",
         "htmlSha256": "3b35c63dbb3f5d75748ef50dbe2e4e7679343da87eab938af49ab93461a83ff8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45199",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45199",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045199_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-45199-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-45199-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45199.json",
+        "sha256": "955efafb4333d1d1d6f7fd46bdaabbdf549a31bc8249ce0f2769c5f6737e070e",
+        "htmlSha256": "955efafb4333d1d1d6f7fd46bdaabbdf549a31bc8249ce0f2769c5f6737e070e",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -39236,6 +42259,468 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45528",
+      "name": "ウガツホムラex",
+      "deckName": "ウガツホムラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45528",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045528_P_UGATSUHOMURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-45528-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "れっかばくしん",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "このワザを使ったなら、このポケモンは、バトル場をはなれるまで「れっかばくしん」が使えない。",
+          "effectId": "reference-45528-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_LOCK_UNTIL_SWITCH",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "れっかばくしん"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45528.json",
+        "sha256": "c907c8b518a2893e14f998da32e0b07bb41a48a46b91378bbc1caefa687088ed",
+        "htmlSha256": "c907c8b518a2893e14f998da32e0b07bb41a48a46b91378bbc1caefa687088ed",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45532",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45532",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045532_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-45532-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-45532-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45532.json",
+        "sha256": "ba8b200fb06b4254b8872c1eefd85af050ad4ce74e0d37c9e344b6dced259af6",
+        "htmlSha256": "ba8b200fb06b4254b8872c1eefd85af050ad4ce74e0d37c9e344b6dced259af6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45536",
+      "name": "ウガツホムラex",
+      "deckName": "ウガツホムラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45536",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045536_P_UGATSUHOMURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-45536-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "れっかばくしん",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "このワザを使ったなら、このポケモンは、バトル場をはなれるまで「れっかばくしん」が使えない。",
+          "effectId": "reference-45536-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_LOCK_UNTIL_SWITCH",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "れっかばくしん"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45536.json",
+        "sha256": "ee85814cb8bf785af5db5c072688d407612ad51d65e026bb8c693a7e0b050b81",
+        "htmlSha256": "ee85814cb8bf785af5db5c072688d407612ad51d65e026bb8c693a7e0b050b81",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45538",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45538",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045538_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-45538-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-45538-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45538.json",
+        "sha256": "5b1970a2b7ed39cd933fca4bb4a32161898922355478e541432044e38b6ab7f4",
+        "htmlSha256": "5b1970a2b7ed39cd933fca4bb4a32161898922355478e541432044e38b6ab7f4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45541",
+      "name": "ウガツホムラex",
+      "deckName": "ウガツホムラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45541",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045541_P_UGATSUHOMURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-45541-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "れっかばくしん",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "このワザを使ったなら、このポケモンは、バトル場をはなれるまで「れっかばくしん」が使えない。",
+          "effectId": "reference-45541-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_LOCK_UNTIL_SWITCH",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "れっかばくしん"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45541.json",
+        "sha256": "3dffae7c04af619c25f6ee80e87c4b2574beebc4750f7bc41882e31a94e44b3b",
+        "htmlSha256": "3dffae7c04af619c25f6ee80e87c4b2574beebc4750f7bc41882e31a94e44b3b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45543",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45543",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045543_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-45543-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-45543-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45543.json",
+        "sha256": "9a869a89869d7025e2e69be5c26d85cc8d7fda36f590c2353703a4661771c600",
+        "htmlSha256": "9a869a89869d7025e2e69be5c26d85cc8d7fda36f590c2353703a4661771c600",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45591",
       "name": "ヒコザル",
       "deckName": "ヒコザル",
@@ -39294,6 +42779,69 @@
         "path": "data/effect-extensions/evidence/45591.json",
         "sha256": "aac014b638fdaeaf731d94d98e8e79cdaa736fe34dab0a09e94be31c3048d7d2",
         "htmlSha256": "aac014b638fdaeaf731d94d98e8e79cdaa736fe34dab0a09e94be31c3048d7d2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45622",
+      "name": "ルチャブル",
+      "deckName": "ルチャブル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45622",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045622_P_RUCHIXYABURU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイドカウンター",
+          "cost": [
+            "闘",
+            "闘"
+          ],
+          "damage": "50+",
+          "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、90ダメージ追加。",
+          "effectId": "reference-45622-attack-0",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownMorePrizes",
+            "base": 50,
+            "bonus": 90
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45622.json",
+        "sha256": "36892b0fcdbb014ad1f066d1990014eca7276b4a191f6169741f0bde70413c86",
+        "htmlSha256": "36892b0fcdbb014ad1f066d1990014eca7276b4a191f6169741f0bde70413c86",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -40090,6 +43638,86 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46238",
+      "name": "ウガツホムラ",
+      "deckName": "ウガツホムラ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46238",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046238_P_UGATSUHOMURA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "つきたおし",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46238-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "えんじょうとつげき",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "相手のサイドの残り枚数が4枚以下なら、70ダメージ追加。",
+          "effectId": "reference-46238-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "opponentPrizes",
+            "base": 100,
+            "bonus": 70,
+            "threshold": 4
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46238.json",
+        "sha256": "f1f234b7f5af44b97a89f3a7c0333bbd915fa74fcf80080dc74debbf830b878a",
+        "htmlSha256": "f1f234b7f5af44b97a89f3a7c0333bbd915fa74fcf80080dc74debbf830b878a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46242",
       "name": "クワッス",
       "deckName": "クワッス",
@@ -40147,6 +43775,160 @@
         "path": "data/effect-extensions/evidence/46242.json",
         "sha256": "58c5f318a0049fa5ec78a846cfa782c2c75d9c8fb6d3a1dccbe620fbe6fd4738",
         "htmlSha256": "58c5f318a0049fa5ec78a846cfa782c2c75d9c8fb6d3a1dccbe620fbe6fd4738",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46274",
+      "name": "カジッチュ",
+      "deckName": "カジッチュ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46274",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046274_P_KAJITCHIXYU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "えいようそ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のポケモン1匹のHPを「30」回復する。",
+          "effectId": "reference-46274-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_HEAL_OWN_TARGET",
+            "commands": [
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        },
+        {
+          "name": "ころばす",
+          "cost": [
+            "草",
+            "炎"
+          ],
+          "damage": "20+",
+          "text": "コインを1回投げオモテなら、30ダメージ追加。",
+          "effectId": "reference-46274-attack-1",
+          "plan": {
+            "mechanic": "COIN_BONUS_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "base": 20,
+            "bonus": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 40,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46274.json",
+        "sha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
+        "htmlSha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46351",
+      "name": "パルデア ケンタロス",
+      "deckName": "パルデア ケンタロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46351",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046351_P_PARUDEAKENTAROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "うしろげり",
+          "cost": [
+            "炎"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46351-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "きあいタックル",
+          "cost": [
+            "炎",
+            "無色",
+            "無色"
+          ],
+          "damage": "90+",
+          "text": "相手のバトルポケモンが1進化ポケモンなら、90ダメージ追加。",
+          "effectId": "reference-46351-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "opponentStage",
+            "base": 90,
+            "bonus": 90,
+            "threshold": 1
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46351.json",
+        "sha256": "adc8703cf7ada2f16ee00cd132598130150acff38100cd4f5f133443e48919e8",
+        "htmlSha256": "adc8703cf7ada2f16ee00cd132598130150acff38100cd4f5f133443e48919e8",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -41169,6 +44951,85 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46688",
+      "name": "ウガツホムラex",
+      "deckName": "ウガツホムラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46688",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046688_P_UGATSUHOMURAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ヒートブラスト",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46688-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "れっかばくしん",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "このワザを使ったなら、このポケモンは、バトル場をはなれるまで「れっかばくしん」が使えない。",
+          "effectId": "reference-46688-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_LOCK_UNTIL_SWITCH",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "れっかばくしん"
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46688.json",
+        "sha256": "7a58049bc40edd039df101594564fdd5e233574ef0a151b5e8ca11175721d81a",
+        "htmlSha256": "7a58049bc40edd039df101594564fdd5e233574ef0a151b5e8ca11175721d81a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46714",
       "name": "ゼラオラ",
       "deckName": "ゼラオラ",
@@ -41310,6 +45171,81 @@
         "path": "data/effect-extensions/evidence/46773.json",
         "sha256": "99b8c9c2c73699cc75eb2a019dfee383d3d58a7cc70db2eaa139b8f2167926eb",
         "htmlSha256": "99b8c9c2c73699cc75eb2a019dfee383d3d58a7cc70db2eaa139b8f2167926eb",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46785",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46785",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046785_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-46785-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-46785-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46785.json",
+        "sha256": "b17c33db82f4d7623e70c27b1906cba44231f607227c04723b1fcbe464144925",
+        "htmlSha256": "b17c33db82f4d7623e70c27b1906cba44231f607227c04723b1fcbe464144925",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -41462,6 +45398,81 @@
         "path": "data/effect-extensions/evidence/47077.json",
         "sha256": "c559fe351b5967d8d7e4c7628afa821c97fdcb44d7d12c6db6245b3f6826f163",
         "htmlSha256": "c559fe351b5967d8d7e4c7628afa821c97fdcb44d7d12c6db6245b3f6826f163",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47143",
+      "name": "タケルライコex",
+      "deckName": "タケルライコex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47143",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/047143_P_TAKERURAIKOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はじけるほうこう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札をすべてトラッシュし、山札を6枚引く。",
+          "effectId": "reference-47143-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DISCARD",
+              "DRAW"
+            ],
+            "amount": 6
+          }
+        },
+        {
+          "name": "きょくらいごう",
+          "cost": [
+            "雷",
+            "闘"
+          ],
+          "damage": "70×",
+          "text": "自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×70ダメージ。",
+          "effectId": "reference-47143-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "unit": 70
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 240,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "竜"
+        ],
+        "weakness": null,
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47143.json",
+        "sha256": "d2088c4f19ac548652b11da39297b85a2e00806cc7994cff8973cd2806b225f1",
+        "htmlSha256": "d2088c4f19ac548652b11da39297b85a2e00806cc7994cff8973cd2806b225f1",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -42301,6 +46312,172 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47573",
+      "name": "ゼクロムex",
+      "deckName": "ゼクロムex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47573",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047573_P_ZEKUROMUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きりさく",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-47573-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ボルテージバースト",
+          "cost": [
+            "雷",
+            "雷",
+            "無色"
+          ],
+          "damage": "130+",
+          "text": "相手がすでにとったサイドの枚数×50ダメージ追加。このポケモンにも30ダメージ。",
+          "effectId": "reference-47573-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+            "commands": [
+              "DAMAGE"
+            ],
+            "base": 130,
+            "unit": 50,
+            "recoil": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47573.json",
+        "sha256": "daf8bac6c0d72283bc4954c460413123aefad4ff41db61493b127bd2fc9bc304",
+        "htmlSha256": "daf8bac6c0d72283bc4954c460413123aefad4ff41db61493b127bd2fc9bc304",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47604",
+      "name": "コバルオン",
+      "deckName": "コバルオン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47604",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047604_P_KOBARUON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ホーリーエッジ",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "20",
+          "text": "相手のバトルポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-47604-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "specialOnly": true
+          }
+        },
+        {
+          "name": "メタルアームズ",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "このポケモンに「ポケモンのどうぐ」がついているなら、40ダメージ追加。",
+          "effectId": "reference-47604-attack-1",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownTool",
+            "base": 80,
+            "bonus": 40
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47604.json",
+        "sha256": "753e36da3afb5654e4cecdfcdc289487282d8ef347a9a43d66067c2891e366bb",
+        "htmlSha256": "753e36da3afb5654e4cecdfcdc289487282d8ef347a9a43d66067c2891e366bb",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47646",
       "name": "バニプッチ",
       "deckName": "バニプッチ",
@@ -42374,6 +46551,85 @@
         "path": "data/effect-extensions/evidence/47646.json",
         "sha256": "77aa6ed520905ea0cd077c03c31a750747b7c192e538bb698f94824c2e141d71",
         "htmlSha256": "77aa6ed520905ea0cd077c03c31a750747b7c192e538bb698f94824c2e141d71",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47654",
+      "name": "マッギョ",
+      "deckName": "マッギョ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47654",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047654_P_MAGGIXYO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッドボルト",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "このポケモンに[闘]エネルギーがついているなら、20ダメージ追加。",
+          "effectId": "reference-47654-attack-0",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "ownEnergyType",
+            "base": 20,
+            "bonus": 20,
+            "type": "闘"
+          }
+        },
+        {
+          "name": "はねまわる",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-47654-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47654.json",
+        "sha256": "aadc22f4b6e731551b9d21d0c4de8b9c44c70536986342e68b70d5adf70db41a",
+        "htmlSha256": "aadc22f4b6e731551b9d21d0c4de8b9c44c70536986342e68b70d5adf70db41a",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -44551,6 +48807,81 @@
         "path": "data/effect-extensions/evidence/49662.json",
         "sha256": "1b05409127997ba5d0b70b101800670bebc2fe610e0773cc37b2b098483d40e4",
         "htmlSha256": "1b05409127997ba5d0b70b101800670bebc2fe610e0773cc37b2b098483d40e4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49667",
+      "name": "シュシュプ",
+      "deckName": "シュシュプ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49667",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049667_P_SHIXYUSHIXYUPU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あまいかおり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のポケモン1匹のHPを「30」回復する。",
+          "effectId": "reference-49667-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_HEAL_OWN_TARGET",
+            "commands": [
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        },
+        {
+          "name": "ぶつかる",
+          "cost": [
+            "超"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-49667-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49667.json",
+        "sha256": "d206457353d8dc1508980da4a52a9618870e303b79ebebbf29629287d41a0bd4",
+        "htmlSha256": "d206457353d8dc1508980da4a52a9618870e303b79ebebbf29629287d41a0bd4",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -138738,7 +143069,7 @@
     {
       "officialCardId": "44366",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44367",
@@ -139063,12 +143394,12 @@
     {
       "officialCardId": "44453",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44455",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44457",
@@ -139386,11 +143717,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47494",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47497",
       "name": "ロケット団のさいみん装置",
       "category": "tool",
@@ -139536,11 +143862,6 @@
       }
     },
     {
-      "officialCardId": "49633",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50035",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -139596,11 +143917,6 @@
       }
     },
     {
-      "officialCardId": "50176",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50177",
       "name": "グリ",
       "category": "supporter",
@@ -139613,21 +143929,6 @@
         "sha256": "39a74db541bc67c1b7cfbbba24c5b7eb27df5bf4e774710815d8eff6762cee42",
         "htmlSha256": "39a74db541bc67c1b7cfbbba24c5b7eb27df5bf4e774710815d8eff6762cee42",
         "textSha256": "f4834a74d13d8086fa5bd968efbf299867d0c3dba93953491e1ed6f4d6b758d4"
-      }
-    },
-    {
-      "officialCardId": "50178",
-      "name": "ヒカリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「たねポケモン」「1進化ポケモン」「2進化ポケモン」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50178.json",
-        "sha256": "6196da4eb92a15fed06ef7c72cfd82db48dd8a3de26e98a4feb5a3befbe9ed4d",
-        "htmlSha256": "6196da4eb92a15fed06ef7c72cfd82db48dd8a3de26e98a4feb5a3befbe9ed4d",
-        "textSha256": "cae0b08fd92dcff0c5bb1e0a2cbb895fd1135ceb55b573a6cf5a4ef97a0d026d"
       }
     },
     {
@@ -139881,11 +144182,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50680",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50684",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -139946,11 +144242,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45179",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45180",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -139986,11 +144277,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45204",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45205",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140017,11 +144303,6 @@
     },
     {
       "officialCardId": "45227",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45236",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140066,11 +144347,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45291",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45295",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140091,22 +144367,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45519",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45520",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45523",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45524",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140171,16 +144437,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45610",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45612",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45619",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140241,11 +144497,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45722",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45728",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140301,11 +144552,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45775",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45848",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140317,11 +144563,6 @@
     },
     {
       "officialCardId": "45852",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45855",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140397,11 +144638,6 @@
     },
     {
       "officialCardId": "45986",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45994",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140641,22 +144877,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46472",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46473",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46488",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46490",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140672,11 +144893,6 @@
     },
     {
       "officialCardId": "46555",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46558",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140716,11 +144932,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46698",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46716",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140737,11 +144948,6 @@
     },
     {
       "officialCardId": "46728",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46733",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140896,22 +145102,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47255",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47272",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47274",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47275",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -140951,11 +145147,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47334",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47335",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -140991,22 +145182,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47375",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47400",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47433",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47434",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141026,22 +145207,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47464",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47467",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47468",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47471",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141061,17 +145232,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47510",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47511",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47513",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141127,11 +145288,6 @@
     },
     {
       "officialCardId": "47596",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47612",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141536,11 +145692,6 @@
       }
     },
     {
-      "officialCardId": "48481",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49590",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -141552,11 +145703,6 @@
     },
     {
       "officialCardId": "49613",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49614",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141581,22 +145727,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45158",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47025",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50564",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50620",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141616,22 +145752,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50662",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50667",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50669",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50697",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141647,11 +145773,6 @@
     },
     {
       "officialCardId": "45197",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45199",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141716,22 +145837,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45528",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45529",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45532",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45536",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141741,22 +145847,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45538",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45541",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45542",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45543",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -141832,11 +145923,6 @@
     },
     {
       "officialCardId": "45616",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45622",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142091,11 +146177,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46238",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46240",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -142107,11 +146188,6 @@
     },
     {
       "officialCardId": "46268",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46274",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142132,11 +146208,6 @@
     },
     {
       "officialCardId": "46343",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46351",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142241,11 +146312,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46688",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46710",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -142301,11 +146367,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46785",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46787",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -142357,11 +146418,6 @@
     },
     {
       "officialCardId": "47140",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47143",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142501,17 +146557,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47573",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47583",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47604",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142527,11 +146573,6 @@
     },
     {
       "officialCardId": "47649",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47654",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -142572,11 +146613,6 @@
     },
     {
       "officialCardId": "47589",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49667",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
