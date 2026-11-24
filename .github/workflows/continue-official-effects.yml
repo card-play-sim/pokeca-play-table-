@@ -98,7 +98,7 @@ jobs:
         run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
-          INTAKE_LIMIT: ${{ github.ref_name == 'work/issue122-next-782-replay' && '1000' || inputs.limit || '400' }}
+          INTAKE_LIMIT: ${{ github.ref_name == 'work/issue122-next-782-replay' && '1200' || inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
