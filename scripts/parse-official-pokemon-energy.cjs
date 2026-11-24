@@ -41,8 +41,15 @@ function predecessor(right,stage,name){
  }
  // A three-row arrow-linked evolution chain must never fall back to the
  // unmarked-row heuristic: a missing arrow makes the predecessor ambiguous.
- if(stage===1&&linkedRows.length===3&&linkedRows.some(r=>r[3]||r[4]))
+ if(stage===1&&linkedRows.length===3&&linkedRows.some(r=>r[3]||r[4])){
+  // The official chain may contain a BREAK stage and boxed alternative
+  // evolutions above the highlighted stage-1 Pokemon.  Validate every
+  // entry/arrow, then use ONLY the row immediately below the current Pokemon.
+  // Ambiguous or malformed chains still fail closed rather than guessing.
+  const verified=linkedPredecessor(evolution,stage,name);
+  if(verified)return verified;
   assert(false,'UNSUPPORTED_EVOLUTION_CHAIN');
+ }
  const ordinary=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));
  if(ordinary.length!==stage){
   // Some final evolutions share a display row with alternate print families
