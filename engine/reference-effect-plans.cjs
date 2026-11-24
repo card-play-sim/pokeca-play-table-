@@ -154,6 +154,11 @@ function additionalAttackPlan(entry,text){
  const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
  if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
   return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
+ // The official coin result determines whether the selected physical Energy
+ // is discarded. Always roll through match-owned deterministic RNG.
+ const coinDiscard=text.match(/^コインを1回投げオモテなら、相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
+ if(coinDiscard&&base!==null&&!printed.endsWith('+'))
+  return {mechanic:'ATTACK_COIN_DISCARD_DEFENDER_ENERGY',commands:[...deal,'COIN_FLIP','DISCARD'],specialOnly:Boolean(coinDiscard[1])};
  const discardEnergy=text.match(/^相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
  if(discardEnergy)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:Boolean(discardEnergy[1])};
  const healTarget=text.match(/^自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
