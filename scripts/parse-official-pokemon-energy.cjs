@@ -8,6 +8,25 @@ function text(s){
  assert(!/<[^>]+>/.test(s),'UNSUPPORTED_INLINE_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,'').trim();
 }
 function label(s){assert(!/<[^>]*>/.test(s),'UNSUPPORTED_NAME_MARKUP');return s.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();}
+function linkedPredecessor(chain,stage,name){
+ const start=/<div class="evolution (?:ev_on|ev_off|evbox)">/g;
+ const rows=[...chain.matchAll(start)];
+ if(!rows.length||chain.slice(0,rows[0].index).trim())return null;
+ const entry=/<div class="(?:evolution |evolution in-box |in-box )(ev_on|ev_off)">\s*<a\b[^>]*>([^<]+)<\/a>\s*(?:<div class="arrow_(on|off)"><\/div>)?\s*<\/div>/g;
+ const parsed=rows.map((row,index)=>{
+  const html=chain.slice(row.index,rows[index+1]?.index??chain.length);
+  const boxed=row[0].includes('evbox');
+  const body=boxed?html.slice(row[0].length).replace(/<\/div\/?>\s*$/,''):html;
+  const linked=[...body.matchAll(entry)];
+  if(!linked.length||linked.map(x=>x[0]).join('').replace(/\s/g,'')!==body.replace(/\s/g,''))return null;
+  return linked;
+ });
+ if(parsed.includes(null))return null;
+ const selected=parsed.flatMap((row,index)=>row.filter(link=>link[1]==='ev_on').map(link=>({index,name:label(link[2])})));
+ if(selected.length!==1||selected[0].name!==name)return null;
+ const earlier=parsed.slice(selected[0].index+1).map(row=>row.filter(link=>link[3]==='off')).filter(row=>row.length);
+ return earlier.length===stage&&earlier.every(row=>row.length===1)?label(earlier[0][0][2]):null;
+}
 function predecessor(right,stage,name){
  if(stage===0)return null;
  const evolution=right.match(/<h2[^>]*>進化<\/h2>([\s\S]*?)\n\s*<\/div>\s*<\/div>\s*<div class="clear">/)?.[1]||'';
@@ -46,6 +65,8 @@ function predecessor(right,stage,name){
    if(chain.length===stage&&chain.map(link=>link[0]).join('').replace(/\s/g,'')===tail.replace(/\s/g,''))
     return label(chain[0][1]);
   }
+  const linked=linkedPredecessor(evolution,stage,name);
+  if(linked)return linked;
  }
  assert(ordinary.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
  return ordinary[0];
@@ -53,7 +74,7 @@ function predecessor(right,stage,name){
 function parse(html,{enableTeraRule=false}={}){
  const right=html.slice(html.indexOf('<div class="RightBox-inner">'));assert(right.startsWith('<div'),'OFFICIAL_DETAIL_LAYOUT');
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
- if(/^<h2[^>]*>基本エネルギー<\/h2>\s*(?:<p>※ロゴあり（専用キャンペーン）<\/p>\s*)?<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
+ if(/^<h2[^>]*>基本エネルギー<\/h2>\s*(?:<p>(?:※ロゴあり（専用キャンペーン）)?\s*<\/p>\s*)?<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
  if(/^<h2[^>]*>特殊エネルギー<\/h2>/.test(right.slice(first))){
   const section=right.slice(first).match(/^<h2[^>]*>特殊エネルギー<\/h2>\s*<p[^>]*>([^]*?)<\/p>\s*(?:<h2[^>]*>特別なルール<\/h2>\s*<p><p>(ACE SPECのカードは、デッキに1枚しか入れられない。)<\/p><\/p>\s*)?<\/div>/);
   assert(section,'UNSUPPORTED_ENERGY_PARAGRAPHS');

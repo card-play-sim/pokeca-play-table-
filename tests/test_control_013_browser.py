@@ -177,7 +177,7 @@ async def main():
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
             'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
-            'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE'):
+            'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
    if m=='ATTACK_RESET_HAND':
@@ -186,14 +186,18 @@ async def main():
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='ATTACK_DISCARD_OWN_DECK_TOP':
     own=before['players'][0]
-    discarded=own['deck'][:f['e']['plan']['amount']]
-    assert [card['id'] for card in after['players'][0]['discard'][len(own['discard']):]]==[card['id'] for card in discarded]
-   if m=='ATTACK_DISABLE_DEFENDER':
+    discarded=[card['id'] for card in own['deck'][:f['e']['plan']['amount']]]
+    assert set(discarded)<={card['id'] for card in after['players'][0]['discard']}
+    assert any(ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck'
+               and ev['details'].get('cardIds')==discarded for ev in events)
+   if m in ('ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER'):
     previous=before['players'][1]['active']
     opponent=after['players'][1]
     targets=[card for card in [opponent['active'],*opponent['bench']] if card and card['id']==previous['id']]
-    if targets:
+    if targets and m=='ATTACK_DISABLE_DEFENDER':
      assert targets[0]['referenceCannotAttackTurn']==before['turnNumber']+1
+    elif targets:
+     assert targets[0]['referenceOutgoingDamagePenalty']=={'turn':before['turnNumber']+1,'amount':f['e']['plan']['amount']}
     else:
      assert previous['id'] in [card['id'] for card in opponent['discard']]
    if (trigger or f['e'])['plan']['mechanic']=='ATTACK_DISCARD_BENCH_ENERGY_BONUS':

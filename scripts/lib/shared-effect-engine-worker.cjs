@@ -264,7 +264,7 @@ function prepare(r, e, kind) {
     }
     if (!attached) return {blocked:"NO_ATTACHED_TOOL_FIXTURE_RESOURCE"};
   }
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -483,6 +483,11 @@ function verifyCase(t, e) {
     };
     verifyPrintedAttack(before, after, e, e.plan.base + (conditions[e.plan.predicate] ? e.plan.bonus : 0));
   }
+  if (e.plan.mechanic === "FIXED_COIN_HITS" && Object.hasOwn(e.plan, "base")) {
+    const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
+    assert.equal(tosses.length, e.plan.flips);
+    verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
   if (e.plan.mechanic === "SCALED_ATTACK_DAMAGE") {
     const count = cards => cards.flatMap(card => card.energyCards).filter(energy =>
       !e.plan.type || energy.energyType === e.plan.type).length;
@@ -504,12 +509,33 @@ function verifyCase(t, e) {
   if (e.plan.mechanic === "ATTACK_DISCARD_OWN_DECK_TOP") {
     const discarded = attackingSide.deck.slice(0, e.plan.amount).map(card => card.id);
     assert(discarded.length > 0);
-    assert.deepEqual(Array.from(after.players[0].discard.slice(attackingSide.discard.length), card => card.id), Array.from(discarded));
+    assert(effectEvents.some(event => event?.command === "DISCARD" && event.fromZone === "deck" &&
+      JSON.stringify(event.cardIds) === JSON.stringify(discarded)));
+    assert(discarded.every(id => after.players[0].discard.some(card => card.id === id)));
   }
   if (e.plan.mechanic === "ATTACK_DISABLE_DEFENDER") {
     const target = [after.players[1].active, ...after.players[1].bench].find(card => card?.id === defendingSide.active.id);
     if (target) assert.equal(target.referenceCannotAttackTurn, before.turnNumber + 1);
     else assert(after.players[1].discard.some(card => card.id === defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ATTACK_WEAKEN_DEFENDER") {
+    const target = [after.players[1].active, ...after.players[1].bench].find(card => card?.id === defendingSide.active.id);
+    if (target) {
+      assert.equal(target.referenceOutgoingDamagePenalty?.turn, before.turnNumber + 1);
+      assert.equal(target.referenceOutgoingDamagePenalty?.amount, e.plan.amount);
+    } else assert(after.players[1].discard.some(card => card.id === defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ANY_DAMAGE" && e.plan.amount) {
+    const chosen = o.action.targetIds[0];
+    assert(effectEvents.some(event => event?.command === "DAMAGE" && event.targetInstanceId === chosen));
+    const bench = defendingSide.bench.find(card => !E.getReferenceEffectRecord(card).facts.teraBenchProtection);
+    if (bench) {
+      const replay = port(before);
+      assert(replay.dispatch("you", { ...o.action, targetIds: [bench.id] }).ok);
+      const result = replay.getSnapshot();
+      assert(result.history.slice(before.history.length).some(event => event.details?.command === "DAMAGE" &&
+        event.details.targetInstanceId === bench.id && event.details.amount === e.plan.amount));
+    }
   }
   if (e.plan.mechanic === "COIN_SEARCH_POKEMON") {
     const action = o.action;

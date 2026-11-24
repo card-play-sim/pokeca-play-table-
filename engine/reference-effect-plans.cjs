@@ -71,6 +71,9 @@ const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function additionalAttackPlan(entry,text){
  const printed=String(entry.damage).normalize('NFKC');
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
+ const additionalFlips=text.match(/^コインを([1-9]\d?)回投げ、オモテの数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(additionalFlips&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'FIXED_COIN_HITS',commands:['COIN_FLIP','DAMAGE'],flips:Number(additionalFlips[1]),unit:Number(additionalFlips[2]),base};
  const conditional=text.match(/^(相手のバトルポケモンが「ポケモンex」なら|相手のバトルポケモンが「ポケモンex・V」なら|相手のバトルポケモンが進化ポケモンなら|相手のバトルポケモンにダメカンがのっているなら|自分のベンチポケモンにダメカンがのっているなら)、([1-9]\d{0,2})ダメージ追加。$/);
  if(conditional&&base!==null&&printed.endsWith('+')){
   const predicates={
@@ -89,12 +92,17 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
  }
  if(base===null||printed.endsWith('+'))return null;
+ const chosenTarget=text.match(/^相手のポケモン1匹に、([1-9]\d{0,2})ダメージ。(?:\[ベンチは弱点・抵抗力を計算しない。\]|ベンチは弱点・抵抗力を計算しない。)$/);
+ if(chosenTarget&&base===0)return {mechanic:'ANY_DAMAGE',commands:['DAMAGE'],amount:Number(chosenTarget[1])};
  const reset=text.match(/^自分の手札をすべて山札にもどして切る。その後、山札を([1-9]\d?)枚引く。$/);
  if(reset)return {mechanic:'ATTACK_RESET_HAND',commands:[...(base?['DAMAGE']:[]),'RETURN_TO_DECK','SHUFFLE_DECK','DRAW'],amount:Number(reset[1])};
  const discard=text.match(/^自分の山札を上から([1-9]\d?)枚トラッシュする。$/);
  if(discard)return {mechanic:'ATTACK_DISCARD_OWN_DECK_TOP',commands:[...(base?['DAMAGE']:[]),'DISCARD'],amount:Number(discard[1])};
  if(text==='次の相手の番、このワザを受けたポケモンは、ワザが使えない。')
   return {mechanic:'ATTACK_DISABLE_DEFENDER',commands:[...(base?['DAMAGE']:[]),'ADD_STATE']};
+ const weaken=text.match(/^次の相手の番、このワザを受けたポケモンが使うワザのダメージは「[-−]([1-9]\d{0,2})」される。$/);
+ if(weaken)
+  return {mechanic:'ATTACK_WEAKEN_DEFENDER',commands:[...(base?['DAMAGE']:[]),'ADD_STATE'],amount:Number(weaken[1])};
  return null;
 }
 function plan(entry,kind){
