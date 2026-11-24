@@ -22,7 +22,8 @@ assert.deepEqual(attack('このポケモンについているエネルギーを�
 assert.deepEqual(attack('このポケモンについているエネルギーを1個選び、トラッシュする。'),
   {mechanic:'DISCARD_ONE_SELF_ENERGY_ATTACK',commands:['DAMAGE','DISCARD']});
 assert.equal(attack('このポケモンについているエネルギーを1個選び、トラッシュする。','20',[]),null);
-assert.equal(attack('このポケモンについているエネルギーを2個選び、トラッシュする。'),null);
+assert.deepEqual(attack('このポケモンについているエネルギーを2個選び、トラッシュする。'),{mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:['DAMAGE','DISCARD'],count:2});
+assert.equal(attack('このポケモンについているエネルギーを2個選び、トラッシュする。その後、山札を引く。'),null);
 assert.equal(attack('このポケモンについている[炎]エネルギーを1個選び、トラッシュする。'),null);
 assert.equal(attack('このポケモンについているエネルギーを2個トラッシュする。'),null);
 assert.equal(attack('相手のバトルポケモンをマヒにする。'),null);
