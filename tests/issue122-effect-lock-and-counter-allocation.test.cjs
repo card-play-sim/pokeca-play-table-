@@ -37,6 +37,13 @@ assert(phantom,'official 90-damage printed attack');
 assert.equal(phantom.damage,'90');
 assert.equal(phantom.plan.mechanic,'PHANTOM');
 assert.equal(phantom.plan.counterCount,2);
+const suppression=compiled(shadow).abilities.find(a=>a.name==='あんやのはばたき');
+assert(suppression,'official printed suppression ability');
+assert.deepEqual(suppression.plan,{
+ mechanic:'ACTIVE_OPPONENT_ABILITY_SUPPRESSION',
+ commands:['ADD_STATE'],
+ exceptAbilityName:'あんやのはばたき'
+});
 // Seven remaining printings share two precisely checked variants of this attack.
 for (const [id, wording, target] of [
  ['47700','自分の手札から基本エネルギーを1枚選び、このポケモンにつける。','self'],
