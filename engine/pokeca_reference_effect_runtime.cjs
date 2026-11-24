@@ -236,7 +236,10 @@ function requests(g,actor,card,effect){
   const count=energies.length&&targets.length?1:0;
   deckRequest('energy',energies,count,count);cardRequest('attachTo',targets,count,count);
  }
- if(m==='PHANTOM'&&o.bench.length)add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),6,6);
+ if(m==='PHANTOM'&&o.bench.length){
+  const count=effect.plan.counterCount??6;
+  add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),count,count);
+ }
  if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'){
   const candidates=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic);
   deckRequest('cards',candidates,0,Math.min(effect.plan.limit,5-p.bench.length,candidates.length));
@@ -523,11 +526,12 @@ function attackBonusApplies(predicate,own,defender){
 function attackMetric(plan,own,other){
  if(plan.metric==='opponentCounters')return (other.active.damage||0)/10;
  if(plan.metric==='ownPokemon')return field(own).length;
+ if(plan.metric==='opponentPrizesTaken')return 6-other.prizes;
  if(plan.metric==='opponentRetreat')return other.active.retreatCost;
  if(plan.metric==='ownDiscardEnergy')return own.discard.filter(card=>card.kind==='energy').length;
- const holders={ownEnergy:[own.active],opponentEnergy:[other.active],opponentTeamEnergy:field(other)}[plan.metric];
+ const holders={ownEnergy:[own.active],ownTeamEnergy:field(own),opponentEnergy:[other.active],opponentTeamEnergy:field(other)}[plan.metric];
  assert(holders,'UNKNOWN_ATTACK_DAMAGE_METRIC');
- return holders.flatMap(energyUnits).filter(unit=>!plan.type||unit.includes(plan.type)).length;
+ return holders.flatMap(energyUnits).filter(unit=>!plan.type||unit.includes(plan.type)||Boolean(plan.secondType&&unit.includes(plan.secondType))).length;
 }
 function contextBonus(g,effect,own,other){
  const p=effect.plan,source=own.active,defender=other.active;
@@ -593,7 +597,8 @@ function applyPlan(g,actor,card,effect,action){
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=spreadTargets(plan,p,o);
    for(const mon of targets)
-    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.amount,{bench:mon!==o.active});
+    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.amount,
+      {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense,skipResistance:plan.ignoreDefense});
    break;
   }
   case 'CONTEXT_ATTACK_BONUS':
@@ -687,7 +692,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='EX_COUNT_DAMAGE')amount=60*field(o).filter(c=>record(c).facts.prizeCount>=2).length;
    if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE','ANY_DAMAGE'].includes(m)){mon=target();assert(mon,'TARGET_REQUIRED');options.bench=o.active!==mon;amount=m==='BENCH_COUNTER_DAMAGE'?(mon.damage||0)*2:m==='BENCH_EX_DAMAGE'?60:plan.amount??100;}
    if(m==='IGNORE_DEFENDER_EFFECTS')options.ignore=true;
-   if(m==='FULL_BENCH_REQUIRED_DAMAGE'&&p.bench.length<plan.minimum)break;
+   if(m==='FULL_BENCH_REQUIRED_DAMAGE'&&(plan.requiresStadium?!g.stadium:p.bench.length<plan.minimum))break;
    damage(g,actor,mon,amount,options);
    if(m==='RECOIL_DAMAGE')command(g,actor,{command:'DAMAGE',amount:plan.amount},{targetIds:[id(card)]});
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
