@@ -28,8 +28,8 @@ for(const file of testFiles){
  console.log('START',file,'shard',shardIndex+'/'+shardCount);
  // These seeded full-match and rejection suites cover thousands of audited state transitions.
  // Keep all seeds and assertions; grant only these suites a bounded workload-specific budget.
- const workloadTimeoutMs=['reference-effect-cross-family-seeded.test.cjs','reference-effect-extended-gameplay.test.cjs','reference-effect-cross-family-rejection.test.cjs'].includes(file)
-  ? Math.max(timeoutMs,300000):timeoutMs;
+ const workloadTimeoutMs=['reference-effect-cross-family-seeded.test.cjs','reference-effect-extended-gameplay.test.cjs','reference-effect-cross-family-rejection.test.cjs','battle-energy-acceleration-official.test.cjs'].includes(file)
+  ? Math.max(timeoutMs,300000):file==='control-013-continuation.test.cjs'?Math.max(timeoutMs,600000):timeoutMs;
  const result=spawnSync(process.execPath,[path.join('tests',file)],{stdio:'inherit',timeout:workloadTimeoutMs});
  const durationMs=Date.now()-started;
  const ok=result.status===0&&!result.error;

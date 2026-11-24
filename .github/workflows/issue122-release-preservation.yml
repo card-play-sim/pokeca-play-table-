@@ -1,0 +1,33 @@
+name: Consolidated release print preservation gate
+on:
+  pull_request:
+    branches: [main]
+    paths: ['data/effect-extensions/**','engine/**','ui/**']
+permissions:
+  contents: read
+jobs:
+  exact-preservation:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          git show ${{ github.event.pull_request.base.sha }}:data/effect-extensions/compiled.json > /tmp/base-compiled.json
+          node - <<'NODE'
+          const assert=require('node:assert/strict'),fs=require('node:fs');
+          const base=JSON.parse(fs.readFileSync('/tmp/base-compiled.json'));
+          const next=JSON.parse(fs.readFileSync('data/effect-extensions/compiled.json'));
+          const index=new Map(next.records.map(row=>[row.officialCardId,row]));
+          for(const row of base.records)assert.deepEqual(index.get(row.officialCardId),row,'PREVIOUS_RELEASE_CHANGED:'+row.officialCardId);
+          const ids=new Set(base.records.map(r=>r.officialCardId));
+          const added=next.records.filter(row=>!ids.has(row.officialCardId));
+          console.log(JSON.stringify({state:'PRESERVED_RELEASE',prior:base.records.length,newPrints:added.length,ids:added.map(r=>r.officialCardId)}));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check

@@ -70,7 +70,8 @@ if(!verified.length){
   for(const entry of fs.readdirSync('data'))if(!['effect-extensions','reference-effects'].includes(entry))
    fs.symlinkSync(path.join(root,'data',entry),path.join(temp,'data',entry));
   fs.cpSync('data/reference-effects',path.join(temp,'data/reference-effects'),{recursive:true});
-  fs.symlinkSync(path.join(root,'data/effect-extensions/evidence'),path.join(temp,'data/effect-extensions/evidence'));
+  for(const entry of fs.readdirSync('data/effect-extensions'))if(!['intake.json','compiled.json'].includes(entry))
+   fs.symlinkSync(path.join(root,'data/effect-extensions',entry),path.join(temp,'data/effect-extensions',entry));
   fs.copyFileSync('ui/engine.bundle.js',path.join(temp,'ui/engine.bundle.js'));
   for(const dir of ['engine','scripts','tests'])fs.symlinkSync(path.join(root,dir),path.join(temp,dir));
   fs.writeFileSync(path.join(temp,'data/effect-extensions/intake.json'),JSON.stringify({...intake,records}));
