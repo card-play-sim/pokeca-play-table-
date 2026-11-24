@@ -33,6 +33,19 @@ function predecessor(right,stage,name){
    if(rows.length===stage&&rows.map(row=>row[0]).join('').replace(/\s/g,'')===tail.replace(/\s/g,''))
     return label(rows[0][1]);
   }
+  // An arrow below the highlighted row connects it to its predecessor.
+  // Ignore parallel prints within the same row and evolutions above it.
+  const highlighted=[...evolution.matchAll(/<div class="(?:in-box|evolution) ev_on">\s*<a\b[^>]*>([^<]+)<\/a>\s*<div class="arrow_on"><\/div>\s*<\/div>/g)];
+  if(highlighted.length===1&&label(highlighted[0][1])===name){
+   const row=highlighted[0];
+   let tail=evolution.slice(row.index+row[0].length);
+   if(row[0].includes('in-box ev_on')){
+    tail=tail.replace(/^(?:\s*<div class="in-box ev_off">\s*<a\b[^>]*>[^<]+<\/a>\s*<\/div>)*\s*<\/div>/,'');
+   }
+   const chain=[...tail.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>\s*<div class="arrow_off"><\/div>\s*<\/div>/g)];
+   if(chain.length===stage&&chain.map(link=>link[0]).join('').replace(/\s/g,'')===tail.replace(/\s/g,''))
+    return label(chain[0][1]);
+  }
  }
  assert(ordinary.length===stage,'UNSUPPORTED_EVOLUTION_CHAIN');
  return ordinary[0];
@@ -40,8 +53,12 @@ function predecessor(right,stage,name){
 function parse(html,{enableTeraRule=false}={}){
  const right=html.slice(html.indexOf('<div class="RightBox-inner">'));assert(right.startsWith('<div'),'OFFICIAL_DETAIL_LAYOUT');
  const first=right.search(/<h2\b/);assert(first>=0,'OFFICIAL_EFFECT_SECTION');
- if(/^<h2[^>]*>基本エネルギー<\/h2>\s*<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
- if(/<h2[^>]*>特殊エネルギー<\/h2>/.test(right.slice(first,first+90))){const section=right.slice(first).match(/^<h2[^>]*>特殊エネルギー<\/h2>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/div>/);assert(section,'UNSUPPORTED_ENERGY_PARAGRAPHS');return {category:'energy',text:text(section[1]),attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false}};}
+ if(/^<h2[^>]*>基本エネルギー<\/h2>\s*(?:<p>※ロゴあり（専用キャンペーン）<\/p>\s*)?<\/div>/.test(right.slice(first))){const name=label(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1]||''),m=name.match(/^基本([草炎水雷超闘悪鋼])エネルギー$/);assert(m,'UNVERIFIED_BASIC_ENERGY_TYPE');return {category:'energy',text:'',attacks:[],abilities:[],rulesText:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false,basicEnergyType:m[1]}};}
+ if(/^<h2[^>]*>特殊エネルギー<\/h2>/.test(right.slice(first))){
+  const section=right.slice(first).match(/^<h2[^>]*>特殊エネルギー<\/h2>\s*<p[^>]*>([^]*?)<\/p>\s*(?:<h2[^>]*>特別なルール<\/h2>\s*<p><p>(ACE SPECのカードは、デッキに1枚しか入れられない。)<\/p><\/p>\s*)?<\/div>/);
+  assert(section,'UNSUPPORTED_ENERGY_PARAGRAPHS');
+  return {category:'energy',text:text(section[1]),attacks:[],abilities:[],rulesText:section[2]?[section[2]]:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false}};
+ }
  // These exact official rules affect prize count, which the battle engine already enforces.
  const special=right.match(/<h2[^>]*>特別なルール<\/h2>\s*<p><p>([^<]*)<\/p><\/p>/);
  const prizeRules=new Map([

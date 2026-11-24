@@ -480,6 +480,24 @@ function moveAttachedEnergy(g,actor,source,target,energyId){
  event(g,actor,'MOVE_ENERGY',{energyId:id(energy),sourceInstanceId:id(source),targetInstanceId:id(target)});
 }
 function heal(g,actor,mon,requested){assert(mon&&find(g,id(mon))?.player.id===actor&&Number.isSafeInteger(requested)&&requested>0,'INVALID_HEAL_TARGET');const amount=Math.min(mon.damage||0,requested);mon.damage-=amount;event(g,actor,'HEAL',{targetInstanceId:id(mon),amount});return amount;}
+function attackBonusApplies(predicate,own,defender){
+ const print=record(defender);
+ switch(predicate){
+  case 'opponentEx':return print.name.endsWith('ex');
+  case 'opponentExOrV':return print.name.endsWith('ex')||/V(?:MAX|STAR|-UNION)?$/.test(print.name);
+  case 'opponentEvolved':return print.facts.stage>0;
+  case 'opponentDamaged':return defender.damage>0;
+  case 'ownBenchDamaged':return own.bench.some(card=>card.damage>0);
+  default:throw Error('UNKNOWN_ATTACK_BONUS_PREDICATE');
+ }
+}
+function attackMetric(plan,own,other){
+ if(plan.metric==='opponentCounters')return (other.active.damage||0)/10;
+ if(plan.metric==='ownPokemon')return field(own).length;
+ const holders={ownEnergy:[own.active],opponentEnergy:[other.active],opponentTeamEnergy:field(other)}[plan.metric];
+ assert(holders,'UNKNOWN_ATTACK_DAMAGE_METRIC');
+ return holders.flatMap(energyUnits).filter(unit=>!plan.type||unit.includes(plan.type)).length;
+}
 function applyPlan(g,actor,card,effect,action){
  const p=player(g,actor),o=opponent(g,actor),plan=effect.plan,m=plan.mechanic,ids=key=>selected(action,key),target=()=>find(g,action.targetIds?.[0])?.card;
  // Confusion is an attack-wide rule, not a property of one damage mechanic.
@@ -491,6 +509,28 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'CONDITIONAL_ATTACK_BONUS':
+   damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
+   break;
+  case 'SCALED_ATTACK_DAMAGE':
+   damage(g,actor,o.active,plan.base+plan.unit*attackMetric(plan,p,o));
+   break;
+  case 'ATTACK_RESET_HAND':
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   resetHand(g,p,plan.amount);
+   break;
+  case 'ATTACK_DISCARD_OWN_DECK_TOP':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const cards=p.deck.splice(0,plan.amount);
+   p.discard.push(...cards);
+   event(g,actor,'DISCARD',{cardIds:cards.map(id),fromZone:'deck'});
+   break;
+  }
+  case 'ATTACK_DISABLE_DEFENDER':
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+    o.active.referenceCannotAttackTurn=g.turnNumber+1;
+   break;
   case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}

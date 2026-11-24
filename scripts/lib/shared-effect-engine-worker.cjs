@@ -338,6 +338,27 @@ function prepare(r, e, kind) {
       deck.splice(position,0,card);
     }
   }
+  if (m === "CONDITIONAL_ATTACK_BONUS") {
+    const [own, opponent] = frame.game.players;
+    if (e.plan.predicate === "opponentDamaged") opponent.active.damage = 10;
+    if (e.plan.predicate === "ownBenchDamaged" && own.bench.length) own.bench[0].damage = 10;
+  }
+  if (m === "SCALED_ATTACK_DAMAGE") {
+    const [own, opponent] = frame.game.players;
+    if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
+    if (["opponentEnergy", "opponentTeamEnergy"].includes(e.plan.metric)) {
+      const targets = e.plan.metric === "opponentEnergy" ? [opponent.active] : [opponent.active, ...opponent.bench];
+      for (const target of targets) {
+        const index = opponent.deck.findIndex(card => card.kind === "energy" && !card.isSpecial);
+        if (index >= 0) target.energyCards.push(opponent.deck.splice(index, 1)[0]);
+      }
+    }
+    for (const energy of [...own.active.energyCards]) {
+      if (!energy.isSpecial) continue;
+      own.active.energyCards.splice(own.active.energyCards.indexOf(energy), 1);
+      own.deck.push(energy);
+    }
+  }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
     assert(
@@ -449,6 +470,47 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  const [attackingSide, defendingSide] = before.players;
+  const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if (e.plan.mechanic === "CONDITIONAL_ATTACK_BONUS") {
+    const print = E.getReferenceEffectRecord(defendingSide.active);
+    const conditions = {
+      opponentEx: print.name.endsWith("ex"),
+      opponentExOrV: print.name.endsWith("ex") || /V(?:MAX|STAR|-UNION)?$/.test(print.name),
+      opponentEvolved: print.facts.stage > 0,
+      opponentDamaged: defendingSide.active.damage > 0,
+      ownBenchDamaged: attackingSide.bench.some(card => card.damage > 0),
+    };
+    verifyPrintedAttack(before, after, e, e.plan.base + (conditions[e.plan.predicate] ? e.plan.bonus : 0));
+  }
+  if (e.plan.mechanic === "SCALED_ATTACK_DAMAGE") {
+    const count = cards => cards.flatMap(card => card.energyCards).filter(energy =>
+      !e.plan.type || energy.energyType === e.plan.type).length;
+    const metrics = {
+      opponentCounters: defendingSide.active.damage / 10,
+      ownPokemon: 1 + attackingSide.bench.length,
+      ownEnergy: count([attackingSide.active]),
+      opponentEnergy: count([defendingSide.active]),
+      opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
+    };
+    verifyPrintedAttack(before, after, e, e.plan.base + e.plan.unit * metrics[e.plan.metric]);
+  }
+  if (e.plan.mechanic === "ATTACK_RESET_HAND") {
+    assert.equal(after.players[0].hand.length, Math.min(e.plan.amount, attackingSide.hand.length + attackingSide.deck.length));
+    assert(effectEvents.some(event => event?.command === "SHUFFLE_DECK"));
+    assert(effectEvents.some(event => event?.command === "RETURN_TO_DECK" &&
+      JSON.stringify(event.cardIds) === JSON.stringify(attackingSide.hand.map(card => card.id))));
+  }
+  if (e.plan.mechanic === "ATTACK_DISCARD_OWN_DECK_TOP") {
+    const discarded = attackingSide.deck.slice(0, e.plan.amount).map(card => card.id);
+    assert(discarded.length > 0);
+    assert.deepEqual(Array.from(after.players[0].discard.slice(attackingSide.discard.length), card => card.id), Array.from(discarded));
+  }
+  if (e.plan.mechanic === "ATTACK_DISABLE_DEFENDER") {
+    const target = [after.players[1].active, ...after.players[1].bench].find(card => card?.id === defendingSide.active.id);
+    if (target) assert.equal(target.referenceCannotAttackTurn, before.turnNumber + 1);
+    else assert(after.players[1].discard.some(card => card.id === defendingSide.active.id));
+  }
   if (e.plan.mechanic === "COIN_SEARCH_POKEMON") {
     const action = o.action;
     const choice = after.pendingReferenceChoice;

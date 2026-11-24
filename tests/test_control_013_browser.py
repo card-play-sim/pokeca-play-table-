@@ -176,9 +176,26 @@ async def main():
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
-            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS'):
+            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
+            'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_RESET_HAND':
+    own=before['players'][0]
+    assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_DISCARD_OWN_DECK_TOP':
+    own=before['players'][0]
+    discarded=own['deck'][:f['e']['plan']['amount']]
+    assert [card['id'] for card in after['players'][0]['discard'][len(own['discard']):]]==[card['id'] for card in discarded]
+   if m=='ATTACK_DISABLE_DEFENDER':
+    previous=before['players'][1]['active']
+    opponent=after['players'][1]
+    targets=[card for card in [opponent['active'],*opponent['bench']] if card and card['id']==previous['id']]
+    if targets:
+     assert targets[0]['referenceCannotAttackTurn']==before['turnNumber']+1
+    else:
+     assert previous['id'] in [card['id'] for card in opponent['discard']]
    if (trigger or f['e'])['plan']['mechanic']=='ATTACK_DISCARD_BENCH_ENERGY_BONUS':
     picked=set(option['action']['selections']['energy'])
     assert len(picked)==(trigger or f['e'])['plan']['maxDiscard']

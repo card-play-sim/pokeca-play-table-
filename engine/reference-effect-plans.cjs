@@ -68,6 +68,35 @@ const ijMainPlans=new Map([
  ['item:自分の山札から「メガシンカex」を1枚選び、相手に見せて、手札に加える。そして山札を切る。',{mechanic:'SEARCH_MEGA_EVOLUTION_EX',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']}]
 ]);
 const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
+function additionalAttackPlan(entry,text){
+ const printed=String(entry.damage).normalize('NFKC');
+ const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
+ const conditional=text.match(/^(相手のバトルポケモンが「ポケモンex」なら|相手のバトルポケモンが「ポケモンex・V」なら|相手のバトルポケモンが進化ポケモンなら|相手のバトルポケモンにダメカンがのっているなら|自分のベンチポケモンにダメカンがのっているなら)、([1-9]\d{0,2})ダメージ追加。$/);
+ if(conditional&&base!==null&&printed.endsWith('+')){
+  const predicates={
+   '相手のバトルポケモンが「ポケモンex」なら':'opponentEx',
+   '相手のバトルポケモンが「ポケモンex・V」なら':'opponentExOrV',
+   '相手のバトルポケモンが進化ポケモンなら':'opponentEvolved',
+   '相手のバトルポケモンにダメカンがのっているなら':'opponentDamaged',
+   '自分のベンチポケモンにダメカンがのっているなら':'ownBenchDamaged'
+  };
+  return {mechanic:'CONDITIONAL_ATTACK_BONUS',commands:['DAMAGE'],predicate:predicates[conditional[1]],base,bonus:Number(conditional[2])};
+ }
+ const scaled=text.match(/^(相手のバトルポケモンにのっているダメカン|(?:このポケモン|相手のバトルポケモン|相手のポケモン全員)についている(?:\[(?:草|炎|水|雷|超|闘|悪|鋼)\])?エネルギー|自分の場のポケモン)の数×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(scaled&&(scaled[3]?base!==null&&printed.endsWith('+'):printed===scaled[2]+'×')){
+  const source=scaled[1],type=source.match(/\[([^\]]+)\]/)?.[1]||null;
+  const metric=source.endsWith('ダメカン')?'opponentCounters':source==='自分の場のポケモン'?'ownPokemon':source.startsWith('このポケモン')?'ownEnergy':source.startsWith('相手のバトルポケモン')?'opponentEnergy':'opponentTeamEnergy';
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
+ }
+ if(base===null||printed.endsWith('+'))return null;
+ const reset=text.match(/^自分の手札をすべて山札にもどして切る。その後、山札を([1-9]\d?)枚引く。$/);
+ if(reset)return {mechanic:'ATTACK_RESET_HAND',commands:[...(base?['DAMAGE']:[]),'RETURN_TO_DECK','SHUFFLE_DECK','DRAW'],amount:Number(reset[1])};
+ const discard=text.match(/^自分の山札を上から([1-9]\d?)枚トラッシュする。$/);
+ if(discard)return {mechanic:'ATTACK_DISCARD_OWN_DECK_TOP',commands:[...(base?['DAMAGE']:[]),'DISCARD'],amount:Number(discard[1])};
+ if(text==='次の相手の番、このワザを受けたポケモンは、ワザが使えない。')
+  return {mechanic:'ATTACK_DISABLE_DEFENDER',commands:[...(base?['DAMAGE']:[]),'ADD_STATE']};
+ return null;
+}
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
@@ -76,6 +105,7 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  // Exact printed abilities are continuous (not manually activated) and their
@@ -253,7 +283,7 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_REVEAL_OPPONENT_HAND',commands:['DAMAGE','REVEAL']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:null;
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional;
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
