@@ -243,6 +243,16 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const openingBench=generic.match(/^このワザは、後攻プレイヤーの最初の番には使えない。自分のベンチポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(kind==='ATTACK'&&openingBench&&String(entry.damage).normalize('NFKC')===openingBench[1]+'×')
+  return {mechanic:'BENCH_COUNT_DAMAGE',commands:['DAMAGE'],side:'own',unit:Number(openingBench[1]),base:0,noSecondPlayerFirstTurn:true,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='次の相手の番、このポケモンはたねポケモン([無色]ポケモンをのぞく)からワザのダメージを受けない。'&&/^\d+$/.test(String(entry.damage)))
+  return {mechanic:'ATTACK_BASIC_DAMAGE_PROTECTION',commands:['DAMAGE','PREVENT_DAMAGE'],exceptType:'無色',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。')
+  return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],sharedWording:true};
+ const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
+  return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
  const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
   return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};

@@ -67,7 +67,7 @@ for (const r of selected) {
       const option = W.effectOption(t, e);
       if (!(option && (option.ok ?? option.enabled))) continue;
       if (kind === "ability" && !t.trigger && option.action.type !== "use_ability") continue;
-      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON","TRAINER_TOP_TYPED_SEARCH","TRAINER_TOP_POKEMON_TRAINER","ATTACK_DISCARD_TOOL_BEFORE_DAMAGE"].includes(e.plan.mechanic)) {
+      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON","TRAINER_TOP_TYPED_SEARCH","TRAINER_TOP_POKEMON_TRAINER","ATTACK_DISCARD_TOOL_BEFORE_DAMAGE","ATTACK_BASIC_DAMAGE_PROTECTION","TRAINER_DISCARD_SPECIAL_ENERGY","TOOL_LOW_HP_RETREAT_DISCOUNT"].includes(e.plan.mechanic)) {
         const verification = W.verifyCase(W.prepare(r, e, kind), e);
         if (verification.status !== "SUCCEEDED") continue;
       }

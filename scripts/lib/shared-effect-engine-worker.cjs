@@ -250,7 +250,7 @@ function prepare(r, e, kind) {
       });
     }
   }
-  if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m) && e.plan.specialOnly) {
+  if (m==="TRAINER_DISCARD_SPECIAL_ENERGY"||(["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m) && e.plan.specialOnly)) {
     const opponentEntries = manifest.decks[1-locations[0].deck].cards;
     const ignition = [...records.values()].find(record => record.mainPlan?.mechanic === "IGNITION");
     if (!ignition) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
@@ -431,12 +431,25 @@ function prepare(r, e, kind) {
     for (const card of payment)
       opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
   }
-  if (m === "ATTACK_DAMAGE_REDUCTION") {
+  if (m === "ATTACK_DAMAGE_REDUCTION"||m==="ATTACK_BASIC_DAMAGE_PROTECTION") {
     const opponent = frame.game.players[1];
     for (const card of opponent.deck.filter(card => card.kind === "energy" && !card.isSpecial))
       opponent.active.energyCards.push(opponent.deck.splice(opponent.deck.indexOf(card), 1)[0]);
   }
   // The official active-only healing supporter needs a damaged Active fixture.
+  if(m==="TRAINER_DISCARD_SPECIAL_ENERGY"){
+    const other=frame.game.players[1],zone=[other.deck,other.hand,other.prizeCards].find(cards=>cards.some(c=>c.kind==="energy"&&c.isSpecial));
+    if(!zone)return {blocked:"NO_SPECIAL_ENERGY_FIXTURE"};
+    const target=other.bench[0]||other.active;
+    target.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==="energy"&&c.isSpecial),1)[0]);
+    if(zone===other.prizeCards&&other.deck.length)other.prizeCards.push(other.deck.shift());
+    const basic=other.deck.findIndex(c=>c.kind==="energy"&&!c.isSpecial);
+    if(basic>=0)target.energyCards.push(other.deck.splice(basic,1)[0]);
+  }
+  if(m==="TOOL_LOW_HP_RETREAT_DISCOUNT"){
+    const own=frame.game.players[0];
+    own.active.damage=Math.max(0,own.active.hp-e.plan.threshold-10);
+  }
   if (m === "HEAL_ACTIVE_DAMAGE") frame.game.players[0].active.damage = 40;
   if (m === "FULL_BENCH_REQUIRED_DAMAGE" && !e.plan.requiresStadium) {
     const player = frame.game.players[0];
@@ -1051,6 +1064,27 @@ function verifyCase(t, e) {
     assert.equal(entered.validationReference.officialCardId,source.validationReference.officialCardId);
     assert(!after.players[0].hand.some(card=>card.id===t.sourceId));
   }
+  if(e.plan.mechanic==="TRAINER_DISCARD_SPECIAL_ENERGY"){
+    const action=t.action||o.action,chosen=action.selections.energy;
+    assert.equal(chosen.length,1);
+    const target=[before.players[1].active,...before.players[1].bench].find(c=>c.energyCards.some(e=>e.id===chosen[0]&&e.isSpecial));
+    assert(target);assert(after.players[1].discard.some(c=>c.id===chosen[0]));
+    const resolved=[after.players[1].active,...after.players[1].bench].find(c=>c.id===target.id);
+    assert.deepEqual(resolved.energyCards.map(c=>c.id),target.energyCards.filter(c=>c.id!==chosen[0]).map(c=>c.id));
+    const basic=target.energyCards.find(c=>!c.isSpecial);
+    if(basic){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{energy:[basic.id]}}).ok,false);assert.deepEqual(replay.getSnapshot(),before);}
+  }
+  if(e.plan.mechanic==="TOOL_LOW_HP_RETREAT_DISCOUNT"){
+    const action=t.action||o.action,findMon=state=>[state.players[0].active,...state.players[0].bench].find(c=>c.id===action.targetInstanceId);
+    for(const remaining of [e.plan.threshold,e.plan.threshold+10]){
+      const start=JSON.parse(JSON.stringify(before)),mon=findMon(start);
+      assert(mon.hp>=remaining);
+      mon.damage=mon.hp-remaining;
+      const replay=port(start),prior=findMon(replay.getSnapshot()).retreatCost;
+      assert(replay.dispatch("you",action).ok);
+      assert.equal(findMon(replay.getSnapshot()).retreatCost,remaining<=e.plan.threshold?0:Math.max(0,prior-e.plan.amount));
+    }
+  }
   if(e.plan.mechanic==='TOOL_RETREAT_DISCOUNT_TWO'){
     const action=t.action||o.action;
     const findMon=state=>[state.players[0].active,...state.players[0].bench]
@@ -1181,6 +1215,12 @@ function verifyCase(t, e) {
     assert.equal(end.players[1].active.damage, start.players[1].active.damage);
     assert.notEqual(end.turnPlayer, start.turnPlayer);
     assert.deepEqual(S.identities(start), S.identities(end));
+  }
+  if(e.plan.noSecondPlayerFirstTurn){
+    const initial=JSON.parse(JSON.stringify(before));initial.turnNumber=2;
+    const replay=port(initial),snapshot=replay.getSnapshot(),action=t.action||o.action;
+    assert(!E.getLegalActions(snapshot,"you").actions.some(a=>a.type==="attack_turn"&&a.attackIndex===action.attackIndex));
+    assert.equal(replay.dispatch("you",action).ok,false);assert.deepEqual(replay.getSnapshot(),snapshot);
   }
   if (e.plan.mechanic === "BENCH_COUNT_DAMAGE") {
     const action = t.action || o.action;
@@ -1487,6 +1527,18 @@ function verifyCase(t, e) {
       assert.equal(p.dispatch("ai", action).ok, false);
       assert.equal(JSON.stringify(p.getSnapshot()), JSON.stringify(after));
     }
+  }
+  if(e.plan.mechanic==="ATTACK_BASIC_DAMAGE_PROTECTION"){
+    const source=after.players[0].active,baseline=JSON.parse(JSON.stringify(after));
+    assert.equal(source.referenceBasicDamageProtection.turn,before.turnNumber+1);
+    delete baseline.players[0].active.referenceBasicDamageProtection;
+    const print=E.getReferenceEffectRecord(baseline.players[1].active);
+    if(!print.facts.basic||print.facts.types.includes(e.plan.exceptType))return {status:"BLOCKED",reason:"NO_QUALIFYING_BASIC_ATTACKER_FIXTURE"};
+    const actions=E.getLegalActions(baseline,"ai").actions.filter(a=>a.type==="attack_turn"&&!["IGNORE_DEFENDER_EFFECTS","ATTACK_IGNORE_DAMAGE_RULES"].includes(print.attacks[a.attackIndex].plan.mechanic));
+    const damage=(state,action)=>{const replay=port(state);if(!replay.dispatch("ai",action).ok)return undefined;return replay.getSnapshot().history.slice(state.history.length).find(ev=>ev.details?.command==="DAMAGE"&&ev.details.targetInstanceId===source.id)?.details.amount;};
+    let tested=false;
+    for(const action of actions){const normal=damage(baseline,action);if(!(normal>0))continue;assert.equal(damage(after,action),0);assert.equal(damage({...after,turnNumber:after.turnNumber+2},action),normal);tested=true;break;}
+    if(!tested)return {status:"BLOCKED",reason:"NO_QUALIFYING_BASIC_DAMAGE_FIXTURE"};
   }
   if (e.plan.mechanic === "ATTACK_DAMAGE_REDUCTION") {
     const active = after.players[0].active;

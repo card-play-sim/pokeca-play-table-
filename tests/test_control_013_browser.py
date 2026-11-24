@@ -359,6 +359,19 @@ async def main():
     chosen=option['action'].get('selections',{}).get('energy',[]) if m=='ATTACK_PRIZE_BONUS_DISCARD' else [card['id'] for card in before['players'][0]['active']['energyCards']] if before['players'][1]['active']['stage']>0 else []
     assert set(chosen)<={card['id'] for card in after['players'][0]['discard']}
     assert not set(chosen)&{card['id'] for card in after['players'][0]['active']['energyCards']}
+   if m=='TRAINER_DISCARD_SPECIAL_ENERGY':
+    picked=option['action']['selections']['energy']
+    assert len(picked)==1
+    assert any(card['id']==picked[0] and card['isSpecial'] for mon in [before['players'][1]['active'],*before['players'][1]['bench']] for card in mon['energyCards'])
+    assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
+   if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
+    assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='TOOL_LOW_HP_RETREAT_DISCOUNT':
+    target=option['action']['targetInstanceId']
+    old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)
+    mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
+    plan=f['e']['plan']
+    assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):
