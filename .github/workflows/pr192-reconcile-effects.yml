@@ -4,6 +4,10 @@ on:
     branches: [battle/official-shared-bulk-218-20261124]
     paths:
       - '.github/workflows/pr192-reconcile-effects.yml'
+      - 'scripts/parse-official-pokemon-energy.cjs'
+      - 'scripts/reconcile-pr192-effect-extensions.cjs'
+      - 'scripts/build-effect-extensions.cjs'
+      - 'data/effect-extensions/evidence/**'
   workflow_dispatch:
 permissions:
   contents: write
