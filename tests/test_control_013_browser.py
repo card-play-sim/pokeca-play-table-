@@ -166,6 +166,14 @@ async def main():
                for ev in after['history'])
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in after['history'])
    events=after['history'][len(before.get('history',[])):]
+   if f.get('sharedAttackEvents') is not None:
+    assert f['sharedAttackEvents'] and all(event in events for event in f['sharedAttackEvents'])
+   if m=='ATTACK_DISABLE_SELECTED_MOVE':
+    previous=before['players'][1]['active']
+    enemy=after['players'][1]
+    target=next((card for card in [enemy['active'],*enemy['bench']] if card and card['id']==previous['id']),None)
+    if target:
+     assert target['referenceNamedAttackLock']['turn']==before['turnNumber']+1
    if kind=='attack':
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']

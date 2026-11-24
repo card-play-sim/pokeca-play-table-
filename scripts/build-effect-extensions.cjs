@@ -6,8 +6,11 @@ const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();
 const sharedAttackMechanics=new Set(['CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE',
  'ATTACK_RESET_HAND','ATTACK_DISCARD_OWN_DECK_TOP','ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER']);
+for(const mechanic of ['ATTACK_DISCARD_FIELD_BASIC','ATTACK_OPTIONAL_DRAW_TO_LIMIT','ATTACK_DISCARD_DEFENDER_ENERGY',
+ 'ATTACK_HEAL_OWN_TARGET','ATTACK_SPLASH_OWN_BENCH','ATTACK_DISABLE_SELECTED_MOVE','CONTEXT_ATTACK_BONUS',
+ 'ATTACK_PRIZE_BONUS_RECOIL','ATTACK_BLIND_HAND_CHOICE','ATTACK_SPREAD_DAMAGE'])sharedAttackMechanics.add(mechanic);
 function requiresHijAttackScope(plan){
- return sharedAttackMechanics.has(plan.mechanic)||
+ return sharedAttackMechanics.has(plan.mechanic)||plan.sharedWording===true||
    plan.mechanic==='ANY_DAMAGE'&&Object.hasOwn(plan,'amount')||
    plan.mechanic==='FIXED_COIN_HITS'&&Object.hasOwn(plan,'base');
 }
@@ -38,6 +41,16 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
    }
    const section=body.match(/<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)<\/h2>((?:\s*<p[^>]*>.*?<\/p>)+)/s),categories={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'};
    const paragraphs=section?[...section[2].matchAll(/<p[^>]*>(.*?)<\/p>/gs)].map(m=>m[1]):[];
+   if(row.category==='stadium'&&section?.[1]==='スタジアム'&&paragraphs.length===1){
+    const tail=body.slice(section.index+section[0].length);
+    const combined=tail.match(/^\s*<h2[^>]*>特別なルール<\/h2>\s*<h4>\s*<\/h4>\s*<p>(このカードは1枚だけでは出せず、自分の手札から2種類の「([^」]+)」を組み合わせて、1枚のスタジアムとして場に出す。)<\/p>/);
+    if(combined){
+     const officialText=require('./parse-official-pokemon-energy.cjs').text(paragraphs[0]);
+     assertCombinedStadium(row,officialText,combined[2],hash,body);
+     blocked.push({officialCardId:ident,name,category:row.category,status:'BLOCKED',reason:'UNSUPPORTED_COMBINED_STADIUM_PLAY',text:officialText,rulesText:[combined[1]],source:row.source});
+     continue;
+    }
+   }
    const usage={item:'グッズは、自分の番に何枚でも使える。',supporter:'サポートは、自分の番に1枚しか使えない。',tool:'ポケモンのどうぐは、自分の番に何枚でも、自分のポケモンにつけられる。ポケモン1匹につき1枚だけつけられ、つけたままにする。',stadium:'スタジアムは、自分の番に1枚、バトル場の横に出せる。別のスタジアムが場に出たなら、このカードをトラッシュする。同じ名前のスタジアムは場に出せない。'};
    const acceptedUsage=[usage[row.category],...(row.category==='stadium'?['スタジアムは、自分の番に1枚だけ、バトル場の横に出せる。別の名前のスタジアムが場に出たなら、このカードをトラッシュする。']:[])];
    if(paragraphs.length!==2||!acceptedUsage.includes(plain(paragraphs[1])))throw Error('UNSUPPORTED_EFFECT_PARAGRAPHS');
@@ -51,6 +64,12 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
   }catch(e){blocked.push({officialCardId:ident,status:'BLOCKED',reason:e.message});}
  }
  return {schemaVersion:1,scope:'SUPPLEMENTAL_OFFICIAL_REFERENCES_NOT_DECK_ADOPTION',records,blocked};
+}
+function assertCombinedStadium(row,text,title,hash,body){
+ if(row.name!==title||row.text!==text||row.source.textSha256!==hash(text))
+  throw Error('COMBINED_STADIUM_OFFICIAL_TEXT_MISMATCH');
+ if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl)||!body.includes(row.imageSourceUrl.replace('https://www.pokemon-card.com','')))
+  throw Error('IMAGE_REFERENCE_MISMATCH');
 }
 if(require.main===module){const result=build(JSON.parse(fs.readFileSync(input))),text=JSON.stringify(result,null,2)+'\n';if(fs.existsSync(output)){const indexed=new Map(result.records.map(r=>[r.officialCardId,r]));for(const prior of JSON.parse(fs.readFileSync(output)).records){const current=indexed.get(prior.officialCardId);if(!current||JSON.stringify(current)!==JSON.stringify(prior))throw Error('EXTENSION_IMMUTABLE_SOURCE_CONFLICT');}}if(process.argv.includes('--check')){if(fs.readFileSync(output,'utf8')!==text)throw Error('EXTENSION_DATA_STALE');}else{fs.mkdirSync(path.dirname(output),{recursive:true});const tmp=output+'.tmp';fs.writeFileSync(tmp,text);fs.renameSync(tmp,output);}console.log(JSON.stringify({accepted:result.records.length,blocked:result.blocked.length,output}));}
 module.exports={build};
