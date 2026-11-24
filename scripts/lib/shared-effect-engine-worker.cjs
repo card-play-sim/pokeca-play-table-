@@ -751,6 +751,11 @@ function prepare(r, e, kind) {
   }
   if (m === "ATTACK_SPREAD_DAMAGE" && e.plan.ignoreDefense)
     frame.game.players[1].active.referenceProtection={opponentTurn:frame.game.turnNumber};
+  if(m==='MASS_COIN_OUTCOME'){
+    const [own,other]=frame.game.players;
+    if(e.plan.heal)own.active.damage=Math.min(e.plan.heal,own.active.hp-10);
+    for(const energy of [...own.active.energyCards])if(energy.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1);own.deck.push(energy);}
+  }
   if (m === "SCALED_ATTACK_DAMAGE") {
     const [own, opponent] = frame.game.players;
     if(e.plan.metric==="ownTeamEnergy"&&own.bench.length){
@@ -1356,6 +1361,42 @@ function verifyCase(t, e) {
     const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
     assert.equal(tosses.length, e.plan.flips);
     verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
+  if(e.plan.mechanic==='MASS_COIN_OUTCOME'){
+    const q=e.plan,action=t.action||o.action,seeds=new Map();
+    for(let seed=0;seed<100000&&seeds.size<q.flips+1;seed++){
+      let state=seed,n=0;for(let i=0;i<q.flips;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;if(state<0x80000000)n++;}
+      if(!seeds.has(n))seeds.set(n,seed);
+    }
+    assert.equal(seeds.size,q.flips+1,'MISSING_COIN_OUTCOME_SEED');
+    for(const [heads,seed] of seeds){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
+      const tosses=events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean');
+      assert.equal(tosses.length,q.flips);assert.equal(tosses.filter(x=>x.heads).length,heads);
+      const met=q.when==='all'?heads===q.flips:q.when==='none'?heads===0:heads>=q.threshold;
+      const amount=q.failOnTails&&!met?0:q.base+(q.unit||0)*heads+(met?(q.bonus||0):0);
+      if(amount===0)assert(events.some(x=>x?.command==='DAMAGE'&&x.targetInstanceId===start.players[1].active.id&&x.amount===0));
+      else verifyPrintedAttack(start,end,e,amount);
+      const src=start.players[0].active.id,dst=start.players[1].active.id;
+      if(q.status)assert.equal(events.some(x=>x?.command==='STATUS_CONDITION'&&x.targetInstanceId===dst&&x.status===q.status),met);
+      if(q.recoil)assert.equal(events.some(x=>x?.command==='DAMAGE'&&x.targetInstanceId===src&&x.amount===q.recoil),met);
+      if(q.heal)assert.equal(events.some(x=>x?.command==='HEAL'&&x.targetInstanceId===src&&x.amount>0),met);
+      if(q.mill){const ids=start.players[1].deck.slice(0,heads).map(c=>c.id);assert(ids.every(id=>end.players[1].discard.some(c=>c.id===id)));}
+      if(q.lock||q.protect){
+        const target=q.lock?.startsWith('opponent')?end.players[1].active:end.players[0].active;
+        if(met&&target?.id===(q.lock?.startsWith('opponent')?dst:src)){
+          if(q.lock==='selfAttack')assert.equal(target.referenceCannotAttackTurn,start.turnNumber+2);
+          if(q.lock==='opponentAttack')assert.equal(target.referenceCannotAttackTurn,start.turnNumber+1);
+          if(q.lock==='opponentRetreat')assert.equal(target.referenceCannotRetreatTurn,start.turnNumber+1);
+          if(q.protect)assert.equal(target.referenceProtection.opponentTurn,start.turnNumber+1);
+        }
+      }
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(end));
+    }
   }
   if (e.plan.mechanic === "SCALED_ATTACK_DAMAGE") {
     const count = cards => cards.flatMap(card => card.energyCards).filter(energy =>
