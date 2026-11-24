@@ -276,6 +276,15 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
+    const player=frame.game.players[0];
+    const basic=card=>card.kind==='energy'&&!card.isSpecial&&['草','炎','水','雷','超','闘','悪','鋼'].includes(card.energyType);
+    if(!player.hand.some(basic)){
+      const index=player.deck.findIndex(basic);
+      if(index<0)return {blocked:'NO_HAND_ATTACHMENT_FIXTURE_RESOURCE'};
+      player.hand.push(player.deck.splice(index,1)[0]);
+    }
+  }
   if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
     const player=frame.game.players[0];
     if(!player.hand.some(card=>card.id!==frame.sourceId)){
@@ -1281,7 +1290,15 @@ function verifyCase(t, e) {
     const discarded=effectEvents.some(ev=>ev?.command==="DISCARD"&&ev.fromZone==="attached"&&ev.cardIds?.includes(chosen[0]));
     assert.equal(discarded,flips[0].heads&&before.players[1].active.referenceProtection?.opponentTurn!==before.turnNumber);
     if(discarded)assert(after.players[1].discard.some(c=>c.id===chosen[0]));
-    verifyPrintedAttack(before,after,e,Number(e.damage)||0);
+    // A printed no-damage attack performs its effect without a DAMAGE event.
+    // Require the actual attack event and no positive damage to the defender.
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    else {
+      assert(after.history.slice(before.history.length).some(ev=>ev.type==='attack'&&
+        ev.details?.effectId===e.effectId&&ev.details.referenceOfficialCardId===E.getReferenceEffectRecord(before.players[0].active).officialCardId));
+      assert(!effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===before.players[1].active.id&&ev.amount>0));
+      assert.equal(after.players[1].active.damage,before.players[1].active.damage);
+    }
   }
   if(e.plan.mechanic==="ATTACK_ATTACH_BASIC_FROM_HAND"){
     const action=t.action||o.action,chosen=action.selections.energy||[];

@@ -34,6 +34,8 @@ jobs:
           python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/intake-checkpoint-recovery-contract.test.cjs
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
           node tests/control-014-official-parser.test.cjs
           node tests/atomic-official-to-battle.test.cjs
           node tests/issue122-counter-picker-ui.test.cjs
