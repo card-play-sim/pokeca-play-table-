@@ -103,6 +103,22 @@ jobs:
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
           python -m unittest discover -s tests -p test_atomic_parser_retry.py
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ]; then
+            git fetch origin 82cd8e905f76d5db0de32ea55197237175b68a3f
+            git show FETCH_HEAD:reports/official-effect-continuation/work-next-782-parser.json > /tmp/work-next-782-parser.json
+            python - <<'PYTHON'
+          import json, subprocess
+          from pathlib import Path
+          rows = json.loads(Path('/tmp/work-next-782-parser.json').read_text())['results']
+          proof_rows = [r for r in rows if r['officialProof']]
+          paths = [r['officialProof']['path'] for r in proof_rows]
+          assert all(p == 'data/effect-extensions/evidence/' + r['officialCardId'] + '.json'
+                     and r['officialCardId'].isdigit() for p, r in zip(paths, proof_rows))
+          subprocess.check_call(['git', 'restore', '--source=FETCH_HEAD', '--', *paths])
+          Path('/tmp/work-parser-ids.json').write_text(json.dumps([r['officialCardId'] for r in proof_rows]))
+          PYTHON
+            python scripts/continue-official-effect-intake.py --ids /tmp/work-parser-ids.json --limit 127 --retry-blocked --max-tasks 1
+          fi
           # One command owns official acquisition, shared mechanic compilation, execution,
           # print-specific release, and persistent unresolved effect work units.
           node tests/atomic-official-to-battle.test.cjs
@@ -123,6 +139,32 @@ jobs:
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
             git push -u origin "$INTAKE_BRANCH"
           fi
+      - name: Verify exact candidate prints through the existing Chromium battle test
+        if: github.ref_name == 'work/issue122-next-782-replay'
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="work-intake-$shard" \
+              python tests/test_control_013_browser.py > "/tmp/work-intake-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          mkdir -p artifacts
+          cp /tmp/work-intake-shard-*.log artifacts/
+          for logfile in /tmp/work-intake-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
       - name: Open verified candidate pull request
         env:
           GH_TOKEN: ${{ github.token }}
@@ -155,6 +197,7 @@ jobs:
           name: official-effect-continuation-checkpoint
           path: |
             work/card-auto-connect/
+            artifacts/work-intake-*
             reports/official-effect-continuation/atomic-battle-connection.json
             reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json
             work/official-standard-search/

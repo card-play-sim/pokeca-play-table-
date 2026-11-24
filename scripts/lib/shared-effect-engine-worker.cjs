@@ -197,6 +197,9 @@ function prepare(r, e, kind) {
       if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
     }
     if (m === "RECOVER_TYPED_DISCARD") needed.set(e.plan.type, e.plan.amount);
+    if (m === "SCALED_ATTACK_DAMAGE" && e.plan.metric === "ownTeamEnergy")
+      for (const type of [e.plan.type, e.plan.secondType].filter(Boolean))
+        needed.set(type, (needed.get(type) || 0) + 1);
     const basicType = reference => reference?.mainPlan?.mechanic === "BASIC_ENERGY"
       ? reference.facts.basicEnergyType || reference.name.match(/^基本(.)エネルギー$/)?.[1]
       : null;
@@ -255,7 +258,7 @@ function prepare(r, e, kind) {
       player.hand.push(donor);
     }
   }
-  if (m === "ATTACK_DISCARD_STADIUM") {
+  if (m === "ATTACK_DISCARD_STADIUM" || e.plan.requiresStadium) {
     const owner = frame.game.players[1];
     const zone = [owner.deck, owner.hand, owner.prizeCards]
       .find(cards => cards.some(card => card.kind === "stadium"));
@@ -263,6 +266,7 @@ function prepare(r, e, kind) {
     const [stadium] = zone.splice(zone.findIndex(card => card.kind === "stadium"), 1);
     frame.game.stadium = stadium;
     frame.game.stadiumOwner = owner.id;
+    if (zone === owner.prizeCards && owner.deck.length) owner.prizeCards.push(owner.deck.shift());
   }
   if (m === "ATTACK_ATTACHED_TOOL_COUNT") {
     const [own, opponent] = frame.game.players;
@@ -343,7 +347,7 @@ function prepare(r, e, kind) {
   }
   // The official active-only healing supporter needs a damaged Active fixture.
   if (m === "HEAL_ACTIVE_DAMAGE") frame.game.players[0].active.damage = 40;
-  if (m === "FULL_BENCH_REQUIRED_DAMAGE") {
+  if (m === "FULL_BENCH_REQUIRED_DAMAGE" && !e.plan.requiresStadium) {
     const player = frame.game.players[0];
     const basics = player.deck.filter(card => card.kind === "pokemon" && E.getReferenceEffectRecord(card).facts.basic);
     for (const card of basics.slice(0, e.plan.minimum - player.bench.length)) {
@@ -366,8 +370,16 @@ function prepare(r, e, kind) {
     if (e.plan.predicate === "opponentDamaged") opponent.active.damage = 10;
     if (e.plan.predicate === "ownBenchDamaged" && own.bench.length) own.bench[0].damage = 10;
   }
+  if (m === "ATTACK_SPREAD_DAMAGE" && e.plan.ignoreDefense)
+    frame.game.players[1].active.referenceProtection={opponentTurn:frame.game.turnNumber};
   if (m === "SCALED_ATTACK_DAMAGE") {
     const [own, opponent] = frame.game.players;
+    if(e.plan.metric==="ownTeamEnergy"&&own.bench.length){
+      const index=own.active.energyCards.findIndex(energy=>!energy.isSpecial&&[e.plan.type,e.plan.secondType].includes(energy.energyType)
+        &&own.active.energyCards.filter(card=>!card.isSpecial&&card.energyType===energy.energyType).length>e.cost.filter(type=>type===energy.energyType).length);
+      if(index>=0&&own.active.energyCards.filter(card=>!card.isSpecial).length>e.cost.length)
+        own.bench[0].energyCards.push(own.active.energyCards.splice(index,1)[0]);
+    }
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (["opponentEnergy", "opponentTeamEnergy"].includes(e.plan.metric)) {
       const targets = e.plan.metric === "opponentEnergy" ? [opponent.active] : [opponent.active, ...opponent.bench];
@@ -380,6 +392,10 @@ function prepare(r, e, kind) {
       if (!energy.isSpecial) continue;
       own.active.energyCards.splice(own.active.energyCards.indexOf(energy), 1);
       own.deck.push(energy);
+    }
+    if (e.plan.metric === "opponentPrizesTaken") {
+      opponent.prizes--;
+      opponent.hand.push(opponent.prizeCards.pop());
     }
     if (e.plan.metric === "ownDiscardEnergy") {
       const index = own.deck.findIndex(card => card.kind === "energy");
@@ -581,7 +597,14 @@ function verifyCase(t, e) {
       e.plan.scope==="opponentBench" ? defendingSide.bench : [defendingSide.active,...defendingSide.bench];
     const chosen=e.plan.count==null?targets.map(card=>card.id):o.action.targetIds;
     assert(chosen.length>0);
-    assert(chosen.every(id=>effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===id)));
+    assert(chosen.every(id=>effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===id
+      &&(!e.plan.ignoreDefense||step.amount===e.plan.amount))));
+  }
+  if(e.plan.mechanic==="PHANTOM"&&e.plan.counterCount) {
+    const allocation=o.action.selections.allocation;
+    assert.equal(Object.values(allocation).reduce((sum,count)=>sum+count,0),e.plan.counterCount);
+    for(const [id,count] of Object.entries(allocation))
+      if(count) assert(effectEvents.some(step=>step?.command==="PLACE_DAMAGE_COUNTERS"&&step.targetInstanceId===id&&step.counterCount===count));
   }
   if (e.plan.mechanic === "ATTACK_PRIZE_BONUS_RECOIL") {
     verifyPrintedAttack(before,after,e,e.plan.base+(6-defendingSide.prizes)*e.plan.unit);
@@ -617,16 +640,19 @@ function verifyCase(t, e) {
   }
   if (e.plan.mechanic === "SCALED_ATTACK_DAMAGE") {
     const count = cards => cards.flatMap(card => card.energyCards).filter(energy =>
-      !e.plan.type || energy.energyType === e.plan.type).length;
+      !e.plan.type || [e.plan.type,e.plan.secondType].includes(energy.energyType)).length;
     const metrics = {
       opponentCounters: defendingSide.active.damage / 10,
       ownPokemon: 1 + attackingSide.bench.length,
       opponentRetreat: defendingSide.active.retreatCost,
       ownDiscardEnergy: attackingSide.discard.filter(card=>card.kind==="energy").length,
       ownEnergy: count([attackingSide.active]),
+      ownTeamEnergy: count([attackingSide.active,...attackingSide.bench]),
+      opponentPrizesTaken: 6-defendingSide.prizes,
       opponentEnergy: count([defendingSide.active]),
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
+    if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
     verifyPrintedAttack(before, after, e, e.plan.base + e.plan.unit * metrics[e.plan.metric]);
   }
   if (e.plan.mechanic === "ATTACK_RESET_HAND") {
@@ -885,8 +911,14 @@ function verifyCase(t, e) {
   if (e.plan.mechanic === "FULL_BENCH_REQUIRED_DAMAGE") {
     verifyPrintedAttack(before, after, e, Number(e.damage));
     const start = JSON.parse(JSON.stringify(before));
-    const player = start.players[0];
-    player.deck.push(player.bench.pop());
+    if(e.plan.requiresStadium) {
+      start.players.find(player=>player.id===start.stadiumOwner).discard.push(start.stadium);
+      start.stadium=null;
+      start.stadiumOwner=null;
+    } else {
+      const player = start.players[0];
+      player.deck.push(player.bench.pop());
+    }
     const replay = port(start);
     assert(replay.dispatch("you", (t.action || o.action)).ok);
     const end = replay.getSnapshot();

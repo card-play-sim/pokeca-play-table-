@@ -109,6 +109,13 @@ function additionalAttackPlan(entry,text){
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};
+ const prizeBonus=text.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(prizeBonus&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'opponentPrizesTaken',type:null,unit:Number(prizeBonus[1]),base};
+ const ownTyped=text.match(/^自分のポケモン全員についている\[(草|炎|水|雷|超|闘|悪|鋼)\](?:と\[(草|炎|水|雷|超|闘|悪|鋼)\])?エネルギーの数×([1-9]\d{0,2})ダメージ。$/);
+ if(ownTyped&&printed===ownTyped[3]+'×'&&ownTyped[1]!==ownTyped[2])
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTeamEnergy',type:ownTyped[1],
+   ...(ownTyped[2]?{secondType:ownTyped[2]}:{}),unit:Number(ownTyped[3]),base:0};
  const prizeRecoil=text.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。このポケモンにも([1-9]\d{0,2})ダメージ。$/);
  if(prizeRecoil&&base!==null&&printed.endsWith('+'))
   return {mechanic:'ATTACK_PRIZE_BONUS_RECOIL',commands:['DAMAGE'],base,unit:Number(prizeRecoil[1]),recoil:Number(prizeRecoil[2])};
@@ -125,6 +132,14 @@ function additionalAttackPlan(entry,text){
  if(hiddenDiscard||hiddenReturn)
   return {mechanic:'ATTACK_BLIND_HAND_CHOICE',commands:[...deal,...(hiddenReturn?['REVEAL','RETURN_TO_DECK','SHUFFLE_DECK']:['DISCARD'])],
    amount:Number((hiddenDiscard||hiddenReturn)[1]),destination:hiddenReturn?'deck':'discard'};
+ const piercingSpread=text.match(/^相手のポケモン([2-5])匹に、それぞれ([1-9]\d{0,2})ダメージ。このワザのダメージは、弱点・抵抗力と、ダメージを受けるポケモンにかかっている効果を計算しない。$/);
+ if(piercingSpread&&base===0)
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponent',amount:Number(piercingSpread[2]),count:Number(piercingSpread[1]),ignoreDefense:true};
+ const benchCounters=text.match(/^ダメカン([1-9]\d?)個を、相手のベンチポケモンに好きなようにのせる。$/);
+ if(benchCounters)
+  return {mechanic:'PHANTOM',commands:[...deal,'PLACE_DAMAGE_COUNTERS'],counterCount:Number(benchCounters[1]),sharedWording:true};
+ if(text==='場にスタジアムが出ていないなら、このワザは失敗。'&&base>0)
+  return {mechanic:'FULL_BENCH_REQUIRED_DAMAGE',commands:['DAMAGE'],requiresStadium:true,sharedWording:true};
  const spread=text.match(/^(相手のポケモン|相手のベンチポケモン|自分のベンチポケモン)(全員|[1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(spread&&((spread[3]==='にも')===(base>0))&&!(spread[1]==='相手のポケモン'&&(base||spread[2]==='1匹')))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:spread[1]==='相手のポケモン'?'opponent':spread[1].startsWith('自分')?'ownBench':'opponentBench',
@@ -278,8 +293,8 @@ function plan(entry,kind){
  match=generic.match(/^自分の番に1回使える。自分の手札が([1-9][0-9]*)枚になるように、山札を引く。$/);
  if(kind==='ABILITY'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HAND_LIMIT_DRAW_ABILITY',commands:['DRAW'],limit:Number(match[1])};
  if(kind==='ATTACK'&&generic==='コインを1回投げウラなら、このワザは失敗。'&&/^\d+$/.test(String(entry.damage)))return {mechanic:'COIN_FAILURE_DAMAGE',commands:['COIN_FLIP','DAMAGE']};
- match=generic.match(/^自分の山札からたねポケモンを(1枚|2枚まで)選び、ベンチに出す。そして山札を切る。$/);
- if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:match[1]==='1枚'?1:2};
+ match=generic.match(/^自分の山札からたねポケモンを(1枚|[23]枚まで)選び、ベンチに出す。そして山札を切る。$/);
+ if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:Number.parseInt(match[1],10),...(match[1]==='3枚まで'?{sharedWording:true}:{})};
  match=generic.match(/^自分の山札から(ポケモン|グッズ|サポート|基本エネルギー)を(1枚|2枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
  if(kind==='ATTACK'&&match&&/^\d+$/.test(String(entry.damage||'0'))){
   const filter={'ポケモン':'pokemon','グッズ':'item','サポート':'supporter','基本エネルギー':'basicEnergy'}[match[1]];
