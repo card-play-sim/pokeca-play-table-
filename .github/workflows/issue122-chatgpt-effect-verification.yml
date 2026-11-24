@@ -1,0 +1,33 @@
+name: Issue122 verified shared effect integration
+on:
+  push:
+    branches: [chatgpt/issue122-effects-batch-20261124]
+    paths:
+      - '.github/workflows/issue122-chatgpt-effect-verification.yml'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'tests/issue122-effect-lock-and-counter-allocation.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  official-shared-effect-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact official text and fail-closed shared mechanisms
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/issue122-effect-lock-and-counter-allocation.test.cjs
+      - name: Regenerate runtime from official evidence without relaxing gates
+        run: |
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node tests/control-011-engine-batch.test.cjs
+          node tests/battle-rocket-team-exact-print.test.cjs
