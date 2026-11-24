@@ -198,7 +198,7 @@ function prepare(r, e, kind) {
   const rocketTeamCount = kind === "attack"
     ? r.abilities.find(ability => ability.plan?.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE")?.plan.required
     : undefined;
-  if (kind === "attack" || m === "RECOVER_TYPED_DISCARD" || m === "ABILITY_ATTACH_SELF_DRAW" || m==="TRAINER_TOP_TYPED_SEARCH") {
+  if (kind === "attack" || m === "RECOVER_TYPED_DISCARD" || m === "ABILITY_ATTACH_SELF_DRAW" || m==="TRAINER_TOP_TYPED_SEARCH"||m==="MASS_ENERGY_ROUTE") {
     const cards = manifest.decks[locations[0].deck].cards;
     if (rocketTeamCount) {
       const teammate = [...records.values()].find(record =>
@@ -220,7 +220,7 @@ function prepare(r, e, kind) {
     }
     if (m === "RECOVER_TYPED_DISCARD") needed.set(e.plan.type, e.plan.amount);
     if(m==="ABILITY_ATTACH_SELF_DRAW"||m==="TRAINER_TOP_TYPED_SEARCH")needed.set(e.plan.type,m==="TRAINER_TOP_TYPED_SEARCH"?e.plan.amount:1);
-    if(m==="ATTACK_ACCELERATE_BASIC_ENERGY"&&e.plan.type)needed.set(e.plan.type,(needed.get(e.plan.type)||0)+e.plan.limit);
+    if(["ATTACK_ACCELERATE_BASIC_ENERGY","MASS_ENERGY_ROUTE"].includes(m)&&e.plan.type)needed.set(e.plan.type,(needed.get(e.plan.type)||0)+Math.min(e.plan.limit,4));
     if (m === "SCALED_ATTACK_DAMAGE" && e.plan.metric === "ownTeamEnergy")
       for (const type of [e.plan.type, e.plan.secondType].filter(Boolean))
         needed.set(type, (needed.get(type) || 0) + 1);
@@ -348,6 +348,22 @@ function prepare(r, e, kind) {
       if(index<0)return {blocked:"NO_TYPED_ATTACK_PAYMENT_FIXTURE"};
       own.active.energyCards.push(own.deck.splice(index,1)[0]);
     }
+  }
+  if(m==='MASS_ENERGY_ROUTE'){
+    const own=frame.game.players[0],plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
+    const targets=(plan.target==='self'?[own.active]:plan.target==='bench'?own.bench:[own.active,...own.bench]).filter(c=>!plan.holderType||E.getReferenceEffectRecord(c).facts.types.includes(plan.holderType)).filter(c=>!plan.team||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'));
+    if(!targets.length)return {blocked:'NO_MASS_ROUTE_TARGET'};
+    if(plan.zone!=='deck')for(const zone of [own.deck,own.hand,own.discard].filter(zone=>zone!==own[plan.zone])){
+     while(own[plan.zone].filter(eligible).length<Math.min(3,plan.limit)){
+      const index=zone.findIndex(eligible);if(index<0)break;own[plan.zone].push(zone.splice(index,1)[0]);
+     }
+    }
+    if(!own[plan.zone].some(eligible)){
+     const index=own.prizeCards.findIndex(eligible);
+     if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
+    }
+    if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_ROUTE_ENERGY'};
+    if(plan.heal)for(const target of targets)target.damage=Math.min(target.hp-10,40);
   }
   if(m==='MASS_ZONE_TRANSFER'){
     const own=frame.game.players[0],plan=e.plan,eligible=c=>massTransferCandidate(c,plan);
@@ -762,6 +778,45 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='MASS_ENERGY_ROUTE'){
+    const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],energy=action.selections.energy;
+    assert(energy.length>0&&energy.length<=plan.limit);
+    for(const [i,id] of energy.entries()){
+      const source=own[plan.zone].find(c=>c.id===id);
+      assert(source?.kind==='energy'&&!source.isSpecial&&(!plan.type||source.energyType===plan.type));
+      const targetId=plan.target==='self'?own.active.id:action.selections['attachTo'+(plan.multi?i:0)][0];
+      const previous=[own.active,...own.bench].find(c=>c.id===targetId);
+      assert(previous);
+      const facts=E.getReferenceEffectRecord(previous).facts;
+      assert(!plan.holderType||facts.types.includes(plan.holderType));
+      assert(!plan.team||E.getReferenceEffectRecord(previous).name.startsWith(plan.team+'の'));
+      if(plan.target==='bench')assert(own.bench.some(c=>c.id===targetId));
+      const next=[resolved.active,...resolved.bench].find(c=>c.id===targetId);
+      assert(next?.energyCards.some(c=>c.id===id));
+      assert(!resolved[plan.zone].some(c=>c.id===id));
+      if(plan.heal)assert.equal(next.damage,plan.heal==='all'?0:Math.max(0,previous.damage-plan.heal));
+      assert(effectEvents.some(ev=>ev?.command==='ATTACH_ENERGY'&&ev.energyId===id&&ev.targetInstanceId===targetId));
+    }
+    assert.equal(resolved.normalEnergyAttached,own.normalEnergyAttached);
+    const invalid=port(before);
+    assert.equal(invalid.dispatch("you",{...action,selections:{...action.selections,energy:[energy[0],energy[0]]}}).ok,false);
+    assert.deepEqual(invalid.getSnapshot(),before);
+    if(plan.target!=='self'){
+     assert.equal(invalid.dispatch("you",{...action,selections:{...action.selections,attachTo0:[before.players[1].active.id]}}).ok,false);
+     assert.deepEqual(invalid.getSnapshot(),before);
+    }
+    if(plan.multi&&energy.length>=2){
+     const eligible=[own.active,...own.bench].filter(c=>(plan.target!=='bench'||own.bench.includes(c))&&(!plan.holderType||E.getReferenceEffectRecord(c).facts.types.includes(plan.holderType))&&(!plan.team||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の')));
+     if(eligible.length>=2){
+      const replay=port(before),selections={...action.selections,attachTo0:[eligible[0].id],attachTo1:[eligible[1].id]};
+      assert(replay.dispatch("you",{...action,selections}).ok);
+      const field=[replay.getSnapshot().players[0].active,...replay.getSnapshot().players[0].bench];
+      assert(field.find(c=>c.id===eligible[0].id).energyCards.some(c=>c.id===energy[0]));
+      assert(field.find(c=>c.id===eligible[1].id).energyCards.some(c=>c.id===energy[1]));
+     }
+    }
+    if(t.kind==='ability'&&!plan.repeated){assert.equal(p.dispatch("you",action).ok,false);assert.deepEqual(p.getSnapshot(),after);}
+  }
   if(e.plan.mechanic==='MASS_ZONE_TRANSFER'){
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);

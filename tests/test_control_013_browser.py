@@ -372,6 +372,15 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='MASS_ENERGY_ROUTE':
+    plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
+    assert picked
+    for i,ident in enumerate(picked):
+     assert any(c['id']==ident and c['kind']=='energy' and not c.get('isSpecial') for c in before['players'][0][plan['zone']])
+     target=before['players'][0]['active']['id'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
+     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
+     assert ident in {c['id'] for c in mon['energyCards']}
+    assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}

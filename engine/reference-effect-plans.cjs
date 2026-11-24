@@ -243,13 +243,28 @@ function massSharedPlan(entry,kind,text){
  const printed=String(entry.damage??'0').normalize('NFKC');
  const damage=attack&&/^\d+$/.test(printed)?Number(printed):0;
  if(attack&&!/^\d+$/.test(printed)&&!/^\d+\+$/.test(printed))return null;
- let body=text,activeOnly=false;
+ let body=text,activeOnly=false,repeated=false;
  if(ability){
   if(body.startsWith('このポケモンがバトル場にいるなら、自分の番に1回使える。')){body=body.slice('このポケモンがバトル場にいるなら、自分の番に1回使える。'.length);activeOnly=true;}
   else if(body.startsWith('自分の番に1回使える。'))body=body.slice('自分の番に1回使える。'.length);
+  else if(body.startsWith('自分の番に何回でも使える。')){body=body.slice('自分の番に何回でも使える。'.length);repeated=true;}
   else return null;
  }
  const fixed=!attack||/^\d+$/.test(printed);
+ // All holder assignments are explicit dependent selections in the same
+ // canonical action; neither the AI nor the browser may infer destinations.
+ if(fixed&&(attack||ability||trainer)){
+  const attach=body.match(/^自分の(山札|トラッシュ|手札)から(基本エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を(1枚|[2-9]枚まで|好きなだけ)選び、(このポケモン|自分のポケモン1匹|自分のポケモン|ベンチポケモン1匹|ベンチポケモン|自分の\[[草炎水雷超闘悪鋼竜無色]\]ポケモン|(?:ベンチの|自分の)「(?:ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」(?:1匹)?)(に好きなように|に)つける。(そして山札を切る。)?(その後、つけたポケモンのHPを「([1-9]\d{0,2})」回復する。|その後、つけたポケモンのHPをすべて回復する。)?$/);
+  if(attach&&Boolean(attach[7])===(attach[1]==='山札')){
+   const [,zone,,type,count,holder,distribution,,healing,amount]=attach;
+   const multi=distribution==='に好きなように',limit=count==='好きなだけ'?60:parseInt(count,10);
+   const self=holder==='このポケモン',bench=holder.startsWith('ベンチ'),team=holder.match(/「(.+)のポケモン」/)?.[1],holderType=holder.match(/\[([^\]]+)\]/)?.[1];
+   if((!multi&&(limit===1||self||holder.endsWith('1匹'))||multi&&!self&&!holder.endsWith('1匹'))&&(!healing||!multi))
+    return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(damage?['DAMAGE']:[]),...(zone==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(zone==='山札'?['SHUFFLE_DECK']:[]),...(healing?['HEAL']:[])],zone:({'山札':'deck','トラッシュ':'discard','手札':'hand'})[zone],type:type||null,limit,target:self?'self':bench?'bench':'own',holderType:holderType||null,team:team||null,multi,heal:healing?(amount?Number(amount):'all'):null,activeOnly,repeated,sharedWording:true};
+  }
+ }
+
+ if(repeated)return null;
  if((attack||ability||trainer)&&fixed){
   const transfer=body.match(/^自分の(山札|トラッシュ)から(ポケモン|トレーナーズ|グッズ|サポート|スタジアム|エネルギー|基本エネルギー|「ポケモンのどうぐ」|[12]進化ポケモン|たねポケモン|\[(?:草|炎|水|雷|超|闘|悪|鋼|竜|無色)\](?:タイプの)?(?:たね|進化)?ポケモン|「基本\[(?:草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」|「(?:ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」)を(1枚|[2-9]枚まで)選び、相手に見せて、(手札に加える。|山札にもどして切る。)(そして山札を切る。)?$/);
   if(transfer){
