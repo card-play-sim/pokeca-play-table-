@@ -117,6 +117,21 @@ async def main():
     assert await page.locator(attack_selector).is_disabled()
     await page.locator('#sheet-close').tap()
     await load_game(f['game'])
+   if m=='ACTIVE_OPPONENT_ABILITY_SUPPRESSION':
+    result=await page.evaluate("""g=>{
+      const own=g.players[0],other=g.players[1],ability=Pokeca.getReferenceEffectRecord(other.active).abilities.find(a=>a.plan?.mechanic==='DASH');
+      if(!ability||!own.bench.length)throw Error('SUPPRESSION_FIXTURE_MISSING');
+      g.turnPlayer='ai';let current=g;
+      const port=Pokeca.createUIPort({getGame:()=>current,setGame:x=>current=x});
+      if(!port.loadGame(g).ok)throw Error('SUPPRESSION_LOAD');
+      const action={type:'use_ability',sourceInstanceId:other.active.id,abilityId:ability.effectId};
+      const before=JSON.stringify(port.getSnapshot()),blocked=!port.dispatch('ai',action).ok&&JSON.stringify(port.getSnapshot())===before;
+      [own.active,own.bench[0]]=[own.bench[0],own.active];
+      if(!port.loadGame(g).ok)throw Error('SUPPRESSION_BENCH_LOAD');
+      const legal=Pokeca.getLegalActions(port.getSnapshot(),'ai').actions.find(a=>a.type===action.type&&a.abilityId===action.abilityId&&a.sourceInstanceId===action.sourceInstanceId);
+      return blocked&&Boolean(legal)&&port.dispatch('ai',legal).ok;
+    }""",await snap())
+    assert result,'ACTIVE_SUPPRESSION_MUST_END_ON_BENCH'
    before=await snap()
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
    hand_ability=(kind=='ability' and
