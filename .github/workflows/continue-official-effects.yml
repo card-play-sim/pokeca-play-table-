@@ -170,7 +170,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           count=$(node -p "require('./work/card-auto-connect/candidate.json').qualified.length")
-          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ] && [ "$count" -lt 782 ]; then
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ] && [ "$count" -lt 500 ]; then
             echo "Preserved $count engine-qualified printings for the next batch." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
