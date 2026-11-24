@@ -973,7 +973,7 @@ function afterAction(g,before,actor,action){
   const c=field(player(g,actor)).find(c=>id(c)===action.cardId);if(c&&action.type==='bench_basic'){onBench(g,player(g,actor),c,true);c.entryWindow=g.referenceActionSequence;}
  }
  if(action.type==='evolve'){
-  const c=find(g,action.targetInstanceId)?.card;if(c){c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty'])delete c[k];}
+  const c=find(g,action.targetInstanceId)?.card;if(c){c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch'])delete c[k];}
  }
  if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
