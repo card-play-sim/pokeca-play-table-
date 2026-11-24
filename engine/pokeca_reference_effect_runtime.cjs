@@ -218,6 +218,26 @@ function typedEvolutionOrTera(c,plan){
  const facts=record(c).facts;
  return plan.mechanic==='TRAINER_SEARCH_TERA'?facts.teraBenchProtection===true:facts.stage>0&&facts.types.includes(plan.type);
 }
+function massTransferCandidate(c,plan){
+ const r=record(c);
+ if(plan.category==='basicEnergy')return basicEnergy(c)&&(!plan.type||c.energyType===plan.type);
+ if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
+ if(r?.category!==plan.category)return false;
+ if(plan.type&&!r.facts.types?.includes(plan.type))return false;
+ if(plan.stage==='evolved'&&!(r.facts.stage>0))return false;
+ if(Number.isInteger(plan.stage)&&r.facts.stage!==plan.stage)return false;
+ if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
+ return true;
+}
+function massHealTargets(p,plan){
+ return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
+}
+function massContext(plan,p,o){
+ if(plan.predicate==='equalHand')return p.hand.length===o.hand.length;
+ if(plan.predicate==='opponentBench')return o.bench.length>=plan.threshold;
+ if(plan.predicate==='ownTypedBench')return p.bench.some(c=>record(c).facts.types.includes(plan.type)&&(plan.stage===null||record(c).facts.stage===plan.stage));
+ return plan.statuses.includes((plan.predicate==='ownStatus'?p.active:o.active).statusCondition);
+}
 function mixedTopCategory(c,plan){
  if(plan.mechanic==='TRAINER_TOP_TYPED_SEARCH'){
   if(c.kind==='pokemon'&&record(c).facts.types.includes(plan.type))return 'pokemon';
@@ -352,6 +372,16 @@ function requests(g,actor,card,effect){
   deckRequest('cards',candidates,0,new Set(candidates.map(c=>record(c).facts.stage)).size);
   out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
  }
+ if(m==='MASS_ZONE_TRANSFER'){
+  const plan=effect.plan,pool=p[plan.zone].filter(c=>massTransferCandidate(c,plan)),max=Math.min(plan.limit,pool.length);
+  if(plan.zone==='deck')deckRequest('cards',pool,0,max);
+  else cardRequest('cards',pool,Math.min(1,max),max);
+ }
+ if(m==='MASS_HEAL_OWN'&&effect.plan.target==='choice'){
+  const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
+  cardRequest('cards',pool,min,min);
+ }
+ if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
  if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
   const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
@@ -454,6 +484,9 @@ function abilityCheck(g,actor,card,a,action){
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
+ if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+ if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
@@ -535,6 +568,9 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='MASS_ZONE_TRANSFER')assert(r.mainPlan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,r.mainPlan)),'NO_MASS_TRANSFER_SOURCE');
+   if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+   if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>e.isSpecial)),'NO_OPPONENT_SPECIAL_ENERGY');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
@@ -732,6 +768,23 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'MASS_CONTEXT_BONUS':damage(g,actor,o.active,plan.base+(massContext(plan,p,o)?plan.bonus:0));break;
+  case 'MASS_ZONE_TRANSFER':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'));
+   else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
+   break;
+  case 'MASS_HEAL_OWN':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount);
+   break;
+  case 'MASS_PRIZE_DRAW':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
+  case 'MASS_PLACE_COUNTERS':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of field(o))if(plan.target==='all'||ids('target').includes(id(mon)))counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
+   break;
   case 'ATTACK_BLIND_HAND_CHOICE':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
