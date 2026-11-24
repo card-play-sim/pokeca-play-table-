@@ -126,7 +126,8 @@ for (const r of catalog.records) {
       const defender = before.players[1].active,
         dr = E.getReferenceEffectRecord(defender),
         sr = E.getReferenceEffectRecord(before.players[0].active);
-      let expected = flips.filter((f) => f.details.heads).length * e.plan.unit;
+      const printedBase = e.damage.endsWith("+") ? Number.parseInt(e.damage, 10) : 0;
+      let expected = printedBase + flips.filter((f) => f.details.heads).length * e.plan.unit;
       if (dr.facts.weakness?.types.some((t) => sr.facts.types.includes(t)))
         expected *= 2;
       if (dr.facts.resistance?.types.some((t) => sr.facts.types.includes(t)))

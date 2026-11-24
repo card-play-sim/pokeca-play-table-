@@ -70,9 +70,8 @@ function makeWorklist(records,blocked,ids) {
       if (!alreadyCounted) {
         seenPrints.get(key).add(id);
         group.printCount++;
-        if (group.officialCardIds.length < 30) group.officialCardIds.push(id);
-        if (row.source?.path && group.officialEvidencePaths.length < 30)
-          group.officialEvidencePaths.push(row.source.path);
+        group.officialCardIds.push(id);
+        if (row.source?.path) group.officialEvidencePaths.push(row.source.path);
       }
     }
   }

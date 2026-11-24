@@ -4,6 +4,13 @@ const input=process.argv[2]&&!process.argv[2].startsWith('--')?process.argv[2]:'
 const output=process.argv[3]&&!process.argv[3].startsWith('--')?process.argv[3]:'data/effect-extensions/compiled.json';
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').trim();
+const sharedAttackMechanics=new Set(['CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE',
+ 'ATTACK_RESET_HAND','ATTACK_DISCARD_OWN_DECK_TOP','ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER']);
+function requiresHijAttackScope(plan){
+ return sharedAttackMechanics.has(plan.mechanic)||
+   plan.mechanic==='ANY_DAMAGE'&&Object.hasOwn(plan,'amount')||
+   plan.mechanic==='FIXED_COIN_HITS'&&Object.hasOwn(plan,'base');
+}
 function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
  const records=[],blocked=[...(intake.blocked||[])],seen=new Set(),base=new Set(JSON.parse(fs.readFileSync('data/reference-effects/catalog.json')).records.map(r=>r.officialCardId));
  const hijIds=new Set(JSON.parse(fs.readFileSync('data/deck-building/catalog.json')).records
@@ -26,7 +33,7 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
     if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl)||!body.includes(row.imageSourceUrl.replace('https://www.pokemon-card.com','')))throw Error('IMAGE_REFERENCE_MISMATCH');
     const record=compile({records:[row]}).records[0],effects=row.category==='pokemon'?[...record.attacks,...record.abilities]:[{plan:record.mainPlan}];
     if(effects.some(e=>!e.plan))throw Error('UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN');
-    if(effects.some(e=>['COIN_UNTIL_TAILS_DAMAGE','ACTIVE_TOP_SUPPORTER_SEARCH'].includes(e.plan.mechanic))&&!hijIds.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
+    if(effects.some(e=>['COIN_UNTIL_TAILS_DAMAGE','ACTIVE_TOP_SUPPORTER_SEARCH'].includes(e.plan.mechanic)||requiresHijAttackScope(e.plan))&&!hijIds.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
     records.push(record);continue;
    }
    const section=body.match(/<h2[^>]*>(グッズ|サポート|スタジアム|ポケモンのどうぐ)<\/h2>((?:\s*<p[^>]*>.*?<\/p>)+)/s),categories={'グッズ':'item','サポート':'supporter','スタジアム':'stadium','ポケモンのどうぐ':'tool'};
@@ -45,5 +52,5 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
  }
  return {schemaVersion:1,scope:'SUPPLEMENTAL_OFFICIAL_REFERENCES_NOT_DECK_ADOPTION',records,blocked};
 }
-if(require.main===module){const result=build(JSON.parse(fs.readFileSync(input))),text=JSON.stringify(result,null,2)+'\n';if(fs.existsSync(output)){const indexed=new Map(result.records.map(r=>[r.officialCardId,r]));for(const prior of JSON.parse(fs.readFileSync(output)).records){const current=indexed.get(prior.officialCardId);if(!current||JSON.stringify(current)!==JSON.stringify(prior))throw Error('EXTENSION_IMMUTABLE_SOURCE_CONFLICT');}}if(process.argv.includes('--check')){if(fs.readFileSync(output,'utf8')!==text)throw Error('EXTENSION_DATA_STALE');}else{fs.mkdirSync(path.dirname(output),{recursive:true});const tmp=output+'.tmp';fs.writeFileSync(tmp,text);fs.renameSync(tmp,output);}console.log(JSON.stringify({accepted:result.records.length,blocked:result.blocked.length,output}));}
+if(require.main===module){const result=build(JSON.parse(fs.readFileSync(input))),text=JSON.stringify(result,null,2)+'\n';if(fs.existsSync(output)){const indexed=new Map(result.records.map(r=>[r.officialCardId,r]));for(const prior of JSON.parse(fs.readFileSync(output)).records){const current=indexed.get(prior.officialCardId);if(!current||JSON.stringify(current)!==JSON.stringify(prior))throw Error('EXTENSION_IMMUTABLE_SOURCE_CONFLICT:'+prior.officialCardId+':'+(!current?'missing':'compiled facts differ')+': recompile evidence and review parser before adoption');}}if(process.argv.includes('--check')){if(fs.readFileSync(output,'utf8')!==text)throw Error('EXTENSION_DATA_STALE');}else{fs.mkdirSync(path.dirname(output),{recursive:true});const tmp=output+'.tmp';fs.writeFileSync(tmp,text);fs.renameSync(tmp,output);}console.log(JSON.stringify({accepted:result.records.length,blocked:result.blocked.length,output}));}
 module.exports={build};

@@ -264,7 +264,7 @@ function prepare(r, e, kind) {
     }
     if (!attached) return {blocked:"NO_ATTACHED_TOOL_FIXTURE_RESOURCE"};
   }
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -336,6 +336,27 @@ function prepare(r, e, kind) {
     for (const [card, position] of [[supporters[0],0],[supporters[1],6]]) {
       deck.splice(deck.indexOf(card),1);
       deck.splice(position,0,card);
+    }
+  }
+  if (m === "CONDITIONAL_ATTACK_BONUS") {
+    const [own, opponent] = frame.game.players;
+    if (e.plan.predicate === "opponentDamaged") opponent.active.damage = 10;
+    if (e.plan.predicate === "ownBenchDamaged" && own.bench.length) own.bench[0].damage = 10;
+  }
+  if (m === "SCALED_ATTACK_DAMAGE") {
+    const [own, opponent] = frame.game.players;
+    if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
+    if (["opponentEnergy", "opponentTeamEnergy"].includes(e.plan.metric)) {
+      const targets = e.plan.metric === "opponentEnergy" ? [opponent.active] : [opponent.active, ...opponent.bench];
+      for (const target of targets) {
+        const index = opponent.deck.findIndex(card => card.kind === "energy" && !card.isSpecial);
+        if (index >= 0) target.energyCards.push(opponent.deck.splice(index, 1)[0]);
+      }
+    }
+    for (const energy of [...own.active.energyCards]) {
+      if (!energy.isSpecial) continue;
+      own.active.energyCards.splice(own.active.energyCards.indexOf(energy), 1);
+      own.deck.push(energy);
     }
   }
   const p = port(frame.game);
@@ -449,6 +470,130 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  const [attackingSide, defendingSide] = before.players;
+  const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if (e.plan.mechanic === "CONDITIONAL_ATTACK_BONUS") {
+    const print = E.getReferenceEffectRecord(defendingSide.active);
+    const conditions = {
+      opponentEx: print.name.endsWith("ex"),
+      opponentExOrV: print.name.endsWith("ex") || /V(?:MAX|STAR|-UNION)?$/.test(print.name),
+      opponentEvolved: print.facts.stage > 0,
+      opponentDamaged: defendingSide.active.damage > 0,
+      ownBenchDamaged: attackingSide.bench.some(card => card.damage > 0),
+    };
+    verifyPrintedAttack(before, after, e, e.plan.base + (conditions[e.plan.predicate] ? e.plan.bonus : 0));
+  }
+  if (e.plan.mechanic === "FIXED_COIN_HITS" && Object.hasOwn(e.plan, "base")) {
+    const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
+    assert.equal(tosses.length, e.plan.flips);
+    verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
+  if (e.plan.mechanic === "SCALED_ATTACK_DAMAGE") {
+    const count = cards => cards.flatMap(card => card.energyCards).filter(energy =>
+      !e.plan.type || energy.energyType === e.plan.type).length;
+    const metrics = {
+      opponentCounters: defendingSide.active.damage / 10,
+      ownPokemon: 1 + attackingSide.bench.length,
+      ownEnergy: count([attackingSide.active]),
+      opponentEnergy: count([defendingSide.active]),
+      opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
+    };
+    verifyPrintedAttack(before, after, e, e.plan.base + e.plan.unit * metrics[e.plan.metric]);
+  }
+  if (e.plan.mechanic === "ATTACK_RESET_HAND") {
+    assert.equal(after.players[0].hand.length, Math.min(e.plan.amount, attackingSide.hand.length + attackingSide.deck.length));
+    assert(effectEvents.some(event => event?.command === "SHUFFLE_DECK"));
+    assert(effectEvents.some(event => event?.command === "RETURN_TO_DECK" &&
+      JSON.stringify(event.cardIds) === JSON.stringify(attackingSide.hand.map(card => card.id))));
+  }
+  if (e.plan.mechanic === "ATTACK_DISCARD_OWN_DECK_TOP") {
+    const discarded = attackingSide.deck.slice(0, e.plan.amount).map(card => card.id);
+    assert(discarded.length > 0);
+    assert(effectEvents.some(event => event?.command === "DISCARD" && event.fromZone === "deck" &&
+      JSON.stringify(event.cardIds) === JSON.stringify(discarded)));
+    assert(discarded.every(id => after.players[0].discard.some(card => card.id === id)));
+  }
+  if (e.plan.mechanic === "ATTACK_DISABLE_DEFENDER") {
+    const target = [after.players[1].active, ...after.players[1].bench].find(card => card?.id === defendingSide.active.id);
+    if (target) assert.equal(target.referenceCannotAttackTurn, before.turnNumber + 1);
+    else assert(after.players[1].discard.some(card => card.id === defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ATTACK_WEAKEN_DEFENDER") {
+    const target = [after.players[1].active, ...after.players[1].bench].find(card => card?.id === defendingSide.active.id);
+    if (target) {
+      assert.equal(target.referenceOutgoingDamagePenalty?.turn, before.turnNumber + 1);
+      assert.equal(target.referenceOutgoingDamagePenalty?.amount, e.plan.amount);
+    } else assert(after.players[1].discard.some(card => card.id === defendingSide.active.id));
+  }
+  if (e.plan.mechanic === "ANY_DAMAGE" && e.plan.amount) {
+    const chosen = o.action.targetIds[0];
+    assert(effectEvents.some(event => event?.command === "DAMAGE" && event.targetInstanceId === chosen));
+    const bench = defendingSide.bench.find(card => !E.getReferenceEffectRecord(card).facts.teraBenchProtection);
+    if (bench) {
+      const replay = port(before);
+      assert(replay.dispatch("you", { ...o.action, targetIds: [bench.id] }).ok);
+      const result = replay.getSnapshot();
+      assert(result.history.slice(before.history.length).some(event => event.details?.command === "DAMAGE" &&
+        event.details.targetInstanceId === bench.id && event.details.amount === e.plan.amount));
+    }
+  }
+  if (e.plan.mechanic === "COIN_SEARCH_POKEMON") {
+    const action = o.action;
+    const choice = after.pendingReferenceChoice;
+    assert.equal(choice?.kind, "DECK_POKEMON_SEARCH");
+    assert.equal(choice.playerId, "you");
+    assert(after.players[0].discard.some(card => card.id === t.sourceId));
+    assert.equal(p.getView("ai").pendingReferenceChoice.options, undefined);
+    const saved = p.getResumeSnapshot();
+    assert(p.restoreSession(saved).ok);
+    assert.deepEqual(p.getSnapshot(), after);
+    const deckCardId = choice.options[0];
+    const selection = { type: "resolve_reference_choice", deckCardId };
+    const actions = E.getLegalActions(after, "you").actions;
+    assert(actions.some(candidate => JSON.stringify(candidate) === JSON.stringify(selection)));
+    assert(actions.every(candidate => candidate.type === selection.type));
+    const invalid = after.players[0].deck.find(card => card.kind !== "pokemon");
+    assert.equal(p.dispatch("you", { ...selection, deckCardId: invalid.id }).ok, false);
+    assert.equal(p.dispatch("you", { type: "end_turn" }).ok, false);
+    assert.deepEqual(p.getSnapshot(), after);
+    assert(p.dispatch("you", selection).ok);
+    const resolved = p.getSnapshot();
+    assert(!resolved.pendingReferenceChoice);
+    assert(resolved.players[0].hand.some(card => card.id === deckCardId));
+    assert(!resolved.players[0].deck.some(card => card.id === deckCardId));
+    assert(resolved.history.some(event => event.details?.command === "REVEAL" &&
+      event.details.cardIds?.includes(deckCardId)));
+    assert(resolved.history.some(event => event.details?.command === "SHUFFLE_DECK"));
+    assert.deepEqual(S.identities(before), S.identities(resolved));
+    assert(p.restoreSession(saved).ok);
+
+    const skipped = port(after);
+    assert(skipped.dispatch("you", { ...selection, deckCardId: null }).ok);
+    assert.deepEqual(skipped.getSnapshot().players[0].hand, after.players[0].hand);
+    assert(skipped.getSnapshot().history.some(event => event.details?.command === "SHUFFLE_DECK"));
+
+    const tails = port({ ...before, referenceRngState: 682 });
+    assert(tails.dispatch("you", action).ok);
+    const tailResult = tails.getSnapshot();
+    assert(!tailResult.pendingReferenceChoice);
+    assert.deepEqual(tailResult.players[0].deck, before.players[0].deck);
+    const steps = tailResult.history.slice(before.history.length).map(event => event.details);
+    assert(steps.some(step => step?.command === "COIN_FLIP" && step.heads === false));
+    assert(steps.every(step => !["REVEAL", "SEARCH_DECK", "SHUFFLE_DECK"].includes(step?.command)));
+
+    const noPokemon = structuredClone(before);
+    const own = noPokemon.players[0];
+    own.hand.push(...own.deck.filter(card => card.kind === "pokemon"));
+    own.deck = own.deck.filter(card => card.kind !== "pokemon");
+    const emptyOfPokemon = port(noPokemon);
+    assert(emptyOfPokemon.dispatch("you", action).ok);
+    const noChoice = emptyOfPokemon.getSnapshot();
+    assert(!noChoice.pendingReferenceChoice);
+    assert(noChoice.history.some(event => event.details?.command === "SHUFFLE_DECK"));
+    own.hand.push(...own.deck.splice(0));
+    const emptyDeck = port(noPokemon);
+    assert.equal(emptyDeck.dispatch("you", action).ok, false);
+  }
   if (e.plan.mechanic === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
     const defender = E.getReferenceEffectRecord(before.players[1].active);
     assert(defender.abilities.some(ability => ability.effectId === e.effectId));
