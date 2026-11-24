@@ -204,7 +204,7 @@ function requests(g,actor,card,effect){
   const attached=card.energyCards||[],count=Math.min(effect.plan.count,attached.length);
   cardRequest('energy',attached,count,count);
  }
- if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'){
+ if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
   const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
@@ -650,8 +650,11 @@ function applyPlan(g,actor,card,effect,action){
    if(ids('drawChoice')[0]==='draw')draw(g,p,Math.max(0,plan.limit-p.hand.length));
    break;
   case 'ATTACK_DISCARD_DEFENDER_ENERGY':
+  case 'ATTACK_COIN_DISCARD_DEFENDER_ENERGY':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)discardSelectedAttachment(g,actor,o,[o.active],ids('energy'));
+   if((m!=='ATTACK_COIN_DISCARD_DEFENDER_ENERGY'||coin(g,actor))&&
+      o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+    discardSelectedAttachment(g,actor,o,[o.active],ids('energy'));
    break;
   case 'ATTACK_HEAL_OWN_TARGET':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));

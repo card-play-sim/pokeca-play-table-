@@ -28,6 +28,7 @@ jobs:
           node --check engine/pokeca_reference_effect_runtime.cjs
           node --check scripts/lib/shared-effect-engine-worker.cjs
           node tests/control-014-official-parser.test.cjs
+          node scripts/stage-battle-board-count-official.cjs
           node scripts/build-effect-extensions.cjs
           node scripts/sync-reference-effects.cjs
           node scripts/build-pwa-release.cjs
@@ -47,7 +48,7 @@ jobs:
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          git add data/effect-extensions/intake.json reports/official-effect-continuation/board-count-bulk-intake.json data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
           if ! git diff --cached --quiet; then
             git commit -m 'build: verified board-count attack damage data'
             git push origin HEAD:battle/shared-board-count-damage-20261124
@@ -56,5 +57,7 @@ jobs:
         if: always()
         with:
           name: official-board-count-damage-battle-evidence
-          path: test-results/battle-board-count-damage-official.json
+          path: |
+            test-results/battle-board-count-damage-official.json
+            reports/official-effect-continuation/board-count-bulk-intake.json
           if-no-files-found: warn
