@@ -36,6 +36,7 @@
   function addHand(i,pred){const c=take(i,pred,false);if(c)g.players[i].hand.push(c);return c;}
   function attach(i,target,pred){const c=take(i,pred,false);if(c)target.energyCards.push(c);return c;}
   const basic=c=>c.kind==='energy'&&!c.isSpecial;
+  const reservedAcceleration=[];
   if(row.kind==='attack'){
    const needs=row.cost.filter(t=>t!=='無色'),available=new Set(pools[0].filter(basic).map(c=>c.energyType));
    if(needs.some(t=>!available.has(t)&&!(t==='超'||t==='悪') ))return {blocked:'FIXED_DECK_ENERGY_UNAVAILABLE',requiredTypes:needs,availableTypes:[...available]};
@@ -47,6 +48,19 @@
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     if(!addHand(0,basic))return {blocked:'NO_HAND_ATTACHMENT_FIXTURE_RESOURCE'};
+   }else if(m==='ATTACK_ACCELERATE_BASIC_ENERGY'){
+    // Pay exactly the printed cost; preserve real unused basic energy for
+    // the subsequent deck/discard acceleration effect.
+    for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    for(const type of row.cost.filter(type=>type==='無色')){
+     if(!attach(0,p.active,c=>basic(c)&&row.plan.type&&c.energyType!==row.plan.type)&&!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    }
+    for(let i=0;i<row.plan.limit;i++){
+     const c=take(0,c=>basic(c)&&(!row.plan.type||c.energyType===row.plan.type),false);
+     if(!c)break;
+     reservedAcceleration.push(c);
+    }
+    if(!reservedAcceleration.length)return {blocked:'NO_ACCELERATION_ENERGY_FIXTURE'};
    }else for(const c of [...pools[0]].filter(c=>c.kind==='energy'))attach(0,p.active,x=>x.id===c.id);
   }
   if(m==='FAIRY_ZONE'){attach(0,p.active,c=>basic(c)&&c.energyType==='超');attach(0,p.active,basic);}
@@ -76,6 +90,7 @@
   if(row.category==='supporter')addHand(0,c=>c.cardType==='SUPPORTER');
   if(row.category==='energy')addHand(0,c=>c.kind==='energy');
   g.players.forEach((p,i)=>{p.prizeCards=pools[i].splice(0,p.prizes);p.deck=pools[i];});
+  if(reservedAcceleration.length)p[row.plan.zone].push(...reservedAcceleration);
   const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);if(!loaded.ok)throw Error(JSON.stringify(loaded));
   return {game:port.getSnapshot(),sourceId:source.id,activeId:p.active.id,opponentId:o.active.id,firstDeck,variant,extras:Object.fromEntries(Object.entries(extras).map(([k,v])=>[k,v?.id])),row};
  }
