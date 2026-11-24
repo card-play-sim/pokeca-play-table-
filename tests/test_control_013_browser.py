@@ -387,6 +387,16 @@ async def main():
     assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
    if m=='TRAINER_SWITCH_OR_EX_V_BOOST':
     assert after['players'][0]['referenceExVDamageBoost']=={'turn':before['turnNumber'],'amount':f['e']['plan']['amount']}
+   if m=='MASS_COIN_OUTCOME':
+    plan=f['e']['plan']
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)]
+    assert len(flips)==plan['flips']
+    heads=sum(flips)
+    met=heads==plan['flips'] if plan['when']=='all' else heads==0 if plan['when']=='none' else heads>=plan['threshold']
+    if plan.get('status'):
+     assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==plan['status'] for ev in events)==met
+    if plan.get('mill'):
+     assert {c['id'] for c in before['players'][1]['deck'][:heads]}<={c['id'] for c in after['players'][1]['discard']}
    if m=='MASS_EFFECT_SEQUENCE':
     own,other=before['players'];resolved=after['players'][0]
     for step in f['e']['plan']['steps']:
