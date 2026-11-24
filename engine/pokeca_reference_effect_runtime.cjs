@@ -211,6 +211,17 @@ function requests(g,actor,card,effect){
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,p.bench.length),Math.min(1,p.bench.length));
  if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
+ if(m==='ATTACK_ACCELERATE_BASIC_ENERGY'){
+  const plan=effect.plan,targets=(plan.target==='self'?[card]:plan.target==='bench'?p.bench:own).filter(c=>!plan.holderType||record(c).facts.types.includes(plan.holderType));
+  const pool=targets.length?p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type)):[];
+  const count=Math.min(plan.limit,pool.length);
+  if(plan.zone==='deck')deckRequest('energy',pool,0,count);
+  else cardRequest('energy',pool,0,count);
+  if(plan.target!=='self'){
+   cardRequest('attachTo',targets,0,Math.min(1,targets.length));
+   out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:1,count:1}];
+  }
+ }
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'){
@@ -792,6 +803,21 @@ function applyPlan(g,actor,card,effect,action){
   }
   case 'ATTACK_DISCARD_HAND_DRAW':damage(g,actor,o.active,Number(effect.damage)||0);
    discardHandAndDraw(g,actor,p,plan.amount);break;
+  case 'ATTACK_ACCELERATE_BASIC_ENERGY':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const energy=ids('energy'),target=plan.target==='self'?card:find(g,ids('attachTo')[0])?.card;
+   if(energy.length){
+    assert(target&&field(p).includes(target)&&(plan.target!=='bench'||p.bench.includes(target))&&(!plan.holderType||record(target).facts.types.includes(plan.holderType)),'ACCELERATION_TARGET_CHANGED');
+    for(const ident of energy){
+     const index=p[plan.zone].findIndex(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+     assert(index>=0,'ACCELERATION_ENERGY_CHANGED');
+     target.energyCards.push(p[plan.zone].splice(index,1)[0]);
+     event(g,actor,'ATTACH_ENERGY',{energyId:ident,targetInstanceId:id(target),fromZone:plan.zone});
+    }
+   }
+   if(plan.zone==='deck'){event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});shuffle(g,p);}
+   break;
+  }
   case 'DECK_ENERGY_TO_GRASS_BENCH':{
    if(ids('energy').length){const energyId=ids('energy')[0],benchId=ids('attachTo')[0];
     const target=p.bench.find(c=>id(c)===benchId&&record(c).facts.types.includes('草'));

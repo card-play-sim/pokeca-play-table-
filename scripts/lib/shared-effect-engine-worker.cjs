@@ -208,6 +208,7 @@ function prepare(r, e, kind) {
       if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
     }
     if (m === "RECOVER_TYPED_DISCARD") needed.set(e.plan.type, e.plan.amount);
+    if(m==="ATTACK_ACCELERATE_BASIC_ENERGY"&&e.plan.type)needed.set(e.plan.type,(needed.get(e.plan.type)||0)+e.plan.limit);
     if (m === "SCALED_ATTACK_DAMAGE" && e.plan.metric === "ownTeamEnergy")
       for (const type of [e.plan.type, e.plan.secondType].filter(Boolean))
         needed.set(type, (needed.get(type) || 0) + 1);
@@ -463,6 +464,20 @@ function prepare(r, e, kind) {
       own.active.energyCards=own.active.energyCards.filter(energy=>!energy.isSpecial);
       own.deck.push(...specials);
     }
+  }
+  if(m==="ATTACK_ACCELERATE_BASIC_ENERGY"){
+    const own=frame.game.players[0],eligible=c=>c.kind==="energy"&&!c.isSpecial&&(!e.plan.type||c.energyType===e.plan.type);
+    const targets=(e.plan.target==="self"?[own.active]:e.plan.target==="bench"?own.bench:[own.active,...own.bench]).filter(c=>!e.plan.holderType||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.holderType));
+    if(!targets.length)return {blocked:"NO_ACCELERATION_TARGET_FIXTURE"};
+    if(e.plan.zone==="discard"){
+      for(const zone of [own.deck,own.hand]){
+       while(own.discard.filter(eligible).length<e.plan.limit){
+        const index=zone.findIndex(eligible);if(index<0)break;
+        own.discard.push(zone.splice(index,1)[0]);
+       }
+      }
+    }
+    if(!own[e.plan.zone].some(eligible))return {blocked:"NO_ACCELERATION_ENERGY_FIXTURE"};
   }
   if(e.plan.batchSearch){
     const own=frame.game.players[0];
@@ -1152,6 +1167,33 @@ function verifyCase(t, e) {
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
     }
+  }
+  if(e.plan.mechanic==="ATTACK_ACCELERATE_BASIC_ENERGY"){
+    const action=t.action||o.action,chosen=action.selections.energy;
+    const own=before.players[0],targetId=e.plan.target==="self"?own.active.id:action.selections.attachTo[0];
+    const oldTarget=[own.active,...own.bench].find(c=>c.id===targetId);
+    const newTarget=[after.players[0].active,...after.players[0].bench].find(c=>c?.id===targetId);
+    assert(oldTarget&&newTarget&&chosen.length>0&&chosen.length<=e.plan.limit);
+    if(e.plan.target==="bench")assert(own.bench.some(c=>c.id===targetId));
+    if(e.plan.holderType)assert(E.getReferenceEffectRecord(oldTarget).facts.types.includes(e.plan.holderType));
+    for(const id of chosen){
+      const source=own[e.plan.zone].find(c=>c.id===id);
+      assert(source?.kind==="energy"&&!source.isSpecial&&(!e.plan.type||source.energyType===e.plan.type));
+      assert(newTarget.energyCards.some(c=>c.id===id));
+      assert(!after.players[0][e.plan.zone].some(c=>c.id===id));
+      assert(effectEvents.some(s=>s?.command==="ATTACH_ENERGY"&&s.energyId===id&&s.targetInstanceId===targetId&&s.fromZone===e.plan.zone));
+    }
+    assert.equal(effectEvents.some(s=>s?.command==="SHUFFLE_DECK"),e.plan.zone==="deck");
+    assert.equal(after.players[0].normalEnergyAttached,own.normalEnergyAttached);
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...action,selections:{...action.selections,energy:[chosen[0],chosen[0]]}}).ok,false);
+    assert.deepEqual(replay.getSnapshot(),before);
+    if(e.plan.target!=="self"){
+      assert.equal(replay.dispatch("you",{...action,selections:{...action.selections,attachTo:[before.players[1].active.id]}}).ok,false);
+      assert.deepEqual(replay.getSnapshot(),before);
+    }
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),after);
   }
   if (e.plan.mechanic === "SEARCH_BASIC_TO_BENCH_ATTACK") {
     const action = t.action || o.action;

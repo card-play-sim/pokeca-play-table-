@@ -147,6 +147,15 @@ function additionalAttackPlan(entry,text){
    return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:count==='好きなだけ'?5:Number.parseInt(count,10),...(typedBench?{type:typedBench[1]}:{}),batchSearch:true,sharedWording:true};
   }
  }
+ // Exact one-holder acceleration; multi-holder distribution is a separate mechanic.
+ const acceleration=text.match(/^自分の(山札|トラッシュ)から(基本エネルギー|「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」)を(1枚|[2-9]枚まで)選び、(このポケモン|自分のポケモン1匹|ベンチポケモン1匹|自分のポケモン|ベンチポケモン|自分の\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモン)につける。(そして山札を切る。)?$/);
+ if(acceleration&&/^\d+$/.test(printed)&&Boolean(acceleration[7])===(acceleration[1]==='山札')){
+  const [,zone,,type,count,holder,holderType]=acceleration,limit=Number.parseInt(count,10);
+  if(limit===1||holder==='このポケモン'||holder.endsWith('1匹')){
+   const target=holder==='このポケモン'?'self':holder.startsWith('ベンチ')?'bench':'own';
+   return {mechanic:'ATTACK_ACCELERATE_BASIC_ENERGY',commands:[...(base?['DAMAGE']:[]),...(zone==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(zone==='山札'?['SHUFFLE_DECK']:[])],zone:zone==='山札'?'deck':'discard',type:type||null,limit,target,holderType:holderType||null,sharedWording:true};
+  }
+ }
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
  const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);
