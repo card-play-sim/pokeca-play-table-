@@ -35,5 +35,7 @@ for(const text of [
 }
 assert.equal(plan(groups.coin.text,'item'),null,'coin supporter effect cannot be treated as item');
 assert.equal(plan(groups.heal.text.replace('バトルポケモン','ベンチポケモン')),null);
-assert.equal(plan(groups.heal.text,'item'),null);
+assert.deepEqual(plan(groups.heal.text,'item'),{mechanic:'MASS_HEAL_OWN',commands:['HEAL'],type:null,target:'active',amount:70,activeOnly:false,sharedWording:true});
+assert.equal(plan(groups.heal.text+'このポケモンをどくにする。','item'),null);
+assert.equal(plan(groups.heal.text,'stadium'),null);
 console.log('PASS official H source identities and six exact supporter plans');
