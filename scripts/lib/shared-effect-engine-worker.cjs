@@ -187,7 +187,7 @@ function prepare(r, e, kind) {
   const rocketTeamCount = kind === "attack"
     ? r.abilities.find(ability => ability.plan?.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE")?.plan.required
     : undefined;
-  if (kind === "attack" || m === "RECOVER_TYPED_DISCARD") {
+  if (kind === "attack" || m === "RECOVER_TYPED_DISCARD" || m === "ABILITY_ATTACH_SELF_DRAW") {
     const cards = manifest.decks[locations[0].deck].cards;
     if (rocketTeamCount) {
       const teammate = [...records.values()].find(record =>
@@ -208,6 +208,7 @@ function prepare(r, e, kind) {
       if (type !== "無色") needed.set(type, (needed.get(type) || 0) + 1);
     }
     if (m === "RECOVER_TYPED_DISCARD") needed.set(e.plan.type, e.plan.amount);
+    if(m==="ABILITY_ATTACH_SELF_DRAW")needed.set(e.plan.type,1);
     if(m==="ATTACK_ACCELERATE_BASIC_ENERGY"&&e.plan.type)needed.set(e.plan.type,(needed.get(e.plan.type)||0)+e.plan.limit);
     if (m === "SCALED_ATTACK_DAMAGE" && e.plan.metric === "ownTeamEnergy")
       for (const type of [e.plan.type, e.plan.secondType].filter(Boolean))
@@ -284,6 +285,23 @@ function prepare(r, e, kind) {
       if(index<0)return {blocked:'NO_HAND_ATTACHMENT_FIXTURE_RESOURCE'};
       player.hand.push(player.deck.splice(index,1)[0]);
     }
+  }
+  if(m==='ABILITY_ATTACH_SELF_DRAW'){
+    const own=frame.game.players[0],eligible=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
+    if(!own.hand.some(eligible)){
+      const index=own.deck.findIndex(eligible);
+      if(index>=0)own.hand.push(own.deck.splice(index,1)[0]);
+      else {
+        const prize=own.prizeCards.findIndex(eligible);
+        if(prize<0||!own.deck.length)return {blocked:'NO_TYPED_HAND_ENERGY_FIXTURE'};
+        own.hand.push(own.prizeCards[prize]);own.prizeCards[prize]=own.deck.shift();
+      }
+    }
+  }
+  if(m==='ABILITY_DISCARD_DRAW'){
+    const own=frame.game.players[0];
+    while(own.hand.length<e.plan.cost&&own.deck.length>e.plan.amount)own.hand.push(own.deck.shift());
+    if(own.hand.length<e.plan.cost||!own.deck.length)return {blocked:'NO_ABILITY_COST_FIXTURE'};
   }
   if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
     const player=frame.game.players[0];
@@ -610,6 +628,34 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(["ABILITY_DISCARD_DRAW","ABILITY_ATTACH_SELF_DRAW"].includes(e.plan.mechanic)){
+    const action=t.action||o.action,own=before.players[0],resolved=after.players[0],plan=e.plan;
+    const costKey=plan.mechanic==="ABILITY_DISCARD_DRAW"?"discard":"energy",chosen=action.selections[costKey];
+    const count=plan.mechanic==="ABILITY_DISCARD_DRAW"?plan.cost:1;
+    assert.equal(chosen.length,count);
+    assert(chosen.every(id=>own.hand.some(c=>c.id===id)));
+    assert(chosen.every(id=>!resolved.hand.some(c=>c.id===id)));
+    const drawn=own.deck.slice(0,plan.amount).map(c=>c.id);
+    assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(drawn.length).map(c=>c.id));
+    assert(drawn.every(id=>resolved.hand.some(c=>c.id===id)));
+    assert.equal(resolved.hand.length,own.hand.length-count+drawn.length);
+    if(costKey==="discard")assert(chosen.every(id=>resolved.discard.some(c=>c.id===id)));
+    else {
+      const source=[resolved.active,...resolved.bench].find(c=>c?.id===t.sourceId);
+      assert(own.hand.some(c=>c.id===chosen[0]&&c.kind==="energy"&&!c.isSpecial&&c.energyType===plan.type));
+      assert(source.energyCards.some(c=>c.id===chosen[0]));
+      assert.equal(resolved.normalEnergyAttached,own.normalEnergyAttached);
+    }
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...action,selections:{...action.selections,[costKey]:[]}}).ok,false);
+    assert.deepEqual(replay.getSnapshot(),before);
+    const invalid=port(before);
+    assert.equal(invalid.dispatch("you",{...action,selections:{...action.selections,[costKey]:["not-a-physical-card"]}}).ok,false);
+    assert.deepEqual(invalid.getSnapshot(),before);
+    const repeated=port(after);
+    assert.equal(repeated.dispatch("you",action).ok,false);
+    assert.deepEqual(repeated.getSnapshot(),after);
+  }
   if (e.plan.mechanic === "TRAINER_SWITCH_BOTH") {
     const selections=o.action.selections;
     assert.equal(after.players[1].active.id,selections.opponentBench[0]);

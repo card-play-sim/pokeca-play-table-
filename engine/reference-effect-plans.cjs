@@ -243,6 +243,13 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&discardDrawAbility)
+  return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};
+ const attachDrawAbility=generic.match(/^自分の番に1回使える。自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、このポケモンにつける。その後、自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&attachDrawAbility)
+  return {mechanic:'ABILITY_ATTACH_SELF_DRAW',commands:['ATTACH_ENERGY','DRAW'],type:attachDrawAbility[1],amount:Number(attachDrawAbility[2]),sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};

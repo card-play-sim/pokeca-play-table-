@@ -318,6 +318,22 @@ async def main():
     assert state=={'turn':before['turnNumber']+1,'amount':f['e']['plan']['amount']}
    if m=='RECOIL_DAMAGE':assert after['players'][0]['active']['damage']==before['players'][0]['active']['damage']+f['e']['plan']['amount']
    if m=='HEAL_SELF_ATTACK':assert after['players'][0]['active']['damage']==max(0,before['players'][0]['active']['damage']-f['e']['plan']['amount'])
+   if m in ('ABILITY_DISCARD_DRAW','ABILITY_ATTACH_SELF_DRAW'):
+    plan=f['e']['plan']
+    own,resolved=before['players'][0],after['players'][0]
+    key='discard' if m=='ABILITY_DISCARD_DRAW' else 'energy'
+    selected=option['action']['selections'][key]
+    assert len(selected)==(plan['cost'] if key=='discard' else 1)
+    assert set(selected)<={card['id'] for card in own['hand']}
+    assert not set(selected)&{card['id'] for card in resolved['hand']}
+    drawn=[card['id'] for card in own['deck'][:plan['amount']]]
+    assert set(drawn)<={card['id'] for card in resolved['hand']}
+    if key=='discard':
+     assert set(selected)<={card['id'] for card in resolved['discard']}
+    else:
+     source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
+     assert selected[0] in {card['id'] for card in source['energyCards']}
+     assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):

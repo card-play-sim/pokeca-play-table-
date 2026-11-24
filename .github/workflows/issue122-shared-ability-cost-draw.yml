@@ -1,0 +1,77 @@
+name: Issue122 shared ability cost and draw exact-print gate
+on:
+  push:
+    branches: [battle/issue122-shared-ability-cost-draw-20261125]
+    paths:
+      - '.github/workflows/issue122-shared-ability-cost-draw.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Recover and verify exact official evidence
+        run: |
+          git fetch origin 9ea92e420a8776100390252b14e8ee8c040f63c5
+          python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/issue122-ability-cost-draw.test.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+      - name: Verify newly compilable complete printings in the real engine
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {build}=require('./scripts/build-effect-extensions.cjs');
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const raw=read('data/official-effect-intake/checkpoint.json');
+          const intake=read('data/effect-extensions/intake.json');
+          const previous=read('data/effect-extensions/compiled.json');
+          const input={...intake,records:[...new Map([...raw.records,...intake.records].map(r=>[r.officialCardId,r])).values()]};
+          const result=build(input);
+          const old=new Map(previous.records.map(r=>[r.officialCardId,r]));
+          const next=new Map(result.records.map(r=>[r.officialCardId,r]));
+          for(const [id,row] of old)assert.deepEqual(next.get(id),row,'EXISTING_COMPILED_CONFLICT:'+id);
+          const requested=new Set(['ABILITY_DISCARD_DRAW','ABILITY_ATTACH_SELF_DRAW','ATTACK_ATTACH_BASIC_FROM_HAND']);
+          const candidates=result.records.filter(r=>!old.has(r.officialCardId)&&[...r.attacks,...r.abilities].some(e=>requested.has(e.plan?.mechanic)));
+          const eligible=new Set([...old.keys(),...candidates.map(r=>r.officialCardId)]);
+          const selected={...intake,records:input.records.filter(r=>eligible.has(r.officialCardId))};
+          fs.writeFileSync('data/effect-extensions/intake.json',JSON.stringify(selected,null,2)+'\n');
+          console.log(JSON.stringify({state:'COMPILER_ELIGIBLE_ONLY',ids:candidates.map(r=>r.officialCardId)}));
+          NODE
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/stage-card-auto-connect.cjs "$GITHUB_SHA" work/card-auto-connect
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA" POKECA_INTAKE_PREFIX=work/card-auto-connect/browser node scripts/build-intake-verification-fixtures.cjs
+      - name: Verify candidate physical card interactions in Chromium
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/ability-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA" POKECA_INTAKE_PREFIX=work/card-auto-connect/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=ability-cost-draw python tests/test_control_013_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-ability-cost-draw-evidence
+          path: |
+            work/card-auto-connect/
+            artifacts/ability-cost-draw*
+            reports/official-effect-continuation/official-fact-refresh.json
+            test-results/
+          if-no-files-found: warn

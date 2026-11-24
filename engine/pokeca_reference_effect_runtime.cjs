@@ -246,6 +246,8 @@ function requests(g,actor,card,effect){
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
  }
+ if(m==='ABILITY_DISCARD_DRAW')cardRequest('discard',p.hand,effect.plan.cost,effect.plan.cost);
+ if(m==='ABILITY_ATTACH_SELF_DRAW')cardRequest('energy',p.hand.filter(c=>basicEnergy(c)&&c.energyType===effect.plan.type),1,1);
  if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
   const eligible=p.hand.filter(basicEnergy),count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
@@ -415,6 +417,8 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
+ if(m==='ABILITY_DISCARD_DRAW')assert(p.hand.length>=a.plan.cost&&p.deck.length>0,'ABILITY_DISCARD_DRAW_UNAVAILABLE');
+ if(m==='ABILITY_ATTACH_SELF_DRAW')assert(p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'ABILITY_TYPED_ENERGY_REQUIRED');
  if(m==='ABILITY_HEAL_SELF')assert((card.damage||0)>0,'ABILITY_HEAL_UNAVAILABLE');
  if(m==='DASH')assert(p.active===card&&!p.turnLimits?.abilityNames?.DASH,'DASH_ACTIVE_AND_SHARED_LIMIT');
  if(m==='REVERSAL_DRAW')assert(wasKnockedOut(g,actor)&&!p.turnLimits?.abilityNames?.REVERSAL_DRAW,'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
@@ -926,6 +930,25 @@ function applyPlan(g,actor,card,effect,action){
   case 'HAND_LIMIT_DRAW_ATTACK':if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'ABILITY_DRAW_CARDS':draw(g,p,plan.amount);break;
+  case 'ABILITY_DISCARD_DRAW':{
+   const chosen=ids('discard');
+   for(const ident of chosen){
+    const index=p.hand.findIndex(c=>id(c)===ident);
+    assert(index>=0,'ABILITY_DISCARD_COST_CHANGED');
+    p.discard.push(p.hand.splice(index,1)[0]);
+   }
+   event(g,actor,'DISCARD',{cardIds:chosen,fromZone:'hand',sourceInstanceId:id(card)});
+   draw(g,p,plan.amount);break;
+  }
+  case 'ABILITY_ATTACH_SELF_DRAW':{
+   const index=p.hand.findIndex(c=>id(c)===ids('energy')[0]&&basicEnergy(c)&&c.energyType===plan.type);
+   assert(index>=0,'ABILITY_TYPED_ENERGY_CHANGED');
+   const energy=p.hand.splice(index,1)[0];
+   card.energyCards||=[];card.energyCards.push(energy);
+   event(g,actor,'ATTACH_ENERGY',{energyId:id(energy),targetInstanceId:id(card),fromZone:'hand',sourceOfficialCardId:record(card).officialCardId});
+   if(p.deck.length)draw(g,p,plan.amount);
+   break;
+  }
   case 'ABILITY_HEAL_SELF':heal(g,actor,card,plan.amount);break;
   case 'DASH':draw(g,p,2);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.DASH=true;break;
   case 'REVERSAL_DRAW':draw(g,p,3);p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.REVERSAL_DRAW=true;break;

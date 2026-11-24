@@ -43,6 +43,10 @@
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(let i=0;i<row.plan.maxDiscard;i++)if(!p.bench.length||!attach(0,p.bench[i%p.bench.length],basic))return {blocked:'FIXTURE_BENCH_ENERGY_MISSING'};
+   }else if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
+    for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    if(!addHand(0,basic))return {blocked:'NO_HAND_ATTACHMENT_FIXTURE_RESOURCE'};
    }else for(const c of [...pools[0]].filter(c=>c.kind==='energy'))attach(0,p.active,x=>x.id===c.id);
   }
   if(m==='FAIRY_ZONE'){attach(0,p.active,c=>basic(c)&&c.energyType==='超');attach(0,p.active,basic);}
