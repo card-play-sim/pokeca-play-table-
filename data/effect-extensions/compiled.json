@@ -1714,6 +1714,40 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46305",
+      "name": "改造ハンマー",
+      "deckName": "改造ハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46305",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046305_T_KAIZOUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46305.json",
+        "sha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
+        "htmlSha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
+        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_DISCARD_SPECIAL_ENERGY",
+        "commands": [
+          "DISCARD"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
       "officialCardId": "46449",
       "name": "ヒポポタス",
       "deckName": "ヒポポタス",
@@ -161426,6 +161460,322 @@
         "threshold": 30,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "45210",
+      "name": "緊急ボード",
+      "deckName": "緊急ボード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45210",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045210_T_KINKIXYUUBODO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45210.json",
+        "sha256": "71bef383580239e7561187b8f402db1d217de96938fbbc2ac7677c461ecb913e",
+        "htmlSha256": "71bef383580239e7561187b8f402db1d217de96938fbbc2ac7677c461ecb913e",
+        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_LOW_HP_RETREAT_DISCOUNT",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "amount": 1,
+        "threshold": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45629",
+      "name": "改造ハンマー",
+      "deckName": "改造ハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45629",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045629_T_KAIZOUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45629.json",
+        "sha256": "3a1a854cabdee3ae46de270a6835e0bdbde96daf2552a0b109d96e3fb33a66d8",
+        "htmlSha256": "3a1a854cabdee3ae46de270a6835e0bdbde96daf2552a0b109d96e3fb33a66d8",
+        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_DISCARD_SPECIAL_ENERGY",
+        "commands": [
+          "DISCARD"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45690",
+      "name": "緊急ボード",
+      "deckName": "緊急ボード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45690",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045690_T_KINKIXYUUBODO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45690.json",
+        "sha256": "7edff997e0c417081e7ff726bfe6a7e7478eb067b73e5876d05841f182a3b2bc",
+        "htmlSha256": "7edff997e0c417081e7ff726bfe6a7e7478eb067b73e5876d05841f182a3b2bc",
+        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_LOW_HP_RETREAT_DISCOUNT",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "amount": 1,
+        "threshold": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45874",
+      "name": "改造ハンマー",
+      "deckName": "改造ハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45874",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045874_T_KAIZOUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45874.json",
+        "sha256": "5b2cbaf59183da8e370c42d78c85a41458b2f246edca8ca63e963c7f7e87529d",
+        "htmlSha256": "5b2cbaf59183da8e370c42d78c85a41458b2f246edca8ca63e963c7f7e87529d",
+        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_DISCARD_SPECIAL_ENERGY",
+        "commands": [
+          "DISCARD"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46096",
+      "name": "緊急ボード",
+      "deckName": "緊急ボード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46096",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVK/046096_T_KINKIXYUUBODO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46096.json",
+        "sha256": "ddfdee75cab099be6335e1761b09d9475d3ba559b106d49126efe0da13a6d021",
+        "htmlSha256": "ddfdee75cab099be6335e1761b09d9475d3ba559b106d49126efe0da13a6d021",
+        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_LOW_HP_RETREAT_DISCOUNT",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "amount": 1,
+        "threshold": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46799",
+      "name": "改造ハンマー",
+      "deckName": "改造ハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46799",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046799_T_KAIZOUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46799.json",
+        "sha256": "389b7265e549883dca6c4eca1aa859484165ae047461174db1eb627883ad7bf3",
+        "htmlSha256": "389b7265e549883dca6c4eca1aa859484165ae047461174db1eb627883ad7bf3",
+        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_DISCARD_SPECIAL_ENERGY",
+        "commands": [
+          "DISCARD"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46814",
+      "name": "緊急ボード",
+      "deckName": "緊急ボード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46814",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046814_T_KINKIXYUUBODO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46814.json",
+        "sha256": "1ed9a514cd9898eeae02882ef2719d5224ddb90c0b790c25f6c92f5617cb0215",
+        "htmlSha256": "1ed9a514cd9898eeae02882ef2719d5224ddb90c0b790c25f6c92f5617cb0215",
+        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_LOW_HP_RETREAT_DISCOUNT",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "amount": 1,
+        "threshold": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47201",
+      "name": "緊急ボード",
+      "deckName": "緊急ボード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47201",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVN/047201_T_KINKIXYUUBODO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47201.json",
+        "sha256": "e52fe5cac2e43e85569446f48a1ffcd98f14750ce7908f4b14dd7ce22b67a609",
+        "htmlSha256": "e52fe5cac2e43e85569446f48a1ffcd98f14750ce7908f4b14dd7ce22b67a609",
+        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_LOW_HP_RETREAT_DISCOUNT",
+        "commands": [
+          "MODIFY_RETREAT_COST"
+        ],
+        "amount": 1,
+        "threshold": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "48670",
+      "name": "改造ハンマー",
+      "deckName": "改造ハンマー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48670",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048670_T_KAIZOUHANMA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48670.json",
+        "sha256": "399adbb1c2d467489959008a5d47942bee9003216d0651c5d51700ca895ff419",
+        "htmlSha256": "399adbb1c2d467489959008a5d47942bee9003216d0651c5d51700ca895ff419",
+        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_DISCARD_SPECIAL_ENERGY",
+        "commands": [
+          "DISCARD"
+        ],
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -162008,21 +162358,6 @@
       "officialCardId": "46229",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46305",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46305.json",
-        "sha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
-        "htmlSha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
-      }
     },
     {
       "officialCardId": "46309",
@@ -164220,11 +164555,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46027",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46048",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -164271,21 +164601,6 @@
     },
     {
       "officialCardId": "46169",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46170",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46178",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46181",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -164480,11 +164795,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46797",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -164525,11 +164835,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47147",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47154",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -164541,11 +164846,6 @@
     },
     {
       "officialCardId": "47157",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47158",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

@@ -37,77 +37,6 @@
       "effectSlots": 10
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_38DB958D350118B4F0A7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このワザは、後攻プレイヤーの最初の番には使えない。自分のベンチポケモンの数×30ダメージ。",
-      "printedDamage": "30×",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46027",
-        "46170",
-        "46178",
-        "46181",
-        "46797",
-        "47147",
-        "47158",
-        "48667",
-        "49346"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46027.json",
-        "data/effect-extensions/evidence/46170.json",
-        "data/effect-extensions/evidence/46178.json",
-        "data/effect-extensions/evidence/46181.json",
-        "data/effect-extensions/evidence/46797.json",
-        "data/effect-extensions/evidence/47147.json",
-        "data/effect-extensions/evidence/47158.json",
-        "data/effect-extensions/evidence/48667.json",
-        "data/effect-extensions/evidence/49346.json"
-      ],
-      "printCount": 9,
-      "effectSlots": 9
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5DE54F3272AE4BA371C5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "次の相手の番、このポケモンはたねポケモン（[無色]ポケモンをのぞく）からワザのダメージを受けない。",
-      "printedDamage": "180",
-      "energyCost": [
-        "草",
-        "水",
-        "雷"
-      ],
-      "officialCardIds": [
-        "46027",
-        "46170",
-        "46178",
-        "46181",
-        "46797",
-        "47147",
-        "47158",
-        "48667",
-        "49346"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46027.json",
-        "data/effect-extensions/evidence/46170.json",
-        "data/effect-extensions/evidence/46178.json",
-        "data/effect-extensions/evidence/46181.json",
-        "data/effect-extensions/evidence/46797.json",
-        "data/effect-extensions/evidence/47147.json",
-        "data/effect-extensions/evidence/47158.json",
-        "data/effect-extensions/evidence/48667.json",
-        "data/effect-extensions/evidence/49346.json"
-      ],
-      "printCount": 9,
-      "effectSlots": 9
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5FBB46BFE8D373543422",
       "category": "pokemon",
       "effectKind": "ability",
@@ -1001,30 +930,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_366923F0A14899F3929E",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46305",
-        "45629",
-        "45874",
-        "46799",
-        "48670"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46305.json",
-        "data/effect-extensions/evidence/45629.json",
-        "data/effect-extensions/evidence/45874.json",
-        "data/effect-extensions/evidence/46799.json",
-        "data/effect-extensions/evidence/48670.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B5B376A87B7EF763C34",
       "category": "supporter",
       "effectKind": "supporter",
@@ -1095,30 +1000,6 @@
         "data/effect-extensions/evidence/47996.json",
         "data/effect-extensions/evidence/48641.json",
         "data/effect-extensions/evidence/49228.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4356496ABA2E6DB9F611",
-      "category": "tool",
-      "effectKind": "tool",
-      "exampleOfficialText": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45210",
-        "45690",
-        "46096",
-        "46814",
-        "47201"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45210.json",
-        "data/effect-extensions/evidence/45690.json",
-        "data/effect-extensions/evidence/46096.json",
-        "data/effect-extensions/evidence/46814.json",
-        "data/effect-extensions/evidence/47201.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -22540,5 +22421,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 2234
+  "unfinishedPrints": 2224
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "65e8ffc1c04c485b12b5572a82361368fd39f83b6041fc531e7f3e0acd7e59d4",
+  "registryHash": "c03a50358e7fc73f62abe9b758400c05d99b38bac450027dab8a6b746702f53e",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -19,15 +19,15 @@
     },
     "item": {
       "prints": 299,
-      "compiled": 159,
-      "notImplemented": 140,
+      "compiled": 164,
+      "notImplemented": 135,
       "blocked": 0,
-      "executionVerifiedPrints": 35
+      "executionVerifiedPrints": 36
     },
     "tool": {
       "prints": 100,
-      "compiled": 19,
-      "notImplemented": 81,
+      "compiled": 24,
+      "notImplemented": 76,
       "blocked": 0,
       "executionVerifiedPrints": 5
     },
@@ -40,8 +40,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 1944,
-      "notImplemented": 1722,
+      "compiled": 1953,
+      "notImplemented": 1713,
       "blocked": 10,
       "executionVerifiedPrints": 532
     },
@@ -708,21 +708,6 @@
       "officialCardId": "46229",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46305",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46305.json",
-        "sha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
-        "htmlSha256": "500ff020a74b46d1eb4382fc297c539a8745f7093822f8f89125111df6af3046",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
-      }
     },
     {
       "officialCardId": "46309",
@@ -2920,11 +2905,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46027",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46048",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2971,21 +2951,6 @@
     },
     {
       "officialCardId": "46169",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46170",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46178",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46181",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3180,11 +3145,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46797",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3225,11 +3185,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47147",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47154",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3241,11 +3196,6 @@
     },
     {
       "officialCardId": "47157",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47158",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3770,21 +3720,6 @@
       }
     },
     {
-      "officialCardId": "45210",
-      "name": "緊急ボード",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45210.json",
-        "sha256": "71bef383580239e7561187b8f402db1d217de96938fbbc2ac7677c461ecb913e",
-        "htmlSha256": "71bef383580239e7561187b8f402db1d217de96938fbbc2ac7677c461ecb913e",
-        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
-      }
-    },
-    {
       "officialCardId": "45212",
       "name": "マキシマムベルト",
       "category": "tool",
@@ -4225,21 +4160,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45629",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45629.json",
-        "sha256": "3a1a854cabdee3ae46de270a6835e0bdbde96daf2552a0b109d96e3fb33a66d8",
-        "htmlSha256": "3a1a854cabdee3ae46de270a6835e0bdbde96daf2552a0b109d96e3fb33a66d8",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
-      }
-    },
-    {
       "officialCardId": "45632",
       "name": "ラブラブボール",
       "category": "item",
@@ -4442,21 +4362,6 @@
         "sha256": "40c2c7242d9ce3a90e6ec6a27dbfe2c60d532af8eaa75e5af1ed0ff5828564c4",
         "htmlSha256": "40c2c7242d9ce3a90e6ec6a27dbfe2c60d532af8eaa75e5af1ed0ff5828564c4",
         "textSha256": "f1be87f2afe48f77f66aa6c91847e75efe36c2955e3918b55c676cefc497a77e"
-      }
-    },
-    {
-      "officialCardId": "45690",
-      "name": "緊急ボード",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45690.json",
-        "sha256": "7edff997e0c417081e7ff726bfe6a7e7478eb067b73e5876d05841f182a3b2bc",
-        "htmlSha256": "7edff997e0c417081e7ff726bfe6a7e7478eb067b73e5876d05841f182a3b2bc",
-        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
       }
     },
     {
@@ -4722,21 +4627,6 @@
         "sha256": "6d8d07d9337d62eb281ead82474fed7f263b9f8bdc6679d2734296c3636eb2b1",
         "htmlSha256": "6d8d07d9337d62eb281ead82474fed7f263b9f8bdc6679d2734296c3636eb2b1",
         "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
-      "officialCardId": "45874",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45874.json",
-        "sha256": "5b2cbaf59183da8e370c42d78c85a41458b2f246edca8ca63e963c7f7e87529d",
-        "htmlSha256": "5b2cbaf59183da8e370c42d78c85a41458b2f246edca8ca63e963c7f7e87529d",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
       }
     },
     {
@@ -5362,21 +5252,6 @@
         "sha256": "e1615f28f298f0815a840271df478e57e700fbc784293b280f4edebf159dc7c5",
         "htmlSha256": "e1615f28f298f0815a840271df478e57e700fbc784293b280f4edebf159dc7c5",
         "textSha256": "13aa491f5b798c5ced13749853b4c693524236b2bbe03f05d723cec81fc84e71"
-      }
-    },
-    {
-      "officialCardId": "46096",
-      "name": "緊急ボード",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46096.json",
-        "sha256": "ddfdee75cab099be6335e1761b09d9475d3ba559b106d49126efe0da13a6d021",
-        "htmlSha256": "ddfdee75cab099be6335e1761b09d9475d3ba559b106d49126efe0da13a6d021",
-        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
       }
     },
     {
@@ -6500,21 +6375,6 @@
       }
     },
     {
-      "officialCardId": "46799",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46799.json",
-        "sha256": "389b7265e549883dca6c4eca1aa859484165ae047461174db1eb627883ad7bf3",
-        "htmlSha256": "389b7265e549883dca6c4eca1aa859484165ae047461174db1eb627883ad7bf3",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
-      }
-    },
-    {
       "officialCardId": "46801",
       "name": "ガラスのラッパ",
       "category": "item",
@@ -6602,21 +6462,6 @@
         "sha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "htmlSha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "46814",
-      "name": "緊急ボード",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46814.json",
-        "sha256": "1ed9a514cd9898eeae02882ef2719d5224ddb90c0b790c25f6c92f5617cb0215",
-        "htmlSha256": "1ed9a514cd9898eeae02882ef2719d5224ddb90c0b790c25f6c92f5617cb0215",
-        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
       }
     },
     {
@@ -13779,21 +13624,6 @@
       }
     },
     {
-      "officialCardId": "47201",
-      "name": "緊急ボード",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、にげるためのエネルギーが1個ぶん少なくなる。そのポケモンの残りHPが「30」以下なら、にげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47201.json",
-        "sha256": "e52fe5cac2e43e85569446f48a1ffcd98f14750ce7908f4b14dd7ce22b67a609",
-        "htmlSha256": "e52fe5cac2e43e85569446f48a1ffcd98f14750ce7908f4b14dd7ce22b67a609",
-        "textSha256": "74d7a898aa98a41a10ce571fb886c7e65575ad39870c050459a6f6a017d785ee"
-      }
-    },
-    {
       "officialCardId": "47202",
       "name": "マキシマムベルト",
       "category": "tool",
@@ -13967,26 +13797,6 @@
       "officialCardId": "48666",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48667",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48670",
-      "name": "改造ハンマー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48670.json",
-        "sha256": "399adbb1c2d467489959008a5d47942bee9003216d0651c5d51700ca895ff419",
-        "htmlSha256": "399adbb1c2d467489959008a5d47942bee9003216d0651c5d51700ca895ff419",
-        "textSha256": "91c4831df73f71c95bba4194c57f0e76dfcead10720d65d214d1cfacc79a21a5"
-      }
     },
     {
       "officialCardId": "48671",
@@ -14710,11 +14520,6 @@
     },
     {
       "officialCardId": "49345",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49346",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -16313,11 +16118,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1755
+        "count": 1746
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 486
+        "count": 476
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -16332,17 +16137,17 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "9b80cad368c0b50e57c0b59b3b66d4a96e0f23642db87ef6781b017afba8d579",
+    "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 109209,
+    "seq": 113865,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 236,
+      "SUCCEEDED": 237,
       "FAILED": 0,
-      "BLOCKED": 540
+      "BLOCKED": 539
     },
     "categories": {
       "pokemon": {
@@ -16362,9 +16167,9 @@
       "item": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 23,
+        "SUCCEEDED": 24,
         "FAILED": 0,
-        "BLOCKED": 10
+        "BLOCKED": 9
       },
       "stadium": {
         "PENDING": 0,
