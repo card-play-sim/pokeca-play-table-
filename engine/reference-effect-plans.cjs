@@ -194,6 +194,10 @@ function plan(entry,kind){
  // damage reduction applies after weakness/resistance, unless ignored by an attack.
  // A printed Rocket Team minimum-size condition is a continuous attack gate.
  // It must be checked when an attack is declared, not as a one-time ability.
+ // Suppress only the opposing Active Pokemon's abilities, except the named
+ // official ability itself. This is continuous and never a manual action.
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性(「あんやのはばたき」をのぞく)は、すべてなくなる。')
+  return {mechanic:'ACTIVE_OPPONENT_ABILITY_SUPPRESSION',commands:['ADD_STATE'],exceptAbilityName:'あんやのはばたき'};
  const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
  if(kind==='ABILITY'&&rocketGate)
   return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};
