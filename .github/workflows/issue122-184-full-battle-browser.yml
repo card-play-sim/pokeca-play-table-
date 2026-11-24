@@ -1,7 +1,8 @@
 name: Issue122 candidate 184 exact-print Chromium battle gate
 on:
-  push:
-    branches: [battle/issue122-next-184-candidate-20261124]
+  pull_request:
+    branches: [battle/official-shared-bulk-218-20261124]
+    types: [opened, synchronize, reopened]
     paths:
       - '.github/workflows/issue122-184-full-battle-browser.yml'
       - 'scripts/build-intake-verification-fixtures.cjs'
