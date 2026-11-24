@@ -35,6 +35,9 @@ async def select_effect_targets(page, option):
 
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
+ if os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1':
+  assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/' and release_base
+  release_base=None
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
  shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
  shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
@@ -148,7 +151,32 @@ async def main():
    elif await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
+   if m=='COIN_SEARCH_POKEMON':
+    choice=after['pendingReferenceChoice']
+    assert choice['kind']=='DECK_POKEMON_SEARCH'
+    picked=choice['options'][0]
+    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
+    await c.set_offline(True)
+    await page.reload()
+    await ready()
+    assert await snap()==after
+    await c.set_offline(False)
+    await page.locator(f'#reference-choice [data-selection-id="{picked}"]').tap()
+    await page.wait_for_function('!PokecaMobile.port.getSnapshot().pendingReferenceChoice')
+    after=await snap()
+    assert any(card['id']==picked for card in after['players'][0]['hand'])
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and picked in ev['details']['cardIds']
+               for ev in after['history'])
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in after['history'])
    events=after['history'][len(before.get('history',[])):]
+   if f.get('sharedAttackEvents') is not None:
+    assert f['sharedAttackEvents'] and all(event in events for event in f['sharedAttackEvents'])
+   if m=='ATTACK_DISABLE_SELECTED_MOVE':
+    previous=before['players'][1]['active']
+    enemy=after['players'][1]
+    target=next((card for card in [enemy['active'],*enemy['bench']] if card and card['id']==previous['id']),None)
+    if target:
+     assert target['referenceNamedAttackLock']['turn']==before['turnNumber']+1
    if kind=='attack':
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
@@ -159,9 +187,30 @@ async def main():
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
-            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS'):
+            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
+            'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_RESET_HAND':
+    own=before['players'][0]
+    assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_DISCARD_OWN_DECK_TOP':
+    own=before['players'][0]
+    discarded=[card['id'] for card in own['deck'][:f['e']['plan']['amount']]]
+    assert set(discarded)<={card['id'] for card in after['players'][0]['discard']}
+    assert any(ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck'
+               and ev['details'].get('cardIds')==discarded for ev in events)
+   if m in ('ATTACK_DISABLE_DEFENDER','ATTACK_WEAKEN_DEFENDER'):
+    previous=before['players'][1]['active']
+    opponent=after['players'][1]
+    targets=[card for card in [opponent['active'],*opponent['bench']] if card and card['id']==previous['id']]
+    if targets and m=='ATTACK_DISABLE_DEFENDER':
+     assert targets[0]['referenceCannotAttackTurn']==before['turnNumber']+1
+    elif targets:
+     assert targets[0]['referenceOutgoingDamagePenalty']=={'turn':before['turnNumber']+1,'amount':f['e']['plan']['amount']}
+    else:
+     assert previous['id'] in [card['id'] for card in opponent['discard']]
    if (trigger or f['e'])['plan']['mechanic']=='ATTACK_DISCARD_BENCH_ENERGY_BONUS':
     picked=set(option['action']['selections']['energy'])
     assert len(picked)==(trigger or f['e'])['plan']['maxDiscard']
@@ -276,7 +325,7 @@ async def main():
   # Each partition checks its own physical exact-print actions and save-resume.
   # Only partition zero runs the unchanged whole-deck AI match, which may use
   # any official print from the complete source fixture, not only this shard.
-  if shard_count>1 and shard_index!=0:
+  if os.environ.get('POKECA_BROWSER_SLOTS_ONLY')=='1' or (shard_count>1 and shard_index!=0):
    assert not errors,errors
    report={'url':page.url,'browserShard':shard_index,'totalFixtures':total_fixtures,
            'newPrints':len({f['r']['officialCardId'] for f in fixtures}),

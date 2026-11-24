@@ -62,6 +62,30 @@ for (const [id, expectedPredecessor, prizes] of [
     assert.throws(() => parse(changed), /UNSUPPORTED_POKEMON_RULE_SECTION/);
   }
 }
+// A highlighted stage-1 row can have a BREAK row plus multiple boxed
+// alternate final evolutions ABOVE it. The official arrow immediately below
+// the current stage identifies its actual predecessor; never guess by count.
+for (const [id, predecessor] of [
+  ["50096", "フォッコ"],
+  ["50399", "ヤヤコマ"],
+  ["50585", "モノズ"],
+  ["48055", "モノズ"],
+  ["45470", "ケロマツ"],
+  ["45600", "ケロマツ"],
+  ["46411", "モノズ"],
+]) {
+  const evidence=JSON.parse(fs.readFileSync("data/effect-extensions/evidence/"+id+".json"));
+  assert.equal(crypto.createHash("sha256").update(evidence.html).digest("hex"),evidence.htmlSha256);
+  const parsed=parse(evidence.html);
+  assert.equal(parsed.facts.stage,1,id+":stage");
+  assert.equal(parsed.facts.evolvesFrom,predecessor,id+":official_arrow");
+  // If the mandatory predecessor arrow is missing, reject the printing.
+  const malformed=evidence.html.replace(
+    new RegExp('(<div class="evolution ev_on">[^]*?<div class="arrow_on"><\\/div><\\/div>[^]*?<div class="evolution ev_off">[^]*?)<div class="arrow_off"><\\/div>'),
+    '$1');
+  assert.notEqual(malformed,evidence.html,id+":tamper_must_apply");
+  assert.throws(()=>parse(malformed),/UNSUPPORTED_EVOLUTION_CHAIN/,id+":fail_closed");
+}
 assert(stageTwo >= 2);
 assert(iconProofs >= 3);
 for (const id of ["45944", "46371", "47589"]) {

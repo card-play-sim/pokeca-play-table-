@@ -1,23 +1,42 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_63A37AB205739D6F:e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
   "taskFingerprint": "e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
-  "executionFingerprint": "66e729a5ead7ccb43a198de77217a8fcdb10b4d908ba19b03b382c28dc3af27d",
-  "attemptId": "09d8f649-b647-439a-978d-d9c00136126b",
-  "status": "BLOCKED",
+  "executionFingerprint": "58bd06c7ee1f44a8e06ebcc2f895370c4ef96e7468706abd34ab082955dcb4ce",
+  "attemptId": "683e3c03-2f23-4440-b524-04c72611db3c",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47334:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47375:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47397:attack:ガジェットショー:1",
@@ -66,5 +85,5 @@
       }
     ]
   },
-  "checksum": "c393882b8f085ae906563b027c72133ab6fd0184f4fa27d6b55a22d5479987c1"
+  "checksum": "80ee03f5074b9c83b30f5a0eb2b906354eff43edeb891d36573404e445a8e850"
 }

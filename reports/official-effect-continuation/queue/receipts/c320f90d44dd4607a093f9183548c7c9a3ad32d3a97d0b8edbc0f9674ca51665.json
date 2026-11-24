@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_E590F156E63F28AA:e4b84c6ec610e50813f7b46fb5bef083a2c2d22eb626cd303667017bfe6bc220",
   "taskFingerprint": "e4b84c6ec610e50813f7b46fb5bef083a2c2d22eb626cd303667017bfe6bc220",
-  "executionFingerprint": "66e729a5ead7ccb43a198de77217a8fcdb10b4d908ba19b03b382c28dc3af27d",
-  "attemptId": "62a1f2a4-0f49-4898-9737-dbf69430ccb3",
-  "status": "BLOCKED",
+  "executionFingerprint": "58bd06c7ee1f44a8e06ebcc2f895370c4ef96e7468706abd34ab082955dcb4ce",
+  "attemptId": "9940e4e5-b7fe-4fac-86a4-773e1e6be2bb",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45352:attack:サイバードライブ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "d4ee416f77ae473d6535898cf6c8c871c4c1fcc92f11c626c3410ddc6fce0421"
+  "checksum": "a3c28138a082b738982c384e00d01cfe90e3d317bbee6c5a82680fe5f1c00b51"
 }

@@ -67,7 +67,7 @@ for (const r of selected) {
       const option = W.effectOption(t, e);
       if (!(option && (option.ok ?? option.enabled))) continue;
       if (kind === "ability" && !t.trigger && option.action.type !== "use_ability") continue;
-      if (t.trigger || e.plan.mechanic === "ATTACK_DISCARD_BENCH_ENERGY_BONUS") {
+      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON"].includes(e.plan.mechanic)) {
         const verification = W.verifyCase(W.prepare(r, e, kind), e);
         if (verification.status !== "SUCCEEDED") continue;
       }
@@ -76,12 +76,19 @@ for (const r of selected) {
       const printedDamageEvents = ["VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE",
           "ACTIVE_AND_BENCH_DAMAGE", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP",
           "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
-          "PASSIVE_ROCKET_TEAM_ATTACK_GATE", "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION"].includes(e.plan.mechanic)
+          "PASSIVE_ROCKET_TEAM_ATTACK_GATE", "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+          "CONDITIONAL_ATTACK_BONUS", "SCALED_ATTACK_DAMAGE", "ANY_DAMAGE", "FIXED_COIN_HITS"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event =>
             (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
             (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))
         : undefined;
-      fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents, trigger: t.trigger });
+      const sharedAttackEvents = ["ATTACK_DISCARD_FIELD_BASIC","ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_DISCARD_DEFENDER_ENERGY",
+        "ATTACK_HEAL_OWN_TARGET","ATTACK_SPLASH_OWN_BENCH","ATTACK_DISABLE_SELECTED_MOVE","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL",
+        "ATTACK_BLIND_HAND_CHOICE","ATTACK_SPREAD_DAMAGE","PHANTOM","TRAINER_SWITCH_BOTH",
+        "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT","SUPPORTER_SEARCH_BY_STAGE"].includes(e.plan.mechanic)
+        ? p.getSnapshot().history.slice(game.history.length).filter(event=>event.type==="attack"||event.details?.command&&!event.details.reference)
+        : undefined;
+      fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents, sharedAttackEvents, trigger: t.trigger });
       patterns.set(e.plan.mechanic, (patterns.get(e.plan.mechanic) || 0) + 1);
     } catch (error) {
       if (previous) console.error(error);
