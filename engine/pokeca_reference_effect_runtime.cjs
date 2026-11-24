@@ -520,6 +520,7 @@ function abilityOrigin(a){
  if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
+ if(a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION')return {zones:['ACTIVE'],entry:false};
  if(text.startsWith('このポケモンがバトル場にいるなら'))return {zones:['ACTIVE'],entry:false};
  return {zones:['ACTIVE','BENCH'],entry:false};
 }
