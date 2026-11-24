@@ -1,30 +1,62 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_1F8DE1B87E786E81:ac0ea31e0858bde7abcb4e3c37f81d11868e115948e48a05bc21f9c6069d277c",
   "taskFingerprint": "ac0ea31e0858bde7abcb4e3c37f81d11868e115948e48a05bc21f9c6069d277c",
-  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
-  "attemptId": "6d16c250-4fbd-4a6a-9b12-9d4bbeeb6e3f",
-  "status": "BLOCKED",
+  "executionFingerprint": "e74707f5df7dee520da5cdfb8c94a887972b10236e0c784d6c7bb6702cf0d86c",
+  "attemptId": "5367596c-94b4-4b2e-b45d-ed42d63eecb2",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45598:attack:まねきよせる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45666:attack:まねきよせる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46560:attack:まねきよせる:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "ADD_TO_HAND"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "623010eb1a1a99b501c2520960c4e14bd37f535f09763e5a6e30739db0f04e4e"
+  "checksum": "ce41704e9e086b2c65c2ac285c8e5886d2d8fd10c4c068dd9022b8ed833d7f85"
 }
