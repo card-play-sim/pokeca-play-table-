@@ -85,4 +85,23 @@ assert.match(workflow,/atomic-battle-connection\.json/,
   'unfinished effects must survive as an explicit, durable work ledger');
 assert.match(workflow,/node tests\/atomic-official-to-battle\.test\.cjs/,
   'connected cards need a permanent regression gate');
+// A newly compilable old intake row without current execution receipts must
+// never block an unrelated proven print, escape the retry queue, or remove a
+// previously published compiled print.
+const {deferUnverifiedPromotions}=require('../scripts/stage-card-auto-connect.cjs');
+const sourceRows=['old-live','old-deferred','old-unsupported','new-pass','new-fail']
+  .map(officialCardId=>({officialCardId,source:{path:officialCardId+'.json'}}));
+const stagedIntake={records:sourceRows.slice()};
+const retryCheckpoint={records:[sourceRows[4]],blocked:[]};
+const deferred=deferUnverifiedPromotions(stagedIntake,retryCheckpoint,
+  new Set(['old-live','old-deferred','old-unsupported']),new Set(['old-live']),
+  ['new-pass'],[{id:'old-deferred',reason:'EXECUTION_EVIDENCE_INCOMPLETE'},
+    {id:'new-fail',reason:'ENGINE_EXECUTION_FAILED'}]);
+assert.deepEqual(deferred.map(x=>x.id),['old-deferred']);
+assert.deepEqual(stagedIntake.records.map(x=>x.officialCardId),
+  ['old-live','old-unsupported','new-pass']);
+assert.deepEqual(retryCheckpoint.records,[sourceRows[4],sourceRows[1]]);
+assert.throws(()=>deferUnverifiedPromotions({records:[sourceRows[1]]},
+  {records:[{...sourceRows[1],source:{path:'conflict'}}]},new Set(['old-deferred']),
+  new Set(),[],[{id:'old-deferred'}]),/DEFERRED_EVIDENCE_CONFLICT/);
 console.log('ATOMIC_OFFICIAL_TO_BATTLE PASS: acquisition + mechanic + physical execution one work unit; exact shared task groups; unresolved never completed');
