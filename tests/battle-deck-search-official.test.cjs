@@ -28,7 +28,24 @@ for(const [text,type] of [
 }
 assert.equal(plan(fixtures[4][0].replace("基本[炎]","基本[水]")),null);
 const compiled=JSON.parse(fs.readFileSync("data/effect-extensions/compiled.json"));
-const audit=JSON.parse(fs.readFileSync("reports/official-effect-continuation/deck-search-bulk-intake.json"));
+// Reconstruct the target list from preserved official evidence rather than a
+// transient report produced on a different branch. Full release rows still
+// undergo the real-engine worker assertions below.
+const crypto=require('node:crypto');
+const raw=JSON.parse(fs.readFileSync('data/official-effect-intake/checkpoint.json'));
+const targetPrintIds=[];
+for(const row of raw.records){
+ if(row.category!=='pokemon')continue;
+ const plans=compile({records:[row]}).records[0];
+ if(!plans.attacks.some(a=>a.plan?.batchSearch===true))continue;
+ const proof=JSON.parse(fs.readFileSync(row.source.path));
+ assert.equal(proof.url,row.officialPageUrl);
+ assert.equal(crypto.createHash('sha256').update(proof.html).digest('hex'),row.source.sha256);
+ const parsed=require('../scripts/parse-official-pokemon-energy.cjs').parse(proof.html);
+ assert.deepEqual(parsed.attacks,row.attacks);
+ targetPrintIds.push(String(row.officialCardId));
+}
+const audit={targetPrintIds:[...new Set(targetPrintIds)]};
 const verified=[],blocked=[];
 for(const r of compiled.records)for(const [index,a] of r.attacks.entries()){
  if(!a.plan?.batchSearch)continue;

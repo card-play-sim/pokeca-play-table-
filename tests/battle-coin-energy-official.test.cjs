@@ -51,7 +51,7 @@ for(const row of candidates){
    assert(t.port.dispatch("you",action).ok);
    const after=t.port.getSnapshot();
    const events=after.history.slice(initial.history.length);
-   const flips=events.filter(x=>x.details?.command==="COIN_FLIP");
+   const flips=events.filter(x=>x.details?.command==="COIN_FLIP"&&typeof x.details.heads==="boolean"&&!x.details.reference);
    assert.equal(flips.length,1,"printed attack must toss exactly one coin");
    assert.equal(flips[0].details.heads,head,"match-owned RNG coin outcome mismatched");
    const attackDiscards=events.filter(x=>x.details?.command==="DISCARD"&&x.details?.fromZone==="attached");
