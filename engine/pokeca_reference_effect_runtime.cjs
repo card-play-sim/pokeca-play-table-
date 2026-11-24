@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -34,8 +34,18 @@ function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,co
 function command(g,a,cmd,context={}){functions().Effects.apply(g,cmd,{playerId:a,sourceType:'POKEMON',actionType:'ATTACK',...context});}
 function stadium(g){return record(g.stadium)?.mainPlan?.mechanic;}
 function toolEnabled(g){return stadium(g)!=='JAMMING';}
-function abilityEnabled(g,card){
- const r=record(card);return !(stadium(g)==='WATCHTOWER'&&r?.facts.types?.includes('無色')||stadium(g)==='SUPPRESS_RULE_ABILITIES'&&r?.facts.rulePokemon);
+function abilityEnabled(g,card,ability=null){
+ const r=record(card),s=stadium(g);
+ if(s==='WATCHTOWER'&&r?.facts.types?.includes('無色')||s==='SUPPRESS_RULE_ABILITIES'&&r?.facts.rulePokemon)return false;
+ const owner=inPlay(g).find(entry=>entry.card===card);
+ if(owner?.player.active===card){
+  const adversary=opponent(g,owner.player.id).active,source=record(adversary);
+  const suppressorEnabled=source&&!(s==='WATCHTOWER'&&source.facts.types?.includes('無色')||s==='SUPPRESS_RULE_ABILITIES'&&source.facts.rulePokemon);
+  if(suppressorEnabled)for(const a of source.abilities){
+   if(a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'&&connected(a.plan)&&ability?.name!==a.plan.exceptAbilityName)return false;
+  }
+ }
+ return true;
 }
 function maxHpBonus(g,card){
  if(!toolEnabled(g))return 0;
@@ -85,11 +95,11 @@ function resetHand(g,p,n,bottomOnly=false){
  event(g,p.id,'RETURN_TO_DECK',{cardIds:cards.map(id),bottomOnly});draw(g,p,typeof n==='function'?n():n);
 }
 function wasKnockedOut(g,actor){return g.history.some(e=>e.turnNumber===g.turnNumber-1&&e.type==='knockout'&&e.details?.targetPlayerId===actor);}
-function enabledAbilities(g,card){return abilityEnabled(g,card)?record(card)?.abilities.filter(a=>connected(a.plan))||[]:[];}
+function enabledAbilities(g,card){return record(card)?.abilities.filter(a=>connected(a.plan)&&abilityEnabled(g,card,a))||[];}
 function used(p,card,a){return !!p.turnLimits?.abilityUses?.[id(card)+':'+a.effectId];}
 function mark(p,card,a){p.turnLimits||={};p.turnLimits.abilityUses||={};p.turnLimits.abilityUses[id(card)+':'+a.effectId]=true;}
 function unconnectedAutomatic(g){
- for(const {card} of inPlay(g))for(const a of record(card)?.abilities||[])if(!a.plan&&/いるかぎり|ダメージを受けたとき/.test(a.text)&&abilityEnabled(g,card))return blocked(card,a,'UNCONNECTED_AUTOMATIC_ABILITY');
+ for(const {card} of inPlay(g))for(const a of record(card)?.abilities||[])if(!a.plan&&/いるかぎり|ダメージを受けたとき/.test(a.text)&&abilityEnabled(g,card,a))return blocked(card,a,'UNCONNECTED_AUTOMATIC_ABILITY');
  return null;
 }
 function refresh(g){
@@ -357,7 +367,7 @@ function abilityCheck(g,actor,card,a,action){
  const origin=abilityOrigin(a),zone=abilityZone(p,card);
  assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
- assert(zone==='HAND'||abilityEnabled(g,card),'ABILITY_SUPPRESSED');
+ assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
@@ -1137,7 +1147,7 @@ function statuses(g){
 }
 function cardInfo(g,actor,ident){
  const p=player(g,actor),card=[...field(p),...p.hand,...p.discard].find(c=>id(c)===ident),r=record(card);if(!r)return null;
- const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?abilityOrigin(e).zones.includes(abilityZone(p,card))&&abilityEnabled(g,card):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
+ const entries=[...r.attacks.map(e=>({...e,type:'ATTACK'})),...r.abilities.map(e=>({...e,type:'ABILITY'})),...(r.category!=='pokemon'?[{name:r.name,text:r.text,plan:r.mainPlan,type:'CARD'}]:[])].map(e=>({id:e.effectId||r.officialCardId,name:e.name,type:e.type,officialText:e.text,damage:e.damage??null,cost:e.cost||[],active:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)?abilityOrigin(e).zones.includes(abilityZone(p,card))&&abilityEnabled(g,card,e):null,inactiveReasons:e.type==='ABILITY'&&passive.has(e.plan?.mechanic)&&(!field(p).includes(card)||!abilityEnabled(g,card,e))?[field(p).includes(card)?'特性無効化中':'場にいません']:[],description:e.text||'印刷されたダメージ',condition:'印刷版 '+r.officialCardId+' / '+r.set+' / '+(r.cardNumber||'番号無印字'),usage:'公式テキストと合法手判定に従う',removal:'公式テキストと期限の判定に従う',resolution:connected(e.plan)?e.plan.commands.join(' → '):'未接続・使用時に停止'}));
  for(const entry of entries.filter(e=>e.type==='ABILITY'&&e.active===false&&!e.inactiveReasons.length))entry.inactiveReasons=['ABILITY_SOURCE_ZONE:'+abilityOrigin(r.abilities.find(a=>a.effectId===entry.id)).zones.join('|')];
  for(const entry of entries.filter(e=>e.type==='ABILITY'&&e.active===null)){
   const effect=r.abilities.find(a=>a.effectId===entry.id),option=abilityActions(g,actor,card).find(o=>o.action.abilityId===entry.id);
