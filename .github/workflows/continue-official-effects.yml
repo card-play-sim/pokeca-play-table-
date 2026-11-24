@@ -3,7 +3,7 @@ on:
   # Accelerate only exact official print/effect intake; preserve all fail-closed gates.
   # Scheduled checkpoints resume missing prints without changing existing decks.
   push:
-    branches: [main]
+    branches: [main, work/issue122-next-782-replay]
     paths:
       - '.github/workflows/continue-official-effects.yml'
       - 'scripts/list-card-auto-connect-ids.cjs'
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref_name == 'work/issue122-next-782-replay' && github.sha || 'main' }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -64,9 +64,15 @@ jobs:
           # Resume the newest branch with a durable checkpoint, skipping interrupted
           # branches without one. Numeric run IDs are monotonically increasing.
           CHECKPOINT_FOUND=0
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ]; then
+            git fetch origin 3ff2e945c399545689fb3bcf5fe8fbea355c9e6a
+            python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+            CHECKPOINT_FOUND=1
+          fi
           for RUN_ID in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' |
             sed -n 's|.*refs/heads/automation/control-013-intake-\([0-9][0-9]*\)$|\1|p' |
             sort -nr); do
+            if [ "$CHECKPOINT_FOUND" -eq 1 ]; then break; fi
             CHECKPOINT_BRANCH="automation/control-013-intake-$RUN_ID"
             # A concurrent branch deletion must not abort checkpoint recovery.
             if ! git fetch origin "$CHECKPOINT_BRANCH"; then
@@ -88,19 +94,20 @@ jobs:
             fi
           fi
       - name: Discover unclassified prints using official standard search
+        if: github.ref_name != 'work/issue122-next-782-replay'
         run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
-          INTAKE_LIMIT: ${{ inputs.limit || '400' }}
+          INTAKE_LIMIT: ${{ github.ref_name == 'work/issue122-next-782-replay' && '1000' || inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
           python -m unittest discover -s tests -p test_atomic_parser_retry.py
-          node tests/bulk-basic-energy-intake.test.cjs
           # One command owns official acquisition, shared mechanic compilation, execution,
           # print-specific release, and persistent unresolved effect work units.
           node tests/atomic-official-to-battle.test.cjs
           node scripts/run-atomic-official-battle-intake.cjs
+          node tests/bulk-basic-energy-intake.test.cjs
       - name: Save checkpoint and outcomes on the automation branch for review
         if: always()
         run: |
@@ -121,6 +128,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           count=$(node -p "require('./work/card-auto-connect/candidate.json').qualified.length")
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ] && [ "$count" -lt 782 ]; then
+            echo "Preserved $count engine-qualified printings for the next batch." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           if [ "$count" -eq 0 ]; then
             echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
