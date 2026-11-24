@@ -139,7 +139,7 @@ function refresh(g){
   }
  }
 }
-function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','validationBase'])delete out[k];return out;}
+function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
 function returnStack(g,p,mon,zone){
  const stack=[reduced(mon),...(mon.evolutionCards||[]).map(reduced),...(mon.energyCards||[]),...(mon.tools||[])];
  if(p.active===mon)p.active=null;else p.bench.splice(p.bench.indexOf(mon),1);
@@ -148,7 +148,7 @@ function returnStack(g,p,mon,zone){
  if(!p.active&&!p.bench.length){g.status='finished';g.winner=opponent(g,p.id).id;}
  if(!p.active&&p.bench.length>1)g.pendingReferenceChoice={kind:'PROMOTE',playerId:p.id,options:p.bench.map(id)};
 }
-function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceBasicDamageProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;}
+function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceBasicDamageProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;delete c.referenceNoWeaknessTurn;delete c.referenceEvolutionWindow;}
 function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);assert(p.active&&index>=0,'INVALID_BENCH_CHOICE');clearActiveEffects(p.active);[p.active,p.bench[index]]=[p.bench[index],p.active];event(g,p.id,'SWITCH',{activeInstanceId:id(p.active)});}
 function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false,skipResistance=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
@@ -181,6 +181,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   const r=record(mon),types=record(source).facts.types||[];
   let weakness=r.facts.weakness,resistance=r.facts.resistance;
   if(!ignore&&types.includes('超')&&record(mon).facts.types?.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE')))weakness={types:['超'],value:'×2'};
+  if(!ignore&&mon.referenceNoWeaknessTurn===g.turnNumber)weakness=null;
   if(!skipWeakness&&weakness?.types.some(t=>types.includes(t))){assert(weakness.value==='×2','UNSUPPORTED_WEAKNESS');amount*=2;}
   if(!skipResistance&&resistance?.types.some(t=>types.includes(t))){const n=Number(resistance.value.replace('－','-'));assert(Number.isFinite(n),'UNSUPPORTED_RESISTANCE');amount=Math.max(0,amount+n);}
  }
@@ -204,6 +205,7 @@ function damage(g,actor,mon,amount,options={}){
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
  }
+ return value;
 }
 function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
 function coin(g,actor){if(g.referenceEffectPreview)return false;const n=referenceRandom(g);assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
@@ -527,6 +529,8 @@ function abilityCheck(g,actor,card,a,action){
  const origin=abilityOrigin(a),zone=abilityZone(p,card);
  assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
+ if(a.plan.origin==='evolve')assert(card.referenceEvolutionWindow===g.referenceActionSequence,'EVOLUTION_ENTRY_WINDOW_REQUIRED');
+ if(m==='MASS_EFFECT_SEQUENCE'&&a.plan.steps.every(s=>s.op==='healSelf'))assert(card.damage>0,'ABILITY_HEAL_UNAVAILABLE');
  assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
@@ -821,6 +825,28 @@ function applyPlan(g,actor,card,effect,action){
    if(ids('mode')[0]==='switch')chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
    else p.referenceExVDamageBoost={turn:g.turnNumber,amount:plan.amount};
    break;
+  case 'MASS_EFFECT_SEQUENCE':{
+   const defender=o.active,amount=action.type==='attack_turn'&&Number(effect.damage)>0?damage(g,actor,defender,Number(effect.damage)):0;
+   for(const step of plan.steps){
+    const target=step.side==='opponent'?defender:card;
+    const protectedTarget=step.side==='opponent'&&action.type==='attack_turn'&&defender.referenceProtection?.opponentTurn===g.turnNumber;
+    switch(step.op){
+     case 'draw':draw(g,p,step.amount);break;
+     case 'mill':{const side=step.side==='opponent'?o:p,discarded=side.deck.splice(0,step.amount);side.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});break;}
+     case 'healSelf':if(card.damage>0)heal(g,actor,card,step.amount);break;
+     case 'drain':if(amount>0&&card.damage>0)heal(g,actor,card,amount);break;
+     case 'status':if(!protectedTarget){target.statusCondition=step.status;event(g,actor,'STATUS_CONDITION',{status:step.status,targetInstanceId:id(target)});}break;
+     case 'retreatLock':if(!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+step.offset;break;
+     case 'attackLock':card.referenceCannotAttackTurn=g.turnNumber+step.offset;break;
+     case 'reduce':card.referenceDamageReduction={turn:g.turnNumber+1,amount:step.amount};break;
+     case 'discardAttached':discardSelectedAttachment(g,actor,p,[card],card.energyCards.map(id));break;
+     case 'itemLock':g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});break;
+     case 'noWeakness':card.referenceNoWeaknessTurn=g.turnNumber+1;break;
+     default:throw Error('UNKNOWN_SEQUENCE_STEP');
+    }
+   }
+   break;
+  }
   case 'MASS_ENERGY_ROUTE':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
@@ -1315,7 +1341,7 @@ function afterAction(g,before,actor,action){
   const c=field(player(g,actor)).find(c=>id(c)===action.cardId);if(c&&action.type==='bench_basic'){onBench(g,player(g,actor),c,true);c.entryWindow=g.referenceActionSequence;}
  }
  if(action.type==='evolve'){
-  const c=find(g,action.targetInstanceId)?.card;if(c){c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch'])delete c[k];}
+  const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
  }
  if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){

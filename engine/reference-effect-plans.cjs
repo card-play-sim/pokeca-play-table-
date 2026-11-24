@@ -293,6 +293,45 @@ function massSharedPlan(entry,kind,text){
  }
  return null;
 }
+// Compose only complete, anchored, reviewed Japanese clauses. The initial
+// damage is resolved once; the ordered instructions never infer omitted text.
+function sequencePlan(entry,kind,text){
+ const attack=kind==='ATTACK',ability=kind==='ABILITY',trainer=kind==='MAIN'&&['item','supporter'].includes(entry.category);
+ const printed=String(entry.damage??'0').normalize('NFKC');
+ if(!(attack||ability||trainer)||attack&&!/^\d+$/.test(printed))return null;
+ let body=text,origin=null,activeOnly=false;
+ if(ability){
+  const prefixes=[['自分の番に、このカードを手札から出して進化させたとき、1回使える。','evolve'],['自分の番に、このカードを手札からベンチに出したとき、1回使える。','bench'],['このポケモンがバトル場にいるなら、自分の番に1回使える。','active'],['自分の番に1回使える。','field']];
+  const found=prefixes.find(([prefix])=>body.startsWith(prefix));if(!found)return null;
+  body=body.slice(found[0].length);origin=found[1];activeOnly=origin==='active';
+ }
+ const raw=body.match(/[^。]+。/g);
+ if(!raw||raw.join('')!==body||raw.length>3)return null;
+ const steps=[];
+ for(const clause of raw){
+  let m;
+  if((m=clause.match(/^自分の山札を([1-9])枚引く。$/)))steps.push({op:'draw',amount:Number(m[1])});
+  else if((m=clause.match(/^(自分|相手)の山札を上から([1-9]\d?)枚トラッシュする。$/)))steps.push({op:'mill',side:m[1]==='自分'?'own':'opponent',amount:Number(m[2])});
+  else if((attack||ability)&&(m=clause.match(/^このポケモンのHPを「([1-9]\d{0,2})」回復する。$/)))steps.push({op:'healSelf',amount:Number(m[1])});
+  else if(attack&&clause==='相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。'&&Number(printed)>0)steps.push({op:'drain'});
+  else if(attack&&(m=clause.match(/^(このポケモン|相手のバトルポケモン)を(どく|やけど|ねむり|こんらん|マヒ)にする。$/)))steps.push({op:'status',side:m[1]==='このポケモン'?'own':'opponent',status:({'どく':'POISONED','やけど':'BURNED','ねむり':'ASLEEP','こんらん':'CONFUSED','マヒ':'PARALYZED'})[m[2]]});
+  else if(attack&&clause==='次の相手の番、このワザを受けたポケモンは、にげられない。')steps.push({op:'retreatLock',side:'opponent',offset:1});
+  else if(attack&&clause==='次の自分の番、このポケモンはにげられない。')steps.push({op:'retreatLock',side:'own',offset:2});
+  else if(attack&&clause==='次の自分の番、このポケモンはワザが使えない。')steps.push({op:'attackLock',offset:2});
+  else if(attack&&(m=clause.match(/^次の相手の番、このポケモンが受けるワザのダメージは「-([1-9]\d{0,2})」される。$/)))steps.push({op:'reduce',amount:Number(m[1])});
+  else if(attack&&clause==='このポケモンについているエネルギーを、すべてトラッシュする。')steps.push({op:'discardAttached'});
+  else if(attack&&clause==='次の相手の番、相手は手札からグッズを出して使えない。')steps.push({op:'itemLock'});
+  else if(attack&&clause==='次の相手の番、このポケモンの弱点は、すべてなくなる。')steps.push({op:'noWeakness'});
+  else return null;
+ }
+ // No combining attack-only effects with unrelated ability/Trainer semantics.
+ // A complete sequence or a distinct entry-origin/single-effect pattern only.
+ if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
+ if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op)))return null;
+ if(trainer&&steps.some(s=>!['draw','mill'].includes(s.op)))return null;
+ const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({draw:['DRAW'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
+ return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...new Set(commands)],steps,origin,activeOnly,sharedWording:true};
+}
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
@@ -555,7 +594,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic);
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
