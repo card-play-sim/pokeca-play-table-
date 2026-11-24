@@ -732,6 +732,15 @@ function attackMetric(plan,own,other){
  if(plan.metric==='opponentPrizesTaken')return 6-other.prizes;
  if(plan.metric==='opponentRetreat')return other.active.retreatCost;
  if(plan.metric==='ownDiscardEnergy')return own.discard.filter(card=>card.kind==='energy').length;
+ if(plan.metric==='opponentDiscardBasic')return other.discard.filter(basicEnergy).length;
+ if(plan.metric==='opponentDiscardItem')return other.discard.filter(c=>record(c)?.category==='item').length;
+ if(plan.metric==='opponentExVCount')return field(other).filter(c=>/ex$|V(?:MAX|STAR|-UNION)?$/.test(record(c).name)).length;
+ if(plan.metric==='ownDamagedCount')return field(own).filter(c=>c.damage>0).length;
+ if(plan.metric==='opponentAbilityCount')return field(other).filter(c=>record(c).abilities.length>0).length;
+ if(plan.metric==='ownNamedAttackCount')return field(own).filter(c=>record(c).attacks.some(a=>a.name===plan.name)).length;
+ if(plan.metric==='ownTeamNameCount')return field(own).filter(c=>record(c).name.startsWith(plan.name+'の')).length;
+ if(plan.metric==='ownDiscardTypedPokemon')return own.discard.filter(c=>c.kind==='pokemon'&&record(c).facts.types.includes(plan.type)).length;
+ if(plan.metric==='ownDiscardNamedAttack')return own.discard.filter(c=>c.kind==='pokemon'&&record(c).attacks.some(a=>a.name===plan.name)).length;
  const holders={ownEnergy:[own.active],ownTeamEnergy:field(own),opponentEnergy:[other.active],opponentTeamEnergy:field(other),bothActiveEnergy:[own.active,other.active],bothTeamEnergy:[...field(own),...field(other)]}[plan.metric];
  assert(holders,'UNKNOWN_ATTACK_DAMAGE_METRIC');
  return holders.flatMap(energyUnits).filter(unit=>!plan.type||unit.includes(plan.type)||Boolean(plan.secondType&&unit.includes(plan.secondType))).length;
