@@ -780,6 +780,21 @@ function prepare(r, e, kind) {
       opponent.prizes--;
       opponent.hand.push(opponent.prizeCards.pop());
     }
+    if(e.plan.metric==='ownDamagedCount')own.active.damage=10;
+    const discardFilters={
+      opponentDiscardBasic:c=>c.kind==='energy'&&!c.isSpecial,
+      opponentDiscardItem:c=>E.getReferenceEffectRecord(c)?.category==='item',
+      ownDiscardTypedPokemon:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.types.includes(e.plan.type),
+      ownDiscardNamedAttack:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.attacks.some(a=>a.name===e.plan.name)
+    };
+    const filter=discardFilters[e.plan.metric];
+    if(filter){
+      const side=e.plan.metric.startsWith('opponent')?opponent:own;
+      for(const zone of [side.deck,side.hand]){
+        const index=zone.findIndex(filter);
+        if(index>=0){side.discard.push(zone.splice(index,1)[0]);break;}
+      }
+    }
     if (e.plan.metric === "ownDiscardEnergy") {
       const index = own.deck.findIndex(card => card.kind === "energy");
       if (index >= 0) own.discard.push(own.deck.splice(index, 1)[0]);
@@ -1364,6 +1379,15 @@ function verifyCase(t, e) {
       bothTeamEnergy: count([attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench]),
       ownPokemon: 1 + attackingSide.bench.length,
       opponentRetreat: defendingSide.active.retreatCost,
+      opponentDiscardBasic:defendingSide.discard.filter(c=>c.kind==='energy'&&!c.isSpecial).length,
+      opponentDiscardItem:defendingSide.discard.filter(c=>E.getReferenceEffectRecord(c)?.category==='item').length,
+      opponentExVCount:[defendingSide.active,...defendingSide.bench].filter(c=>/ex$|V(?:MAX|STAR|-UNION)?$/.test(E.getReferenceEffectRecord(c).name)).length,
+      ownDamagedCount:[attackingSide.active,...attackingSide.bench].filter(c=>c.damage>0).length,
+      opponentAbilityCount:[defendingSide.active,...defendingSide.bench].filter(c=>E.getReferenceEffectRecord(c).abilities.length>0).length,
+      ownNamedAttackCount:[attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).attacks.some(a=>a.name===e.plan.name)).length,
+      ownTeamNameCount:[attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.name+'の')).length,
+      ownDiscardTypedPokemon:attackingSide.discard.filter(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).length,
+      ownDiscardNamedAttack:attackingSide.discard.filter(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).attacks.some(a=>a.name===e.plan.name)).length,
       ownDiscardEnergy: attackingSide.discard.filter(card=>card.kind==="energy").length,
       ownEnergy: count([attackingSide.active]),
       ownTeamEnergy: count([attackingSide.active,...attackingSide.bench]),
@@ -1372,6 +1396,8 @@ function verifyCase(t, e) {
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
+    if(['opponentDiscardBasic','opponentDiscardItem','opponentExVCount','ownDamagedCount','opponentAbilityCount','ownNamedAttackCount','ownTeamNameCount','ownDiscardTypedPokemon','ownDiscardNamedAttack'].includes(e.plan.metric)&&metrics[e.plan.metric]===0)
+      return {status:'BLOCKED',reason:'NO_POSITIVE_PUBLIC_COUNT_FIXTURE'};
     assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
     verifyPrintedAttack(before, after, e, Math.max(0,e.plan.base+(e.plan.subtract?-1:1)*e.plan.unit*metrics[e.plan.metric]));
     if (e.plan.subtract) {
