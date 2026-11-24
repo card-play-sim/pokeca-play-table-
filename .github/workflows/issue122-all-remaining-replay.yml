@@ -36,6 +36,7 @@ jobs:
           node tests/intake-checkpoint-recovery-contract.test.cjs
           node tests/control-014-official-parser.test.cjs
           node tests/atomic-official-to-battle.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
           node scripts/run-atomic-official-battle-intake.cjs
