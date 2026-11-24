@@ -178,6 +178,19 @@ function requirePlan(card,effect){if(!connected(effect?.plan))stop(card,effect);
 function itemLocked(g,actor){return !!g.referenceItemLock?.some(x=>x.playerId===actor&&x.turnNumber===g.turnNumber);}
 function canHealOrClearStatus(card){return card.damage>0||!!card.statusCondition;}
 function isMegaEvolutionEx(card){return card.kind==='pokemon'&&String(record(card).rulesText).includes('メガシンカexがきぜつしたとき');}
+function attackSearchCandidate(c,plan){
+ const r=record(c),typed=c.kind==='pokemon'&&r?.facts.types?.includes(plan.type);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed);
+ switch(plan.filter){
+  case 'any':return true;
+  case 'basicEnergy':return basicEnergy(c);
+  case 'typedBasicEnergy':return basicEnergy(c)&&c.energyType===plan.type;
+  case 'typedPokemon':return typed;
+  case 'typedPokemonOrBasicEnergy':return typed||basicEnergy(c)&&c.energyType===plan.type;
+  case 'typedPokemonOrStadium':return typed||r?.category==='stadium';
+  default:return r?.category===plan.filter;
+ }
+}
 function typedRecoveryCandidate(c,plan){return c.kind==='pokemon'?record(c).facts.types.includes(plan.type):basicEnergy(c)&&c.energyType===plan.type;}
 // The same scope defines the private picker and its resolution.
 const topDeckEffects={
@@ -241,12 +254,11 @@ function requests(g,actor,card,effect){
   add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),count,count);
  }
  if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'){
-  const candidates=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic);
+  const candidates=p.deck.filter(c=>attackSearchCandidate(c,effect.plan));
   deckRequest('cards',candidates,0,Math.min(effect.plan.limit,5-p.bench.length,candidates.length));
  }
  if(m==='SEARCH_REVEAL_TO_HAND_ATTACK'){
-  const filter=effect.plan.filter;
-  const candidates=p.deck.filter(c=>filter==='basicEnergy'?basicEnergy(c):record(c)?.category===filter);
+  const candidates=p.deck.filter(c=>attackSearchCandidate(c,effect.plan));
   deckRequest('cards',candidates,0,Math.min(effect.plan.limit,candidates.length));
  }
  if(m==='HUNT')deckRequest('cards',p.deck,0,2);
@@ -745,7 +757,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
-   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'));
+   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:plan.reveal!==false});
    if(m==='HUNT')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:false});
    if(m==='PHANTOM')for(const [ident,count] of Object.entries(action.selections?.allocation||{}))counters(g,actor,find(g,ident).card,count,{attack:true});
    if(m==='COIN_PROTECT'&&coin(g,actor))card.referenceProtection={opponentTurn:g.turnNumber+1};

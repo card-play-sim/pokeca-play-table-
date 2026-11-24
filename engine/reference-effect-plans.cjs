@@ -125,6 +125,28 @@ function additionalAttackPlan(entry,text){
   const metric=source.endsWith('ダメカン')?'opponentCounters':source==='自分の場のポケモン'?'ownPokemon':source.startsWith('このポケモン')?'ownEnergy':source.startsWith('相手のバトルポケモン')?'opponentEnergy':'opponentTeamEnergy';
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type,unit:Number(scaled[2]),base:scaled[3]?base:0};
  }
+ // Search uses the same physical-card picker for every exact printed filter.
+ const searchCount=text.match(/^自分の山札から(ポケモン|グッズ|サポート|基本エネルギー|エネルギー|「ポケモンのどうぐ」|スタジアム)を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const typedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const typedEnergySearch=text.match(/^自分の山札から「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const mixedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼)\]ポケモンと「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const stadiumSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンとスタジアムを合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const privateSearch=text.match(/^自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
+ const typedBench=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]タイプのたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+ const basicBench=text.match(/^自分の山札からたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+ if(/^\d+$/.test(printed)){
+  const hand=(filter,limit,extra={})=>({mechanic:'SEARCH_REVEAL_TO_HAND_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK',...(extra.reveal===false?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],filter,limit,batchSearch:true,sharedWording:true,...extra});
+  if(searchCount&&(Number.parseInt(searchCount[2],10)>2||['エネルギー','「ポケモンのどうぐ」','スタジアム'].includes(searchCount[1])))return hand({'ポケモン':'pokemon','グッズ':'item','サポート':'supporter','基本エネルギー':'basicEnergy','エネルギー':'energy','「ポケモンのどうぐ」':'tool','スタジアム':'stadium'}[searchCount[1]],Number.parseInt(searchCount[2],10));
+  if(typedSearch)return hand('typedPokemon',Number.parseInt(typedSearch[2],10),{type:typedSearch[1]});
+  if(typedEnergySearch)return hand('typedBasicEnergy',Number.parseInt(typedEnergySearch[2],10),{type:typedEnergySearch[1]});
+  if(mixedSearch&&mixedSearch[1]===mixedSearch[2])return hand('typedPokemonOrBasicEnergy',Number(mixedSearch[3]),{type:mixedSearch[1]});
+  if(stadiumSearch)return hand('typedPokemonOrStadium',Number(stadiumSearch[2]),{type:stadiumSearch[1]});
+  if(privateSearch)return hand('any',Number.parseInt(privateSearch[1],10),{reveal:false});
+  if(typedBench||basicBench&&['4枚まで','5枚まで','好きなだけ'].includes(basicBench[1])){
+   const count=typedBench?typedBench[2]:basicBench[1];
+   return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:count==='好きなだけ'?5:Number.parseInt(count,10),...(typedBench?{type:typedBench[1]}:{}),batchSearch:true,sharedWording:true};
+  }
+ }
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
  const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);

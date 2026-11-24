@@ -57,6 +57,17 @@ function port(game) {
   assert(r.ok, JSON.stringify(r));
   return p;
 }
+function batchSearchCandidate(c,plan){
+ const r=E.getReferenceEffectRecord(c),pokemon=c.kind==='pokemon',typed=pokemon&&r?.facts.types?.includes(plan.type),basic=c.kind==='energy'&&!c.isSpecial&&['草','炎','水','雷','超','闘','悪','鋼'].includes(c.energyType);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return pokemon&&r?.facts.basic&&(!plan.type||typed);
+ if(plan.filter==='any')return true;
+ if(plan.filter==='basicEnergy')return basic;
+ if(plan.filter==='typedBasicEnergy')return basic&&c.energyType===plan.type;
+ if(plan.filter==='typedPokemon')return typed;
+ if(plan.filter==='typedPokemonOrBasicEnergy')return typed||basic&&c.energyType===plan.type;
+ if(plan.filter==='typedPokemonOrStadium')return typed||r?.category==='stadium';
+ return r?.category===plan.filter;
+}
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
@@ -452,6 +463,11 @@ function prepare(r, e, kind) {
       own.active.energyCards=own.active.energyCards.filter(energy=>!energy.isSpecial);
       own.deck.push(...specials);
     }
+  }
+  if(e.plan.batchSearch){
+    const own=frame.game.players[0];
+    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&own.bench.length>=5)return {blocked:"NO_BENCH_SEARCH_SPACE"};
+    if(!own.deck.some(c=>batchSearchCandidate(c,e.plan)))return {blocked:"NO_EXACT_SEARCH_FIXTURE_RESOURCE"};
   }
   const p = port(frame.game);
   if (m === "MEOWTH_ENTRY")
@@ -1144,7 +1160,7 @@ function verifyCase(t, e) {
     assert(chosen.length > 0 && chosen.length <= Math.min(e.plan.limit, 5 - own.bench.length));
     for (const id of chosen) {
       const card = own.deck.find(card => card.id === id);
-      assert(card && E.getReferenceEffectRecord(card).facts.basic);
+      assert(card && batchSearchCandidate(card,e.plan));
       assert(after.players[0].bench.some(card => card.id === id && card.enteredTurn === before.turnNumber));
       assert(!after.players[0].deck.some(card => card.id === id));
     }
@@ -1163,17 +1179,22 @@ function verifyCase(t, e) {
     for (const id of selected) {
       const card = before.players[0].deck.find(card => card.id === id);
       assert(card);
-      if (e.plan.filter === "basicEnergy") assert(card.kind === "energy" && !card.isSpecial);
-      else assert.equal(E.getReferenceEffectRecord(card).category, e.plan.filter);
+      assert(batchSearchCandidate(card,e.plan), 'SELECTED_CARD_MUST_MATCH_PRINTED_SEARCH_FILTER');
       assert(after.players[0].hand.some(card => card.id === id));
       assert(!after.players[0].deck.some(card => card.id === id));
     }
     const steps = after.history.slice(before.history.length).map(event => event.details);
-    assert(steps.some(step => step?.command === "REVEAL" && JSON.stringify(step.cardIds) === JSON.stringify(selected)));
+    if(e.plan.reveal===false)assert(!steps.some(step=>step?.command==='REVEAL'&&step.cardIds?.some(id=>selected.includes(id))));
+    else assert(steps.some(step => step?.command === "REVEAL" && JSON.stringify(step.cardIds) === JSON.stringify(selected)));
     assert(steps.some(step => step?.command === "SHUFFLE_DECK"));
     const replay = port(before);
     assert.equal(replay.dispatch("you", {...action, selections:{cards:[selected[0], selected[0]]}}).ok, false);
     assert.deepEqual(replay.getSnapshot(), before);
+    const wrong=before.players[0].deck.find(c=>!batchSearchCandidate(c,e.plan));
+    if(wrong){
+      assert.equal(replay.dispatch("you",{...action,selections:{cards:[wrong.id]}}).ok,false);
+      assert.deepEqual(replay.getSnapshot(),before);
+    }
     assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
   }
   if (e.plan.mechanic === "DISCARD_ALL_SELF_ENERGY_ATTACK") {
