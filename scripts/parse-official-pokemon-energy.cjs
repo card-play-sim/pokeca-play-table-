@@ -38,6 +38,10 @@ function predecessor(right,stage,name){
   if(next[1]==='ev_off'&&!next[3]&&current[1]==='ev_on'&&current[4]==='on'&&label(current[2])===name&&previous[1]==='ev_off'&&previous[4]==='off')
    return label(previous[2]);
  }
+ // A three-row arrow-linked evolution chain must never fall back to the
+ // unmarked-row heuristic: a missing arrow makes the predecessor ambiguous.
+ if(stage===1&&linkedRows.length===3&&linkedRows.some(r=>r[3]||r[4]))
+  assert(false,'UNSUPPORTED_EVOLUTION_CHAIN');
  const ordinary=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));
  if(ordinary.length!==stage){
   // Some final evolutions share a display row with alternate print families
