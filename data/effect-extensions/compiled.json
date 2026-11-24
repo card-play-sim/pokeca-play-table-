@@ -36912,6 +36912,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "48330",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48330",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048330_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-48330-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-48330-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48330.json",
+        "sha256": "34a0a435f0c5d7da528a5e795b4e2ea37edbe510322011c0aea82fc75d7ba9a8",
+        "htmlSha256": "34a0a435f0c5d7da528a5e795b4e2ea37edbe510322011c0aea82fc75d7ba9a8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "49592",
       "name": "ピカチュウex",
       "deckName": "ピカチュウex",
@@ -39745,6 +39828,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47432",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47432",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047432_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-47432-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-47432-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47432.json",
+        "sha256": "5413f7248cbf641fd7daeaaf5597dcadbef0a0c0f57c7b713a342e664aaa2bab",
+        "htmlSha256": "5413f7248cbf641fd7daeaaf5597dcadbef0a0c0f57c7b713a342e664aaa2bab",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47446",
       "name": "アサナン",
       "deckName": "アサナン",
@@ -39802,6 +39968,255 @@
         "path": "data/effect-extensions/evidence/47446.json",
         "sha256": "3288149d9dd5774919eb0d5141fa268eede8bcf0813ea3c16e6470d100e95a9d",
         "htmlSha256": "3288149d9dd5774919eb0d5141fa268eede8bcf0813ea3c16e6470d100e95a9d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47518",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47518",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047518_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-47518-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-47518-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47518.json",
+        "sha256": "63fbe97af3e204b541949d17e6ede7a1cf64f8743a9ad2cc214c6f7fcbe2acb4",
+        "htmlSha256": "63fbe97af3e204b541949d17e6ede7a1cf64f8743a9ad2cc214c6f7fcbe2acb4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47529",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47529",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047529_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-47529-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-47529-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47529.json",
+        "sha256": "f47996f1cb9e48d7a912dc0d2609b31daef7bf98b80107bd38c898ddaac6d1e5",
+        "htmlSha256": "f47996f1cb9e48d7a912dc0d2609b31daef7bf98b80107bd38c898ddaac6d1e5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47534",
+      "name": "ロケット団のミュウツーex",
+      "deckName": "ロケット団のミュウツーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47534",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047534_P_ROKETTODANNOMIXYUUTSUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "イレイザーボール",
+          "cost": [
+            "超",
+            "超",
+            "無色"
+          ],
+          "damage": "160+",
+          "text": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
+          "effectId": "reference-47534-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "base": 160,
+            "maxDiscard": 2,
+            "unit": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パワーセーバー",
+          "text": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-47534-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ROCKET_TEAM_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "required": 4
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47534.json",
+        "sha256": "3080e71d341ecf26d5f0de1dd75d95075ffdccf21fb2ace2c2b21dce0815e071",
+        "htmlSha256": "3080e71d341ecf26d5f0de1dd75d95075ffdccf21fb2ace2c2b21dce0815e071",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -126843,11 +127258,6 @@
       }
     },
     {
-      "officialCardId": "48330",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48481",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -127873,11 +128283,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47432",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47448",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -127888,27 +128293,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47518",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47519",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47528",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47529",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47534",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

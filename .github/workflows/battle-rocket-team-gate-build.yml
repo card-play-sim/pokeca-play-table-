@@ -1,0 +1,50 @@
+name: Rebuild official Rocket Team attack gate
+on:
+  push:
+    branches: [feat/battle-rocket-team-gate-20261124]
+    paths:
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'tests/battle-rocket-team-gate.test.cjs'
+      - 'tests/battle-rocket-team-exact-print.test.cjs'
+      - '.github/workflows/battle-rocket-team-gate-build.yml'
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/battle-rocket-team-gate-20261124
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify attack gate against battle state
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node tests/battle-passive-firstturn-shared.test.cjs
+          node tests/battle-rocket-team-gate.test.cjs
+      - name: Recompile all saved official source and publish synchronized release files
+        run: |
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node tests/battle-rocket-team-gate.test.cjs
+          node tests/battle-rocket-team-exact-print.test.cjs
+          node tests/reference-runtime-source-parity.test.cjs
+      - name: Save compiled exact-print and runtime artifacts to branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: integrate Rocket Team attack gate into official print release'
+            git push origin HEAD:feat/battle-rocket-team-gate-20261124
+          fi

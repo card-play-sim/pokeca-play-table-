@@ -78,6 +78,11 @@ function plan(entry,kind){
  const generic=text.normalize('NFKC');
  // Exact printed abilities are continuous (not manually activated) and their
  // damage reduction applies after weakness/resistance, unless ignored by an attack.
+ // A printed Rocket Team minimum-size condition is a continuous attack gate.
+ // It must be checked when an attack is declared, not as a one-time ability.
+ const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
+ if(kind==='ABILITY'&&rocketGate)
+  return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};
  const incomingReduction=generic.match(/^このポケモンが受けるワザのダメージは「-([1-9][0-9]{0,2})」される。$/);
  if(kind==='ABILITY'&&incomingReduction)
   return {mechanic:'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],amount:Number(incomingReduction[1])};
@@ -93,6 +98,13 @@ function plan(entry,kind){
  // Match complete, verified attack text. Printed damage and counter/damage units are separate.
  const printedAmount=/^\d+$/.test(String(entry.damage||'0'));
 
+ // Optional physical-energy discard from any of your Benched Pokemon must
+ // select the actual attached cards, not a count or a card-name shortcut.
+ const benchEnergyBonus=generic.match(/^のぞむなら、自分のベンチポケモンについているエネルギーを([1-5])枚までトラッシュし、その枚数×([1-9][0-9]{0,2})ダメージ追加。$/);
+ const attackDamage=String(entry.damage||'').normalize('NFKC');
+ if(kind==='ATTACK'&&benchEnergyBonus&&/^([1-9][0-9]{0,2})\+$/.test(attackDamage))
+  return {mechanic:'ATTACK_DISCARD_BENCH_ENERGY_BONUS',commands:['DISCARD','DAMAGE'],
+   base:Number.parseInt(attackDamage,10),maxDiscard:Number(benchEnergyBonus[1]),unit:Number(benchEnergyBonus[2])};
  // Lock ONLY the explicitly named attack on the next own turn.
  // This differs from NO_NEXT_ATTACK, which disables all attacks.
  const namedLock=text.normalize('NFKC').match(/^次の自分の番、このポケモンは「([^」]+)」が使えない。$/);
