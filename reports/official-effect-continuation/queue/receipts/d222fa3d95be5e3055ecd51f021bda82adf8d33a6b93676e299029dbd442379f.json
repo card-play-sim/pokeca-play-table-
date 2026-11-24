@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_85212BD591F10983:f9a422c5f327486e60627b10f137e1ce33e06fb16c78f5d73357ad60001e7a39",
   "taskFingerprint": "f9a422c5f327486e60627b10f137e1ce33e06fb16c78f5d73357ad60001e7a39",
-  "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
-  "attemptId": "0c409d19-1e79-4eb9-b6bf-1de80d95eef7",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "c5542a0f-f669-4d2a-aac0-9bb4cb7ddfaf",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47307:attack:おにハンマー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "7a1ed00537b83d1a39f8440fdc90f681ec2f002bfdc150f5e0728905b839a9d5"
+  "checksum": "4c44f6d7f9dfc38928a7594ef2fac76f88c75695792f102225bb7db70ca30f7c"
 }

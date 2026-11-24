@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_6F2DEB8499ACC129:87c517ffdd0b322f0bc56a2bf5911e94e7af4fc90c6ef72b4a17420428a41927",
   "taskFingerprint": "87c517ffdd0b322f0bc56a2bf5911e94e7af4fc90c6ef72b4a17420428a41927",
-  "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
-  "attemptId": "75df067c-409e-4d2c-a957-5b188a101200",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "4611ab47-2dab-4525-8aad-c91292fbc967",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -112,8 +112,19 @@
       },
       {
         "slot": "47328:attack:バブルドレイン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "HEAL_SELF_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45575:attack:マジカルリーフ:1",
@@ -149,5 +160,5 @@
       }
     ]
   },
-  "checksum": "fd10723040dba73577a45308b930dd4a4ed9a8c4ba0ef7be680a19150576b2ab"
+  "checksum": "6c9e8980274782ecfb947d72d21ee6843cfcbc49846b0d6aa2e8620cfc384912"
 }

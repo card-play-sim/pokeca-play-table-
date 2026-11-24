@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_989D440E7A17BB63:878a23289b14870cea5f7f2bce98da75d8f93d3da92e60ca11fcb1755c221d3f",
   "taskFingerprint": "878a23289b14870cea5f7f2bce98da75d8f93d3da92e60ca11fcb1755c221d3f",
-  "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
-  "attemptId": "87057e1a-e661-497e-95e8-00a19577ebf8",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "e0a83779-8015-4e4f-a0d1-048e4c67a16c",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -55,8 +55,20 @@
       },
       {
         "slot": "46212:attack:げんわくダンス:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONFUSION",
+        "commands": [
+          "DAMAGE",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46277:attack:チャームボイス:0",
@@ -162,5 +174,5 @@
       }
     ]
   },
-  "checksum": "298921faff8eeab6d12180645271bf61c994f8771f288c93ba01aa8ed1dea400"
+  "checksum": "8973ce614747aa02537a9e8ed559a53d14e4c85542e274f85aea5bb896d487dc"
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "c03a50358e7fc73f62abe9b758400c05d99b38bac450027dab8a6b746702f53e",
+  "registryHash": "7c39275f0138e9e88aae81d9721e72c6808fade522c69bc2d582185307dc1700",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -19,8 +19,8 @@
     },
     "item": {
       "prints": 299,
-      "compiled": 164,
-      "notImplemented": 135,
+      "compiled": 174,
+      "notImplemented": 125,
       "blocked": 0,
       "executionVerifiedPrints": 36
     },
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 1953,
-      "notImplemented": 1713,
+      "compiled": 1963,
+      "notImplemented": 1703,
       "blocked": 10,
-      "executionVerifiedPrints": 532
+      "executionVerifiedPrints": 553
     },
     "energy": {
       "prints": 681,
@@ -2560,21 +2560,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49717",
-      "name": "パワープロテイン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49717.json",
-        "sha256": "4df059f85a962b3c6f2eb764d4ea8c1966b593cb759a19eebdea835b2e9c7506",
-        "htmlSha256": "4df059f85a962b3c6f2eb764d4ea8c1966b593cb759a19eebdea835b2e9c7506",
-        "textSha256": "555f43e4e25b0831043be05344f120ba7d9816fd387950cf649ffa41a8561e4a"
-      }
-    },
-    {
       "officialCardId": "50556",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3285,11 +3270,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47605",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47649",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3405,22 +3385,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47988",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47992",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47994",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47996",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5370,21 +5340,6 @@
       }
     },
     {
-      "officialCardId": "46195",
-      "name": "テラスタルオーブ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46195.json",
-        "sha256": "dc481ab658c3f82bdd0a426e402e6cd0d42d21ed046a38498072693772beaa43",
-        "htmlSha256": "dc481ab658c3f82bdd0a426e402e6cd0d42d21ed046a38498072693772beaa43",
-        "textSha256": "b6c00efd6aadfd45c49ff1dfa87b7072b1897e17160642da07b8ff79ac57aea8"
-      }
-    },
-    {
       "officialCardId": "46197",
       "name": "パーフェクトミキサー",
       "category": "item",
@@ -5408,21 +5363,6 @@
       "officialCardId": "46210",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46217",
-      "name": "テラスタルオーブ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46217.json",
-        "sha256": "ae32f705772f67de680d92518f6e8293a2c0ad80d4e6b57477b4306053c784ad",
-        "htmlSha256": "ae32f705772f67de680d92518f6e8293a2c0ad80d4e6b57477b4306053c784ad",
-        "textSha256": "b6c00efd6aadfd45c49ff1dfa87b7072b1897e17160642da07b8ff79ac57aea8"
-      }
     },
     {
       "officialCardId": "46220",
@@ -6402,21 +6342,6 @@
         "sha256": "673d9cea7567cbd0cb996c61e820ea794e8288911367c43b198ad9a366aa282d",
         "htmlSha256": "673d9cea7567cbd0cb996c61e820ea794e8288911367c43b198ad9a366aa282d",
         "textSha256": "aa67b5c83f6205239da5788d5d04e41aada8f933951176e9c3caccdac3c17763"
-      }
-    },
-    {
-      "officialCardId": "46806",
-      "name": "テラスタルオーブ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46806.json",
-        "sha256": "dac3bfa19650e53be16b63bb1e56ff69b90b0a8bee806376e2c18bf0fe8ae067",
-        "htmlSha256": "dac3bfa19650e53be16b63bb1e56ff69b90b0a8bee806376e2c18bf0fe8ae067",
-        "textSha256": "b6c00efd6aadfd45c49ff1dfa87b7072b1897e17160642da07b8ff79ac57aea8"
       }
     },
     {
@@ -10454,21 +10379,6 @@
       }
     },
     {
-      "officialCardId": "47791",
-      "name": "パワープロテイン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47791.json",
-        "sha256": "5f1bea5e626df14e32da2e34b206e7cb7dcfa0982a2696c2e6435fb192f5dc1e",
-        "htmlSha256": "5f1bea5e626df14e32da2e34b206e7cb7dcfa0982a2696c2e6435fb192f5dc1e",
-        "textSha256": "555f43e4e25b0831043be05344f120ba7d9816fd387950cf649ffa41a8561e4a"
-      }
-    },
-    {
       "officialCardId": "47792",
       "name": "ファイトゴング",
       "category": "item",
@@ -11284,21 +11194,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48438",
-      "name": "パワープロテイン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48438.json",
-        "sha256": "9d8bbdf487c2d45adac306dabb2bf59f0dbbdf51e9bc686f16b0b5703b7926ff",
-        "htmlSha256": "9d8bbdf487c2d45adac306dabb2bf59f0dbbdf51e9bc686f16b0b5703b7926ff",
-        "textSha256": "555f43e4e25b0831043be05344f120ba7d9816fd387950cf649ffa41a8561e4a"
-      }
-    },
-    {
       "officialCardId": "48439",
       "name": "ファイトゴング",
       "category": "item",
@@ -11804,11 +11699,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48641",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48642",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -11881,21 +11771,6 @@
         "sha256": "d375ac5515ef3ef4168a6d92f8d022e993afdc10911e80b1e760c571f350cf4b",
         "htmlSha256": "d375ac5515ef3ef4168a6d92f8d022e993afdc10911e80b1e760c571f350cf4b",
         "textSha256": "d42e17276c59bbc0a1dfa2605e6e74f7ac0d3d8747ca394477767433962d2c92"
-      }
-    },
-    {
-      "officialCardId": "48676",
-      "name": "パワープロテイン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48676.json",
-        "sha256": "843683bc168af16e66782c18cf2b66cfabeeaa59eb7a00581079414094d011f1",
-        "htmlSha256": "843683bc168af16e66782c18cf2b66cfabeeaa59eb7a00581079414094d011f1",
-        "textSha256": "555f43e4e25b0831043be05344f120ba7d9816fd387950cf649ffa41a8561e4a"
       }
     },
     {
@@ -12574,11 +12449,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49228",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49231",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12701,21 +12571,6 @@
         "sha256": "5d177d01cba33fc555c5a271763dc740835226d0515719a3a4ab0d614f528648",
         "htmlSha256": "5d177d01cba33fc555c5a271763dc740835226d0515719a3a4ab0d614f528648",
         "textSha256": "8f745e50b37aaaa1cd54e35a8fee471e9557489509e2ee2cbecd2fc4f8ba39e3"
-      }
-    },
-    {
-      "officialCardId": "49368",
-      "name": "パワープロテイン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49368.json",
-        "sha256": "da521fefbeb2e05e185d27532f7135494912109efb1130504334f742d21bdaa9",
-        "htmlSha256": "da521fefbeb2e05e185d27532f7135494912109efb1130504334f742d21bdaa9",
-        "textSha256": "555f43e4e25b0831043be05344f120ba7d9816fd387950cf649ffa41a8561e4a"
       }
     },
     {
@@ -13594,21 +13449,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47190",
-      "name": "テラスタルオーブ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47190.json",
-        "sha256": "89440c963c7efe1ea30113488b18a2d342c318d66751d4f0cafa6f050e06cccf",
-        "htmlSha256": "89440c963c7efe1ea30113488b18a2d342c318d66751d4f0cafa6f050e06cccf",
-        "textSha256": "b6c00efd6aadfd45c49ff1dfa87b7072b1897e17160642da07b8ff79ac57aea8"
-      }
-    },
-    {
       "officialCardId": "47199",
       "name": "カウンターゲイン",
       "category": "tool",
@@ -13811,21 +13651,6 @@
         "sha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
         "htmlSha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
         "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
-    },
-    {
-      "officialCardId": "48674",
-      "name": "テラスタルオーブ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48674.json",
-        "sha256": "2440db7bfe2d69f20ebc1b2577d43878dbf4d017f6118ec51bf46d4f42eed17b",
-        "htmlSha256": "2440db7bfe2d69f20ebc1b2577d43878dbf4d017f6118ec51bf46d4f42eed17b",
-        "textSha256": "b6c00efd6aadfd45c49ff1dfa87b7072b1897e17160642da07b8ff79ac57aea8"
       }
     },
     {
@@ -15489,11 +15314,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48648",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48738",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -15949,11 +15769,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49992",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49995",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -15979,22 +15794,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50006",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50010",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50829",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50839",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -16118,11 +15918,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1746
+        "count": 1736
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 476
+        "count": 466
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -16137,25 +15937,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
+    "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 113865,
+    "seq": 118521,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 237,
+      "SUCCEEDED": 260,
       "FAILED": 0,
-      "BLOCKED": 539
+      "BLOCKED": 516
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 178,
+        "SUCCEEDED": 201,
         "FAILED": 0,
-        "BLOCKED": 493
+        "BLOCKED": 470
       },
       "supporter": {
         "PENDING": 0,

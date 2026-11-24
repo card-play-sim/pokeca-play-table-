@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_CA38D96C1F3A8B07:dbf0a26ca566ed4fdfbf8607d6436843c8f9d4d52feab9d8d8563a3c7fa288b9",
   "taskFingerprint": "dbf0a26ca566ed4fdfbf8607d6436843c8f9d4d52feab9d8d8563a3c7fa288b9",
-  "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
-  "attemptId": "0974bb65-5042-4b78-9baf-908bdbd133a6",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "7977e86a-e956-47fb-bd16-0cf713194223",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45768:attack:メタルコーティング:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ACCELERATE_BASIC_ENERGY",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "9ba0fb0cec3b0599b28bb2f5a633eb9a2339cb9ca64146be220432186af99572"
+  "checksum": "a54217513e103482fbcb88435a2956a67fd78138ddb544de70f708f112b3b719"
 }

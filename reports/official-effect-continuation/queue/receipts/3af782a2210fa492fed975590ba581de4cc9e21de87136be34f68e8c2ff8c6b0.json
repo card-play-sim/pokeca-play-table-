@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_304C6D13E53B2176:2b51c67e5a8e6fdc01cae4e083bb8d8aa9940ee76fa4d6dd36217c694fc147df",
   "taskFingerprint": "2b51c67e5a8e6fdc01cae4e083bb8d8aa9940ee76fa4d6dd36217c694fc147df",
-  "executionFingerprint": "6ece1373cbe8125cdf4d602d06a8b91670bf41d62b512ff27b3e24ded7c719f6",
-  "attemptId": "b06d6a69-a010-4c78-8b4e-33da7b409f3f",
-  "status": "BLOCKED",
+  "executionFingerprint": "c0281ad65ce8efb02f2d33b4ccff3aec68fe745893c383f26586ae3be5e0742a",
+  "attemptId": "6202646b-5502-4994-b51c-3551919cd321",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50786:attack:ひのこ:0",
@@ -62,8 +61,20 @@
       },
       {
         "slot": "50666:attack:サイコドライブ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45246:attack:ストロングボルト:1",
@@ -118,8 +129,20 @@
       },
       {
         "slot": "46187:attack:ひばな:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46360:attack:かえんほうしゃ:1",
@@ -157,10 +180,22 @@
       },
       {
         "slot": "47572:attack:ディザスターボルト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "74d0a302b34eed43152ca8c1072a6c004ba5beb99692560b60df11c8cfa4fd8c"
+  "checksum": "8a3d63dd05b0da776f1529c6f3292765d0edbfd5960bb698e55ab059d9832b85"
 }
