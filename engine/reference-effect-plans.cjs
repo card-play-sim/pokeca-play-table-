@@ -127,6 +127,11 @@ function additionalAttackPlan(entry,text){
  }
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
+ // The printed attack is unusable until its Pokemon actually leaves the Active Spot.
+ // This is not the ordinary next-turn attack lock and must survive turn changes.
+ const untilSwitch=text.match(/^このワザを使ったなら、このポケモンは、バトル場をはなれるまで「([^「」]{1,40})」が使えない。$/);
+ if(untilSwitch&&base>0&&untilSwitch[1]===String(entry.name).normalize('NFKC'))
+  return {mechanic:'ATTACK_LOCK_UNTIL_SWITCH',commands:['DAMAGE','ADD_STATE'],attackName:untilSwitch[1]};
  const hiddenDiscard=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、トラッシュする。$/);
  const hiddenReturn=text.match(/^相手の手札からオモテを見ないで([1-9]\d?)枚選び、そのカードのオモテを見て、相手の山札にもどして切る。$/);
  if(hiddenDiscard||hiddenReturn)
