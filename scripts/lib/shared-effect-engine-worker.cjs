@@ -169,6 +169,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,plan.holderType,0)&&(!plan.team||r.name.startsWith(plan.team+'の')),'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
+ if(m==='MASS_BOARD_BONUS'){
+  if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains')reserve(r=>mon(r,null,0)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name)),'bench');
+  if(plan.predicate==='opponentType'||plan.predicate==='opponentResistance'||plan.predicate==='opponentTera'){
+   const matches=r=>plan.predicate==='opponentType'?r.facts.types.includes(plan.type):plan.predicate==='opponentResistance'?!!r.facts.resistance?.types.includes(plan.type):r.facts.teraBenchProtection===true;
+   reserve(r=>mon(r,null,0)&&matches(r),'active',1);
+   reserve(r=>mon(r,null,0)&&!matches(r),'bench',1);
+  }
+  if(plan.predicate==='ownStadium'||plan.predicate==='stadiumContains')reserve(r=>r.category==='stadium'&&(plan.predicate==='ownStadium'||r.name.includes(plan.name)),'deck');
+ }
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
  if(m==='TRAINER_SEARCH_TERA')reserve(r=>r.category==='pokemon'&&r.facts.teraBenchProtection,'deck');
@@ -569,6 +578,26 @@ function prepare(r, e, kind) {
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
     if(!targets.length)return {blocked:'NO_MASS_HEAL_FIXTURE'};
     for(const mon of targets)mon.damage=Math.min(mon.hp-10,Math.max(10,e.plan.amount+10));
+  }
+  if(m==='MASS_BOARD_BONUS'){
+    const g=frame.game,[own,other]=g.players,plan=e.plan;
+    // Only the special-energy predicate keeps a real attached special energy.
+    for(const card of [...own.active.energyCards])if(card.isSpecial&&plan.predicate!=='ownSpecialEnergy'){
+      own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);own.deck.push(card);
+    }
+    if(plan.predicate==='ownSpecialEnergy'&&!own.active.energyCards.some(c=>c.isSpecial))return {blocked:'NO_SPECIAL_ENERGY_PREDICATE_FIXTURE'};
+    if(plan.predicate==='ownHandEmpty')own.deck.push(...own.hand.splice(0));
+    if(plan.predicate==='ownDeckAtMost')own.discard.push(...own.deck.splice(plan.threshold));
+    if(plan.predicate==='ownPrizesExact'||plan.predicate==='opponentPrizesExact'){
+      const side=plan.predicate==='ownPrizesExact'?own:other;
+      while(side.prizes>plan.threshold){side.prizes--;side.hand.push(side.prizeCards.pop());}
+    }
+    if(plan.predicate==='allDamagedBench')for(const mon of own.bench)mon.damage=Math.min(10,mon.hp-10);
+    if(plan.predicate==='ownStadium'||plan.predicate==='stadiumContains'){
+      const i=own.deck.findIndex(c=>c.kind==='stadium'&&(plan.predicate==='ownStadium'||E.getReferenceEffectRecord(c).name.includes(plan.name)));
+      if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
+      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+    }
   }
   if(m==='MASS_CONTEXT_BONUS'){
     const own=frame.game.players[0],other=frame.game.players[1],plan=e.plan;
@@ -1112,6 +1141,61 @@ function verifyCase(t, e) {
     const ids=plan.target==='all'?[other.active,...other.bench].map(c=>c.id):action.selections.target;
     assert(ids.length>0);
     assert(ids.every(id=>effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===id&&ev.counterCount===plan.amount)));
+  }
+  if(e.plan.mechanic==='MASS_BOARD_BONUS'){
+    const plan=e.plan,action=t.action||o.action;
+    const rec=c=>E.getReferenceEffectRecord(c);
+    const matches=c=>plan.predicate==='opponentType'?rec(c).facts.types.includes(plan.type):plan.predicate==='opponentResistance'?!!rec(c).facts.resistance?.types.includes(plan.type):rec(c).facts.teraBenchProtection===true;
+    const nameMatches=c=>plan.predicate==='ownBenchNamed'?rec(c).name===plan.name:rec(c).name.includes(plan.name);
+    const positive=g=>{
+      const [own,other]=g.players;
+      switch(plan.predicate){
+        case 'ownHandEmpty':return own.hand.length===0;
+        case 'ownDeckAtMost':return own.deck.length<=plan.threshold;
+        case 'ownPrizesExact':return own.prizes===plan.threshold;
+        case 'opponentPrizesExact':return other.prizes===plan.threshold;
+        case 'allDamagedBench':return own.bench.length>0&&own.bench.every(c=>c.damage>0);
+        case 'ownBenchNamed':case 'ownBenchContains':return own.bench.some(nameMatches);
+        case 'ownStadium':return !!g.stadium&&g.stadiumOwner===own.id;
+        case 'stadiumContains':return !!g.stadium&&rec(g.stadium).name.includes(plan.name);
+        case 'opponentType':case 'opponentResistance':case 'opponentTera':return matches(other.active);
+        case 'ownSpecialEnergy':return own.active.energyCards.some(c=>c.isSpecial);
+        default:throw Error('MISSING_BOARD_PREDICATE_PROOF');
+      }
+    };
+    if(!positive(before))return {status:'BLOCKED',reason:'NO_POSITIVE_BOARD_PREDICATE_FIXTURE'};
+    const start=JSON.parse(JSON.stringify(before)),[own,other]=start.players;
+    switch(plan.predicate){
+      case 'ownHandEmpty':own.hand.push(own.deck.shift());break;
+      case 'ownDeckAtMost':while(own.deck.length<=plan.threshold&&own.discard.length)own.deck.push(own.discard.pop());break;
+      case 'ownPrizesExact':case 'opponentPrizesExact':{
+        const side=plan.predicate==='ownPrizesExact'?own:other;
+        if(side.prizes>1){side.prizes--;side.hand.push(side.prizeCards.pop());}
+        else if(side.hand.length){side.prizes++;side.prizeCards.push(side.hand.pop());}
+        break;
+      }
+      case 'allDamagedBench':own.bench[0].damage=0;break;
+      case 'ownBenchNamed':case 'ownBenchContains':{
+        for(let i=own.bench.length-1;i>=0;i--)if(nameMatches(own.bench[i])){
+          const c=own.bench.splice(i,1)[0];own.deck.push(...c.energyCards,...c.tools,c);c.energyCards=[];c.energies=[];c.tools=[];c.damage=0;
+        }break;
+      }
+      case 'ownStadium':case 'stadiumContains':own.deck.push(start.stadium);start.stadium=null;start.stadiumOwner=null;break;
+      case 'opponentType':case 'opponentResistance':case 'opponentTera':{
+        const i=other.bench.findIndex(c=>!matches(c));if(i<0)return {status:'BLOCKED',reason:'NO_NEGATIVE_DEFENDER_FIXTURE'};
+        [other.active,other.bench[i]]=[other.bench[i],other.active];break;
+      }
+      case 'ownSpecialEnergy':for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}break;
+    }
+    if(positive(start))return {status:'BLOCKED',reason:'NO_NEGATIVE_BOARD_PREDICATE_FIXTURE'};
+    assert.deepEqual(S.identities(before),S.identities(start));
+    const replay=port(start);
+    if(!replay.dispatch('you',action).ok)return {status:'BLOCKED',reason:'NEGATIVE_PREDICATE_ATTACK_UNPAYABLE'};
+    // Special energy with damage penalty or a stadium modifier must not be
+    // declared qualified by a simplified damage formula.
+    if(plan.predicate==='ownSpecialEnergy'&&before.players[0].active.energyCards.some(c=>c.isSpecial&&rec(c)?.mainPlan?.damagePenalty))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_PENALTY_PROOF_REQUIRED'};
+    verifyPrintedAttack(before,after,e,plan.base+plan.bonus);
+    verifyPrintedAttack(start,replay.getSnapshot(),e,plan.base);
   }
   if(e.plan.mechanic==='MASS_CONTEXT_BONUS'){
     const plan=e.plan,own=before.players[0],other=before.players[1];
