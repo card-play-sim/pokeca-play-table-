@@ -14,7 +14,10 @@ for(const [text,zone,type,limit,target,holderType] of [
  assert.equal(plan(text+"このポケモンをどくにする。"),null);
  assert.equal(plan(text,"30+"),null);
 }
-for(const text of ["自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。","自分の山札から基本エネルギーを1枚選び、このポケモンにつける。"])assert.equal(plan(text),null);
+const multiText="自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。";
+assert.deepEqual(plan(multiText),{mechanic:"MASS_ENERGY_ROUTE",commands:["SEARCH_DECK","ATTACH_ENERGY","SHUFFLE_DECK"],zone:"deck",type:null,limit:3,target:"own",holderType:null,team:null,multi:true,heal:null,activeOnly:false,repeated:false,sharedWording:true});
+assert.equal(plan(multiText+"このポケモンをどくにする。"),null);
+assert.equal(plan("自分の山札から基本エネルギーを1枚選び、このポケモンにつける。"),null);
 const compiled=JSON.parse(fs.readFileSync("data/effect-extensions/compiled.json"));
 // Reconstruct the target list from preserved official evidence rather than a
 // transient report produced on a different branch. Full release rows still

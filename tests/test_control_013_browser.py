@@ -372,6 +372,32 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='MASS_ENERGY_ROUTE':
+    plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
+    assert picked
+    for i,ident in enumerate(picked):
+     assert any(c['id']==ident and c['kind']=='energy' and not c.get('isSpecial') for c in before['players'][0][plan['zone']])
+     target=before['players'][0]['active']['id'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
+     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
+     assert ident in {c['id'] for c in mon['energyCards']}
+    assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+   if m=='MASS_ZONE_TRANSFER':
+    plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
+    assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
+    assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
+    assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
+   if m=='MASS_HEAL_OWN':
+    plan=f['e']['plan'];chosen=option['action'].get('selections',{}).get('cards',[])
+    old=[before['players'][0]['active'],*before['players'][0]['bench']]
+    new={c['id']:c for c in [after['players'][0]['active'],*after['players'][0]['bench']]}
+    assert any(c['damage']>new[c['id']]['damage'] for c in old if c['id'] in new and (not chosen or c['id'] in chosen))
+   if m=='MASS_PLACE_COUNTERS':
+    plan=f['e']['plan']
+    ids=[c['id'] for c in [before['players'][1]['active'],*before['players'][1]['bench']]] if plan['target']=='all' else option['action']['selections']['target']
+    assert all(any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==ident and ev['details'].get('counterCount')==plan['amount'] for ev in events) for ident in ids)
+   if m=='MASS_PRIZE_DRAW':
+    plan=f['e']['plan'];n=min(len(before['players'][0]['deck']),plan['amount']+(plan['extra'] if before['players'][1]['prizes']<=plan['threshold'] else 0))
+    assert {c['id'] for c in before['players'][0]['deck'][:n]}<={c['id'] for c in after['players'][0]['hand']}
    if m=='ABILITY_SWITCH_OWN':
     assert after['players'][0]['active']['id']==option['action']['selections']['ownBench'][0]
     assert before['players'][0]['active']['id'] in {card['id'] for card in after['players'][0]['bench']}

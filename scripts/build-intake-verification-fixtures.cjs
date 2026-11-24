@@ -67,7 +67,7 @@ for (const r of selected) {
       const option = W.effectOption(t, e);
       if (!(option && (option.ok ?? option.enabled))) continue;
       if (kind === "ability" && !t.trigger && option.action.type !== "use_ability") continue;
-      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON","TRAINER_TOP_TYPED_SEARCH","TRAINER_TOP_POKEMON_TRAINER","ATTACK_DISCARD_TOOL_BEFORE_DAMAGE","ATTACK_BASIC_DAMAGE_PROTECTION","TRAINER_DISCARD_SPECIAL_ENERGY","TOOL_LOW_HP_RETREAT_DISCOUNT","ABILITY_SWITCH_OWN","ABILITY_SEARCH_TYPED_EVOLUTION","TRAINER_SEARCH_TERA","TRAINER_TYPED_DAMAGE_BOOST"].includes(e.plan.mechanic)) {
+      if (t.trigger || ["ATTACK_DISCARD_BENCH_ENERGY_BONUS", "COIN_SEARCH_POKEMON","TRAINER_TOP_TYPED_SEARCH","TRAINER_TOP_POKEMON_TRAINER","ATTACK_DISCARD_TOOL_BEFORE_DAMAGE","ATTACK_BASIC_DAMAGE_PROTECTION","TRAINER_DISCARD_SPECIAL_ENERGY","TOOL_LOW_HP_RETREAT_DISCOUNT","ABILITY_SWITCH_OWN","ABILITY_SEARCH_TYPED_EVOLUTION","TRAINER_SEARCH_TERA","TRAINER_TYPED_DAMAGE_BOOST","MASS_ZONE_TRANSFER","MASS_HEAL_OWN","MASS_PRIZE_DRAW","MASS_PLACE_COUNTERS","MASS_CONTEXT_BONUS","MASS_ENERGY_ROUTE"].includes(e.plan.mechanic)) {
         const verification = W.verifyCase(W.prepare(r, e, kind), e);
         if (verification.status !== "SUCCEEDED") continue;
       }
@@ -77,7 +77,7 @@ for (const r of selected) {
           "ACTIVE_AND_BENCH_DAMAGE", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP",
           "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
           "PASSIVE_ROCKET_TEAM_ATTACK_GATE", "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
-          "CONDITIONAL_ATTACK_BONUS", "SCALED_ATTACK_DAMAGE", "ANY_DAMAGE", "FIXED_COIN_HITS"].includes(e.plan.mechanic)
+          "CONDITIONAL_ATTACK_BONUS", "SCALED_ATTACK_DAMAGE", "ANY_DAMAGE", "FIXED_COIN_HITS","MASS_CONTEXT_BONUS"].includes(e.plan.mechanic)
         ? p.getSnapshot().history.slice(game.history.length).filter(event =>
             (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
             (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))

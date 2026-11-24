@@ -48,14 +48,14 @@
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     if(!addHand(0,basic))return {blocked:'NO_HAND_ATTACHMENT_FIXTURE_RESOURCE'};
-   }else if(m==='ATTACK_ACCELERATE_BASIC_ENERGY'){
+   }else if(['ATTACK_ACCELERATE_BASIC_ENERGY','MASS_ENERGY_ROUTE'].includes(m)){
     // Pay exactly the printed cost; preserve real unused basic energy for
     // the subsequent deck/discard acceleration effect.
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色')){
      if(!attach(0,p.active,c=>basic(c)&&row.plan.type&&c.energyType!==row.plan.type)&&!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     }
-    for(let i=0;i<row.plan.limit;i++){
+    for(let i=0;i<Math.min(row.plan.limit,6);i++){
      const c=take(0,c=>basic(c)&&(!row.plan.type||c.energyType===row.plan.type),false);
      if(!c)break;
      reservedAcceleration.push(c);

@@ -218,6 +218,32 @@ function typedEvolutionOrTera(c,plan){
  const facts=record(c).facts;
  return plan.mechanic==='TRAINER_SEARCH_TERA'?facts.teraBenchProtection===true:facts.stage>0&&facts.types.includes(plan.type);
 }
+function massRouteTargets(p,card,plan){
+ return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
+}
+function massRouteEnergy(p,plan){
+ return p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+}
+function massTransferCandidate(c,plan){
+ const r=record(c);
+ if(plan.category==='basicEnergy')return basicEnergy(c)&&(!plan.type||c.energyType===plan.type);
+ if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
+ if(r?.category!==plan.category)return false;
+ if(plan.type&&!r.facts.types?.includes(plan.type))return false;
+ if(plan.stage==='evolved'&&!(r.facts.stage>0))return false;
+ if(Number.isInteger(plan.stage)&&r.facts.stage!==plan.stage)return false;
+ if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
+ return true;
+}
+function massHealTargets(p,plan){
+ return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
+}
+function massContext(plan,p,o){
+ if(plan.predicate==='equalHand')return p.hand.length===o.hand.length;
+ if(plan.predicate==='opponentBench')return o.bench.length>=plan.threshold;
+ if(plan.predicate==='ownTypedBench')return p.bench.some(c=>record(c).facts.types.includes(plan.type)&&(plan.stage===null||record(c).facts.stage===plan.stage));
+ return plan.statuses.includes((plan.predicate==='ownStatus'?p.active:o.active).statusCondition);
+}
 function mixedTopCategory(c,plan){
  if(plan.mechanic==='TRAINER_TOP_TYPED_SEARCH'){
   if(c.kind==='pokemon'&&record(c).facts.types.includes(plan.type))return 'pokemon';
@@ -352,6 +378,27 @@ function requests(g,actor,card,effect){
   deckRequest('cards',candidates,0,new Set(candidates.map(c=>record(c).facts.stage)).size);
   out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
  }
+ if(m==='MASS_ENERGY_ROUTE'){
+  const plan=effect.plan,targets=massRouteTargets(p,card,plan),pool=targets.length?massRouteEnergy(p,plan):[],max=Math.min(plan.limit,pool.length),min=plan.zone==='deck'?0:Math.min(1,max);
+  if(plan.zone==='deck')deckRequest('energy',pool,min,max);
+  else cardRequest('energy',pool,min,max);
+  if(plan.target!=='self'){
+   for(let i=0;i<(plan.multi?max:1);i++){
+    cardRequest('attachTo'+i,targets,0,Math.min(1,targets.length));
+    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:i+1,count:1}];
+   }
+  }
+ }
+ if(m==='MASS_ZONE_TRANSFER'){
+  const plan=effect.plan,pool=p[plan.zone].filter(c=>massTransferCandidate(c,plan)),max=Math.min(plan.limit,pool.length);
+  if(plan.zone==='deck')deckRequest('cards',pool,0,max);
+  else cardRequest('cards',pool,Math.min(1,max),max);
+ }
+ if(m==='MASS_HEAL_OWN'&&effect.plan.target==='choice'){
+  const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
+  cardRequest('cards',pool,min,min);
+ }
+ if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
  if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
   const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
@@ -451,9 +498,13 @@ function abilityCheck(g,actor,card,a,action){
  assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
  assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
- assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
+ assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
+ if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
+ if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+ if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
@@ -535,6 +586,10 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
+   if(m==='MASS_ZONE_TRANSFER')assert(r.mainPlan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,r.mainPlan)),'NO_MASS_TRANSFER_SOURCE');
+   if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+   if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>e.isSpecial)),'NO_OPPONENT_SPECIAL_ENERGY');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
@@ -732,6 +787,38 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'MASS_ENERGY_ROUTE':{
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
+   for(const [i,ident] of energy.entries()){
+    const target=plan.target==='self'?card:targets.find(c=>id(c)===ids('attachTo'+(plan.multi?i:0))[0]);
+    const index=p[plan.zone].findIndex(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+    assert(target&&index>=0,'MASS_ENERGY_ROUTE_CHANGED');
+    target.energyCards.push(p[plan.zone].splice(index,1)[0]);
+    event(g,actor,'ATTACH_ENERGY',{energyId:ident,targetInstanceId:id(target),fromZone:plan.zone});
+    healed.add(target);
+   }
+   if(plan.zone==='deck'){event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});shuffle(g,p);}
+   if(plan.heal)for(const target of healed)if(target.damage>0)heal(g,actor,target,plan.heal==='all'?target.damage:plan.heal);
+   break;
+  }
+  case 'MASS_CONTEXT_BONUS':damage(g,actor,o.active,plan.base+(massContext(plan,p,o)?plan.bonus:0));break;
+  case 'MASS_ZONE_TRANSFER':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'));
+   else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
+   break;
+  case 'MASS_HEAL_OWN':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount);
+   break;
+  case 'MASS_PRIZE_DRAW':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
+  case 'MASS_PLACE_COUNTERS':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of field(o))if(plan.target==='all'||ids('target').includes(id(mon)))counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
+   break;
   case 'ATTACK_BLIND_HAND_CHOICE':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
@@ -1176,7 +1263,7 @@ function execute(g,actor,action){
  }else if(action.type==='attack_turn'){
   const card=p.active,effect=record(card).attacks[action.attackIndex];applyPlan(g,actor,card,effect,action);g.history.push({turnNumber:g.turnNumber,player:actor,type:'attack',details:{effectId:effect.effectId,referenceOfficialCardId:record(card).officialCardId}});refresh(g);finishAttack(g,actor);
  }else if(action.type==='use_ability'){
-  const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
+  const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);if(!effect.plan.repeated)mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
  }else{
   const i=p.hand.findIndex(c=>id(c)===action.cardId),card=p.hand.splice(i,1)[0],r=record(card);
   if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
