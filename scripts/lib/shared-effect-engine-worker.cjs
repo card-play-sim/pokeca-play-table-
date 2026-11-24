@@ -143,6 +143,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   const needed=new Map();for(const type of attack.cost)needed.set(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type,(needed.get(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type)||0)+1);
   return [...needed].every(([t,n])=>reserveEnergy(t,n,index));
  };
+ if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  if(m==='MASS_ZONE_TRANSFER'){
   const filter=r=>{
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
@@ -186,6 +187,16 @@ function kindAttackCost(e,type){return (e.cost||[]).filter(t=>t===type||t==='無
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'){
+    const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    const chosen=index>=0?index:r.attacks.findIndex(a=>a.plan);
+    if(chosen<0)return {blocked:'NO_SUPPRESSION_ATTACK_TRIGGER'};
+    const trigger={...r.attacks[chosen],effectIndex:chosen,proofSuppression:e.plan.exceptAbilityName},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),own=game.players[0],other=game.players[1];
+    if(!own.bench.length||!E.getReferenceEffectRecord(other.active).abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.plan.exceptAbilityName))return {blocked:'NO_SUPPRESSION_TARGET_FIXTURE'};
+    return {...t,trigger};
+  }
   if (m === "PASSIVE_ROCKET_TEAM_ATTACK_GATE") {
     const attackIndex = r.attacks.findIndex(attack => attack.plan);
     if (attackIndex < 0) return { blocked: "NO_PASSIVE_TRIGGER_ATTACK" };
@@ -1539,6 +1550,20 @@ function verifyCase(t, e) {
     own.hand.push(...own.deck.splice(0));
     const emptyDeck = port(noPokemon);
     assert.equal(emptyDeck.dispatch("you", action).ok, false);
+  }
+  if(e.plan.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'){
+    const g=JSON.parse(JSON.stringify(before)),own=g.players[0],other=g.players[1];
+    const ability=E.getReferenceEffectRecord(other.active).abilities.find(a=>a.plan?.mechanic==='DASH'&&a.name!==e.plan.exceptAbilityName);
+    assert(ability&&own.bench.length);g.turnPlayer='ai';
+    const action={type:'use_ability',sourceInstanceId:other.active.id,abilityId:ability.effectId};
+    const blocked=port(g),saved=JSON.stringify(blocked.getSnapshot());
+    assert(!E.getLegalActions(blocked.getSnapshot(),'ai').actions.some(a=>a.type===action.type&&a.abilityId===action.abilityId&&a.sourceInstanceId===action.sourceInstanceId));
+    assert.equal(blocked.dispatch('ai',action).ok,false);
+    assert.equal(JSON.stringify(blocked.getSnapshot()),saved);
+    [own.active,own.bench[0]]=[own.bench[0],own.active];
+    const allowed=port(g),legal=E.getLegalActions(allowed.getSnapshot(),'ai').actions.find(a=>a.type===action.type&&a.abilityId===action.abilityId&&a.sourceInstanceId===action.sourceInstanceId);
+    assert(legal,'SUPPRESSION_MUST_END_ON_BENCH');assert(allowed.dispatch('ai',legal).ok);
+    assert.deepEqual(S.identities(g),S.identities(allowed.getSnapshot()));
   }
   if(e.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'){
     const defender=E.getReferenceEffectRecord(before.players[1].active);
