@@ -200,6 +200,10 @@ function requests(g,actor,card,effect){
  if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  const attached=card.energyCards||[],count=Math.min(effect.plan.count,attached.length);
+  cardRequest('energy',attached,count,count);
+ }
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'){
   const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
   const count=Math.min(1,eligible.length);
@@ -678,7 +682,7 @@ function applyPlan(g,actor,card,effect,action){
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
     o.active.referenceCannotAttackTurn=g.turnNumber+1;
    break;
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=plan.base||0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
@@ -733,6 +737,20 @@ function applyPlan(g,actor,card,effect,action){
     const discarded=(card.energyCards||[]).splice(0);
     p.discard.push(...discarded);
     event(g,actor,'DISCARD',{cardIds:discarded.map(id),sourceInstanceId:id(card)});
+   }
+   if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+    const chosen=ids('energy'),attached=card.energyCards||[];
+    assert(Number.isInteger(plan.count)&&plan.count>=2&&plan.count<=9,
+      'INVALID_PRINTED_SELF_ENERGY_DISCARD_COUNT');
+    assert(chosen.length===Math.min(plan.count,attached.length),
+      'PRINTED_SELF_ENERGY_DISCARD_COUNT_CHANGED');
+    for(const ident of chosen){
+     const index=attached.findIndex(energy=>id(energy)===ident);
+     assert(index>=0,'SELF_ENERGY_DISCARD_TARGET_CHANGED');
+     const [discarded]=attached.splice(index,1);
+     p.discard.push(discarded);
+     event(g,actor,'DISCARD',{cardIds:[id(discarded)],sourceInstanceId:id(card)});
+    }
    }
    if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK'){
     const attached=card.energyCards,energyIndex=attached.findIndex(energy=>id(energy)===ids('energy')[0]);
