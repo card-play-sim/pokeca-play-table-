@@ -52,7 +52,11 @@ permissions:
 jobs:
   published-mobile-browser:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        intake-shard: [0, 1, 2, 3]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,6 +75,8 @@ jobs:
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
           POKECA_INTAKE_PREFIX: work/published-intake
+          POKECA_BROWSER_SHARD_COUNT: '4'
+          POKECA_BROWSER_SHARD_INDEX: ${{ matrix.intake-shard }}
           REQUESTED_BASE: ${{ inputs.intake_base || github.event.before }}
         run: |
           base=${REQUESTED_BASE:-$(git rev-parse HEAD^1)}
@@ -78,16 +84,20 @@ jobs:
           git merge-base --is-ancestor "$base" HEAD
           POKECA_INTAKE_RELEASE_BASE="$base" python tests/test_control_013_browser.py
       - name: Exercise published deck editing in mobile Chromium
+        if: matrix.intake-shard == 0
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: python tests/deck-editor-browser.py
       - name: Create persistent browser evidence directory
+        if: matrix.intake-shard == 0
         run: mkdir -p artifacts
       - name: Upgrade installed v246 from actual published assets and cold restart
+        if: matrix.intake-shard == 0
         env:
           POKECA_UPGRADE_PUBLIC_SOURCE: https://card-play-sim.github.io/pokeca-play-table-/
         run: python tests/test_control_003_update_browser.py
       - name: Exercise published reference matches in Pixel 5 Chromium emulation
+        if: matrix.intake-shard == 0
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: |
@@ -104,6 +114,7 @@ jobs:
           python tests/test_reference_match_browser.py
           python tests/test_release_delivery_browser.py
       - name: Write effect-level public DOM and gateway evidence
+        if: matrix.intake-shard == 0
         run: |
           node tests/control-005-effect-matrix.test.cjs
           node tests/control-006-abilities.test.cjs
@@ -113,6 +124,7 @@ jobs:
           node tests/control-010-effects.test.cjs
           node scripts/report-control-006-connections.cjs
       - name: Verify service worker and offline resume on published PWA
+        if: matrix.intake-shard == 0
         env:
           POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
         run: python tests/test_published_pwa_browser.py
@@ -120,7 +132,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: published-mobile-browser-evidence
+          name: ${{ matrix.intake-shard == 0 && 'published-mobile-browser-evidence' || format('published-mobile-browser-evidence-{0}', matrix.intake-shard) }}
           path: |
             artifacts/
             test-results/shared-operation-origins.json
