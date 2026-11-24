@@ -71,6 +71,26 @@ const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function additionalAttackPlan(entry,text){
  const printed=String(entry.damage).normalize('NFKC');
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
+ // Fixed-count coin outcomes use one deterministic match-owned stream.
+ const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ const coinStatus=text.match(/^コインを([1-9])回投げ、オモテの数×([1-9]\d{0,2})ダメージ。(1回でもオモテ|オモテが([1-9])回以上|すべてウラ)なら、相手のバトルポケモンを(マヒ|こんらん|やけど|ねむり|どく)にする。$/);
+ const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
+ if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
+  return coinPlan(Number(coinStatus[1]),0,{unit:Number(coinStatus[2]),status:statusMap[coinStatus[5]],when:coinStatus[3]==='すべてウラ'?'none':'threshold',threshold:Number(coinStatus[4]||1)});
+ const singleStatus=text.match(/^コインを1回投げ、?オモテなら、相手のバトルポケモンを(やけど|こんらん|ねむり|どく)にする。$/);
+ if(singleStatus&&/^\d+$/.test(printed))return coinPlan(1,base,{status:statusMap[singleStatus[1]],when:'all'});
+ const recoil=text.match(/^コインを([1-9])回投げ、?(?:すべて)?ウラなら、このポケモンにも([1-9]\d{0,2})ダメージ。$/);
+ if(recoil&&/^\d+$/.test(printed)&&(Number(recoil[1])===1||text.includes('すべてウラ')))return coinPlan(Number(recoil[1]),base,{recoil:Number(recoil[2]),when:'none'});
+ if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、次の自分の番、このポケモンはワザが使えない。')return coinPlan(1,base,{lock:'selfAttack',when:'none'});
+ const lock=text.match(/^コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、(ワザが使えない|にげられない)。$/);
+ if(lock&&/^\d+$/.test(printed))return coinPlan(1,base,{lock:lock[1]==='にげられない'?'opponentRetreat':'opponentAttack',when:'all'});
+ if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
+ const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
+ if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
+ const mill=text.match(/^コインを([1-9])回投げ、オモテの数ぶん、相手の山札を上からトラッシュする。$/);
+ if(mill&&/^\d+$/.test(printed))return coinPlan(Number(mill[1]),base,{mill:true,when:'threshold',threshold:1});
+ const allBonus=text.match(/^コインを([2-9])回投げ、すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
+ if(allBonus&&base!==null&&printed.endsWith('+'))return coinPlan(Number(allBonus[1]),base,{bonus:Number(allBonus[2]),when:'all'});
  const discardBasic=text.match(/^自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×([1-9]\d{0,2})ダメージ。$/);
  if(discardBasic&&printed===discardBasic[1]+'×')
   return {mechanic:'ATTACK_DISCARD_FIELD_BASIC',commands:['DISCARD','DAMAGE'],unit:Number(discardBasic[1])};
