@@ -201,8 +201,11 @@ function requests(g,actor,card,effect){
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
-  const attached=card.energyCards||[],count=Math.min(effect.plan.count,attached.length);
-  cardRequest('energy',attached,count,count);
+  // Printed Energy "個" can be supplied by one physical multi-unit Energy card.
+  const eligible=(card.energyCards||[]).filter(energy=>
+    energyUnits({...card,energyCards:[energy]}).length>0);
+  cardRequest('energy',eligible,Math.min(1,eligible.length),
+    Math.min(effect.plan.count,eligible.length));
  }
  if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
   const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
@@ -334,6 +337,19 @@ function verifyRequests(g,actor,card,effect,action){
   for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  // The selection specifies physical cards, but the printed quantity counts
+  // their provided Energy units (including multi-unit special Energy).
+  const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+  const available=(card.energyCards||[]).filter(energy=>contribution(energy)>0);
+  const choice=selected(action,'energy').map(ident=>available.find(e=>id(e)===ident));
+  assert(choice.every(Boolean),'INVALID_SELF_ENERGY_SELECTION');
+  const target=Math.min(effect.plan.count,available.reduce((n,e)=>n+contribution(e),0));
+  const selectedUnits=choice.reduce((n,e)=>n+contribution(e),0);
+  assert(selectedUnits>=target,'INSUFFICIENT_SELECTED_ENERGY_UNITS');
+  assert(choice.every(e=>selectedUnits-contribution(e)<target),
+    'REDUNDANT_SELF_ENERGY_DISCARD_SELECTION');
+ }
  if(m==='AKAMATSU'){
   const hand=selected(action,'toHand'),target=selected(action,'attachTo');assert(hand.length===Math.min(1,cards.length)&&hand.every(i=>cards.some(c=>id(c)===i)),'AKAMATSU_HAND_CHOICE');assert(target.length===(cards.length>1?1:0),'AKAMATSU_ATTACH_CHOICE');
  }
@@ -745,7 +761,11 @@ function applyPlan(g,actor,card,effect,action){
     const chosen=ids('energy'),attached=card.energyCards||[];
     assert(Number.isInteger(plan.count)&&plan.count>=2&&plan.count<=9,
       'INVALID_PRINTED_SELF_ENERGY_DISCARD_COUNT');
-    assert(chosen.length===Math.min(plan.count,attached.length),
+    const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+    const target=Math.min(plan.count,attached.reduce((sum,e)=>sum+contribution(e),0));
+    const selectedEnergy=chosen.map(ident=>attached.find(e=>id(e)===ident));
+    assert(selectedEnergy.every(Boolean)&&
+      selectedEnergy.reduce((sum,e)=>sum+contribution(e),0)>=target,
       'PRINTED_SELF_ENERGY_DISCARD_COUNT_CHANGED');
     for(const ident of chosen){
      const index=attached.findIndex(energy=>id(energy)===ident);
@@ -1059,6 +1079,18 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  const entries=(card.energyCards||[]).map((energy,index)=>({
+    energy,index,units:energyUnits({...card,energyCards:[energy]}).length
+  })).filter(e=>e.units>0).sort((a,b)=>b.units-a.units||a.index-b.index);
+  const chosen=[];let covered=0;
+  for(const entry of entries){
+   if(covered>=effect.plan.count)break;
+   chosen.push(entry.energy);covered+=entry.units;
+  }
+  action.selections||={};
+  action.selections.energy=chosen.map(id);
+ }
  if(m==='AKAMATSU'){
   const candidates=requests(g,actor,card,effect).find(r=>r.key==='cards').candidates,types=new Set(),chosen=candidates.filter(c=>{if(types.has(c.energyType))return false;types.add(c.energyType);return true;}).slice(0,2);
   action.selections.cards=chosen.map(id);action.selections.toHand=chosen.slice(0,1).map(id);action.selections.attachTo=chosen.length>1?[id(p.active)]:[];

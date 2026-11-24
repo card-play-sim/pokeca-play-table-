@@ -38,7 +38,7 @@ for (const r of fullyCompiled) {
     const before=t.port.getSnapshot();
     const chosen=option.action.selections?.energy || [];
     const attached=before.players[0].active.energyCards || [];
-    assert.equal(chosen.length,Math.min(attack.plan.count,attached.length));
+    assert(chosen.length >= Math.min(1,attached.length) && chosen.length <= Math.min(attack.plan.count,attached.length));
     assert(chosen.every(id => attached.some(c => c.id === id)));
     if (chosen.length >= 2) {
       const invalid={...option.action,selections:{...option.action.selections,energy:[chosen[0],chosen[0],...chosen.slice(2)]}};
