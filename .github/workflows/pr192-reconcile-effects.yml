@@ -44,7 +44,10 @@ jobs:
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/official-effect-continuation/pr192-derived-reconciliation.json
+          # Keep the reconciliation audit as an uploaded artifact. Do not
+          # create a bot-only commit merely because an audit was refreshed:
+          # GitHub requires human-app-authored PR commits for required checks.
+          git add data/effect-extensions/compiled.json data/reference-effects/plans.json ui/engine.bundle.js sw.js
           if ! git diff --cached --quiet; then
             git commit -m 'fix: regenerate provenance-checked effect data and PWA bundle for PR192'
             git push origin HEAD:battle/official-shared-bulk-218-20261124
