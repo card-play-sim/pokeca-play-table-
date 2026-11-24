@@ -1,23 +1,42 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_63A37AB205739D6F:e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
   "taskFingerprint": "e985388eb02c560bd3e257ddbd787b249415be0a838d3d17bbd9c22703a22099",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "719456d9-4c51-4718-a03a-20313d6e585f",
-  "status": "BLOCKED",
+  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
+  "attemptId": "a652c7bd-ba59-400a-a179-254e03bbfee7",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47334:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47375:attack:ガジェットショー:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47397:attack:ガジェットショー:1",
@@ -66,5 +85,5 @@
       }
     ]
   },
-  "checksum": "dbba0b679f044c1559ed62744ffa273b646c025f85da1c231bf530600d83ea30"
+  "checksum": "2dc420439c7e142b288279607dde82ce793e202908e1c5f16b57628cbc82cffd"
 }
