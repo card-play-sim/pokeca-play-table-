@@ -116,7 +116,8 @@ async def main():
     await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
     await page.locator('#hand-actions [data-action-type="use_ability"]').filter(has_text=option['label']).tap()
    elif kind in ('attack','ability'):
-    await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
+    container='#self-active' if before['players'][0]['active']['id']==ident else '#self-bench'
+    await page.locator(container+f' [data-card-id="{ident}"]').tap()
     if kind=='attack':await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(attack_selector).tap()
     else:await page.locator('#pokemon-actions [data-action-kind="ability"]').filter(has_text=option['label']).tap()
    elif r['category']=='stadium':
@@ -372,6 +373,16 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='MASS_EFFECT_SEQUENCE':
+    own,other=before['players'];resolved=after['players'][0]
+    for step in f['e']['plan']['steps']:
+     if step['op']=='draw':
+      assert {c['id'] for c in own['deck'][:step['amount']]}<={c['id'] for c in resolved['hand']}
+     if step['op']=='mill':
+      index=1 if step['side']=='opponent' else 0
+      assert {c['id'] for c in before['players'][index]['deck'][:step['amount']]}<={c['id'] for c in after['players'][index]['discard']}
+     if step['op']=='status':
+      assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==step['status'] for ev in events)
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
     assert picked

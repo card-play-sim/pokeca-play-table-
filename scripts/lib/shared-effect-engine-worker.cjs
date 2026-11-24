@@ -284,6 +284,16 @@ function prepare(r, e, kind) {
         referenceOfficialCardId:ignition.officialCardId});
     }
   }
+  if(m==='MASS_EFFECT_SEQUENCE'&&e.plan.origin==='evolve'){
+    const deck=manifest.decks[locations[0].deck];
+    const parent=[...records.values()].find(x=>x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1&&x.attacks.every(a=>a.plan)&&x.abilities.every(a=>a.plan));
+    if(!parent)return {blocked:'NO_EXACT_EVOLUTION_PARENT_FIXTURE'};
+    if(!deck.cards.some(c=>c.name===parent.deckName)){
+      const donor=deck.cards.find(c=>c.category==='pokemon'&&c.name!==r.deckName&&c.count>1);
+      if(!donor)return {blocked:'NO_EVOLUTION_PARENT_DECK_SLOT'};
+      donor.count--;deck.cards.push({name:parent.deckName,category:'pokemon',count:1,referenceOfficialCardId:parent.officialCardId});
+    }
+  }
   const row = {
     cardName: r.deckName,
     category: r.category,
@@ -665,7 +675,39 @@ function prepare(r, e, kind) {
     if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&own.bench.length>=5)return {blocked:"NO_BENCH_SEARCH_SPACE"};
     if(!own.deck.some(c=>batchSearchCandidate(c,e.plan)))return {blocked:"NO_EXACT_SEARCH_FIXTURE_RESOURCE"};
   }
+  if(m==='MASS_EFFECT_SEQUENCE'){
+    const own=frame.game.players[0];
+    if(e.plan.steps.some(s=>['healSelf','drain'].includes(s.op))){
+      const source=[own.active,...own.bench].find(c=>c.id===frame.sourceId);
+      if(source)source.damage=Math.min(source.hp-10,70);
+    }
+    if(e.plan.origin==='evolve'){
+      const eligible=c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).name===r.facts.evolvesFrom;
+      let parent;
+      for(const zone of [own.deck,own.hand,own.bench]){
+        const i=zone.findIndex(eligible);
+        if(i>=0){parent=zone.splice(i,1)[0];break;}
+      }
+      if(!parent){const i=own.prizeCards.findIndex(eligible);if(i>=0&&own.deck.length){parent=own.prizeCards[i];own.prizeCards[i]=own.deck.shift();}}
+      if(!parent)return {blocked:'NO_PHYSICAL_EVOLUTION_PARENT'};
+      const child=own.active;
+      if(child.id!==frame.sourceId)return {blocked:'NO_PHYSICAL_EVOLUTION_CHILD'};
+      for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','evolutionCards','validationBase','entryWindow'])delete child[key];
+      own.hand.push(child);
+      own.active={...parent,cardId:parent.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]};
+      const pp=port(frame.game),action={type:'evolve',cardId:child.id,targetInstanceId:parent.id};
+      if(!pp.dispatch('you',action).ok)return {blocked:'EVOLUTION_FIXTURE_ACTION_REJECTED'};
+      const now=pp.getSnapshot().players[0].active;
+      if(E.getReferenceEffectRecord(now).officialCardId!==r.officialCardId)return {blocked:'EVOLUTION_FIXTURE_PRINT_MISMATCH'};
+      return {port:pp,sourceId:now.id,kind};
+    }
+  }
   const p = port(frame.game);
+  if(m==='MASS_EFFECT_SEQUENCE'&&e.plan.origin==='bench'){
+    if(!p.dispatch('you',{type:'bench_basic',cardId:frame.sourceId}).ok)return {blocked:'BENCH_ENTRY_FIXTURE_ACTION_REJECTED'};
+    // The real entry action opens the window. A subsequent harmless action
+    // must close it; verify this independently without mutating the fixture.
+  }
   if (m === "MEOWTH_ENTRY")
     assert(
       p.dispatch("you", { type: "bench_basic", cardId: frame.sourceId }).ok,
@@ -778,6 +820,36 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='MASS_EFFECT_SEQUENCE'){
+    const plan=e.plan,action=t.action||o.action,own=before.players[0],other=before.players[1],resolved=after.players[0];
+    const source=[own.active,...own.bench].find(c=>c.id===t.sourceId),next=[resolved.active,...resolved.bench].find(c=>c?.id===t.sourceId);
+    if(action.type==='attack_turn'&&Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    for(const step of plan.steps){
+      const target=step.side==='opponent'?after.players[1].active:next;
+      if(step.op==='draw')assert(own.deck.slice(0,step.amount).every(c=>resolved.hand.some(x=>x.id===c.id)));
+      if(step.op==='mill'){
+        const side=step.side==='opponent'?other:own,result=after.players[step.side==='opponent'?1:0];
+        assert(side.deck.slice(0,step.amount).every(c=>result.discard.some(x=>x.id===c.id)));
+      }
+      if(step.op==='healSelf'||step.op==='drain'){
+        const amount=step.op==='healSelf'?step.amount:effectEvents.find(x=>x?.command==='DAMAGE'&&x.targetInstanceId===other.active.id)?.amount;
+        assert(next&&source.damage>0&&amount>0);assert.equal(next.damage,Math.max(0,source.damage-amount));
+      }
+      if(step.op==='status'){
+        assert(effectEvents.some(x=>x?.command==='STATUS_CONDITION'&&x.status===step.status&&x.targetInstanceId===(step.side==='opponent'?other.active.id:source.id)));
+      }
+      if(step.op==='retreatLock')assert.equal(target.referenceCannotRetreatTurn,before.turnNumber+step.offset);
+      if(step.op==='attackLock')assert.equal(next.referenceCannotAttackTurn,before.turnNumber+step.offset);
+      if(step.op==='reduce')assert.deepEqual(next.referenceDamageReduction,{turn:before.turnNumber+1,amount:step.amount});
+      if(step.op==='discardAttached')assert(source.energyCards.every(c=>resolved.discard.some(x=>x.id===c.id)));
+      if(step.op==='itemLock')assert(after.referenceItemLock.some(x=>x.playerId==='ai'&&x.turnNumber===before.turnNumber+1));
+      if(step.op==='noWeakness')assert.equal(next.referenceNoWeaknessTurn,before.turnNumber+1);
+    }
+    if(['bench','evolve'].includes(plan.origin)){
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);assert.deepEqual(replay.getSnapshot(),closed);
+    }
+  }
   if(e.plan.mechanic==='MASS_ENERGY_ROUTE'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],energy=action.selections.energy;
     assert(energy.length>0&&energy.length<=plan.limit);
