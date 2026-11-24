@@ -167,6 +167,24 @@ function additionalAttackPlan(entry,text){
   const metrics={'自分の手札の枚数':'ownHand','相手の手札の枚数':'opponentHand','自分がすでにとったサイドの枚数':'ownPrizesTaken','自分の場のたねポケモンの数':'ownBasicCount','相手の場のたねポケモンの数':'opponentBasicCount','自分の場の1進化ポケモンの数':'ownStageOneCount','自分の場の進化ポケモンの数':'ownEvolvedCount','相手の場の進化ポケモンの数':'opponentEvolvedCount','自分のベンチの2進化ポケモンの数':'ownBenchStageTwoCount','ダメカンがのっている自分のベンチポケモンの数':'ownDamagedBenchCount','相手のポケモン全員にのっているダメカンの数':'opponentTeamCounters','おたがいのバトルポケモンについているエネルギーの数':'bothActiveEnergy','おたがいのポケモン全員についているエネルギーの数':'bothTeamEnergy','相手のバトルポケモンのにげるためのエネルギーの数':'opponentRetreat'};
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:metrics[boardCount[1]],type:null,unit:Number(boardCount[2]),base:boardCount[3]?base:0};
  }
+ // Count only public physical cards and exact registered names/attacks.
+ const publicCount=text.match(/^(相手のトラッシュにある基本エネルギーの枚数|相手のトラッシュにあるグッズの枚数|相手の場の「ポケモンex・V」の数|自分の場のダメカンがのっているポケモンの数|相手の場の特性を持つポケモンの数)×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(publicCount&&(publicCount[3]?base!==null&&printed.endsWith('+'):printed===publicCount[2]+'×')){
+  const metric={'相手のトラッシュにある基本エネルギーの枚数':'opponentDiscardBasic','相手のトラッシュにあるグッズの枚数':'opponentDiscardItem','相手の場の「ポケモンex・V」の数':'opponentExVCount','自分の場のダメカンがのっているポケモンの数':'ownDamagedCount','相手の場の特性を持つポケモンの数':'opponentAbilityCount'}[publicCount[1]];
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,type:null,unit:Number(publicCount[2]),base:publicCount[3]?base:0};
+ }
+ const namedAttackCount=text.match(/^自分の場の、ワザ「([^「」]{1,40})」を持つポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(namedAttackCount&&printed===namedAttackCount[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownNamedAttackCount',name:namedAttackCount[1],unit:Number(namedAttackCount[2]),base:0};
+ const namedTeamCount=text.match(/^自分の場の「(ロケット団|エリカ|ヒビキ|カスミ|シロナ|リーリエ|ホップ|N|ナンジャモ|ダイゴ|ペパー)のポケモン」の数×([1-9]\d{0,2})ダメージ。$/);
+ if(namedTeamCount&&printed===namedTeamCount[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTeamNameCount',name:namedTeamCount[1],unit:Number(namedTeamCount[2]),base:0};
+ const discardTyped=text.match(/^自分のトラッシュにある\[([草炎水雷超闘悪鋼竜無色])\]ポケモンの枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(discardTyped&&printed===discardTyped[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardTypedPokemon',type:discardTyped[1],unit:Number(discardTyped[2]),base:0};
+ const discardNamed=text.match(/^自分のトラッシュにある、ワザ「([^「」]{1,40})」を持つポケモンの枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(discardNamed&&printed===discardNamed[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardNamedAttack',name:discardNamed[1],unit:Number(discardNamed[2]),base:0};
  const typedCount=text.match(/^自分の場の\[(草|炎|水|雷|超|闘|悪|鋼|無色|竜)\]ポケモンの数×([1-9]\d{0,2})ダメージ。$/);
  if(typedCount&&printed===typedCount[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTypedPokemonCount',type:typedCount[1],unit:Number(typedCount[2]),base:0};
