@@ -372,6 +372,16 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='ABILITY_SWITCH_OWN':
+    assert after['players'][0]['active']['id']==option['action']['selections']['ownBench'][0]
+    assert before['players'][0]['active']['id'] in {card['id'] for card in after['players'][0]['bench']}
+   if m in ('ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'):
+    picked=set(option['action']['selections']['cards'])
+    assert picked and picked<={card['id'] for card in after['players'][0]['hand']}
+    assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+   if m=='TRAINER_TYPED_DAMAGE_BOOST':
+    plan=f['e']['plan']
+    assert {'turn':before['turnNumber'],'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTypedDamageBoosts']
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):

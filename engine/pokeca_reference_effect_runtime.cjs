@@ -144,6 +144,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  // Supporter bonus applies only to attack damage dealt to the opponent's Active Pokemon ex.
  // Add it BEFORE weakness/resistance and special-energy penalties, and expire by turn number.
  if(!bench&&find(g,id(mon))?.player.id===other.id&&record(mon)?.name.endsWith('ex')&&own.referenceExDamageBoost?.turn===g.turnNumber)amount+=own.referenceExDamageBoost.amount;
+ if(!bench&&find(g,id(mon))?.player.id===other.id)amount+=(own.referenceTypedDamageBoosts||[]).filter(boost=>boost.turn===g.turnNumber&&record(source).facts.types.includes(boost.type)).reduce((sum,boost)=>sum+boost.amount,0);
  const energyPenalty=(source.energyCards||[]).reduce((sum,c)=>sum+(record(c)?.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY'?record(c).mainPlan.damagePenalty:0),0);
  const outgoing=source.referenceOutgoingDamagePenalty;
  const penalty=energyPenalty+(outgoing?.turn===g.turnNumber?outgoing.amount:0);
@@ -212,6 +213,11 @@ const topDeckEffects={
  TOP_SUPPORTER_SEARCH:{limit:7,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'}
 };
 const deckWindow=(deck,scope)=>scope?deck.slice(0,scope.limit):deck;
+function typedEvolutionOrTera(c,plan){
+ if(c.kind!=='pokemon')return false;
+ const facts=record(c).facts;
+ return plan.mechanic==='TRAINER_SEARCH_TERA'?facts.teraBenchProtection===true:facts.stage>0&&facts.types.includes(plan.type);
+}
 function mixedTopCategory(c,plan){
  if(plan.mechanic==='TRAINER_TOP_TYPED_SEARCH'){
   if(c.kind==='pokemon'&&record(c).facts.types.includes(plan.type))return 'pokemon';
@@ -346,6 +352,11 @@ function requests(g,actor,card,effect){
   deckRequest('cards',candidates,0,new Set(candidates.map(c=>record(c).facts.stage)).size);
   out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
  }
+ if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
+ if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
+  const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
+  deckRequest('cards',pool,0,Math.min(effect.plan.limit,pool.length));
+ }
  if(m==='TRAINER_SWITCH_BOTH'){
   cardRequest('opponentBench',o.bench,1,1);
   if(p.bench.length)cardRequest('ownBench',p.bench,1,1);
@@ -443,6 +454,8 @@ function abilityCheck(g,actor,card,a,action){
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
+ if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_DISCARD_DRAW')assert(p.hand.length>=a.plan.cost&&p.deck.length>0,'ABILITY_DISCARD_DRAW_UNAVAILABLE');
  if(m==='ABILITY_ATTACH_SELF_DRAW')assert(p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'ABILITY_TYPED_ENERGY_REQUIRED');
@@ -522,6 +535,7 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>e.isSpecial)),'NO_OPPONENT_SPECIAL_ENERGY');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
    if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
@@ -996,6 +1010,13 @@ function applyPlan(g,actor,card,effect,action){
   case 'SWITCH_SELF_ATTACK':if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);break;
   case 'HAND_LIMIT_DRAW_ATTACK':if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
+  case 'ABILITY_SWITCH_OWN':chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);break;
+  case 'ABILITY_SEARCH_TYPED_EVOLUTION':case 'TRAINER_SEARCH_TERA':searchSelectedDeck(g,actor,p,ids('cards'));break;
+  case 'TRAINER_TYPED_DAMAGE_BOOST':
+   p.referenceTypedDamageBoosts||=[];
+   p.referenceTypedDamageBoosts=p.referenceTypedDamageBoosts.filter(boost=>boost.turn===g.turnNumber);
+   p.referenceTypedDamageBoosts.push({turn:g.turnNumber,type:plan.type,amount:plan.amount});
+   break;
   case 'ABILITY_DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'ABILITY_DISCARD_DRAW':{
    const chosen=ids('discard');

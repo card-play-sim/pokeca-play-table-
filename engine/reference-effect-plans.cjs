@@ -243,6 +243,16 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
+  return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],sharedWording:true};
+ const typedEvolution=generic.match(/^自分の番に1回使える。自分の山札から\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ if(kind==='ABILITY'&&typedEvolution)
+  return {mechanic:'ABILITY_SEARCH_TYPED_EVOLUTION',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],type:typedEvolution[1],limit:parseInt(typedEvolution[2],10),sharedWording:true};
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。')
+  return {mechanic:'TRAINER_SEARCH_TERA',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:1,sharedWording:true};
+ const typedBoost=generic.match(/^この番、自分の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&typedBoost)
+  return {mechanic:'TRAINER_TYPED_DAMAGE_BOOST',commands:['MODIFY_DAMAGE'],type:typedBoost[1],amount:Number(typedBoost[2]),sharedWording:true};
  const openingBench=generic.match(/^このワザは、後攻プレイヤーの最初の番には使えない。自分のベンチポケモンの数×([1-9]\d{0,2})ダメージ。$/);
  if(kind==='ATTACK'&&openingBench&&String(entry.damage).normalize('NFKC')===openingBench[1]+'×')
   return {mechanic:'BENCH_COUNT_DAMAGE',commands:['DAMAGE'],side:'own',unit:Number(openingBench[1]),base:0,noSecondPlayerFirstTurn:true,sharedWording:true};
