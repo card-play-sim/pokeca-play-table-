@@ -3,118 +3,6 @@
   "scope": "OFFICIAL_CARD_TO_ENGINE_ONE_ATOMIC_WORK_UNIT",
   "groups": [
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BBB2EBCC9592084ECBC0",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "コインを1回投げオモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "49385",
-        "48318",
-        "48319",
-        "48320",
-        "50042",
-        "50043",
-        "50044",
-        "50045",
-        "50046",
-        "50047",
-        "50168",
-        "50169",
-        "50170",
-        "50180",
-        "50181",
-        "50182",
-        "50503",
-        "50504",
-        "50505",
-        "50506",
-        "50507",
-        "50508",
-        "50509",
-        "50510",
-        "50511",
-        "50512",
-        "50513",
-        "50514",
-        "50515",
-        "50516"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49385.json",
-        "data/effect-extensions/evidence/48318.json",
-        "data/effect-extensions/evidence/48319.json",
-        "data/effect-extensions/evidence/48320.json",
-        "data/effect-extensions/evidence/50042.json",
-        "data/effect-extensions/evidence/50043.json",
-        "data/effect-extensions/evidence/50044.json",
-        "data/effect-extensions/evidence/50045.json",
-        "data/effect-extensions/evidence/50046.json",
-        "data/effect-extensions/evidence/50047.json",
-        "data/effect-extensions/evidence/50168.json",
-        "data/effect-extensions/evidence/50169.json",
-        "data/effect-extensions/evidence/50170.json",
-        "data/effect-extensions/evidence/50180.json",
-        "data/effect-extensions/evidence/50181.json",
-        "data/effect-extensions/evidence/50182.json",
-        "data/effect-extensions/evidence/50503.json",
-        "data/effect-extensions/evidence/50504.json",
-        "data/effect-extensions/evidence/50505.json",
-        "data/effect-extensions/evidence/50506.json",
-        "data/effect-extensions/evidence/50507.json",
-        "data/effect-extensions/evidence/50508.json",
-        "data/effect-extensions/evidence/50509.json",
-        "data/effect-extensions/evidence/50510.json",
-        "data/effect-extensions/evidence/50511.json",
-        "data/effect-extensions/evidence/50512.json",
-        "data/effect-extensions/evidence/50513.json",
-        "data/effect-extensions/evidence/50514.json",
-        "data/effect-extensions/evidence/50515.json",
-        "data/effect-extensions/evidence/50516.json"
-      ],
-      "printCount": 31,
-      "effectSlots": 31
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A7D573C00017407D3500",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが受けるワザのダメージは「-30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47697",
-        "48076",
-        "48084",
-        "45578",
-        "46026",
-        "46246",
-        "46315",
-        "47341",
-        "49122",
-        "49321",
-        "48729",
-        "48934"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47697.json",
-        "data/effect-extensions/evidence/48076.json",
-        "data/effect-extensions/evidence/48084.json",
-        "data/effect-extensions/evidence/45578.json",
-        "data/effect-extensions/evidence/46026.json",
-        "data/effect-extensions/evidence/46246.json",
-        "data/effect-extensions/evidence/46315.json",
-        "data/effect-extensions/evidence/47341.json",
-        "data/effect-extensions/evidence/49122.json",
-        "data/effect-extensions/evidence/49321.json",
-        "data/effect-extensions/evidence/48729.json",
-        "data/effect-extensions/evidence/48934.json"
-      ],
-      "printCount": 12,
-      "effectSlots": 12
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4110F643BF75F8A79B36",
       "category": "supporter",
       "effectKind": "supporter",
@@ -181,36 +69,6 @@
       "effectSlots": 9
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1CCDA54C48D4E4E9D978",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の場の「ロケット団のポケモン」が4匹以上のときにしか、このポケモンはワザが使えない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48330",
-        "47432",
-        "47518",
-        "47529",
-        "47534",
-        "48585",
-        "49006",
-        "49997"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48330.json",
-        "data/effect-extensions/evidence/47432.json",
-        "data/effect-extensions/evidence/47518.json",
-        "data/effect-extensions/evidence/47529.json",
-        "data/effect-extensions/evidence/47534.json",
-        "data/effect-extensions/evidence/48585.json",
-        "data/effect-extensions/evidence/49006.json",
-        "data/effect-extensions/evidence/49997.json"
-      ],
-      "printCount": 8,
-      "effectSlots": 8
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2D7377AD7A155DE16D91",
       "category": "tool",
       "effectKind": "tool",
@@ -236,40 +94,6 @@
         "data/effect-extensions/evidence/48683.json",
         "data/effect-extensions/evidence/49395.json",
         "data/effect-extensions/evidence/49978.json"
-      ],
-      "printCount": 8,
-      "effectSlots": 8
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3A5CF1E479596C221409",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分のベンチポケモンについているエネルギーを2枚までトラッシュし、その枚数×60ダメージ追加。",
-      "printedDamage": "160+",
-      "energyCost": [
-        "超",
-        "超",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48330",
-        "47432",
-        "47518",
-        "47529",
-        "47534",
-        "48585",
-        "49006",
-        "49997"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48330.json",
-        "data/effect-extensions/evidence/47432.json",
-        "data/effect-extensions/evidence/47518.json",
-        "data/effect-extensions/evidence/47529.json",
-        "data/effect-extensions/evidence/47534.json",
-        "data/effect-extensions/evidence/48585.json",
-        "data/effect-extensions/evidence/49006.json",
-        "data/effect-extensions/evidence/49997.json"
       ],
       "printCount": 8,
       "effectSlots": 8
@@ -647,34 +471,6 @@
         "data/effect-extensions/evidence/46739.json",
         "data/effect-extensions/evidence/47135.json",
         "data/effect-extensions/evidence/49077.json"
-      ],
-      "printCount": 7,
-      "effectSlots": 7
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B3B77BC88F6B8F4D3C6E",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の手札をすべてトラッシュし、山札を5枚引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46132",
-        "45788",
-        "45865",
-        "45872",
-        "46831",
-        "47208",
-        "49431"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46132.json",
-        "data/effect-extensions/evidence/45788.json",
-        "data/effect-extensions/evidence/45865.json",
-        "data/effect-extensions/evidence/45872.json",
-        "data/effect-extensions/evidence/46831.json",
-        "data/effect-extensions/evidence/47208.json",
-        "data/effect-extensions/evidence/49431.json"
       ],
       "printCount": 7,
       "effectSlots": 7
@@ -1323,30 +1119,6 @@
         "data/effect-extensions/evidence/46334.json",
         "data/effect-extensions/evidence/48644.json",
         "data/effect-extensions/evidence/49242.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_24AE35C6B8C7E4CBC497",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが受けるワザのダメージは「-20」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45149",
-        "46564",
-        "50086",
-        "48750",
-        "49328"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45149.json",
-        "data/effect-extensions/evidence/46564.json",
-        "data/effect-extensions/evidence/50086.json",
-        "data/effect-extensions/evidence/48750.json",
-        "data/effect-extensions/evidence/49328.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -29021,5 +28793,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 2783
+  "unfinishedPrints": 2727
 }

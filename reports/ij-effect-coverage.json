@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 661,
-      "missing": 1041
+      "connected": 701,
+      "missing": 1001
     },
     "J": {
       "total": 870,
-      "connected": 320,
-      "missing": 550
+      "connected": 322,
+      "missing": 548
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 655,
-      "MECHANIC_REQUIRED": 159,
-      "ENGINE_CONNECTION_REQUIRED": 819,
+      "CONNECTED_UNTESTED": 695,
+      "MECHANIC_REQUIRED": 154,
+      "ENGINE_CONNECTION_REQUIRED": 784,
       "EVIDENCE_UNVERIFIED": 63,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 319,
+      "CONNECTED_UNTESTED": 321,
       "MECHANIC_REQUIRED": 71,
-      "ENGINE_CONNECTION_REQUIRED": 430,
+      "ENGINE_CONNECTION_REQUIRED": 428,
       "EVIDENCE_UNVERIFIED": 49,
       "EXECUTION_PASS": 1
     }
@@ -2145,8 +2145,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47432.json"
     },
     {
@@ -2411,8 +2410,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47518.json"
     },
     {
@@ -2438,8 +2436,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47529.json"
     },
     {
@@ -2447,8 +2444,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47534.json"
     },
     {
@@ -5341,8 +5337,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48585.json"
     },
     {
@@ -6172,8 +6167,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49006.json"
     },
     {
@@ -7324,8 +7318,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49997.json"
     },
     {
@@ -9975,8 +9968,7 @@
       "name": "バンバドロ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47341.json"
     },
     {
@@ -15523,8 +15515,7 @@
       "name": "バンバドロ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49122.json"
     },
     {
@@ -16133,8 +16124,7 @@
       "name": "モンスターボール",
       "mark": "J",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49385.json"
     },
     {
@@ -17352,8 +17342,7 @@
       "name": "コクーン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50086.json"
     },
     {
@@ -20231,8 +20220,7 @@
       "name": "ロケット団のミュウツーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48330.json"
     },
     {
@@ -21184,8 +21172,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48318.json"
     },
     {
@@ -21193,8 +21180,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48319.json"
     },
     {
@@ -21202,8 +21188,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48320.json"
     },
     {
@@ -21211,8 +21196,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50042.json"
     },
     {
@@ -21220,8 +21204,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50043.json"
     },
     {
@@ -21229,8 +21212,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50044.json"
     },
     {
@@ -21238,8 +21220,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50045.json"
     },
     {
@@ -21247,8 +21228,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50046.json"
     },
     {
@@ -21256,8 +21236,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50047.json"
     },
     {
@@ -21265,8 +21244,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50168.json"
     },
     {
@@ -21274,8 +21252,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50169.json"
     },
     {
@@ -21283,8 +21260,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50170.json"
     },
     {
@@ -21292,8 +21268,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50180.json"
     },
     {
@@ -21301,8 +21276,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50181.json"
     },
     {
@@ -21310,8 +21284,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50182.json"
     },
     {
@@ -21319,8 +21292,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50503.json"
     },
     {
@@ -21328,8 +21300,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50504.json"
     },
     {
@@ -21337,8 +21308,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50505.json"
     },
     {
@@ -21346,8 +21316,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50506.json"
     },
     {
@@ -21355,8 +21324,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50507.json"
     },
     {
@@ -21364,8 +21332,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50508.json"
     },
     {
@@ -21373,8 +21340,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50509.json"
     },
     {
@@ -21382,8 +21348,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50510.json"
     },
     {
@@ -21391,8 +21356,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50511.json"
     },
     {
@@ -21400,8 +21364,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50512.json"
     },
     {
@@ -21409,8 +21372,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50513.json"
     },
     {
@@ -21418,8 +21380,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50514.json"
     },
     {
@@ -21427,8 +21388,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50515.json"
     },
     {
@@ -21436,8 +21396,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50516.json"
     },
     {
@@ -21445,8 +21404,7 @@
       "name": "勝利のしるし",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50517.json"
     },
     {
@@ -22174,21 +22132,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1124,
-        "ENGINE_CONNECTED": 681,
+        "MECHANIC_REQUIRED": 1110,
+        "ENGINE_CONNECTED": 695,
         "EVIDENCE_UNVERIFIED": 59
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 661,
-        "MECHANIC_REQUIRED": 975,
+        "ENGINE_CONNECTED": 701,
+        "MECHANIC_REQUIRED": 935,
         "EVIDENCE_UNVERIFIED": 63,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 319,
-        "MECHANIC_REQUIRED": 495,
+        "ENGINE_CONNECTED": 321,
+        "MECHANIC_REQUIRED": 493,
         "EVIDENCE_UNVERIFIED": 52,
         "ENGINE_CONNECTION_REQUIRED": 3
       },
@@ -22199,7 +22157,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2290,
-    "unconnected": 2783
+    "engineConnected": 2346,
+    "unconnected": 2727
   }
 }
