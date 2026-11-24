@@ -117,7 +117,7 @@ function refresh(g){
   }
  }
 }
-function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','enteredTurn','evolvedTurn','entryWindow','validationBase'])delete out[k];return out;}
+function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','validationBase'])delete out[k];return out;}
 function returnStack(g,p,mon,zone){
  const stack=[reduced(mon),...(mon.evolutionCards||[]).map(reduced),...(mon.energyCards||[]),...(mon.tools||[])];
  if(p.active===mon)p.active=null;else p.bench.splice(p.bench.indexOf(mon),1);
@@ -126,7 +126,7 @@ function returnStack(g,p,mon,zone){
  if(!p.active&&!p.bench.length){g.status='finished';g.winner=opponent(g,p.id).id;}
  if(!p.active&&p.bench.length>1)g.pendingReferenceChoice={kind:'PROMOTE',playerId:p.id,options:p.bench.map(id)};
 }
-function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;}
+function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;}
 function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);assert(p.active&&index>=0,'INVALID_BENCH_CHOICE');clearActiveEffects(p.active);[p.active,p.bench[index]]=[p.bench[index],p.active];event(g,p.id,'SWITCH',{activeInstanceId:id(p.active)});}
 function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false,skipResistance=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
@@ -322,7 +322,7 @@ function verifyRequests(g,actor,card,effect,action){
   const r=Selection.resolve(original,req,action.selections);
   if(r.kind==='COUNTERS'){
    const allocation=action.selections?.allocation;assert(allocation&&typeof allocation==='object'&&!Array.isArray(allocation),'COUNTER_ALLOCATION_REQUIRED');
-   const entries=Object.entries(allocation);assert(entries.every(([key,n])=>r.candidates.some(c=>c.id===key)&&Number.isInteger(n)&&n>=0)&&entries.reduce((s,[,n])=>s+n,0)===6,'INVALID_COUNTER_ALLOCATION');continue;
+   const entries=Object.entries(allocation);assert(entries.every(([key,n])=>r.candidates.some(c=>c.id===key)&&Number.isInteger(n)&&n>=0)&&entries.reduce((s,[,n])=>s+n,0)===r.min&&r.min===r.max,'INVALID_COUNTER_ALLOCATION');continue;
   }
   if(r.kind==='COUNT'){const n=action.selections?.count;assert(Number.isInteger(n)&&n>=r.min&&n<=r.max,'INVALID_COUNTER_COUNT');continue;}
   const ids=r.kind==='POKEMON'?(action.targetIds||[]):selected(action,r.key);
@@ -394,7 +394,7 @@ function preflight(g,actor,action){
   if(action.type==='attack'||action.type==='effect_attack')throw Error('REFERENCE_ATTACK_TURN_ACTION_REQUIRED');
   if(action.type==='attack_turn'){
    const mon=p.active,r=record(mon),a=r?.attacks[action.attackIndex];assert(mon&&a,'ATTACK_MISSING');requirePlan(mon,a);
-   assert(g.turnNumber!==1,'FIRST_PLAYER_FIRST_TURN_ATTACK');assert(mon.referenceCannotAttackTurn!==g.turnNumber,'ATTACK_DISABLED_THIS_TURN');assert(!(mon.referenceNamedAttackLock?.turn===g.turnNumber&&mon.referenceNamedAttackLock.attackName===a.name),'NAMED_ATTACK_LOCKED_THIS_TURN');
+   assert(g.turnNumber!==1,'FIRST_PLAYER_FIRST_TURN_ATTACK');assert(mon.referenceCannotAttackTurn!==g.turnNumber,'ATTACK_DISABLED_THIS_TURN');assert(!(mon.referenceNamedAttackLock?.turn===g.turnNumber&&mon.referenceNamedAttackLock.attackName===a.name),'NAMED_ATTACK_LOCKED_THIS_TURN');assert(mon.referenceAttackLockUntilSwitch?.attackName!==a.name,'ATTACK_LOCKED_UNTIL_SWITCH');
    assert(!['ASLEEP','PARALYZED'].includes(mon.statusCondition),'ATTACK_BLOCKED_BY_STATUS');
    if(!a.cost.every(t=>[...basicTypes,'無色'].includes(t)))stop(mon,a,'UNREVIEWED_ENERGY_SYMBOL');
    // Continuous Rocket Team ability: include the attacking Pokemon itself.
@@ -651,6 +651,10 @@ function applyPlan(g,actor,card,effect,action){
     o.active.referenceNamedAttackLock={turn:g.turnNumber+1,attackName:move.name};
    break;
   }
+  case 'ATTACK_LOCK_UNTIL_SWITCH':
+   damage(g,actor,o.active,Number(effect.damage));
+   card.referenceAttackLockUntilSwitch={attackName:plan.attackName};
+   break;
   case 'CONDITIONAL_ATTACK_BONUS':
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
    break;
