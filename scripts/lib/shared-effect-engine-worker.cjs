@@ -237,7 +237,7 @@ function prepare(r, e, kind) {
       });
     }
   }
-  if (m === "ATTACK_DISCARD_DEFENDER_ENERGY" && e.plan.specialOnly) {
+  if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m) && e.plan.specialOnly) {
     const opponentEntries = manifest.decks[1-locations[0].deck].cards;
     const ignition = [...records.values()].find(record => record.mainPlan?.mechanic === "IGNITION");
     if (!ignition) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
@@ -417,13 +417,13 @@ function prepare(r, e, kind) {
     }
   }
   if (["ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_HEAL_OWN_TARGET","ATTACK_DISCARD_DEFENDER_ENERGY",
-    "ATTACK_DISCARD_FIELD_BASIC","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
+    "ATTACK_DISCARD_FIELD_BASIC","ATTACK_COIN_DISCARD_DEFENDER_ENERGY","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
     const [own, other] = frame.game.players;
     if (m === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
       own.deck.push(...own.hand.splice(Math.max(0,e.plan.limit-1)));
     }
     if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
-    if (m === "ATTACK_DISCARD_DEFENDER_ENERGY") {
+    if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m)) {
       const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly;
       const zone = [other.deck, other.hand, other.prizeCards].find(cards => cards.some(eligible));
       if (!zone) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};

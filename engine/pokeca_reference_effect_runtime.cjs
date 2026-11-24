@@ -200,7 +200,14 @@ function requests(g,actor,card,effect){
  if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
- if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'){
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  // Printed Energy "個" can be supplied by one physical multi-unit Energy card.
+  const eligible=(card.energyCards||[]).filter(energy=>
+    energyUnits({...card,energyCards:[energy]}).length>0);
+  cardRequest('energy',eligible,Math.min(1,eligible.length),
+    Math.min(effect.plan.count,eligible.length));
+ }
+ if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
   const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
@@ -330,6 +337,19 @@ function verifyRequests(g,actor,card,effect,action){
   for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  // The selection specifies physical cards, but the printed quantity counts
+  // their provided Energy units (including multi-unit special Energy).
+  const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+  const available=(card.energyCards||[]).filter(energy=>contribution(energy)>0);
+  const choice=selected(action,'energy').map(ident=>available.find(e=>id(e)===ident));
+  assert(choice.every(Boolean),'INVALID_SELF_ENERGY_SELECTION');
+  const target=Math.min(effect.plan.count,available.reduce((n,e)=>n+contribution(e),0));
+  const selectedUnits=choice.reduce((n,e)=>n+contribution(e),0);
+  assert(selectedUnits>=target,'INSUFFICIENT_SELECTED_ENERGY_UNITS');
+  assert(choice.every(e=>selectedUnits-contribution(e)<target),
+    'REDUNDANT_SELF_ENERGY_DISCARD_SELECTION');
+ }
  if(m==='AKAMATSU'){
   const hand=selected(action,'toHand'),target=selected(action,'attachTo');assert(hand.length===Math.min(1,cards.length)&&hand.every(i=>cards.some(c=>id(c)===i)),'AKAMATSU_HAND_CHOICE');assert(target.length===(cards.length>1?1:0),'AKAMATSU_ATTACH_CHOICE');
  }
@@ -633,8 +653,11 @@ function applyPlan(g,actor,card,effect,action){
    if(ids('drawChoice')[0]==='draw')draw(g,p,Math.max(0,plan.limit-p.hand.length));
    break;
   case 'ATTACK_DISCARD_DEFENDER_ENERGY':
+  case 'ATTACK_COIN_DISCARD_DEFENDER_ENERGY':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)discardSelectedAttachment(g,actor,o,[o.active],ids('energy'));
+   if((m!=='ATTACK_COIN_DISCARD_DEFENDER_ENERGY'||coin(g,actor))&&
+      o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+    discardSelectedAttachment(g,actor,o,[o.active],ids('energy'));
    break;
   case 'ATTACK_HEAL_OWN_TARGET':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
@@ -678,7 +701,7 @@ function applyPlan(g,actor,card,effect,action){
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
     o.active.referenceCannotAttackTurn=g.turnNumber+1;
    break;
-  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
+  case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
    let amount=Number.parseInt(effect.damage,10)||0,mon=o.active,options={};
    if(m==='FIXED_COIN_HITS'){amount=plan.base||0;for(let i=0;i<plan.flips;i++)if(coin(g,actor))amount+=plan.unit;}
    if(m==='COIN_FAILURE_DAMAGE')amount=coin(g,actor)?amount:0;
@@ -733,6 +756,24 @@ function applyPlan(g,actor,card,effect,action){
     const discarded=(card.energyCards||[]).splice(0);
     p.discard.push(...discarded);
     event(g,actor,'DISCARD',{cardIds:discarded.map(id),sourceInstanceId:id(card)});
+   }
+   if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+    const chosen=ids('energy'),attached=card.energyCards||[];
+    assert(Number.isInteger(plan.count)&&plan.count>=2&&plan.count<=9,
+      'INVALID_PRINTED_SELF_ENERGY_DISCARD_COUNT');
+    const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+    const target=Math.min(plan.count,attached.reduce((sum,e)=>sum+contribution(e),0));
+    const selectedEnergy=chosen.map(ident=>attached.find(e=>id(e)===ident));
+    assert(selectedEnergy.every(Boolean)&&
+      selectedEnergy.reduce((sum,e)=>sum+contribution(e),0)>=target,
+      'PRINTED_SELF_ENERGY_DISCARD_COUNT_CHANGED');
+    for(const ident of chosen){
+     const index=attached.findIndex(energy=>id(energy)===ident);
+     assert(index>=0,'SELF_ENERGY_DISCARD_TARGET_CHANGED');
+     const [discarded]=attached.splice(index,1);
+     p.discard.push(discarded);
+     event(g,actor,'DISCARD',{cardIds:[id(discarded)],sourceInstanceId:id(card)});
+    }
    }
    if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK'){
     const attached=card.energyCards,energyIndex=attached.findIndex(energy=>id(energy)===ids('energy')[0]);
@@ -1038,6 +1079,18 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+  const entries=(card.energyCards||[]).map((energy,index)=>({
+    energy,index,units:energyUnits({...card,energyCards:[energy]}).length
+  })).filter(e=>e.units>0).sort((a,b)=>b.units-a.units||a.index-b.index);
+  const chosen=[];let covered=0;
+  for(const entry of entries){
+   if(covered>=effect.plan.count)break;
+   chosen.push(entry.energy);covered+=entry.units;
+  }
+  action.selections||={};
+  action.selections.energy=chosen.map(id);
+ }
  if(m==='AKAMATSU'){
   const candidates=requests(g,actor,card,effect).find(r=>r.key==='cards').candidates,types=new Set(),chosen=candidates.filter(c=>{if(types.has(c.energyType))return false;types.add(c.energyType);return true;}).slice(0,2);
   action.selections.cards=chosen.map(id);action.selections.toHand=chosen.slice(0,1).map(id);action.selections.attachTo=chosen.length>1?[id(p.active)]:[];
