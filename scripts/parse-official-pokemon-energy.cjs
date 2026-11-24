@@ -19,6 +19,7 @@ function linkedPredecessor(chain,stage,name){
   const body=boxed?html.slice(row[0].length).replace(/<\/div\/?>\s*$/,''):html;
   const linked=[...body.matchAll(entry)];
   if(!linked.length||linked.map(x=>x[0]).join('').replace(/\s/g,'')!==body.replace(/\s/g,''))return null;
+  if(linked.some(link=>link[3]&&link[1]!==`ev_${link[3]}`))return null;
   return linked;
  });
  if(parsed.includes(null))return null;
@@ -37,6 +38,17 @@ function predecessor(right,stage,name){
   const [next,current,previous]=linkedRows;
   if(next[1]==='ev_off'&&!next[3]&&current[1]==='ev_on'&&current[4]==='on'&&label(current[2])===name&&previous[1]==='ev_off'&&previous[4]==='off')
    return label(previous[2]);
+ }
+ // A three-row arrow-linked evolution chain must never fall back to the
+ // unmarked-row heuristic: a missing arrow makes the predecessor ambiguous.
+ if(stage===1&&linkedRows.length===3&&linkedRows.some(r=>r[3]||r[4])){
+  // The official chain may contain a BREAK stage and boxed alternative
+  // evolutions above the highlighted stage-1 Pokemon.  Validate every
+  // entry/arrow, then use ONLY the row immediately below the current Pokemon.
+  // Ambiguous or malformed chains still fail closed rather than guessing.
+  const verified=linkedPredecessor(evolution,stage,name);
+  if(verified)return verified;
+  assert(false,'UNSUPPORTED_EVOLUTION_CHAIN');
  }
  const ordinary=[...right.matchAll(/<div class="evolution ev_off">\s*<a\b[^>]*>([^<]+)<\/a>/g)].map(m=>label(m[1]));
  if(ordinary.length!==stage){
