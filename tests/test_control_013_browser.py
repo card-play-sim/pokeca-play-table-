@@ -334,6 +334,19 @@ async def main():
      source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
      assert selected[0] in {card['id'] for card in source['energyCards']}
      assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
+   if m in ('TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'):
+    plan=f['e']['plan']
+    picked=set(option['action']['selections']['cards'])
+    assert picked<={card['id'] for card in before['players'][0]['deck'][:plan['limit']]}
+    assert picked<={card['id'] for card in after['players'][0]['hand']}
+    assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE':
+    tools={card['id'] for card in before['players'][1]['active']['tools']}
+    assert tools and tools<={card['id'] for card in after['players'][1]['discard']}
+    discard_index=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='DISCARD' and tools<=set(ev['details'].get('cardIds',[])))
+    damage_index=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==before['players'][1]['active']['id'])
+    assert discard_index<damage_index
    if m=='RECOVER_NON_RULE_AND_ENERGY':
     picked=set(option['action']['selections']['cards'])
     assert picked<={card['id'] for card in after['players'][0]['hand']}

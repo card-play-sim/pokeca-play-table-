@@ -211,6 +211,16 @@ const topDeckEffects={
  TOP_SUPPORTER_SEARCH:{limit:7,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'}
 };
 const deckWindow=(deck,scope)=>scope?deck.slice(0,scope.limit):deck;
+function mixedTopCategory(c,plan){
+ if(plan.mechanic==='TRAINER_TOP_TYPED_SEARCH'){
+  if(c.kind==='pokemon'&&record(c).facts.types.includes(plan.type))return 'pokemon';
+  if(basicEnergy(c)&&c.energyType===plan.type)return 'energy';
+ }else {
+  if(c.kind==='pokemon')return 'pokemon';
+  if(['item','supporter','tool','stadium'].includes(record(c)?.category))return 'trainer';
+ }
+ return null;
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -303,6 +313,16 @@ function requests(g,actor,card,effect){
   add('source','CARD',own.filter(c=>(c.damage||0)>0).map(c=>({id:id(c),name:c.name,damage:c.damage||0})),1,1);
   add('target','CARD',opp.map(c=>({id:id(c),name:c.name})),1,1);
   add('count','COUNT',[],1,3,{dependencies:[{kind:'maxFromSelection',key:'source',field:'damage',divisor:10}]});
+ }
+ if(['TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'].includes(m)){
+  const plan=effect.plan,eligible=deckWindow(p.deck,plan).filter(c=>mixedTopCategory(c,plan));
+  const distinct=m==='TRAINER_TOP_POKEMON_TRAINER';
+  const limit=distinct?new Set(eligible.map(c=>mixedTopCategory(c,plan))).size:Math.min(plan.amount,eligible.length);
+  deckRequest('cards',eligible,0,limit,plan);
+  if(distinct){
+   out.at(-1).candidates=out.at(-1).candidates.map(c=>({...c,searchCategory:mixedTopCategory(c,plan)}));
+   out.at(-1).constraints=[{kind:'distinct',field:'searchCategory',error:'TOP_SEARCH_DUPLICATE_CATEGORY'}];
+  }
  }
  if(topDeckEffects[m]){
   const scope=topDeckEffects[m],window=deckWindow(p.deck,scope);
@@ -508,6 +528,7 @@ function preflight(g,actor,action){
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
    if(m==='RECYCLE_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');
    if(['DISCARD_DECK_TOP','SEARCH_MEGA_EVOLUTION_EX','COIN_SEARCH_POKEMON'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(['TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'].includes(m))assert(p.deck.length>0,'TOP_SEARCH_DECK_EMPTY');
    if(m==='RECOVER_NON_RULE_AND_ENERGY')assert(p.discard.some(nonRuleRecovery),'NO_RECOVERABLE_NON_RULE_CARD');
    if(m==='HEAL_LOW_HP_FULL')assert(field(p).some(c=>lowHpHeal(c,r.mainPlan)),'NO_LOW_HP_HEAL_TARGET');
    if(m==='RECOVER_TYPED_DISCARD')assert(p.discard.some(c=>typedRecoveryCandidate(c,r.mainPlan)),'NO_RECOVERABLE_TYPED_CARD');if(m==='RECOVER_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');if(m==='DISCARD_HAND_DRAW')assert(p.deck.length>0||p.hand.some(c=>id(c)!==id(card)),'NO_DISCARD_OR_DRAW_POSSIBLE');if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='REPELLENT')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU','TOP_SUPPORTER_SEARCH'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
@@ -557,6 +578,17 @@ function inspectDeckTopToHand(g,p,scope,chosenIds){
  if(chosen&&scope.reveal)event(g,p.id,'REVEAL',{cardIds:[id(chosen)],toPlayer:opponent(g,p.id).id});
  event(g,p.id,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],...(!scope.reveal?{privateTo:p.id}:{}),fromZone:'deck'});
  if(scope.remainder==='shuffle')shuffle(g,p);
+}
+function resolveMixedTop(g,actor,p,plan,chosenIds){
+ const top=p.deck.splice(0,plan.limit);
+ const chosen=chosenIds.map(ident=>top.find(c=>id(c)===ident));
+ assert(chosen.every(c=>c&&mixedTopCategory(c,plan)),'TOP_SEARCH_SELECTION_CHANGED');
+ p.hand.push(...chosen);
+ p.deck.push(...top.filter(c=>!chosenIds.includes(id(c))));
+ event(g,actor,'SEARCH_DECK',{selectedCount:chosenIds.length,inspectedCount:top.length,privateTo:actor});
+ if(chosen.length)event(g,actor,'REVEAL',{cardIds:chosenIds,toPlayer:opponent(g,actor).id});
+ event(g,actor,'ADD_TO_HAND',{cardIds:chosenIds,fromZone:'deck'});
+ shuffle(g,p);
 }
 function finishAttack(g,actor){
  g.attackUsed=true;g.referenceAttackTurnPending=actor;
@@ -714,6 +746,17 @@ function applyPlan(g,actor,card,effect,action){
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(ids('drawChoice')[0]==='draw')draw(g,p,Math.max(0,plan.limit-p.hand.length));
    break;
+  case 'ATTACK_DISCARD_TOOL_BEFORE_DAMAGE':{
+   const defender=o.active;
+   if(defender.referenceProtection?.opponentTurn!==g.turnNumber){
+    const tools=(defender.tools||[]).splice(0);
+    o.discard.push(...tools);
+    if(tools.length)event(g,actor,'DISCARD',{cardIds:tools.map(id),sourceInstanceId:id(defender),fromZone:'attached'});
+    refresh(g);
+   }
+   damage(g,actor,defender,Number(effect.damage));
+   break;
+  }
   case 'ATTACK_EVOLUTION_BONUS_DISCARD':{
    const evolved=record(o.active).facts.stage>0;
    damage(g,actor,o.active,plan.base+(evolved?plan.bonus:0));
@@ -1027,6 +1070,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_ACTIVE_DAMAGE':heal(g,actor,p.active,plan.amount);break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
+  case 'TRAINER_TOP_TYPED_SEARCH':case 'TRAINER_TOP_POKEMON_TRAINER':resolveMixedTop(g,actor,p,plan,ids('cards'));break;
   case 'RECOVER_NON_RULE_AND_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'HEAL_LOW_HP_FULL':{
    const mon=find(g,ids('cards')[0])?.card;

@@ -243,6 +243,14 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
+  return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};
+ const topDistinct=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中からポケモンとトレーナーズを1枚ずつ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topDistinct)
+  return {mechanic:'TRAINER_TOP_POKEMON_TRAINER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topDistinct[1]),amount:2,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='ダメージを与える前に、相手のバトルポケモンについている「ポケモンのどうぐ」をトラッシュする。'&&/^\d+$/.test(String(entry.damage)))
+  return {mechanic:'ATTACK_DISCARD_TOOL_BEFORE_DAMAGE',commands:['DISCARD','DAMAGE'],sharedWording:true};
  const recovery=generic.match(/^自分のトラッシュからポケモン\(「ルールを持つポケモン」をのぞく\)と基本エネルギーを合計([1-9])枚まで選び、相手に見せて、手札に加える。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&recovery)
   return {mechanic:'RECOVER_NON_RULE_AND_ENERGY',commands:['REVEAL','ADD_TO_HAND'],amount:Number(recovery[1]),sharedWording:true};
