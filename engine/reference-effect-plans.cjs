@@ -243,6 +243,33 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
+  return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};
+ const topDistinct=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中からポケモンとトレーナーズを1枚ずつ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topDistinct)
+  return {mechanic:'TRAINER_TOP_POKEMON_TRAINER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topDistinct[1]),amount:2,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='ダメージを与える前に、相手のバトルポケモンについている「ポケモンのどうぐ」をトラッシュする。'&&/^\d+$/.test(String(entry.damage)))
+  return {mechanic:'ATTACK_DISCARD_TOOL_BEFORE_DAMAGE',commands:['DISCARD','DAMAGE'],sharedWording:true};
+ const recovery=generic.match(/^自分のトラッシュからポケモン\(「ルールを持つポケモン」をのぞく\)と基本エネルギーを合計([1-9])枚まで選び、相手に見せて、手札に加える。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&recovery)
+  return {mechanic:'RECOVER_NON_RULE_AND_ENERGY',commands:['REVEAL','ADD_TO_HAND'],amount:Number(recovery[1]),sharedWording:true};
+ const fullHeal=generic.match(/^残りHPが「([1-9]\d{0,2})」以下の自分のポケモン1匹のHPを、すべて回復する。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&fullHeal)
+  return {mechanic:'HEAL_LOW_HP_FULL',commands:['HEAL'],threshold:Number(fullHeal[1]),sharedWording:true};
+ const evoDiscard=generic.match(/^相手のバトルポケモンが進化ポケモンなら、([1-9]\d{0,2})ダメージ追加。その場合、このポケモンについているエネルギーを、すべてトラッシュする。$/);
+ if(kind==='ATTACK'&&evoDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_EVOLUTION_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),bonus:Number(evoDiscard[1]),sharedWording:true};
+ const prizeDiscard=generic.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。このポケモンについているエネルギーを1個選び、トラッシュする。$/);
+ if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
+ // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&discardDrawAbility)
+  return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};
+ const attachDrawAbility=generic.match(/^自分の番に1回使える。自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、このポケモンにつける。その後、自分の山札を([1-9])枚引く。$/);
+ if(kind==='ABILITY'&&attachDrawAbility)
+  return {mechanic:'ABILITY_ATTACH_SELF_DRAW',commands:['ATTACH_ENERGY','DRAW'],type:attachDrawAbility[1],amount:Number(attachDrawAbility[2]),sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
