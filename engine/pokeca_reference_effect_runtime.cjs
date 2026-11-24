@@ -201,6 +201,8 @@ function attackSearchCandidate(c,plan){
   default:return r?.category===plan.filter;
  }
 }
+function nonRuleRecovery(c){return c.kind==='pokemon'?!record(c).facts.rulePokemon:basicEnergy(c);}
+function lowHpHeal(c,plan){return c.damage>0&&c.hp-c.damage>0&&c.hp-c.damage<=plan.threshold;}
 function typedRecoveryCandidate(c,plan){return c.kind==='pokemon'?record(c).facts.types.includes(plan.type):basicEnergy(c)&&c.energyType===plan.type;}
 // The same scope defines the private picker and its resolution.
 const topDeckEffects={
@@ -342,6 +344,9 @@ function requests(g,actor,card,effect){
  if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
  if(m==='RECYCLE_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='HEAL_AND_CLEAR_STATUS')cardRequest('cards',own.filter(canHealOrClearStatus),1,1);
+ if(m==='RECOVER_NON_RULE_AND_ENERGY'){const pool=p.discard.filter(nonRuleRecovery);cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
+ if(m==='HEAL_LOW_HP_FULL')cardRequest('cards',own.filter(c=>lowHpHeal(c,effect.plan)),1,1);
+ if(m==='ATTACK_PRIZE_BONUS_DISCARD'){const pool=card.energyCards||[];const count=Math.min(1,pool.length);cardRequest('energy',pool,count,count);}
  if(m==='RECOVER_TYPED_DISCARD'){const pool=p.discard.filter(c=>typedRecoveryCandidate(c,effect.plan));cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
  if(m==='RECOVER_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='STRETCHER')cardRequest('cards',p.discard.filter(c=>c.kind==='pokemon'||basicEnergy(c)),1,1);
@@ -503,6 +508,8 @@ function preflight(g,actor,action){
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
    if(m==='RECYCLE_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');
    if(['DISCARD_DECK_TOP','SEARCH_MEGA_EVOLUTION_EX','COIN_SEARCH_POKEMON'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='RECOVER_NON_RULE_AND_ENERGY')assert(p.discard.some(nonRuleRecovery),'NO_RECOVERABLE_NON_RULE_CARD');
+   if(m==='HEAL_LOW_HP_FULL')assert(field(p).some(c=>lowHpHeal(c,r.mainPlan)),'NO_LOW_HP_HEAL_TARGET');
    if(m==='RECOVER_TYPED_DISCARD')assert(p.discard.some(c=>typedRecoveryCandidate(c,r.mainPlan)),'NO_RECOVERABLE_TYPED_CARD');if(m==='RECOVER_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');if(m==='DISCARD_HAND_DRAW')assert(p.deck.length>0||p.hand.some(c=>id(c)!==id(card)),'NO_DISCARD_OR_DRAW_POSSIBLE');if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='REPELLENT')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU','TOP_SUPPORTER_SEARCH'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
    if(m==='UNFAIR')assert(wasKnockedOut(g,actor),'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
    if(m==='ROSA')assert(p.prizes>o.prizes,'MORE_REMAINING_PRIZES_REQUIRED');
@@ -706,6 +713,16 @@ function applyPlan(g,actor,card,effect,action){
   case 'ATTACK_OPTIONAL_DRAW_TO_LIMIT':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(ids('drawChoice')[0]==='draw')draw(g,p,Math.max(0,plan.limit-p.hand.length));
+   break;
+  case 'ATTACK_EVOLUTION_BONUS_DISCARD':{
+   const evolved=record(o.active).facts.stage>0;
+   damage(g,actor,o.active,plan.base+(evolved?plan.bonus:0));
+   if(evolved)discardSelectedAttachment(g,actor,p,[card],(card.energyCards||[]).map(id));
+   break;
+  }
+  case 'ATTACK_PRIZE_BONUS_DISCARD':
+   damage(g,actor,o.active,plan.base+(6-o.prizes)*plan.unit);
+   discardSelectedAttachment(g,actor,p,[card],ids('energy'));
    break;
   case 'ATTACK_DISCARD_DEFENDER_ENERGY':
   case 'ATTACK_COIN_DISCARD_DEFENDER_ENERGY':
@@ -1010,6 +1027,12 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_ACTIVE_DAMAGE':heal(g,actor,p.active,plan.amount);break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
+  case 'RECOVER_NON_RULE_AND_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
+  case 'HEAL_LOW_HP_FULL':{
+   const mon=find(g,ids('cards')[0])?.card;
+   assert(mon&&lowHpHeal(mon,plan),'LOW_HP_TARGET_CHANGED');
+   heal(g,actor,mon,mon.damage);break;
+  }
   case 'RECOVER_TYPED_DISCARD':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'RECOVER_BASIC_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'HEAL_AND_CLEAR_STATUS':{

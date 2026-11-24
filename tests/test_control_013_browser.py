@@ -334,6 +334,18 @@ async def main():
      source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
      assert selected[0] in {card['id'] for card in source['energyCards']}
      assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
+   if m=='RECOVER_NON_RULE_AND_ENERGY':
+    picked=set(option['action']['selections']['cards'])
+    assert picked<={card['id'] for card in after['players'][0]['hand']}
+    assert not picked&{card['id'] for card in after['players'][0]['discard']}
+   if m=='HEAL_LOW_HP_FULL':
+    picked=option['action']['selections']['cards'][0]
+    mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c and c['id']==picked)
+    assert mon['damage']==0
+   if m in ('ATTACK_EVOLUTION_BONUS_DISCARD','ATTACK_PRIZE_BONUS_DISCARD'):
+    chosen=option['action'].get('selections',{}).get('energy',[]) if m=='ATTACK_PRIZE_BONUS_DISCARD' else [card['id'] for card in before['players'][0]['active']['energyCards']] if before['players'][1]['active']['stage']>0 else []
+    assert set(chosen)<={card['id'] for card in after['players'][0]['discard']}
+    assert not set(chosen)&{card['id'] for card in after['players'][0]['active']['energyCards']}
    if m=='RECOVER_TYPED_DISCARD':assert all(any(c0['id']==i for c0 in after['players'][0]['hand']) for i in option['action']['selections']['cards'])
    if m=='FIXED_COIN_HITS':assert len([e for e in after['history'][len(before.get('history',[])):] if e.get('details',{}).get('command')=='COIN_FLIP' and isinstance(e.get('details',{}).get('heads'),bool)])==f['e']['plan']['flips']
    for _ in range(20):

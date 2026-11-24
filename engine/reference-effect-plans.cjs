@@ -243,6 +243,18 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const recovery=generic.match(/^自分のトラッシュからポケモン\(「ルールを持つポケモン」をのぞく\)と基本エネルギーを合計([1-9])枚まで選び、相手に見せて、手札に加える。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&recovery)
+  return {mechanic:'RECOVER_NON_RULE_AND_ENERGY',commands:['REVEAL','ADD_TO_HAND'],amount:Number(recovery[1]),sharedWording:true};
+ const fullHeal=generic.match(/^残りHPが「([1-9]\d{0,2})」以下の自分のポケモン1匹のHPを、すべて回復する。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&fullHeal)
+  return {mechanic:'HEAL_LOW_HP_FULL',commands:['HEAL'],threshold:Number(fullHeal[1]),sharedWording:true};
+ const evoDiscard=generic.match(/^相手のバトルポケモンが進化ポケモンなら、([1-9]\d{0,2})ダメージ追加。その場合、このポケモンについているエネルギーを、すべてトラッシュする。$/);
+ if(kind==='ATTACK'&&evoDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_EVOLUTION_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),bonus:Number(evoDiscard[1]),sharedWording:true};
+ const prizeDiscard=generic.match(/^相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ追加。このポケモンについているエネルギーを1個選び、トラッシュする。$/);
+ if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
  // Cost-paid abilities use physical hand cards, never normal energy attachment.
  const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&discardDrawAbility)
