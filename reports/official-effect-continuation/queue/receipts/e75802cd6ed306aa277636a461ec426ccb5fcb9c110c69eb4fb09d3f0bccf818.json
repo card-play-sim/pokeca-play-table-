@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_8088266F942BB1DD:31cf88fe4b86a8a84f46903046d0f92d1afaddda3ad984e9c9dabbb90f414fe3",
   "taskFingerprint": "31cf88fe4b86a8a84f46903046d0f92d1afaddda3ad984e9c9dabbb90f414fe3",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "9b3e6987-7112-422b-9926-cba93efa15ab",
-  "status": "BLOCKED",
+  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
+  "attemptId": "ab9a7595-ceea-418d-9b47-9b29a413f193",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47275:attack:ツインソニック:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_SPREAD_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "c851d7de009eb2a9c384164b7c15daa50f2a470be04254c0654d711d46fffa51"
+  "checksum": "5d2f8bcae8cd42ca23e717e6c56f56e3b923c43f35fe92ac420dea5962df9361"
 }

@@ -1,0 +1,1837 @@
+{
+  "state": "PREPUBLICATION_ENGINE_PASS",
+  "priorQualified": 218,
+  "attemptedExactPrints": 2557,
+  "compiledExactCandidates": 141,
+  "engineQualified": [
+    "49633",
+    "50176",
+    "50680",
+    "45236",
+    "45291",
+    "45610",
+    "45612",
+    "45722",
+    "45994",
+    "46472",
+    "46488",
+    "46490",
+    "46698",
+    "47255",
+    "47275",
+    "47334",
+    "47375",
+    "47434",
+    "47464",
+    "47471",
+    "47510",
+    "47513",
+    "47612",
+    "48481",
+    "49614",
+    "50620",
+    "50662",
+    "50697",
+    "45199",
+    "45532",
+    "45538",
+    "45543",
+    "45622",
+    "46238",
+    "46274",
+    "46351",
+    "46785",
+    "47143",
+    "47573",
+    "47604",
+    "47654",
+    "49667",
+    "47973",
+    "47980",
+    "47985",
+    "47993",
+    "47998",
+    "48027",
+    "48379",
+    "48402",
+    "48406",
+    "48493",
+    "45620",
+    "45671",
+    "45749",
+    "45960",
+    "45995",
+    "46189",
+    "46356",
+    "46532",
+    "49110",
+    "49691",
+    "49697",
+    "49706",
+    "50026",
+    "50072",
+    "50118",
+    "50278",
+    "50385",
+    "50526",
+    "50595",
+    "50678",
+    "50876",
+    "50879",
+    "47062",
+    "47070",
+    "47324",
+    "47326",
+    "47330",
+    "47333",
+    "47339",
+    "47380",
+    "47381",
+    "47388",
+    "47392",
+    "47404",
+    "47594",
+    "47675",
+    "47701",
+    "47775",
+    "47798",
+    "47850",
+    "47963",
+    "48047",
+    "48573",
+    "48612",
+    "48624",
+    "48631",
+    "48786",
+    "48910",
+    "48953",
+    "48959",
+    "48975",
+    "49094",
+    "49163",
+    "49179",
+    "49195",
+    "49210",
+    "49275",
+    "49310",
+    "49317",
+    "49352",
+    "50203",
+    "47124",
+    "48553",
+    "48809",
+    "48822",
+    "48852",
+    "48857",
+    "48866",
+    "48902",
+    "48907",
+    "48912",
+    "49017",
+    "49044",
+    "49270",
+    "49191",
+    "50282",
+    "50321",
+    "48391",
+    "48504",
+    "48519",
+    "46412",
+    "46647",
+    "46656",
+    "50349",
+    "48368",
+    "48653"
+  ],
+  "cumulativeEngineQualified": 356,
+  "publishedAndBattleVerified": [],
+  "remaining": 2419,
+  "remainingByReason": {
+    "QUALIFIED_PREPUBLICATION": 138,
+    "NEEDS_ENGINE_EXECUTION": 0,
+    "NEEDS_SHARED_MECHANIC": 2248,
+    "NEEDS_OFFICIAL_PARSER": 127,
+    "EVIDENCE_BLOCKED": 44,
+    "EFFECT_UNRESOLVED": 0,
+    "PENDING_OFFICIAL_FETCH": 0
+  },
+  "effectSlots": [
+    {
+      "officialCardId": "49633",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "49633",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "FIXED_COIN_HITS",
+      "evidenceSha256": "1023c7f8f7c15ce18b2596a8c268bfc42f4e5ef2a4f2b6bec940ba4bb351899d"
+    },
+    {
+      "officialCardId": "50176",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "50176",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "50680",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "f68594cf184bea0a7374c4e7d5bf185faecdc4bc0565795b4cfe389f0a80dddd"
+    },
+    {
+      "officialCardId": "45236",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_RESET_HAND",
+      "evidenceSha256": "6a9af355e7a25ff314c579a70bed85ea8dbda1d4572387af51bd8bab9bfb9249"
+    },
+    {
+      "officialCardId": "45236",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "f0efc944170030788295155ce0a01b2cc25c8fd5d9ab3456b150b72f6a66f15e"
+    },
+    {
+      "officialCardId": "45291",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "bf8ca452286769378b20ee1ad0d77d1f94eeceeb530d11ddcee7700ea94c3a15"
+    },
+    {
+      "officialCardId": "45291",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45610",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "3026e1c930d77b87459f098be9355f75e108fe9379581cf3a0f5ef1d50bf2333"
+    },
+    {
+      "officialCardId": "45612",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "45612",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45722",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "45994",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "46472",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_RESET_HAND",
+      "evidenceSha256": "6a9af355e7a25ff314c579a70bed85ea8dbda1d4572387af51bd8bab9bfb9249"
+    },
+    {
+      "officialCardId": "46472",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "f0efc944170030788295155ce0a01b2cc25c8fd5d9ab3456b150b72f6a66f15e"
+    },
+    {
+      "officialCardId": "46488",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "46490",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "46490",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "d2147bdd69c58323801196d4d0dd3fa20c3a3973f07a10a76d3f3415fce0a1b1"
+    },
+    {
+      "officialCardId": "46698",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "47255",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "47275",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47275",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "fbe6c10ba06ec4225d914a512edf2f34f9633a1d5959029b61293c0a64df5c68"
+    },
+    {
+      "officialCardId": "47334",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "47334",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+      "evidenceSha256": "cbb6f3709966cff915b700d8c8c033bfb28c8634f49ffcff09caaf9026906f26"
+    },
+    {
+      "officialCardId": "47375",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "47375",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_ATTACHED_TOOL_COUNT",
+      "evidenceSha256": "cbb6f3709966cff915b700d8c8c033bfb28c8634f49ffcff09caaf9026906f26"
+    },
+    {
+      "officialCardId": "47434",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "47464",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+      "evidenceSha256": "01ff70606c44c0b1230929e67b8fbf2f656ae047519acaa37727dfcce9ec285d"
+    },
+    {
+      "officialCardId": "47464",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "47471",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "47471",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "FIXED_COIN_HITS",
+      "evidenceSha256": "1023c7f8f7c15ce18b2596a8c268bfc42f4e5ef2a4f2b6bec940ba4bb351899d"
+    },
+    {
+      "officialCardId": "47510",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+      "evidenceSha256": "01ff70606c44c0b1230929e67b8fbf2f656ae047519acaa37727dfcce9ec285d"
+    },
+    {
+      "officialCardId": "47510",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "47513",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "47513",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "FIXED_COIN_HITS",
+      "evidenceSha256": "1023c7f8f7c15ce18b2596a8c268bfc42f4e5ef2a4f2b6bec940ba4bb351899d"
+    },
+    {
+      "officialCardId": "47612",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "48481",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "RETREAT_LOCK_ATTACK",
+      "evidenceSha256": "8a188b40a7bc0f153b92a03f119d82aa732dd925001e823c02e78c130eb055b5"
+    },
+    {
+      "officialCardId": "48481",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "4f9203b3209f311f7138cb0399b18724684b0b08eebc6489bbed9258211aa0a0"
+    },
+    {
+      "officialCardId": "49614",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "49614",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "50620",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "50620",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "627fca325fef32486433a747eb1f0e929557384fa09beb300047c693e9b0f304"
+    },
+    {
+      "officialCardId": "50662",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "50662",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "2294120e3c829a9e7adf958f7ec4c789221e69a0428cb274ddaf74f8cffe2b34"
+    },
+    {
+      "officialCardId": "50697",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "55af7c157a3820c34f053b2c51795f9c85e881e69b0f1cbd598ff1e91c86ec3c"
+    },
+    {
+      "officialCardId": "50697",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_NAMED_NEXT_TURN_LOCK",
+      "evidenceSha256": "0fdfc23842383e563a02e6099e9f33c000aa304f3ad2c959e0334ac1a9797519"
+    },
+    {
+      "officialCardId": "45199",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "45199",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "45532",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "45532",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "45538",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "45538",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "45543",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "45543",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "45622",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b71d579519eb72e57ec987a167881a6aecef38652ff535b75b6007524f0da975"
+    },
+    {
+      "officialCardId": "46238",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "46238",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "ab1958ec1abae0fbd448aa93afb9b15c12d4d783f6152e1a08eaf1503ad47b1f"
+    },
+    {
+      "officialCardId": "46274",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "46274",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "COIN_BONUS_DAMAGE",
+      "evidenceSha256": "8b974c2475764abc7d46b661dd34bc21cd9b5dce43cb11c92966bbfcf517b8ab"
+    },
+    {
+      "officialCardId": "46351",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "46351",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "d0e5a52031f9c243c4ba558be7a5cc9008aca85c972c8abf404ea77b9fc2dd0b"
+    },
+    {
+      "officialCardId": "46785",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "46785",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "47143",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "47143",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "47573",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47573",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "47604",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "f0efc944170030788295155ce0a01b2cc25c8fd5d9ab3456b150b72f6a66f15e"
+    },
+    {
+      "officialCardId": "47604",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "55af7c157a3820c34f053b2c51795f9c85e881e69b0f1cbd598ff1e91c86ec3c"
+    },
+    {
+      "officialCardId": "47654",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "2b11e4107c24aea09f646bbd9a5b330b87b2df697e71c3de68991dc7237c9ecc"
+    },
+    {
+      "officialCardId": "47654",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49667",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "49667",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47973",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "f0efc944170030788295155ce0a01b2cc25c8fd5d9ab3456b150b72f6a66f15e"
+    },
+    {
+      "officialCardId": "47973",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "55af7c157a3820c34f053b2c51795f9c85e881e69b0f1cbd598ff1e91c86ec3c"
+    },
+    {
+      "officialCardId": "47980",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47985",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47985",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "47993",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47993",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "47998",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47998",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "48027",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "2b11e4107c24aea09f646bbd9a5b330b87b2df697e71c3de68991dc7237c9ecc"
+    },
+    {
+      "officialCardId": "48027",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48379",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "a2d9b66724e34e124bb3d010bac89cebb9ee2282a5b1174a309a2550ecee05f6"
+    },
+    {
+      "officialCardId": "48402",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "48406",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "48493",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "a2d9b66724e34e124bb3d010bac89cebb9ee2282a5b1174a309a2550ecee05f6"
+    },
+    {
+      "officialCardId": "45620",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b23bfc3e2443a8df1925374b167278554d2d5778f5285fedb2eb41e84c05fc1d"
+    },
+    {
+      "officialCardId": "45620",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45671",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b23bfc3e2443a8df1925374b167278554d2d5778f5285fedb2eb41e84c05fc1d"
+    },
+    {
+      "officialCardId": "45671",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45749",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45749",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "045da3df5c31da8196118c2b419bfce620e756bcd389b079d42bb1b650338aa0"
+    },
+    {
+      "officialCardId": "45960",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "45960",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "45995",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "6c802d260df15f404a02e1455194ebec86258f0cb53a13261169bc807c8fd930"
+    },
+    {
+      "officialCardId": "46189",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "evidenceSha256": "a34b6f04dd3868266f2e81737bb8f4000f4b00364c44f640d3df44b2a5e358b2"
+    },
+    {
+      "officialCardId": "46189",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "46356",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "2409bd572f65484bdeab4224d3a433053642ffa4be7b8d2440ed72bd2903cfa3"
+    },
+    {
+      "officialCardId": "46356",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "46532",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "evidenceSha256": "c383008aeb524f1552384ee1e6f08a84ed1100144b224b0cfb6ffbed451a3057"
+    },
+    {
+      "officialCardId": "46532",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "49110",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "RETREAT_LOCK_ATTACK",
+      "evidenceSha256": "8a188b40a7bc0f153b92a03f119d82aa732dd925001e823c02e78c130eb055b5"
+    },
+    {
+      "officialCardId": "49110",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "563b012a58b7d241281b5ded99cbea6530ac243a203d172d965df988342a59a4"
+    },
+    {
+      "officialCardId": "49691",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "49697",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "2409bd572f65484bdeab4224d3a433053642ffa4be7b8d2440ed72bd2903cfa3"
+    },
+    {
+      "officialCardId": "49697",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49706",
+      "kind": "supporter",
+      "effectIndex": 0,
+      "mechanic": "RECOVER_TYPED_DISCARD",
+      "evidenceSha256": "c854f81ff588dc04441d0e4886c7cb359ca9c90c1649dabe13f29a95838af191"
+    },
+    {
+      "officialCardId": "50026",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "RETREAT_LOCK_ATTACK",
+      "evidenceSha256": "8a188b40a7bc0f153b92a03f119d82aa732dd925001e823c02e78c130eb055b5"
+    },
+    {
+      "officialCardId": "50026",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "563b012a58b7d241281b5ded99cbea6530ac243a203d172d965df988342a59a4"
+    },
+    {
+      "officialCardId": "50072",
+      "kind": "supporter",
+      "effectIndex": 0,
+      "mechanic": "RECOVER_TYPED_DISCARD",
+      "evidenceSha256": "c854f81ff588dc04441d0e4886c7cb359ca9c90c1649dabe13f29a95838af191"
+    },
+    {
+      "officialCardId": "50118",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "7b457d6ed3c66e86e916bdecd313e3006e25b46bbba804052bc09036d7ffbc78"
+    },
+    {
+      "officialCardId": "50278",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "50385",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "50526",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "50595",
+      "kind": "item",
+      "effectIndex": 0,
+      "mechanic": "HEAL_DAMAGE",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "50678",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "evidenceSha256": "a34b6f04dd3868266f2e81737bb8f4000f4b00364c44f640d3df44b2a5e358b2"
+    },
+    {
+      "officialCardId": "50678",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "50876",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "c3e3191c7a94f94ebe5b9d69728e3f07ef11d16118139a30e8801a49d0f080a0"
+    },
+    {
+      "officialCardId": "50879",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b23bfc3e2443a8df1925374b167278554d2d5778f5285fedb2eb41e84c05fc1d"
+    },
+    {
+      "officialCardId": "47062",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "RETREAT_LOCK_ATTACK",
+      "evidenceSha256": "8a188b40a7bc0f153b92a03f119d82aa732dd925001e823c02e78c130eb055b5"
+    },
+    {
+      "officialCardId": "47062",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "f68594cf184bea0a7374c4e7d5bf185faecdc4bc0565795b4cfe389f0a80dddd"
+    },
+    {
+      "officialCardId": "47070",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "47070",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "NO_NEXT_ATTACK",
+      "evidenceSha256": "79c2f1ef1646b97d24cab1183e22cabf133bbd8b7a4e151e8ce341dbe701be39"
+    },
+    {
+      "officialCardId": "47324",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "68e8c5ad9cd7b0ae3c80a6b0e7fa3532245b69720ee66f1f89a022b6edc52920"
+    },
+    {
+      "officialCardId": "47326",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "47326",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "NO_NEXT_ATTACK",
+      "evidenceSha256": "79c2f1ef1646b97d24cab1183e22cabf133bbd8b7a4e151e8ce341dbe701be39"
+    },
+    {
+      "officialCardId": "47330",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "fbe6c10ba06ec4225d914a512edf2f34f9633a1d5959029b61293c0a64df5c68"
+    },
+    {
+      "officialCardId": "47330",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "acbe566d0868b539cf9198bd6783020a00cc96a4020e8597e26c262297c7bd0b"
+    },
+    {
+      "officialCardId": "47333",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47333",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "04c9e5519fafc78c96a3c48cb414cfc25f3764663e846bd31c1699e31f0f5e87"
+    },
+    {
+      "officialCardId": "47339",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47339",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "47380",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "fbe6c10ba06ec4225d914a512edf2f34f9633a1d5959029b61293c0a64df5c68"
+    },
+    {
+      "officialCardId": "47380",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "acbe566d0868b539cf9198bd6783020a00cc96a4020e8597e26c262297c7bd0b"
+    },
+    {
+      "officialCardId": "47381",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47381",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "47388",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47388",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "47392",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47392",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "47404",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "20125cae9acf191cffbb1ab9714759abbf0afcae1ec66f4e7252da0114a8c719"
+    },
+    {
+      "officialCardId": "47404",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47594",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "0073796e29ab9eb5399d8cdbce2c19b02614817633a6ead2722cc8c60b1cf658"
+    },
+    {
+      "officialCardId": "47675",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "47701",
+      "kind": "item",
+      "effectIndex": 0,
+      "mechanic": "RECOVER_BASIC_ENERGY",
+      "evidenceSha256": "2c76811d70d3226cefed2c1425d9720e63631037eca80efd00a02dcbdf1d1cdb"
+    },
+    {
+      "officialCardId": "47775",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "47775",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47798",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "HEAL_SELF_ATTACK",
+      "evidenceSha256": "7245a0f4bcc9cd3e04616ead0835035dbb3f61dd891f98f25b72bac832b118c0"
+    },
+    {
+      "officialCardId": "47798",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "1a34064753e973b2948f6bed87e4e3420928ad3a630d43a2121cd6e3f07d7c3f"
+    },
+    {
+      "officialCardId": "47850",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "21623db07029f5f7f8f24d744370d2abde5bd4296c2ad83f3185ddf82b110bd9"
+    },
+    {
+      "officialCardId": "47850",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "47963",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "0073796e29ab9eb5399d8cdbce2c19b02614817633a6ead2722cc8c60b1cf658"
+    },
+    {
+      "officialCardId": "48047",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "48573",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48573",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "48612",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "48612",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "48624",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+      "evidenceSha256": "01ff70606c44c0b1230929e67b8fbf2f656ae047519acaa37727dfcce9ec285d"
+    },
+    {
+      "officialCardId": "48624",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "48631",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "48786",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "20125cae9acf191cffbb1ab9714759abbf0afcae1ec66f4e7252da0114a8c719"
+    },
+    {
+      "officialCardId": "48786",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48910",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "48910",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "NO_NEXT_ATTACK",
+      "evidenceSha256": "79c2f1ef1646b97d24cab1183e22cabf133bbd8b7a4e151e8ce341dbe701be39"
+    },
+    {
+      "officialCardId": "48953",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "fbe6c10ba06ec4225d914a512edf2f34f9633a1d5959029b61293c0a64df5c68"
+    },
+    {
+      "officialCardId": "48953",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "acbe566d0868b539cf9198bd6783020a00cc96a4020e8597e26c262297c7bd0b"
+    },
+    {
+      "officialCardId": "48959",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48959",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "04c9e5519fafc78c96a3c48cb414cfc25f3764663e846bd31c1699e31f0f5e87"
+    },
+    {
+      "officialCardId": "48975",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48975",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_PRIZE_BONUS_RECOIL",
+      "evidenceSha256": "c82ece1ad83a6aead2bb25bb2c59bc0bd1afc2ead138207fd8530b6916a7e0fc"
+    },
+    {
+      "officialCardId": "49094",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "49094",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "49163",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+      "evidenceSha256": "01ff70606c44c0b1230929e67b8fbf2f656ae047519acaa37727dfcce9ec285d"
+    },
+    {
+      "officialCardId": "49163",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "49179",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "6d06b937bf7ede43c65c3a840fb9549fa8e6cdbf51094483fe445baf0f45f733"
+    },
+    {
+      "officialCardId": "49195",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISABLE_SELECTED_MOVE",
+      "evidenceSha256": "5542f0802ff8e9cc1b5df981b800d081efdbb5b801f515b6f97e8bbb8cda2fda"
+    },
+    {
+      "officialCardId": "49195",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "NO_NEXT_ATTACK",
+      "evidenceSha256": "79c2f1ef1646b97d24cab1183e22cabf133bbd8b7a4e151e8ce341dbe701be39"
+    },
+    {
+      "officialCardId": "49210",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49210",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "fbe6c10ba06ec4225d914a512edf2f34f9633a1d5959029b61293c0a64df5c68"
+    },
+    {
+      "officialCardId": "49275",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "49275",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "FIXED_COIN_HITS",
+      "evidenceSha256": "1023c7f8f7c15ce18b2596a8c268bfc42f4e5ef2a4f2b6bec940ba4bb351899d"
+    },
+    {
+      "officialCardId": "49310",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "21623db07029f5f7f8f24d744370d2abde5bd4296c2ad83f3185ddf82b110bd9"
+    },
+    {
+      "officialCardId": "49310",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49317",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "49352",
+      "kind": "item",
+      "effectIndex": 0,
+      "mechanic": "RECOVER_BASIC_ENERGY",
+      "evidenceSha256": "2c76811d70d3226cefed2c1425d9720e63631037eca80efd00a02dcbdf1d1cdb"
+    },
+    {
+      "officialCardId": "50203",
+      "kind": "item",
+      "effectIndex": 0,
+      "mechanic": "RECOVER_BASIC_ENERGY",
+      "evidenceSha256": "2c76811d70d3226cefed2c1425d9720e63631037eca80efd00a02dcbdf1d1cdb"
+    },
+    {
+      "officialCardId": "47124",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "evidenceSha256": "a34b6f04dd3868266f2e81737bb8f4000f4b00364c44f640d3df44b2a5e358b2"
+    },
+    {
+      "officialCardId": "47124",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "48553",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "evidenceSha256": "a34b6f04dd3868266f2e81737bb8f4000f4b00364c44f640d3df44b2a5e358b2"
+    },
+    {
+      "officialCardId": "48553",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+      "evidenceSha256": "34a05441cdc1fb7457abb9f1488c7daadce8101191380cd124161af46066e746"
+    },
+    {
+      "officialCardId": "48809",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48809",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "d0e5a52031f9c243c4ba558be7a5cc9008aca85c972c8abf404ea77b9fc2dd0b"
+    },
+    {
+      "officialCardId": "48822",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_RESET_HAND",
+      "evidenceSha256": "6a9af355e7a25ff314c579a70bed85ea8dbda1d4572387af51bd8bab9bfb9249"
+    },
+    {
+      "officialCardId": "48822",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_DEFENDER_ENERGY",
+      "evidenceSha256": "f0efc944170030788295155ce0a01b2cc25c8fd5d9ab3456b150b72f6a66f15e"
+    },
+    {
+      "officialCardId": "48852",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "bf8ca452286769378b20ee1ad0d77d1f94eeceeb530d11ddcee7700ea94c3a15"
+    },
+    {
+      "officialCardId": "48852",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48857",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "2409bd572f65484bdeab4224d3a433053642ffa4be7b8d2440ed72bd2903cfa3"
+    },
+    {
+      "officialCardId": "48857",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48866",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48866",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "ab1958ec1abae0fbd448aa93afb9b15c12d4d783f6152e1a08eaf1503ad47b1f"
+    },
+    {
+      "officialCardId": "48902",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "b22f7624551b3567e97007e01c59fb36feb704274ce1eda1b8f5d4253707e622"
+    },
+    {
+      "officialCardId": "48907",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48907",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "d2147bdd69c58323801196d4d0dd3fa20c3a3973f07a10a76d3f3415fce0a1b1"
+    },
+    {
+      "officialCardId": "48912",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+      "evidenceSha256": "53034a8901c997810e23209fd83f23a7f63a621e65b3f9cd8ecdc5f0b3fcc71c"
+    },
+    {
+      "officialCardId": "48912",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49017",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "3026e1c930d77b87459f098be9355f75e108fe9379581cf3a0f5ef1d50bf2333"
+    },
+    {
+      "officialCardId": "49044",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_HEAL_OWN_TARGET",
+      "evidenceSha256": "1a407628c17752b4f7a3acd8b2d6d4e6b47a5579a9c5b6673e4fae318f80e46c"
+    },
+    {
+      "officialCardId": "49044",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "49270",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+      "evidenceSha256": "252677616a45398ca2c8d350904f0adce40cb2b813d36e7776cc7c937ac83055"
+    },
+    {
+      "officialCardId": "49270",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_DISCARD_FIELD_BASIC",
+      "evidenceSha256": "7c6c23d281470053d0c83d4b14f9b023bfa1aff13494ace5886d64f13e72a694"
+    },
+    {
+      "officialCardId": "49191",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ANY_DAMAGE",
+      "evidenceSha256": "9b6129138df50c2ba3e55a2d1b3878072f31484a2eeb31c6662691945e76115a"
+    },
+    {
+      "officialCardId": "49191",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_BLIND_HAND_CHOICE",
+      "evidenceSha256": "0aa76de6d658b3f679b524b1de2456c2bd5ac946562afb5de7949a26bd9c8214"
+    },
+    {
+      "officialCardId": "50282",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      "evidenceSha256": "7166f13183f0646a8c6159ce16775b20d3afde6dbc325c624f2c187f3f1122a0"
+    },
+    {
+      "officialCardId": "50282",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "3a61d07749152b88d10a03ed57656e101c1b745f118d2a1bb337f86de6b4a2a5"
+    },
+    {
+      "officialCardId": "50321",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      "evidenceSha256": "7166f13183f0646a8c6159ce16775b20d3afde6dbc325c624f2c187f3f1122a0"
+    },
+    {
+      "officialCardId": "50321",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "3a61d07749152b88d10a03ed57656e101c1b745f118d2a1bb337f86de6b4a2a5"
+    },
+    {
+      "officialCardId": "48391",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DRAW",
+      "evidenceSha256": "d4875703765883e3c36d1af0b0e6eaf534b2f4df759a6e35c6e927a717b7dd1f"
+    },
+    {
+      "officialCardId": "48391",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b61830ef151c040cbf2985a0dae5742a548bf32b40aa7c144c557fc6638f3a26"
+    },
+    {
+      "officialCardId": "48504",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DRAW",
+      "evidenceSha256": "d4875703765883e3c36d1af0b0e6eaf534b2f4df759a6e35c6e927a717b7dd1f"
+    },
+    {
+      "officialCardId": "48504",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b61830ef151c040cbf2985a0dae5742a548bf32b40aa7c144c557fc6638f3a26"
+    },
+    {
+      "officialCardId": "48519",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DRAW",
+      "evidenceSha256": "d4875703765883e3c36d1af0b0e6eaf534b2f4df759a6e35c6e927a717b7dd1f"
+    },
+    {
+      "officialCardId": "48519",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "b61830ef151c040cbf2985a0dae5742a548bf32b40aa7c144c557fc6638f3a26"
+    },
+    {
+      "officialCardId": "46412",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      "evidenceSha256": "57685a67d3d9480430c9eea77ac115fc76ad225ae8aea4e0b5475a40dc7abd61"
+    },
+    {
+      "officialCardId": "46412",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "80d88f3e6d6e71b60e95c92bca5ff767cfd1ed89c9ff0d94da08e5580a78b480"
+    },
+    {
+      "officialCardId": "46647",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      "evidenceSha256": "57685a67d3d9480430c9eea77ac115fc76ad225ae8aea4e0b5475a40dc7abd61"
+    },
+    {
+      "officialCardId": "46647",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "80d88f3e6d6e71b60e95c92bca5ff767cfd1ed89c9ff0d94da08e5580a78b480"
+    },
+    {
+      "officialCardId": "46656",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+      "evidenceSha256": "57685a67d3d9480430c9eea77ac115fc76ad225ae8aea4e0b5475a40dc7abd61"
+    },
+    {
+      "officialCardId": "46656",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "80d88f3e6d6e71b60e95c92bca5ff767cfd1ed89c9ff0d94da08e5580a78b480"
+    },
+    {
+      "officialCardId": "50349",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "7895a722eafb84310727cd1eecad32d34899ae8aa2ada06b6ec284c94c625f74"
+    },
+    {
+      "officialCardId": "50349",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "RECOIL_DAMAGE",
+      "evidenceSha256": "b1fd75d723af3b566b3b9014cb8b5aa9b757f99494f6195463500c085b65dc34"
+    },
+    {
+      "officialCardId": "48368",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "VANILLA_DAMAGE",
+      "evidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "officialCardId": "48368",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "ATTACK_SPREAD_DAMAGE",
+      "evidenceSha256": "689a68c14b63e502cf3f4b41b2806e65af8da29247b7abd5d78f46064565a9fc"
+    },
+    {
+      "officialCardId": "48653",
+      "kind": "attack",
+      "effectIndex": 0,
+      "mechanic": "COIN_PROTECT",
+      "evidenceSha256": "766ada3cc03ad2d5a63c7e9f7b63fa537683661bbcd03fbba68f9374dde6ed9d"
+    },
+    {
+      "officialCardId": "48653",
+      "kind": "attack",
+      "effectIndex": 1,
+      "mechanic": "CONTEXT_ATTACK_BONUS",
+      "evidenceSha256": "6c45415483270a985976b1eda2550152b960613faa3c97cd74d50eead645ca75"
+    }
+  ],
+  "stageVerifiedSlots": 237,
+  "scopeBlockers": [
+    {
+      "id": "44431",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    },
+    {
+      "id": "44446",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    },
+    {
+      "id": "44449",
+      "reason": "UNVERIFIED_HIJ_SCOPE"
+    }
+  ],
+  "restoreCheckpoint": "3ff2e945c399545689fb3bcf5fe8fbea355c9e6a",
+  "sourceBase": "cee8bfdd",
+  "notes": "Official print IDs and exact effect slots passed the candidate engine. Full release CI and Pages are pending."
+}

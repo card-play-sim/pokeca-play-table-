@@ -35,6 +35,9 @@ async def select_effect_targets(page, option):
 
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
+ if os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1':
+  assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/' and release_base
+  release_base=None
  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
  shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
  shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
@@ -166,6 +169,14 @@ async def main():
                for ev in after['history'])
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in after['history'])
    events=after['history'][len(before.get('history',[])):]
+   if f.get('sharedAttackEvents') is not None:
+    assert f['sharedAttackEvents'] and all(event in events for event in f['sharedAttackEvents'])
+   if m=='ATTACK_DISABLE_SELECTED_MOVE':
+    previous=before['players'][1]['active']
+    enemy=after['players'][1]
+    target=next((card for card in [enemy['active'],*enemy['bench']] if card and card['id']==previous['id']),None)
+    if target:
+     assert target['referenceNamedAttackLock']['turn']==before['turnNumber']+1
    if kind=='attack':
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']

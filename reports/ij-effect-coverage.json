@@ -5,29 +5,29 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 753,
-      "missing": 949
+      "connected": 832,
+      "missing": 870
     },
     "J": {
       "total": 870,
-      "connected": 370,
-      "missing": 500
+      "connected": 402,
+      "missing": 468
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 747,
-      "MECHANIC_REQUIRED": 147,
-      "ENGINE_CONNECTION_REQUIRED": 746,
-      "EVIDENCE_UNVERIFIED": 56,
+      "CONNECTED_UNTESTED": 826,
+      "MECHANIC_REQUIRED": 130,
+      "ENGINE_CONNECTION_REQUIRED": 736,
+      "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 369,
-      "MECHANIC_REQUIRED": 65,
-      "ENGINE_CONNECTION_REQUIRED": 404,
-      "EVIDENCE_UNVERIFIED": 31,
-      "EXECUTION_PASS": 1
+      "CONNECTED_UNTESTED": 401,
+      "MECHANIC_REQUIRED": 59,
+      "ENGINE_CONNECTION_REQUIRED": 408,
+      "EXECUTION_PASS": 1,
+      "EVIDENCE_UNVERIFIED": 1
     }
   },
   "playability": {
@@ -509,8 +509,7 @@
       "name": "レシラム",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50620.json"
     },
     {
@@ -838,8 +837,7 @@
       "name": "ゼクロム",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50662.json"
     },
     {
@@ -944,8 +942,7 @@
       "name": "グラードン",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50680.json"
     },
     {
@@ -1022,8 +1019,7 @@
       "name": "ザシアン",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50697.json"
     },
     {
@@ -1528,8 +1524,7 @@
       "name": "マリィのズルッグ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47255.json"
     },
     {
@@ -1571,8 +1566,7 @@
       "name": "ダイゴのエアームド",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47275.json"
     },
     {
@@ -1790,8 +1784,7 @@
       "name": "ロトム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47334.json"
     },
     {
@@ -1918,8 +1911,7 @@
       "name": "ロトム",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47375.json"
     },
     {
@@ -2152,8 +2144,7 @@
       "name": "ロケット団のリーシャン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47434.json"
     },
     {
@@ -2261,8 +2252,7 @@
       "name": "ロケット団のヤミカラス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47464.json"
     },
     {
@@ -2296,8 +2286,7 @@
       "name": "ロケット団のニャース",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47471.json"
     },
     {
@@ -2356,8 +2345,7 @@
       "name": "ロケット団のヤミカラス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47510.json"
     },
     {
@@ -2374,8 +2362,7 @@
       "name": "ロケット団のニャース",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47513.json"
     },
     {
@@ -2603,8 +2590,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47573.json"
     },
     {
@@ -2730,8 +2716,7 @@
       "name": "コバルオン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47604.json"
     },
     {
@@ -2764,8 +2749,7 @@
       "name": "タブンネ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47612.json"
     },
     {
@@ -2916,8 +2900,7 @@
       "name": "マッギョ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47654.json"
     },
     {
@@ -3599,8 +3582,8 @@
       "name": "メガラティアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47845.json"
     },
     {
@@ -3903,8 +3886,7 @@
       "name": "コバルオン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47973.json"
     },
     {
@@ -3928,8 +3910,7 @@
       "name": "タブンネ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47980.json"
     },
     {
@@ -3954,8 +3935,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47985.json"
     },
     {
@@ -3990,8 +3970,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47993.json"
     },
     {
@@ -4017,8 +3996,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47998.json"
     },
     {
@@ -4143,8 +4121,7 @@
       "name": "マッギョ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48027.json"
     },
     {
@@ -4481,8 +4458,8 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48289.json"
     },
     {
@@ -4523,8 +4500,8 @@
       "name": "メガヘラクロスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48344.json"
     },
     {
@@ -4681,8 +4658,7 @@
       "name": "ザシアン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48379.json"
     },
     {
@@ -4782,8 +4758,7 @@
       "name": "ジュラルドン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48402.json"
     },
     {
@@ -4799,8 +4774,7 @@
       "name": "エイパム",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48406.json"
     },
     {
@@ -4892,8 +4866,8 @@
       "name": "メガアブソルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48436.json"
     },
     {
@@ -4901,8 +4875,8 @@
       "name": "メガクチートex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48437.json"
     },
     {
@@ -4910,8 +4884,8 @@
       "name": "メガアブソルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48446.json"
     },
     {
@@ -4969,8 +4943,8 @@
       "name": "メガラティアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48465.json"
     },
     {
@@ -4978,8 +4952,8 @@
       "name": "メガラティアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48474.json"
     },
     {
@@ -5019,8 +4993,7 @@
       "name": "ザシアン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48493.json"
     },
     {
@@ -5036,8 +5009,8 @@
       "name": "メガヘラクロスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/48499.json"
     },
     {
@@ -5258,8 +5231,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48573.json"
     },
     {
@@ -5470,8 +5442,7 @@
       "name": "ロケット団のヤミカラス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48624.json"
     },
     {
@@ -5496,8 +5467,7 @@
       "name": "ズルッグ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48631.json"
     },
     {
@@ -6104,8 +6074,7 @@
       "name": "ゼクロムex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48975.json"
     },
     {
@@ -6352,8 +6321,7 @@
       "name": "マッギョex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49110.json"
     },
     {
@@ -6487,8 +6455,7 @@
       "name": "ロケット団のヤミカラス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49163.json"
     },
     {
@@ -6522,8 +6489,7 @@
       "name": "マリィのズルッグ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49179.json"
     },
     {
@@ -6595,8 +6561,7 @@
       "name": "ダイゴのエアームド",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49210.json"
     },
     {
@@ -6730,8 +6695,7 @@
       "name": "ロケット団のニャース",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49275.json"
     },
     {
@@ -6829,8 +6793,7 @@
       "name": "タブンネ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49317.json"
     },
     {
@@ -7046,8 +7009,7 @@
       "name": "シュシュプ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49667.json"
     },
     {
@@ -7097,8 +7059,8 @@
       "name": "メガジガルデex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49679.json"
     },
     {
@@ -7140,8 +7102,8 @@
       "name": "メガエアームドex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49687.json"
     },
     {
@@ -7157,8 +7119,7 @@
       "name": "クレッフィ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49691.json"
     },
     {
@@ -7270,8 +7231,8 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49987.json"
     },
     {
@@ -7279,8 +7240,8 @@
       "name": "メガルチャブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49989.json"
     },
     {
@@ -7296,8 +7257,8 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49998.json"
     },
     {
@@ -7305,8 +7266,8 @@
       "name": "メガルチャブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49999.json"
     },
     {
@@ -7356,8 +7317,7 @@
       "name": "マッギョex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50026.json"
     },
     {
@@ -7602,8 +7562,7 @@
       "name": "デオキシス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50118.json"
     },
     {
@@ -7611,8 +7570,8 @@
       "name": "メガフラエッテex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50119.json"
     },
     {
@@ -7646,8 +7605,7 @@
       "name": "ゼルネアス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50126.json"
     },
     {
@@ -7805,8 +7763,7 @@
       "name": "ゼルネアス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50188.json"
     },
     {
@@ -7823,8 +7780,8 @@
       "name": "メガフラエッテex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50198.json"
     },
     {
@@ -7841,8 +7798,8 @@
       "name": "メガフラエッテex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50214.json"
     },
     {
@@ -8512,8 +8469,7 @@
       "name": "マーイーカ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50385.json"
     },
     {
@@ -8815,8 +8771,7 @@
       "name": "マーイーカ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50526.json"
     },
     {
@@ -9262,8 +9217,7 @@
       "name": "ホップのサダイジャ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47062.json"
     },
     {
@@ -9298,8 +9252,7 @@
       "name": "ゴロンダ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47070.json"
     },
     {
@@ -9372,8 +9325,8 @@
       "name": "オンバーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47089.json"
     },
     {
@@ -9771,8 +9724,8 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47298.json"
     },
     {
@@ -9807,8 +9760,8 @@
       "name": "カミツオロチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47306.json"
     },
     {
@@ -9869,8 +9822,7 @@
       "name": "シロナのミロカロス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47324.json"
     },
     {
@@ -9878,8 +9830,7 @@
       "name": "フローゼル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47326.json"
     },
     {
@@ -9887,8 +9838,7 @@
       "name": "エレキブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47330.json"
     },
     {
@@ -9896,8 +9846,7 @@
       "name": "ライボルト",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47333.json"
     },
     {
@@ -9914,8 +9863,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47339.json"
     },
     {
@@ -10019,8 +9967,8 @@
       "name": "カミツオロチ",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47369.json"
     },
     {
@@ -10054,8 +10002,8 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47377.json"
     },
     {
@@ -10063,8 +10011,7 @@
       "name": "エレキブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47380.json"
     },
     {
@@ -10072,8 +10019,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47381.json"
     },
     {
@@ -10107,8 +10053,8 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47386.json"
     },
     {
@@ -10116,8 +10062,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47388.json"
     },
     {
@@ -10142,8 +10087,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47392.json"
     },
     {
@@ -10186,8 +10130,7 @@
       "name": "オリーニョ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47404.json"
     },
     {
@@ -10204,8 +10147,8 @@
       "name": "ウインディ",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47407.json"
     },
     {
@@ -11033,8 +10976,7 @@
       "name": "ホイーガ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47594.json"
     },
     {
@@ -11069,8 +11011,8 @@
       "name": "バルジーナ",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47600.json"
     },
     {
@@ -11404,8 +11346,7 @@
       "name": "レパルダス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47675.json"
     },
     {
@@ -11430,8 +11371,8 @@
       "name": "ゾロアーク",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47681.json"
     },
     {
@@ -11439,8 +11380,7 @@
       "name": "ジヘッド",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47683.json"
     },
     {
@@ -11448,8 +11388,8 @@
       "name": "サザンドラex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47684.json"
     },
     {
@@ -11517,8 +11457,7 @@
       "name": "エネルギー回収",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47701.json"
     },
     {
@@ -11594,8 +11533,8 @@
       "name": "メガフシギバナex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47736.json"
     },
     {
@@ -11628,8 +11567,8 @@
       "name": "キュウコン",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47744.json"
     },
     {
@@ -11637,8 +11576,8 @@
       "name": "メガバクーダex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47746.json"
     },
     {
@@ -11681,8 +11620,8 @@
       "name": "メガルカリオex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47762.json"
     },
     {
@@ -11724,8 +11663,7 @@
       "name": "フォクスライ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47775.json"
     },
     {
@@ -11847,8 +11785,7 @@
       "name": "モジャンボ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47798.json"
     },
     {
@@ -11882,8 +11819,8 @@
       "name": "カエンジシ",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47807.json"
     },
     {
@@ -11900,8 +11837,8 @@
       "name": "メガユキノオーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47814.json"
     },
     {
@@ -11961,8 +11898,8 @@
       "name": "メガライボルトex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47828.json"
     },
     {
@@ -12005,8 +11942,8 @@
       "name": "メガサーナイトex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47838.json"
     },
     {
@@ -12041,8 +11978,7 @@
       "name": "ミミロップ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47850.json"
     },
     {
@@ -12427,8 +12363,7 @@
       "name": "ホイーガ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47963.json"
     },
     {
@@ -12791,8 +12726,7 @@
       "name": "レパルダス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48047.json"
     },
     {
@@ -13275,8 +13209,7 @@
       "name": "ポッタイシ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48368.json"
     },
     {
@@ -13371,8 +13304,7 @@
       "name": "メガサメハダーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48391.json"
     },
     {
@@ -13504,8 +13436,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48417.json"
     },
     {
@@ -13930,8 +13861,7 @@
       "name": "メガサメハダーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48504.json"
     },
     {
@@ -14001,8 +13931,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48512.json"
     },
     {
@@ -14045,8 +13974,7 @@
       "name": "メガサメハダーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48519.json"
     },
     {
@@ -14063,8 +13991,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48521.json"
     },
     {
@@ -14357,8 +14284,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48612.json"
     },
     {
@@ -14497,8 +14423,7 @@
       "name": "オンバーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48653.json"
     },
     {
@@ -14976,8 +14901,7 @@
       "name": "オリーニョ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48786.json"
     },
     {
@@ -15157,8 +15081,7 @@
       "name": "フローゼル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48910.json"
     },
     {
@@ -15209,8 +15132,7 @@
       "name": "エレキブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48953.json"
     },
     {
@@ -15218,8 +15140,7 @@
       "name": "ライボルト",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48959.json"
     },
     {
@@ -15376,8 +15297,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49094.json"
     },
     {
@@ -15562,8 +15482,8 @@
       "name": "ゾロアーク",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49184.json"
     },
     {
@@ -15580,8 +15500,7 @@
       "name": "バルジーナex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49191.json"
     },
     {
@@ -15589,8 +15508,7 @@
       "name": "ジヘッド",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49193.json"
     },
     {
@@ -15598,8 +15516,8 @@
       "name": "サザンドラex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49194.json"
     },
     {
@@ -15607,8 +15525,7 @@
       "name": "ゴロンダ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49195.json"
     },
     {
@@ -15793,8 +15710,7 @@
       "name": "ミミロップ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49310.json"
     },
     {
@@ -15843,8 +15759,8 @@
       "name": "オンバーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49331.json"
     },
     {
@@ -15896,8 +15812,7 @@
       "name": "エネルギー回収",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49352.json"
     },
     {
@@ -16302,8 +16217,7 @@
       "name": "コフーライ",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49641.json"
     },
     {
@@ -16338,8 +16252,7 @@
       "name": "ヒノヤコマ",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49646.json"
     },
     {
@@ -16347,8 +16260,8 @@
       "name": "ファイアロー",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49647.json"
     },
     {
@@ -16374,8 +16287,7 @@
       "name": "メガスターミーex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49654.json"
     },
     {
@@ -16383,8 +16295,7 @@
       "name": "アマルス",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49655.json"
     },
     {
@@ -16401,8 +16312,8 @@
       "name": "ルクシオ",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49659.json"
     },
     {
@@ -16410,8 +16321,8 @@
       "name": "レントラー",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49660.json"
     },
     {
@@ -16419,8 +16330,8 @@
       "name": "メガピクシーex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49663.json"
     },
     {
@@ -16472,8 +16383,7 @@
       "name": "チゴラス",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49676.json"
     },
     {
@@ -16534,8 +16444,8 @@
       "name": "ラッタ",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49693.json"
     },
     {
@@ -16543,8 +16453,7 @@
       "name": "ホルード",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49697.json"
     },
     {
@@ -16605,8 +16514,7 @@
       "name": "タラゴン",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49706.json"
     },
     {
@@ -16791,8 +16699,8 @@
       "name": "メガリザードンXex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49983.json"
     },
     {
@@ -16800,8 +16708,8 @@
       "name": "メガユキメノコex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49984.json"
     },
     {
@@ -16809,8 +16717,8 @@
       "name": "メガシビルドンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49985.json"
     },
     {
@@ -16818,8 +16726,8 @@
       "name": "メガサーナイトex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49986.json"
     },
     {
@@ -16827,8 +16735,8 @@
       "name": "メガルカリオex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49988.json"
     },
     {
@@ -16836,8 +16744,8 @@
       "name": "メガゲンガーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49990.json"
     },
     {
@@ -16845,8 +16753,8 @@
       "name": "メガズルズキンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49991.json"
     },
     {
@@ -16854,8 +16762,8 @@
       "name": "メガカイリューex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49992.json"
     },
     {
@@ -16863,8 +16771,8 @@
       "name": "メガユキメノコex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49993.json"
     },
     {
@@ -16872,8 +16780,8 @@
       "name": "メガシビルドンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/49995.json"
     },
     {
@@ -16890,8 +16798,8 @@
       "name": "メガゲンガーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50000.json"
     },
     {
@@ -16899,8 +16807,8 @@
       "name": "メガズルズキンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50001.json"
     },
     {
@@ -16935,8 +16843,8 @@
       "name": "メガカイリューex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50006.json"
     },
     {
@@ -16961,8 +16869,8 @@
       "name": "メガカイリューex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50010.json"
     },
     {
@@ -17176,8 +17084,7 @@
       "name": "タラゴン",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50072.json"
     },
     {
@@ -17404,8 +17311,8 @@
       "name": "オーロット",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50123.json"
     },
     {
@@ -17440,8 +17347,8 @@
       "name": "ゴルバット",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50133.json"
     },
     {
@@ -17449,8 +17356,8 @@
       "name": "クロバット",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50134.json"
     },
     {
@@ -17501,8 +17408,8 @@
       "name": "メガドラミドロex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50147.json"
     },
     {
@@ -17644,8 +17551,8 @@
       "name": "ゲコガシラ",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50186.json"
     },
     {
@@ -17671,8 +17578,8 @@
       "name": "クロバット",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50190.json"
     },
     {
@@ -17714,8 +17621,8 @@
       "name": "メガカエンジシex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50196.json"
     },
     {
@@ -17723,8 +17630,8 @@
       "name": "メガゲッコウガex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50197.json"
     },
     {
@@ -17741,8 +17648,8 @@
       "name": "メガドラミドロex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50201.json"
     },
     {
@@ -17759,8 +17666,7 @@
       "name": "エネルギー回収",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50203.json"
     },
     {
@@ -17848,8 +17754,8 @@
       "name": "メガゲッコウガex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50213.json"
     },
     {
@@ -17857,8 +17763,8 @@
       "name": "メガドラミドロex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50215.json"
     },
     {
@@ -17893,8 +17799,8 @@
       "name": "メガゲッコウガex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50219.json"
     },
     {
@@ -18113,8 +18019,7 @@
       "name": "タテトプス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50278.json"
     },
     {
@@ -18140,8 +18045,7 @@
       "name": "メガドリュウズex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50282.json"
     },
     {
@@ -18390,8 +18294,7 @@
       "name": "メガドリュウズex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50321.json"
     },
     {
@@ -18540,8 +18443,7 @@
       "name": "ウインディ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50349.json"
     },
     {
@@ -18835,8 +18737,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50428.json"
     },
     {
@@ -19032,8 +18933,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50466.json"
     },
     {
@@ -19333,8 +19233,7 @@
       "name": "きずぐすり",
       "mark": "J",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50595.json"
     },
     {
@@ -19493,8 +19392,7 @@
       "name": "ルナアーラ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50678.json"
     },
     {
@@ -19756,8 +19654,8 @@
       "name": "メガゲンガーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50829.json"
     },
     {
@@ -19824,8 +19722,8 @@
       "name": "メガカイリューex",
       "mark": "I",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50839.json"
     },
     {
@@ -19900,8 +19798,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50852.json"
     },
     {
@@ -20168,8 +20065,7 @@
       "name": "ワルビアルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48481.json"
     },
     {
@@ -20351,8 +20247,7 @@
       "name": "シロナのガブリアスex",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49614.json"
     },
     {
@@ -20408,8 +20303,7 @@
       "name": "ロケット団のニャース",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49633.json"
     },
     {
@@ -20545,8 +20439,7 @@
       "name": "シュシュプ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50176.json"
     },
     {
@@ -20563,8 +20456,7 @@
       "name": "ヒカリ",
       "mark": "I",
       "category": "support",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50178.json"
     },
     {
@@ -21520,8 +21412,7 @@
       "name": "フリージオ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50876.json"
     },
     {
@@ -21546,8 +21437,7 @@
       "name": "パモット",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50879.json"
     },
     {
@@ -21616,8 +21506,7 @@
       "name": "メロエッタ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50887.json"
     },
     {
@@ -21803,8 +21692,8 @@
       "name": "メガキラフロルex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50909.json"
     },
     {
@@ -21830,8 +21719,8 @@
       "name": "メガルカリオZex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50912.json"
     },
     {
@@ -21917,8 +21806,8 @@
       "name": "メガガブリアスZex",
       "mark": "J",
       "category": "pokemon",
-      "status": "EVIDENCE_UNVERIFIED",
-      "reason": "UNSUPPORTED_POKEMON_RULE_SECTION",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50922.json"
     },
     {
@@ -22032,23 +21921,20 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 1071,
-        "ENGINE_CONNECTED": 756,
-        "EVIDENCE_UNVERIFIED": 37
+        "MECHANIC_REQUIRED": 1035,
+        "ENGINE_CONNECTED": 829
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 753,
-        "MECHANIC_REQUIRED": 890,
-        "EVIDENCE_UNVERIFIED": 56,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTED": 832,
+        "MECHANIC_REQUIRED": 866,
+        "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 369,
-        "MECHANIC_REQUIRED": 463,
-        "EVIDENCE_UNVERIFIED": 34,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTED": 401,
+        "MECHANIC_REQUIRED": 464,
+        "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
         "total": 638,
@@ -22056,7 +21942,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 2516,
-    "unconnected": 2557
+    "engineConnected": 2700,
+    "unconnected": 2373
   }
 }

@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_38573067F8E08147:35289b6ed768865489efd763b29b362a1a8e767a7fe9250c44798290c94e6c51",
   "taskFingerprint": "35289b6ed768865489efd763b29b362a1a8e767a7fe9250c44798290c94e6c51",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "7ae12d4e-9887-4aa0-af1b-794ec71e1c15",
+  "executionFingerprint": "3df3ac335dd5fd5a4032ff7365cbfb9d8a30436ca5849fa08b487b0c6f742c4b",
+  "attemptId": "75639593-31a4-4076-83ce-4053debba8dd",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -43,8 +43,19 @@
       },
       {
         "slot": "49614:attack:リューノバスター:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50659:attack:10まんボルト:1",
@@ -53,5 +64,5 @@
       }
     ]
   },
-  "checksum": "08a56b9f692c87fa5cced9293044332dd70b8951f16d7cd79c2baf005293a7c4"
+  "checksum": "673036df2ca974a332ef691d52595835d9a1163dd80ecf7521ec7289d8c4ba6d"
 }

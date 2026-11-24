@@ -82,7 +82,13 @@ for (const r of selected) {
             (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
             (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))
         : undefined;
-      fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents, trigger: t.trigger });
+      const sharedAttackEvents = ["ATTACK_DISCARD_FIELD_BASIC","ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_DISCARD_DEFENDER_ENERGY",
+        "ATTACK_HEAL_OWN_TARGET","ATTACK_SPLASH_OWN_BENCH","ATTACK_DISABLE_SELECTED_MOVE","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL",
+        "ATTACK_BLIND_HAND_CHOICE","ATTACK_SPREAD_DAMAGE","PHANTOM","TRAINER_SWITCH_BOTH",
+        "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT","SUPPORTER_SEARCH_BY_STAGE"].includes(e.plan.mechanic)
+        ? p.getSnapshot().history.slice(game.history.length).filter(event=>event.type==="attack"||event.details?.command&&!event.details.reference)
+        : undefined;
+      fixtures.push({ r, kind, e, sourceId: t.sourceId, game, option, printedDamageEvents, sharedAttackEvents, trigger: t.trigger });
       patterns.set(e.plan.mechanic, (patterns.get(e.plan.mechanic) || 0) + 1);
     } catch (error) {
       if (previous) console.error(error);

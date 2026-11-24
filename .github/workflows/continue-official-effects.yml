@@ -3,7 +3,7 @@ on:
   # Accelerate only exact official print/effect intake; preserve all fail-closed gates.
   # Scheduled checkpoints resume missing prints without changing existing decks.
   push:
-    branches: [main]
+    branches: [main, work/issue122-next-782-replay]
     paths:
       - '.github/workflows/continue-official-effects.yml'
       - 'scripts/list-card-auto-connect-ids.cjs'
@@ -43,13 +43,13 @@ jobs:
       (github.event.issue.number == 122 && !github.event.issue.pull_request &&
        github.event.comment.user.login == github.repository_owner &&
        github.event.comment.body == '/card-auto-connect')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
+          ref: ${{ github.ref_name == 'work/issue122-next-782-replay' && github.sha || 'main' }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -64,9 +64,15 @@ jobs:
           # Resume the newest branch with a durable checkpoint, skipping interrupted
           # branches without one. Numeric run IDs are monotonically increasing.
           CHECKPOINT_FOUND=0
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ]; then
+            git fetch origin 3ff2e945c399545689fb3bcf5fe8fbea355c9e6a
+            python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+            CHECKPOINT_FOUND=1
+          fi
           for RUN_ID in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' |
             sed -n 's|.*refs/heads/automation/control-013-intake-\([0-9][0-9]*\)$|\1|p' |
             sort -nr); do
+            if [ "$CHECKPOINT_FOUND" -eq 1 ]; then break; fi
             CHECKPOINT_BRANCH="automation/control-013-intake-$RUN_ID"
             # A concurrent branch deletion must not abort checkpoint recovery.
             if ! git fetch origin "$CHECKPOINT_BRANCH"; then
@@ -88,19 +94,36 @@ jobs:
             fi
           fi
       - name: Discover unclassified prints using official standard search
+        if: github.ref_name != 'work/issue122-next-782-replay'
         run: python tools/classify-deck-search.py --discover
       - name: Collect incremental official pages and atomically connect every supported effect to battle
         env:
-          INTAKE_LIMIT: ${{ inputs.limit || '400' }}
+          INTAKE_LIMIT: ${{ github.ref_name == 'work/issue122-next-782-replay' && '1200' || inputs.limit || '400' }}
         run: |
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/auto-connect-workflow-recovery.test.cjs
           python -m unittest discover -s tests -p test_atomic_parser_retry.py
-          node tests/bulk-basic-energy-intake.test.cjs
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ]; then
+            git fetch origin 82cd8e905f76d5db0de32ea55197237175b68a3f
+            git show FETCH_HEAD:reports/official-effect-continuation/work-next-782-parser.json > /tmp/work-next-782-parser.json
+            python - <<'PYTHON'
+          import json, subprocess
+          from pathlib import Path
+          rows = json.loads(Path('/tmp/work-next-782-parser.json').read_text())['results']
+          proof_rows = [r for r in rows if r['officialProof']]
+          paths = [r['officialProof']['path'] for r in proof_rows]
+          assert all(p == 'data/effect-extensions/evidence/' + r['officialCardId'] + '.json'
+                     and r['officialCardId'].isdigit() for p, r in zip(paths, proof_rows))
+          subprocess.check_call(['git', 'restore', '--source=FETCH_HEAD', '--', *paths])
+          Path('/tmp/work-parser-ids.json').write_text(json.dumps([r['officialCardId'] for r in proof_rows]))
+          PYTHON
+            python scripts/continue-official-effect-intake.py --ids /tmp/work-parser-ids.json --limit 127 --retry-blocked --max-tasks 1 --adopt
+          fi
           # One command owns official acquisition, shared mechanic compilation, execution,
           # print-specific release, and persistent unresolved effect work units.
           node tests/atomic-official-to-battle.test.cjs
           node scripts/run-atomic-official-battle-intake.cjs
+          node tests/bulk-basic-energy-intake.test.cjs
       - name: Save checkpoint and outcomes on the automation branch for review
         if: always()
         run: |
@@ -112,15 +135,61 @@ jobs:
             git add reports/official-effect-continuation/candidate.json
             git add data/effect-extensions/intake.json data/effect-extensions/compiled.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json
           fi
+          # Commit this run's reviewed evidence to an immutable snapshot first.
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: incremental official effect intake and execution outcomes'
+          fi
+          SNAPSHOT_SHA="$(git rev-parse HEAD)"
+          # An Actions token cannot push a new branch containing workflow edits.
+          # Re-root the verified source+checkpoint snapshot on main and exclude
+          # ALL workflow modifications. Keep the Work source branch untouched.
+          git reset --hard "$SNAPSHOT_SHA"
+          git fetch origin main
+          git checkout -B "$INTAKE_BRANCH" origin/main
+          git restore --source="$SNAPSHOT_SHA" --staged --worktree -- . ':(exclude).github/workflows'
+          if git diff --cached --name-only | grep -q '^\\.github/workflows/'; then
+            echo 'Refusing to push workflow edits with the Actions token' >&2
+            exit 1
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "checkpoint: official battle-verified intake replay for run $GITHUB_RUN_ID"
             git push -u origin "$INTAKE_BRANCH"
           fi
+      - name: Verify exact candidate prints through the existing Chromium battle test
+        if: github.ref_name == 'work/issue122-next-782-replay'
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="work-intake-$shard" \
+              python tests/test_control_013_browser.py > "/tmp/work-intake-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          mkdir -p artifacts
+          cp /tmp/work-intake-shard-*.log artifacts/
+          for logfile in /tmp/work-intake-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
       - name: Open verified candidate pull request
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           count=$(node -p "require('./work/card-auto-connect/candidate.json').qualified.length")
+          if [ "$GITHUB_REF_NAME" = work/issue122-next-782-replay ] && [ "$count" -lt 500 ]; then
+            echo "Preserved $count engine-qualified printings for the next batch." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           if [ "$count" -eq 0 ]; then
             echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -144,6 +213,7 @@ jobs:
           name: official-effect-continuation-checkpoint
           path: |
             work/card-auto-connect/
+            artifacts/work-intake-*
             reports/official-effect-continuation/atomic-battle-connection.json
             reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json
             work/official-standard-search/

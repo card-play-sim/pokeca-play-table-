@@ -1,0 +1,74 @@
+name: Issue122 candidate 184 exact-print Chromium battle gate
+on:
+  pull_request:
+    branches: [battle/official-shared-bulk-218-20261124]
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/issue122-184-full-battle-browser.yml'
+      - 'scripts/build-intake-verification-fixtures.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'engine/**'
+      - 'ui/engine.bundle.js'
+      - 'data/effect-extensions/compiled.json'
+      - 'data/effect-extensions/intake.json'
+      - 'scripts/parse-official-pokemon-energy.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-card-battle:
+    name: All candidate effect slots - Chromium shard ${{ matrix.shard }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate official evolution and effect compilation before battle
+        run: |
+          node tests/control-014-official-parser.test.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+      - name: Install Chromium on supported Ubuntu runner
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Execute every new printing's real DOM attack or ability, sharded
+        env:
+          POKECA_TEST_URL: http://127.0.0.1:8765/
+          POKECA_INTAKE_RELEASE_BASE: 1250f5692e2439ca37bc998f390c16f93cb67f58
+          POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+          POKECA_INTAKE_PREFIX: work/card-auto-connect/browser
+          POKECA_BROWSER_SHARD_COUNT: '4'
+          POKECA_BROWSER_SHARD_INDEX: ${{ matrix.shard }}
+          POKECA_BROWSER_SLOTS_ONLY: '1'
+          POKECA_INTAKE_ARTIFACT: issue122-184-shard-${{ matrix.shard }}
+        run: |
+          mkdir -p artifacts work/card-auto-connect/browser
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/issue122-browser-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent http://127.0.0.1:8765/ > /dev/null; then break; fi
+            sleep 1
+          done
+          python tests/test_control_013_browser.py 2>&1 | tee artifacts/issue122-184-shard-${{ matrix.shard }}.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-candidate-184-shard-${{ matrix.shard }}
+          path: |
+            artifacts/issue122-184-shard-${{ matrix.shard }}*
+            work/card-auto-connect/browser/browser-fixtures.json
+            test-results/control-013*.json
+          retention-days: 60

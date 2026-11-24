@@ -34,5 +34,16 @@ assert.equal(makePlan({...coinAttack,text:coinAttack.text+'自分の山札を1�
 const workflow=fs.readFileSync('.github/workflows/continue-official-effects.yml','utf8');
 assert.match(workflow,/comment\.user\.login == github\.repository_owner/);
 assert.match(workflow,/comment\.body == '\/card-auto-connect'/);
-assert.match(workflow,/ref: main/);
+// The default source is main; only the named isolated Work replay may
+// checkout its immutable triggering commit. No arbitrary dispatch input.
+const checkoutRef=workflow.match(/^\s*ref:\s*(.+)$/m)?.[1].trim();
+const workRef="work/issue122-next-782-replay";
+const isolatedRef="$"+"{{ github.ref_name == '"+workRef+"' && github.sha || 'main' }}";
+assert(checkoutRef==='main'||checkoutRef===isolatedRef,"unsafe automatic intake checkout source");
+if(checkoutRef===isolatedRef){
+ assert.match(workflow,/branches: \[main, work\/issue122-next-782-replay\]/);
+ assert.match(workflow,/git checkout -B "\$INTAKE_BRANCH" origin\/main/);
+ assert.match(workflow,/git push -u origin "\$INTAKE_BRANCH"/);
+ assert.doesNotMatch(workflow,/git push[^\n]*\b(?:HEAD:main|origin main)\b/);
+}
 console.log('Automatic update gate rejects incomplete print execution and restricts the connector trigger.');
