@@ -271,6 +271,16 @@ function requests(g,actor,card,effect){
    cardRequest('toHand',candidates,0,1);out.at(-1).dependencies=[{kind:'subset',key:'cards'},{kind:'countFromSelection',key:'cards',threshold:1,count:1}];cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),0,1);out.at(-1).dependencies=[{kind:'countFromSelection',key:'cards',threshold:2,count:1}];
   }
  }
+ if(m==='SUPPORTER_SEARCH_BY_STAGE'){
+  const candidates=p.deck.filter(c=>c.kind==='pokemon'&&[0,1,2].includes(record(c).facts.stage));
+  deckRequest('cards',candidates,0,new Set(candidates.map(c=>record(c).facts.stage)).size);
+  out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
+ }
+ if(m==='TRAINER_SWITCH_BOTH'){
+  cardRequest('opponentBench',o.bench,1,1);
+  if(p.bench.length)cardRequest('ownBench',p.bench,1,1);
+ }
+ if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')cardRequest('ownBench',p.bench,1,1);
  if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'){
   const plan=effect.plan,candidates=p.deck.filter(c=>plan.categories.includes(record(c)?.category));
   const category=c=>record(c).category;
@@ -423,6 +433,9 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
+   if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
+   if(m==='SUPPORTER_SEARCH_BY_STAGE')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
@@ -800,6 +813,17 @@ function applyPlan(g,actor,card,effect,action){
   case 'ACTIVE_TOP_SUPPORTER_SEARCH':case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':searchSelectedDeck(g,actor,p,ids('cards'));p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
+  case 'TRAINER_SWITCH_BOTH':
+   chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
+   if(p.bench.length)chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
+   break;
+  case 'SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT':
+   chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
+   draw(g,p,Math.max(0,plan.limit-p.hand.length));
+   break;
+  case 'SUPPORTER_SEARCH_BY_STAGE':
+   searchSelectedDeck(g,actor,p,ids('cards'));
+   break;
   case 'DISCARD_TO_SEARCH_DISTINCT_CATEGORIES':
   case 'ULTRA_BALL':moveChosen(g,p,'hand',ids('discard'),'discard',false);searchSelectedDeck(g,actor,p,ids('cards'));break;
   case 'CYRANO':case 'HILDA':case 'BROCK':case 'POKEPAD':searchSelectedDeck(g,actor,p,ids('cards'));break;

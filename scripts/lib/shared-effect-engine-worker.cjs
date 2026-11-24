@@ -223,6 +223,20 @@ function prepare(r, e, kind) {
     }
     manifest.decks[locations[0].deck].cards = cards.filter(card => card.count);
   }
+  if (m === "TRAINER_SWITCH_BOTH") {
+    const {records: deckCatalog}=require("../../data/deck-building/catalog.json");
+    const aceNames=new Set(deckCatalog.filter(card=>card.aceSpec).map(card=>card.source.identityName));
+    if(aceNames.has(r.name)){
+      const playerDeck=manifest.decks[locations[0].deck];
+      const energy=playerDeck.cards.find(card=>card.category==="energy"&&card.name.startsWith("基本"));
+      if(!energy)return {blocked:"NO_LEGAL_ACE_SPEC_FIXTURE_RESOURCE"};
+      playerDeck.cards=playerDeck.cards.filter(card=>{
+        if(!aceNames.has(card.name)||card.name===r.deckName)return true;
+        energy.count+=card.count;
+        return false;
+      });
+    }
+  }
   if (m === "ATTACK_DISCARD_DEFENDER_ENERGY" && e.plan.specialOnly) {
     const opponentEntries = manifest.decks[1-locations[0].deck].cards;
     const ignition = [...records.values()].find(record => record.mainPlan?.mechanic === "IGNITION");
@@ -552,6 +566,45 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if (e.plan.mechanic === "TRAINER_SWITCH_BOTH") {
+    const selections=o.action.selections;
+    assert.equal(after.players[1].active.id,selections.opponentBench[0]);
+    assert.equal(after.players[0].active.id,selections.ownBench[0]);
+    const switched=effectEvents.filter(step=>step?.command==="SELECT_BENCH_SWITCH");
+    assert.deepEqual(Array.from(switched,step=>step.playerId),["ai","you"]);
+    const start=JSON.parse(JSON.stringify(before));
+    start.players[0].deck.push(...start.players[0].bench.splice(0));
+    const replay=port(start);
+    assert(replay.dispatch("you",{...o.action,selections:{opponentBench:selections.opponentBench}}).ok);
+    assert.equal(replay.getSnapshot().players[1].active.id,selections.opponentBench[0]);
+    const noOpponent=JSON.parse(JSON.stringify(before));
+    noOpponent.players[1].deck.push(...noOpponent.players[1].bench.splice(0));
+    assert.equal(port(noOpponent).dispatch("you",o.action).ok,false);
+  }
+  if (e.plan.mechanic === "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT") {
+    assert.equal(after.players[0].active.id,o.action.selections.ownBench[0]);
+    const startingHand=attackingSide.hand.length-1;
+    const drawCount=Math.min(attackingSide.deck.length,Math.max(0,e.plan.limit-startingHand));
+    assert.equal(after.players[0].hand.length,startingHand+drawCount);
+    const noBench=JSON.parse(JSON.stringify(before));
+    noBench.players[0].deck.push(...noBench.players[0].bench.splice(0));
+    assert.equal(port(noBench).dispatch("you",o.action).ok,false);
+  }
+  if (e.plan.mechanic === "SUPPORTER_SEARCH_BY_STAGE") {
+    const selection=o.action.selections.cards;
+    assert(selection.length>0);
+    const stages=selection.map(id=>E.getReferenceEffectRecord(attackingSide.deck.find(c=>c.id===id)).facts.stage);
+    assert.equal(stages.length,new Set(stages).size);
+    assert(selection.every(id=>after.players[0].hand.some(c=>c.id===id)));
+    assert(effectEvents.some(step=>step?.command==="SHUFFLE_DECK"));
+    const known=attackingSide.deck.filter(card=>card.kind==="pokemon");
+    const sameStage=known.find(card=>known.some(second=>second.id!==card.id&&
+      E.getReferenceEffectRecord(second).facts.stage===E.getReferenceEffectRecord(card).facts.stage));
+    assert(sameStage);
+    const other=known.find(card=>card.id!==sameStage.id&&
+      E.getReferenceEffectRecord(card).facts.stage===E.getReferenceEffectRecord(sameStage).facts.stage);
+    assert.equal(port(before).dispatch("you",{...o.action,selections:{cards:[sameStage.id,other.id]}}).ok,false);
+  }
   if (e.plan.mechanic === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
     const chosen=o.action.selections.drawChoice;
     assert.deepEqual(Array.from(chosen),["draw"]);

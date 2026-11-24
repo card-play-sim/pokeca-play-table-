@@ -353,6 +353,13 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_DISCARD_ONE_DRAW_TO_SIX',commands:['DISCARD','DRAW'],limit:6};
  if(kind==='ATTACK'&&generic==='相手の手札を見る。'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_REVEAL_OPPONENT_HAND',commands:['DAMAGE','REVEAL']};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。その後、自分のバトルポケモンをベンチポケモンと入れ替える。')
+  return {mechanic:'TRAINER_SWITCH_BOTH',commands:['FORCE_SWITCH','SWITCH']};
+ const switchDraw=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&switchDraw)
+  return {mechanic:'SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT',commands:['SWITCH','DRAW'],limit:Number(switchDraw[1])};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札から「たねポケモン」「1進化ポケモン」「2進化ポケモン」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')
+  return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
  const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional;

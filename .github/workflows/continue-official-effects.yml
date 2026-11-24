@@ -117,7 +117,7 @@ jobs:
           subprocess.check_call(['git', 'restore', '--source=FETCH_HEAD', '--', *paths])
           Path('/tmp/work-parser-ids.json').write_text(json.dumps([r['officialCardId'] for r in proof_rows]))
           PYTHON
-            python scripts/continue-official-effect-intake.py --ids /tmp/work-parser-ids.json --limit 127 --retry-blocked --max-tasks 1
+            python scripts/continue-official-effect-intake.py --ids /tmp/work-parser-ids.json --limit 127 --retry-blocked --max-tasks 1 --adopt
           fi
           # One command owns official acquisition, shared mechanic compilation, execution,
           # print-specific release, and persistent unresolved effect work units.

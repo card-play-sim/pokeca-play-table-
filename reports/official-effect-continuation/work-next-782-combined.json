@@ -3,13 +3,13 @@
   "baseline": 218,
   "batchTarget": 782,
   "officialPrintingScope": 2557,
-  "compiledCandidates": 169,
-  "passed": 166,
-  "totalEnginePass": 384,
-  "targetRemaining": 616,
-  "unverifiedRemaining": 2391,
+  "compiledCandidates": 187,
+  "passed": 184,
+  "totalEnginePass": 402,
+  "targetRemaining": 598,
+  "unverifiedRemaining": 2373,
   "publishedInBatch": 0,
-  "effectSlots": 277,
+  "effectSlots": 295,
   "parser": {
     "reviewed": 127,
     "parsed": 122,
@@ -19,15 +19,15 @@
   },
   "pending": [
     {
-      "officialCardId": "44431",
+      "id": "44431",
       "reason": "UNVERIFIED_HIJ_SCOPE"
     },
     {
-      "officialCardId": "44446",
+      "id": "44446",
       "reason": "UNVERIFIED_HIJ_SCOPE"
     },
     {
-      "officialCardId": "44449",
+      "id": "44449",
       "reason": "UNVERIFIED_HIJ_SCOPE"
     }
   ],
@@ -59,6 +59,16 @@
           "kind": "attack",
           "index": 1,
           "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "50178",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
         }
       ]
     },
@@ -2244,6 +2254,176 @@
           "kind": "attack",
           "index": 1,
           "mechanic": "VANILLA_DAMAGE"
+        }
+      ]
+    },
+    {
+      "officialCardId": "46290",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "46330",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48417",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48512",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48521",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50428",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50466",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50852",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SEARCH_BY_STAGE",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48693",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "49424",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "50009",
+      "effects": [
+        {
+          "kind": "supporter",
+          "mechanic": "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "45279",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "46809",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47195",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "47881",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "48274",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "officialCardId": "49372",
+      "effects": [
+        {
+          "kind": "item",
+          "mechanic": "TRAINER_SWITCH_BOTH",
+          "index": 0
         }
       ]
     }
