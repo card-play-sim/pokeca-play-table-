@@ -1,7 +1,7 @@
-name: Issue122 all remaining official print battle replay
+name: Issue122 integrated all remaining battle replay
 on:
   push:
-    branches: [battle/issue122-all-remaining-replay-20261124]
+    branches: [battle/issue122-all-integrated-20261124]
     paths:
       - '.github/workflows/issue122-all-remaining-replay.yml'
   workflow_dispatch:
@@ -73,7 +73,7 @@ jobs:
           git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: full remaining official print replay and candidate Chromium verification'
-            git push origin HEAD:battle/issue122-all-remaining-replay-20261124
+            git push origin HEAD:battle/issue122-all-integrated-20261124
           fi
       - uses: actions/upload-artifact@v4
         if: always()
