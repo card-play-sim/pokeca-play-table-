@@ -985,6 +985,25 @@ function applyPlan(g,actor,card,effect,action){
   case 'CONDITIONAL_ATTACK_BONUS':
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
    break;
+  case 'MASS_COIN_OUTCOME':{
+   let heads=0;
+   for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
+   const met=plan.when==='all'?heads===plan.flips:plan.when==='none'?heads===0:heads>=plan.threshold;
+   const target=o.active,protectedTarget=target.referenceProtection?.opponentTurn===g.turnNumber;
+   const amount=plan.failOnTails&&!met?0:plan.base+(plan.unit||0)*heads+(met?(plan.bonus||0):0);
+   damage(g,actor,target,amount);
+   if(met){
+    if(plan.status&&!protectedTarget){target.statusCondition=plan.status;event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(target)});}
+    if(plan.recoil)command(g,actor,{command:'DAMAGE',amount:plan.recoil},{targetIds:[id(card)]});
+    if(plan.heal)heal(g,actor,card,plan.heal);
+    if(plan.mill){const discarded=o.deck.splice(0,heads);o.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:o.id});}
+    if(plan.lock==='selfAttack')card.referenceCannotAttackTurn=g.turnNumber+2;
+    if(plan.lock==='opponentAttack'&&!protectedTarget)target.referenceCannotAttackTurn=g.turnNumber+1;
+    if(plan.lock==='opponentRetreat'&&!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+1;
+    if(plan.protect)card.referenceProtection={opponentTurn:g.turnNumber+1};
+   }
+   break;
+  }
   case 'SCALED_ATTACK_DAMAGE':
    damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
    break;
