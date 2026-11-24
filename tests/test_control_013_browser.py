@@ -81,20 +81,40 @@ async def main():
   await ready()
   for f in fixtures:
    r=f['r'];ident=f['sourceId'];m=f['e']['plan']['mechanic'];print('START',r['officialCardId'],m,flush=True)
-   await page.evaluate('g=>{const r=PokecaMobile.port.loadGame(g);if(!r.ok)throw Error(JSON.stringify(r));}',f['game'])
+   trigger=f.get('trigger')
+   kind='attack' if trigger else f['kind']
+   option=f['option']
+   attack_selector=(f'#attack-actions [data-action-kind="attack"][data-attack-index="{option["action"]["attackIndex"]}"]'
+                    if kind=='attack' else None)
+   async def load_game(game):
+    await page.evaluate('g=>{const r=PokecaMobile.port.loadGame(g);if(!r.ok)throw Error(JSON.stringify(r));}',game)
+   await load_game(f['game'])
    await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
    if await toggle.count():await toggle.tap()
    else:await page.locator('#sheet-close').tap()
-   before=await snap();option=f['option'];assert option
+   if m=='PASSIVE_ROCKET_TEAM_ATTACK_GATE':
+    short=await snap()
+    own=short['players'][0]
+    teammate=own['bench'].pop()
+    own['deck'].extend(teammate['energyCards'])
+    teammate.update(energyCards=[],energies=[])
+    own['deck'].append(teammate)
+    await load_game(short)
+    await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
+    await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
+    assert await page.locator(attack_selector).is_disabled()
+    await page.locator('#sheet-close').tap()
+    await load_game(f['game'])
+   before=await snap()
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
-   hand_ability=(f['kind']=='ability' and
+   hand_ability=(kind=='ability' and
                  any(card['id']==ident for card in before['players'][0]['hand']))
    if hand_ability:
     await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
     await page.locator('#hand-actions [data-action-type="use_ability"]').filter(has_text=option['label']).tap()
-   elif f['kind'] in ('attack','ability'):
+   elif kind in ('attack','ability'):
     await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
-    if f["kind"]=="attack":await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(f'#attack-actions [data-action-kind="attack"][data-attack-index="{option["action"]["attackIndex"]}"]').tap()
+    if kind=='attack':await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(attack_selector).tap()
     else:await page.locator('#pokemon-actions [data-action-kind="ability"]').filter(has_text=option['label']).tap()
    elif r['category']=='stadium':
     await page.locator('#stadium').tap();await page.get_by_role('button',name=r['name']+'を置く',exact=True).tap()
@@ -105,12 +125,12 @@ async def main():
     container='#self-active' if to_active else '#self-bench'
     index=0 if to_active else option['action']['target']
     await page.locator(container+' [data-card-id]').nth(index).tap()
-   elif r['category']!='stadium' and f['kind'] not in ('attack','ability'):
+   elif r['category']!='stadium' and kind not in ('attack','ability'):
     await page.locator(f'#hand-actions [data-action-type="{option["action"]["type"]}"]').tap()
     await select_effect_targets(page,option)
-   if f['kind'] in ('attack','ability'):
+   if kind in ('attack','ability'):
     await select_effect_targets(page,option)
-   if f['kind'] in ('attack','ability'):
+   if kind in ('attack','ability'):
     # The selection sheet closes asynchronously. Wait for the next
     # confirmation or a committed action before deciding what to tap.
     history_before=len(before.get('history',[]))
@@ -129,13 +149,27 @@ async def main():
    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=len(before.get('history',[])))
    after=await snap();assert after!=before
    events=after['history'][len(before.get('history',[])):]
-   if f['kind']=='attack':
-    assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==f['e']['effectId']
-               and event['details'].get('referenceOfficialCardId')==r['officialCardId'] for event in events)
+   if kind=='attack':
+    attack_print=before['players'][0]['active']['validationReference']['officialCardId']
+    assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
+               and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
+    if not trigger or m=='PASSIVE_ROCKET_TEAM_ATTACK_GATE':
+     assert attack_print==r['officialCardId']
+    else:
+     assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
-            'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES'):
+            'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
+            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if (trigger or f['e'])['plan']['mechanic']=='ATTACK_DISCARD_BENCH_ENERGY_BONUS':
+    picked=set(option['action']['selections']['energy'])
+    assert len(picked)==(trigger or f['e'])['plan']['maxDiscard']
+    own_before,own_after=before['players'][0],after['players'][0]
+    before_attached={energy['id'] for card in own_before['bench'] for energy in card['energyCards']}
+    after_attached={energy['id'] for card in own_after['bench'] for energy in card['energyCards']}
+    assert picked<=before_attached and after_attached==before_attached-picked
+    assert picked<={card['id'] for card in own_after['discard']}
    if m=='ATTACK_DISCARD_STADIUM':
     assert before['stadium'] and after['stadium'] is None
     owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])

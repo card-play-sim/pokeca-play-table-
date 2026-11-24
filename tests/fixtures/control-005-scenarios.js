@@ -24,16 +24,26 @@
    const criterion=m==='ROCKET_ENERGY'?c=>record(c).name.startsWith('ロケット団の'):m==='IGNITION'||m==='ROSA'?c=>record(c).facts.stage===2:m==='FAIRY_ZONE'?c=>record(c).facts.types.includes('超')&&!record(c).abilities.some(a=>a.plan?.mechanic==='FAIRY_ZONE'):()=>true;
    p.active=pokemon(0,criterion);if(!p.active)throw Error('FIXTURE_ACTIVE_MISSING');
   }
-  o.active=pokemon(1,m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
+  o.active=pokemon(1,row.defenderOfficialCardId?c=>record(c).officialCardId===row.defenderOfficialCardId:m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
+  if(row.defenderOfficialCardId&&!o.active)return {blocked:'FIXTURE_DEFENDER_MISSING'};
   if(!o.active)o.active=pokemon(1);
-  for(let i=0;i<2;i++){const a=pokemon(0);if(a)p.bench.push(a);const b=pokemon(1,c=>!record(c).facts.teraBenchProtection);if(b)o.bench.push(b);}
+  const teammate=c=>record(c).facts.basic&&record(c).name.startsWith('ロケット団の');
+  for(let i=0;i<Math.max(2,(row.rocketTeamCount||0)-1);i++){
+   const a=pokemon(0,row.rocketTeamCount?teammate:undefined);if(a)p.bench.push(a);
+   if(i<2){const b=pokemon(1,c=>!record(c).facts.teraBenchProtection);if(b)o.bench.push(b);}
+  }
+  if(row.rocketTeamCount&&p.bench.length!==row.rocketTeamCount-1)return {blocked:'FIXTURE_ROCKET_TEAM_MISSING'};
   function addHand(i,pred){const c=take(i,pred,false);if(c)g.players[i].hand.push(c);return c;}
   function attach(i,target,pred){const c=take(i,pred,false);if(c)target.energyCards.push(c);return c;}
   const basic=c=>c.kind==='energy'&&!c.isSpecial;
   if(row.kind==='attack'){
    const needs=row.cost.filter(t=>t!=='無色'),available=new Set(pools[0].filter(basic).map(c=>c.energyType));
    if(needs.some(t=>!available.has(t)&&!(t==='超'||t==='悪') ))return {blocked:'FIXED_DECK_ENERGY_UNAVAILABLE',requiredTypes:needs,availableTypes:[...available]};
-   for(const c of [...pools[0]].filter(c=>c.kind==='energy'))attach(0,p.active,x=>x.id===c.id);
+   if(m==='ATTACK_DISCARD_BENCH_ENERGY_BONUS'){
+    for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    for(let i=0;i<row.plan.maxDiscard;i++)if(!p.bench.length||!attach(0,p.bench[i%p.bench.length],basic))return {blocked:'FIXTURE_BENCH_ENERGY_MISSING'};
+   }else for(const c of [...pools[0]].filter(c=>c.kind==='energy'))attach(0,p.active,x=>x.id===c.id);
   }
   if(m==='FAIRY_ZONE'){attach(0,p.active,c=>basic(c)&&c.energyType==='超');attach(0,p.active,basic);}
   if(m==='ADRENA_BRAIN'){attach(0,p.active,c=>basic(c)&&c.energyType==='悪');p.active.damage=50;}

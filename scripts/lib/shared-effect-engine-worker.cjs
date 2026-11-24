@@ -40,6 +40,7 @@ const fileDigests = [
   "ui/engine.bundle.js",
   "engine/pokeca_reference_effect_runtime.cjs",
   "engine/reference-effect-plans.cjs",
+  "scripts/lib/shared-effect-engine-worker.cjs",
   "tests/fixtures/control-005-scenarios.js",
   "tests/fixtures/control-009-scenarios.cjs",
   "tests/fixtures/control-010-scenarios.cjs",
@@ -59,6 +60,25 @@ function port(game) {
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if (m === "PASSIVE_ROCKET_TEAM_ATTACK_GATE") {
+    const attackIndex = r.attacks.findIndex(attack => attack.plan);
+    if (attackIndex < 0) return { blocked: "NO_PASSIVE_TRIGGER_ATTACK" };
+    const trigger = { ...r.attacks[attackIndex], effectIndex: attackIndex };
+    return { ...prepare(r, trigger, "attack"), trigger };
+  }
+  if (m === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
+    // A fixed-deck attacker hits the exact verified defender in the browser.
+    const attacker = records.get("45152");
+    const attackIndex = attacker.attacks.findIndex(attack => attack.plan?.mechanic === "VANILLA_DAMAGE");
+    const trigger = { ...attacker.attacks[attackIndex], effectIndex: attackIndex };
+    const manifest = require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed, [r]);
+    const frame = S.create(E, manifest, {
+      cardName: attacker.deckName, category: "pokemon", officialCardId: attacker.officialCardId,
+      kind: "attack", index: attackIndex, plan: trigger.plan, cost: trigger.cost,
+      locations: [{ deck: 0 }], defenderOfficialCardId: r.officialCardId,
+    });
+    return { port: port(frame.game), sourceId: frame.sourceId, kind: "attack", trigger };
+  }
   if (F10.records.some((x) => x.officialCardId === r.officialCardId)) {
     if (m === "BENCH_DAMAGE_PROTECTION") {
       const f = F10.protection(r.officialCardId);
@@ -153,8 +173,24 @@ function prepare(r, e, kind) {
     d.cards.filter((c) => c.name === r.deckName).map(() => ({ deck: i })),
   );
   if (!locations.length) return { blocked: "NO_VERIFICATION_DECK_ADAPTER" };
+  const rocketTeamCount = kind === "attack"
+    ? r.abilities.find(ability => ability.plan?.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE")?.plan.required
+    : undefined;
   if (kind === "attack") {
     const cards = manifest.decks[locations[0].deck].cards;
+    if (rocketTeamCount) {
+      const teammate = [...records.values()].find(record =>
+        record.name.startsWith("ロケット団の") && record.deckName !== r.deckName &&
+        record.facts.basic && !record.abilities.length && record.attacks.every(attack => attack.plan) &&
+        !cards.some(card => card.name === record.deckName));
+      const remaining = rocketTeamCount - 1;
+      const donor = cards.find(card => ["goods", "item", "support", "supporter"].includes(card.category)
+        && card.count >= remaining);
+      if (!teammate || !donor || remaining > 4) return { blocked: "NO_ROCKET_TEAM_FIXTURE_RESOURCE" };
+      donor.count -= remaining;
+      cards.push({ name: teammate.deckName, category: "pokemon", count: remaining,
+        referenceOfficialCardId: teammate.officialCardId });
+    }
     const references = E.getReferenceEffectCatalog({ includeExtensions: true });
     const needed = new Map();
     for (const type of e.cost || []) {
@@ -189,6 +225,7 @@ function prepare(r, e, kind) {
     plan: e.plan,
     cost: e.cost || [],
     damage: e.damage || "0",
+    rocketTeamCount,
     locations,
   };
   const frame = S.create(E, manifest, row);
@@ -319,7 +356,7 @@ function prepare(r, e, kind) {
     return { port: p, sourceId: frame.sourceId, kind, passive: true };
   return { port: p, sourceId: frame.sourceId, kind };
 }
-function verifyPrintedAttack(before, after, effect, amount) {
+function verifyPrintedAttack(before, after, effect, amount, reduction = 0) {
   const [own, opponent] = before.players;
   const attacker = E.getReferenceEffectRecord(own.active);
   const defender = E.getReferenceEffectRecord(opponent.active);
@@ -327,6 +364,7 @@ function verifyPrintedAttack(before, after, effect, amount) {
   if (!effect.plan.skipWeakness && hasType(defender.facts.weakness)) amount *= 2;
   if (!effect.plan.skipResistance && hasType(defender.facts.resistance))
     amount = Math.max(0, amount + Number(defender.facts.resistance.value.replace("－", "-")));
+  amount = Math.max(0, amount - reduction);
   const changes = after.history.slice(before.history.length);
   assert(changes.some(event => event.type === "attack" &&
     event.details.effectId === effect.effectId &&
@@ -337,6 +375,7 @@ function verifyPrintedAttack(before, after, effect, amount) {
 
 function effectOption(t, e) {
   if (t.option) return t.option;
+  e = t.trigger || e;
   const p = t.port;
   if (t.kind === "ability") {
     const inHand = p.getSnapshot().players[0].hand.some(card => card.id === t.sourceId);
@@ -410,6 +449,45 @@ function verifyCase(t, e) {
     assert(p.dispatch("you", action).ok);
   }
   const after = p.getSnapshot();
+  if (e.plan.mechanic === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
+    const defender = E.getReferenceEffectRecord(before.players[1].active);
+    assert(defender.abilities.some(ability => ability.effectId === e.effectId));
+    verifyPrintedAttack(before, after, t.trigger, Number(t.trigger.damage), e.plan.amount);
+  }
+  if ((t.trigger || e).plan.mechanic === "ATTACK_DISCARD_BENCH_ENERGY_BONUS") {
+    const effect = t.trigger || e;
+    const action = o.action;
+    const chosen = action.selections.energy;
+    assert.equal(chosen.length, effect.plan.maxDiscard);
+    for (let count = 0; count <= chosen.length; count++) {
+      const replay = port(before);
+      const energy = chosen.slice(0, count);
+      assert(replay.dispatch("you", { ...action, selections: { energy } }).ok);
+      const resolved = replay.getSnapshot();
+      verifyPrintedAttack(before, resolved, effect, effect.plan.base + count * effect.plan.unit);
+      const [own] = resolved.players;
+      assert.deepEqual(Array.from(own.discard.slice(before.players[0].discard.length), card => card.id), Array.from(energy));
+      assert(own.bench.every(card => card.energyCards.every(attached => !energy.includes(attached.id))));
+      assert.deepEqual(S.identities(before), S.identities(resolved));
+    }
+    const invalid = port(before);
+    for (const energy of [[chosen[0], chosen[0]], [before.players[0].active.energyCards[0].id]]) {
+      assert.equal(invalid.dispatch("you", { ...action, selections: { energy } }).ok, false);
+      assert.deepEqual(invalid.getSnapshot(), before);
+    }
+  }
+  if (e.plan.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE") {
+    const short = structuredClone(before);
+    const [own] = short.players;
+    const teammate = own.bench.pop();
+    own.deck.push(...teammate.energyCards, { ...teammate, energyCards: [], energies: [] });
+    const replay = port(short);
+    const saved = replay.getSnapshot();
+    const option = effectOption({ ...t, port: replay }, e);
+    assert((option.errors || option.disabledReasons).includes("ROCKET_TEAM_ATTACK_REQUIREMENT"));
+    assert.equal(replay.dispatch("you", o.action).ok, false);
+    assert.deepEqual(replay.getSnapshot(), saved);
+  }
   if(e.plan.mechanic==='EXCITE_DIVE'){
     const source=before.players[0].hand.find(card=>card.id===t.sourceId);
     const entered=after.players[0].bench.find(card=>card.id===t.sourceId);
@@ -842,6 +920,7 @@ function verifyPrintedDamage(evidence) {
 module.exports = {
   prepare,
   effectOption,
+  verifyCase,
   verifyPrintedDamage,
   version: "1",
   idempotent: true,
