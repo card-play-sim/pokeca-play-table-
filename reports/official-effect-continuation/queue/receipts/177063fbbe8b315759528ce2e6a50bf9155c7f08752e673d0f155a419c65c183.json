@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_7BCC443A3F36D7D3:e86a71e951809ed082046f55090c117392a88bc43069577a8eb66da768b040c4",
   "taskFingerprint": "e86a71e951809ed082046f55090c117392a88bc43069577a8eb66da768b040c4",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "f5c8a447-e411-4042-bd1b-bc6bd0d49e4d",
-  "status": "BLOCKED",
+  "executionFingerprint": "2921a07ab793e81cdf17b9aa00ffbd38acb99d48ca57cdf08bcba4aeff2f05cd",
+  "attemptId": "b85fb451-8890-4aa5-b48d-d40892dbec82",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47166:attack:ぜんそくりょく:0",
@@ -28,35 +27,107 @@
       },
       {
         "slot": "45199:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45532:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45538:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45543:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46785:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47143:attack:はじけるほうこう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_HAND_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DISCARD",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "2afce3e89138a11338c666d021e274dc7e21f3d14035974ac822f63da179fac5"
+  "checksum": "fe5fe16c73a8e9c2f84f19b10474774b5aed55852a6a26a7d3af49718ef5f5a5"
 }

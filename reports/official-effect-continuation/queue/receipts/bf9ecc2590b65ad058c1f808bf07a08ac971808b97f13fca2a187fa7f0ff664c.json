@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_E0683389EF6E6B7C:83a1653b0c0b1c7bcca3f49f74eb530976a90bd623325e5d7c496aef4ad07f5c",
   "taskFingerprint": "83a1653b0c0b1c7bcca3f49f74eb530976a90bd623325e5d7c496aef4ad07f5c",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "a6e9f6ff-584f-4e19-8df3-65a60bb9a43d",
-  "status": "BLOCKED",
+  "executionFingerprint": "2921a07ab793e81cdf17b9aa00ffbd38acb99d48ca57cdf08bcba4aeff2f05cd",
+  "attemptId": "7b616032-4261-41db-9285-4bbbb9d3adc7",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50620:attack:レーザーフレイム:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONTEXT_ATTACK_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "42c93edd821da0e1d99ec4a409558c9bf90f737462a3db9eb29a25af4b50111c"
+  "checksum": "b0d3a7ef76f67cc18e5c03486f515642ac10ca3409f3237b22438df38f7047c7"
 }

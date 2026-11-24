@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_1E7E86BF993D45D4:4b84a84141bf7428285d95636a75ce403ddca9599ddac36c17aaa75c3f46ed3e",
   "taskFingerprint": "4b84a84141bf7428285d95636a75ce403ddca9599ddac36c17aaa75c3f46ed3e",
-  "executionFingerprint": "26111b73d5b5b349b8fdf2c6a67674db3d176389ca5ce3c7ffebfd4451165ab3",
-  "attemptId": "1bc1fb7f-dcc4-4ae4-ab36-7da005876e08",
+  "executionFingerprint": "2921a07ab793e81cdf17b9aa00ffbd38acb99d48ca57cdf08bcba4aeff2f05cd",
+  "attemptId": "8c929fcc-529b-4221-a841-21c7d658149d",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -21,20 +21,50 @@
       },
       {
         "slot": "50176:attack:あまいかおり:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_HEAL_OWN_TARGET",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45612:attack:きずをなおす:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_HEAL_OWN_TARGET",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46274:attack:えいようそ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_HEAL_OWN_TARGET",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "e8ad1c423624050af4753b0ad4dbab7c65a16f6e7f57e2d38b01706abadcdaed"
+  "checksum": "401a44e2cdff33f9d3a55c5880c19e699db280656986c01f9573fc448a98ee07"
 }
