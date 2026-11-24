@@ -261,6 +261,25 @@ function massTransferCandidate(c,plan){
 function massHealTargets(p,plan){
  return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
 }
+function boardBonusApplies(g,p,o,plan){
+ const facts=record(o.active).facts;
+ switch(plan.predicate){
+  case 'ownHandEmpty':return p.hand.length===0;
+  case 'ownPrizesExact':return p.prizes===plan.threshold;
+  case 'opponentPrizesExact':return o.prizes===plan.threshold;
+  case 'ownDeckAtMost':return p.deck.length<=plan.threshold;
+  case 'allDamagedBench':return p.bench.length>0&&p.bench.every(c=>c.damage>0);
+  case 'ownBenchNamed':return p.bench.some(c=>record(c).name===plan.name);
+  case 'ownBenchContains':return p.bench.some(c=>record(c).name.includes(plan.name));
+  case 'ownStadium':return !!g.stadium&&g.stadiumOwner===p.id;
+  case 'stadiumContains':return !!g.stadium&&record(g.stadium).name.includes(plan.name);
+  case 'opponentType':return facts.types.includes(plan.type);
+  case 'opponentResistance':return !!facts.resistance?.types.includes(plan.type);
+  case 'opponentTera':return facts.teraBenchProtection===true;
+  case 'ownSpecialEnergy':return p.active.energyCards.some(c=>c.isSpecial);
+  default:throw Error('UNKNOWN_BOARD_BONUS_PREDICATE');
+ }
+}
 function massContext(plan,p,o){
  if(plan.predicate==='equalHand')return p.hand.length===o.hand.length;
  if(plan.predicate==='opponentBench')return o.bench.length>=plan.threshold;
@@ -1005,6 +1024,9 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
+  case 'MASS_BOARD_BONUS':
+   damage(g,actor,o.active,plan.base+(boardBonusApplies(g,p,o,plan)?plan.bonus:0));
+   break;
   case 'SCALED_ATTACK_DAMAGE':
    damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
    break;
