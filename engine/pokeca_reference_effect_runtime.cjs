@@ -205,6 +205,11 @@ function requests(g,actor,card,effect){
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
  }
+ if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
+  const eligible=p.hand.filter(basicEnergy),count=Math.min(1,eligible.length);
+  cardRequest('energy',eligible,count,count);
+  if(effect.plan.target==='own')cardRequest('attachTo',own,count,count);
+ }
  if(m==='ATTACK_DISCARD_FIELD_BASIC'){
   const eligible=own.flatMap(mon=>(mon.energyCards||[]).filter(basicEnergy));
   cardRequest('energy',eligible,0,eligible.length);
@@ -649,6 +654,18 @@ function applyPlan(g,actor,card,effect,action){
    const move=record(o.active).attacks.find(attack=>attack.effectId===ids('attackChoice')[0]);
    if(move&&o.active.referenceProtection?.opponentTurn!==g.turnNumber)
     o.active.referenceNamedAttackLock={turn:g.turnNumber+1,attackName:move.name};
+   break;
+  }
+  case 'ATTACK_ATTACH_BASIC_FROM_HAND': {
+   const energyId=ids('energy')[0];
+   if(energyId){
+    const index=p.hand.findIndex(c=>id(c)===energyId&&basicEnergy(c));
+    const target=plan.target==='self'?card:field(p).find(c=>id(c)===ids('attachTo')[0]);
+    assert(index>=0&&target,'HAND_BASIC_ENERGY_ATTACHMENT_CHANGED');
+    const energy=p.hand.splice(index,1)[0];
+    target.energyCards||=[];target.energyCards.push(energy);
+    event(g,actor,'ATTACH_ENERGY',{energyId,targetInstanceId:id(target),fromZone:'hand',sourceOfficialCardId:record(card).officialCardId});
+   }
    break;
   }
   case 'ATTACK_LOCK_UNTIL_SWITCH':
