@@ -436,6 +436,20 @@ async def main():
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
+   if m=='MASS_HEAL_SCOPE':
+    plan=f['e']['plan']
+    chosen=option['action'].get('selections',{}).get('cards',[])
+    healed=[ev['details'] for ev in events if ev.get('details',{}).get('command')=='HEAL' and ev['details'].get('amount',0)>0]
+    assert healed
+    if plan['choice']:assert {ev['targetInstanceId'] for ev in healed}==set(chosen)
+   if m=='MASS_HAND_FLOW':
+    plan=f['e']['plan'];mode=plan['mode']
+    if mode.startswith('reset'):
+     assert any(ev.get('details',{}).get('command')=='RETURN_TO_DECK' and not ev['details'].get('reference') for ev in events)
+    if mode=='resetBothCoin':
+     assert len([ev for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)])==2
+    if mode=='revealCount':
+     assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' for ev in events)
    if m=='MASS_HEAL_OWN':
     plan=f['e']['plan'];chosen=option['action'].get('selections',{}).get('cards',[])
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
