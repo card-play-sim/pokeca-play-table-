@@ -758,6 +758,27 @@ function prepare(r, e, kind) {
     for(const card of own.deck.filter(eligible).slice(0,Math.min(plan.limit,2))){
       own.deck.splice(own.deck.indexOf(card),1);dest.push(card);
     }
+    if(!dest.some(eligible)&&dest!==own.active.energyCards){
+      // Older generic attack fixtures attach every Energy to Active. Preserve
+      // exact printed attack payment and relocate only surplus physical cards.
+      const remaining=[...own.active.energyCards],payment=[];
+      const take=predicate=>{const i=remaining.findIndex(predicate);return i<0?null:remaining.splice(i,1)[0];};
+      for(const type of (e.cost||[]).filter(t=>t!=='無色')){
+        const card=take(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===type);
+        if(!card)return {blocked:'NO_ENERGY_COUNT_TYPED_PAYMENT'};
+        payment.push(card);
+      }
+      for(const type of (e.cost||[]).filter(t=>t==='無色')){
+        const card=take(c=>c.kind==='energy'&&!c.isSpecial&&!eligible(c))||take(c=>c.kind==='energy'&&!c.isSpecial);
+        if(!card)return {blocked:'NO_ENERGY_COUNT_COLORLESS_PAYMENT'};
+        payment.push(card);
+      }
+      const surplus=remaining.filter(eligible).slice(0,Math.min(plan.limit,2));
+      for(const card of surplus){
+        own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);dest.push(card);
+      }
+      assert(payment.every(c=>own.active.energyCards.some(x=>x.id===c.id)));
+    }
     if(!dest.some(eligible))return {blocked:'NO_ENERGY_COUNT_RESOURCE'};
     // Known special energy types are checked against physical card and holder below.
     // Never silently treat an unrecognised special energy as a basic one.
