@@ -220,6 +220,11 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_OPTIONAL_ENERGY_BONUS':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];sel=option['action']['selections']
+    picked=([c['id'] for c in own['active']['energyCards']] if sel['mode']==['bonus'] else []) if plan['all'] else sel['energy']
+    assert set(picked)<={c['id'] for c in resolved[plan['destination']]}
+    assert [c['id'] for c in resolved['active']['energyCards']]==[c['id'] for c in own['active']['energyCards'] if c['id'] not in picked]
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))

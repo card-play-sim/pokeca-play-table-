@@ -305,6 +305,12 @@ function additionalAttackPlan(entry,text){
 function energyCountFallback(entry,kind,text){
  if(kind!=='ATTACK')return null;
  const printed=String(entry.damage??'0').normalize('NFKC'),base=/^\d+\+$/.test(printed)?parseInt(printed,10):null;
+ const optionalAll=text.match(/^のぞむなら、このポケモンについているエネルギーをすべて(トラッシュし|手札にもどし|山札にもどして切り)、([1-9]\d{0,2})ダメージ追加。$/);
+ const optionalTyped=text.match(/^のぞむなら、このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーを1個(手札にもどし|選び、トラッシュする。その場合、)(?:、)?([1-9]\d{0,2})ダメージ追加。$/);
+ if(base!==null&&(optionalAll||optionalTyped)){
+  const destination=optionalAll?({'トラッシュし':'discard','手札にもどし':'hand','山札にもどして切り':'deck'})[optionalAll[1]]:optionalTyped[2]==='手札にもどし'?'hand':'discard';
+  return {mechanic:'ATTACK_OPTIONAL_ENERGY_BONUS',commands:[destination==='discard'?'DISCARD':destination==='hand'?'RETURN_TO_HAND':'RETURN_TO_DECK',...(destination==='deck'?['SHUFFLE_DECK']:[]),'DAMAGE'],all:!!optionalAll,type:optionalTyped?.[1]||null,destination,base,bonus:Number(optionalAll?.[2]||optionalTyped?.[3]),sharedWording:true};
+ }
  // Printed physical-card discard counts (枚), never energy-unit counts (個).
  const energyCount=text.match(/^(のぞむなら、)?(自分の場のポケモンについている|自分のベンチポケモンについている|このポケモンについている|自分の手札から)(基本エネルギー|エネルギー|\[([草炎水雷超闘悪鋼])\]エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を(好きなだけ|すべて|[1-9]枚まで)トラッシュし、その枚数×([1-9]\d{0,2})ダメージ(追加)?。$/);
  if(energyCount&&((energyCount[8]&&base!==null&&printed.endsWith('+'))||(!energyCount[8]&&printed===energyCount[7]+'×'))){
