@@ -4,6 +4,7 @@ on:
     branches: [battle/issue122-switch-proof-integration-20261125]
     paths:
       - '.github/workflows/issue122-switch-proof-integration.yml'
+      - 'tests/test_control_013_browser.py'
   workflow_dispatch:
 permissions:
   contents: write
