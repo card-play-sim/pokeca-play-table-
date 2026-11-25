@@ -447,6 +447,9 @@ function plan(entry,kind){
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
   return {mechanic:'PASSIVE_IGNORE_ACTIVE_DEFENSE',commands:['DAMAGE'],sharedWording:true};
+ const retaliation=generic.match(/^このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモン(?:を(どく|やけど)にする|にダメカンを([1-9]\\d?)個のせる)。$/);
+ if(kind==='ABILITY'&&retaliation)
+  return {mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',commands:[retaliation[1]?'STATUS_CONDITION':'PLACE_DAMAGE_COUNTERS'],status:retaliation[1]==='どく'?'POISONED':retaliation[1]==='やけど'?'BURNED':null,counterCount:retaliation[2]?Number(retaliation[2]):0,sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
