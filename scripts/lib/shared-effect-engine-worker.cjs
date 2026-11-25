@@ -148,7 +148,13 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
  if(m==='SCALED_ATTACK_DAMAGE'){
-  if(plan.metric==='ownDiscardNamedAttack')reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
+  if(plan.metric==='ownDiscardNamedAttack'){
+   const reserved=reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
+   // A second physical copy of the attacking print is also a valid
+   // discarded Pokemon, but must be independently reserved in the 60-card deck.
+   if(!reserved&&source.attacks.some(a=>a.name===plan.name)&&ensure(deckIndex,source,2))
+    requirements.push({side:0,zone:'discard',printId:source.officialCardId});
+  }
   if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
   if(plan.metric==='opponentDiscardBasic')reserve(isBasicEnergy,'discard',1);
   if(plan.metric==='opponentDiscardItem')reserve(r=>r.category==='item','discard',1);
