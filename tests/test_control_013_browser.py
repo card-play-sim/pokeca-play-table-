@@ -436,6 +436,14 @@ async def main():
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
+   if m=='MASS_ENERGY_COUNT_DISCARD':
+    plan=f['e']['plan']
+    chosen=option['action'].get('selections',{}).get('energy',[])
+    if not plan['all']:
+     assert chosen
+     assert set(chosen)<={c['id'] for c in after['players'][0]['discard']}
+     assert all(any(ev.get('details',{}).get('command')=='DISCARD' and ident in ev['details'].get('cardIds',[]) for ev in events) for ident in chosen)
+    assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
    if m=='MASS_HEAL_SCOPE':
     plan=f['e']['plan']
     chosen=option['action'].get('selections',{}).get('cards',[])
