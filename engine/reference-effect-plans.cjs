@@ -466,6 +466,9 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。')
   return {mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category:'trainer',type:null,stage:null,team:null,limit:2,origin:'evolve',requiresTera:true,sharedWording:true};
  const evolveCounters=generic.match(/^自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のポケモン([2-5])匹に、それぞれダメカンを([1-9])個のせる。$/);
+ const evolveSingleCounter=generic.match(/^自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のポケモン1匹に、ダメカンを([1-9])個のせる。$/);
+ if(kind==='ABILITY'&&evolveSingleCounter)
+  return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:1,amount:Number(evolveSingleCounter[1]),sharedWording:true};
  if(kind==='ABILITY'&&evolveCounters)
   return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:Number(evolveCounters[1]),amount:Number(evolveCounters[2]),sharedWording:true};
  if(kind==='ATTACK'&&generic==='のぞむなら、このポケモンを手札にもどす。(ポケモン以外のカードは、すべてトラッシュする。)'&&/^\d+$/.test(String(entry.damage||'0')))
