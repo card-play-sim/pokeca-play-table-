@@ -302,6 +302,21 @@ function additionalAttackPlan(entry,text){
 // Exact composable shared effect grammar. Existing approved plans take priority.
 // Numeric parameters and known filters generalize across official prints; never
 // infer missing clauses, and never compile a partially matched effect.
+function energyCountFallback(entry,kind,text){
+ if(kind!=='ATTACK')return null;
+ const printed=String(entry.damage??'0').normalize('NFKC'),base=/^\d+\+$/.test(printed)?parseInt(printed,10):null;
+ // Printed physical-card discard counts (枚), never energy-unit counts (個).
+ const energyCount=text.match(/^(のぞむなら、)?(自分の場のポケモンについている|自分のベンチポケモンについている|このポケモンについている|自分の手札から)(基本エネルギー|エネルギー|\[([草炎水雷超闘悪鋼])\]エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を(好きなだけ|すべて|[1-9]枚まで)トラッシュし、その枚数×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(energyCount&&((energyCount[8]&&base!==null&&printed.endsWith('+'))||(!energyCount[8]&&printed===energyCount[7]+'×'))){
+  const [,optional,zone,filter,typed,basicTyped,limit,unit,bonus]=energyCount;
+  // Basic-typed wording is valid for cards in hand; typed non-basic wording
+  // only applies to attached cards, where their provided types are defined.
+  if((zone==='自分の手札から'&&!typed)||(zone!=='自分の手札から'&&!basicTyped))
+   return {mechanic:'MASS_ENERGY_COUNT_DISCARD',commands:['DISCARD','DAMAGE'],zone:({'自分の場のポケモンについている':'field','自分のベンチポケモンについている':'bench','このポケモンについている':'self','自分の手札から':'hand'})[zone],type:typed||basicTyped||null,basic:filter.includes('基本'),limit:limit==='すべて'||limit==='好きなだけ'?60:parseInt(limit,10),all:limit==='すべて',base:bonus?base:0,unit:Number(unit),sharedWording:true};
+ }
+
+ return null;
+}
 function handAndHealPlan(entry,kind,text){
  const attack=kind==='ATTACK',ability=kind==='ABILITY',trainer=kind==='MAIN'&&['item','supporter'].includes(entry.category),printed=String(entry.damage??'0').normalize('NFKC');
  if(!(attack||ability||trainer)||attack&&!/^\d+$/.test(printed))return null;
@@ -428,6 +443,10 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
+  return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
+  return {mechanic:'PASSIVE_IGNORE_ACTIVE_DEFENSE',commands:['DAMAGE'],sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
@@ -682,7 +701,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic);
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,

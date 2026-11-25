@@ -206,7 +206,7 @@ async def main():
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION'):
+    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
      assert attack_print==r['officialCardId']
     else:
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
@@ -397,6 +397,17 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='PASSIVE_IGNORE_ACTIVE_DEFENSE':
+    defender=before['players'][1]['active']
+    assert defender['referenceProtection']['opponentTurn']==before['turnNumber']
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+   if m=='PASSIVE_FULL_HP_SURVIVAL':
+    defender=before['players'][1]['active'];survivor=after['players'][1]['active']
+    assert defender['damage']==0 and survivor['id']==defender['id']
+    assert survivor['hp']-survivor['damage']==10
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>=defender['hp'] for ev in events)
+    assert any(ev.get('details',{}).get('mechanic')=='PASSIVE_FULL_HP_SURVIVAL' and ev['details'].get('effectId')==f['e']['effectId'] for ev in events)
+    assert before['players'][0]['prizes']==after['players'][0]['prizes']
    if m=='PASSIVE_TYPED_ATTACK_IMMUNITY':
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==before['players'][1]['active']['id'] and ev['details'].get('amount')==0 for ev in events)
     assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
@@ -436,6 +447,14 @@ async def main():
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
+   if m=='MASS_ENERGY_COUNT_DISCARD':
+    plan=f['e']['plan']
+    chosen=option['action'].get('selections',{}).get('energy',[])
+    if not plan['all']:
+     assert chosen
+     assert set(chosen)<={c['id'] for c in after['players'][0]['discard']}
+     assert all(any(ev.get('details',{}).get('command')=='DISCARD' and ident in ev['details'].get('cardIds',[]) for ev in events) for ident in chosen)
+    assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
    if m=='MASS_HEAL_SCOPE':
     plan=f['e']['plan']
     chosen=option['action'].get('selections',{}).get('cards',[])

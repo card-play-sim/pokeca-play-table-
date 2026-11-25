@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
+const passive=new Set(['PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -200,8 +200,20 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
 }
 function typesConflictForIgnore(g,own,mon,source){return record(source).facts.types.includes('超')&&record(mon).facts.types.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE'));}
 function damage(g,actor,mon,amount,options={}){
- const value=damages(g,actor,mon,amount,options),attacker=player(g,actor).active,defender=find(g,id(mon));
+ const attacker=player(g,actor).active,defender=find(g,id(mon));
+ // Only the opponent's Active Pokémon and only this attack's damage.
+ // Do not bypass protection on the bench or on the attacker's own Pokémon.
+ const bypass=defender?.player.id!==actor&&defender?.player.active===mon&&!options.bench&&enabledAbilities(g,attacker).some(a=>a.plan.mechanic==='PASSIVE_IGNORE_ACTIVE_DEFENSE');
+ if(bypass)options={...options,ignore:true};
+ const value=damages(g,actor,mon,amount,options);
+ const survival=!options.ignore&&defender?.player.id!==actor&&mon.damage===0&&value>=mon.hp&&enabledAbilities(g,mon).find(a=>a.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL');
  command(g,actor,{command:'DAMAGE',amount:value},{targetIds:[id(mon)]});
+ // Survival is not damage reduction: retain the actual attack DAMAGE event
+ // and leave exactly 10 HP before the normal knockout/prize resolution.
+ if(survival&&mon.damage>=mon.hp){
+  mon.damage=mon.hp-survival.plan.remainingHp;
+  event(g,defender.player.id,'ADD_STATE',{mechanic:'PASSIVE_FULL_HP_SURVIVAL',targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
+ }
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
  }
@@ -269,6 +281,11 @@ function handFlowAvailable(p,o,plan){
  if(plan.mode==='resetBothCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
  if(plan.mode==='rocketLimit')return p.deck.length>0&&p.hand.length<(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount);
  return true;
+}
+function energyCountPool(p,card,plan){
+ if(plan.zone==='hand')return p.hand.filter(c=>c.kind==='energy'&&(!plan.basic||basicEnergy(c))&&(!plan.type||c.energyType===plan.type));
+ const holders=plan.zone==='self'?[card]:plan.zone==='bench'?p.bench:field(p);
+ return holders.flatMap(mon=>mon.energyCards.filter(c=>(!plan.basic||basicEnergy(c))&&(!plan.type||energyUnits({...mon,energyCards:[c]}).some(unit=>unit.includes(plan.type)))));
 }
 function massHealTargets(p,plan){
  return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
@@ -351,6 +368,10 @@ function requests(g,actor,card,effect){
   const eligible=p.hand.filter(basicEnergy),count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
   if(effect.plan.target==='own')cardRequest('attachTo',own,count,count);
+ }
+ if(m==='MASS_ENERGY_COUNT_DISCARD'){
+  const pool=energyCountPool(p,card,effect.plan),max=Math.min(effect.plan.limit,pool.length);
+  if(!effect.plan.all)cardRequest('energy',pool,0,max);
  }
  if(m==='ATTACK_DISCARD_FIELD_BASIC'){
   const eligible=own.flatMap(mon=>(mon.energyCards||[]).filter(basicEnergy));
@@ -970,6 +991,14 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,plan.base+(6-o.prizes)*plan.unit);
    command(g,actor,{command:'DAMAGE',amount:plan.recoil},{targetIds:[id(card)]});
    break;
+  case 'MASS_ENERGY_COUNT_DISCARD':{
+   const pool=energyCountPool(p,card,plan),chosen=plan.all?pool.map(id):ids('energy');
+   assert(chosen.length<=plan.limit&&chosen.every(ident=>pool.some(c=>id(c)===ident)),'ENERGY_COUNT_DISCARD_CHANGED');
+   if(plan.zone==='hand'){
+    for(const ident of chosen){const index=p.hand.findIndex(c=>id(c)===ident);p.discard.push(p.hand.splice(index,1)[0]);event(g,actor,'DISCARD',{cardIds:[ident],fromZone:'hand'});}
+   }else discardSelectedAttachment(g,actor,p,field(p),chosen);
+   damage(g,actor,o.active,plan.base+chosen.length*plan.unit);break;
+  }
   case 'ATTACK_DISCARD_FIELD_BASIC': {
    const energy=ids('energy');
    discardSelectedAttachment(g,actor,p,field(p),energy);

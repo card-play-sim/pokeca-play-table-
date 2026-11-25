@@ -3,38 +3,6 @@
   "scope": "OFFICIAL_CARD_TO_ENGINE_ONE_ATOMIC_WORK_UNIT",
   "groups": [
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5FBB46BFE8D373543422",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46373",
-        "46645",
-        "46655",
-        "46659",
-        "47157",
-        "47591",
-        "47960",
-        "48566",
-        "49994"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46373.json",
-        "data/effect-extensions/evidence/46645.json",
-        "data/effect-extensions/evidence/46655.json",
-        "data/effect-extensions/evidence/46659.json",
-        "data/effect-extensions/evidence/47157.json",
-        "data/effect-extensions/evidence/47591.json",
-        "data/effect-extensions/evidence/47960.json",
-        "data/effect-extensions/evidence/48566.json",
-        "data/effect-extensions/evidence/49994.json"
-      ],
-      "printCount": 9,
-      "effectSlots": 9
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
       "category": "item",
       "effectKind": "item",
@@ -295,34 +263,6 @@
         "data/effect-extensions/evidence/46766.json",
         "data/effect-extensions/evidence/47140.json",
         "data/effect-extensions/evidence/49207.json"
-      ],
-      "printCount": 7,
-      "effectSlots": 7
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E2B859357388AA29555B",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45170",
-        "45529",
-        "45537",
-        "45542",
-        "46710",
-        "47156",
-        "48938"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45170.json",
-        "data/effect-extensions/evidence/45529.json",
-        "data/effect-extensions/evidence/45537.json",
-        "data/effect-extensions/evidence/45542.json",
-        "data/effect-extensions/evidence/46710.json",
-        "data/effect-extensions/evidence/47156.json",
-        "data/effect-extensions/evidence/48938.json"
       ],
       "printCount": 7,
       "effectSlots": 7
@@ -616,33 +556,6 @@
         "data/effect-extensions/evidence/47899.json",
         "data/effect-extensions/evidence/48471.json",
         "data/effect-extensions/evidence/48477.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B5FC1474CB6EE04A48C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
-      "printedDamage": "90×",
-      "energyCost": [
-        "炎",
-        "炎"
-      ],
-      "officialCardIds": [
-        "48353",
-        "48500",
-        "48516",
-        "48522",
-        "49983"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48353.json",
-        "data/effect-extensions/evidence/48500.json",
-        "data/effect-extensions/evidence/48516.json",
-        "data/effect-extensions/evidence/48522.json",
-        "data/effect-extensions/evidence/49983.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -2489,31 +2402,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EDEF3E142CDAE67D50E7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[鋼]エネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
-      "printedDamage": "120×",
-      "energyCost": [
-        "鋼",
-        "鋼"
-      ],
-      "officialCardIds": [
-        "46304",
-        "45261",
-        "45561",
-        "49208"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46304.json",
-        "data/effect-extensions/evidence/45261.json",
-        "data/effect-extensions/evidence/45561.json",
-        "data/effect-extensions/evidence/49208.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F1EEBEE4C08A85980574",
       "category": "pokemon",
       "effectKind": "attack",
@@ -3676,29 +3564,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_502F0B2CF2A714DEC3B8",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分のベンチポケモンについている基本エネルギーを2枚までトラッシュし、その枚数×90ダメージ追加。",
-      "printedDamage": "60+",
-      "energyCost": [
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46713",
-        "47130",
-        "48954"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46713.json",
-        "data/effect-extensions/evidence/47130.json",
-        "data/effect-extensions/evidence/48954.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_505FB6ABB3721DDA4FE7",
       "category": "supporter",
       "effectKind": "supporter",
@@ -3904,29 +3769,6 @@
         "data/effect-extensions/evidence/45615.json",
         "data/effect-extensions/evidence/45669.json",
         "data/effect-extensions/evidence/49062.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_711AA0ECC429D9A9785B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の手札からエネルギーを4枚までトラッシュし、その枚数×40ダメージ追加。",
-      "printedDamage": "120+",
-      "energyCost": [
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "50063",
-        "50079",
-        "49663"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50063.json",
-        "data/effect-extensions/evidence/50079.json",
-        "data/effect-extensions/evidence/49663.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -4443,29 +4285,6 @@
         "data/effect-extensions/evidence/47664.json",
         "data/effect-extensions/evidence/48074.json",
         "data/effect-extensions/evidence/48082.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9C9D4F3477797A4BFD1D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
-      "printedDamage": "120×",
-      "energyCost": [
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "48289",
-        "49987",
-        "49998"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48289.json",
-        "data/effect-extensions/evidence/49987.json",
-        "data/effect-extensions/evidence/49998.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -5248,30 +5067,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E9C7D92E89F2E1E396CF",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[炎]エネルギーを5枚までトラッシュし、その枚数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "炎",
-        "炎",
-        "炎"
-      ],
-      "officialCardIds": [
-        "47314",
-        "48541",
-        "49957"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47314.json",
-        "data/effect-extensions/evidence/48541.json",
-        "data/effect-extensions/evidence/49957.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EA6C6C460C3DB2444697",
       "category": "pokemon",
       "effectKind": "ability",
@@ -5786,29 +5581,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/48605.json",
         "data/effect-extensions/evidence/49966.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0C9D099EBDC9F1B607A3",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50361",
-        "50522"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50361.json",
-        "data/effect-extensions/evidence/50522.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -6867,26 +6639,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_39C5C12094A425381EAC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場のポケモンについている[草]エネルギーを3枚までトラッシュし、その枚数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "45705",
-        "46679"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45705.json",
-        "data/effect-extensions/evidence/46679.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B40495ED2404AB358E1",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7055,26 +6807,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/46035.json",
         "data/effect-extensions/evidence/49400.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_43E2F7902137DB2BDA89",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[雷]エネルギーをすべてトラッシュし、その枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "雷"
-      ],
-      "officialCardIds": [
-        "47653",
-        "48026"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47653.json",
-        "data/effect-extensions/evidence/48026.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -12720,26 +12452,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_325A5B8825369F7DF840",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[鋼]エネルギーをすべてトラッシュし、その枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "鋼",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45767"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45767.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_334E48A681BDFA91CB57",
       "category": "pokemon",
       "effectKind": "attack",
@@ -14853,24 +14565,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_796DE7FBB33926384B0F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の手札から「基本[鋼]エネルギー」を2枚までトラッシュし、その枚数×40ダメージ。",
-      "printedDamage": "40×",
-      "energyCost": [
-        "鋼"
-      ],
-      "officialCardIds": [
-        "50277"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50277.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7979CFC0AE14F3D49F99",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16964,25 +16658,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BD30BD5DEA29D522F434",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の手札からエネルギーを2枚までトラッシュし、その枚数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "超",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49664"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49664.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BE71D003385AB7B5BC1F",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18979,5 +18654,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1860
+  "unfinishedPrints": 1822
 }

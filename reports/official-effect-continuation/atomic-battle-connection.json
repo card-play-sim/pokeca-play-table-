@@ -4,53 +4,21 @@
   "source": "EXACT_OFFICIAL_HTML_ID_IMAGE_EFFECT_AND_ENGINE_RECEIPTS",
   "publicBattleVerified": false,
   "finalization": "ONLY_AFTER_REQUIRED_CI_MAIN_PAGES_AND_PUBLISHED_BATTLE",
-  "totalSelected": 2058,
-  "qualifiedForPublication": 198,
-  "workRemaining": 1860,
+  "totalSelected": 1856,
+  "qualifiedForPublication": 34,
+  "workRemaining": 1822,
   "counts": {
-    "QUALIFIED_PREPUBLICATION": 198,
-    "NEEDS_ENGINE_EXECUTION": 43,
-    "NEEDS_SHARED_MECHANIC": 1809,
+    "QUALIFIED_PREPUBLICATION": 34,
+    "NEEDS_ENGINE_EXECUTION": 42,
+    "NEEDS_SHARED_MECHANIC": 1772,
     "NEEDS_OFFICIAL_PARSER": 8,
     "EVIDENCE_BLOCKED": 0,
     "EFFECT_UNRESOLVED": 0,
     "PENDING_OFFICIAL_FETCH": 0
   },
   "allCardEffectsConnectedAndExecuted": false,
-  "sharedMechanicGroups": 969,
+  "sharedMechanicGroups": 955,
   "sharedMechanicWorklist": [
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5FBB46BFE8D373543422",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46373",
-        "46645",
-        "46655",
-        "46659",
-        "47157",
-        "47591",
-        "47960",
-        "48566",
-        "49994"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46373.json",
-        "data/effect-extensions/evidence/46645.json",
-        "data/effect-extensions/evidence/46655.json",
-        "data/effect-extensions/evidence/46659.json",
-        "data/effect-extensions/evidence/47157.json",
-        "data/effect-extensions/evidence/47591.json",
-        "data/effect-extensions/evidence/47960.json",
-        "data/effect-extensions/evidence/48566.json",
-        "data/effect-extensions/evidence/49994.json"
-      ],
-      "printCount": 9,
-      "effectSlots": 9
-    },
     {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
       "category": "item",
@@ -312,34 +280,6 @@
         "data/effect-extensions/evidence/46766.json",
         "data/effect-extensions/evidence/47140.json",
         "data/effect-extensions/evidence/49207.json"
-      ],
-      "printCount": 7,
-      "effectSlots": 7
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E2B859357388AA29555B",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45170",
-        "45529",
-        "45537",
-        "45542",
-        "46710",
-        "47156",
-        "48938"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45170.json",
-        "data/effect-extensions/evidence/45529.json",
-        "data/effect-extensions/evidence/45537.json",
-        "data/effect-extensions/evidence/45542.json",
-        "data/effect-extensions/evidence/46710.json",
-        "data/effect-extensions/evidence/47156.json",
-        "data/effect-extensions/evidence/48938.json"
       ],
       "printCount": 7,
       "effectSlots": 7
@@ -633,33 +573,6 @@
         "data/effect-extensions/evidence/47899.json",
         "data/effect-extensions/evidence/48471.json",
         "data/effect-extensions/evidence/48477.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B5FC1474CB6EE04A48C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
-      "printedDamage": "90×",
-      "energyCost": [
-        "炎",
-        "炎"
-      ],
-      "officialCardIds": [
-        "48353",
-        "48500",
-        "48516",
-        "48522",
-        "49983"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48353.json",
-        "data/effect-extensions/evidence/48500.json",
-        "data/effect-extensions/evidence/48516.json",
-        "data/effect-extensions/evidence/48522.json",
-        "data/effect-extensions/evidence/49983.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -2506,31 +2419,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EDEF3E142CDAE67D50E7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[鋼]エネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
-      "printedDamage": "120×",
-      "energyCost": [
-        "鋼",
-        "鋼"
-      ],
-      "officialCardIds": [
-        "46304",
-        "45261",
-        "45561",
-        "49208"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46304.json",
-        "data/effect-extensions/evidence/45261.json",
-        "data/effect-extensions/evidence/45561.json",
-        "data/effect-extensions/evidence/49208.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F1EEBEE4C08A85980574",
       "category": "pokemon",
       "effectKind": "attack",
@@ -3693,29 +3581,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_502F0B2CF2A714DEC3B8",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分のベンチポケモンについている基本エネルギーを2枚までトラッシュし、その枚数×90ダメージ追加。",
-      "printedDamage": "60+",
-      "energyCost": [
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46713",
-        "47130",
-        "48954"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46713.json",
-        "data/effect-extensions/evidence/47130.json",
-        "data/effect-extensions/evidence/48954.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_505FB6ABB3721DDA4FE7",
       "category": "supporter",
       "effectKind": "supporter",
@@ -3921,29 +3786,6 @@
         "data/effect-extensions/evidence/45615.json",
         "data/effect-extensions/evidence/45669.json",
         "data/effect-extensions/evidence/49062.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_711AA0ECC429D9A9785B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の手札からエネルギーを4枚までトラッシュし、その枚数×40ダメージ追加。",
-      "printedDamage": "120+",
-      "energyCost": [
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "50063",
-        "50079",
-        "49663"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50063.json",
-        "data/effect-extensions/evidence/50079.json",
-        "data/effect-extensions/evidence/49663.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -4460,29 +4302,6 @@
         "data/effect-extensions/evidence/47664.json",
         "data/effect-extensions/evidence/48074.json",
         "data/effect-extensions/evidence/48082.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9C9D4F3477797A4BFD1D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
-      "printedDamage": "120×",
-      "energyCost": [
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "48289",
-        "49987",
-        "49998"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48289.json",
-        "data/effect-extensions/evidence/49987.json",
-        "data/effect-extensions/evidence/49998.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -5265,30 +5084,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E9C7D92E89F2E1E396CF",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[炎]エネルギーを5枚までトラッシュし、その枚数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "炎",
-        "炎",
-        "炎"
-      ],
-      "officialCardIds": [
-        "47314",
-        "48541",
-        "49957"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47314.json",
-        "data/effect-extensions/evidence/48541.json",
-        "data/effect-extensions/evidence/49957.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EA6C6C460C3DB2444697",
       "category": "pokemon",
       "effectKind": "ability",
@@ -5803,29 +5598,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/48605.json",
         "data/effect-extensions/evidence/49966.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0C9D099EBDC9F1B607A3",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50361",
-        "50522"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50361.json",
-        "data/effect-extensions/evidence/50522.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -6884,26 +6656,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_39C5C12094A425381EAC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場のポケモンについている[草]エネルギーを3枚までトラッシュし、その枚数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "45705",
-        "46679"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45705.json",
-        "data/effect-extensions/evidence/46679.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B40495ED2404AB358E1",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7072,26 +6824,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/46035.json",
         "data/effect-extensions/evidence/49400.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_43E2F7902137DB2BDA89",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[雷]エネルギーをすべてトラッシュし、その枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "雷"
-      ],
-      "officialCardIds": [
-        "47653",
-        "48026"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47653.json",
-        "data/effect-extensions/evidence/48026.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -12737,26 +12469,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_325A5B8825369F7DF840",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[鋼]エネルギーをすべてトラッシュし、その枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "鋼",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45767"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45767.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_334E48A681BDFA91CB57",
       "category": "pokemon",
       "effectKind": "attack",
@@ -14870,24 +14582,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_796DE7FBB33926384B0F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の手札から「基本[鋼]エネルギー」を2枚までトラッシュし、その枚数×40ダメージ。",
-      "printedDamage": "40×",
-      "energyCost": [
-        "鋼"
-      ],
-      "officialCardIds": [
-        "50277"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50277.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7979CFC0AE14F3D49F99",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16981,25 +16675,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BD30BD5DEA29D522F434",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の手札からエネルギーを2枚までトラッシュし、その枚数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "超",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49664"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49664.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BE71D003385AB7B5BC1F",
       "category": "pokemon",
       "effectKind": "attack",
@@ -19003,10 +18678,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48724",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48730",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19087,10 +18758,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49635",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49639",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19157,8 +18824,8 @@
     },
     {
       "officialCardId": "49664",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49671",
@@ -19269,10 +18936,6 @@
       "officialCardId": "49707",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49709",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49710",
@@ -19400,10 +19063,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50075",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50077",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -19417,10 +19076,6 @@
       "officialCardId": "50080",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50083",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50084",
@@ -19496,10 +19151,6 @@
       "officialCardId": "50117",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50119",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50120",
@@ -19627,10 +19278,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50162",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50163",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -19659,10 +19306,6 @@
       "officialCardId": "50174",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50177",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50187",
@@ -19700,10 +19343,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50198",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50200",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19734,10 +19373,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50210",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50212",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -19746,10 +19381,6 @@
       "officialCardId": "50213",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50214",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50215",
@@ -19832,10 +19463,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50240",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50242",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -19854,10 +19481,6 @@
       "officialCardId": "50247",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50248",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50249",
@@ -19941,8 +19564,8 @@
     },
     {
       "officialCardId": "50277",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50279",
@@ -19950,17 +19573,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50280",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50281",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50284",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50287",
@@ -20046,10 +19661,6 @@
       "officialCardId": "50306",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50307",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50308",
@@ -20167,10 +19778,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50343",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50344",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -20201,13 +19808,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50359",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50361",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50362",
@@ -20370,17 +19973,9 @@
       "reason": "UNSUPPORTED_COMBINED_STADIUM_PLAY"
     },
     {
-      "officialCardId": "50420",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50421",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50440",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50441",
@@ -20444,8 +20039,8 @@
     },
     {
       "officialCardId": "50522",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50524",
@@ -20476,10 +20071,6 @@
       "officialCardId": "50531",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50532",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50533",
@@ -20602,14 +20193,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50579",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50581",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50583",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -20690,10 +20273,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50643",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50646",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -20712,10 +20291,6 @@
       "officialCardId": "50652",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50654",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50657",
@@ -20804,8 +20379,7 @@
     },
     {
       "officialCardId": "50690",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50691",
@@ -20826,10 +20400,6 @@
       "officialCardId": "50696",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50698",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50699",
@@ -21047,10 +20617,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50922",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50925",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21101,14 +20667,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47011",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47012",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47014",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21124,17 +20682,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47019",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47020",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47021",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47022",
@@ -21180,10 +20730,6 @@
       "officialCardId": "47040",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47042",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47044",
@@ -21284,10 +20830,6 @@
       "officialCardId": "47096",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47097",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47098",
@@ -21480,10 +21022,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47315",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47317",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21504,10 +21042,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47322",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47327",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21523,17 +21057,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47338",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47345",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47349",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47350",
@@ -21576,10 +21102,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47373",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47376",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21588,10 +21110,6 @@
       "officialCardId": "47377",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47378",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47379",
@@ -21609,17 +21127,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47387",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47390",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47391",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47393",
@@ -21637,17 +21147,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47402",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47405",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47407",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47408",
@@ -21810,17 +21312,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47467",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47468",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47470",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47472",
@@ -21913,10 +21407,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47503",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47504",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21945,10 +21435,6 @@
       "officialCardId": "47511",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47512",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47515",
@@ -22061,29 +21547,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47554",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47555",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47558",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47559",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47560",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47561",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47562",
@@ -22104,10 +21570,6 @@
       "officialCardId": "47567",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47574",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47575",
@@ -22146,8 +21608,8 @@
     },
     {
       "officialCardId": "47591",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47595",
@@ -22180,10 +21642,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47610",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47615",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -22199,10 +21657,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47625",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47627",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22211,14 +21665,6 @@
       "officialCardId": "47630",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47632",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47638",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47642",
@@ -22236,18 +21682,14 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47648",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47649",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47653",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47656",
@@ -22270,10 +21712,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47662",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47664",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22282,10 +21720,6 @@
       "officialCardId": "47665",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47666",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47667",
@@ -22333,10 +21767,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47690",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47693",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22363,8 +21793,7 @@
     },
     {
       "officialCardId": "47704",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47705",
@@ -22447,10 +21876,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47778",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47779",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22471,10 +21896,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47785",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47787",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22488,10 +21909,6 @@
       "officialCardId": "47790",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47791",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47792",
@@ -22517,10 +21934,6 @@
       "officialCardId": "47804",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47805",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47807",
@@ -22583,10 +21996,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47833",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47834",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -22625,10 +22034,6 @@
       "officialCardId": "47848",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47852",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47853",
@@ -22706,29 +22111,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47927",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47928",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47931",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47932",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47933",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47934",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47935",
@@ -22744,10 +22129,6 @@
       "officialCardId": "47939",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47945",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47946",
@@ -22776,8 +22157,8 @@
     },
     {
       "officialCardId": "47960",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47964",
@@ -22808,10 +22189,6 @@
       "officialCardId": "47976",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47978",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47983",
@@ -22864,21 +22241,9 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48001",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48005",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48007",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48013",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48016",
@@ -22896,13 +22261,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48022",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48026",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48029",
@@ -22925,17 +22286,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48035",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48037",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48038",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48039",
@@ -22976,10 +22329,6 @@
       "officialCardId": "48060",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48061",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48064",
@@ -23067,14 +22416,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48267",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48269",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48273",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -23085,13 +22426,9 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48288",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48289",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48299",
@@ -23104,13 +22441,8 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48306",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48331",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48342",
@@ -23149,8 +22481,8 @@
     },
     {
       "officialCardId": "48353",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48358",
@@ -23193,10 +22525,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48378",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48381",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23205,10 +22533,6 @@
       "officialCardId": "48382",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48384",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48387",
@@ -23251,10 +22575,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48405",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48407",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23295,10 +22615,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48418",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48419",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -23324,14 +22640,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48430",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48431",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48432",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23350,10 +22658,6 @@
       "officialCardId": "48437",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48438",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48439",
@@ -23516,10 +22820,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48497",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48498",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23531,8 +22831,8 @@
     },
     {
       "officialCardId": "48500",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48501",
@@ -23580,18 +22880,14 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48513",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48514",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48516",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48517",
@@ -23610,8 +22906,8 @@
     },
     {
       "officialCardId": "48522",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48523",
@@ -23649,10 +22945,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48538",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48541",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23661,10 +22953,6 @@
       "officialCardId": "48542",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48543",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48544",
@@ -23802,10 +23090,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48611",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48616",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23896,17 +23180,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48668",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48673",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48676",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48677",
@@ -23940,8 +23216,7 @@
     },
     {
       "officialCardId": "48688",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48689",
@@ -24024,10 +23299,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48720",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48738",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -24058,14 +23329,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48770",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48782",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48783",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -24074,10 +23337,6 @@
       "officialCardId": "48787",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48807",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48808",
@@ -24093,10 +23352,6 @@
       "officialCardId": "48835",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48836",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48840",
@@ -24124,10 +23379,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48876",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48893",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -24136,10 +23387,6 @@
       "officialCardId": "48913",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48917",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48919",
@@ -24197,10 +23444,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49041",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49055",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -24234,10 +23477,6 @@
       "officialCardId": "49089",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49093",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49103",
@@ -24350,14 +23589,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49272",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49273",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49276",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -24371,10 +23602,6 @@
       "officialCardId": "49294",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49315",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49326",
@@ -24407,17 +23634,9 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49351",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49353",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49368",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49370",
@@ -24466,8 +23685,7 @@
     },
     {
       "officialCardId": "49405",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49406",
@@ -24525,21 +23743,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49590",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49591",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49613",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49717",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49954",
@@ -24602,10 +23808,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49974",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49977",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -24622,8 +23824,8 @@
     },
     {
       "officialCardId": "49983",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49985",
@@ -24637,8 +23839,8 @@
     },
     {
       "officialCardId": "49987",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49989",
@@ -24662,8 +23864,8 @@
     },
     {
       "officialCardId": "49998",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49999",
@@ -24707,8 +23909,7 @@
     },
     {
       "officialCardId": "50039",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50041",
@@ -24747,8 +23948,7 @@
     },
     {
       "officialCardId": "50327",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50423",
@@ -24769,10 +23969,6 @@
       "officialCardId": "50829",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50830",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50831",
@@ -24836,17 +24032,12 @@
     },
     {
       "officialCardId": "45170",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45171",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45174",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45175",
@@ -24857,10 +24048,6 @@
       "officialCardId": "45178",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45179",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45180",
@@ -24939,8 +24126,7 @@
     },
     {
       "officialCardId": "45212",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45213",
@@ -24976,10 +24162,6 @@
       "officialCardId": "45227",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45228",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45230",
@@ -25063,8 +24245,8 @@
     },
     {
       "officialCardId": "45261",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "45262",
@@ -25110,10 +24292,6 @@
       "officialCardId": "45276",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45277",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45278",
@@ -25166,10 +24344,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45395",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45396",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -25205,17 +24379,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45517",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45518",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45519",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45520",
@@ -25244,8 +24410,7 @@
     },
     {
       "officialCardId": "45529",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45530",
@@ -25269,8 +24434,7 @@
     },
     {
       "officialCardId": "45537",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45539",
@@ -25279,8 +24443,7 @@
     },
     {
       "officialCardId": "45542",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45544",
@@ -25306,10 +24469,6 @@
       "officialCardId": "45554",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45555",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45556",
@@ -25338,8 +24497,8 @@
     },
     {
       "officialCardId": "45561",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "45562",
@@ -25437,10 +24596,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45596",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45597",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -25484,10 +24639,6 @@
       "officialCardId": "45616",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45619",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45621",
@@ -25535,11 +24686,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45635",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
-    },
-    {
       "officialCardId": "45636",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -25553,10 +24699,6 @@
       "officialCardId": "45639",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45641",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45642",
@@ -25629,11 +24771,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45681",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
-    },
-    {
       "officialCardId": "45682",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -25674,10 +24811,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45698",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45700",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -25693,17 +24826,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45704",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45705",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45712",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45716",
@@ -25714,10 +24839,6 @@
       "officialCardId": "45717",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45718",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45719",
@@ -25795,10 +24916,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45743",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45744",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -25839,17 +24956,9 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "officialCardId": "45760",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45761",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45766",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45767",
@@ -25925,10 +25034,6 @@
       "officialCardId": "45842",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45843",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45845",
@@ -26071,10 +25176,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45907",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45908",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -26215,10 +25316,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45954",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45958",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -26259,10 +25356,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45972",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "45973",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -26286,10 +25379,6 @@
       "officialCardId": "45980",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45981",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45983",
@@ -26400,10 +25489,6 @@
       "officialCardId": "46026",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46027",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46028",
@@ -26586,10 +25671,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46153",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46155",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -26615,10 +25696,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46166",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46167",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -26634,10 +25711,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46170",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46173",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -26648,26 +25721,14 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46176",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46177",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46178",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46180",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46181",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46183",
@@ -26683,10 +25744,6 @@
       "officialCardId": "46193",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46195",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46197",
@@ -26707,10 +25764,6 @@
       "officialCardId": "46214",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46217",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46220",
@@ -26736,10 +25789,6 @@
       "officialCardId": "46232",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46233",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46234",
@@ -26780,10 +25829,6 @@
       "officialCardId": "46256",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46258",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46259",
@@ -26871,18 +25916,13 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46286",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46287",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46288",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46292",
@@ -26896,8 +25936,8 @@
     },
     {
       "officialCardId": "46304",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "46309",
@@ -26991,8 +26031,7 @@
     },
     {
       "officialCardId": "46339",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46342",
@@ -27000,17 +26039,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46343",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46346",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46349",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46350",
@@ -27021,10 +26052,6 @@
       "officialCardId": "46352",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46354",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46359",
@@ -27068,17 +26095,12 @@
     },
     {
       "officialCardId": "46373",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46375",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46376",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46377",
@@ -27089,10 +26111,6 @@
       "officialCardId": "46380",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46381",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46383",
@@ -27195,10 +26213,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46422",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46424",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27217,10 +26231,6 @@
       "officialCardId": "46427",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46429",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46430",
@@ -27271,10 +26281,6 @@
       "officialCardId": "46441",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46443",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46444",
@@ -27347,10 +26353,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46528",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46534",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27379,15 +26381,6 @@
       "officialCardId": "46567",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46576",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "46607",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
     },
     {
       "officialCardId": "46630",
@@ -27420,17 +26413,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46640",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46641",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46642",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46643",
@@ -27444,8 +26429,7 @@
     },
     {
       "officialCardId": "46645",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46646",
@@ -27463,17 +26447,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46651",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46652",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46653",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46654",
@@ -27482,11 +26458,6 @@
     },
     {
       "officialCardId": "46655",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46657",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
@@ -27496,17 +26467,12 @@
     },
     {
       "officialCardId": "46659",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46661",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46664",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46666",
@@ -27605,8 +26571,7 @@
     },
     {
       "officialCardId": "46710",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46711",
@@ -27615,8 +26580,8 @@
     },
     {
       "officialCardId": "46713",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "46716",
@@ -27674,10 +26639,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46733",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46737",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27726,10 +26687,6 @@
       "officialCardId": "46754",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46758",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46761",
@@ -27802,10 +26759,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46793",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46794",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27814,10 +26767,6 @@
       "officialCardId": "46795",
       "state": "NEEDS_ENGINE_EXECUTION",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
-    },
-    {
-      "officialCardId": "46797",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46798",
@@ -27833,10 +26782,6 @@
       "officialCardId": "46803",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46806",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46810",
@@ -27860,8 +26805,7 @@
     },
     {
       "officialCardId": "46820",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46823",
@@ -27944,10 +26888,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47121",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47126",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -27969,8 +26909,8 @@
     },
     {
       "officialCardId": "47130",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47132",
@@ -28013,10 +26953,6 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "officialCardId": "47147",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47149",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -28033,16 +26969,10 @@
     },
     {
       "officialCardId": "47156",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47157",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47158",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
@@ -28051,18 +26981,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47190",
+      "officialCardId": "47199",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
-      "officialCardId": "47199",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
-    },
-    {
       "officialCardId": "47202",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47206",
@@ -28085,10 +27009,6 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "officialCardId": "47494",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "47616",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -28105,13 +27025,11 @@
     },
     {
       "officialCardId": "47886",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47890",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48249",
@@ -28120,8 +27038,7 @@
     },
     {
       "officialCardId": "48252",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48565",
@@ -28130,8 +27047,7 @@
     },
     {
       "officialCardId": "48566",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48568",
@@ -28184,22 +27100,13 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48667",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48671",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48674",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48683",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48705",
@@ -28232,30 +27139,14 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48754",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48766",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48768",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48772",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48775",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48776",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48779",
@@ -28271,10 +27162,6 @@
       "officialCardId": "48793",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48794",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48795",
@@ -28295,10 +27182,6 @@
       "officialCardId": "48821",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48838",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48848",
@@ -28356,10 +27239,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48899",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48901",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -28411,8 +27290,7 @@
     },
     {
       "officialCardId": "48938",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48940",
@@ -28426,8 +27304,8 @@
     },
     {
       "officialCardId": "48954",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48962",
@@ -28445,17 +27323,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48971",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48979",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48981",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48986",
@@ -28568,10 +27438,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49071",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49075",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -28595,10 +27461,6 @@
       "officialCardId": "49086",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49102",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49113",
@@ -28671,10 +27533,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49177",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49178",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -28706,8 +27564,8 @@
     },
     {
       "officialCardId": "49208",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49213",
@@ -28790,10 +27648,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49297",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49299",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -28829,10 +27683,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49346",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49357",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -28863,10 +27713,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49366",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49369",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -28892,10 +27738,6 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49388",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "49392",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -28912,8 +27754,7 @@
     },
     {
       "officialCardId": "49395",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49396",
@@ -28947,8 +27788,7 @@
     },
     {
       "officialCardId": "49407",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49409",
@@ -28976,18 +27816,9 @@
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49423",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
-    },
-    {
       "officialCardId": "49425",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49426",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49430",
@@ -29056,13 +27887,11 @@
     },
     {
       "officialCardId": "49978",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49994",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50012",

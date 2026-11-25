@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1035,
-      "missing": 667
+      "connected": 1041,
+      "missing": 661
     },
     "J": {
       "total": 870,
-      "connected": 472,
-      "missing": 398
+      "connected": 473,
+      "missing": 397
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1029,
+      "CONNECTED_UNTESTED": 1035,
       "MECHANIC_REQUIRED": 86,
-      "ENGINE_CONNECTION_REQUIRED": 577,
+      "ENGINE_CONNECTION_REQUIRED": 571,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 471,
+      "CONNECTED_UNTESTED": 472,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 350,
+      "ENGINE_CONNECTION_REQUIRED": 349,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -965,8 +965,7 @@
       "name": "ズルッグ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50690.json"
     },
     {
@@ -11337,8 +11336,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47704.json"
     },
     {
@@ -14361,8 +14359,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48688.json"
     },
     {
@@ -15803,8 +15800,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49405.json"
     },
     {
@@ -18091,8 +18087,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50327.json"
     },
     {
@@ -19772,8 +19767,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48331.json"
     },
     {
@@ -20108,8 +20102,7 @@
       "name": "ブレイブバングル",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50039.json"
     },
     {
@@ -21648,23 +21641,23 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 768,
-        "ENGINE_CONNECTED": 1069,
-        "ENGINE_CONNECTION_REQUIRED": 27
+        "MECHANIC_REQUIRED": 747,
+        "ENGINE_CONNECTED": 1100,
+        "ENGINE_CONNECTION_REQUIRED": 17
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1035,
-        "MECHANIC_REQUIRED": 650,
-        "ENGINE_CONNECTION_REQUIRED": 13,
+        "ENGINE_CONNECTED": 1041,
+        "MECHANIC_REQUIRED": 638,
+        "ENGINE_CONNECTION_REQUIRED": 19,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 471,
-        "MECHANIC_REQUIRED": 391,
-        "EVIDENCE_UNVERIFIED": 4,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTED": 472,
+        "MECHANIC_REQUIRED": 387,
+        "ENGINE_CONNECTION_REQUIRED": 6,
+        "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
         "total": 638,
@@ -21672,7 +21665,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3213,
-    "unconnected": 1860
+    "engineConnected": 3251,
+    "unconnected": 1822
   }
 }
