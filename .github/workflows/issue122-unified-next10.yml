@@ -25,12 +25,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Integrate only the independently qualified Crobat family source changes
+      - name: Verify merged Crobat and named discard source families
         run: |
-          git diff --binary 2b53611200ca6b186a09b7a77480c2e45386afeb 86385be9b100e1ee2d35aa9001826ec1b2e5c091 -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py > /tmp/crobat-source.patch
-          test -s /tmp/crobat-source.patch
-          git apply --3way /tmp/crobat-source.patch
-          git diff --cached --check
+          grep -q 'ABILITY_EVOLVE_MULTI_COUNTERS' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_NAMED_DISCARD_BENCH' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_OPTIONAL_RETURN_POKEMON' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'NO_EVOLVED_SOURCE_FULL_LINE' scripts/lib/shared-effect-engine-worker.cjs
+          grep -q 'ensure(deckIndex,source,2)' scripts/lib/shared-effect-engine-worker.cjs
       - name: Verify source and resume exact saved official evidence
         run: |
           node --check engine/reference-effect-plans.cjs

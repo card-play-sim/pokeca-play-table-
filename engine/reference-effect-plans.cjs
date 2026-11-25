@@ -471,6 +471,14 @@ function plan(entry,kind){
  const discardBench=generic.match(/^自分のトラッシュから「([^「」]+)」を([1-5])枚まで選び、ベンチに出す。$/);
  if(kind==='ATTACK'&&discardBench&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_NAMED_DISCARD_BENCH',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'BENCH_FROM_ZONE'],name:discardBench[1],limit:Number(discardBench[2]),sharedWording:true};
+ const evolveCounters=generic.match(/^自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のポケモン([2-5])匹に、それぞれダメカンを([1-9])個のせる。$/);
+ const evolveSingleCounter=generic.match(/^自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のポケモン1匹に、ダメカンを([1-9])個のせる。$/);
+ if(kind==='ABILITY'&&evolveSingleCounter)
+  return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:1,amount:Number(evolveSingleCounter[1]),sharedWording:true};
+ if(kind==='ABILITY'&&evolveCounters)
+  return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:Number(evolveCounters[1]),amount:Number(evolveCounters[2]),sharedWording:true};
+ if(kind==='ATTACK'&&generic==='のぞむなら、このポケモンを手札にもどす。(ポケモン以外のカードは、すべてトラッシュする。)'&&/^\d+$/.test(String(entry.damage||'0')))
+  return {mechanic:'ATTACK_OPTIONAL_RETURN_POKEMON',commands:['DAMAGE','RETURN_TO_HAND','DISCARD'],sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
