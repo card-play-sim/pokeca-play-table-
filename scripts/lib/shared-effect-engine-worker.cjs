@@ -1924,6 +1924,34 @@ function verifyCase(t, e) {
     };
     verifyPrintedAttack(before,after,e,e.plan.base+(conditions[e.plan.predicate]?e.plan.bonus:0));
   }
+  if(e.plan.mechanic==='TRAINER_TOP_SELECT_DISCARD'){
+    const action=t.action||o.action,plan=e.plan,own=before.players[0],resolved=after.players[0],selected=action.selections.cards;
+    const top=own.deck.slice(0,plan.limit),count=Math.min(plan.amount,top.length),rest=top.filter(c=>!selected.includes(c.id));
+    assert.equal(selected.length,count);assert.equal(new Set(selected).size,count);
+    assert(selected.every(id=>top.some(c=>c.id===id)&&resolved.hand.some(c=>c.id===id)));
+    assert(rest.every(c=>resolved.discard.some(x=>x.id===c.id)));
+    assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(top.length).map(c=>c.id));
+    assert(effectEvents.some(ev=>ev?.command==='ADD_TO_HAND'&&ev.privateTo==='you'&&selected.every(id=>ev.cardIds?.includes(id))));
+    assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&rest.every(c=>ev.cardIds?.includes(c.id))));
+    assert(!effectEvents.some(ev=>ev?.command==='REVEAL'&&!ev.reference));
+    assert(!effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'&&!ev.reference));
+    const invalid=own.deck[plan.limit];
+    if(invalid&&count){
+      const replay=port(before),bad=[invalid.id,...selected.slice(1)];
+      assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,cards:bad}}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
+    if(count){
+      const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,cards:[]}}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
+    const short=JSON.parse(JSON.stringify(before)),side=short.players[0];
+    side.discard.push(...side.deck.splice(1));
+    const replay=port(short),one=side.deck.map(c=>c.id);
+    assert(replay.dispatch('you',{...action,selections:{...action.selections,cards:one}}).ok);
+    const end=replay.getSnapshot();assert(one.every(id=>end.players[0].hand.some(c=>c.id===id)));assert.equal(end.players[0].deck.length,0);
+    assert.deepEqual(S.identities(short),S.identities(end));
+  }
   if(["TRAINER_TOP_TYPED_SEARCH","TRAINER_TOP_POKEMON_TRAINER"].includes(e.plan.mechanic)){
     const action=t.action||o.action,plan=e.plan,own=before.players[0],resolved=after.players[0],chosen=action.selections.cards;
     const window=own.deck.slice(0,plan.limit),category=c=>plan.mechanic==="TRAINER_TOP_TYPED_SEARCH"?(c.kind==="pokemon"&&E.getReferenceEffectRecord(c).facts.types.includes(plan.type)?"pokemon":c.kind==="energy"&&!c.isSpecial&&c.energyType===plan.type?"energy":null):c.kind==="pokemon"?"pokemon":["item","supporter","tool","stadium"].includes(E.getReferenceEffectRecord(c)?.category)?"trainer":null;

@@ -370,6 +370,15 @@ async def main():
      source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
      assert selected[0] in {card['id'] for card in source['energyCards']}
      assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
+   if m=='TRAINER_TOP_SELECT_DISCARD':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0]
+    top=own['deck'][:plan['limit']];picked=set(option['action']['selections']['cards'])
+    assert len(picked)==min(plan['amount'],len(top))
+    assert picked<={c['id'] for c in top}
+    assert picked<={c['id'] for c in resolved['hand']}
+    assert ({c['id'] for c in top}-picked)<={c['id'] for c in resolved['discard']}
+    assert [c['id'] for c in resolved['deck']]==[c['id'] for c in own['deck'][len(top):]]
+    assert not any(ev.get('details',{}).get('command') in ('REVEAL','SHUFFLE_DECK') and not ev.get('details',{}).get('reference') for ev in events)
    if m in ('TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'):
     plan=f['e']['plan']
     picked=set(option['action']['selections']['cards'])

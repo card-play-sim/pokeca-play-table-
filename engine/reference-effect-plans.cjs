@@ -509,6 +509,9 @@ function plan(entry,kind){
  const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
   return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
+ const topDiscard=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中からカードを([1-9])枚選び、手札に加える。残りのカードはトラッシュする。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topDiscard&&Number(topDiscard[2])<=Number(topDiscard[1]))
+  return {mechanic:'TRAINER_TOP_SELECT_DISCARD',commands:['SEARCH_DECK','ADD_TO_HAND','DISCARD'],limit:Number(topDiscard[1]),amount:Number(topDiscard[2]),sharedWording:true};
  const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
   return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};

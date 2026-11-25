@@ -432,6 +432,10 @@ function requests(g,actor,card,effect){
   add('target','CARD',opp.map(c=>({id:id(c),name:c.name})),1,1);
   add('count','COUNT',[],1,3,{dependencies:[{kind:'maxFromSelection',key:'source',field:'damage',divisor:10}]});
  }
+ if(m==='TRAINER_TOP_SELECT_DISCARD'){
+  const plan=effect.plan,window=deckWindow(p.deck,plan),count=Math.min(plan.amount,window.length);
+  deckRequest('cards',window,count,count,plan);
+ }
  if(['TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'].includes(m)){
   const plan=effect.plan,eligible=deckWindow(p.deck,plan).filter(c=>mixedTopCategory(c,plan));
   const distinct=m==='TRAINER_TOP_POKEMON_TRAINER';
@@ -720,7 +724,7 @@ function preflight(g,actor,action){
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
    if(m==='RECYCLE_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');
    if(['DISCARD_DECK_TOP','SEARCH_MEGA_EVOLUTION_EX','COIN_SEARCH_POKEMON'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
-   if(['TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'].includes(m))assert(p.deck.length>0,'TOP_SEARCH_DECK_EMPTY');
+   if(['TRAINER_TOP_SELECT_DISCARD','TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'].includes(m))assert(p.deck.length>0,'TOP_SEARCH_DECK_EMPTY');
    if(m==='RECOVER_NON_RULE_AND_ENERGY')assert(p.discard.some(nonRuleRecovery),'NO_RECOVERABLE_NON_RULE_CARD');
    if(m==='HEAL_LOW_HP_FULL')assert(field(p).some(c=>lowHpHeal(c,r.mainPlan)),'NO_LOW_HP_HEAL_TARGET');
    if(m==='RECOVER_TYPED_DISCARD')assert(p.discard.some(c=>typedRecoveryCandidate(c,r.mainPlan)),'NO_RECOVERABLE_TYPED_CARD');if(m==='RECOVER_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');if(m==='DISCARD_HAND_DRAW')assert(p.deck.length>0||p.hand.some(c=>id(c)!==id(card)),'NO_DISCARD_OR_DRAW_POSSIBLE');if(m==='HEAL_DAMAGE')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');if(m==='COIN_FORCE_SWITCH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='HAMMER')assert(field(o).some(c=>c.energyCards.length),'NO_OPPONENT_ENERGY');if(m==='REPELLENT')assert(o.bench.length>0,'NO_OPPONENT_BENCH');if(m==='POFFIN')assert(p.bench.length<5,'BENCH_FULL');if(['ULTRA_BALL','CYRANO','HILDA','BROCK','POKEPAD','POFFIN','AKAMATSU','TOP_SUPPORTER_SEARCH'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');if(m==='RED_CARD')assert(o.prizes<=3,'OPPONENT_PRIZES_MUST_BE_THREE_OR_LESS');
@@ -1440,6 +1444,17 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_ACTIVE_DAMAGE':heal(g,actor,p.active,plan.amount);break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
+  case 'TRAINER_TOP_SELECT_DISCARD':{
+   const top=deckWindow(p.deck,plan),selected=ids('cards');
+   assert(selected.length===Math.min(plan.amount,top.length)&&new Set(selected).size===selected.length&&selected.every(ident=>top.some(c=>id(c)===ident)),'TOP_DISCARD_SELECTION_CHANGED');
+   p.deck.splice(0,top.length);
+   const chosen=selected.map(ident=>top.find(c=>id(c)===ident)),rest=top.filter(c=>!selected.includes(id(c)));
+   p.hand.push(...chosen);p.discard.push(...rest);
+   event(g,actor,'SEARCH_DECK',{selectedCount:selected.length,inspectedCount:top.length,privateTo:actor});
+   event(g,actor,'ADD_TO_HAND',{cardIds:selected,fromZone:'deck',privateTo:actor});
+   event(g,actor,'DISCARD',{cardIds:rest.map(id),fromZone:'deck'});
+   break;
+  }
   case 'TRAINER_TOP_TYPED_SEARCH':case 'TRAINER_TOP_POKEMON_TRAINER':resolveMixedTop(g,actor,p,plan,ids('cards'));break;
   case 'RECOVER_NON_RULE_AND_ENERGY':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'HEAL_LOW_HP_FULL':{
