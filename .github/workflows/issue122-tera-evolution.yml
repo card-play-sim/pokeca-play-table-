@@ -4,6 +4,8 @@ on:
     branches: [battle/issue122-tera-evolution-20261125]
     paths:
       - '.github/workflows/issue122-tera-evolution.yml'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/test_control_013_browser.py'
   workflow_dispatch:
 permissions:
   contents: write
