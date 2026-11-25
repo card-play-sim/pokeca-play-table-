@@ -91,6 +91,15 @@ function additionalAttackPlan(entry,text){
  if(mill&&/^\d+$/.test(printed))return coinPlan(Number(mill[1]),base,{mill:true,when:'threshold',threshold:1});
  const allBonus=text.match(/^コインを([2-9])回投げ、すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
  if(allBonus&&base!==null&&printed.endsWith('+'))return coinPlan(Number(allBonus[1]),base,{bonus:Number(allBonus[2]),when:'all'});
+ // Printed physical-card discard counts (枚), never energy-unit counts (個).
+ const energyCount=text.match(/^(のぞむなら、)?(自分の場のポケモンについている|自分のベンチポケモンについている|このポケモンについている|自分の手札から)(基本エネルギー|エネルギー|\[([草炎水雷超闘悪鋼])\]エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を(好きなだけ|すべて|[1-9]枚まで)トラッシュし、その枚数×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(energyCount&&((energyCount[8]&&base!==null&&printed.endsWith('+'))||(!energyCount[8]&&printed===energyCount[7]+'×'))){
+  const [,optional,zone,filter,typed,basicTyped,limit,unit,bonus]=energyCount;
+  // Basic-typed wording is valid for cards in hand; typed non-basic wording
+  // only applies to attached cards, where their provided types are defined.
+  if((zone==='自分の手札から'&&!typed)||(zone!=='自分の手札から'&&!basicTyped))
+   return {mechanic:'MASS_ENERGY_COUNT_DISCARD',commands:['DISCARD','DAMAGE'],zone:({'自分の場のポケモンについている':'field','自分のベンチポケモンについている':'bench','このポケモンについている':'self','自分の手札から':'hand'})[zone],type:typed||basicTyped||null,basic:filter.includes('基本'),limit:limit==='すべて'||limit==='好きなだけ'?60:parseInt(limit,10),all:limit==='すべて',base:bonus?base:0,unit:Number(unit),sharedWording:true};
+ }
  const discardBasic=text.match(/^自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×([1-9]\d{0,2})ダメージ。$/);
  if(discardBasic&&printed===discardBasic[1]+'×')
   return {mechanic:'ATTACK_DISCARD_FIELD_BASIC',commands:['DISCARD','DAMAGE'],unit:Number(discardBasic[1])};
