@@ -258,6 +258,18 @@ function massTransferCandidate(c,plan){
  if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
  return true;
 }
+function scopeHealTargets(p,o,plan){
+ const targets=plan.scope==='both'?[...field(p),...field(o)]:plan.scope==='active'?[p.active]:plan.scope==='bench'?p.bench:field(p).filter(c=>record(c).facts.basic);
+ return targets.filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
+}
+function handFlowAvailable(p,o,plan){
+ if(plan.mode==='resetOpponent')return o.hand.length+o.deck.length>0;
+ if(plan.mode==='bothDraw')return p.deck.length+o.deck.length>0;
+ if(plan.mode==='revealCount')return p.deck.length>0&&o.hand.some(c=>c.kind==='pokemon');
+ if(plan.mode==='resetBothCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
+ if(plan.mode==='rocketLimit')return p.deck.length>0&&p.hand.length<(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount);
+ return true;
+}
 function massHealTargets(p,plan){
  return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
 }
@@ -436,6 +448,10 @@ function requests(g,actor,card,effect){
   if(plan.zone==='deck')deckRequest('cards',pool,0,max);
   else cardRequest('cards',pool,Math.min(1,max),max);
  }
+ if(m==='MASS_HEAL_SCOPE'&&effect.plan.choice){
+  const pool=scopeHealTargets(p,o,effect.plan).filter(c=>c.damage>0);
+  cardRequest('cards',pool,Math.min(1,pool.length),Math.min(1,pool.length));
+ }
  if(m==='MASS_HEAL_OWN'&&effect.plan.target==='choice'){
   const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
   cardRequest('cards',pool,min,min);
@@ -557,6 +573,8 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
+ if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,opponent(g,actor),a.plan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
+ if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,opponent(g,actor),a.plan),'NO_HAND_FLOW_CHANGE');
  if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
@@ -642,6 +660,8 @@ function preflight(g,actor,action){
    }
    if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
    if(m==='MASS_ZONE_TRANSFER')assert(r.mainPlan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,r.mainPlan)),'NO_MASS_TRANSFER_SOURCE');
+   if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,o,r.mainPlan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
+   if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
    if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
    if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -896,6 +916,27 @@ function applyPlan(g,actor,card,effect,action){
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'));
    else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
+   break;
+  case 'MASS_HAND_FLOW':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.mode==='resetOpponent')resetHand(g,o,plan.amount,plan.bottom);
+   if(plan.mode==='bothDraw'){draw(g,p,plan.amount);draw(g,o,plan.amount);}
+   if(plan.mode==='resetOwnMatch')resetHand(g,p,o.hand.length);
+   if(plan.mode==='revealCount'){event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});draw(g,p,o.hand.filter(c=>c.kind==='pokemon').length);}
+   if(plan.mode==='rocketLimit')draw(g,p,Math.max(0,(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount)-p.hand.length));
+   if(plan.mode==='resetBothCoin'){
+    // Both hands are returned before either player flips or draws.
+    for(const side of [p,o]){
+     const cards=side.hand.splice(0);
+     for(let i=cards.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(referenceRandom(g)*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+     side.deck.push(...cards);event(g,side.id,'RETURN_TO_DECK',{cardIds:cards.map(id),bottomOnly:true});
+    }
+    for(const side of [p,o])draw(g,side,coin(g,side.id)?plan.amount:plan.tails);
+   }
+   break;
+  case 'MASS_HEAL_SCOPE':
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of scopeHealTargets(p,o,plan))if(mon.damage>0&&(!plan.choice||ids('cards').includes(id(mon))))heal(g,find(g,id(mon)).player.id,mon,plan.amount==='all'?mon.damage:plan.amount);
    break;
   case 'MASS_HEAL_OWN':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
