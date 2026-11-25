@@ -514,6 +514,12 @@ async def main():
      assert len([ev for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)])==2
     if mode=='revealCount':
      assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' for ev in events)
+    if mode=='rocketLimit':
+     own=before['players'][0]
+     assert all(c['name'].startswith('ロケット団の') for c in [own['active'],*own['bench']])
+     count=min(len(own['deck']),max(0,plan['bonus']-(len(own['hand'])-1)))
+     assert len(after['players'][0]['hand'])==len(own['hand'])-1+count
+     assert {c['id'] for c in own['deck'][:count]}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_HEAL_OWN':
     plan=f['e']['plan'];chosen=option['action'].get('selections',{}).get('cards',[])
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
