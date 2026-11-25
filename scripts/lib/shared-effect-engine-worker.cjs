@@ -310,7 +310,9 @@ function prepare(r, e, kind) {
     const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
     if(!(attackIndex>=0))return {blocked:'NO_SURVIVAL_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
-    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[r,attacker]);
+    const parent=r.facts.basic?null:[...records.values()].find(c=>c.name===r.facts.evolvesFrom&&c.facts.basic&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan));
+    if(!r.facts.basic&&!parent)return {blocked:'NO_SURVIVAL_EVOLUTION_PARENT'};
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[r,attacker,...(parent?[parent]:[])]);
     const deck=manifest.decks[0],water=[...records.values()].find(c=>c.mainPlan?.mechanic==='BASIC_ENERGY'&&(c.facts.basicEnergyType==='水'||c.name==='基本水エネルギー'));
     if(!water)return {blocked:'NO_SURVIVAL_WATER_ENERGY'};
     const available=deck.cards.filter(c=>c.name===water.deckName).reduce((n,c)=>n+c.count,0);
@@ -322,18 +324,32 @@ function prepare(r, e, kind) {
     if(need)return {blocked:'NO_SURVIVAL_ENERGY_RESOURCES'};
     if(originalNeed){const existing=deck.cards.find(c=>c.name===water.deckName);if(existing){existing.count+=originalNeed;existing.referenceOfficialCardId=water.officialCardId;}else deck.cards.push({name:water.deckName,category:'energy',count:originalNeed,referenceOfficialCardId:water.officialCardId});}
     deck.cards=deck.cards.filter(c=>c.count>0);
-    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:r.officialCardId});
+    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:parent?parent.officialCardId:r.officialCardId,fixtureRequirements:parent?[{side:1,zone:'active',printId:parent.officialCardId},{side:1,zone:'hand',printId:r.officialCardId}]:[]});
     if(frame.blocked)return frame;
-    const game=frame.game,own=game.players[0],defender=game.players[1].active;
+    let game=frame.game;const own=game.players[0];
     for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}
-    if(!r.facts.basic){
-      // Do not invent an evolved in-play stack. An exact physical predecessor is required.
-      const parentIndex=game.players[1].deck.findIndex(c=>E.getReferenceEffectRecord(c)?.name===r.facts.evolvesFrom);
-      if(parentIndex<0)return {blocked:'NO_SURVIVAL_EVOLUTION_PARENT'};
-      // Evolution-state setup requires its own legal fixture; until then fail closed.
-      return {blocked:'NO_SURVIVAL_EVOLUTION_STACK_PROOF'};
+    if(parent){
+      // Build an actual legal evolution through the same public action gateway.
+      const defender=game.players[1],baseId=defender.active.id;
+      const evolution=defender.hand.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===r.officialCardId);
+      if(!evolution)return {blocked:'NO_SURVIVAL_EVOLUTION_HAND_PRINT'};
+      game.turnPlayer='ai';
+      const evoPort=port(game),action={type:'evolve',cardId:evolution.id,targetInstanceId:baseId};
+      const illegal=structuredClone(game);illegal.players[1].active.enteredTurn=illegal.turnNumber;
+      const denied=port(illegal);assert.equal(denied.dispatch('ai',action).ok,false);
+      assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(illegal));
+      if(!evoPort.dispatch('ai',action).ok)return {blocked:'SURVIVAL_LEGAL_EVOLUTION_REJECTED'};
+      const evolved=evoPort.getSnapshot();
+      assert.equal(E.getReferenceEffectRecord(evolved.players[1].active).officialCardId,r.officialCardId);
+      assert.equal(evolved.players[1].active.id,baseId);
+      assert(evolved.players[1].active.evolutionCards.some(c=>c.id===evolution.id));
+      assert.deepEqual(Array.from(S.identities(game)),Array.from(S.identities(evolved)));
+      const end=E.getLegalActions(evolved,'ai').actions.find(a=>a.type==='end_turn');
+      if(!end||!evoPort.dispatch('ai',end).ok)return {blocked:'SURVIVAL_EVOLUTION_END_TURN_REJECTED'};
+      game=evoPort.getSnapshot();
+      assert.equal(game.turnPlayer,'you');
     }
-    assert.equal(defender.damage,0);
+    assert.equal(game.players[1].active.damage,0);
     return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
   if (m === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
