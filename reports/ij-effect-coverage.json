@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1072,
-      "missing": 630
+      "connected": 1079,
+      "missing": 623
     },
     "J": {
       "total": 870,
-      "connected": 479,
-      "missing": 391
+      "connected": 481,
+      "missing": 389
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1066,
+      "CONNECTED_UNTESTED": 1073,
       "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 542,
+      "ENGINE_CONNECTION_REQUIRED": 535,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 478,
+      "CONNECTED_UNTESTED": 480,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 343,
+      "ENGINE_CONNECTION_REQUIRED": 341,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -6898,8 +6898,7 @@
       "name": "クチート",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49664.json"
     },
     {
@@ -7982,8 +7981,7 @@
       "name": "エアームド",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50277.json"
     },
     {
@@ -10358,8 +10356,7 @@
       "name": "ロケット団のアテナ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47484.json"
     },
     {
@@ -10523,8 +10520,7 @@
       "name": "ロケット団のアテナ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47523.json"
     },
     {
@@ -10584,8 +10580,7 @@
       "name": "ロケット団のアテナ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47532.json"
     },
     {
@@ -10836,8 +10831,7 @@
       "name": "ペンドラー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47595.json"
     },
     {
@@ -12195,8 +12189,7 @@
       "name": "ペンドラー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47964.json"
     },
     {
@@ -14410,8 +14403,7 @@
       "name": "ロケット団のアテナ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48698.json"
     },
     {
@@ -15883,8 +15875,7 @@
       "name": "ロケット団のアテナ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49447.json"
     },
     {
@@ -21604,23 +21595,23 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1132,
-        "ENGINE_CONNECTION_REQUIRED": 11,
-        "MECHANIC_REQUIRED": 721
+        "ENGINE_CONNECTED": 1160,
+        "MECHANIC_REQUIRED": 702,
+        "ENGINE_CONNECTION_REQUIRED": 2
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1072,
+        "ENGINE_CONNECTED": 1079,
         "MECHANIC_REQUIRED": 617,
-        "ENGINE_CONNECTION_REQUIRED": 9,
+        "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 478,
+        "ENGINE_CONNECTED": 480,
         "MECHANIC_REQUIRED": 383,
-        "ENGINE_CONNECTION_REQUIRED": 4,
-        "EVIDENCE_UNVERIFIED": 4
+        "EVIDENCE_UNVERIFIED": 4,
+        "ENGINE_CONNECTION_REQUIRED": 2
       },
       "basicEnergyException": {
         "total": 638,
@@ -21628,7 +21619,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3320,
-    "unconnected": 1753
+    "engineConnected": 3357,
+    "unconnected": 1716
   }
 }

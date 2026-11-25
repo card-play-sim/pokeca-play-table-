@@ -1,0 +1,148 @@
+name: Issue122 reconcile next release without losing prior cards
+on:
+  push:
+    branches: [battle/issue122-release-37-reconcile-20261125]
+    paths: ['.github/workflows/issue122-reconcile-release-37.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-reconcile-release-37
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Merge current published main into candidate with fail-closed conflict policy
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          base=$(git rev-parse origin/main)
+          test "$base" = 7934a52c73e9fa3c46c2c6022520e35a688507d0
+          git show "$base:data/effect-extensions/compiled.json" > /tmp/public-compiled.json
+          git show HEAD:data/effect-extensions/compiled.json > /tmp/candidate-compiled.json
+          git merge --no-commit --no-ff "$base" || true
+          mkdir -p artifacts
+          git diff --name-only --diff-filter=U > artifacts/conflicts.txt
+          cat artifacts/conflicts.txt
+          while IFS= read -r file; do
+            test -n "$file" || continue
+            case "$file" in
+              reports/official-effect-continuation/queue/receipts/*.json)
+                # Require identical task/slots and exact equivalent proof or strictly evidenced progress.
+                git show ":2:$file" > /tmp/candidate-receipt.json
+                git show ":3:$file" > /tmp/public-receipt.json
+                node - "$file" <<'NODE'
+          const a=require('node:assert/strict'),x=require('/tmp/candidate-receipt.json'),y=require('/tmp/public-receipt.json');
+          const file=process.argv[2];
+          for(const k of ['jobId','taskFingerprint']) a.deepEqual(x[k],y[k],file+':'+k);
+          if(x.status===y.status && require('node:util').isDeepStrictEqual(x.result,y.result)) process.exit(0);
+          const xc=x.result?.cases, yc=y.result?.cases;
+          a(Array.isArray(xc)&&Array.isArray(yc)&&xc.length>0,file+':missing cases');
+          a.deepEqual(xc.map(c=>c.slot).sort(),yc.map(c=>c.slot).sort(),file+':slot identity');
+          a.equal(x.result.status,x.status,file+':candidate receipt status');
+          a.equal(y.result.status,y.status,file+':public receipt status');
+          a.equal(x.result.stage,y.result.stage,file+':stage');
+          const required=['LEGAL_ACTION_OR_PASSIVE_GUARD','INVALID_ACTION_ROLLBACK','AI_UI_LEGAL_PARITY','PHYSICAL_CARD_CONSERVATION','EXACT_SAVE_RESTORE'];
+          const prior=new Map(yc.map(c=>[c.slot,c]));
+          a.equal(prior.size,yc.length,file+':duplicate prior slot');
+          a.equal(new Set(xc.map(c=>c.slot)).size,xc.length,file+':duplicate candidate slot');
+          let advanced=0;
+          for(const c of xc){
+            const old=prior.get(c.slot);
+            if(old.status==='SUCCEEDED') a.deepEqual(c,old,file+':prior successful slot '+c.slot);
+            else if(c.status==='SUCCEEDED'){
+              a(['BLOCKED','FAILED'].includes(old.status),file+':unknown prior status');
+              a(required.every(k=>c.checks?.includes(k)),file+':missing execution checks '+c.slot);
+              a(typeof c.mechanic==='string'&&Array.isArray(c.commands)&&c.commands.length>0,file+':missing mechanic '+c.slot);
+              advanced++;
+            } else {
+              a(['BLOCKED','FAILED'].includes(old.status),file+':unknown prior status');
+              a(['BLOCKED','FAILED'].includes(c.status),file+':unknown candidate status');
+            }
+          }
+          for(const [receipt,cases] of [[x,xc],[y,yc]]) a.equal(receipt.status,cases.some(c=>c.status==='FAILED')?'FAILED':cases.every(c=>c.status==='SUCCEEDED')?'SUCCEEDED':'BLOCKED',file+':aggregate status');
+          if(advanced) console.log('Verified receipt advancement: '+file+' slots='+advanced);
+          NODE
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json|reports/official-effect-continuation/atomic-battle-connection.json|reports/official-effect-continuation/queue/queue.json|reports/official-effect-continuation/status.json)
+                # Generated snapshots from the newer all-card replay. Both originals remain in merge parents.
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              data/effect-extensions/compiled.json|data/effect-extensions/intake.json|data/official-effect-intake/checkpoint.json|reports/ij-effect-coverage.json|ui/engine.bundle.js|sw.js)
+                # These generated files must subsequently pass exact-record and rebuild gates.
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              engine/reference-effect-plans.cjs)
+                # Exact published source is identical to verified ancestor; candidate extends it.
+                test "$(git rev-parse ":2:$file")" = b927b7ac23612e261c399e59758d2b26c2bc1b76
+                test "$(git rev-parse ":3:$file")" = 7e03b98f43745ea2fc0bc37e283a7e0fe6cef52f
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              engine/pokeca_reference_effect_runtime.cjs)
+                # Exact published source is identical to verified ancestor; candidate extends it.
+                test "$(git rev-parse ":2:$file")" = a7ff5ee0c0d9296256f265f3f894acd9c752aea7
+                test "$(git rev-parse ":3:$file")" = 02020637007f0257672ee95f0cf819b50f900a6b
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              scripts/lib/shared-effect-engine-worker.cjs)
+                # Exact published source is identical to verified ancestor; candidate extends it.
+                test "$(git rev-parse ":2:$file")" = c5e9fba672bb94573abebca556a80a707072ab76
+                test "$(git rev-parse ":3:$file")" = 31d26ff4f48a969c225f086c61d101081bc6fb27
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              tests/test_control_013_browser.py)
+                # Exact published source is identical to verified ancestor; candidate extends it.
+                test "$(git rev-parse ":2:$file")" = 5011bef90845a1eb84a43fba6c72ce9af6a31e00
+                test "$(git rev-parse ":3:$file")" = 6c14da0ecea566f0ab400d2cb3a9939c3ca771ad
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              *) echo "UNRESOLVED_SOURCE_CONFLICT: $file"; exit 1 ;;
+            esac
+          done < artifacts/conflicts.txt
+          node <<'NODE'
+          const assert=require('node:assert/strict'),fs=require('node:fs');
+          const read=f=>JSON.parse(fs.readFileSync(f)).records;
+          const current=read('data/effect-extensions/compiled.json');
+          const map=new Map(current.map(r=>[String(r.officialCardId),r]));
+          assert.equal(map.size,current.length);
+          for(const file of ['/tmp/public-compiled.json','/tmp/candidate-compiled.json'])
+            for(const old of read(file))assert.deepEqual(map.get(String(old.officialCardId)),old,'PRESERVATION_CONFLICT:'+old.officialCardId);
+          const known=new Set(read('/tmp/public-compiled.json').map(r=>String(r.officialCardId)));
+          const added=current.filter(r=>!known.has(String(r.officialCardId)));
+          assert.deepEqual(added.map(r=>String(r.officialCardId)).sort(),["45148","45893","46016","46028","46045","46133","46162","46193","46266","46326","46334","46713","46725","46789","46801","47130","47183","47484","47523","47532","47595","47868","47964","48594","48644","48660","48671","48698","48747","48954","49024","49242","49289","49447","49664","49975","50277"],'UNEXPECTED_RELEASE_DELTA');
+          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({added:added.map(r=>r.officialCardId),count:added.length},null,2));
+          console.log('Exact prior and candidate records preserved; 37 new prints');
+          NODE
+          test -z "$(git diff --name-only --diff-filter=U)"
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/control-014-official-parser.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
+          git diff --check
+          git commit -m 'Merge current published main while preserving all exact verified card records' || test -z "$(git status --porcelain --untracked-files=no)"
+          git push origin HEAD:battle/issue122-release-37-reconcile-20261125
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-release37-reconcile
+          path: artifacts/
