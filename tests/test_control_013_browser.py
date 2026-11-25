@@ -468,6 +468,18 @@ async def main():
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('oneEach'):
+     targets=[selection['attachTo'+str(i)][0] for i in range(len(picked))]
+     assert len(set(targets))==len(picked)
+    if plan.get('poisonActive'):
+     assigned=plan['target']=='self' or any(selection['attachTo'+str(i)][0]==before['players'][0]['active']['id'] for i in range(len(picked)))
+     assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')=='POISONED' and ev['details'].get('targetInstanceId')==before['players'][0]['active']['id'] for ev in events)==assigned
+   if m=='SUPPORTER_MEGA_HEAL_RETURN_ENERGY':
+    ident=option['action']['selections']['cards'][0]
+    old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==ident)
+    new=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==ident)
+    assert old['damage']>0 and new['damage']==0 and not new['energyCards']
+    assert {c['id'] for c in old['energyCards']}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
