@@ -179,6 +179,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_ENERGY_ROUTE'&&plan.target!=='self'&&(plan.holderType||plan.team))
   reserve(r=>mon(r,plan.holderType,0)&&(!plan.team||r.name.startsWith(plan.team+'の')),'bench');
+ if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_BOARD_BONUS'){
@@ -585,6 +586,20 @@ function prepare(r, e, kind) {
       if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_TRANSFER_FIXTURE'};
+  }
+  if(m==='MASS_HEAL_SCOPE'){
+    const [own,other]=frame.game.players,plan=e.plan;
+    const targets=plan.scope==='both'?[own.active,...own.bench,other.active,...other.bench]:plan.scope==='active'?[own.active]:plan.scope==='bench'?own.bench:[own.active,...own.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic);
+    const eligible=targets.filter(c=>!plan.type||E.getReferenceEffectRecord(c).facts.types.includes(plan.type));
+    if(!eligible.length)return {blocked:'NO_SCOPE_HEAL_FIXTURE'};
+    for(const mon of eligible)mon.damage=Math.min(mon.hp-10,plan.amount==='all'?30:plan.amount+10);
+  }
+  if(m==='MASS_HAND_FLOW'){
+    const [own,other]=frame.game.players,plan=e.plan;
+    if(plan.mode==='revealCount'&&!other.hand.some(c=>c.kind==='pokemon')){
+     const i=other.deck.findIndex(c=>c.kind==='pokemon');if(i<0)return {blocked:'NO_REVEAL_POKEMON_FIXTURE'};other.hand.push(other.deck.splice(i,1)[0]);
+    }
+    if(plan.mode==='rocketLimit')while(own.hand.length>=plan.amount)own.deck.push(own.hand.pop());
   }
   if(m==='MASS_HEAL_OWN'){
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
@@ -1140,6 +1155,37 @@ function verifyCase(t, e) {
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     const invalid=own[plan.zone].find(c=>!massTransferCandidate(c,plan));
     if(invalid){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{cards:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+  }
+  if(e.plan.mechanic==='MASS_HEAL_SCOPE'){
+    const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
+    const targets=plan.scope==='both'?[own.active,...own.bench,other.active,...other.bench]:plan.scope==='active'?[own.active]:plan.scope==='bench'?own.bench:[own.active,...own.bench].filter(c=>E.getReferenceEffectRecord(c).facts.basic);
+    const eligible=targets.filter(c=>c.damage>0&&(!plan.type||E.getReferenceEffectRecord(c).facts.types.includes(plan.type))&&(!plan.choice||action.selections.cards.includes(c.id)));
+    assert(eligible.length>0);
+    for(const mon of eligible){
+      const next=after.players.flatMap(p=>[p.active,...p.bench]).find(c=>c?.id===mon.id);
+      assert(next);assert.equal(next.damage,plan.amount==='all'?0:Math.max(0,mon.damage-plan.amount));
+    }
+  }
+  if(e.plan.mechanic==='MASS_HAND_FLOW'){
+    const q=e.plan,[own,other]=before.players;
+    const checkDraw=(side,n)=>{const count=Math.min(n,side.deck.length);assert(side.deck.slice(0,count).every(c=>after.players.find(p=>p.id===side.id).hand.some(x=>x.id===c.id)));};
+    const checkReset=(side,n)=>{const result=after.players.find(p=>p.id===side.id),pool=[...side.hand,...side.deck];assert(effectEvents.some(ev=>ev?.command==='RETURN_TO_DECK'&&side.hand.every(c=>ev.cardIds?.includes(c.id))));assert(result.hand.length===Math.min(n,pool.length));assert(result.hand.every(c=>pool.some(x=>x.id===c.id)));};
+    if(q.mode==='resetOpponent')checkReset(other,q.amount);
+    if(q.mode==='bothDraw'){checkDraw(own,q.amount);checkDraw(other,q.amount);}
+    if(q.mode==='resetOwnMatch')checkReset(own,other.hand.length);
+    if(q.mode==='revealCount'){assert(other.hand.some(c=>c.kind==='pokemon'));checkDraw(own,other.hand.filter(c=>c.kind==='pokemon').length);assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.privateTo===own.id));}
+    if(q.mode==='rocketLimit'){
+      const limit=[own.active,...own.bench].every(c=>E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))?q.bonus:q.amount;
+      const hand=own.hand.filter(c=>c.id!==t.sourceId);checkDraw(own,Math.max(0,limit-hand.length));
+      // Both branches must be proven by an independently legal fixture before approval.
+      return {status:'BLOCKED',reason:'ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED'};
+    }
+    if(q.mode==='resetBothCoin'){
+      const flips=after.history.slice(before.history.length).filter(ev=>ev.details?.command==='COIN_FLIP'&&typeof ev.details.heads==='boolean');
+      assert.equal(flips.length,2);assert.deepEqual(flips.map(ev=>ev.player),[own.id,other.id]);
+      checkReset({...own,hand:own.hand.filter(c=>c.id!==t.sourceId)},flips[0].details.heads?q.amount:q.tails);
+      checkReset(other,flips[1].details.heads?q.amount:q.tails);
+    }
   }
   if(e.plan.mechanic==='MASS_HEAL_OWN'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0];
