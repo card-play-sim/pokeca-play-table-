@@ -145,6 +145,8 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
+  reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
  if(m==='SCALED_ATTACK_DAMAGE'){
   if(plan.metric==='ownDiscardNamedAttack')reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
   if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
@@ -586,6 +588,18 @@ function prepare(r, e, kind) {
       if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_TRANSFER_FIXTURE'};
+  }
+  if(m==='MASS_ENERGY_COUNT_DISCARD'){
+    const own=frame.game.players[0],plan=e.plan;
+    // Use real basic energies and retain all existing attack payments.
+    const eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
+    const dest=plan.zone==='hand'?own.hand:plan.zone==='bench'?own.bench[0]?.energyCards:own.active.energyCards;
+    if(!dest)return {blocked:'NO_ENERGY_COUNT_HOLDER'};
+    for(const card of own.deck.filter(eligible).slice(0,Math.min(plan.limit,2))){
+      own.deck.splice(own.deck.indexOf(card),1);dest.push(card);
+    }
+    if(!dest.some(eligible))return {blocked:'NO_ENERGY_COUNT_RESOURCE'};
+    if(own.active.energyCards.some(c=>c.isSpecial))return {blocked:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
   }
   if(m==='MASS_HEAL_SCOPE'){
     const [own,other]=frame.game.players,plan=e.plan;
@@ -1155,6 +1169,30 @@ function verifyCase(t, e) {
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     const invalid=own[plan.zone].find(c=>!massTransferCandidate(c,plan));
     if(invalid){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{cards:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+  }
+  if(e.plan.mechanic==='MASS_ENERGY_COUNT_DISCARD'){
+    const plan=e.plan,action=t.action||o.action,own=before.players[0];
+    const holders=plan.zone==='self'?[own.active]:plan.zone==='bench'?own.bench:[own.active,...own.bench];
+    const pool=(plan.zone==='hand'?own.hand:holders.flatMap(c=>c.energyCards)).filter(c=>c.kind==='energy'&&(!plan.basic||!c.isSpecial)&&(!plan.type||!c.isSpecial&&c.energyType===plan.type));
+    if(pool.some(c=>c.isSpecial))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
+    const chosen=plan.all?pool.map(c=>c.id):action.selections.energy;
+    assert(chosen.length>0&&chosen.length<=plan.limit);
+    assert(chosen.every(id=>pool.some(c=>c.id===id)));
+    const check=(start,end,ids)=>{
+      assert(ids.every(id=>end.players[0].discard.some(c=>c.id===id)));
+      const events=end.history.slice(start.history.length).map(x=>x.details);
+      assert(ids.every(id=>events.some(ev=>ev?.command==='DISCARD'&&ev.cardIds?.includes(id))));
+      const amount=plan.base+ids.length*plan.unit;
+      if(amount===0)assert(events.some(ev=>ev?.command==='DAMAGE'&&ev.amount===0&&ev.targetInstanceId===start.players[1].active.id));
+      else verifyPrintedAttack(start,end,e,amount);
+      assert.deepEqual(S.identities(start),S.identities(end));
+    };
+    check(before,after,chosen);
+    if(!plan.all)for(let n=0;n<chosen.length;n++){
+      const replay=port(before),ids=chosen.slice(0,n);
+      assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:ids}}).ok);
+      check(before,replay.getSnapshot(),ids);
+    }
   }
   if(e.plan.mechanic==='MASS_HEAL_SCOPE'){
     const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
