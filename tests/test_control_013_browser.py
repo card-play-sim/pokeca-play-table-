@@ -271,6 +271,13 @@ async def main():
     audit=[entry for entry in flip_entries if entry.get('reference') is True and entry.get('sourceOfficialCardId')==r['officialCardId'] and entry.get('effectId')==f['e']['effectId']]
     assert len(flips)==1 and len(audit)==1, {'print':r['officialCardId'],'flipEntries':flip_entries,'events':events}
     assert (after['players'][1]['active'].get('statusCondition')=='PARALYZED')==flips[0]['heads']
+   if m=='ATTACK_NAMED_DISCARD_BENCH':
+    selected=option['action']['selections']['cards'];own=before['players'][0]
+    assert 0<len(selected)<=min(f['e']['plan']['limit'],5-len(own['bench']))
+    assert all(any(c['id']==ident and c['name']==f['e']['plan']['name'] for c in own['discard']) for ident in selected)
+    assert set(selected)<={c['id'] for c in after['players'][0]['bench']}
+    assert not set(selected)&{c['id'] for c in after['players'][0]['discard']}
+    assert all(any(ev.get('details',{}).get('command')=='BENCH_FROM_ZONE' and ident in ev['details'].get('cardIds',[]) for ev in events) for ident in selected)
    if m=='SEARCH_BASIC_TO_BENCH_ATTACK':
     selected=option['action']['selections']['cards']
     assert 0<len(selected)<=f['e']['plan']['limit']
