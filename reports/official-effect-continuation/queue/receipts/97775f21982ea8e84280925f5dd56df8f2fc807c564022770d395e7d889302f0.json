@@ -1,35 +1,74 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_37B6DEC673EE8969:2f6ae1933cbd6e6e2cc01bbf1b4a7e335cc4a9416c0b97bc05af7fbd22160b29",
   "taskFingerprint": "2f6ae1933cbd6e6e2cc01bbf1b4a7e335cc4a9416c0b97bc05af7fbd22160b29",
-  "executionFingerprint": "f6f54a4462c349b933a213fb5ed709047143f492d9bdce957b5bc853d359f642",
-  "attemptId": "aa414ec0-9322-46b8-ad5d-83376fd0c142",
-  "status": "BLOCKED",
+  "executionFingerprint": "888c710922a0ef08d34ffb18244fc96c769702aa96d63342e72218d4785e4ca4",
+  "attemptId": "2b485760-fcb3-4623-80e1-337e11c1e231",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47168:ability:はんげきばり:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+        "commands": [
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45358:ability:オートマーシャル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+        "commands": [
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46241:ability:はんげき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+        "commands": [
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46314:ability:はんげき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+        "commands": [
+          "PLACE_DAMAGE_COUNTERS"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "31d95b5c77813a4e33825937fabb994114019b3e4acfa806e3b1108fe92ba121"
+  "checksum": "9deeaa725bf1a6ae6e09df68bd12ae3076d405c118fbc550221648144ea94e21"
 }

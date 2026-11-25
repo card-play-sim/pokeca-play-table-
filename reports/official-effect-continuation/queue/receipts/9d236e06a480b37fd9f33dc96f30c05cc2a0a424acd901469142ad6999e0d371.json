@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_AB9DA20A7404B2A9:c4f9e34b1f6f7fc5497e368707d232b4928eb56c815bafc526d311b7231e827c",
   "taskFingerprint": "c4f9e34b1f6f7fc5497e368707d232b4928eb56c815bafc526d311b7231e827c",
-  "executionFingerprint": "f6f54a4462c349b933a213fb5ed709047143f492d9bdce957b5bc853d359f642",
-  "attemptId": "cb3d7ad5-b6e9-4291-bd9f-0378fd1fb7c1",
+  "executionFingerprint": "888c710922a0ef08d34ffb18244fc96c769702aa96d63342e72218d4785e4ca4",
+  "attemptId": "31135d71-aef2-452a-9880-a59877682446",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -16,8 +16,19 @@
       },
       {
         "slot": "47168:attack:スパイクサンダー:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DRAW",
+        "commands": [
+          "DAMAGE",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "49617:attack:リニューアルオープン！:0",
@@ -33,8 +44,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "49620:attack:リニューアルオープン！:0",
@@ -50,8 +60,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "50038:attack:ダブルドロー:0",
@@ -67,8 +76,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "45164:attack:クイックドロー:0",
@@ -84,8 +92,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "45348:attack:ひきつける:0",
@@ -101,8 +108,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "45779:attack:ダブルドロー:0",
@@ -118,8 +124,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "46190:attack:ダブルドロー:0",
@@ -135,8 +140,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "46577:attack:くわえる:0",
@@ -152,8 +156,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "47075:attack:スパイクドロー:0",
@@ -184,8 +187,7 @@
           "AI_UI_LEGAL_PARITY",
           "PHYSICAL_CARD_CONSERVATION",
           "EXACT_SAVE_RESTORE"
-        ],
-        "reused": true
+        ]
       },
       {
         "slot": "45594:attack:ひきつける:0",
@@ -194,5 +196,5 @@
       }
     ]
   },
-  "checksum": "23937de2e75f94a6665f96c139253f210d5a512fea3f3920927e358656f216a4"
+  "checksum": "49abaafcd4d11b8aa8085bed4fe43cc92def8de789b42e6396a80bf6e6bd9394"
 }

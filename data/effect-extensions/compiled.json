@@ -2201,6 +2201,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47168",
+      "name": "ホップのバチンウニex",
+      "deckName": "ホップのバチンウニex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47168",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047168_P_HOPPUNOBACHINUNIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スパイクサンダー",
+          "cost": [
+            "雷",
+            "雷",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "自分の山札を2枚引く。",
+          "effectId": "reference-47168-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 2
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきばり",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-47168-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 200,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47168.json",
+        "sha256": "3f8f933593880f9e4e09d612e5a8524626fee6462b862ab7c11aa2577803657e",
+        "htmlSha256": "3f8f933593880f9e4e09d612e5a8524626fee6462b862ab7c11aa2577803657e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47170",
       "name": "フワライド",
       "deckName": "フワライド",
@@ -12939,6 +13017,87 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45358",
+      "name": "テツノコウベ",
+      "deckName": "テツノコウベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45358",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVHM/045358_P_TETSUNOKOUBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブラストウインド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "",
+          "effectId": "reference-45358-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "オートマーシャル",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-45358-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45358.json",
+        "sha256": "d485759e640cb73020cf2007e749e3f3e3c1136b872ed505aba1630dee332dd4",
+        "htmlSha256": "d485759e640cb73020cf2007e749e3f3e3c1136b872ed505aba1630dee332dd4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45417",
       "name": "セレビィ",
       "deckName": "セレビィ",
@@ -22756,6 +22915,82 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46241",
+      "name": "ハギギシリ",
+      "deckName": "ハギギシリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46241",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046241_P_HAGIGISHIRI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじりつく",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。",
+          "effectId": "reference-46241-attack-0",
+          "plan": {
+            "mechanic": "RETREAT_LOCK_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげき",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-46241-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46241.json",
+        "sha256": "52708a87bf324564a6a2f123e5fec03cefb0843a2666dff1c51c936076eb0e1c",
+        "htmlSha256": "52708a87bf324564a6a2f123e5fec03cefb0843a2666dff1c51c936076eb0e1c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46245",
       "name": "アルクジラ",
       "deckName": "アルクジラ",
@@ -23607,6 +23842,82 @@
         "path": "data/effect-extensions/evidence/46278.json",
         "sha256": "031cd1b5e50411ef8f0bb869d33b99f409d30edbae4ddebb9ab18fa06794f486",
         "htmlSha256": "031cd1b5e50411ef8f0bb869d33b99f409d30edbae4ddebb9ab18fa06794f486",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46314",
+      "name": "ハギギシリ",
+      "deckName": "ハギギシリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46314",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046314_P_HAGIGISHIRI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじりつく",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。",
+          "effectId": "reference-46314-attack-0",
+          "plan": {
+            "mechanic": "RETREAT_LOCK_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげき",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-46314-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46314.json",
+        "sha256": "6c26f93834aa2dc54c04b7a6bc21e62447c5d8d309a479ec94a0f3ccf1aaf1a0",
+        "htmlSha256": "6c26f93834aa2dc54c04b7a6bc21e62447c5d8d309a479ec94a0f3ccf1aaf1a0",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -199979,6 +200290,163 @@
         "sharedWording": true,
         "nameContains": "ロケット団"
       }
+    },
+    {
+      "officialCardId": "50374",
+      "name": "サンドパン",
+      "deckName": "サンドパン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50374",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050374_P_SANDOPAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あなほりクロー",
+          "cost": [
+            "闘"
+          ],
+          "damage": "60",
+          "text": "相手の山札を上から1枚トラッシュする。",
+          "effectId": "reference-50374-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "amount": 1
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきばり",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-50374-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": "サンド",
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50374.json",
+        "sha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "htmlSha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49344",
+      "name": "テツノコウベ",
+      "deckName": "テツノコウベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49344",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049344_P_TETSUNOKOUBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブラストウインド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "",
+          "effectId": "reference-49344-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "オートマーシャル",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-49344-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49344.json",
+        "sha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "htmlSha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -200598,11 +201066,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47168",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47169",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201093,11 +201556,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45358",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45520",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201353,11 +201811,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46241",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46259",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201389,11 +201842,6 @@
     },
     {
       "officialCardId": "46313",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46314",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

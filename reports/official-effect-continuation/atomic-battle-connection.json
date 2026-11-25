@@ -4,20 +4,20 @@
   "source": "EXACT_OFFICIAL_HTML_ID_IMAGE_EFFECT_AND_ENGINE_RECEIPTS",
   "publicBattleVerified": false,
   "finalization": "ONLY_AFTER_REQUIRED_CI_MAIN_PAGES_AND_PUBLISHED_BATTLE",
-  "totalSelected": 1716,
-  "qualifiedForPublication": 22,
-  "workRemaining": 1694,
+  "totalSelected": 1694,
+  "qualifiedForPublication": 6,
+  "workRemaining": 1688,
   "counts": {
-    "QUALIFIED_PREPUBLICATION": 22,
+    "QUALIFIED_PREPUBLICATION": 6,
     "NEEDS_ENGINE_EXECUTION": 5,
-    "NEEDS_SHARED_MECHANIC": 1681,
+    "NEEDS_SHARED_MECHANIC": 1675,
     "NEEDS_OFFICIAL_PARSER": 8,
     "EVIDENCE_BLOCKED": 0,
     "EFFECT_UNRESOLVED": 0,
     "PENDING_OFFICIAL_FETCH": 0
   },
   "allCardEffectsConnectedAndExecuted": false,
-  "sharedMechanicGroups": 935,
+  "sharedMechanicGroups": 933,
   "sharedMechanicWorklist": [
     {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
@@ -306,32 +306,6 @@
         "data/effect-extensions/evidence/46711.json",
         "data/effect-extensions/evidence/47129.json",
         "data/effect-extensions/evidence/48940.json"
-      ],
-      "printCount": 6,
-      "effectSlots": 6
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A61C73CC4F21E8B293B2",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47168",
-        "45358",
-        "46241",
-        "46314",
-        "50374",
-        "49344"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47168.json",
-        "data/effect-extensions/evidence/45358.json",
-        "data/effect-extensions/evidence/46241.json",
-        "data/effect-extensions/evidence/46314.json",
-        "data/effect-extensions/evidence/50374.json",
-        "data/effect-extensions/evidence/49344.json"
       ],
       "printCount": 6,
       "effectSlots": 6
@@ -3989,26 +3963,6 @@
         "data/effect-extensions/evidence/47689.json",
         "data/effect-extensions/evidence/48060.json",
         "data/effect-extensions/evidence/49224.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A88F52E88B4BDBA951FD",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを5個のせる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48632",
-        "49991",
-        "50001"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48632.json",
-        "data/effect-extensions/evidence/49991.json",
-        "data/effect-extensions/evidence/50001.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -19329,8 +19283,7 @@
     },
     {
       "officialCardId": "50374",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50376",
@@ -20354,8 +20307,7 @@
     },
     {
       "officialCardId": "47168",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47169",
@@ -23464,8 +23416,7 @@
     },
     {
       "officialCardId": "45358",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45396",
@@ -24819,8 +24770,7 @@
     },
     {
       "officialCardId": "46241",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46244",
@@ -24959,8 +24909,7 @@
     },
     {
       "officialCardId": "46314",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46317",
@@ -26444,8 +26393,7 @@
     },
     {
       "officialCardId": "49344",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49345",
@@ -26656,94 +26604,6 @@
       "officialCardId": "50037",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45879",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47358",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47385",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47390",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47458",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47459",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47483",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47521",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47531",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47535",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47792",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48439",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48622",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48623",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48677",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48682",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48696",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49155",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49156",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49370",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49391",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49977",
-      "state": "QUALIFIED_PREPUBLICATION"
     }
   ]
 }

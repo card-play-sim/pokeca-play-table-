@@ -182370,6 +182370,125 @@
         "htmlSha256": "d948a25240d5ae953629084b8ad82f6686bcf9b70ac55cd703e020d962659db8",
         "textSha256": "51cc7193d9828e1f3353d0fbbfa3732e3e30b564e14e4706292f8f9b05e72949"
       }
+    },
+    {
+      "officialCardId": "50374",
+      "name": "サンドパン",
+      "deckName": "サンドパン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50374",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050374_P_SANDOPAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あなほりクロー",
+          "cost": [
+            "闘"
+          ],
+          "damage": "60",
+          "text": "相手の山札を上から1枚トラッシュする。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきばり",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": "サンド",
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50374.json",
+        "sha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "htmlSha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49344",
+      "name": "テツノコウベ",
+      "deckName": "テツノコウベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49344",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049344_P_TETSUNOKOUBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブラストウインド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "オートマーシャル",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49344.json",
+        "sha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "htmlSha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []
