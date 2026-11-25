@@ -70,6 +70,8 @@ function batchSearchCandidate(c,plan){
 }
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
+ if(plan.category==='categorySet')return plan.categories.includes(r?.category);
+ if(plan.energyTypes&&(c.kind!=='energy'||c.isSpecial||!plan.energyTypes.includes(c.energyType)))return false;
  if(plan.category==='basicEnergy')return c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
  if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
  if(r?.category!==plan.category)return false;
@@ -192,12 +194,26 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
+   if(plan.category==='categorySet')return plan.categories.includes(r.category);
+   if(plan.energyTypes&&(!isBasicEnergy(r)||!plan.energyTypes.includes(typeOf(r))))return false;
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
    return r.category===plan.category&&(!plan.type||r.category==='energy'&&typeOf(r)===plan.type||r.facts.types?.includes(plan.type))&&
     (plan.stage===null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   };
-  const target=reserve(filter,plan.zone);
+  let target;
+  if(plan.category==='categorySet'){
+   for(const category of plan.categories){const chosen=reserve(r=>r.category===category&&filter(r),plan.zone);if(!target)target=chosen;}
+  }else if(plan.distinctBy==='energyType'){
+   const types=plan.energyTypes||['草','炎','水','雷','超','闘','悪','鋼'];
+   for(const type of types){
+    const chosen=pick(r=>filter(r)&&typeOf(r)===type);
+    if(chosen&&ensure(deckIndex,chosen,kindAttackCost(e,type)+1)){
+     requirements.push({side:0,zone:plan.zone,printId:chosen.officialCardId});
+     if(!target)target=chosen;
+    }
+   }
+  }else target=reserve(filter,plan.zone);
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(e.plan.batchSearch){
@@ -1486,6 +1502,27 @@ function verifyCase(t, e) {
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);
     assert(ids.every(id=>own[plan.zone].some(c=>c.id===id&&massTransferCandidate(c,plan))));
+    if(plan.category==='categorySet'||plan.distinctBy){
+      const pool=own[plan.zone].filter(c=>massTransferCandidate(c,plan));
+      const group=c=>plan.distinctBy==='energyType'?c.energyType:E.getReferenceEffectRecord(c).category;
+      const groups=new Map();
+      for(const c of pool){const key=group(c);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(c);}
+      const required=plan.categories||plan.energyTypes;
+      if(required&&!required.every(key=>groups.has(key))||!required&&groups.size<2)
+        return {status:'BLOCKED',reason:'NO_MULTI_GROUP_SEARCH_PROOF'};
+      const selected=[...groups.values()].slice(0,plan.limit).map(a=>a[0].id);
+      const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:selected}}).ok);
+      const end=replay.getSnapshot();assert(selected.every(id=>end.players[0].hand.some(c=>c.id===id)));
+      assert.deepEqual(S.identities(before),S.identities(end));
+      if(plan.distinctBy){
+        assert.equal(new Set(ids.map(id=>group(pool.find(c=>c.id===id)))).size,ids.length);
+        const duplicates=[...groups.values()].find(a=>a.length>=2);
+        if(duplicates&&plan.limit>=2){
+          const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{cards:duplicates.slice(0,2).map(c=>c.id)}}).ok,false);
+          assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));
+        }
+      }
+    }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     if(plan.requiresTera){

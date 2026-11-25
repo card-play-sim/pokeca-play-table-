@@ -501,6 +501,9 @@ async def main():
      assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",own['active'])==r['officialCardId']
      assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
+    if plan.get('categories') or plan.get('distinctBy'):
+     selected_cards=[c for c in before['players'][0][plan['zone']] if c['id'] in picked]
+     assert await page.evaluate("(args)=>{const p=args.plan,cs=args.cards,rec=c=>Pokeca.getReferenceEffectRecord(c);const group=c=>p.distinctBy==='energyType'?c.energyType:rec(c).category;return cs.every(c=>(!p.categories||p.categories.includes(rec(c).category))&&(!p.energyTypes||!c.isSpecial&&p.energyTypes.includes(c.energyType)))&&(!p.distinctBy||new Set(cs.map(group)).size===cs.length);}",{'cards':selected_cards,'plan':plan})
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
    if m=='MASS_ENERGY_COUNT_DISCARD':

@@ -369,6 +369,13 @@ function massSharedPlan(entry,kind,text){
 
  if(repeated)return null;
  if((attack||ability||trainer)&&fixed){
+  const combinedTrainer=body.match(/^自分の山札から(サポートとスタジアム|スタジアムとエネルギー)を(合計([2-9])枚まで|1枚ずつ)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const differentBasic=body.match(/^自分の山札から、それぞれちがうタイプの基本エネルギーを([2-8]枚まで|好きなだけ)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const twoBasic=body.match(/^自分の山札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」と「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const searchMany=(category,limit,extra)=>({mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly,sharedWording:true,...extra});
+  if(combinedTrainer)return searchMany('categorySet',combinedTrainer[3]?Number(combinedTrainer[3]):2,{categories:combinedTrainer[1]==='サポートとスタジアム'?['supporter','stadium']:['stadium','energy'],...(combinedTrainer[3]?{}:{distinctBy:'category'})});
+  if(differentBasic)return searchMany('basicEnergy',differentBasic[1]==='好きなだけ'?8:parseInt(differentBasic[1],10),{distinctBy:'energyType'});
+  if(twoBasic&&twoBasic[1]!==twoBasic[2])return searchMany('basicEnergy',2,{energyTypes:[twoBasic[1],twoBasic[2]],distinctBy:'energyType'});
   const transfer=body.match(/^自分の(山札|トラッシュ)から(ポケモン|トレーナーズ|グッズ|サポート|スタジアム|エネルギー|基本エネルギー|「ポケモンのどうぐ」|[12]進化ポケモン|たねポケモン|\[(?:草|炎|水|雷|超|闘|悪|鋼|竜|無色)\](?:タイプの)?(?:たね|進化)?ポケモン|「基本\[(?:草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」|「(?:ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」)を(1枚|[2-9]枚まで)選び、相手に見せて、(手札に加える。|山札にもどして切る。)(そして山札を切る。)?$/);
   if(transfer){
    const [,source,filter,count,dest,shuffle]=transfer,zone=source==='山札'?'deck':'discard',destination=dest.startsWith('手札')?'hand':'deck';

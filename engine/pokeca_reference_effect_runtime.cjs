@@ -267,6 +267,8 @@ function massRouteEnergy(p,plan){
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
+ if(plan.category==='categorySet')return plan.categories.includes(r?.category);
+ if(plan.energyTypes&&(!basicEnergy(c)||!plan.energyTypes.includes(c.energyType)))return false;
  if(plan.category==='basicEnergy')return basicEnergy(c)&&(!plan.type||c.energyType===plan.type);
  if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
  if(r?.category!==plan.category)return false;
@@ -476,9 +478,16 @@ function requests(g,actor,card,effect){
  }
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')cardRequest('cards',own.filter(c=>isMegaEvolutionEx(c)&&c.damage>0),1,1);
  if(m==='MASS_ZONE_TRANSFER'){
-  const plan=effect.plan,pool=p[plan.zone].filter(c=>massTransferCandidate(c,plan)),max=Math.min(plan.limit,pool.length);
+  const plan=effect.plan,pool=p[plan.zone].filter(c=>massTransferCandidate(c,plan));
+  const group=c=>plan.distinctBy==='category'?record(c).category:c.energyType;
+  const max=Math.min(plan.limit,plan.distinctBy?new Set(pool.map(group)).size:pool.length);
   if(plan.zone==='deck')deckRequest('cards',pool,0,max);
   else cardRequest('cards',pool,Math.min(1,max),max);
+  if(plan.distinctBy){
+   const request=out.at(-1),groups=new Map(pool.map(c=>[id(c),group(c)]));
+   request.candidates=request.candidates.map(c=>({...c,searchGroup:groups.get(id(c))}));
+   request.constraints=[{kind:'distinct',field:'searchGroup',error:'MASS_SEARCH_DUPLICATE_GROUP'}];
+  }
  }
  if(m==='MASS_HEAL_SCOPE'&&effect.plan.choice){
   const pool=scopeHealTargets(p,o,effect.plan).filter(c=>c.damage>0);
