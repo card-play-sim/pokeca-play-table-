@@ -2997,26 +2997,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_37BF7AD5AAD71C4CB2F6",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50406",
-        "50542",
-        "50552"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50406.json",
-        "data/effect-extensions/evidence/50542.json",
-        "data/effect-extensions/evidence/50552.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_381F17A7E36A04194894",
       "category": "pokemon",
       "effectKind": "ability",
@@ -3745,26 +3725,6 @@
         "data/effect-extensions/evidence/46309.json",
         "data/effect-extensions/evidence/48479.json",
         "data/effect-extensions/evidence/50491.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_85CF2337C1BF4F1241A0",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45934",
-        "46060",
-        "46825"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45934.json",
-        "data/effect-extensions/evidence/46060.json",
-        "data/effect-extensions/evidence/46825.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -7087,26 +7047,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_68DC30C290B4D5EB7FD9",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札から、それぞれちがうタイプの基本エネルギーを3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46229",
-        "45925"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46229.json",
-        "data/effect-extensions/evidence/45925.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_693595B95A84736B95FB",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7351,24 +7291,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47779.json",
         "data/effect-extensions/evidence/48437.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6FECD126963E27280878",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50402",
-        "50538"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50402.json",
-        "data/effect-extensions/evidence/50538.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -17965,22 +17887,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F0EC777F9331698A74D9",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "自分の山札から、それぞれちがうタイプの基本エネルギーを好きなだけ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46281"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46281.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F231B786F018E7F92D5C",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18310,5 +18216,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1716
+  "unfinishedPrints": 1705
 }

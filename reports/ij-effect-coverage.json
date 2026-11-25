@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 481,
-      "missing": 389
+      "connected": 486,
+      "missing": 384
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 480,
+      "CONNECTED_UNTESTED": 485,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 341,
+      "ENGINE_CONNECTION_REQUIRED": 336,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -18304,8 +18304,7 @@
       "name": "ぼうけんのランタン",
       "mark": "J",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50402.json"
     },
     {
@@ -18339,8 +18338,7 @@
       "name": "ギリー",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50406.json"
     },
     {
@@ -18718,8 +18716,7 @@
       "name": "ぼうけんのランタン",
       "mark": "J",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50538.json"
     },
     {
@@ -18752,8 +18749,7 @@
       "name": "ギリー",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50542.json"
     },
     {
@@ -18823,8 +18819,7 @@
       "name": "ギリー",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50552.json"
     },
     {
@@ -21595,8 +21590,8 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1160,
-        "MECHANIC_REQUIRED": 702,
+        "ENGINE_CONNECTED": 1166,
+        "MECHANIC_REQUIRED": 696,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
       "I": {
@@ -21608,8 +21603,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 480,
-        "MECHANIC_REQUIRED": 383,
+        "ENGINE_CONNECTED": 485,
+        "MECHANIC_REQUIRED": 378,
         "EVIDENCE_UNVERIFIED": 4,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
@@ -21619,7 +21614,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3357,
-    "unconnected": 1716
+    "engineConnected": 3368,
+    "unconnected": 1705
   }
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "17927dc7f69dd08dab249a61f0e6aed015770431e0242f9b0034e77260044fd5",
+  "registryHash": "dcd95fcd2060ac6a654a06926365428336c0435066f3372a6c3a8697280c8b8e",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,15 +12,15 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 229,
-      "notImplemented": 145,
+      "compiled": 235,
+      "notImplemented": 139,
       "blocked": 0,
       "executionVerifiedPrints": 39
     },
     "item": {
       "prints": 299,
-      "compiled": 194,
-      "notImplemented": 105,
+      "compiled": 197,
+      "notImplemented": 102,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2275,
-      "notImplemented": 1386,
+      "compiled": 2277,
+      "notImplemented": 1384,
       "blocked": 15,
-      "executionVerifiedPrints": 654
+      "executionVerifiedPrints": 656
     },
     "energy": {
       "prints": 681,
@@ -699,11 +699,6 @@
         "htmlSha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
         "textSha256": "981338e57cfc48f8b1eedc33ffab7be0bae357b0c2a7206003a88f3ec3d9f3b8"
       }
-    },
-    {
-      "officialCardId": "46229",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46309",
@@ -1422,11 +1417,6 @@
     },
     {
       "officialCardId": "45922",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45925",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3936,21 +3926,6 @@
       }
     },
     {
-      "officialCardId": "45934",
-      "name": "アクロマの執念",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45934.json",
-        "sha256": "5451040389c8477b566b7eeff234315533b08e328a2a9e5929b9f01e5b9f5958",
-        "htmlSha256": "5451040389c8477b566b7eeff234315533b08e328a2a9e5929b9f01e5b9f5958",
-        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
-      }
-    },
-    {
       "officialCardId": "45936",
       "name": "カシオペア",
       "category": "supporter",
@@ -4316,21 +4291,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46060",
-      "name": "アクロマの執念",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46060.json",
-        "sha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
-        "htmlSha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
-        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
-      }
-    },
-    {
       "officialCardId": "46062",
       "name": "カシオペア",
       "category": "supporter",
@@ -4584,21 +4544,6 @@
       "officialCardId": "46279",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46281",
-      "name": "エネルギー転送PRO",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から、それぞれちがうタイプの基本エネルギーを好きなだけ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46281.json",
-        "sha256": "9b1ba3bedd921e05938bf50920d2d66e5b85d5e29c4a682faf1b07a5275b4d00",
-        "htmlSha256": "9b1ba3bedd921e05938bf50920d2d66e5b85d5e29c4a682faf1b07a5275b4d00",
-        "textSha256": "39fdba542c6976027b911a988fa31be34686834d0390c01ac2686d15348dbd5f"
-      }
     },
     {
       "officialCardId": "46282",
@@ -5298,21 +5243,6 @@
         "sha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "htmlSha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
-      }
-    },
-    {
-      "officialCardId": "46825",
-      "name": "アクロマの執念",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46825.json",
-        "sha256": "e4cc004374ab0b6b266f804970c07debfd4fb5a19e49319a6a415725420110b0",
-        "htmlSha256": "e4cc004374ab0b6b266f804970c07debfd4fb5a19e49319a6a415725420110b0",
-        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
       }
     },
     {
@@ -6776,21 +6706,6 @@
       }
     },
     {
-      "officialCardId": "50402",
-      "name": "ぼうけんのランタン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50402.json",
-        "sha256": "fde549f646023980cc10db3de75df80ee3c2ae73bf6af48692ebf19885e7ef78",
-        "htmlSha256": "fde549f646023980cc10db3de75df80ee3c2ae73bf6af48692ebf19885e7ef78",
-        "textSha256": "8c1dc7e56d126fa30b3b179be83ba038227a39a255b5c0fb2f44d7cb426c85af"
-      }
-    },
-    {
       "officialCardId": "50403",
       "name": "とくちゅうチョッキ",
       "category": "tool",
@@ -6818,21 +6733,6 @@
         "sha256": "a874fd6f4379cc425fcacb033696949491283bcbf2ccb3b08033bca4d6a85a2c",
         "htmlSha256": "a874fd6f4379cc425fcacb033696949491283bcbf2ccb3b08033bca4d6a85a2c",
         "textSha256": "49ca13c56b7756ca45eca643d0a7152547a073441877baae25e05423796eabad"
-      }
-    },
-    {
-      "officialCardId": "50406",
-      "name": "ギリー",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50406.json",
-        "sha256": "f58cfdb827f34342284592927d9209b25929140dce8e735c0290d0cc60fa9e23",
-        "htmlSha256": "f58cfdb827f34342284592927d9209b25929140dce8e735c0290d0cc60fa9e23",
-        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
       }
     },
     {
@@ -6990,21 +6890,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50538",
-      "name": "ぼうけんのランタン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50538.json",
-        "sha256": "71da81a84700d63f168e5e8b95d9e53ce4fa1a9085a10d73e5f83c175641ba8a",
-        "htmlSha256": "71da81a84700d63f168e5e8b95d9e53ce4fa1a9085a10d73e5f83c175641ba8a",
-        "textSha256": "8c1dc7e56d126fa30b3b179be83ba038227a39a255b5c0fb2f44d7cb426c85af"
-      }
-    },
-    {
       "officialCardId": "50540",
       "name": "とくちゅうチョッキ",
       "category": "tool",
@@ -7017,21 +6902,6 @@
         "sha256": "15441375c00d75529c633add0c549270ccfcd1b6467d35552982714145931e0d",
         "htmlSha256": "15441375c00d75529c633add0c549270ccfcd1b6467d35552982714145931e0d",
         "textSha256": "16c4a827206f1188dde8d47543116e73a58579e327e02c4180d243d2befb31a3"
-      }
-    },
-    {
-      "officialCardId": "50542",
-      "name": "ギリー",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50542.json",
-        "sha256": "ee32b8855e6611cec363c9e4c6b65457e56051ed8a3a66a29c505a12c496150c",
-        "htmlSha256": "ee32b8855e6611cec363c9e4c6b65457e56051ed8a3a66a29c505a12c496150c",
-        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
       }
     },
     {
@@ -7083,21 +6953,6 @@
       "officialCardId": "50549",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50552",
-      "name": "ギリー",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50552.json",
-        "sha256": "e9d6285c49d84367909f0d25029c6875c16809685afdb0772053872e3d642030",
-        "htmlSha256": "e9d6285c49d84367909f0d25029c6875c16809685afdb0772053872e3d642030",
-        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
-      }
     },
     {
       "officialCardId": "50553",
@@ -12799,11 +12654,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1419
+        "count": 1417
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 362
+        "count": 353
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -12818,25 +12673,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "fd0c5e2d08a96ee49cfed44f6185a4ca099cf5a8fbb6b6d1b7b81b8fc998a007",
+    "executionFingerprint": "d6658a76960a758abb0e4509e6adf406ed773f1e24c02d45493eea9b1864da65",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 165081,
+    "seq": 169737,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 329,
+      "SUCCEEDED": 331,
       "FAILED": 0,
-      "BLOCKED": 447
+      "BLOCKED": 445
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 263,
+        "SUCCEEDED": 265,
         "FAILED": 0,
-        "BLOCKED": 408
+        "BLOCKED": 406
       },
       "supporter": {
         "PENDING": 0,
