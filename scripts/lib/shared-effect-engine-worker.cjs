@@ -1313,6 +1313,13 @@ function verifyCase(t, e) {
       assert(effectEvents.some(ev=>ev?.command==='ATTACH_ENERGY'&&ev.energyId===id&&ev.targetInstanceId===targetId));
     }
     assert.equal(resolved.normalEnergyAttached,own.normalEnergyAttached);
+    if(plan.origin==='evolve'){
+      const source=[own.active,...own.bench].find(c=>c.id===t.sourceId);
+      assert(source?.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(closed));
+    }
     if(plan.oneEach){
       const selectedTargets=energy.map((_,i)=>action.selections['attachTo'+i][0]);
       assert.equal(new Set(selectedTargets).size,energy.length);
