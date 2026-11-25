@@ -228,6 +228,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
+ if(m==='MASS_HAND_FLOW'&&plan.mode==='rocketLimit'){
+  const valid=r=>mon(r,null,0)&&r.name.startsWith('ロケット団の');
+  const active=reserve(valid,'active');
+  if(active)reserve(r=>valid(r)&&r.officialCardId!==active.officialCardId,'bench');
+  reserve(r=>mon(r,null,0)&&!r.name.startsWith('ロケット団の'),'deck');
+ }
  if(m==='SUPPORTER_ROCKET_SWITCH_BOTH'){
   const active=reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'active');
   if(active)reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の')&&r.officialCardId!==active.officialCardId,'bench');
@@ -774,7 +780,23 @@ function prepare(r, e, kind) {
     if(plan.mode==='revealCount'&&!other.hand.some(c=>c.kind==='pokemon')){
      const i=other.deck.findIndex(c=>c.kind==='pokemon');if(i<0)return {blocked:'NO_REVEAL_POKEMON_FIXTURE'};other.hand.push(other.deck.splice(i,1)[0]);
     }
-    if(plan.mode==='rocketLimit')while(own.hand.length>=plan.amount)own.deck.push(own.hand.pop());
+    if(plan.mode==='rocketLimit'){
+      const rocket=c=>E.getReferenceEffectRecord(c).name.startsWith('ロケット団の');
+      if(!rocket(own.active)||!own.bench.some(rocket))return {blocked:'NO_ROCKET_DRAW_TEAM_FIXTURE'};
+      for(const c of own.bench.filter(c=>!rocket(c))){
+        if(c.evolutionCards?.length||c.energyCards?.length||c.tools?.length)return {blocked:'ROCKET_DRAW_UNEXPECTED_STACK'};
+        own.bench.splice(own.bench.indexOf(c),1);
+        const raw=JSON.parse(JSON.stringify(c));
+        for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'])delete raw[key];
+        own.deck.push(raw);
+      }
+      if(!own.deck.some(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).facts.basic&&!rocket(c)))return {blocked:'NO_ROCKET_DRAW_MIXED_TEAM_FIXTURE'};
+      while(own.hand.length>=plan.amount){
+        const index=own.hand.findIndex(c=>c.id!==frame.sourceId);
+        if(index<0)return {blocked:'NO_ROCKET_DRAW_HAND_FIXTURE'};
+        own.deck.push(own.hand.splice(index,1)[0]);
+      }
+    }
   }
   if(m==='MASS_HEAL_OWN'){
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
@@ -1512,8 +1534,20 @@ function verifyCase(t, e) {
     if(q.mode==='rocketLimit'){
       const limit=[own.active,...own.bench].every(c=>E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))?q.bonus:q.amount;
       const hand=own.hand.filter(c=>c.id!==t.sourceId);checkDraw(own,Math.max(0,limit-hand.length));
-      // Both branches must be proven by an independently legal fixture before approval.
-      return {status:'BLOCKED',reason:'ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED'};
+      const rocket=c=>E.getReferenceEffectRecord(c).name.startsWith('ロケット団の');
+      assert([own.active,...own.bench].every(rocket));assert.equal(limit,q.bonus);
+      assert.equal(after.players[0].hand.length,hand.length+Math.min(own.deck.length,Math.max(0,q.bonus-hand.length)));
+      const mixed=JSON.parse(JSON.stringify(before)),side=mixed.players[0];
+      if(side.bench.length>=5)return {status:'BLOCKED',reason:'NO_ROCKET_DRAW_BENCH_SPACE'};
+      const i=side.deck.findIndex(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).facts.basic&&!rocket(c));
+      if(i<0)return {status:'BLOCKED',reason:'NO_ROCKET_DRAW_MIXED_TEAM_FIXTURE'};
+      const c=side.deck.splice(i,1)[0];side.bench.push({...c,cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});
+      const p=port(mixed),action=t.action||o.action;
+      assert(p.dispatch('you',action).ok);
+      const next=p.getSnapshot(),count=Math.min(side.deck.length,Math.max(0,q.amount-(side.hand.length-1)));
+      assert(side.deck.slice(0,count).every(c=>next.players[0].hand.some(x=>x.id===c.id)));
+      assert.equal(next.players[0].hand.length,side.hand.length-1+count);
+      assert.deepEqual(Array.from(S.identities(mixed)),Array.from(S.identities(next)));
     }
     if(q.mode==='resetBothCoin'){
       const flips=after.history.slice(before.history.length).filter(ev=>ev.details?.command==='COIN_FLIP'&&typeof ev.details.heads==='boolean');
