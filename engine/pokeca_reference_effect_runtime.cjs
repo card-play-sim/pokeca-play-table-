@@ -192,6 +192,8 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
    .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION')
    .reduce((sum,a)=>sum+a.plan.amount,0);
   amount=Math.max(0,amount-reduction);
+  const teamReduction=(other.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber&&(!x.type||record(mon).facts.types.includes(x.type))).reduce((sum,x)=>sum+x.amount,0);
+  amount=Math.max(0,amount-teamReduction);
   if(mon.referenceDamageReduction?.turn===g.turnNumber)
    amount=Math.max(0,amount-mon.referenceDamageReduction.amount);
  }
@@ -1365,6 +1367,10 @@ function applyPlan(g,actor,card,effect,action){
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'ABILITY_SWITCH_OWN':chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);break;
   case 'ABILITY_SEARCH_TYPED_EVOLUTION':case 'TRAINER_SEARCH_TERA':searchSelectedDeck(g,actor,p,ids('cards'));break;
+  case 'TRAINER_TEAM_DAMAGE_REDUCTION':
+   p.referenceTeamDamageReductions=(p.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber+1);
+   p.referenceTeamDamageReductions.push({turn:g.turnNumber+1,type:plan.type,amount:plan.amount});
+   break;
   case 'TRAINER_TYPED_DAMAGE_BOOST':
    p.referenceTypedDamageBoosts||=[];
    p.referenceTypedDamageBoosts=p.referenceTypedDamageBoosts.filter(boost=>boost.turn===g.turnNumber);

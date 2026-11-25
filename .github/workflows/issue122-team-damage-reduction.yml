@@ -1,0 +1,109 @@
+name: Issue122 next opponent turn team damage reduction
+on:
+  push:
+    branches: [battle/issue122-team-damage-reduction-20261126]
+    paths:
+      - '.github/workflows/issue122-team-damage-reduction.yml'
+      - 'tests/test_control_013_browser.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-team-damage-reduction
+  cancel-in-progress: false
+jobs:
+  all-remaining:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      INTAKE_LIMIT: '10000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source and resume exact saved official evidence
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          # Start from the persisted, verified 91-print checkpoint, not an older snapshot.
+          node tests/issue122-ability-cost-draw.test.cjs
+          python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
+          node tests/intake-checkpoint-recovery-contract.test.cjs
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/control-014-official-parser.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
+      - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
+        run: |
+          node scripts/run-atomic-official-battle-intake.cjs
+      - name: Require exact current published records and report new IDs
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const published=JSON.parse(execFileSync('git',['show','269293b2dae46dc5d6abdebd55c5745accc8003c:'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const records=JSON.parse(fs.readFileSync(path,'utf8')).records;
+          const map=new Map(records.map(r=>[String(r.officialCardId),r]));
+          assert.equal(map.size,records.length);
+          for(const old of published)assert.deepEqual(map.get(String(old.officialCardId)),old,'PUBLISHED_RECORD_CHANGED:'+old.officialCardId);
+          const prior=new Set(published.map(r=>String(r.officialCardId)));
+          const newIds=records.filter(r=>!prior.has(String(r.officialCardId))).map(r=>String(r.officialCardId));
+          console.log('New exact-print delta',newIds);
+          NODE
+      - name: Verify candidate exact-print browser gameplay
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="269293b2dae46dc5d6abdebd55c5745accc8003c"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          mkdir -p artifacts
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python tests/test_control_013_browser.py > "artifacts/all-remaining-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
+      - name: Persist battle-qualified candidate on isolated branch only
+        if: success()
+        run: |
+          git diff --check
+          mkdir -p reports/official-effect-continuation
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/team-damage-reduction-candidate.json
+          cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/team-damage-reduction-execution-gaps.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          if ! git diff --cached --quiet; then
+            git commit -m 'checkpoint: cumulative new mechanics with complete candidate Chromium verification'
+            git push origin HEAD:battle/issue122-team-damage-reduction-20261126
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-team-damage-reduction-evidence
+          path: |
+            work/card-auto-connect/
+            artifacts/all-remaining-*
+            reports/official-effect-continuation/
+            data/official-effect-intake/checkpoint.json
+            test-results/
+          if-no-files-found: warn
+          retention-days: 90

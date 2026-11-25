@@ -566,6 +566,9 @@ async def main():
     picked=set(option['action']['selections']['cards'])
     assert picked and picked<={card['id'] for card in after['players'][0]['hand']}
     assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+   if m=='TRAINER_TEAM_DAMAGE_REDUCTION':
+    plan=f['e']['plan']
+    assert {'turn':before['turnNumber']+1,'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTeamDamageReductions']
    if m=='TRAINER_TYPED_DAMAGE_BOOST':
     plan=f['e']['plan']
     assert {'turn':before['turnNumber'],'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTypedDamageBoosts']

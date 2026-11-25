@@ -511,6 +511,9 @@ function plan(entry,kind){
   return {mechanic:'ABILITY_SEARCH_TYPED_EVOLUTION',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],type:typedEvolution[1],limit:parseInt(typedEvolution[2],10),sharedWording:true};
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&generic==='自分の山札から「テラスタル」のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。')
   return {mechanic:'TRAINER_SEARCH_TERA',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:1,sharedWording:true};
+ const teamReduction=generic.match(/^次の相手の番、自分の(?:(?:\[([草炎水雷超闘悪鋼竜無色])\])?ポケモン)全員が、相手のポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。\(新しく場に出したポケモンもふくむ。\)$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&teamReduction)
+  return {mechanic:'TRAINER_TEAM_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],type:teamReduction[1]||null,amount:Number(teamReduction[2]),sharedWording:true};
  const typedBoost=generic.match(/^この番、自分の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&typedBoost)
   return {mechanic:'TRAINER_TYPED_DAMAGE_BOOST',commands:['MODIFY_DAMAGE'],type:typedBoost[1],amount:Number(typedBoost[2]),sharedWording:true};

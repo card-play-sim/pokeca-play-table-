@@ -277,6 +277,13 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')reserve(r=>mon(r,null,0),'bench',1);
  if(m==='SUPPORTER_SWITCH_EX_HEAL')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex'),'active');
  if(m==='TRAINER_SEARCH_TERA')reserve(r=>r.category==='pokemon'&&r.facts.teraBenchProtection,'deck');
+ if(m==='TRAINER_TEAM_DAMAGE_REDUCTION'){
+  const attacker=reserve(r=>vanilla(r),'active',1);
+  if(attacker)ensureAttackCost(attacker,1-deckIndex);
+  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'active');
+  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'bench');
+  if(plan.type)reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type)&&!r.abilities.length,'bench');
+ }
  if(m==='TRAINER_TYPED_DAMAGE_BOOST'){
   const target=reserve(r=>vanilla(r)&&r.facts.types.includes(plan.type),'active');
   if(target)ensureAttackCost(target,deckIndex);
@@ -754,6 +761,12 @@ function prepare(r, e, kind) {
         own.deck.push(mon);
       }
     }
+  }
+  if(m==='TRAINER_TEAM_DAMAGE_REDUCTION'){
+    const other=frame.game.players[1],attack=E.getReferenceEffectRecord(other.active).attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    if(!attack)return {blocked:'NO_TEAM_REDUCTION_ATTACKER'};
+    for(const energy of other.deck.filter(c=>c.kind==='energy'&&!c.isSpecial))other.active.energyCards.push(other.deck.splice(other.deck.indexOf(energy),1)[0]);
+    if(e.plan.type&&!E.getReferenceEffectRecord(frame.game.players[0].active).facts.types.includes(e.plan.type))return {blocked:'NO_TEAM_REDUCTION_TYPED_ACTIVE'};
   }
   if(m==="TRAINER_TYPED_DAMAGE_BOOST"){
     const own=frame.game.players[0];
@@ -1834,6 +1847,38 @@ function verifyCase(t, e) {
     assert(effectEvents.some(ev=>ev?.command==="SHUFFLE_DECK"&&!ev.reference));
     const invalid=own.deck.find(c=>c.kind!=="pokemon");
     if(invalid){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{cards:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+  }
+  if(e.plan.mechanic==='TRAINER_TEAM_DAMAGE_REDUCTION'){
+    const plan=e.plan,own=after.players[0];
+    assert(own.referenceTeamDamageReductions.some(x=>x.turn===after.turnNumber+1&&x.type===plan.type&&x.amount===plan.amount));
+    const ended=port(after),end=E.getLegalActions(after,'you').actions.find(a=>a.type==='end_turn');
+    if(!end||!ended.dispatch('you',end).ok)return {status:'BLOCKED',reason:'NO_TEAM_REDUCTION_END_TURN'};
+    const protectedState=ended.getSnapshot(),baseline=JSON.parse(JSON.stringify(protectedState));
+    delete baseline.players[0].referenceTeamDamageReductions;
+    const attacks=E.getReferenceEffectRecord(baseline.players[1].active).attacks;
+    const incoming=E.getLegalActions(baseline,'ai').actions.filter(a=>a.type==='attack_turn'&&attacks[a.attackIndex].plan.mechanic==='VANILLA_DAMAGE');
+    const damage=(state,action)=>{const replay=port(state);if(!replay.dispatch('ai',action).ok)return undefined;return replay.getSnapshot().history.slice(state.history.length).find(ev=>ev.details?.command==='DAMAGE'&&ev.details.targetInstanceId===state.players[0].active.id)?.details.amount;};
+    let tested=0;
+    for(const action of incoming){
+      const normal=damage(baseline,action);if(!(normal>0))continue;
+      assert.equal(damage(protectedState,action),Math.max(0,normal-plan.amount));
+      assert.equal(damage({...protectedState,turnNumber:protectedState.turnNumber+2},action),normal);
+      const newlyActive=JSON.parse(JSON.stringify(protectedState)),side=newlyActive.players[0];
+      const eligible=side.bench.findIndex(c=>!plan.type||E.getReferenceEffectRecord(c).facts.types.includes(plan.type));
+      if(eligible<0)return {status:'BLOCKED',reason:'NO_TEAM_REDUCTION_OTHER_TARGET'};
+      [side.active,side.bench[eligible]]=[side.bench[eligible],side.active];
+      const newlyBase=JSON.parse(JSON.stringify(newlyActive));delete newlyBase.players[0].referenceTeamDamageReductions;
+      const normalOther=damage(newlyBase,action);if(!(normalOther>0))continue;
+      assert.equal(damage(newlyActive,action),Math.max(0,normalOther-plan.amount));
+      if(plan.type){
+        const wrong=JSON.parse(JSON.stringify(protectedState)),s=wrong.players[0],i=s.bench.findIndex(c=>!E.getReferenceEffectRecord(c).facts.types.includes(plan.type));
+        if(i<0)return {status:'BLOCKED',reason:'NO_TEAM_REDUCTION_WRONG_TYPE'};
+        [s.active,s.bench[i]]=[s.bench[i],s.active];const wrongBase=JSON.parse(JSON.stringify(wrong));delete wrongBase.players[0].referenceTeamDamageReductions;
+        assert.equal(damage(wrong,action),damage(wrongBase,action));
+      }
+      tested++;break;
+    }
+    if(!tested)return {status:'BLOCKED',reason:'NO_TEAM_REDUCTION_POSITIVE_DAMAGE'};
   }
   if(e.plan.mechanic==="TRAINER_TYPED_DAMAGE_BOOST"){
     const plan=e.plan,own=after.players[0];
