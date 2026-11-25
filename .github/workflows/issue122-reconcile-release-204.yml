@@ -34,7 +34,21 @@ jobs:
           git diff --name-only --diff-filter=U > artifacts/conflicts.txt
           cat artifacts/conflicts.txt
           while IFS= read -r file; do
+            test -n "$file" || continue
             case "$file" in
+              reports/official-effect-continuation/queue/receipts/*.json)
+                # Keep the candidate execution receipt only when it proves the same task and result.
+                git show ":2:$file" > /tmp/candidate-receipt.json
+                git show ":3:$file" > /tmp/public-receipt.json
+                node -e 'const a=require("node:assert/strict"),x=require("/tmp/candidate-receipt.json"),y=require("/tmp/public-receipt.json"); for(const k of ["jobId","taskFingerprint","status","result"]) a.deepEqual(x[k],y[k],process.argv[1]+":"+k)' "$file"
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
+              reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json|reports/official-effect-continuation/atomic-battle-connection.json|reports/official-effect-continuation/queue/queue.json|reports/official-effect-continuation/status.json)
+                # Generated snapshots from the newer all-card replay. Both originals remain in merge parents.
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
               data/effect-extensions/compiled.json|data/effect-extensions/intake.json|data/official-effect-intake/checkpoint.json|reports/ij-effect-coverage.json|ui/engine.bundle.js|sw.js)
                 # These generated files must subsequently pass exact-record and rebuild gates.
                 git checkout --ours -- "$file"
@@ -57,6 +71,7 @@ jobs:
           fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({added:added.map(r=>r.officialCardId),count:added.length},null,2));
           console.log('Exact prior and candidate records preserved; 73 new prints');
           NODE
+          test -z "$(git diff --name-only --diff-filter=U)"
           node scripts/build-effect-extensions.cjs --check
           node scripts/sync-reference-effects.cjs --check
           node scripts/build-pwa-release.cjs --check
