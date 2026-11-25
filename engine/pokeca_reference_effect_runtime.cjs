@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
+const passive=new Set(['PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -201,7 +201,14 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
 function typesConflictForIgnore(g,own,mon,source){return record(source).facts.types.includes('超')&&record(mon).facts.types.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE'));}
 function damage(g,actor,mon,amount,options={}){
  const value=damages(g,actor,mon,amount,options),attacker=player(g,actor).active,defender=find(g,id(mon));
+ const survival=!options.ignore&&defender?.player.id!==actor&&mon.damage===0&&value>=mon.hp&&enabledAbilities(g,mon).find(a=>a.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL');
  command(g,actor,{command:'DAMAGE',amount:value},{targetIds:[id(mon)]});
+ // Survival is not damage reduction: retain the actual attack DAMAGE event
+ // and leave exactly 10 HP before the normal knockout/prize resolution.
+ if(survival&&mon.damage>=mon.hp){
+  mon.damage=mon.hp-survival.plan.remainingHp;
+  event(g,defender.player.id,'ADD_STATE',{mechanic:'PASSIVE_FULL_HP_SURVIVAL',targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
+ }
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
  }
