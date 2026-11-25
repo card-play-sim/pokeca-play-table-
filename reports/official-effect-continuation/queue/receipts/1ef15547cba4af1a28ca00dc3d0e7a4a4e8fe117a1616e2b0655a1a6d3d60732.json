@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_9DFAE198AD78E219:67cdccd09eb203d0096e0f4b72c048ae3b2ce86e3322d675b054103a5a238e80",
   "taskFingerprint": "67cdccd09eb203d0096e0f4b72c048ae3b2ce86e3322d675b054103a5a238e80",
-  "executionFingerprint": "d04bb2f124bf9a4a7297bbf070a900d5d29e8994b5bbb4e1d01e727398a62cbf",
-  "attemptId": "0acc54c5-2894-4aa6-85bd-9fef96cfceb5",
-  "status": "BLOCKED",
+  "executionFingerprint": "3127263ac381b533dd744f782db783f1da00890a45e37e17b3d09c60616fa14b",
+  "attemptId": "e60371f8-3581-4150-ae38-701b8e927be0",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45767:attack:スチールバースト:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "commands": [
+          "DISCARD",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "abc872a7a8c4c21684fd3b6efcc465036876d82de18eb3ba1f49fa9328faaf9c"
+  "checksum": "5b6cfa1de684cbece6f0d4e4c1a20fedc6ceb8990bd4364d145f9045ba5e099f"
 }

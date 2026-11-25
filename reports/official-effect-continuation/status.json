@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "b5ac25f1537ef44efbbf62adf93afb7c59abb77c7d91d8976144a6c9aad94960",
+  "registryHash": "dccf4c0ffd54de32182cacba280769c4e4fd8537fd2f514f7749f6ad687d4d6f",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,8 +12,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 216,
-      "notImplemented": 158,
+      "compiled": 219,
+      "notImplemented": 155,
       "blocked": 0,
       "executionVerifiedPrints": 38
     },
@@ -43,7 +43,7 @@
       "compiled": 2242,
       "notImplemented": 1419,
       "blocked": 15,
-      "executionVerifiedPrints": 638
+      "executionVerifiedPrints": 647
     },
     "energy": {
       "prints": 681,
@@ -6126,21 +6126,6 @@
       }
     },
     {
-      "officialCardId": "50159",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50159.json",
-        "sha256": "b3bde807a9b6bd85a17cf9d419158948fc6e5d7379dca18c41485abfee49d1fa",
-        "htmlSha256": "b3bde807a9b6bd85a17cf9d419158948fc6e5d7379dca18c41485abfee49d1fa",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
-    },
-    {
       "officialCardId": "50160",
       "name": "ジプソ",
       "category": "supporter",
@@ -6251,21 +6236,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50207",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50207.json",
-        "sha256": "26c1d81870d9d164067f4e42db60e1d17a4aff5bc7c5dc870729b2476cc7b95a",
-        "htmlSha256": "26c1d81870d9d164067f4e42db60e1d17a4aff5bc7c5dc870729b2476cc7b95a",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
-    },
-    {
       "officialCardId": "50208",
       "name": "ジプソ",
       "category": "supporter",
@@ -6314,21 +6284,6 @@
       "officialCardId": "50216",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50217",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50217.json",
-        "sha256": "8fada808aa48ec13766162f714bb34126f45791423ea7a670406e18804911a9c",
-        "htmlSha256": "8fada808aa48ec13766162f714bb34126f45791423ea7a670406e18804911a9c",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
     },
     {
       "officialCardId": "50218",
@@ -13223,7 +13178,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 379
+        "count": 376
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -13238,25 +13193,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "d04bb2f124bf9a4a7297bbf070a900d5d29e8994b5bbb4e1d01e727398a62cbf",
+    "executionFingerprint": "3127263ac381b533dd744f782db783f1da00890a45e37e17b3d09c60616fa14b",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 151113,
+    "seq": 155769,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 321,
+      "SUCCEEDED": 325,
       "FAILED": 0,
-      "BLOCKED": 455
+      "BLOCKED": 451
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 256,
+        "SUCCEEDED": 260,
         "FAILED": 0,
-        "BLOCKED": 415
+        "BLOCKED": 411
       },
       "supporter": {
         "PENDING": 0,
