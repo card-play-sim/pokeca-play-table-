@@ -25,20 +25,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Combine the three independently verified source families
+      - name: Verify manually reconciled exact source families
         run: |
-          git fetch origin main
-          for pair in 3bb6c6426d2479273eab3412e8ac80d7efd5529c:c7e7e5f3772fd0ce94e5ca0e7bad8c8d5c2be49c bd8f9899193d4b7a6b25703564ffa74bb665b94d:d849ae3ffd5f5510ad758df0a89bd11050b88d0c bd8f9899193d4b7a6b25703564ffa74bb665b94d:33c5cff301ec7e6b34a2f8c89a0507e26926bae3; do
-            from=${pair%%:*}
-            to=${pair#*:}
-            git diff --binary "$from" "$to" -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py > /tmp/family.patch
-            test -s /tmp/family.patch
-            git apply --3way /tmp/family.patch
-            test -z "$(git diff --name-only --diff-filter=U)"
-          done
-          git diff --cached --check
           grep -q 'TRAINER_TOP_SELECT_DISCARD' engine/reference-effect-plans.cjs
           grep -q 'MASS_SEARCH_DUPLICATE_GROUP' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'pokemonOrBasicEnergy' engine/reference-effect-plans.cjs
+          grep -q 'NO_MIXED_SEARCH_BOTH_CATEGORY_FIXTURE' scripts/lib/shared-effect-engine-worker.cjs
           grep -q 'opponentHandTrainerCount' engine/reference-effect-plans.cjs
           grep -q 'ATTACK_BASIC_ENERGY_MOVE' engine/pokeca_reference_effect_runtime.cjs
       - name: Verify merged Crobat and named discard source families

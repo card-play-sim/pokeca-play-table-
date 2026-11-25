@@ -152,6 +152,12 @@ function additionalAttackPlan(entry,text){
    }
   }
  }
+ const handTrainers=text.match(/^相手の手札を見て、その中にあるトレーナーズの枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(handTrainers&&printed===handTrainers[1]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['REVEAL','DAMAGE'],metric:'opponentHandTrainerCount',type:null,unit:Number(handTrainers[1]),base:0,sharedWording:true};
+ const basicMove=text.match(/^このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。$/);
+ if(basicMove&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_BASIC_ENERGY_MOVE',commands:['DAMAGE','MOVE_ENERGY'],sharedWording:true};
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};
@@ -376,6 +382,13 @@ function massSharedPlan(entry,kind,text){
   if(namedSupporter)return searchPlan('supporter',parseInt(namedSupporter[2],10),{nameContains:namedSupporter[1]});
   if(teamEnergy)return searchPlan('pokemonOrBasicEnergy',Number(teamEnergy[3]),{team:teamEnergy[1],energyType:teamEnergy[2]});
   if(basicOrEnergy)return searchPlan('pokemonOrBasicEnergy',1,{type:basicOrEnergy[1],stage:0,energyType:basicOrEnergy[2]});
+  const combinedTrainer=body.match(/^自分の山札から(サポートとスタジアム|スタジアムとエネルギー)を(合計([2-9])枚まで|1枚ずつ)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const differentBasic=body.match(/^自分の山札から、それぞれちがうタイプの基本エネルギーを([2-8]枚まで|好きなだけ)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const twoBasic=body.match(/^自分の山札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」と「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const searchMany=(category,limit,extra)=>({mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly,sharedWording:true,...extra});
+  if(combinedTrainer)return searchMany('categorySet',combinedTrainer[3]?Number(combinedTrainer[3]):2,{categories:combinedTrainer[1]==='サポートとスタジアム'?['supporter','stadium']:['stadium','energy'],...(combinedTrainer[3]?{}:{distinctBy:'category'})});
+  if(differentBasic)return searchMany('basicEnergy',differentBasic[1]==='好きなだけ'?8:parseInt(differentBasic[1],10),{distinctBy:'energyType'});
+  if(twoBasic&&twoBasic[1]!==twoBasic[2])return searchMany('basicEnergy',2,{energyTypes:[twoBasic[1],twoBasic[2]],distinctBy:'energyType'});
   const transfer=body.match(/^自分の(山札|トラッシュ)から(ポケモン|トレーナーズ|グッズ|サポート|スタジアム|エネルギー|基本エネルギー|「ポケモンのどうぐ」|[12]進化ポケモン|たねポケモン|\[(?:草|炎|水|雷|超|闘|悪|鋼|竜|無色)\](?:タイプの)?(?:たね|進化)?ポケモン|「基本\[(?:草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」|「(?:ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」)を(1枚|[2-9]枚まで)選び、相手に見せて、(手札に加える。|山札にもどして切る。)(そして山札を切る。)?$/);
   if(transfer){
    const [,source,filter,count,dest,shuffle]=transfer,zone=source==='山札'?'deck':'discard',destination=dest.startsWith('手札')?'hand':'deck';
@@ -524,6 +537,9 @@ function plan(entry,kind){
  const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
   return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
+ const topDiscard=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中からカードを([1-9])枚選び、手札に加える。残りのカードはトラッシュする。$/);
+ if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topDiscard&&Number(topDiscard[2])<=Number(topDiscard[1]))
+  return {mechanic:'TRAINER_TOP_SELECT_DISCARD',commands:['SEARCH_DECK','ADD_TO_HAND','DISCARD'],limit:Number(topDiscard[1]),amount:Number(topDiscard[2]),sharedWording:true};
  const topTyped=generic.match(/^自分の山札を上から([1-9]\d?)枚見て、その中から\[([草炎水雷超闘悪鋼])\]ポケモンと「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([1-9])枚まで選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&topTyped&&topTyped[2]===topTyped[3]&&Number(topTyped[4])<=Number(topTyped[1]))
   return {mechanic:'TRAINER_TOP_TYPED_SEARCH',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],limit:Number(topTyped[1]),type:topTyped[2],amount:Number(topTyped[4]),sharedWording:true};
