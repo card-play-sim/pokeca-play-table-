@@ -397,6 +397,13 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='PASSIVE_FULL_HP_SURVIVAL':
+    defender=before['players'][1]['active'];survivor=after['players'][1]['active']
+    assert defender['damage']==0 and survivor['id']==defender['id']
+    assert survivor['hp']-survivor['damage']==10
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>=defender['hp'] for ev in events)
+    assert any(ev.get('details',{}).get('mechanic')=='PASSIVE_FULL_HP_SURVIVAL' and ev['details'].get('effectId')==f['e']['effectId'] for ev in events)
+    assert before['players'][0]['prizes']==after['players'][0]['prizes']
    if m=='PASSIVE_TYPED_ATTACK_IMMUNITY':
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==before['players'][1]['active']['id'] and ev['details'].get('amount')==0 for ev in events)
     assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
