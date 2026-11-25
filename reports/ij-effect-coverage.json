@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 481,
-      "missing": 389
+      "connected": 483,
+      "missing": 387
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 480,
+      "CONNECTED_UNTESTED": 482,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 341,
+      "ENGINE_CONNECTION_REQUIRED": 339,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -16139,8 +16139,7 @@
       "name": "ゴースト",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49681.json"
     },
     {
@@ -19340,8 +19339,7 @@
       "name": "ゴースト",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50828.json"
     },
     {
@@ -21595,8 +21593,8 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1160,
-        "MECHANIC_REQUIRED": 702,
+        "ENGINE_CONNECTED": 1164,
+        "MECHANIC_REQUIRED": 698,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
       "I": {
@@ -21608,8 +21606,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 480,
-        "MECHANIC_REQUIRED": 383,
+        "ENGINE_CONNECTED": 482,
+        "MECHANIC_REQUIRED": 381,
         "EVIDENCE_UNVERIFIED": 4,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
@@ -21619,7 +21617,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3357,
-    "unconnected": 1716
+    "engineConnected": 3363,
+    "unconnected": 1710
   }
 }

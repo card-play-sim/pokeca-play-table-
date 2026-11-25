@@ -19040,6 +19040,94 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45910",
+      "name": "イベルタル",
+      "deckName": "イベルタル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45910",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045910_P_IBERUTARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むしばむかぜ",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "ダメカンがのっている相手のポケモン全員に、それぞれダメカンを2個のせる。",
+          "effectId": "reference-45910-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "damagedOpponent",
+            "amount": 2,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "はかいビーム",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "コインを1回投げオモテなら、相手のバトルポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-45910-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_COIN_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "COIN_FLIP",
+              "DISCARD"
+            ],
+            "specialOnly": false
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45910.json",
+        "sha256": "6afb468445b0934c6d6cb14271554b83cc8cb07f5b1818e9cba516ba888ef944",
+        "htmlSha256": "6afb468445b0934c6d6cb14271554b83cc8cb07f5b1818e9cba516ba888ef944",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45916",
       "name": "ゾウドウ",
       "deckName": "ゾウドウ",
@@ -198602,6 +198690,390 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46392",
+      "name": "デスカーン",
+      "deckName": "デスカーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46392",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046392_P_DESUKAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "めいふのおきて",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "おたがいの特性を持つポケモン全員に、それぞれダメカンを6個のせる。",
+          "effectId": "reference-46392-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "bothAbility",
+            "amount": 6,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ホロウショット",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "",
+          "effectId": "reference-46392-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "デスマス",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46392.json",
+        "sha256": "f30804818a26a774f6774b3261ee0875ad654cadcd7ffb72251895a90c056759",
+        "htmlSha256": "f30804818a26a774f6774b3261ee0875ad654cadcd7ffb72251895a90c056759",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49681",
+      "name": "ゴースト",
+      "deckName": "ゴースト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49681",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049681_P_GOSUTO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のろう",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "相手のバトルポケモンに、ダメカンを3個のせる。",
+          "effectId": "reference-49681-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "active",
+            "amount": 3,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ゴース",
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49681.json",
+        "sha256": "96d4a4cbd5cbbc97b1e2e1e655e6f61f5f94224a8cfcf123fae3e6bb1c234173",
+        "htmlSha256": "96d4a4cbd5cbbc97b1e2e1e655e6f61f5f94224a8cfcf123fae3e6bb1c234173",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50828",
+      "name": "ゴースト",
+      "deckName": "ゴースト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50828",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050828_P_GOSUTO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のろう",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "相手のバトルポケモンに、ダメカンを3個のせる。",
+          "effectId": "reference-50828-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "active",
+            "amount": 3,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ゴース",
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50828.json",
+        "sha256": "a8216c78db4da0adf8e26bf2535e30d4b29d315b9ab363dd2a5ad668a29db041",
+        "htmlSha256": "a8216c78db4da0adf8e26bf2535e30d4b29d315b9ab363dd2a5ad668a29db041",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49037",
+      "name": "デスカーン",
+      "deckName": "デスカーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49037",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049037_P_DESUKAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "めいふのおきて",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "おたがいの特性を持つポケモン全員に、それぞれダメカンを6個のせる。",
+          "effectId": "reference-49037-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "bothAbility",
+            "amount": 6,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ホロウショット",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "",
+          "effectId": "reference-49037-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "デスマス",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49037.json",
+        "sha256": "959ab324b03e92ce79153ad0650139d95b68e4cc965e4a8546e282c7ecf2c8ac",
+        "htmlSha256": "959ab324b03e92ce79153ad0650139d95b68e4cc965e4a8546e282c7ecf2c8ac",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49196",
+      "name": "イベルタル",
+      "deckName": "イベルタル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49196",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049196_P_IBERUTARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むしばむかぜ",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "ダメカンがのっている相手のポケモン全員に、それぞれダメカンを2個のせる。",
+          "effectId": "reference-49196-attack-0",
+          "plan": {
+            "mechanic": "MASS_PLACE_COUNTERS",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "target": "damagedOpponent",
+            "amount": 2,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "はかいビーム",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "コインを1回投げオモテなら、相手のバトルポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-49196-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_COIN_DISCARD_DEFENDER_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "COIN_FLIP",
+              "DISCARD"
+            ],
+            "specialOnly": false
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49196.json",
+        "sha256": "806f28b3db0774bc7260abb65cdafc4f741da8b61e0b7d7c6935b6f4117f2834",
+        "htmlSha256": "806f28b3db0774bc7260abb65cdafc4f741da8b61e0b7d7c6935b6f4117f2834",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -199882,11 +200354,6 @@
     },
     {
       "officialCardId": "45908",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45910",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
