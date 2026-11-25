@@ -1220,7 +1220,7 @@ function verifyCase(t, e) {
     }
     if(q.mode==='resetBothCoin'){
       const flips=after.history.slice(before.history.length).filter(ev=>ev.details?.command==='COIN_FLIP'&&typeof ev.details.heads==='boolean');
-      assert.equal(flips.length,2);assert.deepEqual(flips.map(ev=>ev.player),[own.id,other.id]);
+      assert.equal(flips.length,2);assert.deepEqual(Array.from(flips,ev=>ev.player),[own.id,other.id]);
       checkReset({...own,hand:own.hand.filter(c=>c.id!==t.sourceId)},flips[0].details.heads?q.amount:q.tails);
       checkReset(other,flips[1].details.heads?q.amount:q.tails);
     }
