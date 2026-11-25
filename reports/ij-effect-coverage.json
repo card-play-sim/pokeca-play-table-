@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1079,
-      "missing": 623
+      "connected": 1087,
+      "missing": 615
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1073,
-      "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 535,
+      "CONNECTED_UNTESTED": 1081,
+      "MECHANIC_REQUIRED": 83,
+      "ENGINE_CONNECTION_REQUIRED": 528,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -3046,8 +3046,7 @@
       "name": "トルネロス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47700.json"
     },
     {
@@ -4242,8 +4241,7 @@
       "name": "トルネロス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48070.json"
     },
     {
@@ -6748,8 +6746,7 @@
       "name": "トルネロス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49326.json"
     },
     {
@@ -10990,8 +10987,7 @@
       "name": "エルフーンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47627.json"
     },
     {
@@ -12635,8 +12631,7 @@
       "name": "エルフーンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48071.json"
     },
     {
@@ -12679,8 +12674,7 @@
       "name": "エルフーンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48079.json"
     },
     {
@@ -14624,8 +14618,7 @@
       "name": "エルフーンex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48760.json"
     },
     {
@@ -19440,8 +19433,7 @@
       "name": "トルネロス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50842.json"
     },
     {
@@ -21601,8 +21593,8 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1079,
-        "MECHANIC_REQUIRED": 617,
+        "ENGINE_CONNECTED": 1087,
+        "MECHANIC_REQUIRED": 609,
         "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21619,7 +21611,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3357,
-    "unconnected": 1716
+    "engineConnected": 3365,
+    "unconnected": 1708
   }
 }

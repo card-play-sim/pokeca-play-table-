@@ -1429,30 +1429,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_725598E160110E582D08",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "47627",
-        "48071",
-        "48079",
-        "48760"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47627.json",
-        "data/effect-extensions/evidence/48071.json",
-        "data/effect-extensions/evidence/48079.json",
-        "data/effect-extensions/evidence/48760.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_77EA86F355BB0A1D0A93",
       "category": "item",
       "effectKind": "item",
@@ -1852,32 +1828,6 @@
         "data/effect-extensions/evidence/47902.json",
         "data/effect-extensions/evidence/48714.json",
         "data/effect-extensions/evidence/49455.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B85651B9E7AB3B5F4A43",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
-      "printedDamage": "100",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47700",
-        "48070",
-        "49326",
-        "50842"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47700.json",
-        "data/effect-extensions/evidence/48070.json",
-        "data/effect-extensions/evidence/49326.json",
-        "data/effect-extensions/evidence/50842.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -18310,5 +18260,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1716
+  "unfinishedPrints": 1708
 }
