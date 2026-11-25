@@ -414,6 +414,10 @@ function requests(g,actor,card,effect){
   const count=effect.plan.counterCount??6;
   add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),count,count);
  }
+ if(m==='ATTACK_NAMED_DISCARD_BENCH'){
+  const candidates=p.discard.filter(c=>c.kind==='pokemon'&&record(c)?.facts.basic&&record(c).name===effect.plan.name);
+  cardRequest('cards',candidates,0,Math.min(effect.plan.limit,5-p.bench.length,candidates.length));
+ }
  if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'){
   const candidates=p.deck.filter(c=>attackSearchCandidate(c,effect.plan));
   deckRequest('cards',candidates,0,Math.min(effect.plan.limit,5-p.bench.length,candidates.length));
@@ -923,6 +927,20 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'ATTACK_NAMED_DISCARD_BENCH':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const chosen=ids('cards');
+   assert(chosen.length<=Math.min(plan.limit,5-p.bench.length)&&new Set(chosen).size===chosen.length,'DISCARD_BENCH_SELECTION');
+   for(const ident of chosen){
+    const index=p.discard.findIndex(c=>id(c)===ident&&c.kind==='pokemon'&&record(c)?.facts.basic&&record(c).name===plan.name);
+    assert(index>=0,'DISCARD_BENCH_WRONG_PRINT');
+    const mon=p.discard.splice(index,1)[0];
+    Object.assign(mon,{cardId:id(mon),damage:0,energies:[],energyCards:[],tools:[],enteredTurn:g.turnNumber});
+    p.bench.push(mon);onBench(g,p,mon,false);
+    event(g,actor,'BENCH_FROM_ZONE',{cardIds:[ident],fromZone:'discard',targetInstanceId:ident});
+   }
+   break;
+  }
   case 'TRAINER_SWITCH_OR_EX_V_BOOST':
    if(ids('mode')[0]==='switch')chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
    else p.referenceExVDamageBoost={turn:g.turnNumber,amount:plan.amount};
