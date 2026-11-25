@@ -270,6 +270,11 @@ function handFlowAvailable(p,o,plan){
  if(plan.mode==='rocketLimit')return p.deck.length>0&&p.hand.length<(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount);
  return true;
 }
+function energyCountPool(p,card,plan){
+ if(plan.zone==='hand')return p.hand.filter(c=>c.kind==='energy'&&(!plan.basic||basicEnergy(c))&&(!plan.type||c.energyType===plan.type));
+ const holders=plan.zone==='self'?[card]:plan.zone==='bench'?p.bench:field(p);
+ return holders.flatMap(mon=>mon.energyCards.filter(c=>(!plan.basic||basicEnergy(c))&&(!plan.type||energyUnits({...mon,energyCards:[c]}).some(unit=>unit.includes(plan.type)))));
+}
 function massHealTargets(p,plan){
  return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
 }
@@ -351,6 +356,10 @@ function requests(g,actor,card,effect){
   const eligible=p.hand.filter(basicEnergy),count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
   if(effect.plan.target==='own')cardRequest('attachTo',own,count,count);
+ }
+ if(m==='MASS_ENERGY_COUNT_DISCARD'){
+  const pool=energyCountPool(p,card,effect.plan),max=Math.min(effect.plan.limit,pool.length);
+  if(!effect.plan.all)cardRequest('energy',pool,0,max);
  }
  if(m==='ATTACK_DISCARD_FIELD_BASIC'){
   const eligible=own.flatMap(mon=>(mon.energyCards||[]).filter(basicEnergy));
@@ -970,6 +979,14 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,plan.base+(6-o.prizes)*plan.unit);
    command(g,actor,{command:'DAMAGE',amount:plan.recoil},{targetIds:[id(card)]});
    break;
+  case 'MASS_ENERGY_COUNT_DISCARD':{
+   const pool=energyCountPool(p,card,plan),chosen=plan.all?pool.map(id):ids('energy');
+   assert(chosen.length<=plan.limit&&chosen.every(ident=>pool.some(c=>id(c)===ident)),'ENERGY_COUNT_DISCARD_CHANGED');
+   if(plan.zone==='hand'){
+    for(const ident of chosen){const index=p.hand.findIndex(c=>id(c)===ident);p.discard.push(p.hand.splice(index,1)[0]);event(g,actor,'DISCARD',{cardIds:[ident],fromZone:'hand'});}
+   }else discardSelectedAttachment(g,actor,p,field(p),chosen);
+   damage(g,actor,o.active,plan.base+chosen.length*plan.unit);break;
+  }
   case 'ATTACK_DISCARD_FIELD_BASIC': {
    const energy=ids('energy');
    discardSelectedAttachment(g,actor,p,field(p),energy);
