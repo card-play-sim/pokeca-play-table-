@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/issue122-scoped-counter-effects.yml'
       - 'tests/test_control_013_browser.py'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
   workflow_dispatch:
 permissions:
   contents: write

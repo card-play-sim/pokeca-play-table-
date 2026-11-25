@@ -1662,7 +1662,7 @@ function verifyCase(t, e) {
     const ids=plan.target==='all'?[other.active,...other.bench].map(c=>c.id):plan.target==='active'?[other.active.id]:plan.target==='damagedOpponent'?[other.active,...other.bench].filter(c=>c.damage>0).map(c=>c.id):plan.target==='bothAbility'?all.filter(c=>E.getReferenceEffectRecord(c).abilities.length>0).map(c=>c.id):action.selections.target;
     if(!ids.length)return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_POSITIVE_FIXTURE'};
     if(plan.target==='benchChoice')assert(ids.every(id=>other.bench.some(c=>c.id===id)));
-    assert.deepEqual(effectEvents.filter(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.counterCount===plan.amount&&!ev.reference).map(ev=>ev.targetInstanceId).sort(),ids.slice().sort());
+    assert.deepEqual(Array.from(effectEvents.filter(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.counterCount===plan.amount&&!ev.reference),ev=>ev.targetInstanceId).sort(),Array.from(ids).sort());
     if(plan.target==='damagedOpponent'||plan.target==='bothAbility'){
       const universe=plan.target==='damagedOpponent'?[other.active,...other.bench]:all;
       if(!universe.some(c=>!ids.includes(c.id)))return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_NEGATIVE_FIXTURE'};
