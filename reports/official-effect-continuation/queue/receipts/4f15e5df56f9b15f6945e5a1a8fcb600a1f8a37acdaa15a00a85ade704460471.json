@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
   "taskFingerprint": "82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "0721ffb0-1b88-482a-9155-b8e9adca8502",
+  "executionFingerprint": "f59bb9249c6c131a704ac6fee5cf860851d362a032b38b4247fb5b6a380cbf58",
+  "attemptId": "847db18e-5359-41a9-b941-775cd1fd2a38",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -33,8 +33,20 @@
       },
       {
         "slot": "45843:attack:ハンマーウィップ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45725:attack:アクアスラッシュ:0",
@@ -150,8 +162,20 @@
       },
       {
         "slot": "47632:attack:エメラルドブレード:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "47766:attack:そこぢから:1",
@@ -257,5 +281,5 @@
       }
     ]
   },
-  "checksum": "3fb0440c20fd17ab23cd87c9e2a85496ed7dd89b3b08d8ba82610135a22dabf2"
+  "checksum": "bc28808c2d36c11299097818f1ba29ed0df6963fccfc3488390889eaddc7f15a"
 }

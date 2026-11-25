@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_F152C61C33A3632C:f39137b5c7b76832c26ab8adf74c74574a7151f15c411eb0c6b7fd9524876362",
   "taskFingerprint": "f39137b5c7b76832c26ab8adf74c74574a7151f15c411eb0c6b7fd9524876362",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "3cd5debb-a6e1-4776-a89e-7df1744c944e",
+  "executionFingerprint": "f59bb9249c6c131a704ac6fee5cf860851d362a032b38b4247fb5b6a380cbf58",
+  "attemptId": "795667d3-705b-4525-a501-069e611095b3",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -16,20 +16,50 @@
       },
       {
         "slot": "46343:attack:リベンジクラッシュ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46642:attack:リベンジクラッシュ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46653:attack:リベンジクラッシュ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "62a62cd9ac5101137adee1b0c045e44d3c1d3ae18513626a3948bfe2fc0a626f"
+  "checksum": "fdbab0b73a80d8a3b8134caf355b60db6d18be146c902657bef54c65daf67c5a"
 }
