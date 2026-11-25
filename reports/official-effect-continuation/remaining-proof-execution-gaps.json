@@ -1,0 +1,336 @@
+{
+  "baseCommit": "e838cead81d1ab5afdfe6ba7d1d0b54d0b9c8202",
+  "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
+  "gaps": [
+    {
+      "id": "46304",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46304:attack:クロスブレイカー:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47295",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47295:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47295-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47295-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45628",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45628:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45628-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45628-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45679",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45679:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45679-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45679-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45686",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45686:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45686-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45686-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45689",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45689:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45689-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-45689-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "46795",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46795:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-46795-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-46795-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47146",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47146:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47146-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-47146-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45261",
+      "kind": "attack",
+      "index": 1,
+      "slot": "45261:attack:クロスブレイカー:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45561",
+      "kind": "attack",
+      "index": 1,
+      "slot": "45561:attack:クロスブレイカー:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45758",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45758:attack:むれでかる:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45879",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45879:attack:だんけつのつばさ:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_PUBLIC_COUNT_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46713",
+      "kind": "attack",
+      "index": 0,
+      "slot": "46713:attack:フラッシュスピア:0",
+      "status": "BLOCKED",
+      "reason": "NO_ENERGY_COUNT_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "49664",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49664:attack:ダブルイーター:0",
+      "status": "BLOCKED",
+      "reason": "NO_ENERGY_COUNT_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "50277",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50277:attack:スチールカッター:0",
+      "status": "BLOCKED",
+      "reason": "NO_ENERGY_COUNT_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "50377",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50377:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50525",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50525:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47453",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47453:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47484",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47484:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47523",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47523:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47532",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47532:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47591",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47591:ability:がんじょう:0",
+      "status": "BLOCKED",
+      "reason": "NO_SURVIVAL_EVOLUTION_PARENT",
+      "details": null
+    },
+    {
+      "id": "47653",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47653:attack:ほうでん:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47960",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47960:ability:がんじょう:0",
+      "status": "BLOCKED",
+      "reason": "NO_SURVIVAL_EVOLUTION_PARENT",
+      "details": null
+    },
+    {
+      "id": "48026",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48026:attack:ほうでん:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48698",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "48698:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "49150",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49150:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49447",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "49447:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47130",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47130:attack:フラッシュスピア:0",
+      "status": "BLOCKED",
+      "reason": "NO_ENERGY_COUNT_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "48954",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48954:attack:フラッシュスピア:0",
+      "status": "BLOCKED",
+      "reason": "NO_ENERGY_COUNT_RESOURCE",
+      "details": null
+    },
+    {
+      "id": "49208",
+      "kind": "attack",
+      "index": 1,
+      "slot": "49208:attack:クロスブレイカー:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+      "details": {
+        "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "49341",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49341:ability:ろうれんのわざ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-49341-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n",
+      "details": {
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n... Skipped lines\n{\n  attackUsed: false,\n  effectStates: [],\n  history: [\n    {\n      details: {\n        cardIds: [\n          'reference-0-47'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    },\n    {\n      details: {\n        cardIds: [\n          'reference-0-48'\n        ],\n        command: 'DISCARD'\n      },\n      player: 'you',\n      turnNumber: 40,\n      type: 'effect_command'\n    }\n  ],\n  manualPrizeSelection: true,\n  mode: 'match',\n  phase: 'main',\n  players: [\n    {\n      active: {\n        abilities: [\n          {\n            effectId: 'reference-49341-ability-0',\n            name: 'ろうれんのわざ',\n            plan: {\n              attackName: 'ブラッドムーン',\n              commands: [\n                'MODIFY_ATTACK_COST'\n              ],\n              mechanic: 'PASSIVE_NAMED_PRIZE_DISCOUNT',\n              sharedWording: true\n            },\n            text: '相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。'\n          }\n        ],\n        attacks: [\n          {\n...}\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1890:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    }
+  ]
+}

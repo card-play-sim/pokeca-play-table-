@@ -1,0 +1,24 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_DA131EA520C39BD7:4b0a40565e0f3903449f1f6751190dd1af6738524686923488031591f1656a0c",
+  "taskFingerprint": "4b0a40565e0f3903449f1f6751190dd1af6738524686923488031591f1656a0c",
+  "executionFingerprint": "c71582aa4fc0556ea8c6711a0f3943546b300ff68eb83640ea23d7f8f3c55623",
+  "attemptId": "2400be6a-7fbd-4c70-821d-0e35d4eed9a8",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "46304:attack:クロスブレイカー:1",
+        "status": "FAILED",
+        "reason": "The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n",
+        "details": {
+          "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!after.players[0].discard.some(c=>c.id===excluded.id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1271:9)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2646:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        }
+      }
+    ]
+  },
+  "checksum": "cfee9b39c5e2284eb93b0afae7b122c63da9a9324c302a997400c569e4a7ef5e"
+}

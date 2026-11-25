@@ -191558,6 +191558,351 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48353",
+      "name": "メガリザードンXex",
+      "deckName": "メガリザードンXex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48353",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048353_P_MRIZADONXEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "インフェルノX",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "90×",
+          "text": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
+          "effectId": "reference-48353-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "field",
+            "type": "炎",
+            "basic": false,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 90,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 360,
+        "evolvesFrom": "リザード",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48353.json",
+        "sha256": "ca7df2624b11b17a06ba1dcd007025886570bbc31c1a03ed8e9f7266df96b8e9",
+        "htmlSha256": "ca7df2624b11b17a06ba1dcd007025886570bbc31c1a03ed8e9f7266df96b8e9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48500",
+      "name": "メガリザードンXex",
+      "deckName": "メガリザードンXex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48500",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048500_P_MRIZADONXEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "インフェルノX",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "90×",
+          "text": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
+          "effectId": "reference-48500-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "field",
+            "type": "炎",
+            "basic": false,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 90,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 360,
+        "evolvesFrom": "リザード",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48500.json",
+        "sha256": "dbed2212cccd5c790ac3c28f830226b4f7d358de3068e47a1a356fcb0d768d71",
+        "htmlSha256": "dbed2212cccd5c790ac3c28f830226b4f7d358de3068e47a1a356fcb0d768d71",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48516",
+      "name": "メガリザードンXex",
+      "deckName": "メガリザードンXex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48516",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048516_P_MRIZADONXEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "インフェルノX",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "90×",
+          "text": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
+          "effectId": "reference-48516-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "field",
+            "type": "炎",
+            "basic": false,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 90,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 360,
+        "evolvesFrom": "リザード",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48516.json",
+        "sha256": "bb505721fb4ea67b3cbd0528d201251473693cdfa43ecf4ca6d6d1e632938c33",
+        "htmlSha256": "bb505721fb4ea67b3cbd0528d201251473693cdfa43ecf4ca6d6d1e632938c33",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48522",
+      "name": "メガリザードンXex",
+      "deckName": "メガリザードンXex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48522",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048522_P_MRIZADONXEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "インフェルノX",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "90×",
+          "text": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
+          "effectId": "reference-48522-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "field",
+            "type": "炎",
+            "basic": false,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 90,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 360,
+        "evolvesFrom": "リザード",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48522.json",
+        "sha256": "41dfea9a861a191f94fbe6b209ff6d79016340491f91941555d76b427424f77e",
+        "htmlSha256": "41dfea9a861a191f94fbe6b209ff6d79016340491f91941555d76b427424f77e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49983",
+      "name": "メガリザードンXex",
+      "deckName": "メガリザードンXex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49983",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049983_P_MRIZADONXEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "インフェルノX",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "90×",
+          "text": "自分の場のポケモンについている[炎]エネルギーを好きなだけトラッシュし、その枚数×90ダメージ。",
+          "effectId": "reference-49983-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "field",
+            "type": "炎",
+            "basic": false,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 90,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 360,
+        "evolvesFrom": "リザード",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49983.json",
+        "sha256": "d1574e5a21990bf9c73126e80ef5973a763bc6aacee22d0deaceca69a9f3b826",
+        "htmlSha256": "d1574e5a21990bf9c73126e80ef5973a763bc6aacee22d0deaceca69a9f3b826",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
