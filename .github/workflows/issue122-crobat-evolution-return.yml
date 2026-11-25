@@ -1,4 +1,4 @@
-name: Issue122 Crobat legal evolution and optional return family
+name: Issue122 Crobat and Golbat complete legal evolution family
 on:
   push:
     branches: [battle/issue122-crobat-evolution-return-20261125]
@@ -42,6 +42,8 @@ jobs:
           node tests/issue122-counter-picker-ui.test.cjs
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
+          node scripts/run-atomic-official-battle-intake.cjs
+          # The newly qualified first evolution may unlock its dependent stage two.
           node scripts/run-atomic-official-battle-intake.cjs
       - name: Require all 310 independently qualified IDs and exact published records
         run: |
