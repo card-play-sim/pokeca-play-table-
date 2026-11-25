@@ -482,6 +482,13 @@ async def main():
     assert {c['id'] for c in old['energyCards']}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
+    if plan.get('requiresTera'):
+     assert before['players'][0]['active']['referenceEvolutionWindow']==before['referenceActionSequence']
+     own=before['players'][0]
+     assert await page.evaluate("cards=>cards.some(c=>Pokeca.getReferenceEffectRecord(c)?.facts.teraBenchProtection===true)",[own['active'],*own['bench']]), 'ACTUAL_TERA_REQUIRED'
+     assert own['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
+     assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",own['active'])==r['officialCardId']
+     assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
