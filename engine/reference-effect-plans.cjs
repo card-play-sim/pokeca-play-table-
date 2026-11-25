@@ -701,7 +701,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_ROCKET_SWITCH_BOTH',commands:['SWITCH','FORCE_SWITCH'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。')
   return {mechanic:'SUPPORTER_BASIC_SWITCH_CONFUSE',commands:['FORCE_SWITCH','STATUS_CONDITION'],sharedWording:true};
- const switchHeal=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「([1-9]\\d{0,2})」回復する。$/);
+ const switchHeal=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&switchHeal)
   return {mechanic:'SUPPORTER_SWITCH_EX_HEAL',commands:['SWITCH','HEAL'],amount:Number(switchHeal[1]),sharedWording:true};
  const switchDraw=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
