@@ -196806,6 +196806,409 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46713",
+      "name": "サンダースex",
+      "deckName": "サンダースex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46713",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046713_P_SANDASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フラッシュスピア",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "60+",
+          "text": "のぞむなら、自分のベンチポケモンについている基本エネルギーを2枚までトラッシュし、その枚数×90ダメージ追加。",
+          "effectId": "reference-46713-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "bench",
+            "type": null,
+            "basic": true,
+            "limit": 2,
+            "all": false,
+            "base": 60,
+            "unit": 90,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ドラバイト",
+          "cost": [
+            "炎",
+            "水",
+            "雷"
+          ],
+          "damage": "280",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-46713-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "イーブイ",
+        "retreatCost": 0,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46713.json",
+        "sha256": "59c8abe1d3c60967f75f1cf176c6a908b2ae15b3619c59ed98e32f633bf5f29f",
+        "htmlSha256": "59c8abe1d3c60967f75f1cf176c6a908b2ae15b3619c59ed98e32f633bf5f29f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49664",
+      "name": "クチート",
+      "deckName": "クチート",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49664",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049664_P_KUCHITO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダブルイーター",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "60×",
+          "text": "自分の手札からエネルギーを2枚までトラッシュし、その枚数×60ダメージ。",
+          "effectId": "reference-49664-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "hand",
+            "type": null,
+            "basic": false,
+            "limit": 2,
+            "all": false,
+            "base": 0,
+            "unit": 60,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49664.json",
+        "sha256": "c01aae458ac9323b7e61cbb683c618347550948ce233345e6b3b4100c9f00273",
+        "htmlSha256": "c01aae458ac9323b7e61cbb683c618347550948ce233345e6b3b4100c9f00273",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50277",
+      "name": "エアームド",
+      "deckName": "エアームド",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50277",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050277_P_EAMUDO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スチールカッター",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "40×",
+          "text": "自分の手札から「基本[鋼]エネルギー」を2枚までトラッシュし、その枚数×40ダメージ。",
+          "effectId": "reference-50277-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "hand",
+            "type": "鋼",
+            "basic": true,
+            "limit": 2,
+            "all": false,
+            "base": 0,
+            "unit": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50277.json",
+        "sha256": "fd9d6c96825f0fc5bde404276994616c0acf2d4a120d4e4fc9621a260746d6f4",
+        "htmlSha256": "fd9d6c96825f0fc5bde404276994616c0acf2d4a120d4e4fc9621a260746d6f4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47130",
+      "name": "サンダースex",
+      "deckName": "サンダースex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47130",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/047130_P_SANDASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フラッシュスピア",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "60+",
+          "text": "のぞむなら、自分のベンチポケモンについている基本エネルギーを2枚までトラッシュし、その枚数×90ダメージ追加。",
+          "effectId": "reference-47130-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "bench",
+            "type": null,
+            "basic": true,
+            "limit": 2,
+            "all": false,
+            "base": 60,
+            "unit": 90,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ドラバイト",
+          "cost": [
+            "炎",
+            "水",
+            "雷"
+          ],
+          "damage": "280",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-47130-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "イーブイ",
+        "retreatCost": 0,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47130.json",
+        "sha256": "39b5d71f66a88c267f85a231cdb1562b234d142e72f2e840dde0f07794d01a5c",
+        "htmlSha256": "39b5d71f66a88c267f85a231cdb1562b234d142e72f2e840dde0f07794d01a5c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48954",
+      "name": "サンダースex",
+      "deckName": "サンダースex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48954",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048954_P_SANDASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フラッシュスピア",
+          "cost": [
+            "雷",
+            "無色"
+          ],
+          "damage": "60+",
+          "text": "のぞむなら、自分のベンチポケモンについている基本エネルギーを2枚までトラッシュし、その枚数×90ダメージ追加。",
+          "effectId": "reference-48954-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "bench",
+            "type": null,
+            "basic": true,
+            "limit": 2,
+            "all": false,
+            "base": 60,
+            "unit": 90,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ドラバイト",
+          "cost": [
+            "炎",
+            "水",
+            "雷"
+          ],
+          "damage": "280",
+          "text": "次の自分の番、このポケモンはワザが使えない。",
+          "effectId": "reference-48954-attack-1",
+          "plan": {
+            "mechanic": "NO_NEXT_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "イーブイ",
+        "retreatCost": 0,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48954.json",
+        "sha256": "3a852f9a36d7152d3446bd768cb0ecaa733a171afa918b84ed6522c38156b83c",
+        "htmlSha256": "3a852f9a36d7152d3446bd768cb0ecaa733a171afa918b84ed6522c38156b83c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

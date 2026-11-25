@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 479,
-      "missing": 391
+      "connected": 481,
+      "missing": 389
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 478,
+      "CONNECTED_UNTESTED": 480,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 343,
+      "ENGINE_CONNECTION_REQUIRED": 341,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -6898,8 +6898,7 @@
       "name": "クチート",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49664.json"
     },
     {
@@ -7982,8 +7981,7 @@
       "name": "エアームド",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50277.json"
     },
     {
@@ -21604,8 +21602,8 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1145,
-        "ENGINE_CONNECTION_REQUIRED": 7,
+        "ENGINE_CONNECTED": 1148,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "MECHANIC_REQUIRED": 712
       },
       "I": {
@@ -21617,10 +21615,10 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 478,
+        "ENGINE_CONNECTED": 480,
         "MECHANIC_REQUIRED": 383,
-        "ENGINE_CONNECTION_REQUIRED": 4,
-        "EVIDENCE_UNVERIFIED": 4
+        "EVIDENCE_UNVERIFIED": 4,
+        "ENGINE_CONNECTION_REQUIRED": 2
       },
       "basicEnergyException": {
         "total": 638,
@@ -21628,7 +21626,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3333,
-    "unconnected": 1740
+    "engineConnected": 3338,
+    "unconnected": 1735
   }
 }
