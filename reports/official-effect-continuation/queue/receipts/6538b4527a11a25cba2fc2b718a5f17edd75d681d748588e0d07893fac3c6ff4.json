@@ -1,35 +1,74 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_4FB9FE5EB3793BBA:e49eee6750968e94b17cddd5bdc0b4829c9ee5dc30fd7bf21476d63e8c797877",
   "taskFingerprint": "e49eee6750968e94b17cddd5bdc0b4829c9ee5dc30fd7bf21476d63e8c797877",
-  "executionFingerprint": "8f56d4558a26e9329ebfed766b5a35f0d80e2e69c3ee331fbb6a84e47bf6328d",
-  "attemptId": "9814f8ed-3de4-49ad-9b6b-1a40ba7241bd",
-  "status": "BLOCKED",
+  "executionFingerprint": "6c984a55eec7b05606970c1bc2c3438c68f6c75f8442d011e00d9020bd744043",
+  "attemptId": "396d1a6b-6016-4873-937a-22fbaee09dfd",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45911:attack:クレイジーチェーン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONTEXT_ATTACK_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46056:attack:クレイジーチェーン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONTEXT_ATTACK_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46064:attack:クレイジーチェーン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONTEXT_ATTACK_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46763:attack:クレイジーチェーン:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "CONTEXT_ATTACK_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "8103f17baa334fec480fc674d567e525fc1a4976532157021295f3943b3db782"
+  "checksum": "26f4ca33e40bc6957ad87047a7673abaf20b8b1691841058f06c9d57b12ea32a"
 }
