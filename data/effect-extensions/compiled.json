@@ -196806,6 +196806,491 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46266",
+      "name": "ブリジュラスex",
+      "deckName": "ブリジュラスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46266",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046266_P_BURIJIXYURASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "メタルディフェンダー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "220",
+          "text": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
+          "effectId": "reference-46266-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "steps": [
+              {
+                "op": "noWeakness"
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ごうきんビルド",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモンに好きなようにつける。",
+          "effectId": "reference-46266-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "discard",
+            "type": "鋼",
+            "limit": 2,
+            "target": "own",
+            "holderType": "鋼",
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46266.json",
+        "sha256": "5877b37f8f3e826c118a0235f3ae80d57495c67ab2c3c387d91c567fb57c36b7",
+        "htmlSha256": "5877b37f8f3e826c118a0235f3ae80d57495c67ab2c3c387d91c567fb57c36b7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46326",
+      "name": "ブリジュラスex",
+      "deckName": "ブリジュラスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46326",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046326_P_BURIJIXYURASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "メタルディフェンダー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "220",
+          "text": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
+          "effectId": "reference-46326-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "steps": [
+              {
+                "op": "noWeakness"
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ごうきんビルド",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモンに好きなようにつける。",
+          "effectId": "reference-46326-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "discard",
+            "type": "鋼",
+            "limit": 2,
+            "target": "own",
+            "holderType": "鋼",
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46326.json",
+        "sha256": "264e881fc4f26c9d00f3fece30ef683b925cf5e26e834c6d885c026cb8facbf2",
+        "htmlSha256": "264e881fc4f26c9d00f3fece30ef683b925cf5e26e834c6d885c026cb8facbf2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46334",
+      "name": "ブリジュラスex",
+      "deckName": "ブリジュラスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46334",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046334_P_BURIJIXYURASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "メタルディフェンダー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "220",
+          "text": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
+          "effectId": "reference-46334-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "steps": [
+              {
+                "op": "noWeakness"
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ごうきんビルド",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモンに好きなようにつける。",
+          "effectId": "reference-46334-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "discard",
+            "type": "鋼",
+            "limit": 2,
+            "target": "own",
+            "holderType": "鋼",
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46334.json",
+        "sha256": "3526ba065ef0aaeba91284a0db1b6a5492ecdc9229e59e5fe4b03b843209aa99",
+        "htmlSha256": "3526ba065ef0aaeba91284a0db1b6a5492ecdc9229e59e5fe4b03b843209aa99",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48644",
+      "name": "ブリジュラスex",
+      "deckName": "ブリジュラスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48644",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048644_P_BURIJIXYURASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "メタルディフェンダー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "220",
+          "text": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
+          "effectId": "reference-48644-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "steps": [
+              {
+                "op": "noWeakness"
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ごうきんビルド",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモンに好きなようにつける。",
+          "effectId": "reference-48644-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "discard",
+            "type": "鋼",
+            "limit": 2,
+            "target": "own",
+            "holderType": "鋼",
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48644.json",
+        "sha256": "f01b10b3fbf79b91f6d2b26fffc56224d197bb6d471173d22585c97407e3ee35",
+        "htmlSha256": "f01b10b3fbf79b91f6d2b26fffc56224d197bb6d471173d22585c97407e3ee35",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49242",
+      "name": "ブリジュラスex",
+      "deckName": "ブリジュラスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49242",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049242_P_BURIJIXYURASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "メタルディフェンダー",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "220",
+          "text": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
+          "effectId": "reference-49242-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "steps": [
+              {
+                "op": "noWeakness"
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ごうきんビルド",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモンに好きなようにつける。",
+          "effectId": "reference-49242-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "discard",
+            "type": "鋼",
+            "limit": 2,
+            "target": "own",
+            "holderType": "鋼",
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49242.json",
+        "sha256": "190af359c49b324e760beb4d7ad4f3b613bfffb9893750e0a28c663e2735ec25",
+        "htmlSha256": "190af359c49b324e760beb4d7ad4f3b613bfffb9893750e0a28c663e2735ec25",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
