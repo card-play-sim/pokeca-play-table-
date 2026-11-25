@@ -43,7 +43,10 @@ jobs:
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
           node scripts/run-atomic-official-battle-intake.cjs
-          # The newly qualified first evolution may unlock its dependent stage two.
+          # Retain the first pass's evidence for diagnosis, but never reuse
+          # its execution queue as a second pass's proof.
+          mkdir -p artifacts
+          mv work/card-auto-connect artifacts/first-pass-intake
           node scripts/run-atomic-official-battle-intake.cjs
       - name: Require all 310 independently qualified IDs and exact published records
         run: |
