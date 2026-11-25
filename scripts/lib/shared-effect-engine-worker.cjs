@@ -143,6 +143,18 @@ function fixtureResources(manifest,deckIndex,source,e){
   const needed=new Map();for(const type of attack.cost)needed.set(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type,(needed.get(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type)||0)+1);
   return [...needed].every(([t,n])=>reserveEnergy(t,n,index));
  };
+ // Reserve a real registered physical print for each counted zone before
+ // allocating the test match; never manufacture counters or card identities.
+ if(m==='SCALED_ATTACK_DAMAGE'){
+  if(plan.metric==='ownDiscardNamedAttack')reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
+  if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
+  if(plan.metric==='opponentDiscardBasic')reserve(isBasicEnergy,'discard',1);
+  if(plan.metric==='opponentDiscardItem')reserve(r=>r.category==='item','discard',1);
+  if(plan.metric==='ownNamedAttackCount'&&!source.attacks.some(a=>a.name===plan.name))reserve(r=>mon(r,null,0)&&r.attacks.some(a=>a.name===plan.name),'bench');
+  if(plan.metric==='ownTeamNameCount'&&!source.name.startsWith(plan.name+'の'))reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.name+'の'),'bench');
+  if(plan.metric==='opponentAbilityCount')reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
+  if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
+ }
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  if(m==='MASS_ZONE_TRANSFER'){
   const filter=r=>{
@@ -835,9 +847,14 @@ function prepare(r, e, kind) {
     const filter=discardFilters[e.plan.metric];
     if(filter){
       const side=e.plan.metric.startsWith('opponent')?opponent:own;
-      for(const zone of [side.deck,side.hand]){
-        const index=zone.findIndex(filter);
-        if(index>=0){side.discard.push(zone.splice(index,1)[0]);break;}
+      if(!side.discard.some(filter)){
+        for(const zone of [side.deck,side.hand,side.prizeCards]){
+          const index=zone.findIndex(filter);
+          if(index<0||zone===side.prizeCards&&!side.deck.length)continue;
+          side.discard.push(zone.splice(index,1)[0]);
+          if(zone===side.prizeCards)side.prizeCards.push(side.deck.shift());
+          break;
+        }
       }
     }
     if (e.plan.metric === "ownDiscardEnergy") {
@@ -1536,6 +1553,24 @@ function verifyCase(t, e) {
       return {status:'BLOCKED',reason:'NO_POSITIVE_PUBLIC_COUNT_FIXTURE'};
     assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
     verifyPrintedAttack(before, after, e, Math.max(0,e.plan.base+(e.plan.subtract?-1:1)*e.plan.unit*metrics[e.plan.metric]));
+    const discardMetricFilters={
+      opponentDiscardBasic:c=>c.kind==='energy'&&!c.isSpecial,
+      opponentDiscardItem:c=>E.getReferenceEffectRecord(c)?.category==='item',
+      ownDiscardTypedPokemon:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.types.includes(e.plan.type),
+      ownDiscardNamedAttack:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.attacks.some(a=>a.name===e.plan.name)
+    };
+    const discardFilter=discardMetricFilters[e.plan.metric];
+    if(discardFilter){
+      const start=JSON.parse(JSON.stringify(before)),side=start.players[e.plan.metric.startsWith('opponent')?1:0];
+      const removed=side.discard.filter(discardFilter);
+      assert(removed.length>0,'MISSING_POSITIVE_DISCARD_PROOF');
+      side.discard=side.discard.filter(c=>!discardFilter(c));
+      side.deck.push(...removed);
+      assert.deepEqual(S.identities(before),S.identities(start));
+      const replay=port(start);
+      assert(replay.dispatch('you',t.action||o.action).ok);
+      verifyPrintedAttack(start,replay.getSnapshot(),e,e.plan.base);
+    }
     if (e.plan.subtract) {
       assert(p.restoreSession(p.getResumeSnapshot()).ok);
       assert.deepEqual(p.getSnapshot(),after);
