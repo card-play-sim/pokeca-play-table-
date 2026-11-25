@@ -277,6 +277,36 @@ function prepare(r, e, kind) {
     own.deck.push(...own.active.energyCards);own.active.energyCards=keep;
     return {...t,port:port(game),trigger};
   }
+  if(m==='PASSIVE_FULL_HP_SURVIVAL'){
+    const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
+    if(!(attackIndex>=0))return {blocked:'NO_SURVIVAL_ATTACK_FIXTURE'};
+    const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[r,attacker]);
+    const deck=manifest.decks[0],water=[...records.values()].find(c=>c.mainPlan?.mechanic==='BASIC_ENERGY'&&(c.facts.basicEnergyType==='水'||c.name==='基本水エネルギー'));
+    if(!water)return {blocked:'NO_SURVIVAL_WATER_ENERGY'};
+    const available=deck.cards.filter(c=>c.name===water.deckName).reduce((n,c)=>n+c.count,0);
+    let need=Math.max(0,trigger.cost.length-available);
+    const originalNeed=need;
+    for(const donor of deck.cards.filter(c=>c.category==='energy'&&c.name!==water.deckName)){
+      const n=Math.min(need,donor.count);donor.count-=n;need-=n;
+    }
+    if(need)return {blocked:'NO_SURVIVAL_ENERGY_RESOURCES'};
+    if(originalNeed){const existing=deck.cards.find(c=>c.name===water.deckName);if(existing){existing.count+=originalNeed;existing.referenceOfficialCardId=water.officialCardId;}else deck.cards.push({name:water.deckName,category:'energy',count:originalNeed,referenceOfficialCardId:water.officialCardId});}
+    deck.cards=deck.cards.filter(c=>c.count>0);
+    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:r.officialCardId});
+    if(frame.blocked)return frame;
+    const game=frame.game,own=game.players[0],defender=game.players[1].active;
+    for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}
+    if(!r.facts.basic){
+      // Do not invent an evolved in-play stack. An exact physical predecessor is required.
+      const parentIndex=game.players[1].deck.findIndex(c=>E.getReferenceEffectRecord(c)?.name===r.facts.evolvesFrom);
+      if(parentIndex<0)return {blocked:'NO_SURVIVAL_EVOLUTION_PARENT'};
+      // Evolution-state setup requires its own legal fixture; until then fail closed.
+      return {blocked:'NO_SURVIVAL_EVOLUTION_STACK_PROOF'};
+    }
+    assert.equal(defender.damage,0);
+    return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
+  }
   if (m === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
     // A fixed-deck attacker hits the exact verified defender in the browser.
     const attacker = records.get("45152");
@@ -1867,6 +1897,21 @@ function verifyCase(t, e) {
       verifyPrintedAttack(start,withTool.getSnapshot(),trigger,Number(attack.damage)+e.plan.amount);
       verifyPrintedAttack(base,withoutTool.getSnapshot(),trigger,Number(attack.damage));
     }
+  }
+  if(e.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL'){
+    const defender=before.players[1].active,action=t.action||o.action;
+    assert.equal(defender.damage,0);assert(after.players[1].active?.id===defender.id);
+    assert.equal(after.players[1].active.hp-after.players[1].active.damage,e.plan.remainingHp);
+    const incoming=effectEvents.find(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===defender.id);
+    assert(incoming&&incoming.amount>=defender.hp);
+    assert(effectEvents.some(ev=>ev?.mechanic==='PASSIVE_FULL_HP_SURVIVAL'&&ev.effectId===e.effectId&&ev.remainingHp===10));
+    assert.equal(after.players[0].prizes,before.players[0].prizes);
+    const injured=JSON.parse(JSON.stringify(before));injured.players[1].active.damage=10;
+    const retry=port(injured);assert(retry.dispatch('you',action).ok);
+    const next=retry.getSnapshot();assert(![next.players[1].active,...next.players[1].bench].some(c=>c?.id===defender.id));
+    assert(next.history.slice(injured.history.length).some(ev=>ev.type==='knockout'&&ev.details?.targetPlayerId==='ai'));
+    assert(!next.history.slice(injured.history.length).some(ev=>ev.details?.mechanic==='PASSIVE_FULL_HP_SURVIVAL'));
+    assert.deepEqual(S.identities(injured),S.identities(next));
   }
   if (e.plan.mechanic === "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION") {
     const defender = E.getReferenceEffectRecord(before.players[1].active);
