@@ -157,6 +157,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentAbilityCount')reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
+ if(m==='ATTACK_NAMED_DISCARD_BENCH'){
+  const target=pick(r=>mon(r,null,0)&&r.name===plan.name);
+  if(target){
+   for(let n=plan.limit;n>0;n--)if(ensure(deckIndex,target,n)){
+    for(let i=0;i<n;i++)requirements.push({side:0,zone:'discard',printId:target.officialCardId});
+    break;
+   }
+  }
+ }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  function reserveTera(zone){
@@ -1102,6 +1111,10 @@ function prepare(r, e, kind) {
       }
     }
     if(!own[e.plan.zone].some(eligible))return {blocked:"NO_ACCELERATION_ENERGY_FIXTURE"};
+  }
+  if(m==='ATTACK_NAMED_DISCARD_BENCH'){
+    const own=frame.game.players[0],plan=e.plan;
+    if(own.bench.length>=5||!own.discard.some(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.basic&&E.getReferenceEffectRecord(c).name===plan.name))return {blocked:'NO_NAMED_DISCARD_BENCH_FIXTURE'};
   }
   if(e.plan.batchSearch){
     const own=frame.game.players[0];
@@ -2614,6 +2627,22 @@ function verifyCase(t, e) {
     }
     assert(p.restoreSession(p.getResumeSnapshot()).ok);
     assert.deepEqual(p.getSnapshot(),after);
+  }
+  if(e.plan.mechanic==='ATTACK_NAMED_DISCARD_BENCH'){
+    const action=t.action||o.action,own=before.players[0],chosen=action.selections.cards,plan=e.plan;
+    const eligible=c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.basic&&E.getReferenceEffectRecord(c).name===plan.name;
+    assert(chosen.length>0&&chosen.length<=Math.min(plan.limit,5-own.bench.length));
+    assert(chosen.every(id=>own.discard.some(c=>c.id===id&&eligible(c))));
+    assert(chosen.every(id=>after.players[0].bench.some(c=>c.id===id&&c.enteredTurn===before.turnNumber)&&!after.players[0].discard.some(c=>c.id===id)));
+    assert(chosen.every(id=>effectEvents.some(ev=>ev?.command==='BENCH_FROM_ZONE'&&ev.fromZone==='discard'&&ev.cardIds.includes(id))));
+    const replay=port(before);
+    const wrong=own.discard.find(c=>!eligible(c));
+    for(const cards of [[chosen[0],chosen[0]],[own.active.id],...(wrong?[[wrong.id]]:[])]){
+      assert.equal(replay.dispatch('you',{...action,selections:{cards}}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
+    assert(replay.dispatch('you',{...action,selections:{cards:[]}}).ok);
+    assert.deepEqual(Array.from(S.identities(replay.getSnapshot())),Array.from(S.identities(before)));
   }
   if (e.plan.mechanic === "SEARCH_BASIC_TO_BENCH_ATTACK") {
     const action = t.action || o.action;
