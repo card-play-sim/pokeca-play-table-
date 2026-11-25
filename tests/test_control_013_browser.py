@@ -444,6 +444,9 @@ async def main():
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
+    if plan.get('requiresTera'):
+     assert before['players'][0]['active']['referenceEvolutionWindow']==before['referenceActionSequence']
+     assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
