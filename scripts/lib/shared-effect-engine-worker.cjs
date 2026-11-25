@@ -1207,7 +1207,25 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==='MASS_HAND_FLOW'){
     const q=e.plan,[own,other]=before.players;
     const checkDraw=(side,n)=>{const count=Math.min(n,side.deck.length);assert(side.deck.slice(0,count).every(c=>after.players.find(p=>p.id===side.id).hand.some(x=>x.id===c.id)));};
-    const checkReset=(side,n)=>{const result=after.players.find(p=>p.id===side.id),pool=[...side.hand,...side.deck];assert(effectEvents.some(ev=>ev?.command==='RETURN_TO_DECK'&&side.hand.every(c=>ev.cardIds?.includes(c.id))));assert(result.hand.length===Math.min(n,pool.length));assert(result.hand.every(c=>pool.some(x=>x.id===c.id)));};
+    const checkReset=(side,n)=>{
+      const result=after.players.find(p=>p.id===side.id),pool=[...side.hand,...side.deck],history=after.history.slice(before.history.length);
+      const returned=history.filter(ev=>ev.player===side.id&&ev.details?.command==='RETURN_TO_DECK'&&!ev.details.reference);
+      assert.equal(returned.length,1);
+      assert.deepEqual(Array.from(returned[0].details.cardIds).sort(),Array.from(side.hand,c=>c.id).sort());
+      const effectDraws=history.filter(ev=>ev.details?.command==='DRAW'&&ev.details.privateTo===side.id&&!ev.details.reference);
+      assert.equal(effectDraws.length,1);
+      const ids=Array.from(effectDraws[0].details.cardIds),count=Math.min(n,pool.length);
+      assert.equal(ids.length,count);assert.equal(new Set(ids).size,count);
+      const turnDraws=history.filter(ev=>ev.type==='draw'&&ev.details?.playerId===side.id);
+      const startsNextTurn=before.mode==='match'&&after.turnNumber===before.turnNumber+1&&after.turnPlayer===side.id;
+      const extra=startsNextTurn&&pool.length>count?1:0;
+      assert.equal(turnDraws.length,extra);
+      if(extra){assert.equal(turnDraws[0].turnNumber,after.turnNumber);assert.equal(turnDraws[0].details.count,1);assert.equal(turnDraws[0].details.cardIds.length,1);ids.push(turnDraws[0].details.cardIds[0]);}
+      assert.equal(new Set(ids).size,ids.length);
+      assert.deepEqual(Array.from(result.hand,c=>c.id).sort(),ids.sort());
+      assert.equal(result.deck.length,pool.length-count-extra);
+      assert.deepEqual(Array.from([...result.hand,...result.deck],c=>c.id).sort(),Array.from(pool,c=>c.id).sort());
+    };
     if(q.mode==='resetOpponent')checkReset(other,q.amount);
     if(q.mode==='bothDraw'){checkDraw(own,q.amount);checkDraw(other,q.amount);}
     if(q.mode==='resetOwnMatch')checkReset(own,other.hand.length);
