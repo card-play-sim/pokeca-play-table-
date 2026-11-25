@@ -198602,6 +198602,158 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "45213",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45213",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045213_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45213.json",
+        "sha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
+        "htmlSha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45533",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45533",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045533_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45533.json",
+        "sha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
+        "htmlSha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46833",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46833",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046833_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46833.json",
+        "sha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
+        "htmlSha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49433",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49433",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049433_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49433.json",
+        "sha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
+        "htmlSha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [

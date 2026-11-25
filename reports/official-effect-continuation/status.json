@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "17927dc7f69dd08dab249a61f0e6aed015770431e0242f9b0034e77260044fd5",
+  "registryHash": "5a2891baeda4bddba61535e50680743263487e7fa900f142012694e37f136f02",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,8 +12,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 229,
-      "notImplemented": 145,
+      "compiled": 233,
+      "notImplemented": 141,
       "blocked": 0,
       "executionVerifiedPrints": 39
     },
@@ -3111,21 +3111,6 @@
       }
     },
     {
-      "officialCardId": "45213",
-      "name": "探検家の先導",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45213.json",
-        "sha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
-        "htmlSha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
-        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
-      }
-    },
-    {
       "officialCardId": "45222",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3319,21 +3304,6 @@
       "officialCardId": "45531",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45533",
-      "name": "探検家の先導",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45533.json",
-        "sha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
-        "htmlSha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
-        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
-      }
     },
     {
       "officialCardId": "45534",
@@ -5328,21 +5298,6 @@
         "sha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
         "htmlSha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
         "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
-      "officialCardId": "46833",
-      "name": "探検家の先導",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46833.json",
-        "sha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
-        "htmlSha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
-        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
       }
     },
     {
@@ -11985,21 +11940,6 @@
       }
     },
     {
-      "officialCardId": "49433",
-      "name": "探検家の先導",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49433.json",
-        "sha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
-        "htmlSha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
-        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
-      }
-    },
-    {
       "officialCardId": "49436",
       "name": "ハイダイ",
       "category": "supporter",
@@ -12803,7 +12743,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 362
+        "count": 358
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -12818,10 +12758,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "fd0c5e2d08a96ee49cfed44f6185a4ca099cf5a8fbb6b6d1b7b81b8fc998a007",
+    "executionFingerprint": "59ffe9fc995b8e10683fb02ddb1ba8440a7ea2ff73838a0f0d44d4914c7d4add",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 165081,
+    "seq": 169737,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
