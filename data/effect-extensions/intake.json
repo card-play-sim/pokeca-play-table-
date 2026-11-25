@@ -175977,6 +175977,753 @@
         "htmlSha256": "2c6a8a58a8190007931a625bedaa2ebe79ff57a387608209d1e80794ebf36f88",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "48331",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48331",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048331_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48331.json",
+        "sha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
+        "htmlSha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "50039",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50039",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050039_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50039.json",
+        "sha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
+        "htmlSha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "50690",
+      "name": "ズルッグ",
+      "deckName": "ズルッグ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50690",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050690_P_ZURUGGU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "けちをつける",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "相手は相手自身の手札をすべて山札にもどして切る。その後、相手は山札を4枚引く。"
+        },
+        {
+          "name": "どつく",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50690.json",
+        "sha256": "b5a260c44c08e0a747d026ef6fff6c2266e0004ed43516ea6ffe7904ec1588cc",
+        "htmlSha256": "b5a260c44c08e0a747d026ef6fff6c2266e0004ed43516ea6ffe7904ec1588cc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48252",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48252",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/048252_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48252.json",
+        "sha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
+        "htmlSha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "45212",
+      "name": "マキシマムベルト",
+      "deckName": "マキシマムベルト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45212",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045212_T_MAKISHIMAMUBERUTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45212.json",
+        "sha256": "6b66ab110ec2fa01212b657a7e254e72fbc9a8eb3b24c7d99cc3055528ff74a6",
+        "htmlSha256": "6b66ab110ec2fa01212b657a7e254e72fbc9a8eb3b24c7d99cc3055528ff74a6",
+        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
+      }
+    },
+    {
+      "officialCardId": "46288",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46288",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046288_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46288.json",
+        "sha256": "fec265eba5c1ecd196eb3e2e37287c4458f045157b3d10d16b21bc50a98418f8",
+        "htmlSha256": "fec265eba5c1ecd196eb3e2e37287c4458f045157b3d10d16b21bc50a98418f8",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "46339",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46339",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046339_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46339.json",
+        "sha256": "f804e2a3f83dcec6d2f01aa89c412a5ccb64970fe1b615370e7864e29cc6f31e",
+        "htmlSha256": "f804e2a3f83dcec6d2f01aa89c412a5ccb64970fe1b615370e7864e29cc6f31e",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "46820",
+      "name": "マキシマムベルト",
+      "deckName": "マキシマムベルト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46820",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046820_T_MAKISHIMAMUBERUTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46820.json",
+        "sha256": "b7fea3b029f14e1989f5b2e5abcb894fee42646dded6d984f97008a4ae589286",
+        "htmlSha256": "b7fea3b029f14e1989f5b2e5abcb894fee42646dded6d984f97008a4ae589286",
+        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
+      }
+    },
+    {
+      "officialCardId": "47704",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47704",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047704_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47704.json",
+        "sha256": "7d2bd6bc737744e66b9729df4fc773bc8737fe7677d4946d02e8e107288cd117",
+        "htmlSha256": "7d2bd6bc737744e66b9729df4fc773bc8737fe7677d4946d02e8e107288cd117",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "48688",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48688",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048688_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48688.json",
+        "sha256": "9d652cdebc4b830641d79b3db108e2eb1fb9d437479452da5fa917f010d9f5c7",
+        "htmlSha256": "9d652cdebc4b830641d79b3db108e2eb1fb9d437479452da5fa917f010d9f5c7",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "49405",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49405",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049405_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49405.json",
+        "sha256": "9720d673605645290b1ce474aee6d55795501ce19df9bb1915583b6bbd7e2342",
+        "htmlSha256": "9720d673605645290b1ce474aee6d55795501ce19df9bb1915583b6bbd7e2342",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "50327",
+      "name": "ブレイブバングル",
+      "deckName": "ブレイブバングル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50327",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050327_T_BUREIBUBANGURU.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50327.json",
+        "sha256": "ab7d94503b3d7beb0d914881f2385d28612ed13b28178f53d88de3adde7e70ee",
+        "htmlSha256": "ab7d94503b3d7beb0d914881f2385d28612ed13b28178f53d88de3adde7e70ee",
+        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
+      }
+    },
+    {
+      "officialCardId": "47199",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47199",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVN/047199_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47199.json",
+        "sha256": "8457088a82546290c2ff927b8d2398d6378aa5a6289a021bdf86c8093cc18b36",
+        "htmlSha256": "8457088a82546290c2ff927b8d2398d6378aa5a6289a021bdf86c8093cc18b36",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "47202",
+      "name": "マキシマムベルト",
+      "deckName": "マキシマムベルト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47202",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVN/047202_T_MAKISHIMAMUBERUTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47202.json",
+        "sha256": "1b883e0aed95b5a9f42a8558524a758cc91752b453d960f539853bedd4ddc71e",
+        "htmlSha256": "1b883e0aed95b5a9f42a8558524a758cc91752b453d960f539853bedd4ddc71e",
+        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
+      }
+    },
+    {
+      "officialCardId": "47886",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47886",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047886_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47886.json",
+        "sha256": "324b953dbfa69ecd68f32bec5405d4d3c726ebd2ffaa6af02baaac10a69356c9",
+        "htmlSha256": "324b953dbfa69ecd68f32bec5405d4d3c726ebd2ffaa6af02baaac10a69356c9",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "47890",
+      "name": "マキシマムベルト",
+      "deckName": "マキシマムベルト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47890",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047890_T_MAKISHIMAMUBERUTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47890.json",
+        "sha256": "627a9e9f318a1a6b57cfae1f67f5ac4961a2c395a24f9f988c64abd6d93ce2be",
+        "htmlSha256": "627a9e9f318a1a6b57cfae1f67f5ac4961a2c395a24f9f988c64abd6d93ce2be",
+        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
+      }
+    },
+    {
+      "officialCardId": "48566",
+      "name": "ピカチュウex",
+      "deckName": "ピカチュウex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48566",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048566_P_PIKACHIXYUUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "トパーズボルト",
+          "cost": [
+            "草",
+            "雷",
+            "鋼"
+          ],
+          "damage": "300",
+          "text": "このポケモンについているエネルギーを3個選び、トラッシュする。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がんばりハート",
+          "text": "このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 200,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48566.json",
+        "sha256": "e3806e5f43eda235877f640e164a7a4282c50df6a5196e986d2340c82b94abd8",
+        "htmlSha256": "e3806e5f43eda235877f640e164a7a4282c50df6a5196e986d2340c82b94abd8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48683",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48683",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048683_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48683.json",
+        "sha256": "9429350e2b2be9955841dd8d77e538aee390c4b0946f7221ea6a06eb74d3993e",
+        "htmlSha256": "9429350e2b2be9955841dd8d77e538aee390c4b0946f7221ea6a06eb74d3993e",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "48938",
+      "name": "ウネルミナモex",
+      "deckName": "ウネルミナモex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48938",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048938_P_UNERUMINAMOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "カタルシスロアー",
+          "cost": [
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "120+",
+          "text": "相手のバトルポケモンが特殊状態なら、120ダメージ追加。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "こんぺきはとう",
+          "text": "このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 220,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48938.json",
+        "sha256": "60346d22635aa8e317296c5e6a0f32f89117d6d4a0f06ef9a0b5ed0cc2eb4c61",
+        "htmlSha256": "60346d22635aa8e317296c5e6a0f32f89117d6d4a0f06ef9a0b5ed0cc2eb4c61",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49395",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49395",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049395_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49395.json",
+        "sha256": "95819704eb6a54d6b79dd135d4120dc6a6a4b93317bc98d71b4526d482a118f5",
+        "htmlSha256": "95819704eb6a54d6b79dd135d4120dc6a6a4b93317bc98d71b4526d482a118f5",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "49407",
+      "name": "マキシマムベルト",
+      "deckName": "マキシマムベルト",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49407",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049407_T_MAKISHIMAMUBERUTO.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49407.json",
+        "sha256": "306782d470f09827d0551d2d5f13000caf3d960e4971816e39b57b957ec7a62e",
+        "htmlSha256": "306782d470f09827d0551d2d5f13000caf3d960e4971816e39b57b957ec7a62e",
+        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
+      }
+    },
+    {
+      "officialCardId": "49978",
+      "name": "カウンターゲイン",
+      "deckName": "カウンターゲイン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49978",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049978_T_KAUNTAGEIN.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49978.json",
+        "sha256": "f143bc1894de01c48f9c981f2227583204a11ffed1c679b1f530517b622ae82e",
+        "htmlSha256": "f143bc1894de01c48f9c981f2227583204a11ffed1c679b1f530517b622ae82e",
+        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
+      }
+    },
+    {
+      "officialCardId": "49994",
+      "name": "ピカチュウex",
+      "deckName": "ピカチュウex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49994",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049994_P_PIKACHIXYUUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "トパーズボルト",
+          "cost": [
+            "草",
+            "雷",
+            "鋼"
+          ],
+          "damage": "300",
+          "text": "このポケモンについているエネルギーを3個選び、トラッシュする。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がんばりハート",
+          "text": "このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 200,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49994.json",
+        "sha256": "234e9f73d5580f8dd616e0fac7c7dd933e2610cc0c84638ff344727edca19b5e",
+        "htmlSha256": "234e9f73d5580f8dd616e0fac7c7dd933e2610cc0c84638ff344727edca19b5e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []
