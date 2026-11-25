@@ -220,6 +220,14 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m in ('ABILITY_TYPED_COST_DRAW_LIMIT','SUPPORTER_NON_RULE_DISCARD_DRAW'):
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0]
+    picked=set(option['action']['selections']['discard'])
+    assert picked and picked<={c['id'] for c in resolved['discard']}
+    remaining=len(own['hand'])-(len(picked)+1 if m=='SUPPORTER_NON_RULE_DISCARD_DRAW' else (1 if plan['zone']=='hand' else 0))
+    amount=len(picked)*plan['unit'] if m=='SUPPORTER_NON_RULE_DISCARD_DRAW' else max(0,plan['limit']-remaining)
+    assert len(resolved['hand'])==remaining+min(amount,len(own['deck']))
+    assert [c['id'] for c in resolved['deck']]==[c['id'] for c in own['deck'][amount:]]
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))

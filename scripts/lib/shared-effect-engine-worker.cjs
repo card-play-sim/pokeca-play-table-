@@ -189,6 +189,8 @@ function fixtureResources(manifest,deckIndex,source,e){
     }
    }
   }
+ if(m==='ABILITY_TYPED_COST_DRAW_LIMIT')reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
+ if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')reserve(r=>r.category==='pokemon'&&!r.facts.rulePokemon,'hand');
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
@@ -899,6 +901,27 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='ownTypedBench'&&!own.bench.some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)&&(plan.stage===null||E.getReferenceEffectRecord(c).facts.stage===plan.stage)))return {blocked:'NO_TYPED_BENCH_FIXTURE'};
     for(const card of [...own.active.energyCards])if(card.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);own.deck.push(card);}
+  }
+  if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
+    const own=frame.game.players[0],plan=e.plan,source=[own.active,...own.bench].find(c=>c?.id===frame.sourceId);
+    const valid=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type;
+    const target=plan.zone==='attached'?source?.energyCards:own.hand;
+    if(!target)return {blocked:'NO_TYPED_DRAW_HOLDER'};
+    if(!target.some(valid)){
+      for(const zone of [own.hand,own.deck]){
+        const i=zone.findIndex(valid);if(i>=0){target.push(zone.splice(i,1)[0]);break;}
+      }
+    }
+    if(!target.some(valid))return {blocked:'NO_TYPED_DRAW_ENERGY'};
+    const keep=plan.zone==='hand'?target.find(valid):null;
+    while(own.hand.length>=plan.limit){
+      const i=own.hand.findIndex(c=>c!==keep);if(i<0)break;own.deck.push(own.hand.splice(i,1)[0]);
+    }
+  }
+  if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW'){
+    const own=frame.game.players[0],valid=c=>c.kind==='pokemon'&&!E.getReferenceEffectRecord(c).facts.rulePokemon;
+    if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
+    if(!own.hand.some(valid))return {blocked:'NO_NON_RULE_DRAW_COST_FIXTURE'};
   }
   if(m==='ABILITY_DISCARD_DRAW'){
     const own=frame.game.players[0];
@@ -1754,6 +1777,24 @@ function verifyCase(t, e) {
     if(!(normal>0))return {status:"BLOCKED",reason:"NO_POSITIVE_DAMAGE_BOOST_FIXTURE"};
     assert.equal(boosted,normal+plan.amount*weak);
     const expired={...after,turnNumber:after.turnNumber+2};assert.equal(damage(expired),normal);
+  }
+  if(['ABILITY_TYPED_COST_DRAW_LIMIT','SUPPORTER_NON_RULE_DISCARD_DRAW'].includes(e.plan.mechanic)){
+    const own=before.players[0],resolved=after.players[0],plan=e.plan,action=t.action||o.action,chosen=action.selections.discard;
+    const source=[own.active,...own.bench].find(c=>c?.id===t.sourceId);
+    const ability=plan.mechanic==='ABILITY_TYPED_COST_DRAW_LIMIT';
+    const pool=ability&&plan.zone==='attached'?source.energyCards:own.hand;
+    const valid=c=>ability?c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type:c.kind==='pokemon'&&!E.getReferenceEffectRecord(c).facts.rulePokemon;
+    assert(chosen.length>0&&chosen.every(id=>pool.some(c=>c.id===id&&valid(c))));
+    assert(chosen.every(id=>resolved.discard.some(c=>c.id===id)));
+    const remaining=own.hand.length-(ability?(plan.zone==='hand'?1:0):chosen.length+1);
+    const amount=ability?Math.max(0,plan.limit-remaining):chosen.length*plan.unit;
+    const drawn=own.deck.slice(0,amount);
+    assert.equal(resolved.hand.length,remaining+drawn.length);
+    assert(drawn.every(c=>resolved.hand.some(x=>x.id===c.id)));
+    assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(drawn.length).map(c=>c.id));
+    const invalid=pool.find(c=>!valid(c));
+    if(invalid){const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+    const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
   }
   if(["ABILITY_DISCARD_DRAW","ABILITY_ATTACH_SELF_DRAW"].includes(e.plan.mechanic)){
     const action=t.action||o.action,own=before.players[0],resolved=after.players[0],plan=e.plan;

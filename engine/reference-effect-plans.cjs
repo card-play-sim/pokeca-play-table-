@@ -530,6 +530,12 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
   return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
  // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const filteredCost=generic.match(/^自分の番に、(このポケモンについている|自分の手札から)「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1(個|枚)トラッシュするなら、1回使える。自分の手札が([1-9])枚になるように、山札を引く。$/);
+ if(kind==='ABILITY'&&filteredCost&&((filteredCost[1]==='このポケモンについている')===(filteredCost[3]==='個')))
+  return {mechanic:'ABILITY_TYPED_COST_DRAW_LIMIT',commands:['DISCARD','DRAW'],zone:filteredCost[3]==='個'?'attached':'hand',type:filteredCost[2],limit:Number(filteredCost[4]),sharedWording:true};
+ const filteredPokemon=generic.match(/^自分の手札からポケモン\(「ルールを持つポケモン」をのぞく\)を([2-9])枚までトラッシュし、その枚数×([1-9])枚ぶん、山札を引く。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&filteredPokemon)
+  return {mechanic:'SUPPORTER_NON_RULE_DISCARD_DRAW',commands:['DISCARD','DRAW'],limit:Number(filteredPokemon[1]),unit:Number(filteredPokemon[2]),sharedWording:true};
  const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&discardDrawAbility)
   return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};
