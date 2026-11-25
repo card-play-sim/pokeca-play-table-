@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1049,
-      "missing": 653
+      "connected": 1053,
+      "missing": 649
     },
     "J": {
       "total": 870,
-      "connected": 475,
-      "missing": 395
+      "connected": 476,
+      "missing": 394
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1043,
+      "CONNECTED_UNTESTED": 1047,
       "MECHANIC_REQUIRED": 86,
-      "ENGINE_CONNECTION_REQUIRED": 563,
+      "ENGINE_CONNECTION_REQUIRED": 559,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 474,
+      "CONNECTED_UNTESTED": 475,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 347,
+      "ENGINE_CONNECTION_REQUIRED": 346,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -5057,8 +5057,7 @@
       "name": "ドンメル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48544.json"
     },
     {
@@ -7077,8 +7076,7 @@
       "name": "ドンメル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49958.json"
     },
     {
@@ -7549,8 +7547,7 @@
       "name": "ハリーセン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50135.json"
     },
     {
@@ -11101,8 +11098,7 @@
       "name": "デンチュラ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47653.json"
     },
     {
@@ -12467,8 +12463,7 @@
       "name": "デンチュラ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48026.json"
     },
     {
@@ -21631,21 +21626,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "MECHANIC_REQUIRED": 747,
-        "ENGINE_CONNECTED": 1100,
-        "ENGINE_CONNECTION_REQUIRED": 17
+        "ENGINE_CONNECTED": 1115,
+        "ENGINE_CONNECTION_REQUIRED": 7,
+        "MECHANIC_REQUIRED": 742
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1049,
-        "MECHANIC_REQUIRED": 638,
+        "ENGINE_CONNECTED": 1053,
+        "MECHANIC_REQUIRED": 634,
         "ENGINE_CONNECTION_REQUIRED": 11,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 474,
-        "MECHANIC_REQUIRED": 387,
+        "ENGINE_CONNECTED": 475,
+        "MECHANIC_REQUIRED": 386,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21655,7 +21650,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3261,
-    "unconnected": 1812
+    "engineConnected": 3281,
+    "unconnected": 1792
   }
 }

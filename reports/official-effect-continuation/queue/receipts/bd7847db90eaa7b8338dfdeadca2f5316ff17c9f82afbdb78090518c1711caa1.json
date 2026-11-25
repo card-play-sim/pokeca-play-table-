@@ -1,50 +1,119 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_50E4F6B14336D080:0fb2e9abc3eba5af8a4b0ddf3d345e14d3efc5f6d5b022371fba3014e83c1674",
   "taskFingerprint": "0fb2e9abc3eba5af8a4b0ddf3d345e14d3efc5f6d5b022371fba3014e83c1674",
-  "executionFingerprint": "3846a908e85bae2e4221319ed3c456ae4201773abf7e6dbf7cae438498dbd789",
-  "attemptId": "f27cac30-6059-4dd8-adf3-7ca5f09ac96d",
-  "status": "BLOCKED",
+  "executionFingerprint": "8f56d4558a26e9329ebfed766b5a35f0d80e2e69c3ee331fbb6a84e47bf6328d",
+  "attemptId": "0f38b95f-a799-466a-8eb2-57069b5121e9",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47295:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45628:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45679:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45686:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45689:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46795:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47146:ability:ろうれんのわざ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_NAMED_PRIZE_DISCOUNT",
+        "commands": [
+          "MODIFY_ATTACK_COST"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "5218c903bcaaaf2e784f5af0dbd82ca1c7566152f69d9374468e9e0c5b56af18"
+  "checksum": "256400b329555775f588b6b462ab98d34d1b15253ca40c1e93ddcb0031d018bd"
 }
