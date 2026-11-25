@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1079,
-      "missing": 623
+      "connected": 1083,
+      "missing": 619
     },
     "J": {
       "total": 870,
-      "connected": 481,
-      "missing": 389
+      "connected": 486,
+      "missing": 384
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1073,
+      "CONNECTED_UNTESTED": 1077,
       "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 535,
+      "ENGINE_CONNECTION_REQUIRED": 531,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 480,
-      "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 341,
+      "CONNECTED_UNTESTED": 485,
+      "MECHANIC_REQUIRED": 46,
+      "ENGINE_CONNECTION_REQUIRED": 337,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -9020,8 +9020,7 @@
       "name": "ナンジャモのタイカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47040.json"
     },
     {
@@ -9352,8 +9351,7 @@
       "name": "ナンジャモのタイカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47224.json"
     },
     {
@@ -13983,8 +13981,7 @@
       "name": "ナンジャモのタイカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48581.json"
     },
     {
@@ -14933,8 +14930,7 @@
       "name": "ナンジャモのタイカイデン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48995.json"
     },
     {
@@ -16945,8 +16941,7 @@
       "name": "マフォクシー",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50097.json"
     },
     {
@@ -17860,8 +17855,7 @@
       "name": "ムク",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50297.json"
     },
     {
@@ -18080,8 +18074,7 @@
       "name": "ムク",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50331.json"
     },
     {
@@ -18107,8 +18100,7 @@
       "name": "ムク",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50337.json"
     },
     {
@@ -20417,8 +20409,7 @@
       "name": "ムク",
       "mark": "J",
       "category": "support",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50784.json"
     },
     {
@@ -21601,15 +21592,15 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1079,
-        "MECHANIC_REQUIRED": 617,
+        "ENGINE_CONNECTED": 1083,
+        "MECHANIC_REQUIRED": 613,
         "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 480,
-        "MECHANIC_REQUIRED": 383,
+        "ENGINE_CONNECTED": 485,
+        "MECHANIC_REQUIRED": 378,
         "EVIDENCE_UNVERIFIED": 4,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
@@ -21619,7 +21610,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3357,
-    "unconnected": 1716
+    "engineConnected": 3366,
+    "unconnected": 1707
   }
 }
