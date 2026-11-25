@@ -206,7 +206,7 @@ async def main():
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m=='PASSIVE_ROCKET_TEAM_ATTACK_GATE':
+    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION'):
      assert attack_print==r['officialCardId']
     else:
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
