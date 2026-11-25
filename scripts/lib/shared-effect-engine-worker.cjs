@@ -70,8 +70,6 @@ function batchSearchCandidate(c,plan){
 }
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
- if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
- if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='basicEnergy')return c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
  if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
  if(r?.category!==plan.category)return false;
@@ -150,13 +148,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
  if(m==='SCALED_ATTACK_DAMAGE'){
-  if(plan.metric==='ownDiscardNamedAttack'){
-   const reserved=reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
-   // A second physical copy of the attacking print is also a valid
-   // discarded Pokemon, but must be independently reserved in the 60-card deck.
-   if(!reserved&&source.attacks.some(a=>a.name===plan.name)&&ensure(deckIndex,source,2))
-    requirements.push({side:0,zone:'discard',printId:source.officialCardId});
-  }
+  if(plan.metric==='ownDiscardNamedAttack')reserve(r=>r.category==='pokemon'&&r.attacks.some(a=>a.name===plan.name),'discard');
   if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
   if(plan.metric==='opponentDiscardBasic')reserve(isBasicEnergy,'discard',1);
   if(plan.metric==='opponentDiscardItem')reserve(r=>r.category==='item','discard',1);
@@ -172,18 +164,6 @@ function fixtureResources(manifest,deckIndex,source,e){
     for(let i=0;i<n;i++)requirements.push({side:0,zone:'discard',printId:target.officialCardId});
     break;
    }
-  }
- }
- if(['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)&&!source.facts.basic){
-  const chain=record=>{
-   if(record.facts.basic)return [record];
-   const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
-   const before=parent&&chain(parent);return before?[...before,record]:null;
-  };
-  const line=chain(source);
-  if(line&&line.slice(0,-1).every(x=>ensure(deckIndex,x))){
-   requirements.evolvedSourceChain=line.map(x=>x.officialCardId);
-   for(const parent of line.slice(0,-1))requirements.push({side:0,zone:'hand',printId:parent.officialCardId});
   }
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
@@ -212,19 +192,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
-   if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?typeOf(r)===plan.energyType:r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
-   if(plan.nameContains&&!r.name.includes(plan.nameContains))return false;
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
    return r.category===plan.category&&(!plan.type||r.category==='energy'&&typeOf(r)===plan.type||r.facts.types?.includes(plan.type))&&
     (plan.stage===null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   };
-  let target;
-  if(plan.category==='pokemonOrBasicEnergy'){
-   target=reserve(r=>r.category==='pokemon'&&filter(r),plan.zone);
-   const energy=reserve(r=>isBasicEnergy(r)&&filter(r),plan.zone);
-   if(!target)target=energy;
-  }else target=reserve(filter,plan.zone);
+  const target=reserve(filter,plan.zone);
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(e.plan.batchSearch){
@@ -678,7 +651,7 @@ function prepare(r, e, kind) {
         referenceOfficialCardId:ignition.officialCardId});
     }
   }
-  if(e.plan.origin==='evolve'&&m!=='ABILITY_EVOLVE_MULTI_COUNTERS'){
+  if(e.plan.origin==='evolve'){
     const deck=manifest.decks[locations[0].deck];
     const parent=[...records.values()].find(x=>x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1&&x.attacks.every(a=>a.plan)&&x.abilities.every(a=>a.plan));
     if(!parent||e.plan.requiresTera&&!parent.facts.basic)return {blocked:'NO_EXACT_EVOLUTION_PARENT_FIXTURE'};
@@ -1224,38 +1197,6 @@ function prepare(r, e, kind) {
     if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&own.bench.length>=5)return {blocked:"NO_BENCH_SEARCH_SPACE"};
     if(!own.deck.some(c=>batchSearchCandidate(c,e.plan)))return {blocked:"NO_EXACT_SEARCH_FIXTURE_RESOURCE"};
   }
-  if(['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)&&!r.facts.basic){
-    const chain=fixtureRequirements.evolvedSourceChain;
-    if(!chain)return {blocked:'NO_EVOLVED_SOURCE_FULL_LINE'};
-    const own=frame.game.players[0],child=own.active;
-    if(child.id!==frame.sourceId)return {blocked:'NO_EVOLVED_SOURCE_PRINT'};
-    const initial=Array.from(S.identities(frame.game)),energy=[...(child.energyCards||[])],tools=[...(child.tools||[])];
-    const i=own.hand.findIndex(c=>E.getReferenceEffectRecord(c).officialCardId===chain[0]);
-    if(i<0)return {blocked:'NO_EVOLVED_SOURCE_BASE'};
-    const base=own.hand.splice(i,1)[0];
-    for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','evolutionCards','validationBase','entryWindow','referenceEvolutionWindow'])delete child[key];
-    own.hand.push(child);
-    own.active={...base,cardId:base.id,damage:0,enteredTurn:0,energyCards:energy.filter(c=>!c.isSpecial),energies:[],tools};
-    own.deck.push(...energy.filter(c=>c.isSpecial));
-    let pp=port(frame.game);
-    for(let n=1;n<chain.length;n++){
-      const current=pp.getSnapshot(),physical=current.players[0].hand.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[n]);
-      if(!physical)return {blocked:'NO_EVOLVED_SOURCE_HAND_PRINT'};
-      const action={type:'evolve',cardId:physical.id,targetInstanceId:base.id};
-      const early=JSON.parse(JSON.stringify(current));early.players[0].active.enteredTurn=early.turnNumber;
-      const denied=port(early);assert.equal(denied.dispatch('you',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(early));
-      if(!pp.dispatch('you',action).ok)return {blocked:'EVOLVED_SOURCE_ACTION_REJECTED'};
-      const now=pp.getSnapshot().players[0].active;
-      assert.equal(E.getReferenceEffectRecord(now).officialCardId,chain[n]);
-      assert(now.evolutionCards.some(c=>c.id===physical.id));
-      if(n+1<chain.length)for(const actor of ['you','ai']){
-        const end=E.getLegalActions(pp.getSnapshot(),actor).actions.find(a=>a.type==='end_turn');
-        if(!end||!pp.dispatch(actor,end).ok)return {blocked:'EVOLVED_SOURCE_TURN_REJECTED'};
-      }
-    }
-    assert.deepEqual(Array.from(S.identities(pp.getSnapshot())),initial);
-    return {port:pp,sourceId:base.id,kind};
-  }
   if(m==='MASS_EFFECT_SEQUENCE'||e.plan.origin==='evolve'){
     const own=frame.game.players[0];
     if((e.plan.steps||[]).some(s=>['healSelf','drain'].includes(s.op))){
@@ -1545,16 +1486,6 @@ function verifyCase(t, e) {
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);
     assert(ids.every(id=>own[plan.zone].some(c=>c.id===id&&massTransferCandidate(c,plan))));
-    if(plan.category==='pokemonOrBasicEnergy'){
-      const pool=own[plan.zone].filter(c=>massTransferCandidate(c,plan));
-      for(const kind of ['pokemon','energy']){
-        const target=pool.find(c=>c.kind===kind);
-        if(!target)return {status:'BLOCKED',reason:'NO_MIXED_SEARCH_BOTH_CATEGORY_FIXTURE'};
-        const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[target.id]}}).ok);
-        const end=replay.getSnapshot();assert(end.players[0].hand.some(c=>c.id===target.id));
-        assert.deepEqual(S.identities(before),S.identities(end));
-      }
-    }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     if(plan.requiresTera){
@@ -1710,32 +1641,6 @@ function verifyCase(t, e) {
     const n=Math.min(own.deck.length,plan.amount+(before.players[1].prizes<=plan.threshold?plan.extra:0));
     assert(own.deck.slice(0,n).every(c=>resolved.hand.some(x=>x.id===c.id)));
     assert.equal(resolved.hand.length,own.hand.length+n-(action.type==='play_item'||action.type==='play_supporter'?1:0));
-  }
-  if(e.plan.mechanic==='ABILITY_EVOLVE_MULTI_COUNTERS'){
-    const plan=e.plan,action=t.action||o.action,source=before.players[0].active,targets=[before.players[1].active,...before.players[1].bench];
-    assert(source.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
-    const selected=action.selections.target;
-    assert.equal(selected.length,Math.min(plan.count,targets.length));assert.equal(new Set(selected).size,selected.length);
-    assert(selected.every(id=>effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===id&&ev.counterCount===plan.amount)));
-    const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
-    const denied=port(closed);assert.equal(denied.dispatch('you',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(closed));
-    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{target:[selected[0],selected[0]]}}).ok,false);assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
-  }
-  if(e.plan.mechanic==='ATTACK_OPTIONAL_RETURN_POKEMON'){
-    const action=t.action||o.action,source=before.players[0].active;
-    for(const mode of ['stay','return']){
-      const replay=port(before);assert(replay.dispatch('you',{...action,selections:{mode:[mode]}}).ok);
-      const end=replay.getSnapshot(),side=end.players[0],events=end.history.slice(before.history.length).map(x=>x.details);
-      verifyPrintedAttack(before,end,e,Number(e.damage));
-      if(mode==='return'){
-        const stack=[source,...(source.evolutionCards||[])].map(c=>c.id);
-        const attached=[...(source.energyCards||[]),...(source.tools||[])].map(c=>c.id);
-        assert(stack.every(id=>side.hand.some(c=>c.id===id)));assert(attached.length>0&&attached.every(id=>side.discard.some(c=>c.id===id)&&!side.hand.some(c=>c.id===id)));
-        assert(events.some(ev=>ev?.command==='RETURN_TO_HAND'&&stack.every(id=>ev.cardIds.includes(id))));
-        assert(events.some(ev=>ev?.command==='DISCARD'&&attached.every(id=>ev.cardIds.includes(id))));
-      }else assert(side.active?.id===source.id&&source.energyCards.every(c=>side.active.energyCards.some(x=>x.id===c.id)));
-      assert.deepEqual(Array.from(S.identities(end)),Array.from(S.identities(before)));
-    }
   }
   if(e.plan.mechanic==='MASS_PLACE_COUNTERS'){
     const plan=e.plan,action=t.action||o.action,other=before.players[1];
