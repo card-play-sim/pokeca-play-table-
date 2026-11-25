@@ -465,6 +465,9 @@ function plan(entry,kind){
   return {mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',commands:[retaliation[1]?'STATUS_CONDITION':'PLACE_DAMAGE_COUNTERS'],status:retaliation[1]==='どく'?'POISONED':retaliation[1]==='やけど'?'BURNED':null,counterCount:retaliation[2]?Number(retaliation[2]):0,sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。')
   return {mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category:'trainer',type:null,stage:null,team:null,limit:2,origin:'evolve',requiresTera:true,sharedWording:true};
+ const discardBench=generic.match(/^自分のトラッシュから「([^「」]+)」を([1-5])枚まで選び、ベンチに出す。$/);
+ if(kind==='ATTACK'&&discardBench&&/^\d+$/.test(String(entry.damage||'0')))
+  return {mechanic:'ATTACK_NAMED_DISCARD_BENCH',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'BENCH_FROM_ZONE'],name:discardBench[1],limit:Number(discardBench[2]),sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
