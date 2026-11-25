@@ -71,6 +71,26 @@ const ijMechanics=new Set([...ijMainPlans.values()].map(plan=>plan.mechanic));
 function additionalAttackPlan(entry,text){
  const printed=String(entry.damage).normalize('NFKC');
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
+ // Fixed-count coin outcomes use one deterministic match-owned stream.
+ const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ const coinStatus=text.match(/^コインを([1-9])回投げ、オモテの数×([1-9]\d{0,2})ダメージ。(1回でもオモテ|オモテが([1-9])回以上|すべてウラ)なら、相手のバトルポケモンを(マヒ|こんらん|やけど|ねむり|どく)にする。$/);
+ const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
+ if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
+  return coinPlan(Number(coinStatus[1]),0,{unit:Number(coinStatus[2]),status:statusMap[coinStatus[5]],when:coinStatus[3]==='すべてウラ'?'none':'threshold',threshold:Number(coinStatus[4]||1)});
+ const singleStatus=text.match(/^コインを1回投げ、?オモテなら、相手のバトルポケモンを(やけど|こんらん|ねむり|どく)にする。$/);
+ if(singleStatus&&/^\d+$/.test(printed))return coinPlan(1,base,{status:statusMap[singleStatus[1]],when:'all'});
+ const recoil=text.match(/^コインを([1-9])回投げ、?(?:すべて)?ウラなら、このポケモンにも([1-9]\d{0,2})ダメージ。$/);
+ if(recoil&&/^\d+$/.test(printed)&&(Number(recoil[1])===1||text.includes('すべてウラ')))return coinPlan(Number(recoil[1]),base,{recoil:Number(recoil[2]),when:'none'});
+ if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、次の自分の番、このポケモンはワザが使えない。')return coinPlan(1,base,{lock:'selfAttack',when:'none'});
+ const lock=text.match(/^コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、(ワザが使えない|にげられない)。$/);
+ if(lock&&/^\d+$/.test(printed))return coinPlan(1,base,{lock:lock[1]==='にげられない'?'opponentRetreat':'opponentAttack',when:'all'});
+ if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
+ const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
+ if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
+ const mill=text.match(/^コインを([1-9])回投げ、オモテの数ぶん、相手の山札を上からトラッシュする。$/);
+ if(mill&&/^\d+$/.test(printed))return coinPlan(Number(mill[1]),base,{mill:true,when:'threshold',threshold:1});
+ const allBonus=text.match(/^コインを([2-9])回投げ、すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
+ if(allBonus&&base!==null&&printed.endsWith('+'))return coinPlan(Number(allBonus[1]),base,{bonus:Number(allBonus[2]),when:'all'});
  const discardBasic=text.match(/^自分の場のポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×([1-9]\d{0,2})ダメージ。$/);
  if(discardBasic&&printed===discardBasic[1]+'×')
   return {mechanic:'ATTACK_DISCARD_FIELD_BASIC',commands:['DISCARD','DAMAGE'],unit:Number(discardBasic[1])};
@@ -105,6 +125,32 @@ function additionalAttackPlan(entry,text){
   const predicate=prizes?'opponentPrizes':hand?'opponentHand':stage?'opponentStage':extraEnergy?'extraEnergy':'ownEnergyType';
   return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate,base,bonus:Number(bonus),
    ...(type?{type}:{threshold:Number(prizes||hand||stage||extraEnergy)})};
+ }
+ // Exact printed board predicates. Unknown clauses never fall back to damage only.
+ if(base!==null&&printed.endsWith('+')){
+  const boardBonus=text.match(/^(.+)、([1-9]\d{0,2})ダメージ追加。$/);
+  if(boardBonus){
+   const clause=boardBonus[1],bonus=Number(boardBonus[2]);
+   const patterns=[
+    ['ownHandEmpty',/^自分の手札が1枚もないなら$/],
+    ['ownPrizesExact',/^自分のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
+    ['opponentPrizesExact',/^相手のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
+    ['ownDeckAtMost',/^自分の山札の残り枚数が([1-9]\d?)枚以下なら$/,'threshold'],
+    ['allDamagedBench',/^自分のベンチポケモン全員にダメカンがのっているなら$/],
+    ['ownBenchNamed',/^自分のベンチに「([^「」]{1,40})」がいるなら$/,'name'],
+    ['ownBenchContains',/^自分のベンチに、名前に「([^「」]{1,40})」とつくポケモンがいるなら$/,'name'],
+    ['ownStadium',/^場に自分のスタジアムが出ているなら$/],
+    ['stadiumContains',/^名前に「([^「」]{1,40})」とつくスタジアムが場に出ているなら$/,'name'],
+    ['opponentType',/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら$/,'type'],
+    ['opponentResistance',/^相手のバトルポケモンの抵抗力が\[([草炎水雷超闘悪鋼竜無色])\]タイプなら$/,'type'],
+    ['opponentTera',/^相手のバトルポケモンが「テラスタル」のポケモンなら$/],
+    ['ownSpecialEnergy',/^このポケモンに特殊エネルギーがついているなら$/]
+   ];
+   for(const [predicate,regex,key] of patterns){
+    const match=clause.match(regex);
+    if(match)return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate,base,bonus,...(key?{[key]:key==='threshold'?Number(match[1]):match[1]}:{}),sharedWording:true};
+   }
+  }
  }
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
@@ -256,6 +302,30 @@ function additionalAttackPlan(entry,text){
 // Exact composable shared effect grammar. Existing approved plans take priority.
 // Numeric parameters and known filters generalize across official prints; never
 // infer missing clauses, and never compile a partially matched effect.
+function handAndHealPlan(entry,kind,text){
+ const attack=kind==='ATTACK',ability=kind==='ABILITY',trainer=kind==='MAIN'&&['item','supporter'].includes(entry.category),printed=String(entry.damage??'0').normalize('NFKC');
+ if(!(attack||ability||trainer)||attack&&!/^\d+$/.test(printed))return null;
+ let body=text;
+ if(ability){
+  const prefix=body.match(/^(?:このポケモンがバトル場にいるなら、)?自分の番に1回使える。/);
+  if(!prefix)return null;body=body.slice(prefix[0].length);
+ }
+ const damage=attack&&Number(printed)>0?['DAMAGE']:[];
+ const hand=(mode,amount,extras={})=>({mechanic:'MASS_HAND_FLOW',mode,amount,commands:[...damage,...(mode.includes('reset')?['RETURN_TO_DECK',...(extras.bottom?[]:['SHUFFLE_DECK'])]:[]),...(mode==='revealCount'?['REVEAL']:[]),...(mode==='resetBothCoin'?['COIN_FLIP']:[]),'DRAW'],...extras,sharedWording:true});
+ const reset=body.match(/^相手は相手自身の手札をすべて(山札にもどして切る|ウラにして切り、山札の下にもどす)。その後、相手は山札を([1-9])枚引く。$/);
+ if(reset)return hand('resetOpponent',Number(reset[2]),{bottom:reset[1].includes('下')});
+ const both=body.match(/^おたがいのプレイヤーは、それぞれ山札を([1-9])枚引く。$/);
+ if(both)return hand('bothDraw',Number(both[1]));
+ if(attack&&body==='自分の手札をすべて山札にもどして切る。その後、相手の手札の枚数ぶん、自分の山札を引く。')return hand('resetOwnMatch',0);
+ if(trainer&&body==='相手の手札を見て、その中にあるポケモンの枚数ぶん、自分の山札を引く。')return hand('revealCount',0);
+ const bothCoin=body.match(/^おたがいのプレイヤーは、それぞれ自分の手札をすべてウラにして切り、山札の下にもどす。その後、おたがいのプレイヤーは、それぞれコインを1回投げ、オモテなら([1-9])枚、ウラなら([1-9])枚、山札を引く。$/);
+ if(trainer&&bothCoin)return hand('resetBothCoin',Number(bothCoin[1]),{tails:Number(bothCoin[2]),bottom:true});
+ const team=body.match(/^自分の手札が([1-9])枚になるように、山札を引く。自分の場のポケモン全員が「ロケット団のポケモン」なら、([1-9])枚になるように引く。$/);
+ if(trainer&&team&&Number(team[1])<Number(team[2]))return hand('rocketLimit',Number(team[1]),{bonus:Number(team[2])});
+ const heal=body.match(/^(自分のベンチ(?:の\[([草炎水雷超闘悪鋼竜無色])\])?ポケモン(1匹|全員)|自分のたねポケモン全員|自分のバトル場の\[([草炎水雷超闘悪鋼竜無色])\]ポケモン|おたがいのポケモン全員)のHPを、?(?:それぞれ)?(すべて|「([1-9]\d{0,2})」)回復する。$/);
+ if(heal&&(!heal[1].startsWith('おたがい')||!damage.length))return {mechanic:'MASS_HEAL_SCOPE',commands:[...damage,'HEAL'],scope:heal[1].startsWith('おたがい')?'both':heal[1].startsWith('自分のたね')?'basic':heal[1].startsWith('自分のバトル')?'active':'bench',choice:heal[3]==='1匹',type:heal[2]||heal[4]||null,amount:heal[5]==='すべて'?'all':Number(heal[6]),sharedWording:true};
+ return null;
+}
 function massSharedPlan(entry,kind,text){
  const attack=kind==='ATTACK',ability=kind==='ABILITY',trainer=kind==='MAIN'&&['item','supporter'].includes(entry.category);
  const printed=String(entry.damage??'0').normalize('NFKC');
@@ -612,7 +682,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic);
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,

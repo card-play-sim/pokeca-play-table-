@@ -117,6 +117,21 @@ async def main():
     assert await page.locator(attack_selector).is_disabled()
     await page.locator('#sheet-close').tap()
     await load_game(f['game'])
+   if m=='ACTIVE_OPPONENT_ABILITY_SUPPRESSION':
+    result=await page.evaluate("""g=>{
+      const own=g.players[0],other=g.players[1],ability=Pokeca.getReferenceEffectRecord(other.active).abilities.find(a=>a.plan?.mechanic==='DASH');
+      if(!ability||!own.bench.length)throw Error('SUPPRESSION_FIXTURE_MISSING');
+      g.turnPlayer='ai';let current=g;
+      const port=Pokeca.createUIPort({getGame:()=>current,setGame:x=>current=x});
+      if(!port.loadGame(g).ok)throw Error('SUPPRESSION_LOAD');
+      const action={type:'use_ability',sourceInstanceId:other.active.id,abilityId:ability.effectId};
+      const before=JSON.stringify(port.getSnapshot()),blocked=!port.dispatch('ai',action).ok&&JSON.stringify(port.getSnapshot())===before;
+      [own.active,own.bench[0]]=[own.bench[0],own.active];
+      if(!port.loadGame(g).ok)throw Error('SUPPRESSION_BENCH_LOAD');
+      const legal=Pokeca.getLegalActions(port.getSnapshot(),'ai').actions.find(a=>a.type===action.type&&a.abilityId===action.abilityId&&a.sourceInstanceId===action.sourceInstanceId);
+      return blocked&&Boolean(legal)&&port.dispatch('ai',legal).ok;
+    }""",await snap())
+    assert result,'ACTIVE_SUPPRESSION_MUST_END_ON_BENCH'
    before=await snap()
    ai=await page.evaluate('Pokeca.getLegalActions(PokecaMobile.port.getSnapshot(),"you").actions');assert option['action'] in ai
    hand_ability=(kind=='ability' and
@@ -191,7 +206,7 @@ async def main():
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m=='PASSIVE_ROCKET_TEAM_ATTACK_GATE':
+    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION'):
      assert attack_print==r['officialCardId']
     else:
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
@@ -387,6 +402,16 @@ async def main():
     assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
    if m=='TRAINER_SWITCH_OR_EX_V_BOOST':
     assert after['players'][0]['referenceExVDamageBoost']=={'turn':before['turnNumber'],'amount':f['e']['plan']['amount']}
+   if m=='MASS_COIN_OUTCOME':
+    plan=f['e']['plan']
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)]
+    assert len(flips)==plan['flips']
+    heads=sum(flips)
+    met=heads==plan['flips'] if plan['when']=='all' else heads==0 if plan['when']=='none' else heads>=plan['threshold']
+    if plan.get('status'):
+     assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==plan['status'] for ev in events)==met
+    if plan.get('mill'):
+     assert {c['id'] for c in before['players'][1]['deck'][:heads]}<={c['id'] for c in after['players'][1]['discard']}
    if m=='MASS_EFFECT_SEQUENCE':
     own,other=before['players'];resolved=after['players'][0]
     for step in f['e']['plan']['steps']:
@@ -411,6 +436,20 @@ async def main():
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
+   if m=='MASS_HEAL_SCOPE':
+    plan=f['e']['plan']
+    chosen=option['action'].get('selections',{}).get('cards',[])
+    healed=[ev['details'] for ev in events if ev.get('details',{}).get('command')=='HEAL' and ev['details'].get('amount',0)>0]
+    assert healed
+    if plan['choice']:assert {ev['targetInstanceId'] for ev in healed}==set(chosen)
+   if m=='MASS_HAND_FLOW':
+    plan=f['e']['plan'];mode=plan['mode']
+    if mode.startswith('reset'):
+     assert any(ev.get('details',{}).get('command')=='RETURN_TO_DECK' and not ev['details'].get('reference') for ev in events)
+    if mode=='resetBothCoin':
+     assert len([ev for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)])==2
+    if mode=='revealCount':
+     assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' for ev in events)
    if m=='MASS_HEAL_OWN':
     plan=f['e']['plan'];chosen=option['action'].get('selections',{}).get('cards',[])
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
