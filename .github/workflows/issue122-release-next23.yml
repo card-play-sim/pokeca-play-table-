@@ -1,0 +1,143 @@
+name: Issue122 integrate the next 23 verified prints with 22-print checkpoint
+on:
+  push:
+    branches: [battle/issue122-release-next23-20261126]
+    paths:
+      - '.github/workflows/issue122-release-next23.yml'
+      - 'tests/test_control_013_browser.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-release-next23
+  cancel-in-progress: false
+jobs:
+  all-remaining:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      INTAKE_LIMIT: '10000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Combine the three independently verified source families
+        run: |
+          git fetch origin main
+          for pair in 3bb6c6426d2479273eab3412e8ac80d7efd5529c:c7e7e5f3772fd0ce94e5ca0e7bad8c8d5c2be49c bd8f9899193d4b7a6b25703564ffa74bb665b94d:d849ae3ffd5f5510ad758df0a89bd11050b88d0c bd8f9899193d4b7a6b25703564ffa74bb665b94d:33c5cff301ec7e6b34a2f8c89a0507e26926bae3; do
+            from=${pair%%:*}
+            to=${pair#*:}
+            git diff --binary "$from" "$to" -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py > /tmp/family.patch
+            test -s /tmp/family.patch
+            git apply --3way /tmp/family.patch
+            test -z "$(git diff --name-only --diff-filter=U)"
+          done
+          git diff --cached --check
+          grep -q 'TRAINER_TOP_SELECT_DISCARD' engine/reference-effect-plans.cjs
+          grep -q 'MASS_SEARCH_DUPLICATE_GROUP' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'opponentHandTrainerCount' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_BASIC_ENERGY_MOVE' engine/pokeca_reference_effect_runtime.cjs
+      - name: Verify merged Crobat and named discard source families
+        run: |
+          grep -q 'ABILITY_EVOLVE_MULTI_COUNTERS' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_NAMED_DISCARD_BENCH' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_OPTIONAL_RETURN_POKEMON' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'NO_EVOLVED_SOURCE_FULL_LINE' scripts/lib/shared-effect-engine-worker.cjs
+          grep -q 'ensure(deckIndex,source,2)' scripts/lib/shared-effect-engine-worker.cjs
+      - name: Verify source and resume exact saved official evidence
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          # Start from the persisted, verified 91-print checkpoint, not an older snapshot.
+          node tests/issue122-ability-cost-draw.test.cjs
+          python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
+          node tests/intake-checkpoint-recovery-contract.test.cjs
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/control-014-official-parser.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
+      - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
+        run: |
+          node scripts/run-atomic-official-battle-intake.cjs
+          mkdir -p artifacts
+          mv work/card-auto-connect artifacts/first-pass-intake
+          node scripts/run-atomic-official-battle-intake.cjs
+      - name: Require exact 23 new prints and all previous verified records
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const read=sha=>JSON.parse(execFileSync('git',['show',sha+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const records=JSON.parse(fs.readFileSync(path,'utf8')).records;
+          const current=new Map(records.map(r=>[String(r.officialCardId),r]));
+          assert.equal(current.size,records.length);
+          const prior=read('a22a46a8ff8684a52a68df3a8cf2db5c94b7114e');
+          for(const sha of ["a22a46a8ff8684a52a68df3a8cf2db5c94b7114e","bd8f9899193d4b7a6b25703564ffa74bb665b94d","c7e7e5f3772fd0ce94e5ca0e7bad8c8d5c2be49c","d849ae3ffd5f5510ad758df0a89bd11050b88d0c","33c5cff301ec7e6b34a2f8c89a0507e26926bae3"])
+            for(const old of read(sha))assert.deepEqual(current.get(String(old.officialCardId)),old,'QUALIFIED_RECORD_CHANGED:'+sha+':'+old.officialCardId);
+          const oldIds=new Set(prior.map(r=>String(r.officialCardId)));
+          const added=[...current.keys()].filter(id=>!oldIds.has(id)).sort();
+          assert.deepEqual(added,["45213","45533","45925","45934","46060","46229","46281","46825","46833","47627","47700","48070","48071","48079","48760","49326","49433","50402","50406","50538","50542","50552","50842"],'EXACT_23_ID_DELTA');
+          fs.mkdirSync('artifacts',{recursive:true});
+          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base:'a22a46a8ff8684a52a68df3a8cf2db5c94b7114e',added,count:added.length},null,2));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify candidate exact-print browser gameplay
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="a22a46a8ff8684a52a68df3a8cf2db5c94b7114e"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          mkdir -p artifacts
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python tests/test_control_013_browser.py > "artifacts/all-remaining-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
+      - name: Persist battle-qualified candidate on isolated branch only
+        if: success()
+        run: |
+          git diff --check
+          mkdir -p reports/official-effect-continuation
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/release-next23-candidate.json
+          cp artifacts/exact-release-delta.json reports/official-effect-continuation/release-next23-exact-delta.json
+          cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/release-next23-execution-gaps.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          if ! git diff --cached --quiet; then
+            git commit -m 'checkpoint: exact 23 new prints unified with published main and Chromium verified'
+            git push origin HEAD:battle/issue122-release-next23-20261126
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-release-next23-evidence
+          path: |
+            work/card-auto-connect/
+            artifacts/all-remaining-*
+            reports/official-effect-continuation/
+            data/official-effect-intake/checkpoint.json
+            test-results/
+          if-no-files-found: warn
+          retention-days: 90
