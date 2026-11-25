@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_3D3A8264CE7E56E3:82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
   "taskFingerprint": "82bda5e67939aebcf93ebd2a9cd2491cedabcfb4390377536e7c1def348394c5",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "0721ffb0-1b88-482a-9155-b8e9adca8502",
+  "executionFingerprint": "68c68278b588f38ebeed11640932e28dad045ac10beef2850d5a6698d79a7b99",
+  "attemptId": "86cf8819-256a-4329-8a74-def20e1f30da",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -33,8 +33,20 @@
       },
       {
         "slot": "45843:attack:ハンマーウィップ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45725:attack:アクアスラッシュ:0",
@@ -150,8 +162,20 @@
       },
       {
         "slot": "47632:attack:エメラルドブレード:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "NO_NEXT_ATTACK",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "47766:attack:そこぢから:1",
@@ -257,5 +281,5 @@
       }
     ]
   },
-  "checksum": "3fb0440c20fd17ab23cd87c9e2a85496ed7dd89b3b08d8ba82610135a22dabf2"
+  "checksum": "47a6c412503c787cbd3f2e39c4203069533ac36a02190cb7f6ef08dd4f0d0a8c"
 }

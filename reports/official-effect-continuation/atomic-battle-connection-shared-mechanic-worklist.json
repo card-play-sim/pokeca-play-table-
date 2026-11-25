@@ -573,34 +573,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_21015B7A622AE723BE40",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "次の相手の番、このポケモンの弱点は、すべてなくなる。",
-      "printedDamage": "220",
-      "energyCost": [
-        "鋼",
-        "鋼",
-        "鋼"
-      ],
-      "officialCardIds": [
-        "46266",
-        "46326",
-        "46334",
-        "48644",
-        "49242"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46266.json",
-        "data/effect-extensions/evidence/46326.json",
-        "data/effect-extensions/evidence/46334.json",
-        "data/effect-extensions/evidence/48644.json",
-        "data/effect-extensions/evidence/49242.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_34015C1C374E07D7B30C",
       "category": "pokemon",
       "effectKind": "ability",
@@ -1516,28 +1488,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2F606D39CDD032A2058E",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、このカードを手札からベンチに出したとき、1回使える。相手の山札を上から1枚トラッシュする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46343",
-        "46642",
-        "46653",
-        "48768"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46343.json",
-        "data/effect-extensions/evidence/46642.json",
-        "data/effect-extensions/evidence/46653.json",
-        "data/effect-extensions/evidence/48768.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_45B4F44B36EF1EB95441",
       "category": "stadium",
       "effectKind": "stadium",
@@ -1735,32 +1685,6 @@
         "data/effect-extensions/evidence/47527.json",
         "data/effect-extensions/evidence/48702.json",
         "data/effect-extensions/evidence/49451.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6829053DD39A8A094F42",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを、すべてトラッシュする。次の相手の番、相手は手札からグッズを出して使えない。",
-      "printedDamage": "180",
-      "energyCost": [
-        "草",
-        "雷",
-        "闘"
-      ],
-      "officialCardIds": [
-        "45972",
-        "46166",
-        "46176",
-        "48971"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45972.json",
-        "data/effect-extensions/evidence/46166.json",
-        "data/effect-extensions/evidence/46176.json",
-        "data/effect-extensions/evidence/48971.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -2464,31 +2388,6 @@
         "data/effect-extensions/evidence/45534.json",
         "data/effect-extensions/evidence/45539.json",
         "data/effect-extensions/evidence/47118.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CA7F1C11CEE6BB54C37F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の、ワザ「りんしょう」を持つポケモンの数×40ダメージ。",
-      "printedDamage": "40×",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47559",
-        "47932",
-        "48405",
-        "48497"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47559.json",
-        "data/effect-extensions/evidence/47932.json",
-        "data/effect-extensions/evidence/48405.json",
-        "data/effect-extensions/evidence/48497.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -3519,30 +3418,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_34A1EACA29E2C2E47510",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、オモテの数×90ダメージ。1回でもオモテなら、相手のバトルポケモンをマヒにする。",
-      "printedDamage": "90×",
-      "energyCost": [
-        "水",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47648",
-        "48022",
-        "48917"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47648.json",
-        "data/effect-extensions/evidence/48022.json",
-        "data/effect-extensions/evidence/48917.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_357E07E241E9DDA8E03A",
       "category": "energy",
       "effectKind": "energy",
@@ -3891,30 +3766,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4E6C61D319585128FF9E",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、次の自分の番、このポケモンはワザが使えない。",
-      "printedDamage": "200",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50362",
-        "50533",
-        "50549"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50362.json",
-        "data/effect-extensions/evidence/50533.json",
-        "data/effect-extensions/evidence/50549.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_502F0B2CF2A714DEC3B8",
       "category": "pokemon",
       "effectKind": "attack",
@@ -4099,29 +3950,6 @@
         "data/effect-extensions/evidence/45616.json",
         "data/effect-extensions/evidence/45677.json",
         "data/effect-extensions/evidence/49069.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6CF87EAFDB4B330EF39D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の「ロケット団のポケモン」の数×30ダメージ。",
-      "printedDamage": "30×",
-      "energyCost": [
-        "草",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47402",
-        "47503",
-        "48538"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47402.json",
-        "data/effect-extensions/evidence/47503.json",
-        "data/effect-extensions/evidence/48538.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -4491,28 +4319,6 @@
         "data/effect-extensions/evidence/46309.json",
         "data/effect-extensions/evidence/48479.json",
         "data/effect-extensions/evidence/50491.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_83B7BC207AF430495EF5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。",
-      "printedDamage": "40",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "47610",
-        "47978",
-        "49315"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47610.json",
-        "data/effect-extensions/evidence/47978.json",
-        "data/effect-extensions/evidence/49315.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -5009,28 +4815,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AC77CF677CBCCABC988A",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンのHPを「60」回復する。次の自分の番、このポケモンはにげられない。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46422",
-        "46640",
-        "49297"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46422.json",
-        "data/effect-extensions/evidence/46640.json",
-        "data/effect-extensions/evidence/49297.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AD00EA60F0AD6C2A62DF",
       "category": "pokemon",
       "effectKind": "attack",
@@ -5450,28 +5234,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D81A8F0ED2E83A8607B6",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、すべてウラなら、このポケモンにも90ダメージ。",
-      "printedDamage": "90",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "47470",
-        "47512",
-        "49272"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47470.json",
-        "data/effect-extensions/evidence/47512.json",
-        "data/effect-extensions/evidence/49272.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D85450763609AA550292",
       "category": "pokemon",
       "effectKind": "ability",
@@ -5531,29 +5293,6 @@
         "data/effect-extensions/evidence/47345.json",
         "data/effect-extensions/evidence/48630.json",
         "data/effect-extensions/evidence/49968.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E485778B756B84FA36F4",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のトラッシュにある基本エネルギーの枚数×30ダメージ。",
-      "printedDamage": "30×",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47024",
-        "48550",
-        "48835"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47024.json",
-        "data/effect-extensions/evidence/48550.json",
-        "data/effect-extensions/evidence/48835.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -5685,28 +5424,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F2B91DA111AA5334478E",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。",
-      "printedDamage": "30",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "47632",
-        "48007",
-        "48770"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47632.json",
-        "data/effect-extensions/evidence/48007.json",
-        "data/effect-extensions/evidence/48770.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F2C2A725FB9FFDE7F293",
       "category": "pokemon",
       "effectKind": "attack",
@@ -5724,29 +5441,6 @@
         "data/effect-extensions/evidence/47095.json",
         "data/effect-extensions/evidence/48665.json",
         "data/effect-extensions/evidence/49340.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F4BCBDD3A52382A70FCB",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げオモテなら、30ダメージ追加し、このポケモンのHPを「30」回復する。",
-      "printedDamage": "30+",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49590",
-        "47019",
-        "48782"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49590.json",
-        "data/effect-extensions/evidence/47019.json",
-        "data/effect-extensions/evidence/48782.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -6036,26 +5730,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45208.json",
         "data/effect-extensions/evidence/49358.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_074967429581E61ED09F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをどくにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "0",
-      "energyCost": [
-        "悪"
-      ],
-      "officialCardIds": [
-        "49177",
-        "45760"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49177.json",
-        "data/effect-extensions/evidence/45760.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -6477,26 +6151,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/46279.json",
         "data/effect-extensions/evidence/46322.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_13F385522FBA913236AF",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンをねむりにする。このポケモンのHPを「30」回復する。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "47574",
-        "47945"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47574.json",
-        "data/effect-extensions/evidence/47945.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -7113,26 +6767,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_303339C74220CF4BEE97",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のトラッシュにあるグッズの枚数×30ダメージ。",
-      "printedDamage": "30×",
-      "energyCost": [
-        "水"
-      ],
-      "officialCardIds": [
-        "47561",
-        "47934"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47561.json",
-        "data/effect-extensions/evidence/47934.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_32729BA8D3F1743C1C75",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7558,24 +7192,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_43E42B2FC884B95C474B",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがバトル場にいるなら、自分の番に1回使える。このポケモンのHPを「50」回復する。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50359",
-        "50532"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50359.json",
-        "data/effect-extensions/evidence/50532.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_43F5F23F72F1AB3D2DAF",
       "category": "pokemon",
       "effectKind": "attack",
@@ -7717,27 +7333,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_49244F202FDC994A9A0B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の場の「ポケモンex・V」の数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45907",
-        "46758"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45907.json",
-        "data/effect-extensions/evidence/46758.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4A1DC6FBFF64A54AE548",
       "category": "pokemon",
       "effectKind": "attack",
@@ -7791,26 +7386,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45154.json",
         "data/effect-extensions/evidence/46666.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4ED7F3C9F470126FA7E7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。",
-      "printedDamage": "30",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46354",
-        "48838"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46354.json",
-        "data/effect-extensions/evidence/48838.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -8260,27 +7835,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_67EE8A812EF4437186B5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをどくにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "10",
-      "energyCost": [
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46415",
-        "49206"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46415.json",
-        "data/effect-extensions/evidence/49206.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6813C730AF0C2145495A",
       "category": "pokemon",
       "effectKind": "ability",
@@ -8469,27 +8023,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45579.json",
         "data/effect-extensions/evidence/45662.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6D059646C4E3A8864FC5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、オモテの数ぶん、相手の山札を上からトラッシュする。",
-      "printedDamage": "40",
-      "energyCost": [
-        "水",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45596",
-        "48899"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45596.json",
-        "data/effect-extensions/evidence/48899.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -8858,28 +8391,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7761760A73018594891E",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の、ワザ「りんしょう」を持つポケモンの数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47560",
-        "47933"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47560.json",
-        "data/effect-extensions/evidence/47933.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_783A911F7942A9717B93",
       "category": "tool",
       "effectKind": "tool",
@@ -9237,27 +8748,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45196.json",
         "data/effect-extensions/evidence/49169.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_92A03052C365E4AFF84C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の、ワザ「りんしょう」を持つポケモンの数×20ダメージ。",
-      "printedDamage": "20×",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47558",
-        "47931"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47558.json",
-        "data/effect-extensions/evidence/47931.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -9787,27 +9277,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AD8702DDB185BD5CDFF7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げオモテなら、相手のバトルポケモンをやけどにする。",
-      "printedDamage": "30",
-      "energyCost": [
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47021",
-        "48807"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47021.json",
-        "data/effect-extensions/evidence/48807.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_ADF45E35B5164FC533FF",
       "category": "supporter",
       "effectKind": "supporter",
@@ -10254,28 +9723,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BEC18331285D4D272B35",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げオモテなら、相手のバトルポケモンをやけどにする。",
-      "printedDamage": "90",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47022",
-        "48808"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47022.json",
-        "data/effect-extensions/evidence/48808.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BEE254FB83B4B90B49CE",
       "category": "pokemon",
       "effectKind": "attack",
@@ -10471,28 +9918,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C8CF9FC32048080B10C0",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをやけどにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "50",
-      "energyCost": [
-        "炎",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45954",
-        "46153"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45954.json",
-        "data/effect-extensions/evidence/46153.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C9EACA68CE664E2D2F63",
       "category": "pokemon",
       "effectKind": "attack",
@@ -10648,24 +10073,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50153.json",
         "data/effect-extensions/evidence/50194.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D11795EDFDB8C9E57ACD",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分の山札を3枚引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47834",
-        "48457"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47834.json",
-        "data/effect-extensions/evidence/48457.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -11387,27 +10794,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_ECD9908A9166EA7AB90C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。",
-      "printedDamage": "50",
-      "energyCost": [
-        "草",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48772",
-        "45698"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48772.json",
-        "data/effect-extensions/evidence/45698.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_ECDFB8D098A307F1D9CD",
       "category": "pokemon",
       "effectKind": "ability",
@@ -11951,26 +11337,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_FE36BA2994AF26C77683",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。",
-      "printedDamage": "10",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "47012",
-        "48720"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47012.json",
-        "data/effect-extensions/evidence/48720.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_001BAC145147D8B2206D",
       "category": "pokemon",
       "effectKind": "ability",
@@ -12117,25 +11483,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47805.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0425F0C1638E39F49980",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをこんらんにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "40",
-      "energyCost": [
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47461"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47461.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -12701,26 +12048,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_157DF7C1A9753EF7DDDD",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、このポケモンにも30ダメージ。",
-      "printedDamage": "200",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50420"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50420.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_15C26C5421E05382119D",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13243,26 +12570,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_20C9894796AAB7D991B3",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、次の自分の番、このポケモンはワザが使えない。",
-      "printedDamage": "130",
-      "energyCost": [
-        "悪",
-        "悪",
-        "悪"
-      ],
-      "officialCardIds": [
-        "48269"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48269.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_21B266C81AC00906380C",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13336,22 +12643,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_22731EC3C59CB0DDDB17",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分の山札を2枚引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47833"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47833.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_237451186E04901BF852",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13400,24 +12691,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/49659.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2518F6A1FCE2BE722FD1",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをどくにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "50",
-      "energyCost": [
-        "闘"
-      ],
-      "officialCardIds": [
-        "48384"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48384.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13601,25 +12874,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/48942.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2A489E6529B84749DA13",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをどくにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "60",
-      "energyCost": [
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46528"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46528.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -14135,24 +13389,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_388AE09E9999AC6F4070",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを4回投げ、オモテの数×60ダメージ。オモテが2回以上なら、相手のバトルポケモンをマヒにする。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "47011"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47011.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_38A71C095722E204AD26",
       "category": "pokemon",
       "effectKind": "attack",
@@ -14525,42 +13761,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_44DC0DF34154EDA7E10B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分のトラッシュにある、ワザ「だんけつのつばさ」を持つポケモンの枚数×20ダメージ。",
-      "printedDamage": "20×",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "45879"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45879.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_44FC9A6F09432590E405",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の場の特性を持つポケモンの数×50ダメージ追加。",
-      "printedDamage": "10+",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "50343"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50343.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_45358F7CE3285B9BA4AD",
       "category": "pokemon",
       "effectKind": "attack",
@@ -14680,45 +13880,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/48640.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4BECC71A31C7C0431B71",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。",
-      "printedDamage": "30",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45884"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45884.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4CE84D8318A05D8D8677",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、次の自分の番、このポケモンはワザが使えない。",
-      "printedDamage": "60",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45619"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45619.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -14862,24 +14023,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45980.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_527F46116D9962FEBE83",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。",
-      "printedDamage": "30",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "50284"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50284.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -15276,24 +14419,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5DD6B500205A0EC813FD",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをどくにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "50",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "49635"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49635.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5DF1A7627C9ADFAEE0B9",
       "category": "pokemon",
       "effectKind": "attack",
@@ -15594,25 +14719,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45719.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_656564B0DA8BBF07F4C8",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、ワザが使えない。",
-      "printedDamage": "50",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46576"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46576.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -16124,24 +15230,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_753EFCD696DF4AF6C9AC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンのHPを「50」回復する。次の自分の番、このポケモンはにげられない。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "47467"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47467.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7656FAE3B705A34822AC",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16542,24 +15630,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7E17C46CF28EBB9BC7AE",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンをねむりにする。自分の山札を2枚引く。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "49335"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49335.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7E18A9D1492E0DB164F0",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16736,24 +15806,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50276.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_84BC3BC6B7FD4928D3F0",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "20",
-      "energyCost": [
-        "悪"
-      ],
-      "officialCardIds": [
-        "50581"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50581.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -17992,25 +17044,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A86DA0C455304E60225C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、すべてオモテなら、150ダメージ追加。",
-      "printedDamage": "50+",
-      "energyCost": [
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50440"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50440.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A8A165BC251A16F7A0AD",
       "category": "stadium",
       "effectKind": "stadium",
@@ -18543,25 +17576,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B902AA22E0F70A375F0D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、オモテの数×90ダメージ。すべてウラなら、相手のバトルポケモンをこんらんにする。",
-      "printedDamage": "90×",
-      "energyCost": [
-        "超",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45743"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45743.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BB5E53AA18EA7957AD1D",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18844,26 +17858,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/48563.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C5FB137D393493F553FC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手のバトルポケモンをこんらんにする。次の相手の番、このワザを受けたポケモンは、にげられない。",
-      "printedDamage": "80",
-      "energyCost": [
-        "雷",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46376"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46376.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -19988,24 +18982,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E7788E02549F4489C015",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場のダメカンがのっているポケモンの数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "鋼"
-      ],
-      "officialCardIds": [
-        "45766"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45766.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E7B1AC147B8EFF78FF21",
       "category": "pokemon",
       "effectKind": "attack",
@@ -20209,26 +19185,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50871.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_ECF9839D82D4B30DF158",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを2回投げ、すべてオモテなら、100ダメージ追加。",
-      "printedDamage": "100+",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47852"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47852.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -20505,25 +19461,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F5D12E14AF100D8134ED",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の「エリカのポケモン」の数×40ダメージ。",
-      "printedDamage": "40×",
-      "energyCost": [
-        "草",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48724"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48724.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F6554630009201C86226",
       "category": "pokemon",
       "effectKind": "attack",
@@ -20594,25 +19531,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47016.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F8FE9318CC160861B66B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分のトラッシュにある[竜]ポケモンの枚数×30ダメージ。",
-      "printedDamage": "30×",
-      "energyCost": [
-        "水",
-        "闘"
-      ],
-      "officialCardIds": [
-        "50922"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50922.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -20762,5 +19680,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 2058
+  "unfinishedPrints": 1907
 }
