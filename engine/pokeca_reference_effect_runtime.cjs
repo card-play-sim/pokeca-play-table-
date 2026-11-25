@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
+const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -213,6 +213,12 @@ function damage(g,actor,mon,amount,options={}){
  if(survival&&mon.damage>=mon.hp){
   mon.damage=mon.hp-survival.plan.remainingHp;
   event(g,defender.player.id,'ADD_STATE',{mechanic:'PASSIVE_FULL_HP_SURVIVAL',targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
+ }
+ if(value>0&&defender?.player.id!==actor&&defender?.player.active===mon){
+  for(const a of enabledAbilities(g,mon).filter(a=>a.plan.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION')){
+   g.referenceReactions||=[];
+   g.referenceReactions.push({kind:'ACTIVE_HIT_RETALIATION',playerId:defender.player.id,attackerId:id(attacker),effectId:a.effectId,status:a.plan.status,counterCount:a.plan.counterCount});
+  }
  }
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
@@ -761,6 +767,17 @@ function finishAttack(g,actor){
  g.attackUsed=true;g.referenceAttackTurnPending=actor;
  while(g.referenceReactions?.length){
   const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);if(!attacker)continue;
+  if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
+   if(reaction.status){
+    if(attacker.player.active!==attacker.card)continue;
+    attacker.card.statusCondition=reaction.status;
+    event(g,reaction.playerId,'STATUS_CONDITION',{status:reaction.status,targetInstanceId:id(attacker.card),effectId:reaction.effectId,mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION'});
+   }else{
+    counters(g,reaction.playerId,attacker.card,reaction.counterCount);
+    event(g,reaction.playerId,'ADD_STATE',{mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',targetInstanceId:id(attacker.card),counterCount:reaction.counterCount,effectId:reaction.effectId});
+   }
+   continue;
+  }
   const choices=attacker.card.energyCards.flatMap(e=>attacker.player.bench.filter(c=>c!==attacker.card).map(c=>({energyId:id(e),benchInstanceId:id(c)})));
   if(choices.length){g.pendingReferenceChoice={...reaction,options:choices};return;}
  }
