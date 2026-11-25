@@ -1,0 +1,142 @@
+name: Issue122 preserve 344 qualified IDs and unify switch, survival and typed-energy proof
+on:
+  push:
+    branches: [battle/issue122-switch-proof-integration-20261125]
+    paths:
+      - '.github/workflows/issue122-switch-proof-integration.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-switch-proof-integration
+  cancel-in-progress: false
+jobs:
+  all-remaining:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      INTAKE_LIMIT: '10000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Integrate exact independently verified energy proof source commits
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git cherry-pick 4bc63f3a2f249aff343adb74f7e4ba843eb7710c eb64d58dfbd8bc78b0d61407f32cca5eb9f93a71
+      - name: Verify source and resume exact saved official evidence
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          # Start from the persisted, verified 91-print checkpoint, not an older snapshot.
+          node tests/issue122-ability-cost-draw.test.cjs
+          python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
+          node tests/intake-checkpoint-recovery-contract.test.cjs
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/control-014-official-parser.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
+      - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
+        run: |
+          node scripts/run-atomic-official-battle-intake.cjs
+      - name: Require all 310 independently qualified IDs and exact published records
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {execFileSync}=require('node:child_process');
+          const read=(sha,path)=>JSON.parse(execFileSync('git',['show',sha+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const path='data/effect-extensions/compiled.json';
+          const current=JSON.parse(fs.readFileSync(path,'utf8'));
+          const map=new Map(current.records.map(r=>[String(r.officialCardId),r]));
+          assert.equal(map.size,current.records.length,'DUPLICATE_COMPILED_PRINT_ID');
+          for(const old of read('a3ff71eabf7c95e2cb45ba535632e6665941dffc',path).records)
+            assert.deepEqual(map.get(String(old.officialCardId)),old,'PUBLISHED_RECORD_CHANGED:'+old.officialCardId);
+          const refs=[
+            ['35263857997f234ae1720e2da33411ef7e926d73','mass-energy-routing-candidate.json'],
+            ['57b765333c040f83982f2082eeef62017c766161','mass-passive-candidate.json'],
+            ['fff4806e2ca6ab72692532ab8cffd9907173ee36','composite-effects-candidate.json'],
+            ['e62766e5ce80be61add5a7867c01fe9534665d63','execution-gap-repair-candidate.json'],
+            ['a72066087dd44aed2c8ec7afe1f8683100212ad8','fixture-resource-batch-candidate.json'],
+            ['b064802dc95021dee2cdfc9ac879af4e5602633e','public-count-batch-candidate.json'],
+            ['2eaf98374da88dc37c0cf78105fc28076a5d20f3','coin-outcomes-candidate.json'],
+            ['a5b766be2e8e69f1df2f2bbb24f191d3ff6ea7e8','release-259-candidate.json'],
+            ['2b4bc2a0ffd16deefb9523122bd83c175d54dafc','release-306-candidate.json']
+          ];
+          const ids=new Set();
+          for(const [sha,file] of refs){
+            const old=new Map(read(sha,path).records.map(r=>[String(r.officialCardId),r]));
+            for(const raw of read(sha,'reports/official-effect-continuation/'+file).qualified){
+              const id=String(raw);ids.add(id);
+              assert(old.has(id),'OLD_PROOF_RECORD_MISSING:'+id);
+              assert.deepEqual(map.get(id),old.get(id),'QUALIFIED_RECORD_MISSING_OR_CHANGED:'+id);
+            }
+          }
+          assert.equal(ids.size,310,'PRIOR_ID_UNION_CHANGED');
+          console.log('310 exact qualified records preserved');
+          const checkpoint=read('b490f590740a12947285175a805245a357a43e8e',path).records;
+          assert.equal(checkpoint.length,3199,'UNEXPECTED_PRIOR_COMPILED_COUNT');
+          for(const old of checkpoint)
+            assert.deepEqual(map.get(String(old.officialCardId)),old,'LATEST_QUALIFIED_RECORD_CHANGED:'+old.officialCardId);
+          console.log('Latest 3199 compiled records exactly preserved');
+          for(const sha of ['ef704641c7dc2b0532ff6efafedb953a80ef694a','3269f5cbde2c7ab803b5a5cc07a28daf5cbc19e0','e7a17234e23998e40df38c168451aa9bbab2ac4d','b747bb88cda2dd78deb3eb9db8784ea70035ae87']){
+            for(const old of read(sha,path).records)
+              assert.deepEqual(map.get(String(old.officialCardId)),old,'INDEPENDENT_CANDIDATE_CHANGED:'+sha+':'+old.officialCardId);
+          }
+          NODE
+      - name: Verify candidate exact-print browser gameplay
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="ef704641c7dc2b0532ff6efafedb953a80ef694a"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          mkdir -p artifacts
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python tests/test_control_013_browser.py > "artifacts/all-remaining-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
+      - name: Persist battle-qualified candidate on isolated branch only
+        if: success()
+        run: |
+          git diff --check
+          mkdir -p reports/official-effect-continuation
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/switch-proof-integration-candidate.json
+          cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/switch-proof-integration-execution-gaps.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          if ! git diff --cached --quiet; then
+            git commit -m 'checkpoint: cumulative new mechanics with complete candidate Chromium verification'
+            git push origin HEAD:battle/issue122-switch-proof-integration-20261125
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-switch-proof-integration-evidence
+          path: |
+            work/card-auto-connect/
+            artifacts/all-remaining-*
+            reports/official-effect-continuation/
+            data/official-effect-intake/checkpoint.json
+            test-results/
+          if-no-files-found: warn
+          retention-days: 90
