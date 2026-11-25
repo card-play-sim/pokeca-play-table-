@@ -206,7 +206,7 @@ async def main():
     attack_print=before['players'][0]['active']['validationReference']['officialCardId']
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION'):
+    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
      assert attack_print==r['officialCardId']
     else:
      assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
@@ -397,6 +397,10 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='PASSIVE_IGNORE_ACTIVE_DEFENSE':
+    defender=before['players'][1]['active']
+    assert defender['referenceProtection']['opponentTurn']==before['turnNumber']
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
    if m=='PASSIVE_FULL_HP_SURVIVAL':
     defender=before['players'][1]['active'];survivor=after['players'][1]['active']
     assert defender['damage']==0 and survivor['id']==defender['id']
