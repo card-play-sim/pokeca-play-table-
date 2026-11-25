@@ -401,6 +401,18 @@ async def main():
     defender=before['players'][1]['active']
     assert defender['referenceProtection']['opponentTurn']==before['turnNumber']
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+   if m=='SUPPORTER_ROCKET_SWITCH_BOTH':
+    assert before['players'][0]['active']['name'].startswith('ロケット団の')
+    assert after['players'][0]['active']['name'].startswith('ロケット団の')
+    assert before['players'][0]['active']['id']!=after['players'][0]['active']['id']
+    if before['players'][1]['bench']:
+     assert before['players'][1]['active']['id']!=after['players'][1]['active']['id']
+   if m=='SUPPORTER_BASIC_SWITCH_CONFUSE':
+    assert before['players'][1]['active']['id']!=after['players'][1]['active']['id']
+    assert after['players'][1]['active']['basic'] and after['players'][1]['active']['statusCondition']=='CONFUSED'
+   if m=='SUPPORTER_SWITCH_EX_HEAL':
+    old=before['players'][0]['active'];new=next(c for c in after['players'][0]['bench'] if c['id']==old['id'])
+    assert old['name'].endswith('ex') and new['damage']==max(0,old['damage']-f['e']['plan']['amount'])
    if m=='PASSIVE_ACTIVE_HIT_RETALIATION':
     defender=before['players'][1]['active'];attacker=before['players'][0]['active'];plan=f['e']['plan']
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
