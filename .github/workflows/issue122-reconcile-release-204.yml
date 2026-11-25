@@ -51,13 +51,26 @@ jobs:
           a.equal(x.result.status,x.status,file+':candidate receipt status');
           a.equal(y.result.status,y.status,file+':public receipt status');
           a.equal(x.result.stage,y.result.stage,file+':stage');
-          if(x.status==='SUCCEEDED' && y.status==='BLOCKED'){
-            const required=['LEGAL_ACTION_OR_PASSIVE_GUARD','INVALID_ACTION_ROLLBACK','AI_UI_LEGAL_PARITY','PHYSICAL_CARD_CONSERVATION','EXACT_SAVE_RESTORE'];
-            for(const c of xc){a.equal(c.status,'SUCCEEDED',file+':case');a(required.every(k=>c.checks?.includes(k)),file+':missing execution check');}
-            console.log('Verified receipt advancement: '+file);
-          } else if(x.status==='BLOCKED' && y.status==='BLOCKED'){
-            a(xc.every(c=>c.status!=='SUCCEEDED') && yc.every(c=>c.status!=='SUCCEEDED'),file+':mixed blocked results');
-          } else a.fail(file+':non-equivalent or regressing evidence');
+          const required=['LEGAL_ACTION_OR_PASSIVE_GUARD','INVALID_ACTION_ROLLBACK','AI_UI_LEGAL_PARITY','PHYSICAL_CARD_CONSERVATION','EXACT_SAVE_RESTORE'];
+          const prior=new Map(yc.map(c=>[c.slot,c]));
+          a.equal(prior.size,yc.length,file+':duplicate prior slot');
+          a.equal(new Set(xc.map(c=>c.slot)).size,xc.length,file+':duplicate candidate slot');
+          let advanced=0;
+          for(const c of xc){
+            const old=prior.get(c.slot);
+            if(old.status==='SUCCEEDED') a.deepEqual(c,old,file+':prior successful slot '+c.slot);
+            else if(c.status==='SUCCEEDED'){
+              a.equal(old.status,'BLOCKED',file+':unknown prior status');
+              a(required.every(k=>c.checks?.includes(k)),file+':missing execution checks '+c.slot);
+              a(typeof c.mechanic==='string'&&Array.isArray(c.commands)&&c.commands.length>0,file+':missing mechanic '+c.slot);
+              advanced++;
+            } else {
+              a.equal(old.status,'BLOCKED',file+':unknown prior status');
+              a.equal(c.status,'BLOCKED',file+':unknown candidate status');
+            }
+          }
+          for(const [receipt,cases] of [[x,xc],[y,yc]]) a.equal(receipt.status,cases.every(c=>c.status==='SUCCEEDED')?'SUCCEEDED':'BLOCKED',file+':aggregate status');
+          if(advanced) console.log('Verified receipt advancement: '+file+' slots='+advanced);
           NODE
                 git checkout --ours -- "$file"
                 git add "$file"
