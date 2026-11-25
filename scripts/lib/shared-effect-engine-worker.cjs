@@ -1509,6 +1509,13 @@ function verifyCase(t, e) {
     assert(E.getReferenceEffectRecord(old).name.endsWith('ex'));
     assert.equal(after.players[0].active.id,q.ownBench[0]);
     assert.equal(after.players[0].bench.find(c=>c.id===old.id).damage,Math.max(0,old.damage-e.plan.amount));
+    const nonEx=before.players[0].bench.find(c=>E.getReferenceEffectRecord(c).facts.basic&&!E.getReferenceEffectRecord(c).name.endsWith('ex'));
+    if(nonEx){
+      const control=JSON.parse(JSON.stringify(before)),side=control.players[0],i=side.bench.findIndex(c=>c.id===nonEx.id);
+      const oldActive=side.active;side.active=side.bench[i];side.bench[i]=oldActive;side.active.damage=Math.min(30,side.active.hp-10);
+      const negative=port(control);assert(negative.dispatch('you',{...a,selections:{...q,ownBench:[oldActive.id]}}).ok);
+      assert.equal(negative.getSnapshot().players[0].bench.find(c=>c.id===nonEx.id).damage,side.active.damage);
+    }
   }
   if (e.plan.mechanic === "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT") {
     assert.equal(after.players[0].active.id,o.action.selections.ownBench[0]);
