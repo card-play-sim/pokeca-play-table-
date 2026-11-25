@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1072,
-      "missing": 630
+      "connected": 1081,
+      "missing": 621
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1066,
+      "CONNECTED_UNTESTED": 1075,
       "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 542,
+      "ENGINE_CONNECTION_REQUIRED": 533,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10234,8 +10234,7 @@
       "name": "ロケット団のゴルバット",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47458.json"
     },
     {
@@ -10243,8 +10242,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47459.json"
     },
     {
@@ -10505,8 +10503,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47521.json"
     },
     {
@@ -10575,8 +10572,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47531.json"
     },
     {
@@ -10601,8 +10597,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47535.json"
     },
     {
@@ -14101,8 +14096,7 @@
       "name": "ロケット団のゴルバット",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48622.json"
     },
     {
@@ -14110,8 +14104,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48623.json"
     },
     {
@@ -15196,8 +15189,7 @@
       "name": "ロケット団のゴルバット",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49155.json"
     },
     {
@@ -15205,8 +15197,7 @@
       "name": "ロケット団のクロバットex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49156.json"
     },
     {
@@ -21610,9 +21601,9 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1072,
-        "MECHANIC_REQUIRED": 611,
-        "ENGINE_CONNECTION_REQUIRED": 15,
+        "ENGINE_CONNECTED": 1081,
+        "MECHANIC_REQUIRED": 608,
+        "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21628,7 +21619,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3333,
-    "unconnected": 1740
+    "engineConnected": 3342,
+    "unconnected": 1731
   }
 }
