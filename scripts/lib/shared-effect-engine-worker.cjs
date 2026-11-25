@@ -352,14 +352,47 @@ function prepare(r, e, kind) {
     return {...t,port:port(g),trigger};
   }
   if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'){
-    if(!r.facts.basic)return {blocked:'NO_RETALIATION_LEGAL_EVOLUTION_FIXTURE'};
     const attacker=records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
-    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[r]);
-    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:r.officialCardId});
+    const line=record=>{
+      if(record.facts.basic)return [record];
+      const parent=[...records.values()].find(c=>c.category==='pokemon'&&c.name===record.facts.evolvesFrom&&c.facts.stage===record.facts.stage-1&&c.attacks.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan));
+      const previous=parent&&line(parent);return previous?[...previous,record]:null;
+    };
+    const chain=line(r);
+    if(!chain)return {blocked:'NO_RETALIATION_EVOLUTION_LINE'};
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,chain);
+    const requirements=chain.length>1?[{side:1,zone:'active',printId:chain[0].officialCardId},...chain.slice(1).map(c=>({side:1,zone:'hand',printId:c.officialCardId}))]:[];
+    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:chain[0].officialCardId,fixtureRequirements:requirements});
     if(frame.blocked)return frame;
-    return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
+    let game=frame.game;
+    if(chain.length>1){
+      const identities=Array.from(S.identities(game)),baseId=game.players[1].active.id;
+      const first=port(game),end=E.getLegalActions(first.getSnapshot(),'you').actions.find(a=>a.type==='end_turn');
+      if(!end||!first.dispatch('you',end).ok)return {blocked:'RETALIATION_INITIAL_END_TURN_REJECTED'};
+      const pp=first;
+      for(let i=1;i<chain.length;i++){
+        const state=pp.getSnapshot(),child=state.players[1].hand.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[i].officialCardId);
+        if(!child)return {blocked:'NO_RETALIATION_EVOLUTION_HAND_PRINT'};
+        const action={type:'evolve',cardId:child.id,targetInstanceId:baseId};
+        const early=JSON.parse(JSON.stringify(state));early.players[1].active.enteredTurn=early.turnNumber;
+        const denied=port(early);assert.equal(denied.dispatch('ai',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(early));
+        if(!pp.dispatch('ai',action).ok)return {blocked:'RETALIATION_LEGAL_EVOLUTION_REJECTED'};
+        const evolved=pp.getSnapshot().players[1].active;
+        assert.equal(E.getReferenceEffectRecord(evolved).officialCardId,chain[i].officialCardId);
+        assert(evolved.evolutionCards.some(c=>c.id===child.id));
+        for(const actor of (i+1<chain.length?['ai','you']:['ai'])){
+          const end=E.getLegalActions(pp.getSnapshot(),actor).actions.find(a=>a.type==='end_turn');
+          if(!end||!pp.dispatch(actor,end).ok)return {blocked:'RETALIATION_EVOLUTION_END_TURN_REJECTED'};
+        }
+      }
+      game=pp.getSnapshot();
+      assert.equal(game.turnPlayer,'you');
+      assert.deepEqual(Array.from(S.identities(game)),identities);
+      assert.equal(E.getReferenceEffectRecord(game.players[1].active).officialCardId,r.officialCardId);
+    }
+    return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
   if(m==='PASSIVE_FULL_HP_SURVIVAL'){
     const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
