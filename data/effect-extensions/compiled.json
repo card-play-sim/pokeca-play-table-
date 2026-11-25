@@ -7943,6 +7943,80 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45147",
+      "name": "ロゼリア",
+      "deckName": "ロゼリア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45147",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045147_P_ROZERIA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リーフステップ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-45147-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "どくのトゲ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをどくにする。",
+          "effectId": "reference-45147-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "POISONED",
+            "counterCount": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45147.json",
+        "sha256": "2bbe2caf1e21a1eb1701b1585e8b89ec4f585831b3908f8c1f445408e0d5bb0f",
+        "htmlSha256": "2bbe2caf1e21a1eb1701b1585e8b89ec4f585831b3908f8c1f445408e0d5bb0f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45149",
       "name": "ナエトル",
       "deckName": "ナエトル",
@@ -191134,6 +191208,307 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48544",
+      "name": "ドンメル",
+      "deckName": "ドンメル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48544",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048544_P_DONMERU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かえん",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-48544-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しゃくねつボディ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをやけどにする。",
+          "effectId": "reference-48544-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED",
+            "counterCount": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48544.json",
+        "sha256": "f05d9fb6b5c0a808397c9a76fc426160a044c01db47cfc89cf68556ed7295380",
+        "htmlSha256": "f05d9fb6b5c0a808397c9a76fc426160a044c01db47cfc89cf68556ed7295380",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50135",
+      "name": "ハリーセン",
+      "deckName": "ハリーセン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50135",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050135_P_HARISEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ベノムショック",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30+",
+          "text": "相手のバトルポケモンがどくなら、50ダメージ追加。",
+          "effectId": "reference-50135-attack-0",
+          "plan": {
+            "mechanic": "CONTEXT_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "opponentPoisoned",
+            "base": 30,
+            "bonus": 50
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "どくのトゲ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをどくにする。",
+          "effectId": "reference-50135-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "POISONED",
+            "counterCount": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50135.json",
+        "sha256": "54ff22c93a2381241dba617df7d8df88fb7e3e411771272739c3cd822cd5909e",
+        "htmlSha256": "54ff22c93a2381241dba617df7d8df88fb7e3e411771272739c3cd822cd5909e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49958",
+      "name": "ドンメル",
+      "deckName": "ドンメル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49958",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049958_P_DONMERU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かえん",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49958-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しゃくねつボディ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをやけどにする。",
+          "effectId": "reference-49958-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED",
+            "counterCount": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49958.json",
+        "sha256": "03545663e04834cf239c550f2e840428fdd2168e6abf06e2616a085a7147121c",
+        "htmlSha256": "03545663e04834cf239c550f2e840428fdd2168e6abf06e2616a085a7147121c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48746",
+      "name": "ロゼリア",
+      "deckName": "ロゼリア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48746",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048746_P_ROZERIA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リーフステップ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-48746-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "どくのトゲ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをどくにする。",
+          "effectId": "reference-48746-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "STATUS_CONDITION"
+            ],
+            "status": "POISONED",
+            "counterCount": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48746.json",
+        "sha256": "afc9e45a1a1371d4c559a253b8a2cc83a0b29fc296435d0de8501c6ed5fbe05e",
+        "htmlSha256": "afc9e45a1a1371d4c559a253b8a2cc83a0b29fc296435d0de8501c6ed5fbe05e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -192018,11 +192393,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45147",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45155",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -192419,11 +192789,6 @@
     },
     {
       "officialCardId": "45755",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45767",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
