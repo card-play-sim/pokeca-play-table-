@@ -199979,6 +199979,266 @@
         "sharedWording": true,
         "nameContains": "ロケット団"
       }
+    },
+    {
+      "officialCardId": "45950",
+      "name": "カミッチュ",
+      "deckName": "カミッチュ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45950",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/045950_P_KAMITCHIXYU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コーティングアタック",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "次の相手の番、このポケモンはたねポケモンからワザのダメージを受けない。",
+          "effectId": "reference-45950-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+            "commands": [
+              "DAMAGE",
+              "PREVENT_DAMAGE"
+            ],
+            "exceptType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": "カジッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45950.json",
+        "sha256": "7b5cad71bb29053120001625915b39d932214bb1dd2487249758fb83c355f44a",
+        "htmlSha256": "7b5cad71bb29053120001625915b39d932214bb1dd2487249758fb83c355f44a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48403",
+      "name": "ブリジュラス",
+      "deckName": "ブリジュラス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48403",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2/048403_P_BURIJIXYURASU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コーティングアタック",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "120",
+          "text": "次の相手の番、このポケモンはたねポケモンからワザのダメージを受けない。",
+          "effectId": "reference-48403-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+            "commands": [
+              "DAMAGE",
+              "PREVENT_DAMAGE"
+            ],
+            "exceptType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "ジュラルドン",
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48403.json",
+        "sha256": "47ae6b8d38f98fb397757464563e27b51f43334bc9ee2a0a7e2f7c593f4e7472",
+        "htmlSha256": "47ae6b8d38f98fb397757464563e27b51f43334bc9ee2a0a7e2f7c593f4e7472",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48779",
+      "name": "カミッチュ",
+      "deckName": "カミッチュ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48779",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048779_P_KAMITCHIXYU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コーティングアタック",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "次の相手の番、このポケモンはたねポケモンからワザのダメージを受けない。",
+          "effectId": "reference-48779-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+            "commands": [
+              "DAMAGE",
+              "PREVENT_DAMAGE"
+            ],
+            "exceptType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": "カジッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48779.json",
+        "sha256": "e1d8c7afd021f652b353ea320b527f0fc3ba699194f98f6393d606c735afa4cd",
+        "htmlSha256": "e1d8c7afd021f652b353ea320b527f0fc3ba699194f98f6393d606c735afa4cd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50133",
+      "name": "ゴルバット",
+      "deckName": "ゴルバット",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50133",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050133_P_GORUBATTO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんみつひこう",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30",
+          "text": "次の相手の番、このポケモンはたねポケモンからワザのダメージを受けない。",
+          "effectId": "reference-50133-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+            "commands": [
+              "DAMAGE",
+              "PREVENT_DAMAGE"
+            ],
+            "exceptType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": "ズバット",
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50133.json",
+        "sha256": "e1f0d7713aba92d07e90c17960b407cc44acbdc0800400f7093a6f1537ee625c",
+        "htmlSha256": "e1f0d7713aba92d07e90c17960b407cc44acbdc0800400f7093a6f1537ee625c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
