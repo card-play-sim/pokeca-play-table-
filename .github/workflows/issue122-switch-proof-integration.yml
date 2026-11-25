@@ -24,11 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Integrate exact independently verified energy proof source commits
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git cherry-pick 4bc63f3a2f249aff343adb74f7e4ba843eb7710c eb64d58dfbd8bc78b0d61407f32cca5eb9f93a71
       - name: Verify source and resume exact saved official evidence
         run: |
           node --check engine/reference-effect-plans.cjs
@@ -86,7 +81,7 @@ jobs:
           for(const old of checkpoint)
             assert.deepEqual(map.get(String(old.officialCardId)),old,'LATEST_QUALIFIED_RECORD_CHANGED:'+old.officialCardId);
           console.log('Latest 3199 compiled records exactly preserved');
-          for(const sha of ['ef704641c7dc2b0532ff6efafedb953a80ef694a','3269f5cbde2c7ab803b5a5cc07a28daf5cbc19e0','e7a17234e23998e40df38c168451aa9bbab2ac4d','b747bb88cda2dd78deb3eb9db8784ea70035ae87']){
+          for(const sha of ['ef704641c7dc2b0532ff6efafedb953a80ef694a','3269f5cbde2c7ab803b5a5cc07a28daf5cbc19e0','e7a17234e23998e40df38c168451aa9bbab2ac4d','b747bb88cda2dd78deb3eb9db8784ea70035ae87','3190275308289c77c37607b59c4fc32b2ee8f750']){
             for(const old of read(sha,path).records)
               assert.deepEqual(map.get(String(old.officialCardId)),old,'INDEPENDENT_CANDIDATE_CHANGED:'+sha+':'+old.officialCardId);
           }
