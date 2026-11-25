@@ -181432,6 +181432,65 @@
         "htmlSha256": "190af359c49b324e760beb4d7ad4f3b613bfffb9893750e0a28c663e2735ec25",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "45879",
+      "name": "フクスロー",
+      "deckName": "フクスロー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45879",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045879_P_FUKUSURO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "だんけつのつばさ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20×",
+          "text": "自分のトラッシュにある、ワザ「だんけつのつばさ」を持つポケモンの枚数×20ダメージ。"
+        },
+        {
+          "name": "カッターウインド",
+          "cost": [
+            "草"
+          ],
+          "damage": "30",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": "モクロー",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45879.json",
+        "sha256": "601488fafe8b42d830eaebf01eed8d9af7c8fa4f79ce935e5df30c21701d90d3",
+        "htmlSha256": "601488fafe8b42d830eaebf01eed8d9af7c8fa4f79ce935e5df30c21701d90d3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []
