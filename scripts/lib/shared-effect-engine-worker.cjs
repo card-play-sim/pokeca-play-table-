@@ -1268,11 +1268,15 @@ function verifyCase(t, e) {
       const excluded=physical.map(({c})=>c).find(c=>c.isSpecial&&!pool.some(allowed=>allowed.id===c.id));
       if(excluded){
         assert(!chosen.includes(excluded.id));
-        assert(!after.players[0].discard.some(c=>c.id===excluded.id));
+        const excludedPlan=E.getReferenceEffectRecord(excluded)?.mainPlan;
+        if(excludedPlan?.mechanic==='IGNITION'&&after.turnNumber>before.turnNumber){
+          // Ignition is discarded at the end of the turn, independently of the attack selection.
+          assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ev.cardIds?.includes(excluded.id)&&!ev.sourceInstanceId&&!ev.fromZone));
+        }else assert(!after.players[0].discard.some(c=>c.id===excluded.id));
         if(!plan.all){
           const invalid=port(before);
           assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,energy:[excluded.id]}}).ok,false);
-          assert.deepEqual(invalid.getSnapshot(),before);
+          assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(invalid.getSnapshot()))),B.canonical(JSON.parse(JSON.stringify(before))));
         }
       }
     }
@@ -1887,7 +1891,7 @@ function verifyCase(t, e) {
     while(other.prizes<6){other.prizeCards.push(other.hand.pop());other.prizes++;}
     const replay=port(baseline),action=t.action||o.action;
     assert.equal(replay.dispatch('you',action).ok,false);
-    assert.deepEqual(replay.getSnapshot(),baseline);
+    assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(replay.getSnapshot()))),B.canonical(baseline));
     assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.amount>0));
     verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
     if(t.trigger.plan.mechanic==='ATTACK_NAMED_NEXT_TURN_LOCK'){
