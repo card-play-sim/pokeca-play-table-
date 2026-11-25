@@ -401,6 +401,16 @@ async def main():
     defender=before['players'][1]['active']
     assert defender['referenceProtection']['opponentTurn']==before['turnNumber']
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+   if m=='PASSIVE_ACTIVE_HIT_RETALIATION':
+    defender=before['players'][1]['active'];attacker=before['players'][0]['active'];plan=f['e']['plan']
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+    reactions=[ev['details'] for ev in events if ev.get('details',{}).get('mechanic')=='PASSIVE_ACTIVE_HIT_RETALIATION' and ev['details'].get('effectId')==f['e']['effectId']]
+    assert len(reactions)==1 and reactions[0]['targetInstanceId']==attacker['id']
+    if plan.get('status'):
+     assert reactions[0]['status']==plan['status']
+    else:
+     assert reactions[0]['counterCount']==plan['counterCount']
+     assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==plan['counterCount'] for ev in events)
    if m=='PASSIVE_FULL_HP_SURVIVAL':
     defender=before['players'][1]['active'];survivor=after['players'][1]['active']
     assert defender['damage']==0 and survivor['id']==defender['id']
