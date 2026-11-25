@@ -290,6 +290,16 @@ function prepare(r, e, kind) {
     other.active.referenceProtection={opponentTurn:g.turnNumber};
     return {...t,port:port(g),trigger};
   }
+  if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'){
+    if(!r.facts.basic)return {blocked:'NO_RETALIATION_LEGAL_EVOLUTION_FIXTURE'};
+    const attacker=records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
+    const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[r]);
+    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:r.officialCardId});
+    if(frame.blocked)return frame;
+    return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
+  }
   if(m==='PASSIVE_FULL_HP_SURVIVAL'){
     const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
     if(!(attackIndex>=0))return {blocked:'NO_SURVIVAL_ATTACK_FIXTURE'};
@@ -1926,6 +1936,23 @@ function verifyCase(t, e) {
     assert(result.history.slice(suppressed.history.length).some(ev=>ev.details?.command==='DAMAGE'&&ev.details.targetInstanceId===defender.id&&ev.details.amount===0));
     assert.equal(result.players[1].active.damage,defender.damage);
     assert.deepEqual(S.identities(suppressed),S.identities(result));
+  }
+  if(e.plan.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION'){
+    const defender=before.players[1].active,attacker=before.players[0].active,action=t.action||o.action;
+    assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===defender.id&&ev.amount>0));
+    const reactions=effectEvents.filter(ev=>ev?.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION'&&ev.effectId===e.effectId);
+    assert.equal(reactions.length,1);assert.equal(reactions[0].targetInstanceId,attacker.id);
+    if(e.plan.status){assert.equal(reactions[0].command,'STATUS_CONDITION');assert.equal(reactions[0].status,e.plan.status);}
+    else{assert.equal(reactions[0].counterCount,e.plan.counterCount);
+      assert(effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===attacker.id&&ev.counterCount===e.plan.counterCount));
+    }
+    // Zero attack damage must not trigger the reaction.
+    const protectedGame=JSON.parse(JSON.stringify(before));protectedGame.players[1].active.referenceProtection={opponentTurn:before.turnNumber};
+    const replay=port(protectedGame);assert(replay.dispatch('you',action).ok);
+    const result=replay.getSnapshot(),events=result.history.slice(protectedGame.history.length).map(ev=>ev.details);
+    assert(events.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===defender.id&&ev.amount===0));
+    assert(!events.some(ev=>ev?.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION'&&ev.effectId===e.effectId));
+    assert.deepEqual(S.identities(protectedGame),S.identities(result));
   }
   if(e.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL'){
     const defender=before.players[1].active,action=t.action||o.action;
