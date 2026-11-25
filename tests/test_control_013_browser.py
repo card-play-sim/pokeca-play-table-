@@ -501,6 +501,10 @@ async def main():
      assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",own['active'])==r['officialCardId']
      assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
+    if plan.get('nameContains'):
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.category==='supporter'&&r.name.includes(args.name);})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'name':plan['nameContains']})
+    if plan['category']=='pokemonOrBasicEnergy':
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return c.kind==='energy'?!c.isSpecial&&c.energyType===p.energyType:r.category==='pokemon'&&(!p.type||r.facts.types.includes(p.type))&&(p.stage===null||r.facts.stage===p.stage)&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'plan':plan})
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
    if m=='MASS_ENERGY_COUNT_DISCARD':

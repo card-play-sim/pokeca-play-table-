@@ -369,6 +369,13 @@ function massSharedPlan(entry,kind,text){
 
  if(repeated)return null;
  if((attack||ability||trainer)&&fixed){
+  const namedSupporter=body.match(/^自分の山札から、名前に「([^「」]{1,40})」とつくサポートを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const teamEnergy=body.match(/^自分の山札から「(ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」と「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const basicOrEnergy=body.match(/^自分の山札から\[([草炎水雷超闘悪鋼])\]タイプのたねポケモンまたは「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  const searchPlan=(category,limit,extra)=>({mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly,sharedWording:true,...extra});
+  if(namedSupporter)return searchPlan('supporter',parseInt(namedSupporter[2],10),{nameContains:namedSupporter[1]});
+  if(teamEnergy)return searchPlan('pokemonOrBasicEnergy',Number(teamEnergy[3]),{team:teamEnergy[1],energyType:teamEnergy[2]});
+  if(basicOrEnergy)return searchPlan('pokemonOrBasicEnergy',1,{type:basicOrEnergy[1],stage:0,energyType:basicOrEnergy[2]});
   const transfer=body.match(/^自分の(山札|トラッシュ)から(ポケモン|トレーナーズ|グッズ|サポート|スタジアム|エネルギー|基本エネルギー|「ポケモンのどうぐ」|[12]進化ポケモン|たねポケモン|\[(?:草|炎|水|雷|超|闘|悪|鋼|竜|無色)\](?:タイプの)?(?:たね|進化)?ポケモン|「基本\[(?:草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」|「(?:ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」)を(1枚|[2-9]枚まで)選び、相手に見せて、(手札に加える。|山札にもどして切る。)(そして山札を切る。)?$/);
   if(transfer){
    const [,source,filter,count,dest,shuffle]=transfer,zone=source==='山札'?'deck':'discard',destination=dest.startsWith('手札')?'hand':'deck';

@@ -267,6 +267,8 @@ function massRouteEnergy(p,plan){
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
+ if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='basicEnergy')return basicEnergy(c)&&(!plan.type||c.energyType===plan.type);
  if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
  if(r?.category!==plan.category)return false;

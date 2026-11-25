@@ -70,6 +70,8 @@ function batchSearchCandidate(c,plan){
 }
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
+ if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='basicEnergy')return c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
  if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r?.category);
  if(r?.category!==plan.category)return false;
@@ -192,12 +194,19 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
+   if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?typeOf(r)===plan.energyType:r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+   if(plan.nameContains&&!r.name.includes(plan.nameContains))return false;
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
    return r.category===plan.category&&(!plan.type||r.category==='energy'&&typeOf(r)===plan.type||r.facts.types?.includes(plan.type))&&
     (plan.stage===null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   };
-  const target=reserve(filter,plan.zone);
+  let target;
+  if(plan.category==='pokemonOrBasicEnergy'){
+   target=reserve(r=>r.category==='pokemon'&&filter(r),plan.zone);
+   const energy=reserve(r=>isBasicEnergy(r)&&filter(r),plan.zone);
+   if(!target)target=energy;
+  }else target=reserve(filter,plan.zone);
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(e.plan.batchSearch){
@@ -1486,6 +1495,16 @@ function verifyCase(t, e) {
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);
     assert(ids.every(id=>own[plan.zone].some(c=>c.id===id&&massTransferCandidate(c,plan))));
+    if(plan.category==='pokemonOrBasicEnergy'){
+      const pool=own[plan.zone].filter(c=>massTransferCandidate(c,plan));
+      for(const kind of ['pokemon','energy']){
+        const target=pool.find(c=>c.kind===kind);
+        if(!target)return {status:'BLOCKED',reason:'NO_MIXED_SEARCH_BOTH_CATEGORY_FIXTURE'};
+        const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[target.id]}}).ok);
+        const end=replay.getSnapshot();assert(end.players[0].hand.some(c=>c.id===target.id));
+        assert.deepEqual(S.identities(before),S.identities(end));
+      }
+    }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     if(plan.requiresTera){
