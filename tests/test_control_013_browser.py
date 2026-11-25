@@ -271,6 +271,13 @@ async def main():
     audit=[entry for entry in flip_entries if entry.get('reference') is True and entry.get('sourceOfficialCardId')==r['officialCardId'] and entry.get('effectId')==f['e']['effectId']]
     assert len(flips)==1 and len(audit)==1, {'print':r['officialCardId'],'flipEntries':flip_entries,'events':events}
     assert (after['players'][1]['active'].get('statusCondition')=='PARALYZED')==flips[0]['heads']
+   if m=='ATTACK_NAMED_DISCARD_BENCH':
+    selected=option['action']['selections']['cards'];own=before['players'][0]
+    assert 0<len(selected)<=min(f['e']['plan']['limit'],5-len(own['bench']))
+    assert all(any(c['id']==ident and c['name']==f['e']['plan']['name'] for c in own['discard']) for ident in selected)
+    assert set(selected)<={c['id'] for c in after['players'][0]['bench']}
+    assert not set(selected)&{c['id'] for c in after['players'][0]['discard']}
+    assert all(any(ev.get('details',{}).get('command')=='BENCH_FROM_ZONE' and ident in ev['details'].get('cardIds',[]) for ev in events) for ident in selected)
    if m=='SEARCH_BASIC_TO_BENCH_ATTACK':
     selected=option['action']['selections']['cards']
     assert 0<len(selected)<=f['e']['plan']['limit']
@@ -468,6 +475,10 @@ async def main():
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('origin')=='evolve':
+     source=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==option['action']['sourceInstanceId'])
+     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
+     assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",source)==r['officialCardId']
     if plan.get('oneEach'):
      targets=[selection['attachTo'+str(i)][0] for i in range(len(picked))]
      assert len(set(targets))==len(picked)
@@ -514,6 +525,12 @@ async def main():
      assert len([ev for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)])==2
     if mode=='revealCount':
      assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' for ev in events)
+    if mode=='rocketLimit':
+     own=before['players'][0]
+     assert all(c['name'].startswith('ロケット団の') for c in [own['active'],*own['bench']])
+     count=min(len(own['deck']),max(0,plan['bonus']-(len(own['hand'])-1)))
+     assert len(after['players'][0]['hand'])==len(own['hand'])-1+count
+     assert {c['id'] for c in own['deck'][:count]}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_HEAL_OWN':
     plan=f['e']['plan'];chosen=option['action'].get('selections',{}).get('cards',[])
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
