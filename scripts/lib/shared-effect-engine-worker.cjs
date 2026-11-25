@@ -200,6 +200,16 @@ function fixtureResources(manifest,deckIndex,source,e){
   const target=reserve(r=>vanilla(r)&&r.facts.types.includes(plan.type),'active');
   if(target)ensureAttackCost(target,deckIndex);
  }
+ if(m==='TOOL_EX_ATTACK_BOOST'||m==='TOOL_PRIZE_COST_DISCOUNT'){
+  // The attachment alone proves nothing. Reserve a basic, ability-free attacker
+  // whose first ordinary attack has a small colorless cost and real printed damage.
+  const target=reserve(r=>r.category==='pokemon'&&r.facts.basic&&!r.facts.rulePokemon&&!r.abilities.length&&r.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&a.cost.length>0&&a.cost.every(t=>t==='無色'))&&r.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0)?.cost.every(t=>t==='無色'),'active');
+  if(target){
+   ensureAttackCost(target,deckIndex);
+   const attack=target.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(m!=='TOOL_PRIZE_COST_DISCOUNT'||a.cost.includes('無色')));
+   if(m==='TOOL_EX_ATTACK_BOOST'&&attack)reserve(r=>r.category==='pokemon'&&r.facts.basic&&r.name.endsWith('ex')&&!r.abilities.length&&r.facts.hp>Number(attack.damage)+plan.amount&&!r.facts.weakness?.types.some(t=>target.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>target.facts.types.includes(t)),'active',1);
+  }
+ }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
