@@ -498,6 +498,12 @@ function requests(g,actor,card,effect){
   cardRequest('opponentBench',o.bench,1,1);
   if(p.bench.length)cardRequest('ownBench',p.bench,1,1);
  }
+ if(m==='SUPPORTER_ROCKET_SWITCH_BOTH'){
+  cardRequest('ownBench',p.bench.filter(c=>record(c).name.startsWith('ロケット団の')),1,1);
+  if(o.bench.length)cardRequest('opponentBench',o.bench,1,1);
+ }
+ if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')cardRequest('opponentBench',o.bench.filter(c=>record(c).facts.basic),1,1);
+ if(m==='SUPPORTER_SWITCH_EX_HEAL')cardRequest('ownBench',p.bench,1,1);
  if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')cardRequest('ownBench',p.bench,1,1);
  if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'){
   const plan=effect.plan,candidates=p.deck.filter(c=>plan.categories.includes(record(c)?.category));
@@ -694,6 +700,9 @@ function preflight(g,actor,action){
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>e.isSpecial)),'NO_OPPONENT_SPECIAL_ENERGY');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
+   if(m==='SUPPORTER_ROCKET_SWITCH_BOTH')assert(record(p.active).name.startsWith('ロケット団の')&&p.bench.some(c=>record(c).name.startsWith('ロケット団の')),'ROCKET_SWITCH_REQUIREMENT');
+   if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')assert(o.bench.some(c=>record(c).facts.basic),'NO_OPPONENT_BASIC_BENCH');
+   if(m==='SUPPORTER_SWITCH_EX_HEAL')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SEARCH_BY_STAGE')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
@@ -1336,6 +1345,21 @@ function applyPlan(g,actor,card,effect,action){
    chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
    if(p.bench.length)chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
    break;
+  case 'SUPPORTER_ROCKET_SWITCH_BOTH':
+   chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
+   if(o.bench.length)chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
+   break;
+  case 'SUPPORTER_BASIC_SWITCH_CONFUSE':
+   chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
+   o.active.statusCondition='CONFUSED';
+   event(g,actor,'STATUS_CONDITION',{targetInstanceId:id(o.active),status:'CONFUSED'});
+   break;
+  case 'SUPPORTER_SWITCH_EX_HEAL':{
+   const previous=p.active;
+   chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
+   if(record(previous).name.endsWith('ex')&&previous.damage>0)heal(g,actor,previous,Math.min(previous.damage,plan.amount));
+   break;
+  }
   case 'SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT':
    chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
    draw(g,p,Math.max(0,plan.limit-p.hand.length));
