@@ -159,18 +159,18 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
- if(m==='MASS_ZONE_TRANSFER'){
-  if(plan.requiresTera){
+ function reserveTera(zone){
    // Prefer a real basic Tera. Otherwise reserve the complete physical
    // evolution line, not an evolved card inserted into the field.
-   const basic=reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,'bench');
+   const basic=reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,zone);
    if(!basic){
     const line=r=>{
      if(r.facts.basic)return [r];
      const parent=legal.find(x=>x.category==='pokemon'&&x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1);
      const previous=parent&&line(parent);return previous?[...previous,r]:null;
     };
-    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1).sort((x,y)=>x.length-y.length);
+    const occupied=new Set(requirements.filter(x=>x.side===0).map(x=>x.printId));
+    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1&&x.every(record=>!occupied.has(record.officialCardId))).sort((x,y)=>x.length-y.length);
     for(const chain of options){
      if(chain.every(record=>ensure(deckIndex,record))){
       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
@@ -180,6 +180,8 @@ function fixtureResources(manifest,deckIndex,source,e){
     }
    }
   }
+ if(m==='MASS_ZONE_TRANSFER'){
+  if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
@@ -210,7 +212,7 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(plan.oneEach&&first)reserve(r=>valid(r)&&r.officialCardId!==first.officialCardId,'bench');
   }
  }
- if(m==='MASS_ENERGY_ROUTE'&&plan.requiresTera)reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,'active');
+ if(m==='MASS_ENERGY_ROUTE'&&plan.requiresTera)reserveTera('active');
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
@@ -255,6 +257,29 @@ function fixtureResources(manifest,deckIndex,source,e){
  return requirements;
 }
 function kindAttackCost(e,type){return (e.cost||[]).filter(t=>t===type||t==='無色').length;}
+function evolveTeraFixture(pp,chain){
+        const base=pp.getSnapshot().players[0].bench.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[0]);
+        if(!base)return {blocked:'NO_TERA_EVOLUTION_BASE'};
+        const initial=Array.from(S.identities(pp.getSnapshot()));
+        for(const printId of chain.slice(1)){
+          const state=pp.getSnapshot(),physical=state.players[0].hand.find(c=>E.getReferenceEffectRecord(c).officialCardId===printId);
+          if(!physical)return {blocked:'NO_TERA_EVOLUTION_HAND_PRINT'};
+          const evolve={type:'evolve',cardId:physical.id,targetInstanceId:base.id};
+          if(!pp.dispatch('you',evolve).ok)return {blocked:'TERA_LEGAL_EVOLUTION_REJECTED'};
+          const evolved=pp.getSnapshot().players[0].bench.find(c=>c.id===base.id);
+          assert.equal(E.getReferenceEffectRecord(evolved).officialCardId,printId);
+          assert(evolved.evolutionCards.some(c=>c.id===physical.id));
+          // Advance a complete turn for each subsequent evolution, without
+          // inventing turn numbers or bypassing the normal evolution rule.
+          for(const actor of ['you','ai']){
+            const state=pp.getSnapshot(),end=E.getLegalActions(state,actor).actions.find(a=>a.type==='end_turn');
+            if(!end||!pp.dispatch(actor,end).ok)return {blocked:'TERA_EVOLUTION_END_TURN_REJECTED'};
+          }
+        }
+        assert.deepEqual(Array.from(S.identities(pp.getSnapshot())),initial);
+        assert(pp.getSnapshot().players[0].bench.some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true));
+        return {port:pp};
+}
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
@@ -688,6 +713,11 @@ function prepare(r, e, kind) {
     if(!target.energyCards.length)return {blocked:'NO_MEGA_HEAL_ENERGY_FIXTURE'};
   }
   if(m==='MASS_ENERGY_ROUTE'){
+    if(e.plan.requiresTera&&fixtureRequirements.teraChain){
+      const tera=evolveTeraFixture(port(frame.game),fixtureRequirements.teraChain);
+      if(tera.blocked)return tera;
+      frame.game=tera.port.getSnapshot();
+    }
     const own=frame.game.players[0],plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
     const targets=(plan.target==='self'?[own.active]:plan.target==='bench'?own.bench:[own.active,...own.bench]).filter(c=>!plan.holderType||E.getReferenceEffectRecord(c).facts.types.includes(plan.holderType)).filter(c=>!plan.team||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'));
     if(!targets.length)return {blocked:'NO_MASS_ROUTE_TARGET'};
@@ -1100,27 +1130,9 @@ function prepare(r, e, kind) {
       own.active={...parent,cardId:parent.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]};
       let pp=port(frame.game);
       if(e.plan.requiresTera&&fixtureRequirements.teraChain){
-        const chain=fixtureRequirements.teraChain;
-        const base=pp.getSnapshot().players[0].bench.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[0]);
-        if(!base)return {blocked:'NO_TERA_EVOLUTION_BASE'};
-        const initial=Array.from(S.identities(pp.getSnapshot()));
-        for(const printId of chain.slice(1)){
-          const state=pp.getSnapshot(),physical=state.players[0].hand.find(c=>E.getReferenceEffectRecord(c).officialCardId===printId);
-          if(!physical)return {blocked:'NO_TERA_EVOLUTION_HAND_PRINT'};
-          const evolve={type:'evolve',cardId:physical.id,targetInstanceId:base.id};
-          if(!pp.dispatch('you',evolve).ok)return {blocked:'TERA_LEGAL_EVOLUTION_REJECTED'};
-          const evolved=pp.getSnapshot().players[0].bench.find(c=>c.id===base.id);
-          assert.equal(E.getReferenceEffectRecord(evolved).officialCardId,printId);
-          assert(evolved.evolutionCards.some(c=>c.id===physical.id));
-          // Advance a complete turn for each subsequent evolution, without
-          // inventing turn numbers or bypassing the normal evolution rule.
-          for(const actor of ['you','ai']){
-            const state=pp.getSnapshot(),end=E.getLegalActions(state,actor).actions.find(a=>a.type==='end_turn');
-            if(!end||!pp.dispatch(actor,end).ok)return {blocked:'TERA_EVOLUTION_END_TURN_REJECTED'};
-          }
-        }
-        assert.deepEqual(Array.from(S.identities(pp.getSnapshot())),initial);
-        assert(pp.getSnapshot().players[0].bench.some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true));
+        const tera=evolveTeraFixture(pp,fixtureRequirements.teraChain);
+        if(tera.blocked)return tera;
+        pp=tera.port;
       }
       const action={type:'evolve',cardId:child.id,targetInstanceId:parent.id};
       if(e.plan.requiresTera){
@@ -1333,11 +1345,14 @@ function verifyCase(t, e) {
     }
     if(plan.requiresTera){
       const absent=JSON.parse(JSON.stringify(before)),side=absent.players[0],isTera=c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true;
+      const raw=mon=>{const result=JSON.parse(JSON.stringify(mon));if(result.evolutionCards?.length){assert(result.validationBase);Object.assign(result,result.validationBase);}for(const key of ['cardId','damage','energies','energyCards','tools','evolutionCards','statusCondition','statusConditionInfo','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','validationBase'])delete result[key];return result;};
+      const returnStack=c=>side.deck.push(raw(c),...(c.evolutionCards||[]).map(raw),...(c.energyCards||[]),...(c.tools||[]));
       if(isTera(side.active)){
         const i=side.bench.findIndex(c=>!isTera(c));
-        if(i>=0){const old=side.active;side.active=side.bench.splice(i,1)[0];side.deck.push(old);}
+        if(i>=0){const old=side.active;side.active=side.bench.splice(i,1)[0];returnStack(old);}
       }
-      for(const c of side.bench.filter(isTera)){side.bench.splice(side.bench.indexOf(c),1);side.deck.push(c);}
+      for(const c of side.bench.filter(isTera)){side.bench.splice(side.bench.indexOf(c),1);returnStack(c);}
+      assert.deepEqual(Array.from(S.identities(absent)),Array.from(S.identities(before)));
       if(![side.active,...side.bench].some(isTera)){
         const replay=port(absent);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(absent));
       }else return {status:'BLOCKED',reason:'NO_TERA_ABSENCE_NEGATIVE_FIXTURE'};
