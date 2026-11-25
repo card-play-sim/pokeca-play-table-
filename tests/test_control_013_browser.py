@@ -224,10 +224,11 @@ async def main():
     plan=f['e']['plan'];other=before['players'][1];resolved=after['players'][1]
     picked=option['action']['selections']['opponentCards']
     assert picked and set(picked)<={c['id'] for c in other['hand']}
-    assert [c['id'] for c in resolved['hand']]==[c['id'] for c in other['hand'] if c['id'] not in picked]
+    draw_count=1 if after['turnNumber']>before['turnNumber'] and after['turnPlayer']=='ai' and other['deck'] else 0
+    assert [c['id'] for c in resolved['hand']]==[c['id'] for c in other['hand'] if c['id'] not in picked]+[c['id'] for c in other['deck'][:draw_count]]
     assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in other['hand']] for ev in events)
     if plan['destination']=='discard': assert set(picked)<={c['id'] for c in resolved['discard']}
-    else: assert [c['id'] for c in resolved['deck']]==[c['id'] for c in other['deck']]+picked
+    else: assert [c['id'] for c in resolved['deck']]==[c['id'] for c in other['deck'][draw_count:]]+picked
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
