@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FA1ADC59662946E5:21410ea228d62c8eeced7580307cdafe80590efc1af807e10321a6f405a72f52",
   "taskFingerprint": "21410ea228d62c8eeced7580307cdafe80590efc1af807e10321a6f405a72f52",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "0ba548f8-a579-43f5-9b8a-0006c65cde36",
-  "status": "BLOCKED",
+  "executionFingerprint": "04c292c0b60958d29ce6dc61d86c69d3ee1ee32df1a68c21703a45fb57eeb3bf",
+  "attemptId": "e6d85ae3-ba8c-4c23-b789-9fe1f5bf6a2b",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "49717:item:パワープロテイン:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "TRAINER_TYPED_DAMAGE_BOOST",
+        "commands": [
+          "MODIFY_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "92d0e608d80277a2b181b1cf00ff4935ad8dc7060c5c77166ee5c9b32d5aac40"
+  "checksum": "f4e96248514f676187d5e0d1fbe64325513a50d73f37dd4ac1b2bcd5dc11d6d4"
 }

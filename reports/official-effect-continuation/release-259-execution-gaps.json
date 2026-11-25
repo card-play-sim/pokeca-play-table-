@@ -1,0 +1,408 @@
+{
+  "baseCommit": "1b92fd365299c86360ab4456b0e56515df1cab95",
+  "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
+  "gaps": [
+    {
+      "id": "50690",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50690:attack:けちをつける:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(result.hand.length===Math.min(n,pool.length))\n",
+      "details": {
+        "mechanic": "MASS_HAND_FLOW",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(result.hand.length===Math.min(n,pool.length))\n\n    at checkReset (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1172:227)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1173:33)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2462:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48331",
+      "kind": "tool",
+      "index": 0,
+      "slot": "48331:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50039",
+      "kind": "tool",
+      "index": 0,
+      "slot": "50039:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47295",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47295:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48252",
+      "kind": "tool",
+      "index": 0,
+      "slot": "48252:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45628",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45628:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45679",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45679:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45686",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45686:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45689",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45689:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46795",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46795:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47146",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47146:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45212",
+      "kind": "tool",
+      "index": 0,
+      "slot": "45212:tool:マキシマムベルト:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45635",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "45635:supporter:ゴヨウ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n",
+      "details": {
+        "mechanic": "MASS_HAND_FLOW",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1185:43)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2462:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45681",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "45681:supporter:ゴヨウ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n",
+      "details": {
+        "mechanic": "MASS_HAND_FLOW",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1185:43)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2462:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45758",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45758:attack:むれでかる:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45879",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45879:attack:だんけつのつばさ:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_PUBLIC_COUNT_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46288",
+      "kind": "tool",
+      "index": 0,
+      "slot": "46288:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46339",
+      "kind": "tool",
+      "index": 0,
+      "slot": "46339:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46607",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "46607:supporter:ゴヨウ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n",
+      "details": {
+        "mechanic": "MASS_HAND_FLOW",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1185:43)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2462:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "46820",
+      "kind": "tool",
+      "index": 0,
+      "slot": "46820:tool:マキシマムベルト:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50377",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50377:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50525",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50525:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47453",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47453:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47484",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47484:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47523",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47523:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47532",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "47532:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "47704",
+      "kind": "tool",
+      "index": 0,
+      "slot": "47704:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48688",
+      "kind": "tool",
+      "index": 0,
+      "slot": "48688:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48698",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "48698:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "49150",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49150:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49405",
+      "kind": "tool",
+      "index": 0,
+      "slot": "49405:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49447",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "49447:supporter:ロケット団のアテナ:0",
+      "status": "BLOCKED",
+      "reason": "ROCKET_TEAM_BOTH_BRANCHES_PROOF_REQUIRED",
+      "details": null
+    },
+    {
+      "id": "50327",
+      "kind": "tool",
+      "index": 0,
+      "slot": "50327:tool:ブレイブバングル:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47199",
+      "kind": "tool",
+      "index": 0,
+      "slot": "47199:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47202",
+      "kind": "tool",
+      "index": 0,
+      "slot": "47202:tool:マキシマムベルト:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47886",
+      "kind": "tool",
+      "index": 0,
+      "slot": "47886:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47890",
+      "kind": "tool",
+      "index": 0,
+      "slot": "47890:tool:マキシマムベルト:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48683",
+      "kind": "tool",
+      "index": 0,
+      "slot": "48683:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49341",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49341:ability:ろうれんのわざ:0",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49395",
+      "kind": "tool",
+      "index": 0,
+      "slot": "49395:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49407",
+      "kind": "tool",
+      "index": 0,
+      "slot": "49407:tool:マキシマムベルト:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49423",
+      "kind": "supporter",
+      "index": 0,
+      "slot": "49423:supporter:ゴヨウ:0",
+      "status": "FAILED",
+      "reason": "Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n",
+      "details": {
+        "mechanic": "MASS_HAND_FLOW",
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'you',\n  'ai'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1185:43)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2462:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "49978",
+      "kind": "tool",
+      "index": 0,
+      "slot": "49978:tool:カウンターゲイン:0",
+      "status": "BLOCKED",
+      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "details": null
+    }
+  ]
+}
