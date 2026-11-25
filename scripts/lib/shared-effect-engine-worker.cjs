@@ -257,7 +257,7 @@ function prepare(r, e, kind) {
     return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
   if(m==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
-    const attackIndex=r.attacks.findIndex(a=>a.name===e.plan.attackName&&a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    const attackIndex=r.attacks.findIndex(a=>a.name===e.plan.attackName&&a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
     if(attackIndex<0)return {blocked:'NO_NAMED_PRIZE_ATTACK_FIXTURE'};
     const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -652,7 +652,8 @@ function prepare(r, e, kind) {
       own.deck.splice(own.deck.indexOf(card),1);dest.push(card);
     }
     if(!dest.some(eligible))return {blocked:'NO_ENERGY_COUNT_RESOURCE'};
-    if(own.active.energyCards.some(c=>c.isSpecial)&&plan.type&&!plan.basic)return {blocked:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
+    // Known special energy types are checked against physical card and holder below.
+    // Never silently treat an unrecognised special energy as a basic one.
   }
   if(m==='MASS_HEAL_SCOPE'){
     const [own,other]=frame.game.players,plan=e.plan;
@@ -1226,8 +1227,18 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==='MASS_ENERGY_COUNT_DISCARD'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0];
     const holders=plan.zone==='self'?[own.active]:plan.zone==='bench'?own.bench:[own.active,...own.bench];
-    const pool=(plan.zone==='hand'?own.hand:holders.flatMap(c=>c.energyCards)).filter(c=>c.kind==='energy'&&(!plan.basic||!c.isSpecial)&&(!plan.type||!c.isSpecial&&c.energyType===plan.type));
-    if(!plan.basic&&plan.type&&holders.some(h=>h.energyCards.some(c=>c.isSpecial)))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
+    const physical=plan.zone==='hand'?own.hand.map(c=>({c,holder:null})):holders.flatMap(holder=>holder.energyCards.map(c=>({c,holder})));
+    const knownSpecial=new Set(['ROCKET_ENERGY','IGNITION','COLORLESS_MULTI_ENERGY']);
+    if(plan.type&&!plan.basic&&physical.some(({c})=>c.isSpecial&&!knownSpecial.has(E.getReferenceEffectRecord(c)?.mainPlan?.mechanic)))
+      return {status:'BLOCKED',reason:'SPECIAL_ENERGY_TYPE_UNPROVEN'};
+    const pool=physical.filter(({c,holder})=>{
+      if(c.kind!=='energy'||plan.basic&&c.isSpecial)return false;
+      if(!plan.type)return true;
+      if(!c.isSpecial)return c.energyType===plan.type;
+      // Rocket energy supplies Psychic/Dark only on an eligible Rocket holder.
+      // Ignition and colorless multi-energy cannot meet these typed discards.
+      return holder&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='ROCKET_ENERGY'&&E.getReferenceEffectRecord(holder)?.name.startsWith('ロケット団の')&&['超','悪'].includes(plan.type);
+    }).map(({c})=>c);
     const chosen=plan.all?pool.map(c=>c.id):action.selections.energy;
     assert(chosen.length>0&&chosen.length<=plan.limit);
     assert(chosen.every(id=>pool.some(c=>c.id===id)));
@@ -1235,7 +1246,11 @@ function verifyCase(t, e) {
       assert(ids.every(id=>end.players[0].discard.some(c=>c.id===id)));
       const events=end.history.slice(start.history.length).map(x=>x.details);
       assert(ids.every(id=>events.some(ev=>ev?.command==='DISCARD'&&ev.cardIds?.includes(id))));
-      const amount=plan.base+ids.length*plan.unit;
+      const penalty=start.players[0].active.energyCards.filter(c=>!ids.includes(c.id)).reduce((sum,c)=>{
+        const p=E.getReferenceEffectRecord(c)?.mainPlan;
+        return sum+(p?.mechanic==='COLORLESS_MULTI_ENERGY'?p.damagePenalty:0);
+      },0);
+      const amount=Math.max(0,plan.base+ids.length*plan.unit-penalty);
       if(amount===0)assert(events.some(ev=>ev?.command==='DAMAGE'&&ev.amount===0&&ev.targetInstanceId===start.players[1].active.id));
       else verifyPrintedAttack(start,end,e,amount);
       assert.deepEqual(S.identities(start),S.identities(end));
@@ -1249,8 +1264,8 @@ function verifyCase(t, e) {
       assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:[special.id]}}).ok);
       check(before,replay.getSnapshot(),[special.id]);
     }
-    if(plan.basic){
-      const excluded=(plan.zone==='hand'?own.hand:holders.flatMap(c=>c.energyCards)).find(c=>c.isSpecial);
+    if(plan.basic||plan.type){
+      const excluded=physical.map(({c})=>c).find(c=>c.isSpecial&&!pool.some(allowed=>allowed.id===c.id));
       if(excluded){
         assert(!chosen.includes(excluded.id));
         assert(!after.players[0].discard.some(c=>c.id===excluded.id));
@@ -1879,6 +1894,9 @@ function verifyCase(t, e) {
       const lock=after.players[0].active?.referenceNamedAttackLock;
       assert.equal(lock?.turn,before.turnNumber+2);
       assert.equal(lock?.attackName,t.trigger.name);
+    }
+    if(t.trigger.plan.mechanic==='NO_NEXT_ATTACK'){
+      assert.equal(after.players[0].active?.referenceCannotAttackTurn,before.turnNumber+2);
     }
   }
   if(e.plan.mechanic==='TRAINER_SWITCH_OR_EX_V_BOOST'){
