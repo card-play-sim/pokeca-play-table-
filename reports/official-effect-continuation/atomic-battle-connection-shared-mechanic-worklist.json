@@ -1857,28 +1857,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CA305C213293AC4CDDA2",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45214",
-        "45534",
-        "45539",
-        "47118"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45214.json",
-        "data/effect-extensions/evidence/45534.json",
-        "data/effect-extensions/evidence/45539.json",
-        "data/effect-extensions/evidence/47118.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D6AF5BCF33A3D9E6EF1B",
       "category": "pokemon",
       "effectKind": "attack",
@@ -2458,29 +2436,6 @@
         "data/effect-extensions/evidence/46038.json",
         "data/effect-extensions/evidence/46173.json",
         "data/effect-extensions/evidence/49436.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1BD6A227B9755E255EC3",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中からカードを1枚選び、トラッシュする。",
-      "printedDamage": "120",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45860",
-        "45732",
-        "48962"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45860.json",
-        "data/effect-extensions/evidence/45732.json",
-        "data/effect-extensions/evidence/48962.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -3538,30 +3493,6 @@
         "data/effect-extensions/evidence/46834.json",
         "data/effect-extensions/evidence/47115.json",
         "data/effect-extensions/evidence/47153.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_80F6150F1892547E86FE",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中からカードを1枚選び、トラッシュする。",
-      "printedDamage": "200",
-      "energyCost": [
-        "悪",
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47771",
-        "48436",
-        "48446"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47771.json",
-        "data/effect-extensions/evidence/48436.json",
-        "data/effect-extensions/evidence/48446.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -6098,26 +6029,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_376879ABB6C9338660F5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中にある「グッズ」と「ポケモンのどうぐ」を、すべてトラッシュする。",
-      "printedDamage": "0",
-      "energyCost": [
-        "雷"
-      ],
-      "officialCardIds": [
-        "46377",
-        "48964"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46377.json",
-        "data/effect-extensions/evidence/48964.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_387632A59EA4299F01A3",
       "category": "stadium",
       "effectKind": "stadium",
@@ -6363,27 +6274,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50256.json",
         "data/effect-extensions/evidence/50308.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4762EC99FCBB982ADD0D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中からカードを1枚選び、相手の山札の下にもどす。",
-      "printedDamage": "30",
-      "energyCost": [
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47067",
-        "49173"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47067.json",
-        "data/effect-extensions/evidence/49173.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -10357,22 +10247,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/49657.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_050286E8869EB2235E65",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "相手の手札を見て、その中からエネルギーを1枚選び、相手の山札の下にもどす。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "49700"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49700.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -16515,24 +16389,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CC9BA4C8D702E04654BD",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中からグッズを1枚選び、相手の山札の下にもどす。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "50706"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50706.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CCCE07688026F0F608B4",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18169,5 +18025,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1694
+  "unfinishedPrints": 1689
 }

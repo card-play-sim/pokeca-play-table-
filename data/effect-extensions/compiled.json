@@ -11305,6 +11305,46 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45214",
+      "name": "ビワ",
+      "deckName": "ビワ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45214",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045214_T_BIWA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45214.json",
+        "sha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
+        "htmlSha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
+        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
+      },
+      "mainPlan": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "DISCARD"
+        ],
+        "filter": "item",
+        "destination": "discard",
+        "all": false,
+        "limit": 2,
+        "optional": true,
+        "sharedWording": true
+      }
+    },
+    {
       "officialCardId": "45218",
       "name": "ストライク",
       "deckName": "ストライク",
@@ -199979,6 +200019,166 @@
         "sharedWording": true,
         "nameContains": "ロケット団"
       }
+    },
+    {
+      "officialCardId": "45534",
+      "name": "ビワ",
+      "deckName": "ビワ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45534",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045534_T_BIWA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45534.json",
+        "sha256": "d73bad5422436fca2905059682e5118447e8f5620ca87d04b0f5d2848d121510",
+        "htmlSha256": "d73bad5422436fca2905059682e5118447e8f5620ca87d04b0f5d2848d121510",
+        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
+      },
+      "mainPlan": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "DISCARD"
+        ],
+        "filter": "item",
+        "destination": "discard",
+        "all": false,
+        "limit": 2,
+        "optional": true,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45539",
+      "name": "ビワ",
+      "deckName": "ビワ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45539",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045539_T_BIWA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45539.json",
+        "sha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
+        "htmlSha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
+        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
+      },
+      "mainPlan": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "DISCARD"
+        ],
+        "filter": "item",
+        "destination": "discard",
+        "all": false,
+        "limit": 2,
+        "optional": true,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49700",
+      "name": "エネはたき",
+      "deckName": "エネはたき",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49700",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049700_T_ENEHATAKI.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の手札を見て、その中からエネルギーを1枚選び、相手の山札の下にもどす。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49700.json",
+        "sha256": "4c9c14a8befe791ebd6c5dfa1445b236d2934edc87ffa590cb28d4eae43e21e1",
+        "htmlSha256": "4c9c14a8befe791ebd6c5dfa1445b236d2934edc87ffa590cb28d4eae43e21e1",
+        "textSha256": "222c25f5cfdc4995d0a82f50457e2696c8f09803b89e28e049c4d24c83a01d3e"
+      },
+      "mainPlan": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "RETURN_TO_DECK"
+        ],
+        "filter": "energy",
+        "destination": "bottom",
+        "all": false,
+        "limit": 1,
+        "optional": false,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47118",
+      "name": "ビワ",
+      "deckName": "ビワ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47118",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/047118_T_BIWA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47118.json",
+        "sha256": "724ddd9189f2b20afb2888594f94e3addd0c9bd35172c1864ec03e9871325491",
+        "htmlSha256": "724ddd9189f2b20afb2888594f94e3addd0c9bd35172c1864ec03e9871325491",
+        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
+      },
+      "mainPlan": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "commands": [
+          "REVEAL",
+          "DISCARD"
+        ],
+        "filter": "item",
+        "destination": "discard",
+        "all": false,
+        "limit": 2,
+        "optional": true,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -200968,11 +201168,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50706",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50707",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201021,21 +201216,6 @@
       "officialCardId": "45205",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45214",
-      "name": "ビワ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45214.json",
-        "sha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
-        "htmlSha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
-        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
-      }
     },
     {
       "officialCardId": "45225",
@@ -201418,11 +201598,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46377",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46380",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201629,11 +201804,6 @@
     },
     {
       "officialCardId": "47063",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47067",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

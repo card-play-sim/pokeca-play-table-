@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "d29f17ed4839c637f7c9df721010e2b1dc2e390524500b96303eb8e312b29c0d",
+  "registryHash": "b06a554511b44e41b7c4053397b8b8acf54bf5ecbb3dde434e2d60faeb6a9973",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,15 +12,15 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 233,
-      "notImplemented": 141,
+      "compiled": 237,
+      "notImplemented": 137,
       "blocked": 0,
-      "executionVerifiedPrints": 39
+      "executionVerifiedPrints": 40
     },
     "item": {
       "prints": 299,
-      "compiled": 202,
-      "notImplemented": 97,
+      "compiled": 203,
+      "notImplemented": 96,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
@@ -40,8 +40,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2284,
-      "notImplemented": 1377,
+      "compiled": 2292,
+      "notImplemented": 1369,
       "blocked": 15,
       "executionVerifiedPrints": 654
     },
@@ -1116,11 +1116,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50706",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50707",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1169,21 +1164,6 @@
       "officialCardId": "45205",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45214",
-      "name": "ビワ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45214.json",
-        "sha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
-        "htmlSha256": "630d1180dd9d9dffbca80312fb2d7a981773c3e5fbd5e7ea48f0df878dba7444",
-        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
-      }
     },
     {
       "officialCardId": "45225",
@@ -1566,11 +1546,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46377",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46380",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1777,11 +1752,6 @@
     },
     {
       "officialCardId": "47063",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47067",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3333,36 +3303,6 @@
         "sha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
         "htmlSha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
         "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
-      }
-    },
-    {
-      "officialCardId": "45534",
-      "name": "ビワ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45534.json",
-        "sha256": "d73bad5422436fca2905059682e5118447e8f5620ca87d04b0f5d2848d121510",
-        "htmlSha256": "d73bad5422436fca2905059682e5118447e8f5620ca87d04b0f5d2848d121510",
-        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
-      }
-    },
-    {
-      "officialCardId": "45539",
-      "name": "ビワ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45539.json",
-        "sha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
-        "htmlSha256": "5cfc0c8506cb6001a1b3b5b2072432ec166af2259169d85a11e6caf9a2ade56e",
-        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
       }
     },
     {
@@ -5544,21 +5484,6 @@
       "officialCardId": "49699",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49700",
-      "name": "エネはたき",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からエネルギーを1枚選び、相手の山札の下にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49700.json",
-        "sha256": "4c9c14a8befe791ebd6c5dfa1445b236d2934edc87ffa590cb28d4eae43e21e1",
-        "htmlSha256": "4c9c14a8befe791ebd6c5dfa1445b236d2934edc87ffa590cb28d4eae43e21e1",
-        "textSha256": "222c25f5cfdc4995d0a82f50457e2696c8f09803b89e28e049c4d24c83a01d3e"
-      }
     },
     {
       "officialCardId": "49701",
@@ -9995,11 +9920,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49173",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49186",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -10705,21 +10625,6 @@
       }
     },
     {
-      "officialCardId": "47118",
-      "name": "ビワ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の手札を見て、その中からグッズを2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47118.json",
-        "sha256": "724ddd9189f2b20afb2888594f94e3addd0c9bd35172c1864ec03e9871325491",
-        "htmlSha256": "724ddd9189f2b20afb2888594f94e3addd0c9bd35172c1864ec03e9871325491",
-        "textSha256": "ca0297fa9164f78b9a04781e53a46adee18a061105d1af4d15259d8d3adbf780"
-      }
-    },
-    {
       "officialCardId": "47126",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -11036,11 +10941,6 @@
     },
     {
       "officialCardId": "48948",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48964",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -12105,11 +12005,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45860",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46501",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12510,11 +12405,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45732",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45751",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12550,11 +12440,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48962",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49046",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12574,11 +12459,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1410
+        "count": 1402
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 350
+        "count": 345
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -12593,17 +12478,17 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "f6f54a4462c349b933a213fb5ed709047143f492d9bdce957b5bc853d359f642",
+    "executionFingerprint": "e7e6d022894b9e54c70b783eaed7beae1ef35347068b833241d00e8b8426710b",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 174393,
+    "seq": 179049,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 329,
+      "SUCCEEDED": 330,
       "FAILED": 0,
-      "BLOCKED": 447
+      "BLOCKED": 446
     },
     "categories": {
       "pokemon": {
@@ -12616,9 +12501,9 @@
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 27,
+        "SUCCEEDED": 28,
         "FAILED": 0,
-        "BLOCKED": 19
+        "BLOCKED": 18
       },
       "item": {
         "PENDING": 0,

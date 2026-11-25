@@ -10,21 +10,21 @@
     },
     "J": {
       "total": 870,
-      "connected": 481,
-      "missing": 389
+      "connected": 482,
+      "missing": 388
     }
   },
   "counts": {
     "I": {
       "CONNECTED_UNTESTED": 1094,
-      "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 514,
+      "MECHANIC_REQUIRED": 83,
+      "ENGINE_CONNECTION_REQUIRED": 515,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 480,
-      "MECHANIC_REQUIRED": 47,
+      "CONNECTED_UNTESTED": 481,
+      "MECHANIC_REQUIRED": 46,
       "ENGINE_CONNECTION_REQUIRED": 341,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
@@ -1049,8 +1049,8 @@
       "name": "イーブイ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50706.json"
     },
     {
@@ -1282,8 +1282,8 @@
       "name": "Nのチョロネコ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47067.json"
     },
     {
@@ -16180,8 +16180,7 @@
       "name": "エネはたき",
       "mark": "J",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49700.json"
     },
     {
@@ -21574,23 +21573,23 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1161,
-        "MECHANIC_REQUIRED": 702,
-        "ENGINE_CONNECTION_REQUIRED": 1
+        "ENGINE_CONNECTED": 1165,
+        "MECHANIC_REQUIRED": 693,
+        "ENGINE_CONNECTION_REQUIRED": 6
       },
       "I": {
         "total": 1702,
         "ENGINE_CONNECTED": 1100,
-        "MECHANIC_REQUIRED": 596,
-        "ENGINE_CONNECTION_REQUIRED": 2,
+        "MECHANIC_REQUIRED": 594,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 480,
-        "MECHANIC_REQUIRED": 383,
+        "ENGINE_CONNECTED": 481,
+        "MECHANIC_REQUIRED": 381,
         "EVIDENCE_UNVERIFIED": 4,
-        "ENGINE_CONNECTION_REQUIRED": 2
+        "ENGINE_CONNECTION_REQUIRED": 3
       },
       "basicEnergyException": {
         "total": 638,
@@ -21598,7 +21597,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3379,
-    "unconnected": 1694
+    "engineConnected": 3384,
+    "unconnected": 1689
   }
 }
