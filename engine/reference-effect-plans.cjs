@@ -383,6 +383,11 @@ function massSharedPlan(entry,kind,text){
   if(heal)return {mechanic:'MASS_HEAL_OWN',commands:[...(damage?['DAMAGE']:[]),'HEAL'],type:heal[1]||null,target:heal[2]==='全員'?'all':heal[2]==='1匹'?'choice':'active',amount:Number(heal[3]),activeOnly,sharedWording:true};
   const draw=body.match(/^自分の山札を([1-9])枚引く。相手のサイドの残り枚数が([1-6])枚以下なら、さらに([1-9])枚引く。$/);
   if(draw)return {mechanic:'MASS_PRIZE_DRAW',commands:[...(damage?['DAMAGE']:[]),'DRAW'],amount:Number(draw[1]),threshold:Number(draw[2]),extra:Number(draw[3]),activeOnly,sharedWording:true};
+  const scopedCounter=body.match(/^(相手のバトルポケモン|相手のベンチポケモン1匹|ダメカンがのっている相手のポケモン全員|おたがいの特性を持つポケモン全員)に、(?:それぞれ)?ダメカンを([1-9]\d?)個のせる。$/);
+  if(attack&&scopedCounter){
+   const target={'相手のバトルポケモン':'active','相手のベンチポケモン1匹':'benchChoice','ダメカンがのっている相手のポケモン全員':'damagedOpponent','おたがいの特性を持つポケモン全員':'bothAbility'}[scopedCounter[1]];
+   return {mechanic:'MASS_PLACE_COUNTERS',commands:[...(damage?['DAMAGE']:[]),'PLACE_DAMAGE_COUNTERS'],target,amount:Number(scopedCounter[2]),activeOnly,sharedWording:true};
+  }
   const counter=body.match(/^相手のポケモン(1匹|全員)に、(?:それぞれ)?ダメカンを([1-9]\d?)個のせる。$/);
   if(counter&&(attack||ability))return {mechanic:'MASS_PLACE_COUNTERS',commands:[...(damage?['DAMAGE']:[]),'PLACE_DAMAGE_COUNTERS'],target:counter[1]==='全員'?'all':'choice',amount:Number(counter[2]),activeOnly,sharedWording:true};
  }
@@ -530,6 +535,8 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
   return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
  // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const counterCost=generic.match(/^このポケモンがバトル場にいて、自分の番に、自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚トラッシュするなら、1回使える。相手のポケモン1匹に、ダメカンを([1-9]\d?)個のせる。$/);
+ if(kind==='ABILITY'&&counterCost)return {mechanic:'ABILITY_TYPED_COST_COUNTER',commands:['DISCARD','PLACE_DAMAGE_COUNTERS'],type:counterCost[1],amount:Number(counterCost[2]),activeOnly:true,sharedWording:true};
  const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&discardDrawAbility)
   return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};

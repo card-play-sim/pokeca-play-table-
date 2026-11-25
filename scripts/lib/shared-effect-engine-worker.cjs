@@ -189,6 +189,11 @@ function fixtureResources(manifest,deckIndex,source,e){
     }
    }
   }
+ if(m==='ABILITY_TYPED_COST_COUNTER')reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
+ if(m==='MASS_PLACE_COUNTERS'&&plan.target==='bothAbility'){
+  reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
+  reserve(r=>mon(r,null,0)&&r.abilities.length===0,'bench',1);
+ }
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
@@ -899,6 +904,15 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='ownTypedBench'&&!own.bench.some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)&&(plan.stage===null||E.getReferenceEffectRecord(c).facts.stage===plan.stage)))return {blocked:'NO_TYPED_BENCH_FIXTURE'};
     for(const card of [...own.active.energyCards])if(card.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);own.deck.push(card);}
+  }
+  if(m==='ABILITY_TYPED_COST_COUNTER'){
+    const own=frame.game.players[0],valid=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
+    if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
+    if(!own.hand.some(valid))return {blocked:'NO_TYPED_COUNTER_COST'};
+  }
+  if(m==='MASS_PLACE_COUNTERS'&&e.plan.target==='damagedOpponent'){
+    const other=frame.game.players[1];other.active.damage=10;
+    for(const mon of other.bench)mon.damage=0;
   }
   if(m==='ABILITY_DISCARD_DRAW'){
     const own=frame.game.players[0];
@@ -1644,9 +1658,26 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='MASS_PLACE_COUNTERS'){
     const plan=e.plan,action=t.action||o.action,other=before.players[1];
-    const ids=plan.target==='all'?[other.active,...other.bench].map(c=>c.id):action.selections.target;
-    assert(ids.length>0);
-    assert(ids.every(id=>effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===id&&ev.counterCount===plan.amount)));
+    const own=before.players[0],all=[own.active,...own.bench,other.active,...other.bench];
+    const ids=plan.target==='all'?[other.active,...other.bench].map(c=>c.id):plan.target==='active'?[other.active.id]:plan.target==='damagedOpponent'?[other.active,...other.bench].filter(c=>c.damage>0).map(c=>c.id):plan.target==='bothAbility'?all.filter(c=>E.getReferenceEffectRecord(c).abilities.length>0).map(c=>c.id):action.selections.target;
+    if(!ids.length)return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_POSITIVE_FIXTURE'};
+    if(plan.target==='benchChoice')assert(ids.every(id=>other.bench.some(c=>c.id===id)));
+    assert.deepEqual(effectEvents.filter(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.counterCount===plan.amount&&!ev.reference).map(ev=>ev.targetInstanceId).sort(),ids.slice().sort());
+    if(plan.target==='damagedOpponent'||plan.target==='bothAbility'){
+      const universe=plan.target==='damagedOpponent'?[other.active,...other.bench]:all;
+      if(!universe.some(c=>!ids.includes(c.id)))return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_NEGATIVE_FIXTURE'};
+    }
+  }
+  if(e.plan.mechanic==='ABILITY_TYPED_COST_COUNTER'){
+    const own=before.players[0],other=before.players[1],action=t.action||o.action,energy=action.selections.discard[0],target=action.selections.target[0];
+    assert.equal(own.active.id,t.sourceId);
+    assert(own.hand.some(c=>c.id===energy&&c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type));
+    assert(after.players[0].discard.some(c=>c.id===energy));
+    assert([other.active,...other.bench].some(c=>c.id===target));
+    assert(effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===target&&ev.counterCount===e.plan.amount));
+    const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    const invalid=own.hand.find(c=>c.kind!=='energy'||c.isSpecial||c.energyType!==e.plan.type);
+    if(invalid){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,discard:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));}
   }
   if(e.plan.mechanic==='MASS_BOARD_BONUS'){
     const plan=e.plan,action=t.action||o.action;

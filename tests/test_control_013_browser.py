@@ -538,8 +538,19 @@ async def main():
     assert any(c['damage']>new[c['id']]['damage'] for c in old if c['id'] in new and (not chosen or c['id'] in chosen))
    if m=='MASS_PLACE_COUNTERS':
     plan=f['e']['plan']
-    ids=[c['id'] for c in [before['players'][1]['active'],*before['players'][1]['bench']]] if plan['target']=='all' else option['action']['selections']['target']
+    own=before['players'][0];other=before['players'][1];targets=[other['active'],*other['bench']]
+    if plan['target']=='all': ids=[c['id'] for c in targets]
+    elif plan['target']=='active': ids=[other['active']['id']]
+    elif plan['target']=='damagedOpponent': ids=[c['id'] for c in targets if c['damage']>0]
+    elif plan['target']=='bothAbility': ids=await page.evaluate("cs=>cs.filter(c=>Pokeca.getReferenceEffectRecord(c).abilities.length>0).map(c=>c.id)",[own['active'],*own['bench'],*targets])
+    else: ids=option['action']['selections']['target']
+    if plan['target']=='benchChoice': assert set(ids)<={c['id'] for c in other['bench']}
     assert all(any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==ident and ev['details'].get('counterCount')==plan['amount'] for ev in events) for ident in ids)
+   if m=='ABILITY_TYPED_COST_COUNTER':
+    plan=f['e']['plan'];energy=option['action']['selections']['discard'][0];target=option['action']['selections']['target'][0]
+    assert any(c['id']==energy and not c.get('isSpecial') and c.get('energyType')==plan['type'] for c in before['players'][0]['hand'])
+    assert energy in {c['id'] for c in after['players'][0]['discard']}
+    assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==target and ev['details'].get('counterCount')==plan['amount'] for ev in events)
    if m=='MASS_PRIZE_DRAW':
     plan=f['e']['plan'];n=min(len(before['players'][0]['deck']),plan['amount']+(plan['extra'] if before['players'][1]['prizes']<=plan['threshold'] else 0))
     assert {c['id'] for c in before['players'][0]['deck'][:n]}<={c['id'] for c in after['players'][0]['hand']}

@@ -488,7 +488,14 @@ function requests(g,actor,card,effect){
   const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
   cardRequest('cards',pool,min,min);
  }
- if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
+ if(m==='MASS_PLACE_COUNTERS'&&['choice','benchChoice'].includes(effect.plan.target)){
+  const pool=effect.plan.target==='benchChoice'?o.bench:opp;
+  const count=Math.min(1,pool.length);cardRequest('target',pool,count,count);
+ }
+ if(m==='ABILITY_TYPED_COST_COUNTER'){
+  cardRequest('discard',p.hand.filter(c=>basicEnergy(c)&&c.energyType===effect.plan.type),1,1);
+  cardRequest('target',opp,1,1);
+ }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'){
   add('mode','CARD',[{id:'boost',name:'ダメージを+30'},{id:'switch',name:'バトル場とベンチを入れ替える'}].filter(c=>c.id==='boost'||p.bench.length),1,1);
   cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
@@ -619,6 +626,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
+ if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');
  if(m==='ABILITY_DISCARD_DRAW')assert(p.hand.length>=a.plan.cost&&p.deck.length>0,'ABILITY_DISCARD_DRAW_UNAVAILABLE');
  if(m==='ABILITY_ATTACH_SELF_DRAW')assert(p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'ABILITY_TYPED_ENERGY_REQUIRED');
  if(m==='ABILITY_HEAL_SELF')assert((card.damage||0)>0,'ABILITY_HEAL_UNAVAILABLE');
@@ -1025,10 +1033,20 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_PRIZE_DRAW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
-  case 'MASS_PLACE_COUNTERS':
+  case 'MASS_PLACE_COUNTERS':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   for(const mon of field(o))if(plan.target==='all'||ids('target').includes(id(mon)))counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
+   const targets=plan.target==='active'?[o.active]:plan.target==='damagedOpponent'?field(o).filter(c=>c.damage>0):plan.target==='bothAbility'?[...field(p),...field(o)].filter(c=>record(c).abilities.length>0):field(o).filter(c=>plan.target==='all'||ids('target').includes(id(c)));
+   for(const mon of targets)counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
    break;
+  }
+  case 'ABILITY_TYPED_COST_COUNTER':{
+   const index=p.hand.findIndex(c=>id(c)===ids('discard')[0]&&basicEnergy(c)&&c.energyType===plan.type);
+   assert(index>=0,'COUNTER_COST_CHANGED');
+   const target=field(o).find(c=>id(c)===ids('target')[0]);assert(target,'COUNTER_TARGET_CHANGED');
+   const energy=p.hand.splice(index,1)[0];p.discard.push(energy);
+   event(g,actor,'DISCARD',{cardIds:[id(energy)],fromZone:'hand',sourceInstanceId:id(card)});
+   counters(g,actor,target,plan.amount);break;
+  }
   case 'ATTACK_BLIND_HAND_CHOICE':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
