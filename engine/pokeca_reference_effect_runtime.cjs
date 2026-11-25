@@ -333,6 +333,10 @@ function mixedTopCategory(c,plan){
  }
  return null;
 }
+function inspectedHandCandidate(c,plan){
+ const category=record(c)?.category;
+ return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(category)||plan.filter===category;
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -393,6 +397,12 @@ function requests(g,actor,card,effect){
   const attacks=record(o.active).attacks.map(attack=>({id:attack.effectId,name:attack.name}));
   const count=Math.min(1,attacks.length);
   add('attackChoice','CARD',attacks,count,count);
+ }
+ if(m==='INSPECTED_OPPONENT_HAND_TRANSFER'){
+  const plan=effect.plan,pool=o.hand.filter(c=>inspectedHandCandidate(c,plan));
+  const count=plan.all?pool.length:Math.min(plan.limit,pool.length);
+  cardRequest('opponentCards',pool,plan.optional?0:count,count);
+  if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(o.hand)};
  }
  if(m==='ATTACK_BLIND_HAND_CHOICE'){
   const count=Math.min(effect.plan.amount,o.hand.length);
@@ -721,6 +731,7 @@ function preflight(g,actor,action){
    if(m==='SUPPORTER_SWITCH_EX_HEAL')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SEARCH_BY_STAGE')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='INSPECTED_OPPONENT_HAND_TRANSFER')assert(o.hand.length>0,'NO_OPPONENT_HAND_TO_INSPECT');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
@@ -1055,6 +1066,19 @@ function applyPlan(g,actor,card,effect,action){
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    for(const mon of field(o))if(plan.target==='all'||ids('target').includes(id(mon)))counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
    break;
+  case 'INSPECTED_OPPONENT_HAND_TRANSFER':{
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(action.type==='attack_turn'&&o.active.referenceProtection?.opponentTurn===g.turnNumber)break;
+   event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
+   const chosen=ids('opponentCards'),moved=[];
+   for(const ident of chosen){
+    const index=o.hand.findIndex(c=>id(c)===ident&&inspectedHandCandidate(c,plan));
+    assert(index>=0,'INSPECTED_HAND_SELECTION_CHANGED');moved.push(o.hand.splice(index,1)[0]);
+   }
+   if(plan.destination==='discard')o.discard.push(...moved);else o.deck.push(...moved);
+   event(g,actor,plan.destination==='discard'?'DISCARD':'RETURN_TO_DECK',{cardIds:chosen,fromZone:'hand',...(plan.destination==='bottom'?{position:'bottom',privateTo:actor}:{})});
+   break;
+  }
   case 'ATTACK_BLIND_HAND_CHOICE':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)

@@ -220,6 +220,14 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='INSPECTED_OPPONENT_HAND_TRANSFER':
+    plan=f['e']['plan'];other=before['players'][1];resolved=after['players'][1]
+    picked=option['action']['selections']['opponentCards']
+    assert picked and set(picked)<={c['id'] for c in other['hand']}
+    assert [c['id'] for c in resolved['hand']]==[c['id'] for c in other['hand'] if c['id'] not in picked]
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in other['hand']] for ev in events)
+    if plan['destination']=='discard': assert set(picked)<={c['id'] for c in resolved['discard']}
+    else: assert [c['id'] for c in resolved['deck']]==[c['id'] for c in other['deck']]+picked
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))

@@ -209,6 +209,12 @@ function fixtureResources(manifest,deckIndex,source,e){
     }
    }
   }
+ if(m==='INSPECTED_OPPONENT_HAND_TRANSFER'){
+  if(plan.filter==='itemTool'){
+   reserve(r=>r.category==='item','hand',1);reserve(r=>r.category==='tool','hand',1);
+  }else reserve(r=>plan.filter==='any'||r.category===plan.filter,'hand',1);
+  if(plan.filter!=='any')reserve(r=>r.category==='pokemon','hand',1);
+ }
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
@@ -926,6 +932,11 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='ownTypedBench'&&!own.bench.some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)&&(plan.stage===null||E.getReferenceEffectRecord(c).facts.stage===plan.stage)))return {blocked:'NO_TYPED_BENCH_FIXTURE'};
     for(const card of [...own.active.energyCards])if(card.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);own.deck.push(card);}
+  }
+  if(m==='INSPECTED_OPPONENT_HAND_TRANSFER'){
+    const other=frame.game.players[1],plan=e.plan,eligible=c=>{const k=E.getReferenceEffectRecord(c)?.category;return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(k)||plan.filter===k;};
+    if(!other.hand.some(eligible)){const i=other.deck.findIndex(eligible);if(i>=0)other.hand.push(other.deck.splice(i,1)[0]);}
+    if(!other.hand.some(eligible))return {blocked:'NO_INSPECTED_HAND_POSITIVE_FIXTURE'};
   }
   if(m==='ABILITY_DISCARD_DRAW'){
     const own=frame.game.players[0];
@@ -1979,6 +1990,23 @@ function verifyCase(t, e) {
       assert.equal(target.referenceNamedAttackLock?.turn,before.turnNumber+1);
       assert.equal(target.referenceNamedAttackLock?.attackName,move.name);
     } else assert(after.players[1].discard.some(card=>card.id===defendingSide.active.id));
+  }
+  if(e.plan.mechanic==='INSPECTED_OPPONENT_HAND_TRANSFER'){
+    const plan=e.plan,action=t.action||o.action,other=before.players[1],resolved=after.players[1],chosen=action.selections.opponentCards;
+    const valid=c=>{const k=E.getReferenceEffectRecord(c)?.category;return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(k)||plan.filter===k;};
+    if(!chosen.length)return {status:'BLOCKED',reason:'NO_INSPECTED_HAND_SELECTION_PROOF'};
+    assert(chosen.every(id=>other.hand.some(c=>c.id===id&&valid(c))));
+    assert.deepEqual(Array.from(resolved.hand,c=>c.id),Array.from(other.hand.filter(c=>!chosen.includes(c.id)),c=>c.id));
+    assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.privateTo==='you'&&ev.fromZone==='hand'&&JSON.stringify(ev.cardIds)===JSON.stringify(other.hand.map(c=>c.id))));
+    if(plan.destination==='discard')assert(chosen.every(id=>resolved.discard.some(c=>c.id===id)));
+    else {assert.deepEqual(Array.from(resolved.deck,c=>c.id),[...Array.from(other.deck,c=>c.id),...Array.from(chosen)]);assert(!effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));}
+    if(plan.all)assert.equal(chosen.length,other.hand.filter(valid).length);
+    if(plan.filter!=='any'){
+      const invalid=other.hand.find(c=>!valid(c));
+      if(!invalid)return {status:'BLOCKED',reason:'NO_INSPECTED_HAND_NEGATIVE_FIXTURE'};
+      const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,opponentCards:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));
+    }
+    if(action.type==='attack_turn'&&Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
   }
   if (e.plan.mechanic === "ATTACK_BLIND_HAND_CHOICE") {
     assert(o.requests[0].candidates.every(c=>/^hand-slot-\d+$/.test(c.id)&&!c.validationReference));

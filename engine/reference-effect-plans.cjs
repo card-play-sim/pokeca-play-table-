@@ -545,6 +545,13 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&prizeDiscard&&/^\d{1,3}\+$/.test(String(entry.damage).normalize('NFKC')))
   return {mechanic:'ATTACK_PRIZE_BONUS_DISCARD',commands:['DAMAGE','DISCARD'],base:parseInt(entry.damage,10),unit:Number(prizeDiscard[1]),sharedWording:true};
  // Cost-paid abilities use physical hand cards, never normal energy attachment.
+ const inspectedHand=generic.match(/^相手の手札を見て、その中から(カード|グッズ|エネルギー)を([1-9])(枚|枚まで)選び、(トラッシュする|相手の山札の下にもどす)。$/);
+ const inspectedAll=generic==='相手の手札を見て、その中にある「グッズ」と「ポケモンのどうぐ」を、すべてトラッシュする。';
+ if((kind==='ATTACK'&&/^\d+$/.test(String(entry.damage))||kind==='MAIN'&&['item','supporter'].includes(entry.category))&&(inspectedHand||inspectedAll)){
+  const filter=inspectedAll?'itemTool':{'カード':'any','グッズ':'item','エネルギー':'energy'}[inspectedHand[1]];
+  const destination=inspectedAll||inspectedHand[4]==='トラッシュする'?'discard':'bottom';
+  return {mechanic:'INSPECTED_OPPONENT_HAND_TRANSFER',commands:[...(kind==='ATTACK'&&Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL',destination==='discard'?'DISCARD':'RETURN_TO_DECK'],filter,destination,all:inspectedAll,limit:inspectedAll?null:Number(inspectedHand[2]),optional:!inspectedAll&&inspectedHand[3]==='枚まで',sharedWording:true};
+ }
  const discardDrawAbility=generic.match(/^自分の番に、自分の手札を([1-9])枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&discardDrawAbility)
   return {mechanic:'ABILITY_DISCARD_DRAW',commands:['DISCARD','DRAW'],cost:Number(discardDrawAbility[1]),amount:Number(discardDrawAbility[2]),sharedWording:true};
