@@ -191134,6 +191134,430 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50361",
+      "name": "エレキブル",
+      "deckName": "エレキブル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50361",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050361_P_EREKIBURU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のしかかり",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "コインを1回投げオモテなら、相手のバトルポケモンをマヒにする。",
+          "effectId": "reference-50361-attack-0",
+          "plan": {
+            "mechanic": "COIN_PARALYZE_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "COIN_FLIP",
+              "STATUS_CONDITION"
+            ]
+          }
+        },
+        {
+          "name": "ボルテージハンマー",
+          "cost": [
+            "雷",
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "60×",
+          "text": "このポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×60ダメージ。",
+          "effectId": "reference-50361-attack-1",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "self",
+            "type": null,
+            "basic": true,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 60,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "エレブー",
+        "retreatCost": 3,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50361.json",
+        "sha256": "cd8bf4843c689c149044e3e7434e0844437733e5af39fb2aabd141e385426249",
+        "htmlSha256": "cd8bf4843c689c149044e3e7434e0844437733e5af39fb2aabd141e385426249",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50522",
+      "name": "エレキブル",
+      "deckName": "エレキブル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50522",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050522_P_EREKIBURU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のしかかり",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "コインを1回投げオモテなら、相手のバトルポケモンをマヒにする。",
+          "effectId": "reference-50522-attack-0",
+          "plan": {
+            "mechanic": "COIN_PARALYZE_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "COIN_FLIP",
+              "STATUS_CONDITION"
+            ]
+          }
+        },
+        {
+          "name": "ボルテージハンマー",
+          "cost": [
+            "雷",
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "60×",
+          "text": "このポケモンについている基本エネルギーを好きなだけトラッシュし、その枚数×60ダメージ。",
+          "effectId": "reference-50522-attack-1",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "self",
+            "type": null,
+            "basic": true,
+            "limit": 60,
+            "all": false,
+            "base": 0,
+            "unit": 60,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "エレブー",
+        "retreatCost": 3,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50522.json",
+        "sha256": "6096cbc286ed954c560e46d71c9220eabaecc5f468543cc2c56f35610bc92065",
+        "htmlSha256": "6096cbc286ed954c560e46d71c9220eabaecc5f468543cc2c56f35610bc92065",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48289",
+      "name": "メガディアンシーex",
+      "deckName": "メガディアンシーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48289",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048289_P_MDEIANSHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ガーランドレイ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "120×",
+          "text": "このポケモンについているエネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
+          "effectId": "reference-48289-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "self",
+            "type": null,
+            "basic": false,
+            "limit": 2,
+            "all": false,
+            "base": 0,
+            "unit": 120,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ダイヤコート",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-48289-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48289.json",
+        "sha256": "531c608ec31238e9c181fee0249d7c3d180bef9d1b312d28ac5ba2899eb68ffe",
+        "htmlSha256": "531c608ec31238e9c181fee0249d7c3d180bef9d1b312d28ac5ba2899eb68ffe",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49987",
+      "name": "メガディアンシーex",
+      "deckName": "メガディアンシーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49987",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049987_P_MDEIANSHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ガーランドレイ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "120×",
+          "text": "このポケモンについているエネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
+          "effectId": "reference-49987-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "self",
+            "type": null,
+            "basic": false,
+            "limit": 2,
+            "all": false,
+            "base": 0,
+            "unit": 120,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ダイヤコート",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-49987-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49987.json",
+        "sha256": "910b6d818e5fcf9423f0c5d9f4cf13606e6c8c23f9a6a23bc554940636f58af7",
+        "htmlSha256": "910b6d818e5fcf9423f0c5d9f4cf13606e6c8c23f9a6a23bc554940636f58af7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49998",
+      "name": "メガディアンシーex",
+      "deckName": "メガディアンシーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49998",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049998_P_MDEIANSHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ガーランドレイ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "120×",
+          "text": "このポケモンについているエネルギーを2枚までトラッシュし、その枚数×120ダメージ。",
+          "effectId": "reference-49998-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_COUNT_DISCARD",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "zone": "self",
+            "type": null,
+            "basic": false,
+            "limit": 2,
+            "all": false,
+            "base": 0,
+            "unit": 120,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ダイヤコート",
+          "text": "このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-49998-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49998.json",
+        "sha256": "610d6dd87e26c2cb93b6f41bb93dbf2c6351c1f186c867a69a9cb04a98cafa11",
+        "htmlSha256": "610d6dd87e26c2cb93b6f41bb93dbf2c6351c1f186c867a69a9cb04a98cafa11",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

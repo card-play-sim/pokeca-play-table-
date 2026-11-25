@@ -257,7 +257,7 @@ function prepare(r, e, kind) {
     return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
   if(m==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
-    const attackIndex=r.attacks.findIndex(a=>a.name===e.plan.attackName&&a.cost.includes('無色')&&a.plan?.mechanic==='VANILLA_DAMAGE');
+    const attackIndex=r.attacks.findIndex(a=>a.name===e.plan.attackName&&a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
     if(attackIndex<0)return {blocked:'NO_NAMED_PRIZE_ATTACK_FIXTURE'};
     const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -652,7 +652,7 @@ function prepare(r, e, kind) {
       own.deck.splice(own.deck.indexOf(card),1);dest.push(card);
     }
     if(!dest.some(eligible))return {blocked:'NO_ENERGY_COUNT_RESOURCE'};
-    if(own.active.energyCards.some(c=>c.isSpecial))return {blocked:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
+    if(own.active.energyCards.some(c=>c.isSpecial)&&plan.type&&!plan.basic)return {blocked:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
   }
   if(m==='MASS_HEAL_SCOPE'){
     const [own,other]=frame.game.players,plan=e.plan;
@@ -1227,7 +1227,7 @@ function verifyCase(t, e) {
     const plan=e.plan,action=t.action||o.action,own=before.players[0];
     const holders=plan.zone==='self'?[own.active]:plan.zone==='bench'?own.bench:[own.active,...own.bench];
     const pool=(plan.zone==='hand'?own.hand:holders.flatMap(c=>c.energyCards)).filter(c=>c.kind==='energy'&&(!plan.basic||!c.isSpecial)&&(!plan.type||!c.isSpecial&&c.energyType===plan.type));
-    if(pool.some(c=>c.isSpecial))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
+    if(!plan.basic&&plan.type&&holders.some(h=>h.energyCards.some(c=>c.isSpecial)))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_COUNT_PROOF_REQUIRED'};
     const chosen=plan.all?pool.map(c=>c.id):action.selections.energy;
     assert(chosen.length>0&&chosen.length<=plan.limit);
     assert(chosen.every(id=>pool.some(c=>c.id===id)));
@@ -1241,6 +1241,26 @@ function verifyCase(t, e) {
       assert.deepEqual(S.identities(start),S.identities(end));
     };
     check(before,after,chosen);
+    // Count physical energy cards, not supplied energy units.
+    const special=pool.find(c=>c.isSpecial);
+    if(special&&!chosen.includes(special.id)){
+      assert(!plan.all);
+      const replay=port(before);
+      assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:[special.id]}}).ok);
+      check(before,replay.getSnapshot(),[special.id]);
+    }
+    if(plan.basic){
+      const excluded=(plan.zone==='hand'?own.hand:holders.flatMap(c=>c.energyCards)).find(c=>c.isSpecial);
+      if(excluded){
+        assert(!chosen.includes(excluded.id));
+        assert(!after.players[0].discard.some(c=>c.id===excluded.id));
+        if(!plan.all){
+          const invalid=port(before);
+          assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,energy:[excluded.id]}}).ok,false);
+          assert.deepEqual(invalid.getSnapshot(),before);
+        }
+      }
+    }
     if(!plan.all)for(let n=0;n<chosen.length;n++){
       const replay=port(before),ids=chosen.slice(0,n);
       assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:ids}}).ok);
@@ -1854,6 +1874,12 @@ function verifyCase(t, e) {
     assert.equal(replay.dispatch('you',action).ok,false);
     assert.deepEqual(replay.getSnapshot(),baseline);
     assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.amount>0));
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
+    if(t.trigger.plan.mechanic==='ATTACK_NAMED_NEXT_TURN_LOCK'){
+      const lock=after.players[0].active?.referenceNamedAttackLock;
+      assert.equal(lock?.turn,before.turnNumber+2);
+      assert.equal(lock?.attackName,t.trigger.name);
+    }
   }
   if(e.plan.mechanic==='TRAINER_SWITCH_OR_EX_V_BOOST'){
     const action=t.action||o.action;
