@@ -195820,6 +195820,992 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46028",
+      "name": "ガラスのラッパ",
+      "deckName": "ガラスのラッパ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46028",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046028_T_GARASUNORAPPA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46028.json",
+        "sha256": "45f85118c4db76dcdadbe3e4208d155256efd4fcae0ce8d3683cd23a9703bac5",
+        "htmlSha256": "45f85118c4db76dcdadbe3e4208d155256efd4fcae0ce8d3683cd23a9703bac5",
+        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": null,
+        "limit": 2,
+        "target": "bench",
+        "holderType": "無色",
+        "team": null,
+        "multi": true,
+        "oneEach": true,
+        "requiresTera": true,
+        "heal": null,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46801",
+      "name": "ガラスのラッパ",
+      "deckName": "ガラスのラッパ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46801",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046801_T_GARASUNORAPPA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46801.json",
+        "sha256": "844cdc5cc3534dd887b1ff7f871be4bb145709602d190901674dc3e7d87cb7fb",
+        "htmlSha256": "844cdc5cc3534dd887b1ff7f871be4bb145709602d190901674dc3e7d87cb7fb",
+        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": null,
+        "limit": 2,
+        "target": "bench",
+        "holderType": "無色",
+        "team": null,
+        "multi": true,
+        "oneEach": true,
+        "requiresTera": true,
+        "heal": null,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46133",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46133",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046133_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46133-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46133-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46133.json",
+        "sha256": "e8416c418a1b32d29dccd6480354e2da71cd513dbc2c40ad71f18e3d992a07c2",
+        "htmlSha256": "e8416c418a1b32d29dccd6480354e2da71cd513dbc2c40ad71f18e3d992a07c2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46193",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46193",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVLS/046193_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46193-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46193-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46193.json",
+        "sha256": "a7864323c78801265987173ebdb5ce76898d0abb7474e3b8e19b0a75db57250d",
+        "htmlSha256": "a7864323c78801265987173ebdb5ce76898d0abb7474e3b8e19b0a75db57250d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46789",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46789",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046789_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46789-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46789-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46789.json",
+        "sha256": "852ceb231615910cba2ee3a3cf9eb128fb90d0e9589d1226d47331897273a0a2",
+        "htmlSha256": "852ceb231615910cba2ee3a3cf9eb128fb90d0e9589d1226d47331897273a0a2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47183",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47183",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVN/047183_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-47183-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-47183-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47183.json",
+        "sha256": "fc206b4c0740e2156426a1b6831b84a0556d4bb2fbd0532de301155732fc3003",
+        "htmlSha256": "fc206b4c0740e2156426a1b6831b84a0556d4bb2fbd0532de301155732fc3003",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47868",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47868",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MA/047868_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-47868-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-47868-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47868.json",
+        "sha256": "fbf3e8e5b4542830b545135cc9386b18f8dfcdeeab8727c393157215da35692d",
+        "htmlSha256": "fbf3e8e5b4542830b545135cc9386b18f8dfcdeeab8727c393157215da35692d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48660",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48660",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048660_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-48660-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-48660-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48660.json",
+        "sha256": "9910dbea87f6739455acd9b96e2e6481ee6f8400d8e1d1c3d050304be7013d89",
+        "htmlSha256": "9910dbea87f6739455acd9b96e2e6481ee6f8400d8e1d1c3d050304be7013d89",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48671",
+      "name": "ガラスのラッパ",
+      "deckName": "ガラスのラッパ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48671",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048671_T_GARASUNORAPPA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48671.json",
+        "sha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
+        "htmlSha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
+        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": null,
+        "limit": 2,
+        "target": "bench",
+        "holderType": "無色",
+        "team": null,
+        "multi": true,
+        "oneEach": true,
+        "requiresTera": true,
+        "heal": null,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49289",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49289",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049289_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-49289-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-49289-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49289.json",
+        "sha256": "52a1b3b4748ae58c2cd573d6108fe9245d18c3939fb15982c9254fa9035841d1",
+        "htmlSha256": "52a1b3b4748ae58c2cd573d6108fe9245d18c3939fb15982c9254fa9035841d1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49975",
+      "name": "ガラスのラッパ",
+      "deckName": "ガラスのラッパ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49975",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049975_T_GARASUNORAPPA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49975.json",
+        "sha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
+        "htmlSha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
+        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": null,
+        "limit": 2,
+        "target": "bench",
+        "holderType": "無色",
+        "team": null,
+        "multi": true,
+        "oneEach": true,
+        "requiresTera": true,
+        "heal": null,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46016",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46016",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046016_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46016-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46016-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46016.json",
+        "sha256": "63be79fc889cbc611e77ae9cfed046e0ebb13c6f3012fc14279fe1974283ccfd",
+        "htmlSha256": "63be79fc889cbc611e77ae9cfed046e0ebb13c6f3012fc14279fe1974283ccfd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46162",
+      "name": "ヨルノズク",
+      "deckName": "ヨルノズク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46162",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046162_P_YORUNOZUKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スピードウイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-46162-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ほうせきさがし",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、自分の場に「テラスタル」のポケモンがいるなら、1回使える。自分の山札からトレーナーズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46162-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "trainer",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 2,
+            "origin": "evolve",
+            "requiresTera": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ホーホー",
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46162.json",
+        "sha256": "45214ecaa1110552d4d4e84f7f0d8be0c7916f7c134d21dc7971cdf373279dca",
+        "htmlSha256": "45214ecaa1110552d4d4e84f7f0d8be0c7916f7c134d21dc7971cdf373279dca",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
