@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1072,
-      "missing": 630
+      "connected": 1074,
+      "missing": 628
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1066,
+      "CONNECTED_UNTESTED": 1068,
       "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 542,
+      "ENGINE_CONNECTION_REQUIRED": 540,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10836,8 +10836,7 @@
       "name": "ペンドラー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47595.json"
     },
     {
@@ -12195,8 +12194,7 @@
       "name": "ペンドラー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47964.json"
     },
     {
@@ -21604,15 +21602,15 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1145,
-        "ENGINE_CONNECTION_REQUIRED": 7,
-        "MECHANIC_REQUIRED": 712
+        "ENGINE_CONNECTED": 1147,
+        "MECHANIC_REQUIRED": 712,
+        "ENGINE_CONNECTION_REQUIRED": 5
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1072,
+        "ENGINE_CONNECTED": 1074,
         "MECHANIC_REQUIRED": 617,
-        "ENGINE_CONNECTION_REQUIRED": 9,
+        "ENGINE_CONNECTION_REQUIRED": 7,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21628,7 +21626,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3333,
-    "unconnected": 1740
+    "engineConnected": 3337,
+    "unconnected": 1736
   }
 }
