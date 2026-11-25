@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1079,
-      "missing": 623
+      "connected": 1091,
+      "missing": 611
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1073,
+      "CONNECTED_UNTESTED": 1085,
       "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 535,
+      "ENGINE_CONNECTION_REQUIRED": 523,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9808,8 +9808,7 @@
       "name": "ヒビキの冒険",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47358.json"
     },
     {
@@ -9910,8 +9909,7 @@
       "name": "ヒビキの冒険",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47385.json"
     },
     {
@@ -9944,8 +9942,7 @@
       "name": "ヒビキの冒険",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47390.json"
     },
     {
@@ -10347,8 +10344,7 @@
       "name": "ロケット団のレシーバー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47483.json"
     },
     {
@@ -11581,8 +11577,7 @@
       "name": "ファイトゴング",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47792.json"
     },
     {
@@ -13348,8 +13343,7 @@
       "name": "ファイトゴング",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48439.json"
     },
     {
@@ -14256,8 +14250,7 @@
       "name": "ファイトゴング",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48677.json"
     },
     {
@@ -14282,8 +14275,7 @@
       "name": "ロケット団のレシーバー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48682.json"
     },
     {
@@ -14386,8 +14378,7 @@
       "name": "ヒビキの冒険",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48696.json"
     },
     {
@@ -15636,8 +15627,7 @@
       "name": "ファイトゴング",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49370.json"
     },
     {
@@ -15739,8 +15729,7 @@
       "name": "ロケット団のレシーバー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49391.json"
     },
     {
@@ -16409,8 +16398,7 @@
       "name": "ロケット団のレシーバー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49977.json"
     },
     {
@@ -21601,8 +21589,8 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1079,
-        "MECHANIC_REQUIRED": 617,
+        "ENGINE_CONNECTED": 1091,
+        "MECHANIC_REQUIRED": 605,
         "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21619,7 +21607,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3357,
-    "unconnected": 1716
+    "engineConnected": 3369,
+    "unconnected": 1704
   }
 }
