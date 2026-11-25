@@ -209,7 +209,11 @@ async def main():
     if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
      assert attack_print==r['officialCardId']
     else:
-     assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
+     # An evolved in-play instance keeps its base identity; resolve the current print through the engine.
+     defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",before['players'][1]['active'])
+     assert defender_print==r['officialCardId'],('DEFENDER_CURRENT_PRINT_MISMATCH',defender_print,r['officialCardId'])
+     if m=='PASSIVE_FULL_HP_SURVIVAL' and not r['facts']['basic']:
+      assert before['players'][1]['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
             'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
