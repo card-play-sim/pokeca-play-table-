@@ -468,6 +468,10 @@ async def main():
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('origin')=='evolve':
+     source=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==option['action']['sourceInstanceId'])
+     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
+     assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",source)==r['officialCardId']
     if plan.get('oneEach'):
      targets=[selection['attachTo'+str(i)][0] for i in range(len(picked))]
      assert len(set(targets))==len(picked)
