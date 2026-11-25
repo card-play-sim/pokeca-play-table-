@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_E296D3839D3D5A92:e225ddf5f134876e06f5e11d8266fb27b8f854becabd0b281311f6b0d8d00aad",
   "taskFingerprint": "e225ddf5f134876e06f5e11d8266fb27b8f854becabd0b281311f6b0d8d00aad",
-  "executionFingerprint": "9021acf5c0d31ef69392db62ddf687439926877db9ea9720f7ef835ac26a3e2c",
-  "attemptId": "1f0556de-335c-47f1-b4fc-4e3da147c027",
+  "executionFingerprint": "f59bb9249c6c131a704ac6fee5cf860851d362a032b38b4247fb5b6a380cbf58",
+  "attemptId": "a8d15359-5715-4e9d-ba89-fc5f038ea090",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -160,8 +160,19 @@
       },
       {
         "slot": "45704:attack:ふいをつく:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "COIN_FAILURE_DAMAGE",
+        "commands": [
+          "COIN_FLIP",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45750:attack:ぜんりょくパンチ:0",
@@ -325,5 +336,5 @@
       }
     ]
   },
-  "checksum": "09faed3619c3bc5a097b20b1cbcdbf1ffb765442c7a0f25616da67ad295a2bd9"
+  "checksum": "0d4cef3e3d2bf79325af1d8c3c05e0f6f3014c512ed7ea024f84d8e56a67353d"
 }

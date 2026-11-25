@@ -16,15 +16,27 @@
   const take=(i,pred,required=true)=>{const index=pools[i].findIndex(typeof pred==='string'?c=>c.name===pred:pred);if(index<0){if(required)throw Error('FIXTURE_RESOURCE_MISSING');return null;}return pools[i].splice(index,1)[0];};
   const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});
   const pokemon=(i,pred=()=>true)=>{const choices=pools[i].filter(c=>c.kind==='pokemon'&&pred(c)).sort((a,b)=>record(b).facts.hp-record(a).facts.hp);return choices[0]?mon(take(i,choices[0].name)):null;};
-  const source=take(0,c=>c.name===row.cardName&&record(c).officialCardId===row.officialCardId),handActivation=['EXCITE_DIVE','MEOWTH_ENTRY','SKYLINE','FAIRY_ZONE'].includes(m),fieldSource=row.kind==='attack'||row.kind==='ability'&&!handActivation;
+  const source=take(0,c=>c.name===row.cardName&&record(c).officialCardId===row.officialCardId),handActivation=['EXCITE_DIVE','MEOWTH_ENTRY','SKYLINE','FAIRY_ZONE'].includes(m)||m==='MASS_EFFECT_SEQUENCE'&&row.plan.origin==='bench',fieldSource=row.kind==='attack'||row.kind==='ability'&&!handActivation;
   g.players.forEach(p=>{p.active=null;p.bench=[];p.hand=[];p.deck=[];p.discard=[];p.prizeCards=[];p.prizes=6;p.turnLimits={supporterUsed:false,abilityUses:{}};p.normalEnergyAttached=false;});
   const p=g.players[0],o=g.players[1];
+  const reserved=[];
+  for(const requirement of row.fixtureRequirements||[]){
+   const c=take(requirement.side,c=>record(c).officialCardId===requirement.printId,false);
+   if(!c)return {blocked:'FIXTURE_EXACT_RESOURCE_MISSING:'+requirement.zone};
+   reserved.push({...requirement,card:c});
+  }
+  const reserveActive=reserved.find(x=>x.side===0&&x.zone==='active'),reserveDefender=reserved.find(x=>x.side===1&&x.zone==='active');
   if(fieldSource)p.active=mon(source);else p.hand.push(source);
+  if(reserveActive){
+   if(fieldSource)return {blocked:'FIXTURE_RESOURCE_WOULD_REPLACE_SOURCE'};
+   p.active=mon(reserveActive.card);
+  }
+  for(const r of reserved.filter(r=>r.zone==='bench'))g.players[r.side].bench.push(mon(r.card));
   if(!p.active){
    const criterion=m==='ROCKET_ENERGY'?c=>record(c).name.startsWith('ロケット団の'):m==='IGNITION'||m==='ROSA'?c=>record(c).facts.stage===2:m==='FAIRY_ZONE'?c=>record(c).facts.types.includes('超')&&!record(c).abilities.some(a=>a.plan?.mechanic==='FAIRY_ZONE'):()=>true;
    p.active=pokemon(0,criterion);if(!p.active)throw Error('FIXTURE_ACTIVE_MISSING');
   }
-  o.active=pokemon(1,row.defenderOfficialCardId?c=>record(c).officialCardId===row.defenderOfficialCardId:m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
+  o.active=reserveDefender?mon(reserveDefender.card):pokemon(1,row.defenderOfficialCardId?c=>record(c).officialCardId===row.defenderOfficialCardId:m==='COIN_PROTECT'?c=>record(c).facts.basic&&record(c).facts.types.includes('悪')&&!record(c).facts.rulePokemon:()=>true);
   if(row.defenderOfficialCardId&&!o.active)return {blocked:'FIXTURE_DEFENDER_MISSING'};
   if(!o.active)o.active=pokemon(1);
   const teammate=c=>record(c).facts.basic&&record(c).name.startsWith('ロケット団の');
@@ -91,6 +103,7 @@
   if(row.category==='energy')addHand(0,c=>c.kind==='energy');
   g.players.forEach((p,i)=>{p.prizeCards=pools[i].splice(0,p.prizes);p.deck=pools[i];});
   if(reservedAcceleration.length)p[row.plan.zone].push(...reservedAcceleration);
+  for(const r of reserved.filter(r=>['deck','hand','discard'].includes(r.zone)))g.players[r.side][r.zone].push(r.card);
   const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);if(!loaded.ok)throw Error(JSON.stringify(loaded));
   return {game:port.getSnapshot(),sourceId:source.id,activeId:p.active.id,opponentId:o.active.id,firstDeck,variant,extras:Object.fromEntries(Object.entries(extras).map(([k,v])=>[k,v?.id])),row};
  }

@@ -12,7 +12,16 @@ async def select_effect_targets(page, option):
  for request in option.get('requests',[]):
   key=request['key']
   kind=request['kind']
-  if request['min']==request['max']==0 and not (request.get('inspection') or {}).get('cards'):
+  # The live engine resolves each dependency against earlier picks. A zero
+  # target step is skipped by the UI and must also be skipped by the test.
+  resolved=dict(request)
+  for dependency in request.get('dependencies',[]):
+   prior=selections.get(dependency['key'],[])
+   if dependency['kind']=='countWhenSelected':
+    resolved['min']=resolved['max']=dependency['count'] if dependency['value'] in prior else 0
+   elif dependency['kind']=='countFromSelection':
+    resolved['min']=resolved['max']=dependency['count'] if len(prior)>=dependency['threshold'] else 0
+  if resolved['min']==resolved['max']==0 and not (resolved.get('inspection') or {}).get('cards'):
    continue
   if kind=='COUNTERS':
    allocation=selections[key]
@@ -116,7 +125,8 @@ async def main():
     await page.locator(f'#self-hand [data-card-id="{ident}"]').tap()
     await page.locator('#hand-actions [data-action-type="use_ability"]').filter(has_text=option['label']).tap()
    elif kind in ('attack','ability'):
-    await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
+    container='#self-active' if before['players'][0]['active']['id']==ident else '#self-bench'
+    await page.locator(container+f' [data-card-id="{ident}"]').tap()
     if kind=='attack':await page.locator("#pokemon-actions").get_by_role("button",name="ワザを使う",exact=True).tap();await page.locator(attack_selector).tap()
     else:await page.locator('#pokemon-actions [data-action-kind="ability"]').filter(has_text=option['label']).tap()
    elif r['category']=='stadium':
@@ -377,6 +387,16 @@ async def main():
     assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
    if m=='TRAINER_SWITCH_OR_EX_V_BOOST':
     assert after['players'][0]['referenceExVDamageBoost']=={'turn':before['turnNumber'],'amount':f['e']['plan']['amount']}
+   if m=='MASS_EFFECT_SEQUENCE':
+    own,other=before['players'];resolved=after['players'][0]
+    for step in f['e']['plan']['steps']:
+     if step['op']=='draw':
+      assert {c['id'] for c in own['deck'][:step['amount']]}<={c['id'] for c in resolved['hand']}
+     if step['op']=='mill':
+      index=1 if step['side']=='opponent' else 0
+      assert {c['id'] for c in before['players'][index]['deck'][:step['amount']]}<={c['id'] for c in after['players'][index]['discard']}
+     if step['op']=='status':
+      assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==step['status'] for ev in events)
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
     assert picked
