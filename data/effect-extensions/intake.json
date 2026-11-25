@@ -175977,6 +175977,66 @@
         "htmlSha256": "2c6a8a58a8190007931a625bedaa2ebe79ff57a387608209d1e80794ebf36f88",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "50690",
+      "name": "ズルッグ",
+      "deckName": "ズルッグ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50690",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050690_P_ZURUGGU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "けちをつける",
+          "cost": [
+            "悪"
+          ],
+          "damage": "0",
+          "text": "相手は相手自身の手札をすべて山札にもどして切る。その後、相手は山札を4枚引く。"
+        },
+        {
+          "name": "どつく",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": ""
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50690.json",
+        "sha256": "b5a260c44c08e0a747d026ef6fff6c2266e0004ed43516ea6ffe7904ec1588cc",
+        "htmlSha256": "b5a260c44c08e0a747d026ef6fff6c2266e0004ed43516ea6ffe7904ec1588cc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []

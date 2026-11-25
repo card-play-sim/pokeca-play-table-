@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 472,
-      "missing": 398
+      "connected": 473,
+      "missing": 397
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 471,
+      "CONNECTED_UNTESTED": 472,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 350,
+      "ENGINE_CONNECTION_REQUIRED": 349,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -965,8 +965,7 @@
       "name": "ズルッグ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50690.json"
     },
     {
@@ -21661,9 +21660,9 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 471,
+        "ENGINE_CONNECTED": 472,
         "MECHANIC_REQUIRED": 387,
-        "ENGINE_CONNECTION_REQUIRED": 7,
+        "ENGINE_CONNECTION_REQUIRED": 6,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21672,7 +21671,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3217,
-    "unconnected": 1856
+    "engineConnected": 3218,
+    "unconnected": 1855
   }
 }
