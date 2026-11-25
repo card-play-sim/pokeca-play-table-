@@ -160,6 +160,26 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  if(m==='MASS_ZONE_TRANSFER'){
+  if(plan.requiresTera){
+   // Prefer a real basic Tera. Otherwise reserve the complete physical
+   // evolution line, not an evolved card inserted into the field.
+   const basic=reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,'bench');
+   if(!basic){
+    const line=r=>{
+     if(r.facts.basic)return [r];
+     const parent=legal.find(x=>x.category==='pokemon'&&x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1);
+     const previous=parent&&line(parent);return previous?[...previous,r]:null;
+    };
+    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1).sort((x,y)=>x.length-y.length);
+    for(const chain of options){
+     if(chain.every(record=>ensure(deckIndex,record))){
+      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+      requirements.teraChain=chain.map(record=>record.officialCardId);break;
+     }
+    }
+   }
+  }
   const filter=r=>{
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
@@ -558,10 +578,10 @@ function prepare(r, e, kind) {
         referenceOfficialCardId:ignition.officialCardId});
     }
   }
-  if(m==='MASS_EFFECT_SEQUENCE'&&e.plan.origin==='evolve'){
+  if(e.plan.origin==='evolve'){
     const deck=manifest.decks[locations[0].deck];
     const parent=[...records.values()].find(x=>x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1&&x.attacks.every(a=>a.plan)&&x.abilities.every(a=>a.plan));
-    if(!parent)return {blocked:'NO_EXACT_EVOLUTION_PARENT_FIXTURE'};
+    if(!parent||e.plan.requiresTera&&!parent.facts.basic)return {blocked:'NO_EXACT_EVOLUTION_PARENT_FIXTURE'};
     if(!deck.cards.some(c=>c.name===parent.deckName)){
       const donor=deck.cards.find(c=>c.category==='pokemon'&&c.name!==r.deckName&&c.count>1);
       if(!donor)return {blocked:'NO_EVOLUTION_PARENT_DECK_SLOT'};
@@ -1058,9 +1078,9 @@ function prepare(r, e, kind) {
     if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&own.bench.length>=5)return {blocked:"NO_BENCH_SEARCH_SPACE"};
     if(!own.deck.some(c=>batchSearchCandidate(c,e.plan)))return {blocked:"NO_EXACT_SEARCH_FIXTURE_RESOURCE"};
   }
-  if(m==='MASS_EFFECT_SEQUENCE'){
+  if(m==='MASS_EFFECT_SEQUENCE'||e.plan.origin==='evolve'){
     const own=frame.game.players[0];
-    if(e.plan.steps.some(s=>['healSelf','drain'].includes(s.op))){
+    if((e.plan.steps||[]).some(s=>['healSelf','drain'].includes(s.op))){
       const source=[own.active,...own.bench].find(c=>c.id===frame.sourceId);
       if(source)source.damage=Math.min(source.hp-10,70);
     }
@@ -1078,7 +1098,35 @@ function prepare(r, e, kind) {
       for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','evolutionCards','validationBase','entryWindow'])delete child[key];
       own.hand.push(child);
       own.active={...parent,cardId:parent.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]};
-      const pp=port(frame.game),action={type:'evolve',cardId:child.id,targetInstanceId:parent.id};
+      let pp=port(frame.game);
+      if(e.plan.requiresTera&&fixtureRequirements.teraChain){
+        const chain=fixtureRequirements.teraChain;
+        const base=pp.getSnapshot().players[0].bench.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[0]);
+        if(!base)return {blocked:'NO_TERA_EVOLUTION_BASE'};
+        const initial=Array.from(S.identities(pp.getSnapshot()));
+        for(const printId of chain.slice(1)){
+          const state=pp.getSnapshot(),physical=state.players[0].hand.find(c=>E.getReferenceEffectRecord(c).officialCardId===printId);
+          if(!physical)return {blocked:'NO_TERA_EVOLUTION_HAND_PRINT'};
+          const evolve={type:'evolve',cardId:physical.id,targetInstanceId:base.id};
+          if(!pp.dispatch('you',evolve).ok)return {blocked:'TERA_LEGAL_EVOLUTION_REJECTED'};
+          const evolved=pp.getSnapshot().players[0].bench.find(c=>c.id===base.id);
+          assert.equal(E.getReferenceEffectRecord(evolved).officialCardId,printId);
+          assert(evolved.evolutionCards.some(c=>c.id===physical.id));
+          // Advance a complete turn for each subsequent evolution, without
+          // inventing turn numbers or bypassing the normal evolution rule.
+          for(const actor of ['you','ai']){
+            const state=pp.getSnapshot(),end=E.getLegalActions(state,actor).actions.find(a=>a.type==='end_turn');
+            if(!end||!pp.dispatch(actor,end).ok)return {blocked:'TERA_EVOLUTION_END_TURN_REJECTED'};
+          }
+        }
+        assert.deepEqual(Array.from(S.identities(pp.getSnapshot())),initial);
+        assert(pp.getSnapshot().players[0].bench.some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true));
+      }
+      const action={type:'evolve',cardId:child.id,targetInstanceId:parent.id};
+      if(e.plan.requiresTera){
+        const early=JSON.parse(JSON.stringify(pp.getSnapshot()));early.players[0].active.enteredTurn=early.turnNumber;
+        const invalid=port(early);assert.equal(invalid.dispatch('you',action).ok,false);assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(early));
+      }
       if(!pp.dispatch('you',action).ok)return {blocked:'EVOLUTION_FIXTURE_ACTION_REJECTED'};
       const now=pp.getSnapshot().players[0].active;
       if(E.getReferenceEffectRecord(now).officialCardId!==r.officialCardId)return {blocked:'EVOLUTION_FIXTURE_PRINT_MISMATCH'};
@@ -1329,6 +1377,22 @@ function verifyCase(t, e) {
     assert(ids.every(id=>own[plan.zone].some(c=>c.id===id&&massTransferCandidate(c,plan))));
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.requiresTera){
+      const tera=c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true;
+      assert([own.active,...own.bench].some(tera));
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.equal(JSON.stringify(late.getSnapshot()),JSON.stringify(closed));
+      if(!tera(own.active)){
+        const absent=JSON.parse(JSON.stringify(before)),side=absent.players[0];
+        for(const c of side.bench.filter(tera)){
+          side.bench.splice(side.bench.indexOf(c),1);
+          const raw=mon=>{const result=JSON.parse(JSON.stringify(mon));if(result.evolutionCards?.length){assert(result.validationBase);Object.assign(result,result.validationBase);}for(const key of ['cardId','damage','energies','energyCards','tools','evolutionCards','statusCondition','statusConditionInfo','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','validationBase'])delete result[key];return result;};
+          side.deck.push(raw(c),...(c.evolutionCards||[]).map(raw),...(c.energyCards||[]),...(c.tools||[]));
+        }
+        assert.deepEqual(Array.from(S.identities(absent)),Array.from(S.identities(before)));
+        const replay=port(absent);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(absent));
+      }
+    }
     const invalid=own[plan.zone].find(c=>!massTransferCandidate(c,plan));
     if(invalid){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{cards:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
   }
