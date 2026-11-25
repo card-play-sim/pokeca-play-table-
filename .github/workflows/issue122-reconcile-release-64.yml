@@ -85,6 +85,14 @@ jobs:
                 git checkout --ours -- "$file"
                 git add "$file"
                 ;;
+              scripts/lib/shared-effect-engine-worker.cjs)
+                # Reviewed exact candidate supersets: named attack proof includes NO_NEXT_ATTACK;
+                # typed energy proof handles Rocket energy and Ignition end-of-turn independently.
+                test "$(git rev-parse ":2:$file")" = 31d26ff4f48a969c225f086c61d101081bc6fb27
+                test "$(git rev-parse ":3:$file")" = bcef7335826c0dc733403315d5613ec4b25106e4
+                git checkout --ours -- "$file"
+                git add "$file"
+                ;;
               *) echo "UNRESOLVED_SOURCE_CONFLICT: $file"; exit 1 ;;
             esac
           done < artifacts/conflicts.txt
@@ -106,6 +114,10 @@ jobs:
           node scripts/build-effect-extensions.cjs --check
           node scripts/sync-reference-effects.cjs --check
           node scripts/build-pwa-release.cjs --check
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/control-014-official-parser.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
           git diff --check
           git commit -m 'Merge current published main while preserving all exact verified card records' || test -z "$(git status --porcelain --untracked-files=no)"
           git push origin HEAD:battle/issue122-release-64-reconcile-20261125
