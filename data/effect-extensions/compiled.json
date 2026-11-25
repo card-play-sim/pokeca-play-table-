@@ -18795,6 +18795,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45893",
+      "name": "ヨマワル",
+      "deckName": "ヨマワル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45893",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045893_P_YOMAWARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むかえにいく",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュから「ヨマワル」を3枚まで選び、ベンチに出す。",
+          "effectId": "reference-45893-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_DISCARD_BENCH",
+            "commands": [
+              "BENCH_FROM_ZONE"
+            ],
+            "name": "ヨマワル",
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "つぶやく",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-45893-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45893.json",
+        "sha256": "a88095f4fc81898eada3af7c59d87a46592c8c74cb0c5a720c4016d5292ab0e0",
+        "htmlSha256": "a88095f4fc81898eada3af7c59d87a46592c8c74cb0c5a720c4016d5292ab0e0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45902",
       "name": "ズバット",
       "deckName": "ズバット",
@@ -21350,6 +21433,89 @@
         "path": "data/effect-extensions/evidence/46044.json",
         "sha256": "85f194272c7f3bed00ebdff1da9a25763cd2763c4fdd2f63f06cb308ac9691cb",
         "htmlSha256": "85f194272c7f3bed00ebdff1da9a25763cd2763c4fdd2f63f06cb308ac9691cb",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46045",
+      "name": "ヨマワル",
+      "deckName": "ヨマワル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46045",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/046045_P_YOMAWARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むかえにいく",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュから「ヨマワル」を3枚まで選び、ベンチに出す。",
+          "effectId": "reference-46045-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_DISCARD_BENCH",
+            "commands": [
+              "BENCH_FROM_ZONE"
+            ],
+            "name": "ヨマワル",
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "つぶやく",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46045-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46045.json",
+        "sha256": "16c0059c3d66c2648420be9b24c2a336e6f875fd0b13a0444a2f546d6c68557f",
+        "htmlSha256": "16c0059c3d66c2648420be9b24c2a336e6f875fd0b13a0444a2f546d6c68557f",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -29895,6 +30061,89 @@
         "path": "data/effect-extensions/evidence/46705.json",
         "sha256": "0a95feb8dec9c5b6601eb1ede639f907776226bdf93739ab687e72437143ec51",
         "htmlSha256": "0a95feb8dec9c5b6601eb1ede639f907776226bdf93739ab687e72437143ec51",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46725",
+      "name": "ヨマワル",
+      "deckName": "ヨマワル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46725",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046725_P_YOMAWARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むかえにいく",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュから「ヨマワル」を3枚まで選び、ベンチに出す。",
+          "effectId": "reference-46725-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_DISCARD_BENCH",
+            "commands": [
+              "BENCH_FROM_ZONE"
+            ],
+            "name": "ヨマワル",
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "つぶやく",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-46725-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46725.json",
+        "sha256": "fad351c8ce131f9ac37b310a9592acfd2c7460703f6ad62cbae6ed4897bab04d",
+        "htmlSha256": "fad351c8ce131f9ac37b310a9592acfd2c7460703f6ad62cbae6ed4897bab04d",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -196806,6 +197055,172 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48594",
+      "name": "ヨマワル",
+      "deckName": "ヨマワル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48594",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048594_P_YOMAWARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むかえにいく",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュから「ヨマワル」を3枚まで選び、ベンチに出す。",
+          "effectId": "reference-48594-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_DISCARD_BENCH",
+            "commands": [
+              "BENCH_FROM_ZONE"
+            ],
+            "name": "ヨマワル",
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "つぶやく",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-48594-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48594.json",
+        "sha256": "746def21bca8be8bfa2558e6f1fce46b8d9cbcb3b4aecfeb5d0aeb219a94f830",
+        "htmlSha256": "746def21bca8be8bfa2558e6f1fce46b8d9cbcb3b4aecfeb5d0aeb219a94f830",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49024",
+      "name": "ヨマワル",
+      "deckName": "ヨマワル",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49024",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049024_P_YOMAWARU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むかえにいく",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュから「ヨマワル」を3枚まで選び、ベンチに出す。",
+          "effectId": "reference-49024-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_DISCARD_BENCH",
+            "commands": [
+              "BENCH_FROM_ZONE"
+            ],
+            "name": "ヨマワル",
+            "limit": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "つぶやく",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-49024-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49024.json",
+        "sha256": "5bc57262b15d635d5afd0f1cc1a36d3ae884243f3b4906d62b4386cb9b55ff99",
+        "htmlSha256": "5bc57262b15d635d5afd0f1cc1a36d3ae884243f3b4906d62b4386cb9b55ff99",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -198085,11 +198500,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45893",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45908",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -198161,11 +198571,6 @@
     },
     {
       "officialCardId": "46025",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46045",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -198366,11 +198771,6 @@
     },
     {
       "officialCardId": "46718",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46725",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
