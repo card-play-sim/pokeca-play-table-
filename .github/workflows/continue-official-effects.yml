@@ -28,7 +28,7 @@ on:
   issue_comment:
     types: [created]
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/5 * * * *"
 permissions:
   contents: write
   pull-requests: write
