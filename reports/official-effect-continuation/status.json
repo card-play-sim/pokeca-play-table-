@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "17808b9f02de824c0236c3ef50ab6f78450fa3344bf3c9b359bfd81b465f797b",
+  "registryHash": "b5ac25f1537ef44efbbf62adf93afb7c59abb77c7d91d8976144a6c9aad94960",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,10 +12,10 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 206,
-      "notImplemented": 168,
+      "compiled": 216,
+      "notImplemented": 158,
       "blocked": 0,
-      "executionVerifiedPrints": 37
+      "executionVerifiedPrints": 38
     },
     "item": {
       "prints": 299,
@@ -794,21 +794,6 @@
       "officialCardId": "48249",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48254",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48254.json",
-        "sha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
-        "htmlSha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
     },
     {
       "officialCardId": "48479",
@@ -4801,21 +4786,6 @@
       }
     },
     {
-      "officialCardId": "46292",
-      "name": "ルチアのアピール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46292.json",
-        "sha256": "5cb439139907db742f86fdea1221b18e3b46da7c96c9a4ffb87fee9e23a94d44",
-        "htmlSha256": "5cb439139907db742f86fdea1221b18e3b46da7c96c9a4ffb87fee9e23a94d44",
-        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
-      }
-    },
-    {
       "officialCardId": "46312",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4846,21 +4816,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46332",
-      "name": "ルチアのアピール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46332.json",
-        "sha256": "cc1721226b022144ba00ed26ccfd8fe5b6731217f4c4836e95e032ca28bb285c",
-        "htmlSha256": "cc1721226b022144ba00ed26ccfd8fe5b6731217f4c4836e95e032ca28bb285c",
-        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
-      }
-    },
-    {
       "officialCardId": "46334",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4869,21 +4824,6 @@
       "officialCardId": "46335",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46337",
-      "name": "ルチアのアピール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46337.json",
-        "sha256": "fb700ac00eeffb68c679085095e8b6cd94181c81bb3584462288b50352a4a79c",
-        "htmlSha256": "fb700ac00eeffb68c679085095e8b6cd94181c81bb3584462288b50352a4a79c",
-        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
-      }
     },
     {
       "officialCardId": "46338",
@@ -8400,21 +8340,6 @@
       }
     },
     {
-      "officialCardId": "47486",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47486.json",
-        "sha256": "6f43f7cc9e8cf2c4ac53c5c0bc7cca7a2392e7a819e134dc5773f397dd5914f0",
-        "htmlSha256": "6f43f7cc9e8cf2c4ac53c5c0bc7cca7a2392e7a819e134dc5773f397dd5914f0",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
-    },
-    {
       "officialCardId": "47488",
       "name": "ロケット団のランス",
       "category": "supporter",
@@ -8505,21 +8430,6 @@
       }
     },
     {
-      "officialCardId": "47525",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47525.json",
-        "sha256": "383b8da95ec092ee4bdcea48d8d747d77b6a4e9fe197593dea22cb20960a3a99",
-        "htmlSha256": "383b8da95ec092ee4bdcea48d8d747d77b6a4e9fe197593dea22cb20960a3a99",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
-    },
-    {
       "officialCardId": "47527",
       "name": "ロケット団のランス",
       "category": "supporter",
@@ -8543,21 +8453,6 @@
       "officialCardId": "47531",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47533",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47533.json",
-        "sha256": "1b311b8e72af38d33615bd967cfea49a462e386b78a8c517d3aaa3392461e4e5",
-        "htmlSha256": "1b311b8e72af38d33615bd967cfea49a462e386b78a8c517d3aaa3392461e4e5",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
     },
     {
       "officialCardId": "47535",
@@ -10205,21 +10100,6 @@
       }
     },
     {
-      "officialCardId": "48700",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48700.json",
-        "sha256": "c9ad5393c339e8f37fc2f77d09cb35f2e77acdac123b6e4b9ca238d1c2a5745a",
-        "htmlSha256": "c9ad5393c339e8f37fc2f77d09cb35f2e77acdac123b6e4b9ca238d1c2a5745a",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
-    },
-    {
       "officialCardId": "48702",
       "name": "ロケット団のランス",
       "category": "supporter",
@@ -10907,21 +10787,6 @@
         "sha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "htmlSha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "textSha256": "c2059b518cf04021ffff811a937a05ed7d79a722461b13ee309645074064e340"
-      }
-    },
-    {
-      "officialCardId": "49449",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49449.json",
-        "sha256": "2bb6e407c8a99646c891c55f6f5094414e9937250cb3f1b25eb28f0b344b58d8",
-        "htmlSha256": "2bb6e407c8a99646c891c55f6f5094414e9937250cb3f1b25eb28f0b344b58d8",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
       }
     },
     {
@@ -12560,21 +12425,6 @@
       }
     },
     {
-      "officialCardId": "49446",
-      "name": "ルチアのアピール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49446.json",
-        "sha256": "aef7cc38804f1f42a8b9f0a42791de7a9c76a7d991c3552525b5b957feb1790f",
-        "htmlSha256": "aef7cc38804f1f42a8b9f0a42791de7a9c76a7d991c3552525b5b957feb1790f",
-        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
-      }
-    },
-    {
       "officialCardId": "49454",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -13373,7 +13223,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 389
+        "count": 379
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -13388,17 +13238,17 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "f5fd579c73b45a70f3347cb3d2d8dbb37df017e12d1d928d26089c118c22c392",
+    "executionFingerprint": "d04bb2f124bf9a4a7297bbf070a900d5d29e8994b5bbb4e1d01e727398a62cbf",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 146457,
+    "seq": 151113,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 320,
+      "SUCCEEDED": 321,
       "FAILED": 0,
-      "BLOCKED": 456
+      "BLOCKED": 455
     },
     "categories": {
       "pokemon": {
@@ -13411,9 +13261,9 @@
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 25,
+        "SUCCEEDED": 26,
         "FAILED": 0,
-        "BLOCKED": 21
+        "BLOCKED": 20
       },
       "item": {
         "PENDING": 0,

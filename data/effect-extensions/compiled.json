@@ -2936,6 +2936,41 @@
       }
     },
     {
+      "officialCardId": "48254",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48254",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/048254_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48254.json",
+        "sha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
+        "htmlSha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
       "officialCardId": "48255",
       "name": "ニャオハ",
       "deckName": "ニャオハ",
@@ -191509,6 +191544,321 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46292",
+      "name": "ルチアのアピール",
+      "deckName": "ルチアのアピール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46292",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046292_T_RUCHIANOAPIRU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46292.json",
+        "sha256": "5cb439139907db742f86fdea1221b18e3b46da7c96c9a4ffb87fee9e23a94d44",
+        "htmlSha256": "5cb439139907db742f86fdea1221b18e3b46da7c96c9a4ffb87fee9e23a94d44",
+        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_BASIC_SWITCH_CONFUSE",
+        "commands": [
+          "FORCE_SWITCH",
+          "STATUS_CONDITION"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46332",
+      "name": "ルチアのアピール",
+      "deckName": "ルチアのアピール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46332",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046332_T_RUCHIANOAPIRU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46332.json",
+        "sha256": "cc1721226b022144ba00ed26ccfd8fe5b6731217f4c4836e95e032ca28bb285c",
+        "htmlSha256": "cc1721226b022144ba00ed26ccfd8fe5b6731217f4c4836e95e032ca28bb285c",
+        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_BASIC_SWITCH_CONFUSE",
+        "commands": [
+          "FORCE_SWITCH",
+          "STATUS_CONDITION"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46337",
+      "name": "ルチアのアピール",
+      "deckName": "ルチアのアピール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46337",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046337_T_RUCHIANOAPIRU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46337.json",
+        "sha256": "fb700ac00eeffb68c679085095e8b6cd94181c81bb3584462288b50352a4a79c",
+        "htmlSha256": "fb700ac00eeffb68c679085095e8b6cd94181c81bb3584462288b50352a4a79c",
+        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_BASIC_SWITCH_CONFUSE",
+        "commands": [
+          "FORCE_SWITCH",
+          "STATUS_CONDITION"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47486",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47486",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047486_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47486.json",
+        "sha256": "6f43f7cc9e8cf2c4ac53c5c0bc7cca7a2392e7a819e134dc5773f397dd5914f0",
+        "htmlSha256": "6f43f7cc9e8cf2c4ac53c5c0bc7cca7a2392e7a819e134dc5773f397dd5914f0",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47525",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47525",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047525_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47525.json",
+        "sha256": "383b8da95ec092ee4bdcea48d8d747d77b6a4e9fe197593dea22cb20960a3a99",
+        "htmlSha256": "383b8da95ec092ee4bdcea48d8d747d77b6a4e9fe197593dea22cb20960a3a99",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47533",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47533",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047533_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47533.json",
+        "sha256": "1b311b8e72af38d33615bd967cfea49a462e386b78a8c517d3aaa3392461e4e5",
+        "htmlSha256": "1b311b8e72af38d33615bd967cfea49a462e386b78a8c517d3aaa3392461e4e5",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "48700",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48700",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048700_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48700.json",
+        "sha256": "c9ad5393c339e8f37fc2f77d09cb35f2e77acdac123b6e4b9ca238d1c2a5745a",
+        "htmlSha256": "c9ad5393c339e8f37fc2f77d09cb35f2e77acdac123b6e4b9ca238d1c2a5745a",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49449",
+      "name": "ロケット団のサカキ",
+      "deckName": "ロケット団のサカキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49449",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049449_T_ROKETTODANNOSAKAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49449.json",
+        "sha256": "2bb6e407c8a99646c891c55f6f5094414e9937250cb3f1b25eb28f0b344b58d8",
+        "htmlSha256": "2bb6e407c8a99646c891c55f6f5094414e9937250cb3f1b25eb28f0b344b58d8",
+        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49446",
+      "name": "ルチアのアピール",
+      "deckName": "ルチアのアピール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49446",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049446_T_RUCHIANOAPIRU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49446.json",
+        "sha256": "aef7cc38804f1f42a8b9f0a42791de7a9c76a7d991c3552525b5b957feb1790f",
+        "htmlSha256": "aef7cc38804f1f42a8b9f0a42791de7a9c76a7d991c3552525b5b957feb1790f",
+        "textSha256": "1adde52b54f6fced6ef2647fd7fdece49641263c4a94c3e580259ef77de9cefc"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_BASIC_SWITCH_CONFUSE",
+        "commands": [
+          "FORCE_SWITCH",
+          "STATUS_CONDITION"
+        ],
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -192176,21 +192526,6 @@
       "officialCardId": "48249",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48254",
-      "name": "ロケット団のサカキ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48254.json",
-        "sha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
-        "htmlSha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
-        "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
     },
     {
       "officialCardId": "48479",

@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1043,
-      "missing": 659
+      "connected": 1049,
+      "missing": 653
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1037,
-      "MECHANIC_REQUIRED": 86,
-      "ENGINE_CONNECTION_REQUIRED": 569,
+      "CONNECTED_UNTESTED": 1043,
+      "MECHANIC_REQUIRED": 85,
+      "ENGINE_CONNECTION_REQUIRED": 564,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10379,8 +10379,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47486.json"
     },
     {
@@ -10545,8 +10544,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47525.json"
     },
     {
@@ -10598,8 +10596,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47533.json"
     },
     {
@@ -14451,8 +14448,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48700.json"
     },
     {
@@ -15925,8 +15921,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49449.json"
     },
     {
@@ -19715,8 +19710,7 @@
       "name": "ロケット団のサカキ",
       "mark": "I",
       "category": "support",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48254.json"
     },
     {
@@ -21638,14 +21632,14 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1102,
+        "ENGINE_CONNECTED": 1106,
         "ENGINE_CONNECTION_REQUIRED": 20,
-        "MECHANIC_REQUIRED": 742
+        "MECHANIC_REQUIRED": 738
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1043,
-        "MECHANIC_REQUIRED": 634,
+        "ENGINE_CONNECTED": 1049,
+        "MECHANIC_REQUIRED": 628,
         "ENGINE_CONNECTION_REQUIRED": 21,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21662,7 +21656,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3256,
-    "unconnected": 1817
+    "engineConnected": 3266,
+    "unconnected": 1807
   }
 }

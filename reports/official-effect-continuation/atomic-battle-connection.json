@@ -4,20 +4,20 @@
   "source": "EXACT_OFFICIAL_HTML_ID_IMAGE_EFFECT_AND_ENGINE_RECEIPTS",
   "publicBattleVerified": false,
   "finalization": "ONLY_AFTER_REQUIRED_CI_MAIN_PAGES_AND_PUBLISHED_BATTLE",
-  "totalSelected": 1822,
-  "qualifiedForPublication": 5,
-  "workRemaining": 1817,
+  "totalSelected": 1817,
+  "qualifiedForPublication": 10,
+  "workRemaining": 1807,
   "counts": {
-    "QUALIFIED_PREPUBLICATION": 5,
+    "QUALIFIED_PREPUBLICATION": 10,
     "NEEDS_ENGINE_EXECUTION": 47,
-    "NEEDS_SHARED_MECHANIC": 1762,
+    "NEEDS_SHARED_MECHANIC": 1752,
     "NEEDS_OFFICIAL_PARSER": 8,
     "EVIDENCE_BLOCKED": 0,
     "EFFECT_UNRESOLVED": 0,
     "PENDING_OFFICIAL_FETCH": 0
   },
   "allCardEffectsConnectedAndExecuted": false,
-  "sharedMechanicGroups": 953,
+  "sharedMechanicGroups": 951,
   "sharedMechanicWorklist": [
     {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
@@ -447,32 +447,6 @@
         "data/effect-extensions/evidence/48593.json",
         "data/effect-extensions/evidence/47838.json",
         "data/effect-extensions/evidence/49986.json"
-      ],
-      "printCount": 6,
-      "effectSlots": 6
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D79A0B9DDDA6011F6ECB",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48254",
-        "47486",
-        "47525",
-        "47533",
-        "48700",
-        "49449"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48254.json",
-        "data/effect-extensions/evidence/47486.json",
-        "data/effect-extensions/evidence/47525.json",
-        "data/effect-extensions/evidence/47533.json",
-        "data/effect-extensions/evidence/48700.json",
-        "data/effect-extensions/evidence/49449.json"
       ],
       "printCount": 6,
       "effectSlots": 6
@@ -1991,28 +1965,6 @@
         "data/effect-extensions/evidence/50225.json",
         "data/effect-extensions/evidence/50250.json",
         "data/effect-extensions/evidence/50251.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AEB01315863790A3949A",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46292",
-        "46332",
-        "46337",
-        "49446"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46292.json",
-        "data/effect-extensions/evidence/46332.json",
-        "data/effect-extensions/evidence/46337.json",
-        "data/effect-extensions/evidence/49446.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -19150,10 +19102,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50135",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50139",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -21320,8 +21268,7 @@
     },
     {
       "officialCardId": "47486",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47488",
@@ -21425,8 +21372,7 @@
     },
     {
       "officialCardId": "47525",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47527",
@@ -21455,8 +21401,7 @@
     },
     {
       "officialCardId": "47533",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47535",
@@ -22340,8 +22285,7 @@
     },
     {
       "officialCardId": "48254",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48261",
@@ -22894,10 +22838,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48544",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48545",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -23189,8 +23129,7 @@
     },
     {
       "officialCardId": "48700",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48702",
@@ -23654,8 +23593,7 @@
     },
     {
       "officialCardId": "49449",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49451",
@@ -23691,10 +23629,6 @@
       "officialCardId": "49957",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49958",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49959",
@@ -23910,10 +23844,6 @@
       "officialCardId": "50844",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45147",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45148",
@@ -25822,8 +25752,7 @@
     },
     {
       "officialCardId": "46292",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46293",
@@ -25902,8 +25831,7 @@
     },
     {
       "officialCardId": "46332",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46334",
@@ -25917,8 +25845,7 @@
     },
     {
       "officialCardId": "46337",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46338",
@@ -26961,10 +26888,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48746",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "48747",
       "state": "NEEDS_ENGINE_EXECUTION",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
@@ -27671,8 +27594,7 @@
     },
     {
       "officialCardId": "49446",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49454",
