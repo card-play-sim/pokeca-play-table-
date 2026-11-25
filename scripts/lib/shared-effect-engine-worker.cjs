@@ -280,8 +280,9 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='TRAINER_TEAM_DAMAGE_REDUCTION'){
   const attacker=reserve(r=>vanilla(r),'active',1);
   if(attacker)ensureAttackCost(attacker,1-deckIndex);
-  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'active');
-  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'bench');
+  const active=reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'active');
+  const bench=reserve(r=>mon(r,plan.type,0)&&!r.abilities.length&&r.officialCardId!==active?.officialCardId,'bench');
+  if(!bench&&active&&ensure(deckIndex,active,2))requirements.push({side:0,zone:'bench',printId:active.officialCardId});
   if(plan.type)reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type)&&!r.abilities.length,'bench');
  }
  if(m==='TRAINER_TYPED_DAMAGE_BOOST'){
