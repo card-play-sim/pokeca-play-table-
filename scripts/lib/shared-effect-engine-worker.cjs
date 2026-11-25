@@ -157,6 +157,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentAbilityCount')reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
+ if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  if(m==='MASS_ZONE_TRANSFER'){
   const filter=r=>{
@@ -276,6 +277,18 @@ function prepare(r, e, kind) {
     }
     own.deck.push(...own.active.energyCards);own.active.energyCards=keep;
     return {...t,port:port(game),trigger};
+  }
+  if(m==='PASSIVE_IGNORE_ACTIVE_DEFENSE'){
+    const attackIndex=r.attacks.findIndex(a=>a.plan?.mechanic==='ATTACK_STATUS_BONUS_DAMAGE');
+    if(attackIndex<0)return {blocked:'NO_DEFENSE_BYPASS_ATTACK'};
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofDefenseBypass:true},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const g=t.port.getSnapshot(),own=g.players[0],other=g.players[1];
+    for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}
+    if(!own.deck.some(c=>E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES'))return {blocked:'NO_DEFENSE_BYPASS_SUPPRESSION_STADIUM'};
+    if(g.stadium)return {blocked:'NO_EMPTY_STADIUM_FIXTURE'};
+    other.active.referenceProtection={opponentTurn:g.turnNumber};
+    return {...t,port:port(g),trigger};
   }
   if(m==='PASSIVE_FULL_HP_SURVIVAL'){
     const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
@@ -1897,6 +1910,22 @@ function verifyCase(t, e) {
       verifyPrintedAttack(start,withTool.getSnapshot(),trigger,Number(attack.damage)+e.plan.amount);
       verifyPrintedAttack(base,withoutTool.getSnapshot(),trigger,Number(attack.damage));
     }
+  }
+  if(e.plan.mechanic==='PASSIVE_IGNORE_ACTIVE_DEFENSE'){
+    const attacker=before.players[0].active,defender=before.players[1].active,action=t.action||o.action;
+    assert(E.getReferenceEffectRecord(attacker).abilities.some(a=>a.effectId===e.effectId));
+    assert.equal(defender.referenceProtection.opponentTurn,before.turnNumber);
+    const plan=t.trigger.plan,amount=plan.base+(defender.statusCondition?plan.bonus:0);
+    verifyPrintedAttack(before,after,t.trigger,amount);
+    assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===defender.id&&ev.amount>0));
+    const suppressed=JSON.parse(JSON.stringify(before)),own=suppressed.players[0];
+    const index=own.deck.findIndex(c=>E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES');
+    assert(index>=0);suppressed.stadium=own.deck.splice(index,1)[0];suppressed.stadiumOwner=own.id;
+    const replay=port(suppressed);assert(replay.dispatch('you',action).ok);
+    const result=replay.getSnapshot();
+    assert(result.history.slice(suppressed.history.length).some(ev=>ev.details?.command==='DAMAGE'&&ev.details.targetInstanceId===defender.id&&ev.details.amount===0));
+    assert.equal(result.players[1].active.damage,defender.damage);
+    assert.deepEqual(S.identities(suppressed),S.identities(result));
   }
   if(e.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL'){
     const defender=before.players[1].active,action=t.action||o.action;
