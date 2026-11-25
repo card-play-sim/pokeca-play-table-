@@ -37,10 +37,28 @@ jobs:
             test -n "$file" || continue
             case "$file" in
               reports/official-effect-continuation/queue/receipts/*.json)
-                # Keep the candidate execution receipt only when it proves the same task and result.
+                # Require identical task/slots and exact equivalent proof or strictly evidenced progress.
                 git show ":2:$file" > /tmp/candidate-receipt.json
                 git show ":3:$file" > /tmp/public-receipt.json
-                node -e 'const a=require("node:assert/strict"),x=require("/tmp/candidate-receipt.json"),y=require("/tmp/public-receipt.json"); for(const k of ["jobId","taskFingerprint","status","result"]) a.deepEqual(x[k],y[k],process.argv[1]+":"+k)' "$file"
+                node - "$file" <<'NODE'
+          const a=require('node:assert/strict'),x=require('/tmp/candidate-receipt.json'),y=require('/tmp/public-receipt.json');
+          const file=process.argv[2];
+          for(const k of ['jobId','taskFingerprint']) a.deepEqual(x[k],y[k],file+':'+k);
+          if(x.status===y.status && require('node:util').isDeepStrictEqual(x.result,y.result)) process.exit(0);
+          const xc=x.result?.cases, yc=y.result?.cases;
+          a(Array.isArray(xc)&&Array.isArray(yc)&&xc.length>0,file+':missing cases');
+          a.deepEqual(xc.map(c=>c.slot).sort(),yc.map(c=>c.slot).sort(),file+':slot identity');
+          a.equal(x.result.status,x.status,file+':candidate receipt status');
+          a.equal(y.result.status,y.status,file+':public receipt status');
+          a.equal(x.result.stage,y.result.stage,file+':stage');
+          if(x.status==='SUCCEEDED' && y.status==='BLOCKED'){
+            const required=['LEGAL_ACTION_OR_PASSIVE_GUARD','INVALID_ACTION_ROLLBACK','AI_UI_LEGAL_PARITY','PHYSICAL_CARD_CONSERVATION','EXACT_SAVE_RESTORE'];
+            for(const c of xc){a.equal(c.status,'SUCCEEDED',file+':case');a(required.every(k=>c.checks?.includes(k)),file+':missing execution check');}
+            console.log('Verified receipt advancement: '+file);
+          } else if(x.status==='BLOCKED' && y.status==='BLOCKED'){
+            a(xc.every(c=>c.status!=='SUCCEEDED') && yc.every(c=>c.status!=='SUCCEEDED'),file+':mixed blocked results');
+          } else a.fail(file+':non-equivalent or regressing evidence');
+          NODE
                 git checkout --ours -- "$file"
                 git add "$file"
                 ;;
