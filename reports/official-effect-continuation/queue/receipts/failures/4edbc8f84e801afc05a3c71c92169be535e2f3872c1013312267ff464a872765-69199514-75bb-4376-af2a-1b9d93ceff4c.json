@@ -1,0 +1,24 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_C3039BF231CF134F:9809b0501c74669dff029631e93a6d961d6d1c0b41d5eee7537fca1579a1ab1f",
+  "taskFingerprint": "9809b0501c74669dff029631e93a6d961d6d1c0b41d5eee7537fca1579a1ab1f",
+  "executionFingerprint": "bff10ba6c372989012950460d4aa8c10eb1a02e1317294f9a517f09e9ca88156",
+  "attemptId": "69199514-75bb-4376-af2a-1b9d93ceff4c",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50690:attack:けちをつける:0",
+        "status": "FAILED",
+        "reason": "The expression evaluated to a falsy value:\n\n  assert(result.hand.length===Math.min(n,pool.length))\n",
+        "details": {
+          "mechanic": "MASS_HAND_FLOW",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(result.hand.length===Math.min(n,pool.length))\n\n    at checkReset (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1210:227)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1211:33)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2500:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        }
+      }
+    ]
+  },
+  "checksum": "a2069b2e7f5754e248510f99b1e9cf9ed18b97bfaa1a1dd6c527b7c47256b112"
+}

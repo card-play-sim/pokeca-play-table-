@@ -1,50 +1,126 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_32D7568F94FB9281:640952ad301b1aba8d9f0a7f667685323f57e6e76fbbf3f98ebad0df46459c8a",
   "taskFingerprint": "640952ad301b1aba8d9f0a7f667685323f57e6e76fbbf3f98ebad0df46459c8a",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "56b1f7ec-efcf-482b-854e-100d9065268e",
-  "status": "BLOCKED",
+  "executionFingerprint": "1fc69971408288c3587ddd0425720bb5a84c501bd0136997c491a0d21391bc68",
+  "attemptId": "1d95117d-ee5f-4870-bea6-2b8d2e4fec08",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46027:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46170:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46178:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46181:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46797:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47147:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "47158:attack:クラウンオパール:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_BASIC_DAMAGE_PROTECTION",
+        "commands": [
+          "DAMAGE",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "5512a56ecf89da38bbfa7e1319379d0481a1c9d0dac3ca99510534bd88df6e7c"
+  "checksum": "da046d651e568a7b88326332166decfa22fa1c7ddbe3fb107567e231636e06e7"
 }

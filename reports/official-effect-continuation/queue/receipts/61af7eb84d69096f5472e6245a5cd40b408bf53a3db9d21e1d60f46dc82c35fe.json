@@ -1,35 +1,74 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B8CBF6753F94E18E:aef4aa81cf29dcef1ddbd07e3725d45c26c0fa7f84af1b627728c3c726ac36c7",
   "taskFingerprint": "aef4aa81cf29dcef1ddbd07e3725d45c26c0fa7f84af1b627728c3c726ac36c7",
-  "executionFingerprint": "13b492ac2f9b558855831fba254be1d64aa3cbd792d6f7f8b866a053b27c759c",
-  "attemptId": "9fea01c5-ea40-4b15-9b9d-89678c855d46",
-  "status": "BLOCKED",
+  "executionFingerprint": "1fc69971408288c3587ddd0425720bb5a84c501bd0136997c491a0d21391bc68",
+  "attemptId": "47e38e1a-0691-4916-815a-7a05334ffa70",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47494:ability:あんやのはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45179:ability:あんやのはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45519:ability:あんやのはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46733:ability:あんやのはばたき:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ACTIVE_OPPONENT_ABILITY_SUPPRESSION",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "eda1220268e49a43f3480501e9336a88edbb75bfe2fecdb3a67819ce7ea3977f"
+  "checksum": "57c67734097b335dc92448e7fb7e49515252a3a8f992404b8fc415600a25ff2d"
 }
