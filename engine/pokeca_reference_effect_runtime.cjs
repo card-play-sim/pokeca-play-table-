@@ -587,6 +587,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
  if(a.plan.origin==='evolve')assert(card.referenceEvolutionWindow===g.referenceActionSequence,'EVOLUTION_ENTRY_WINDOW_REQUIRED');
+ if(a.plan.requiresTera)assert(field(p).some(c=>record(c).facts.teraBenchProtection===true),'TERA_POKEMON_REQUIRED');
  if(m==='MASS_EFFECT_SEQUENCE'&&a.plan.steps.every(s=>s.op==='healSelf'))assert(card.damage>0,'ABILITY_HEAL_UNAVAILABLE');
  assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
