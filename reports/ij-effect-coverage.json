@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1041,
-      "missing": 661
+      "connected": 1044,
+      "missing": 658
     },
     "J": {
       "total": 870,
-      "connected": 473,
-      "missing": 397
+      "connected": 475,
+      "missing": 395
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1035,
+      "CONNECTED_UNTESTED": 1038,
       "MECHANIC_REQUIRED": 86,
-      "ENGINE_CONNECTION_REQUIRED": 571,
+      "ENGINE_CONNECTION_REQUIRED": 568,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 472,
+      "CONNECTED_UNTESTED": 474,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 349,
+      "ENGINE_CONNECTION_REQUIRED": 347,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -4390,8 +4390,7 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48289.json"
     },
     {
@@ -7139,8 +7138,7 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49987.json"
     },
     {
@@ -7165,8 +7163,7 @@
       "name": "メガディアンシーex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49998.json"
     },
     {
@@ -18217,8 +18214,7 @@
       "name": "エレキブル",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50361.json"
     },
     {
@@ -18719,8 +18715,7 @@
       "name": "エレキブル",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50522.json"
     },
     {
@@ -21647,16 +21642,16 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1041,
+        "ENGINE_CONNECTED": 1044,
         "MECHANIC_REQUIRED": 638,
-        "ENGINE_CONNECTION_REQUIRED": 19,
+        "ENGINE_CONNECTION_REQUIRED": 16,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 472,
+        "ENGINE_CONNECTED": 474,
         "MECHANIC_REQUIRED": 387,
-        "ENGINE_CONNECTION_REQUIRED": 6,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21665,7 +21660,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3251,
-    "unconnected": 1822
+    "engineConnected": 3256,
+    "unconnected": 1817
   }
 }
