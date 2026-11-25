@@ -258,39 +258,8 @@ function massTransferCandidate(c,plan){
  if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
  return true;
 }
-function scopeHealTargets(p,o,plan){
- const targets=plan.scope==='both'?[...field(p),...field(o)]:plan.scope==='active'?[p.active]:plan.scope==='bench'?p.bench:field(p).filter(c=>record(c).facts.basic);
- return targets.filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
-}
-function handFlowAvailable(p,o,plan){
- if(plan.mode==='resetOpponent')return o.hand.length+o.deck.length>0;
- if(plan.mode==='bothDraw')return p.deck.length+o.deck.length>0;
- if(plan.mode==='revealCount')return p.deck.length>0&&o.hand.some(c=>c.kind==='pokemon');
- if(plan.mode==='resetBothCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
- if(plan.mode==='rocketLimit')return p.deck.length>0&&p.hand.length<(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount);
- return true;
-}
 function massHealTargets(p,plan){
  return (plan.target==='active'?[p.active]:field(p)).filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
-}
-function boardBonusApplies(g,p,o,plan){
- const facts=record(o.active).facts;
- switch(plan.predicate){
-  case 'ownHandEmpty':return p.hand.length===0;
-  case 'ownPrizesExact':return p.prizes===plan.threshold;
-  case 'opponentPrizesExact':return o.prizes===plan.threshold;
-  case 'ownDeckAtMost':return p.deck.length<=plan.threshold;
-  case 'allDamagedBench':return p.bench.length>0&&p.bench.every(c=>c.damage>0);
-  case 'ownBenchNamed':return p.bench.some(c=>record(c).name===plan.name);
-  case 'ownBenchContains':return p.bench.some(c=>record(c).name.includes(plan.name));
-  case 'ownStadium':return !!g.stadium&&g.stadiumOwner===p.id;
-  case 'stadiumContains':return !!g.stadium&&record(g.stadium).name.includes(plan.name);
-  case 'opponentType':return facts.types.includes(plan.type);
-  case 'opponentResistance':return !!facts.resistance?.types.includes(plan.type);
-  case 'opponentTera':return facts.teraBenchProtection===true;
-  case 'ownSpecialEnergy':return p.active.energyCards.some(c=>c.isSpecial);
-  default:throw Error('UNKNOWN_BOARD_BONUS_PREDICATE');
- }
 }
 function massContext(plan,p,o){
  if(plan.predicate==='equalHand')return p.hand.length===o.hand.length;
@@ -448,10 +417,6 @@ function requests(g,actor,card,effect){
   if(plan.zone==='deck')deckRequest('cards',pool,0,max);
   else cardRequest('cards',pool,Math.min(1,max),max);
  }
- if(m==='MASS_HEAL_SCOPE'&&effect.plan.choice){
-  const pool=scopeHealTargets(p,o,effect.plan).filter(c=>c.damage>0);
-  cardRequest('cards',pool,Math.min(1,pool.length),Math.min(1,pool.length));
- }
  if(m==='MASS_HEAL_OWN'&&effect.plan.target==='choice'){
   const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
   cardRequest('cards',pool,min,min);
@@ -555,7 +520,6 @@ function abilityOrigin(a){
  if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
- if(a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION')return {zones:['ACTIVE'],entry:false};
  if(text.startsWith('このポケモンがバトル場にいるなら'))return {zones:['ACTIVE'],entry:false};
  return {zones:['ACTIVE','BENCH'],entry:false};
 }
@@ -573,8 +537,6 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
- if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,opponent(g,actor),a.plan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
- if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,opponent(g,actor),a.plan),'NO_HAND_FLOW_CHANGE');
  if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
@@ -660,8 +622,6 @@ function preflight(g,actor,action){
    }
    if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
    if(m==='MASS_ZONE_TRANSFER')assert(r.mainPlan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,r.mainPlan)),'NO_MASS_TRANSFER_SOURCE');
-   if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,o,r.mainPlan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
-   if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
    if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
    if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -917,27 +877,6 @@ function applyPlan(g,actor,card,effect,action){
    if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'));
    else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
    break;
-  case 'MASS_HAND_FLOW':
-   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(plan.mode==='resetOpponent')resetHand(g,o,plan.amount,plan.bottom);
-   if(plan.mode==='bothDraw'){draw(g,p,plan.amount);draw(g,o,plan.amount);}
-   if(plan.mode==='resetOwnMatch')resetHand(g,p,o.hand.length);
-   if(plan.mode==='revealCount'){event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});draw(g,p,o.hand.filter(c=>c.kind==='pokemon').length);}
-   if(plan.mode==='rocketLimit')draw(g,p,Math.max(0,(field(p).every(c=>record(c).name.startsWith('ロケット団の'))?plan.bonus:plan.amount)-p.hand.length));
-   if(plan.mode==='resetBothCoin'){
-    // Both hands are returned before either player flips or draws.
-    for(const side of [p,o]){
-     const cards=side.hand.splice(0);
-     for(let i=cards.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(referenceRandom(g)*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
-     side.deck.push(...cards);event(g,side.id,'RETURN_TO_DECK',{cardIds:cards.map(id),bottomOnly:true});
-    }
-    for(const side of [p,o])draw(g,side,coin(g,side.id)?plan.amount:plan.tails);
-   }
-   break;
-  case 'MASS_HEAL_SCOPE':
-   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   for(const mon of scopeHealTargets(p,o,plan))if(mon.damage>0&&(!plan.choice||ids('cards').includes(id(mon))))heal(g,find(g,id(mon)).player.id,mon,plan.amount==='all'?mon.damage:plan.amount);
-   break;
   case 'MASS_HEAL_OWN':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount);
@@ -1045,28 +984,6 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'CONDITIONAL_ATTACK_BONUS':
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
-   break;
-  case 'MASS_COIN_OUTCOME':{
-   let heads=0;
-   for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
-   const met=plan.when==='all'?heads===plan.flips:plan.when==='none'?heads===0:heads>=plan.threshold;
-   const target=o.active,protectedTarget=target.referenceProtection?.opponentTurn===g.turnNumber;
-   const amount=plan.failOnTails&&!met?0:plan.base+(plan.unit||0)*heads+(met?(plan.bonus||0):0);
-   damage(g,actor,target,amount);
-   if(met){
-    if(plan.status&&!protectedTarget){target.statusCondition=plan.status;event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(target)});}
-    if(plan.recoil)command(g,actor,{command:'DAMAGE',amount:plan.recoil},{targetIds:[id(card)]});
-    if(plan.heal)heal(g,actor,card,plan.heal);
-    if(plan.mill){const discarded=o.deck.splice(0,heads);o.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:o.id});}
-    if(plan.lock==='selfAttack')card.referenceCannotAttackTurn=g.turnNumber+2;
-    if(plan.lock==='opponentAttack'&&!protectedTarget)target.referenceCannotAttackTurn=g.turnNumber+1;
-    if(plan.lock==='opponentRetreat'&&!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+1;
-    if(plan.protect)card.referenceProtection={opponentTurn:g.turnNumber+1};
-   }
-   break;
-  }
-  case 'MASS_BOARD_BONUS':
-   damage(g,actor,o.active,plan.base+(boardBonusApplies(g,p,o,plan)?plan.bonus:0));
    break;
   case 'SCALED_ATTACK_DAMAGE':
    damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
