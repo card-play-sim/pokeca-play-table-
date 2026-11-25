@@ -3,40 +3,6 @@
   "scope": "OFFICIAL_CARD_TO_ENGINE_ONE_ATOMIC_WORK_UNIT",
   "groups": [
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4110F643BF75F8A79B36",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47498",
-        "45787",
-        "45864",
-        "45871",
-        "46104",
-        "46830",
-        "47151",
-        "47207",
-        "47894",
-        "49429"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47498.json",
-        "data/effect-extensions/evidence/45787.json",
-        "data/effect-extensions/evidence/45864.json",
-        "data/effect-extensions/evidence/45871.json",
-        "data/effect-extensions/evidence/46104.json",
-        "data/effect-extensions/evidence/46830.json",
-        "data/effect-extensions/evidence/47151.json",
-        "data/effect-extensions/evidence/47207.json",
-        "data/effect-extensions/evidence/47894.json",
-        "data/effect-extensions/evidence/49429.json"
-      ],
-      "printCount": 10,
-      "effectSlots": 10
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5FBB46BFE8D373543422",
       "category": "pokemon",
       "effectKind": "ability",
@@ -133,36 +99,6 @@
       "effectSlots": 9
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2D7377AD7A155DE16D91",
-      "category": "tool",
-      "effectKind": "tool",
-      "exampleOfficialText": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48252",
-        "46288",
-        "46339",
-        "47199",
-        "47886",
-        "48683",
-        "49395",
-        "49978"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48252.json",
-        "data/effect-extensions/evidence/46288.json",
-        "data/effect-extensions/evidence/46339.json",
-        "data/effect-extensions/evidence/47199.json",
-        "data/effect-extensions/evidence/47886.json",
-        "data/effect-extensions/evidence/48683.json",
-        "data/effect-extensions/evidence/49395.json",
-        "data/effect-extensions/evidence/49978.json"
-      ],
-      "printCount": 8,
-      "effectSlots": 8
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3B3AE280AB46980E4F6C",
       "category": "pokemon",
       "effectKind": "ability",
@@ -188,36 +124,6 @@
         "data/effect-extensions/evidence/45845.json",
         "data/effect-extensions/evidence/46670.json",
         "data/effect-extensions/evidence/46690.json"
-      ],
-      "printCount": 8,
-      "effectSlots": 8
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EA53D0447E2EC47F75E9",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "相手がすでにとったサイドの枚数ぶん、このポケモンが「ブラッドムーン」を使うための[無色]エネルギーは少なくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47295",
-        "45628",
-        "45679",
-        "45686",
-        "45689",
-        "46795",
-        "47146",
-        "49341"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47295.json",
-        "data/effect-extensions/evidence/45628.json",
-        "data/effect-extensions/evidence/45679.json",
-        "data/effect-extensions/evidence/45686.json",
-        "data/effect-extensions/evidence/45689.json",
-        "data/effect-extensions/evidence/46795.json",
-        "data/effect-extensions/evidence/47146.json",
-        "data/effect-extensions/evidence/49341.json"
       ],
       "printCount": 8,
       "effectSlots": 8
@@ -452,32 +358,6 @@
       "effectSlots": 6
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_40088D8FAE7E0FAAE7C2",
-      "category": "tool",
-      "effectKind": "tool",
-      "exampleOfficialText": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48331",
-        "50039",
-        "47704",
-        "48688",
-        "49405",
-        "50327"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48331.json",
-        "data/effect-extensions/evidence/50039.json",
-        "data/effect-extensions/evidence/47704.json",
-        "data/effect-extensions/evidence/48688.json",
-        "data/effect-extensions/evidence/49405.json",
-        "data/effect-extensions/evidence/50327.json"
-      ],
-      "printCount": 6,
-      "effectSlots": 6
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_52EDA381EE9A24FA6BC4",
       "category": "pokemon",
       "effectKind": "attack",
@@ -664,32 +544,6 @@
         "data/effect-extensions/evidence/47533.json",
         "data/effect-extensions/evidence/48700.json",
         "data/effect-extensions/evidence/49449.json"
-      ],
-      "printCount": 6,
-      "effectSlots": 6
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E08258BC5869A4B8A15A",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45756",
-        "45861",
-        "45870",
-        "46752",
-        "47137",
-        "49144"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45756.json",
-        "data/effect-extensions/evidence/45861.json",
-        "data/effect-extensions/evidence/45870.json",
-        "data/effect-extensions/evidence/46752.json",
-        "data/effect-extensions/evidence/47137.json",
-        "data/effect-extensions/evidence/49144.json"
       ],
       "printCount": 6,
       "effectSlots": 6
@@ -1069,30 +923,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C2371D5FEDD0AD5F457C",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46504",
-        "47303",
-        "47368",
-        "48536",
-        "48762"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46504.json",
-        "data/effect-extensions/evidence/47303.json",
-        "data/effect-extensions/evidence/47368.json",
-        "data/effect-extensions/evidence/48536.json",
-        "data/effect-extensions/evidence/48762.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CB499D687ACBA009485E",
       "category": "supporter",
       "effectKind": "supporter",
@@ -1112,33 +942,6 @@
         "data/effect-extensions/evidence/48476.json",
         "data/effect-extensions/evidence/48691.json",
         "data/effect-extensions/evidence/49413.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CDA0E62649A230C7F642",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
-      "printedDamage": "30+",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46175",
-        "46671",
-        "45951",
-        "46163",
-        "48780"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46175.json",
-        "data/effect-extensions/evidence/46671.json",
-        "data/effect-extensions/evidence/45951.json",
-        "data/effect-extensions/evidence/46163.json",
-        "data/effect-extensions/evidence/48780.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -1290,30 +1093,6 @@
         "data/effect-extensions/evidence/47298.json",
         "data/effect-extensions/evidence/47377.json",
         "data/effect-extensions/evidence/47386.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E66B0F3B722E3BF4E6A3",
-      "category": "tool",
-      "effectKind": "tool",
-      "exampleOfficialText": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45212",
-        "46820",
-        "47202",
-        "47890",
-        "49407"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45212.json",
-        "data/effect-extensions/evidence/46820.json",
-        "data/effect-extensions/evidence/47202.json",
-        "data/effect-extensions/evidence/47890.json",
-        "data/effect-extensions/evidence/49407.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -20983,5 +20762,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 2084
+  "unfinishedPrints": 2068
 }

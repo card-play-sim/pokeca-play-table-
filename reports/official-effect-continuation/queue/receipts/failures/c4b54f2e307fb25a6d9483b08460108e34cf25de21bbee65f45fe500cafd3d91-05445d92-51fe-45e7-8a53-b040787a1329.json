@@ -1,0 +1,20 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_CAB1E7ACA9A5E69F:a7bf9fd1e514cfc3fc647dad4a0825ef1d390d44a04175f67a0ab3f5ab1c2ad9",
+  "taskFingerprint": "a7bf9fd1e514cfc3fc647dad4a0825ef1d390d44a04175f67a0ab3f5ab1c2ad9",
+  "executionFingerprint": "55d11753303e9647dd0cf5aac450cd92546ba6fe608a26d6dc8928cffd3e0176",
+  "attemptId": "05445d92-51fe-45e7-8a53-b040787a1329",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "47498:supporter:スグリ:0",
+        "status": "FAILED",
+        "reason": "Values have same structure but are not reference-equal:\n\n{\n  amount: 30,\n  turn: 40\n}\n"
+      }
+    ]
+  },
+  "checksum": "587101e27e1a9b6ed3f283ebb66ab269b8ff5ff67f7726814094520bf004cba9"
+}

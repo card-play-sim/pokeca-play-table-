@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION']);
+const passive=new Set(['SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -73,7 +73,19 @@ function pays(mon,cost){
  function match(i,pool){if(i===typed.length)return pool.length>=cost.length-typed.length;for(let j=0;j<pool.length;j++)if(pool[j].includes(typed[i])&&match(i+1,pool.filter((_,k)=>k!==j)))return true;return false;}
  return match(0,units);
 }
-function cost(g,mon,attack){const c=[...attack.cost];if(stadium(g)==='NIGHT_MINE'&&record(mon).facts.teraBenchProtection)c.push('無色');return c;}
+function cost(g,mon,attack){
+ const c=[...attack.cost],owner=inPlay(g).find(x=>x.card===mon)?.player;
+ if(stadium(g)==='NIGHT_MINE'&&record(mon).facts.teraBenchProtection)c.push('無色');
+ if(!owner)return c;
+ const other=opponent(g,owner.id);
+ let discount=0;
+ if(toolEnabled(g)&&owner.prizes>other.prizes)for(const t of mon.tools||[]){
+  const p=record(t)?.mainPlan;if(p?.mechanic==='TOOL_PRIZE_COST_DISCOUNT')discount+=p.amount;
+ }
+ for(const a of enabledAbilities(g,mon))if(a.plan.mechanic==='PASSIVE_NAMED_PRIZE_DISCOUNT'&&a.plan.attackName===attack.name)discount+=6-other.prizes;
+ while(discount-->0){const i=c.indexOf('無色');if(i<0)break;c.splice(i,1);}
+ return c;
+}
 // Optional deterministic match-owned random stream. Persist referenceRngState
 // with the game snapshot; do not consume the AI policy's random stream.
 function referenceRandom(g){
@@ -144,6 +156,14 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  // Supporter bonus applies only to attack damage dealt to the opponent's Active Pokemon ex.
  // Add it BEFORE weakness/resistance and special-energy penalties, and expire by turn number.
  if(!bench&&find(g,id(mon))?.player.id===other.id&&record(mon)?.name.endsWith('ex')&&own.referenceExDamageBoost?.turn===g.turnNumber)amount+=own.referenceExDamageBoost.amount;
+ if(!bench&&find(g,id(mon))?.player.id===other.id){
+  const isEx=record(mon).name.endsWith('ex');
+  if(isEx&&toolEnabled(g))for(const t of source.tools||[]){
+   const plan=record(t)?.mainPlan;
+   if(plan?.mechanic==='TOOL_EX_ATTACK_BOOST'&&(!plan.nonRuleOnly||!record(source).facts.rulePokemon))amount+=plan.amount;
+  }
+  if(own.referenceExVDamageBoost?.turn===g.turnNumber&&(isEx||/V(?:MAX|STAR|-UNION)?$/.test(record(mon).name)))amount+=own.referenceExVDamageBoost.amount;
+ }
  if(!bench&&find(g,id(mon))?.player.id===other.id)amount+=(own.referenceTypedDamageBoosts||[]).filter(boost=>boost.turn===g.turnNumber&&record(source).facts.types.includes(boost.type)).reduce((sum,boost)=>sum+boost.amount,0);
  const energyPenalty=(source.energyCards||[]).reduce((sum,c)=>sum+(record(c)?.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY'?record(c).mainPlan.damagePenalty:0),0);
  const outgoing=source.referenceOutgoingDamagePenalty;
@@ -154,6 +174,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   if(bench&&record(mon).facts.teraBenchProtection)return 0;
   if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
+  if(find(g,id(mon))?.player.id===other.id&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&(a.plan.attacker==='ex'?record(source).name.endsWith('ex'):record(source).abilities.some(x=>abilityEnabled(g,source,x)))))return 0;
   if(find(g,id(mon))?.player.id===other.id&&mon.referenceBasicDamageProtection?.turn===g.turnNumber&&record(source).facts.basic&&!record(source).facts.types.includes(mon.referenceBasicDamageProtection.exceptType))return 0;
  }
  if(!bench){
@@ -399,6 +420,10 @@ function requests(g,actor,card,effect){
   cardRequest('cards',pool,min,min);
  }
  if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
+ if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'){
+  add('mode','CARD',[{id:'boost',name:'ダメージを+30'},{id:'switch',name:'バトル場とベンチを入れ替える'}].filter(c=>c.id==='boost'||p.bench.length),1,1);
+  cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
+ }
  if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
   const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
@@ -460,6 +485,10 @@ function verifyRequests(g,actor,card,effect,action){
   const ids=r.kind==='POKEMON'?(action.targetIds||[]):selected(action,r.key);
   assert(ids.length>=r.min&&ids.length<=r.max&&new Set(ids).size===ids.length&&ids.every(i=>r.candidates.some(c=>(c.id||c.instanceId)===i)),'INVALID_REFERENCE_SELECTION:'+r.key);
   for(const rule of r.constraints||[])assert(Selection.allows(r.candidates,ids,[rule]),rule.error||'INVALID_SELECTION_CONSTRAINT');
+ }
+ if(effect.plan.mechanic==='TRAINER_SWITCH_OR_EX_V_BOOST'){
+  const mode=selected(action,'mode')[0],bench=selected(action,'ownBench');
+  assert(bench.length===(mode==='switch'?1:0),'SUPPORTER_MODE_TARGET_MISMATCH');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
@@ -787,6 +816,10 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'TRAINER_SWITCH_OR_EX_V_BOOST':
+   if(ids('mode')[0]==='switch')chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
+   else p.referenceExVDamageBoost={turn:g.turnNumber,amount:plan.amount};
+   break;
   case 'MASS_ENERGY_ROUTE':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
@@ -1367,6 +1400,7 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'&&action.selections.mode[0]==='boost')action.selections.ownBench=[];
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
   const entries=(card.energyCards||[]).map((energy,index)=>({
     energy,index,units:energyUnits({...card,energyCards:[energy]}).length

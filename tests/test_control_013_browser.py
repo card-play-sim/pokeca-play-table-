@@ -372,6 +372,11 @@ async def main():
     mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
     plan=f['e']['plan']
     assert mon['retreatCost']==(0 if old['hp']-old['damage']<=plan['threshold'] else max(0,old['retreatCost']-plan['amount']))
+   if m=='PASSIVE_TYPED_ATTACK_IMMUNITY':
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==before['players'][1]['active']['id'] and ev['details'].get('amount')==0 for ev in events)
+    assert before['players'][1]['active']['damage']==after['players'][1]['active']['damage']
+   if m=='TRAINER_SWITCH_OR_EX_V_BOOST':
+    assert after['players'][0]['referenceExVDamageBoost']=={'turn':before['turnNumber'],'amount':f['e']['plan']['amount']}
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
     assert picked

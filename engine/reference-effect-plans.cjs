@@ -301,6 +301,24 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
+ if(kind==='ABILITY'&&passiveImmune)
+  return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
+ const toolAttackBoost=generic.match(/^このカードをつけているポケモン(\(「ルールを持つポケモン」をのぞく\))?が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&toolAttackBoost)
+  return {mechanic:'TOOL_EX_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],nonRuleOnly:Boolean(toolAttackBoost[1]),amount:Number(toolAttackBoost[2]),sharedWording:true};
+ const prizeDiscount=generic.match(/^自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、\[無色\]エネルギー([1-9])個ぶん少なくなる。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&prizeDiscount)
+  return {mechanic:'TOOL_PRIZE_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(prizeDiscount[1]),sharedWording:true};
+ const namedDiscount=generic.match(/^相手がすでにとったサイドの枚数ぶん、このポケモンが「([^「」]+)」を使うための\[無色\]エネルギーは少なくなる。$/);
+ if(kind==='ABILITY'&&namedDiscount)
+  return {mechanic:'PASSIVE_NAMED_PRIZE_DISCOUNT',commands:['MODIFY_ATTACK_COST'],attackName:namedDiscount[1],sharedWording:true};
+ const allTypedEnergyBonus=generic.match(/^自分のポケモン全員についている\[([草炎水雷超闘悪鋼])\]エネルギーの数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(kind==='ATTACK'&&allTypedEnergyBonus&&/^\d+\+$/.test(String(entry.damage).normalize('NFKC')))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTeamEnergy',type:allTypedEnergyBonus[1],base:Number.parseInt(entry.damage,10),unit:Number(allTypedEnergyBonus[2]),sharedWording:true};
+ const twoChoice=generic.replace(/\s+/g,'');
+ if(kind==='MAIN'&&entry.category==='supporter'&&twoChoice==='このカードは、2つの効果から1つを選んで使う。◆自分のバトルポケモンをベンチポケモンと入れ替える。◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。')
+  return {mechanic:'TRAINER_SWITCH_OR_EX_V_BOOST',commands:['SWITCH','MODIFY_DAMAGE'],amount:30,sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],sharedWording:true};
  const typedEvolution=generic.match(/^自分の番に1回使える。自分の山札から\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);

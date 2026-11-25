@@ -44951,6 +44951,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45756",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45756",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045756_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-45756-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-45756-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45756.json",
+        "sha256": "17ee7cba7776ac5c9eab254f5b023d5363f6f31e64cc0659c3044d2dfa6705da",
+        "htmlSha256": "17ee7cba7776ac5c9eab254f5b023d5363f6f31e64cc0659c3044d2dfa6705da",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45762",
       "name": "アラブルタケ",
       "deckName": "アラブルタケ",
@@ -45197,6 +45275,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45861",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45861",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045861_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-45861-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-45861-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45861.json",
+        "sha256": "2037177fc8e08d78f07f6458b9fde9944aa488577dd1906dc65a7f6b686edbc0",
+        "htmlSha256": "2037177fc8e08d78f07f6458b9fde9944aa488577dd1906dc65a7f6b686edbc0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45867",
       "name": "オーガポン みどりのめんex",
       "deckName": "オーガポン みどりのめんex",
@@ -45357,6 +45513,84 @@
         "path": "data/effect-extensions/evidence/45868.json",
         "sha256": "32d6e975d208458cccd66bc8deab64624a74f0a5c8e7d2eed4210f18ec10d78a",
         "htmlSha256": "32d6e975d208458cccd66bc8deab64624a74f0a5c8e7d2eed4210f18ec10d78a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45870",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45870",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045870_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-45870-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-45870-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45870.json",
+        "sha256": "42c2f7953b2fc84e0633d677090b8c21dca4f919d40ce64ee2437af5d4b92cad",
+        "htmlSha256": "42c2f7953b2fc84e0633d677090b8c21dca4f919d40ce64ee2437af5d4b92cad",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -47869,6 +48103,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46752",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46752",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046752_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-46752-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-46752-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46752.json",
+        "sha256": "c5b2eef3c0947e8bce2baeeaba3b8e4052ea16e8324119d8a71aceeb22e54216",
+        "htmlSha256": "c5b2eef3c0947e8bce2baeeaba3b8e4052ea16e8324119d8a71aceeb22e54216",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46773",
       "name": "ジュラルドン",
       "deckName": "ジュラルドン",
@@ -48339,6 +48651,84 @@
         "path": "data/effect-extensions/evidence/47125.json",
         "sha256": "bd441783d6c0b7ac18d6cbf39e048fef5bd630f883c7e83923b4e9d4d7212d18",
         "htmlSha256": "bd441783d6c0b7ac18d6cbf39e048fef5bd630f883c7e83923b4e9d4d7212d18",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47137",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47137",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/047137_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-47137-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-47137-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47137.json",
+        "sha256": "fc73d9adaf3d5a22387089699f67c4d766eb272b041f84ec4cf6c7e59ce450d5",
+        "htmlSha256": "fc73d9adaf3d5a22387089699f67c4d766eb272b041f84ec4cf6c7e59ce450d5",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -172691,6 +173081,904 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "46504",
+      "name": "ニンフィア",
+      "deckName": "ニンフィア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46504",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046504_P_NINFUIA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マジカルショット",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "",
+          "effectId": "reference-46504-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しんぴのまもり",
+          "text": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-46504-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ex",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "イーブイ",
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46504.json",
+        "sha256": "efa89982c17e9767f156e49729a27dda065facc241e74adc5ce2dbc20dcfe415",
+        "htmlSha256": "efa89982c17e9767f156e49729a27dda065facc241e74adc5ce2dbc20dcfe415",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47303",
+      "name": "イワパレス",
+      "deckName": "イワパレス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47303",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047303_P_IWAPARESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートシザー",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-47303-attack-0",
+          "plan": {
+            "mechanic": "IGNORE_DEFENDER_EFFECTS",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しんぴのいしやど",
+          "text": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-47303-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ex",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "イシズマイ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47303.json",
+        "sha256": "800295c39b88f04e555701488054b1b154e56f4b9c9bbb1ab5e51ec041288e63",
+        "htmlSha256": "800295c39b88f04e555701488054b1b154e56f4b9c9bbb1ab5e51ec041288e63",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47368",
+      "name": "イワパレス",
+      "deckName": "イワパレス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47368",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047368_P_IWAPARESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートシザー",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-47368-attack-0",
+          "plan": {
+            "mechanic": "IGNORE_DEFENDER_EFFECTS",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しんぴのいしやど",
+          "text": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-47368-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ex",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "イシズマイ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47368.json",
+        "sha256": "3abe74356fc51040b71f55812c98cca1ce2c7df766e0cff65dfea7c6068f8892",
+        "htmlSha256": "3abe74356fc51040b71f55812c98cca1ce2c7df766e0cff65dfea7c6068f8892",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48536",
+      "name": "イワパレス",
+      "deckName": "イワパレス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48536",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048536_P_IWAPARESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートシザー",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-48536-attack-0",
+          "plan": {
+            "mechanic": "IGNORE_DEFENDER_EFFECTS",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しんぴのいしやど",
+          "text": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-48536-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ex",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "イシズマイ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48536.json",
+        "sha256": "b1e6526d4483c10268930268c8eee276d38734f7a401bd675031763047963b33",
+        "htmlSha256": "b1e6526d4483c10268930268c8eee276d38734f7a401bd675031763047963b33",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48762",
+      "name": "イワパレス",
+      "deckName": "イワパレス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48762",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048762_P_IWAPARESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートシザー",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-48762-attack-0",
+          "plan": {
+            "mechanic": "IGNORE_DEFENDER_EFFECTS",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "しんぴのいしやど",
+          "text": "このポケモンは、相手の「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-48762-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ex",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "イシズマイ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48762.json",
+        "sha256": "8417ec3d79b2c1e86435f9c30068757b2292b1b9d5f69e37cd4a1d5193eb4300",
+        "htmlSha256": "8417ec3d79b2c1e86435f9c30068757b2292b1b9d5f69e37cd4a1d5193eb4300",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49144",
+      "name": "オーガポン いしずえのめんex",
+      "deckName": "オーガポン いしずえのめんex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49144",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049144_P_OGAPONISHIZUENOMENEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ぶちやぶる",
+          "cost": [
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "140",
+          "text": "このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。",
+          "effectId": "reference-49144-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipWeakness": true,
+            "skipResistance": true,
+            "ignore": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いしずえのかまえ",
+          "text": "このポケモンは、相手の特性を持つポケモンからワザのダメージを受けない。",
+          "effectId": "reference-49144-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "ability",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49144.json",
+        "sha256": "3d9bd3837f0a691bea6240b3cd47dd799c49b4c4234827169209f3627bed4828",
+        "htmlSha256": "3d9bd3837f0a691bea6240b3cd47dd799c49b4c4234827169209f3627bed4828",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46175",
+      "name": "カミツオロチex",
+      "deckName": "カミツオロチex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46175",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046175_P_KAMITSUOROCHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みつあめストーム",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
+          "effectId": "reference-46175-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownTeamEnergy",
+            "type": "草",
+            "base": 30,
+            "unit": 30,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅくせいチャージ",
+          "text": "自分の番に1回使える。自分の手札から「基本[草]エネルギー」を1枚選び、自分のポケモンにつける。その後、つけたポケモンのHPを「30」回復する。",
+          "effectId": "reference-46175-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY",
+              "HEAL"
+            ],
+            "zone": "hand",
+            "type": "草",
+            "limit": 1,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": 30,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "カミッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46175.json",
+        "sha256": "8629560c3e8ed97b152381c3a50b2d6d0792380f1e3bbe0135f9f3089b9a2806",
+        "htmlSha256": "8629560c3e8ed97b152381c3a50b2d6d0792380f1e3bbe0135f9f3089b9a2806",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46671",
+      "name": "カミツオロチex",
+      "deckName": "カミツオロチex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46671",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046671_P_KAMITSUOROCHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みつあめストーム",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
+          "effectId": "reference-46671-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownTeamEnergy",
+            "type": "草",
+            "base": 30,
+            "unit": 30,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅくせいチャージ",
+          "text": "自分の番に1回使える。自分の手札から「基本[草]エネルギー」を1枚選び、自分のポケモンにつける。その後、つけたポケモンのHPを「30」回復する。",
+          "effectId": "reference-46671-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY",
+              "HEAL"
+            ],
+            "zone": "hand",
+            "type": "草",
+            "limit": 1,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": 30,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "カミッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46671.json",
+        "sha256": "880e5cf8a6f1d5d3b169d0a1687a9db556bed70899d489a8d51b12062227e7f7",
+        "htmlSha256": "880e5cf8a6f1d5d3b169d0a1687a9db556bed70899d489a8d51b12062227e7f7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45951",
+      "name": "カミツオロチex",
+      "deckName": "カミツオロチex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45951",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/045951_P_KAMITSUOROCHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みつあめストーム",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
+          "effectId": "reference-45951-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownTeamEnergy",
+            "type": "草",
+            "base": 30,
+            "unit": 30,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅくせいチャージ",
+          "text": "自分の番に1回使える。自分の手札から「基本[草]エネルギー」を1枚選び、自分のポケモンにつける。その後、つけたポケモンのHPを「30」回復する。",
+          "effectId": "reference-45951-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY",
+              "HEAL"
+            ],
+            "zone": "hand",
+            "type": "草",
+            "limit": 1,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": 30,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "カミッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45951.json",
+        "sha256": "d72a4c21c66f087602b39484a2566c3b0e3c81ac115356f2b9266cb6daac8012",
+        "htmlSha256": "d72a4c21c66f087602b39484a2566c3b0e3c81ac115356f2b9266cb6daac8012",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46163",
+      "name": "カミツオロチex",
+      "deckName": "カミツオロチex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46163",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046163_P_KAMITSUOROCHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みつあめストーム",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
+          "effectId": "reference-46163-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownTeamEnergy",
+            "type": "草",
+            "base": 30,
+            "unit": 30,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅくせいチャージ",
+          "text": "自分の番に1回使える。自分の手札から「基本[草]エネルギー」を1枚選び、自分のポケモンにつける。その後、つけたポケモンのHPを「30」回復する。",
+          "effectId": "reference-46163-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY",
+              "HEAL"
+            ],
+            "zone": "hand",
+            "type": "草",
+            "limit": 1,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": 30,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "カミッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46163.json",
+        "sha256": "831a80f6ed4757066a4a4f9f125624d30f7f113f55bcfcd790e2e3bd3489f062",
+        "htmlSha256": "831a80f6ed4757066a4a4f9f125624d30f7f113f55bcfcd790e2e3bd3489f062",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48780",
+      "name": "カミツオロチex",
+      "deckName": "カミツオロチex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48780",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048780_P_KAMITSUOROCHIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "みつあめストーム",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "30+",
+          "text": "自分のポケモン全員についている[草]エネルギーの数×30ダメージ追加。",
+          "effectId": "reference-48780-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownTeamEnergy",
+            "type": "草",
+            "base": 30,
+            "unit": 30,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅくせいチャージ",
+          "text": "自分の番に1回使える。自分の手札から「基本[草]エネルギー」を1枚選び、自分のポケモンにつける。その後、つけたポケモンのHPを「30」回復する。",
+          "effectId": "reference-48780-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY",
+              "HEAL"
+            ],
+            "zone": "hand",
+            "type": "草",
+            "limit": 1,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": 30,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "カミッチュ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48780.json",
+        "sha256": "4177efcde1b1cb63fc39d273a7c3e900c4e499e907aa8865ebd234b581e7ebc5",
+        "htmlSha256": "4177efcde1b1cb63fc39d273a7c3e900c4e499e907aa8865ebd234b581e7ebc5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -173340,21 +174628,6 @@
       }
     },
     {
-      "officialCardId": "47498",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47498.json",
-        "sha256": "ae2dee2354bc98b53253f95e791266bdc54074a4ddc4d0d73e2b31f45f611ad6",
-        "htmlSha256": "ae2dee2354bc98b53253f95e791266bdc54074a4ddc4d0d73e2b31f45f611ad6",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "47733",
       "name": "エキサイトスタジアム",
       "category": "stadium",
@@ -173387,21 +174660,6 @@
         "sha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
         "htmlSha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
         "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
-    },
-    {
-      "officialCardId": "48331",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48331.json",
-        "sha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
-        "htmlSha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
       }
     },
     {
@@ -173473,21 +174731,6 @@
       "officialCardId": "50037",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50039",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50039.json",
-        "sha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
-        "htmlSha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
     },
     {
       "officialCardId": "50040",
@@ -175020,29 +176263,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47295",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47495",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48252",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48252.json",
-        "sha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
-        "htmlSha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
     },
     {
       "officialCardId": "49590",
@@ -175235,11 +176458,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45628",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45669",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -175260,21 +176478,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45679",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45686",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45689",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45695",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -175285,27 +176488,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45756",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45859",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45861",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45869",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45870",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -175555,11 +176743,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46752",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46761",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -175590,11 +176773,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46795",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -175610,11 +176788,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47137",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47140",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -175626,11 +176799,6 @@
     },
     {
       "officialCardId": "47145",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47146",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

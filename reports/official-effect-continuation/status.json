@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "2487a4fe8f7b2594bdc3ec42a5658bbb6e147e662c05aeb3620eeae715f0366a",
+  "registryHash": "b8509af7b4e1bd5ac0eb9cb26e98a39e80125b0e9f0b8d70b1d02bdd07b02791",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,8 +12,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 184,
-      "notImplemented": 190,
+      "compiled": 194,
+      "notImplemented": 180,
       "blocked": 0,
       "executionVerifiedPrints": 35
     },
@@ -26,8 +26,8 @@
     },
     "tool": {
       "prints": 100,
-      "compiled": 24,
-      "notImplemented": 76,
+      "compiled": 43,
+      "notImplemented": 57,
       "blocked": 0,
       "executionVerifiedPrints": 5
     },
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2049,
-      "notImplemented": 1616,
+      "compiled": 2073,
+      "notImplemented": 1592,
       "blocked": 11,
-      "executionVerifiedPrints": 565
+      "executionVerifiedPrints": 570
     },
     "energy": {
       "prints": 681,
@@ -65,6 +65,7 @@
     "DRAW",
     "FORCE_SWITCH",
     "HEAL",
+    "MODIFY_ATTACK_COST",
     "MODIFY_DAMAGE",
     "MODIFY_MAX_HP",
     "MODIFY_RETREAT_COST",
@@ -775,21 +776,6 @@
       }
     },
     {
-      "officialCardId": "47498",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47498.json",
-        "sha256": "ae2dee2354bc98b53253f95e791266bdc54074a4ddc4d0d73e2b31f45f611ad6",
-        "htmlSha256": "ae2dee2354bc98b53253f95e791266bdc54074a4ddc4d0d73e2b31f45f611ad6",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "47733",
       "name": "エキサイトスタジアム",
       "category": "stadium",
@@ -822,21 +808,6 @@
         "sha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
         "htmlSha256": "080ddd8076db40db4a8b10ca73799053ea40239c24f3a62fc0a82ebc2ba3bb29",
         "textSha256": "fa17b69600e6f6e84a7dcf4c3ac028a6ba61c4efd6ff9a238f59f3d0527adea4"
-      }
-    },
-    {
-      "officialCardId": "48331",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48331.json",
-        "sha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
-        "htmlSha256": "0e59e3e122db531c0e5b9724e72eb24205c23f0b633a735f1dd306f7a740a591",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
       }
     },
     {
@@ -908,21 +879,6 @@
       "officialCardId": "50037",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50039",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50039.json",
-        "sha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
-        "htmlSha256": "2a5d43e5de914ed9c691b265b8d57b1917804d35843954d873cb7842b678ca66",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
     },
     {
       "officialCardId": "50040",
@@ -2455,29 +2411,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47295",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47495",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48252",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48252.json",
-        "sha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
-        "htmlSha256": "a7bf2d3284ef4a3fc4a9b4f1682b7deb9703611cd52982d795c6c5322b7f0e3d",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
     },
     {
       "officialCardId": "49590",
@@ -2670,11 +2606,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45628",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45669",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2695,21 +2626,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45679",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45686",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45689",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45695",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2720,27 +2636,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45756",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45859",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45861",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45869",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45870",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2990,11 +2891,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46752",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46761",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3025,11 +2921,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46795",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3045,11 +2936,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47137",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47140",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3061,11 +2947,6 @@
     },
     {
       "officialCardId": "47145",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47146",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3552,21 +3433,6 @@
         "sha256": "81650dc7adb94d02a9600132b1398e5a903a76a79077cabee2811dca98a0a119",
         "htmlSha256": "81650dc7adb94d02a9600132b1398e5a903a76a79077cabee2811dca98a0a119",
         "textSha256": "9cbaece245028462341eef945d0536000772fdafcab0f61b866c1b09e97639cf"
-      }
-    },
-    {
-      "officialCardId": "45212",
-      "name": "マキシマムベルト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45212.json",
-        "sha256": "6b66ab110ec2fa01212b657a7e254e72fbc9a8eb3b24c7d99cc3055528ff74a6",
-        "htmlSha256": "6b66ab110ec2fa01212b657a7e254e72fbc9a8eb3b24c7d99cc3055528ff74a6",
-        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
       }
     },
     {
@@ -4285,21 +4151,6 @@
       }
     },
     {
-      "officialCardId": "45787",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45787.json",
-        "sha256": "053c9d4994f88842d0c42043cc89aa8576c39a6f0dd0373ea70421bd4a7bc8a7",
-        "htmlSha256": "053c9d4994f88842d0c42043cc89aa8576c39a6f0dd0373ea70421bd4a7bc8a7",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "45789",
       "name": "ハッサク",
       "category": "supporter",
@@ -4350,21 +4201,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45864",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45864.json",
-        "sha256": "749554db0c8225a225da17f318f21c80ce5195c3ac11b51359dbbc1e7b2563ca",
-        "htmlSha256": "749554db0c8225a225da17f318f21c80ce5195c3ac11b51359dbbc1e7b2563ca",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "45866",
       "name": "ハッサク",
       "category": "supporter",
@@ -4377,21 +4213,6 @@
         "sha256": "b27714eb7436b04836e677d1e0d2c128c49a0c346e11785c8de147c7d268f350",
         "htmlSha256": "b27714eb7436b04836e677d1e0d2c128c49a0c346e11785c8de147c7d268f350",
         "textSha256": "3aec8186fe305a8544ffbe69b19f8476ce79725073af1590ec4689a83ae083f8"
-      }
-    },
-    {
-      "officialCardId": "45871",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45871.json",
-        "sha256": "6d8d07d9337d62eb281ead82474fed7f263b9f8bdc6679d2734296c3636eb2b1",
-        "htmlSha256": "6d8d07d9337d62eb281ead82474fed7f263b9f8bdc6679d2734296c3636eb2b1",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
       }
     },
     {
@@ -5020,21 +4841,6 @@
       }
     },
     {
-      "officialCardId": "46104",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46104.json",
-        "sha256": "b0641ebcce90cbeac2d806c3c5728811161035e0f3884aa21e036f753a00dc6b",
-        "htmlSha256": "b0641ebcce90cbeac2d806c3c5728811161035e0f3884aa21e036f753a00dc6b",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "46151",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5350,21 +5156,6 @@
       }
     },
     {
-      "officialCardId": "46288",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46288.json",
-        "sha256": "fec265eba5c1ecd196eb3e2e37287c4458f045157b3d10d16b21bc50a98418f8",
-        "htmlSha256": "fec265eba5c1ecd196eb3e2e37287c4458f045157b3d10d16b21bc50a98418f8",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
-    },
-    {
       "officialCardId": "46292",
       "name": "ルチアのアピール",
       "category": "supporter",
@@ -5453,21 +5244,6 @@
       "officialCardId": "46338",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46339",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46339.json",
-        "sha256": "f804e2a3f83dcec6d2f01aa89c412a5ccb64970fe1b615370e7864e29cc6f31e",
-        "htmlSha256": "f804e2a3f83dcec6d2f01aa89c412a5ccb64970fe1b615370e7864e29cc6f31e",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
     },
     {
       "officialCardId": "46342",
@@ -5751,11 +5527,6 @@
     },
     {
       "officialCardId": "46482",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46504",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6115,21 +5886,6 @@
       }
     },
     {
-      "officialCardId": "46820",
-      "name": "マキシマムベルト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46820.json",
-        "sha256": "b7fea3b029f14e1989f5b2e5abcb894fee42646dded6d984f97008a4ae589286",
-        "htmlSha256": "b7fea3b029f14e1989f5b2e5abcb894fee42646dded6d984f97008a4ae589286",
-        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
-      }
-    },
-    {
       "officialCardId": "46823",
       "name": "アオキの手際",
       "category": "supporter",
@@ -6187,21 +5943,6 @@
         "sha256": "c18d90cd76cf18e1534e1f8dcb91698a2c28f4d088240e7f3d1953e241e17867",
         "htmlSha256": "c18d90cd76cf18e1534e1f8dcb91698a2c28f4d088240e7f3d1953e241e17867",
         "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
-      }
-    },
-    {
-      "officialCardId": "46830",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46830.json",
-        "sha256": "adfb0cb5739dc1fb0012f6f656b42eef1a7e5cd84e574a215cf5c7cfa7d4e0e9",
-        "htmlSha256": "adfb0cb5739dc1fb0012f6f656b42eef1a7e5cd84e574a215cf5c7cfa7d4e0e9",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
       }
     },
     {
@@ -8849,11 +8590,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47303",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47305",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8935,11 +8671,6 @@
     },
     {
       "officialCardId": "47366",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47368",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9701,21 +9432,6 @@
         "sha256": "e18c6a141bb611a8fdbc86d470d6aabd89460353b5d34422ed2c3235e52b794e",
         "htmlSha256": "e18c6a141bb611a8fdbc86d470d6aabd89460353b5d34422ed2c3235e52b794e",
         "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "47704",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47704.json",
-        "sha256": "7d2bd6bc737744e66b9729df4fc773bc8737fe7677d4946d02e8e107288cd117",
-        "htmlSha256": "7d2bd6bc737744e66b9729df4fc773bc8737fe7677d4946d02e8e107288cd117",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
       }
     },
     {
@@ -10859,11 +10575,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48536",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48538",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -11179,21 +10890,6 @@
       }
     },
     {
-      "officialCardId": "48688",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48688.json",
-        "sha256": "9d652cdebc4b830641d79b3db108e2eb1fb9d437479452da5fa917f010d9f5c7",
-        "htmlSha256": "9d652cdebc4b830641d79b3db108e2eb1fb9d437479452da5fa917f010d9f5c7",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
-    },
-    {
       "officialCardId": "48689",
       "name": "ホップのこだわりハチマキ",
       "category": "tool",
@@ -11450,11 +11146,6 @@
     },
     {
       "officialCardId": "48761",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48762",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -11964,21 +11655,6 @@
       }
     },
     {
-      "officialCardId": "49405",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49405.json",
-        "sha256": "9720d673605645290b1ce474aee6d55795501ce19df9bb1915583b6bbd7e2342",
-        "htmlSha256": "9720d673605645290b1ce474aee6d55795501ce19df9bb1915583b6bbd7e2342",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
-    },
-    {
       "officialCardId": "49406",
       "name": "ホップのこだわりハチマキ",
       "category": "tool",
@@ -12344,21 +12020,6 @@
       }
     },
     {
-      "officialCardId": "50327",
-      "name": "ブレイブバングル",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50327.json",
-        "sha256": "ab7d94503b3d7beb0d914881f2385d28612ed13b28178f53d88de3adde7e70ee",
-        "htmlSha256": "ab7d94503b3d7beb0d914881f2385d28612ed13b28178f53d88de3adde7e70ee",
-        "textSha256": "1814c0b139093ed11b248d79dd685ee509094e829a5009758b626a39fed965bf"
-      }
-    },
-    {
       "officialCardId": "50423",
       "name": "ふしぎなアメ",
       "category": "item",
@@ -12599,21 +12260,6 @@
       }
     },
     {
-      "officialCardId": "47151",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47151.json",
-        "sha256": "d4980a4ac0c351e09de304c2730b65bb4051be77094994250a49151df6ad4969",
-        "htmlSha256": "d4980a4ac0c351e09de304c2730b65bb4051be77094994250a49151df6ad4969",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
-    },
-    {
       "officialCardId": "47153",
       "name": "ネリネ",
       "category": "supporter",
@@ -12634,36 +12280,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47199",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47199.json",
-        "sha256": "8457088a82546290c2ff927b8d2398d6378aa5a6289a021bdf86c8093cc18b36",
-        "htmlSha256": "8457088a82546290c2ff927b8d2398d6378aa5a6289a021bdf86c8093cc18b36",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
-    },
-    {
-      "officialCardId": "47202",
-      "name": "マキシマムベルト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47202.json",
-        "sha256": "1b883e0aed95b5a9f42a8558524a758cc91752b453d960f539853bedd4ddc71e",
-        "htmlSha256": "1b883e0aed95b5a9f42a8558524a758cc91752b453d960f539853bedd4ddc71e",
-        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
-      }
-    },
-    {
       "officialCardId": "47206",
       "name": "暗号マニアの解読",
       "category": "supporter",
@@ -12676,21 +12292,6 @@
         "sha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
         "htmlSha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
         "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
-      "officialCardId": "47207",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47207.json",
-        "sha256": "903643069bd7bbf31b0d839cdcb2bfccd89afcd0d14d1ffbf2992bcaefa80e1e",
-        "htmlSha256": "903643069bd7bbf31b0d839cdcb2bfccd89afcd0d14d1ffbf2992bcaefa80e1e",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
       }
     },
     {
@@ -12717,51 +12318,6 @@
       "officialCardId": "47868",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47886",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47886.json",
-        "sha256": "324b953dbfa69ecd68f32bec5405d4d3c726ebd2ffaa6af02baaac10a69356c9",
-        "htmlSha256": "324b953dbfa69ecd68f32bec5405d4d3c726ebd2ffaa6af02baaac10a69356c9",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
-    },
-    {
-      "officialCardId": "47890",
-      "name": "マキシマムベルト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47890.json",
-        "sha256": "627a9e9f318a1a6b57cfae1f67f5ac4961a2c395a24f9f988c64abd6d93ce2be",
-        "htmlSha256": "627a9e9f318a1a6b57cfae1f67f5ac4961a2c395a24f9f988c64abd6d93ce2be",
-        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
-      }
-    },
-    {
-      "officialCardId": "47894",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47894.json",
-        "sha256": "8bb3b1460680ab770dc0d687b99c81c004da13db891ae54db7fbf27287ab7648",
-        "htmlSha256": "8bb3b1460680ab770dc0d687b99c81c004da13db891ae54db7fbf27287ab7648",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
-      }
     },
     {
       "officialCardId": "48565",
@@ -12836,21 +12392,6 @@
         "sha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
         "htmlSha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
         "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
-    },
-    {
-      "officialCardId": "48683",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48683.json",
-        "sha256": "9429350e2b2be9955841dd8d77e538aee390c4b0946f7221ea6a06eb74d3993e",
-        "htmlSha256": "9429350e2b2be9955841dd8d77e538aee390c4b0946f7221ea6a06eb74d3993e",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
       }
     },
     {
@@ -13284,11 +12825,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49144",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49145",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -13465,11 +13001,6 @@
     },
     {
       "officialCardId": "49334",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49341",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -13709,21 +13240,6 @@
       }
     },
     {
-      "officialCardId": "49395",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49395.json",
-        "sha256": "95819704eb6a54d6b79dd135d4120dc6a6a4b93317bc98d71b4526d482a118f5",
-        "htmlSha256": "95819704eb6a54d6b79dd135d4120dc6a6a4b93317bc98d71b4526d482a118f5",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
-      }
-    },
-    {
       "officialCardId": "49396",
       "name": "きらめく結晶",
       "category": "tool",
@@ -13811,21 +13327,6 @@
         "sha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
         "htmlSha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
         "textSha256": "a09bc9fcf659182cb7e6117ea4351ee6bf21a09d1c65a91608e1f6c35e864111"
-      }
-    },
-    {
-      "officialCardId": "49407",
-      "name": "マキシマムベルト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49407.json",
-        "sha256": "306782d470f09827d0551d2d5f13000caf3d960e4971816e39b57b957ec7a62e",
-        "htmlSha256": "306782d470f09827d0551d2d5f13000caf3d960e4971816e39b57b957ec7a62e",
-        "textSha256": "409cfae123226270bfe160b6e993e1a70e1e8ea2669782b23f95f3b248b3a715"
       }
     },
     {
@@ -13931,21 +13432,6 @@
         "sha256": "2370e757e8edb97bb7643fd3eec8c1dddb6d5a2afcf88163f1e51346f88acd19",
         "htmlSha256": "2370e757e8edb97bb7643fd3eec8c1dddb6d5a2afcf88163f1e51346f88acd19",
         "textSha256": "f1be87f2afe48f77f66aa6c91847e75efe36c2955e3918b55c676cefc497a77e"
-      }
-    },
-    {
-      "officialCardId": "49429",
-      "name": "スグリ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、2つの効果から1つを選んで使う。\n\n◆自分のバトルポケモンをベンチポケモンと入れ替える。\n\n◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49429.json",
-        "sha256": "e5253a3b1a8092ba3ae997ed3e5285c33fd98e90a0c7d0d9b84b03684f58dc94",
-        "htmlSha256": "e5253a3b1a8092ba3ae997ed3e5285c33fd98e90a0c7d0d9b84b03684f58dc94",
-        "textSha256": "7a0fefd84f12fd08b517720158047998f2cc61f15154462937421f121d11a8f6"
       }
     },
     {
@@ -14081,21 +13567,6 @@
         "sha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
         "htmlSha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
         "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
-    },
-    {
-      "officialCardId": "49978",
-      "name": "カウンターゲイン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、[無色]エネルギー1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49978.json",
-        "sha256": "f143bc1894de01c48f9c981f2227583204a11ffed1c679b1f530517b622ae82e",
-        "htmlSha256": "f143bc1894de01c48f9c981f2227583204a11ffed1c679b1f530517b622ae82e",
-        "textSha256": "e45af699c633e422f2b0db0e0685428af09aaf38f24a8fee9cfef3ac5a4009be"
       }
     },
     {
@@ -14519,17 +13990,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46175",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46293",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46671",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -14899,11 +14360,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45951",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45988",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -14934,22 +14390,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46163",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46848",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47220",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48780",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -14978,11 +14424,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1649
+        "count": 1625
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 432
+        "count": 403
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -14997,25 +14443,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "5a482a34ac2b3e42dec4efcb29aa2e1667be6c9522922c1840cb442bdf56df3f",
+    "executionFingerprint": "9021acf5c0d31ef69392db62ddf687439926877db9ea9720f7ef835ac26a3e2c",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 123177,
+    "seq": 127833,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 268,
+      "SUCCEEDED": 270,
       "FAILED": 0,
-      "BLOCKED": 508
+      "BLOCKED": 506
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 209,
+        "SUCCEEDED": 211,
         "FAILED": 0,
-        "BLOCKED": 462
+        "BLOCKED": 460
       },
       "supporter": {
         "PENDING": 0,
