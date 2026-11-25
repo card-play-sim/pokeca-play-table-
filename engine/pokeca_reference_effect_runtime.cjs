@@ -460,16 +460,17 @@ function requests(g,actor,card,effect){
   out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
  }
  if(m==='MASS_ENERGY_ROUTE'){
-  const plan=effect.plan,targets=massRouteTargets(p,card,plan),pool=targets.length?massRouteEnergy(p,plan):[],max=Math.min(plan.limit,pool.length),min=plan.zone==='deck'?0:Math.min(1,max);
+  const plan=effect.plan,targets=massRouteTargets(p,card,plan),pool=targets.length?massRouteEnergy(p,plan):[],max=Math.min(plan.limit,pool.length,plan.oneEach?targets.length:Infinity),min=plan.zone==='deck'?0:plan.allHolders?max:Math.min(1,max);
   if(plan.zone==='deck')deckRequest('energy',pool,min,max);
   else cardRequest('energy',pool,min,max);
   if(plan.target!=='self'){
    for(let i=0;i<(plan.multi?max:1);i++){
     cardRequest('attachTo'+i,targets,0,Math.min(1,targets.length));
-    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:i+1,count:1}];
+    out.at(-1).dependencies=[...Array.from({length:plan.oneEach?i:0},(_,n)=>({kind:'excludeSelectedField',key:'attachTo'+n,field:'id'})),{kind:'countFromSelection',key:'energy',threshold:i+1,count:1}];
    }
   }
  }
+ if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')cardRequest('cards',own.filter(c=>isMegaEvolutionEx(c)&&c.damage>0),1,1);
  if(m==='MASS_ZONE_TRANSFER'){
   const plan=effect.plan,pool=p[plan.zone].filter(c=>massTransferCandidate(c,plan)),max=Math.min(plan.limit,pool.length);
   if(plan.zone==='deck')deckRequest('cards',pool,0,max);
@@ -691,7 +692,11 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
-   if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
+   if(m==='MASS_ENERGY_ROUTE'){
+    assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
+    if(r.mainPlan.requiresTera)assert(field(p).some(c=>record(c).facts.teraBenchProtection===true),'TERA_POKEMON_REQUIRED');
+   }
+   if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')assert(field(p).some(c=>isMegaEvolutionEx(c)&&c.damage>0),'NO_DAMAGED_MEGA_EVOLUTION_EX');
    if(m==='MASS_ZONE_TRANSFER')assert(r.mainPlan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,r.mainPlan)),'NO_MASS_TRANSFER_SOURCE');
    if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,o,r.mainPlan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
    if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
@@ -956,6 +961,15 @@ function applyPlan(g,actor,card,effect,action){
    }
    if(plan.zone==='deck'){event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});shuffle(g,p);}
    if(plan.heal)for(const target of healed)if(target.damage>0)heal(g,actor,target,plan.heal==='all'?target.damage:plan.heal);
+   if(plan.poisonActive&&healed.has(p.active)){p.active.statusCondition='POISONED';event(g,actor,'STATUS_CONDITION',{status:'POISONED',targetInstanceId:id(p.active)});}
+   break;
+  }
+  case 'SUPPORTER_MEGA_HEAL_RETURN_ENERGY':{
+   const target=field(p).find(c=>id(c)===ids('cards')[0]);
+   assert(target&&isMegaEvolutionEx(target)&&target.damage>0,'MEGA_HEAL_TARGET_CHANGED');
+   heal(g,actor,target,target.damage);
+   const returned=target.energyCards.splice(0);p.hand.push(...returned);
+   event(g,actor,'RETURN_TO_HAND',{cardIds:returned.map(id),fromZone:'attached',targetInstanceId:id(target)});
    break;
   }
   case 'MASS_CONTEXT_BONUS':damage(g,actor,o.active,plan.base+(massContext(plan,p,o)?plan.bonus:0));break;
