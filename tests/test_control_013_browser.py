@@ -203,7 +203,7 @@ async def main():
     if target:
      assert target['referenceNamedAttackLock']['turn']==before['turnNumber']+1
    if kind=='attack':
-    attack_print=before['players'][0]['active']['validationReference']['officialCardId']
+    attack_print=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",before['players'][0]['active'])
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
     if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
@@ -501,6 +501,10 @@ async def main():
      assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",own['active'])==r['officialCardId']
      assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
+    if plan.get('nameContains'):
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.category==='supporter'&&r.name.includes(args.name);})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'name':plan['nameContains']})
+    if plan['category']=='pokemonOrBasicEnergy':
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return c.kind==='energy'?!c.isSpecial&&c.energyType===p.energyType:r.category==='pokemon'&&(!p.type||r.facts.types.includes(p.type))&&(p.stage===null||r.facts.stage===p.stage)&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'plan':plan})
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
    if m=='MASS_ENERGY_COUNT_DISCARD':
@@ -536,6 +540,18 @@ async def main():
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
     new={c['id']:c for c in [after['players'][0]['active'],*after['players'][0]['bench']]}
     assert any(c['damage']>new[c['id']]['damage'] for c in old if c['id'] in new and (not chosen or c['id'] in chosen))
+   if m=='ABILITY_EVOLVE_MULTI_COUNTERS':
+    source=before['players'][0]['active'];plan=f['e']['plan'];targets=option['action']['selections']['target']
+    assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
+    assert len(targets)==min(plan['count'],1+len(before['players'][1]['bench']))
+    assert all(any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==ident and ev['details'].get('counterCount')==plan['amount'] for ev in events) for ident in targets)
+   if m=='ATTACK_OPTIONAL_RETURN_POKEMON':
+    source=before['players'][0]['active'];side=after['players'][0]
+    assert source['evolutionCards']
+    if option['action']['selections']['mode']==['return']:
+     assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
+     assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
+    else:assert side['active']['id']==source['id']
    if m=='MASS_PLACE_COUNTERS':
     plan=f['e']['plan']
     ids=[c['id'] for c in [before['players'][1]['active'],*before['players'][1]['bench']]] if plan['target']=='all' else option['action']['selections']['target']
