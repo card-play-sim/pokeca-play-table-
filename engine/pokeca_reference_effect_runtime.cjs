@@ -484,6 +484,10 @@ function requests(g,actor,card,effect){
   const pool=massHealTargets(p,effect.plan).filter(c=>c.damage>0),min=Math.min(1,pool.length);
   cardRequest('cards',pool,min,min);
  }
+ if(m==='ABILITY_EVOLVE_MULTI_COUNTERS'){
+  const count=Math.min(effect.plan.count,opp.length);cardRequest('target',opp,count,count);
+ }
+ if(m==='ATTACK_OPTIONAL_RETURN_POKEMON')add('mode','CARD',[{id:'stay',name:'場に残す'},{id:'return',name:'手札にもどす'}],1,1);
  if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'){
   add('mode','CARD',[{id:'boost',name:'ダメージを+30'},{id:'switch',name:'バトル場とベンチを入れ替える'}].filter(c=>c.id==='boost'||p.bench.length),1,1);
@@ -923,6 +927,26 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'ABILITY_EVOLVE_MULTI_COUNTERS':{
+   const selected=ids('target'),targets=field(o);
+   assert(selected.length===Math.min(plan.count,targets.length)&&new Set(selected).size===selected.length,'EVOLVE_COUNTER_SELECTION');
+   for(const ident of selected){
+    const target=targets.find(mon=>id(mon)===ident);assert(target,'EVOLVE_COUNTER_TARGET');
+    counters(g,actor,target,plan.amount);
+   }
+   break;
+  }
+  case 'ATTACK_OPTIONAL_RETURN_POKEMON':{
+   damage(g,actor,o.active,Number(effect.damage)||0);
+   if(ids('mode')[0]==='return'){
+    const attached=[...(card.energyCards||[]),...(card.tools||[])];
+    card.energyCards=[];card.energies=[];card.tools=[];
+    p.discard.push(...attached);
+    if(attached.length)event(g,actor,'DISCARD',{cardIds:attached.map(id),sourceInstanceId:id(card),fromZone:'attached'});
+    returnStack(g,p,card,'hand');
+   }
+   break;
+  }
   case 'TRAINER_SWITCH_OR_EX_V_BOOST':
    if(ids('mode')[0]==='switch')chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);
    else p.referenceExVDamageBoost={turn:g.turnNumber,amount:plan.amount};
