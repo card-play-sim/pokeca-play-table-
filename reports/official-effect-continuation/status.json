@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "b5ac25f1537ef44efbbf62adf93afb7c59abb77c7d91d8976144a6c9aad94960",
+  "registryHash": "c620828cf3381eb9026363ce429d0353c792dcacd614769a9aa9b2e0ea3a4aad",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,15 +12,15 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 216,
-      "notImplemented": 158,
+      "compiled": 229,
+      "notImplemented": 145,
       "blocked": 0,
-      "executionVerifiedPrints": 38
+      "executionVerifiedPrints": 39
     },
     "item": {
       "prints": 299,
-      "compiled": 190,
-      "notImplemented": 109,
+      "compiled": 194,
+      "notImplemented": 105,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2242,
-      "notImplemented": 1419,
+      "compiled": 2256,
+      "notImplemented": 1405,
       "blocked": 15,
-      "executionVerifiedPrints": 638
+      "executionVerifiedPrints": 651
     },
     "energy": {
       "prints": 681,
@@ -878,21 +878,6 @@
         "sha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
         "htmlSha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
         "textSha256": "b05fbaa509fe797d39d49aaaa74747d761a8b96644ca7927e972b6eed6c81d0d"
-      }
-    },
-    {
-      "officialCardId": "50041",
-      "name": "ミツルの思いやり",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50041.json",
-        "sha256": "7f9b6edacfd71f27cc688386873583104d395eae92730b16640cef87f12b8bf5",
-        "htmlSha256": "7f9b6edacfd71f27cc688386873583104d395eae92730b16640cef87f12b8bf5",
-        "textSha256": "adbd56cc8029981e6de4ff5bc8689cd96f29367b1d2b8d76f4dfa57f2ae9614c"
       }
     },
     {
@@ -2511,11 +2496,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45911",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45912",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2546,22 +2526,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46056",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46057",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46059",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46064",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2692,11 +2662,6 @@
     },
     {
       "officialCardId": "46761",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46763",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3116,11 +3081,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45184",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45190",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3352,11 +3312,6 @@
     },
     {
       "officialCardId": "45518",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45521",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4011,21 +3966,6 @@
       }
     },
     {
-      "officialCardId": "45935",
-      "name": "アンズの秘技",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45935.json",
-        "sha256": "501304cdf5c8000ba59f6da090c92206f80ec1bc912e142c28fb148c2039980c",
-        "htmlSha256": "501304cdf5c8000ba59f6da090c92206f80ec1bc912e142c28fb148c2039980c",
-        "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
-      }
-    },
-    {
       "officialCardId": "45936",
       "name": "カシオペア",
       "category": "supporter",
@@ -4209,21 +4149,6 @@
       "officialCardId": "46026",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46028",
-      "name": "ガラスのラッパ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46028.json",
-        "sha256": "45f85118c4db76dcdadbe3e4208d155256efd4fcae0ce8d3683cd23a9703bac5",
-        "htmlSha256": "45f85118c4db76dcdadbe3e4208d155256efd4fcae0ce8d3683cd23a9703bac5",
-        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
     },
     {
       "officialCardId": "46029",
@@ -4418,21 +4343,6 @@
         "sha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
         "htmlSha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
         "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
-      }
-    },
-    {
-      "officialCardId": "46061",
-      "name": "アンズの秘技",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46061.json",
-        "sha256": "ab98bb56eb6f00ee1111ce8fb10715e98c052b24519ad18c9175294dc07630d3",
-        "htmlSha256": "ab98bb56eb6f00ee1111ce8fb10715e98c052b24519ad18c9175294dc07630d3",
-        "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
       }
     },
     {
@@ -5331,21 +5241,6 @@
       }
     },
     {
-      "officialCardId": "46801",
-      "name": "ガラスのラッパ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46801.json",
-        "sha256": "844cdc5cc3534dd887b1ff7f871be4bb145709602d190901674dc3e7d87cb7fb",
-        "htmlSha256": "844cdc5cc3534dd887b1ff7f871be4bb145709602d190901674dc3e7d87cb7fb",
-        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
-    },
-    {
       "officialCardId": "46803",
       "name": "つりざおMAX",
       "category": "item",
@@ -5463,21 +5358,6 @@
         "sha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
         "htmlSha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
         "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
-      "officialCardId": "46827",
-      "name": "アンズの秘技",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46827.json",
-        "sha256": "c18d90cd76cf18e1534e1f8dcb91698a2c28f4d088240e7f3d1953e241e17867",
-        "htmlSha256": "c18d90cd76cf18e1534e1f8dcb91698a2c28f4d088240e7f3d1953e241e17867",
-        "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
       }
     },
     {
@@ -6126,21 +6006,6 @@
       }
     },
     {
-      "officialCardId": "50159",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50159.json",
-        "sha256": "b3bde807a9b6bd85a17cf9d419158948fc6e5d7379dca18c41485abfee49d1fa",
-        "htmlSha256": "b3bde807a9b6bd85a17cf9d419158948fc6e5d7379dca18c41485abfee49d1fa",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
-    },
-    {
       "officialCardId": "50160",
       "name": "ジプソ",
       "category": "supporter",
@@ -6251,21 +6116,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50207",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50207.json",
-        "sha256": "26c1d81870d9d164067f4e42db60e1d17a4aff5bc7c5dc870729b2476cc7b95a",
-        "htmlSha256": "26c1d81870d9d164067f4e42db60e1d17a4aff5bc7c5dc870729b2476cc7b95a",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
-    },
-    {
       "officialCardId": "50208",
       "name": "ジプソ",
       "category": "supporter",
@@ -6314,21 +6164,6 @@
       "officialCardId": "50216",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50217",
-      "name": "AZの安らぎ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50217.json",
-        "sha256": "8fada808aa48ec13766162f714bb34126f45791423ea7a670406e18804911a9c",
-        "htmlSha256": "8fada808aa48ec13766162f714bb34126f45791423ea7a670406e18804911a9c",
-        "textSha256": "7ac6349fc272dc3f92fc6d29232e5b63c720b47978d480b678c9a019c9dc3e30"
-      }
     },
     {
       "officialCardId": "50218",
@@ -8850,21 +8685,6 @@
       }
     },
     {
-      "officialCardId": "47856",
-      "name": "ミツルの思いやり",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47856.json",
-        "sha256": "23499fe553fac317e07b116b5455f16f5ba0c143c8741cefdfe6f810257d796f",
-        "htmlSha256": "23499fe553fac317e07b116b5455f16f5ba0c143c8741cefdfe6f810257d796f",
-        "textSha256": "adbd56cc8029981e6de4ff5bc8689cd96f29367b1d2b8d76f4dfa57f2ae9614c"
-      }
-    },
-    {
       "officialCardId": "47857",
       "name": "活力の森",
       "category": "stadium",
@@ -8937,21 +8757,6 @@
         "sha256": "f3ba146adab7dee3df6981d16d993a0c34d0cff467c8476e1714d87ce73f20da",
         "htmlSha256": "f3ba146adab7dee3df6981d16d993a0c34d0cff467c8476e1714d87ce73f20da",
         "textSha256": "b12f2483ab2afc1437f85c0feb05354b27dcc1b7be6b9fb2de6b24d3cdda1283"
-      }
-    },
-    {
-      "officialCardId": "47899",
-      "name": "ミツルの思いやり",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47899.json",
-        "sha256": "4f1d429f5b27749c17a19fa47114c2335021e79b87ba7f43a079711fa5d57197",
-        "htmlSha256": "4f1d429f5b27749c17a19fa47114c2335021e79b87ba7f43a079711fa5d57197",
-        "textSha256": "adbd56cc8029981e6de4ff5bc8689cd96f29367b1d2b8d76f4dfa57f2ae9614c"
       }
     },
     {
@@ -9525,21 +9330,6 @@
       }
     },
     {
-      "officialCardId": "48471",
-      "name": "ミツルの思いやり",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48471.json",
-        "sha256": "722cbfff7db748bb6397846fc642e475fba4ad093e63eaf4312bf1b994a16f0d",
-        "htmlSha256": "722cbfff7db748bb6397846fc642e475fba4ad093e63eaf4312bf1b994a16f0d",
-        "textSha256": "adbd56cc8029981e6de4ff5bc8689cd96f29367b1d2b8d76f4dfa57f2ae9614c"
-      }
-    },
-    {
       "officialCardId": "48472",
       "name": "ミステリーガーデン",
       "category": "stadium",
@@ -9567,21 +9357,6 @@
         "sha256": "62f5d19599d7c08a11afd514bb024208b7bf77f0148907dcf5481a8539a25539",
         "htmlSha256": "62f5d19599d7c08a11afd514bb024208b7bf77f0148907dcf5481a8539a25539",
         "textSha256": "a07c20cc30bb5bd7a88e03498c40ff133bf6ed6a99b6ca7f4865d06797f57c87"
-      }
-    },
-    {
-      "officialCardId": "48477",
-      "name": "ミツルの思いやり",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48477.json",
-        "sha256": "92bd71ae61eca750725a785923a9df4d6476a0c8071c74a8cd318c73a61c730b",
-        "htmlSha256": "92bd71ae61eca750725a785923a9df4d6476a0c8071c74a8cd318c73a61c730b",
-        "textSha256": "adbd56cc8029981e6de4ff5bc8689cd96f29367b1d2b8d76f4dfa57f2ae9614c"
       }
     },
     {
@@ -11245,21 +11020,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47149",
-      "name": "アンズの秘技",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47149.json",
-        "sha256": "223b781d16497a12cf0f70b04cf3435232bc1fbc63986c9ea565843cefaebf0c",
-        "htmlSha256": "223b781d16497a12cf0f70b04cf3435232bc1fbc63986c9ea565843cefaebf0c",
-        "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
-      }
-    },
-    {
       "officialCardId": "47153",
       "name": "ネリネ",
       "category": "supporter",
@@ -11373,21 +11133,6 @@
       "officialCardId": "48666",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48671",
-      "name": "ガラスのラッパ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48671.json",
-        "sha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
-        "htmlSha256": "9ba19718cf4e89653813886d6a18b8b9949dcc4a24a9ae6b9c06946362d2da2e",
-        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
     },
     {
       "officialCardId": "48705",
@@ -11740,11 +11485,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49121",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49129",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -11816,11 +11556,6 @@
     },
     {
       "officialCardId": "49202",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49204",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -12290,21 +12025,6 @@
       }
     },
     {
-      "officialCardId": "49415",
-      "name": "アンズの秘技",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49415.json",
-        "sha256": "1b378eb8817da10de3a0ab94b123b513ce56fd7f54abf2296dd379705f9bc015",
-        "htmlSha256": "1b378eb8817da10de3a0ab94b123b513ce56fd7f54abf2296dd379705f9bc015",
-        "textSha256": "fe305501f914d2b43f63290fcaa860db0df2ff22ad020742ef1aa1c27cbd8950"
-      }
-    },
-    {
       "officialCardId": "49421",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -12438,21 +12158,6 @@
       "officialCardId": "49973",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49975",
-      "name": "ガラスのラッパ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49975.json",
-        "sha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
-        "htmlSha256": "dcc75fd227987b46bb850a1e1e87693e7154f732662fc3b832db00331ae97c2d",
-        "textSha256": "7a2d66bf78857d99f6012c8c6e096c42f775e17181331c86f185de24d170dad3"
-      }
     },
     {
       "officialCardId": "50012",
@@ -12675,21 +12380,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48464",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48473",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48478",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48506",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12706,11 +12396,6 @@
     },
     {
       "officialCardId": "48571",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48593",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -13015,11 +12700,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47838",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47845",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -13076,11 +12756,6 @@
     },
     {
       "officialCardId": "49985",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49986",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -13219,11 +12894,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1452
+        "count": 1438
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 379
+        "count": 362
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -13238,32 +12913,32 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "d04bb2f124bf9a4a7297bbf070a900d5d29e8994b5bbb4e1d01e727398a62cbf",
+    "executionFingerprint": "f5cc6176d7d726232e86792fbeb7e09153bf8fdcf6d12f38aa47079f776edf50",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 151113,
+    "seq": 155769,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 321,
+      "SUCCEEDED": 328,
       "FAILED": 0,
-      "BLOCKED": 455
+      "BLOCKED": 448
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 256,
+        "SUCCEEDED": 262,
         "FAILED": 0,
-        "BLOCKED": 415
+        "BLOCKED": 409
       },
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 26,
+        "SUCCEEDED": 27,
         "FAILED": 0,
-        "BLOCKED": 20
+        "BLOCKED": 19
       },
       "item": {
         "PENDING": 0,
