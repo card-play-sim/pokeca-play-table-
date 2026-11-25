@@ -376,6 +376,14 @@ function requests(g,actor,card,effect){
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
  }
+ if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
+  const plan=effect.plan,pool=(plan.zone==='attached'?card.energyCards:p.hand).filter(c=>basicEnergy(c)&&c.energyType===plan.type);
+  cardRequest('discard',pool,1,1);
+ }
+ if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW'){
+  const pool=p.hand.filter(c=>c.kind==='pokemon'&&!record(c).facts.rulePokemon);
+  cardRequest('discard',pool,1,Math.min(effect.plan.limit,pool.length));
+ }
  if(m==='ABILITY_DISCARD_DRAW')cardRequest('discard',p.hand,effect.plan.cost,effect.plan.cost);
  if(m==='ABILITY_ATTACH_SELF_DRAW')cardRequest('energy',p.hand.filter(c=>basicEnergy(c)&&c.energyType===effect.plan.type),1,1);
  if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
@@ -642,6 +650,11 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
+ if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
+  const plan=a.plan;
+  assert((plan.zone==='attached'?card.energyCards:p.hand).some(c=>basicEnergy(c)&&c.energyType===plan.type),'TYPED_DRAW_COST_MISSING');
+  assert(p.deck.length>0&&p.hand.length-(plan.zone==='hand'?1:0)<plan.limit,'TYPED_DRAW_NOT_AVAILABLE');
+ }
  if(m==='ABILITY_DISCARD_DRAW')assert(p.hand.length>=a.plan.cost&&p.deck.length>0,'ABILITY_DISCARD_DRAW_UNAVAILABLE');
  if(m==='ABILITY_ATTACH_SELF_DRAW')assert(p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'ABILITY_TYPED_ENERGY_REQUIRED');
  if(m==='ABILITY_HEAL_SELF')assert((card.damage||0)>0,'ABILITY_HEAL_UNAVAILABLE');
@@ -738,6 +751,7 @@ function preflight(g,actor,action){
    if(m==='SUPPORTER_SWITCH_EX_HEAL')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SEARCH_BY_STAGE')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')assert(p.deck.length>0&&p.hand.some(c=>c.kind==='pokemon'&&!record(c).facts.rulePokemon),'NO_NON_RULE_DRAW_COST');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
@@ -1396,6 +1410,22 @@ function applyPlan(g,actor,card,effect,action){
    p.referenceTypedDamageBoosts.push({turn:g.turnNumber,type:plan.type,amount:plan.amount});
    break;
   case 'ABILITY_DRAW_CARDS':draw(g,p,plan.amount);break;
+  case 'ABILITY_TYPED_COST_DRAW_LIMIT':{
+   const pool=plan.zone==='attached'?card.energyCards:p.hand,ident=ids('discard')[0];
+   const index=pool.findIndex(c=>id(c)===ident&&basicEnergy(c)&&c.energyType===plan.type);
+   assert(index>=0,'TYPED_DRAW_COST_CHANGED');
+   p.discard.push(pool.splice(index,1)[0]);
+   event(g,actor,'DISCARD',{cardIds:[ident],fromZone:plan.zone,sourceInstanceId:id(card)});
+   draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
+  }
+  case 'SUPPORTER_NON_RULE_DISCARD_DRAW':{
+   const chosen=ids('discard');
+   for(const ident of chosen){
+    const index=p.hand.findIndex(c=>id(c)===ident&&c.kind==='pokemon'&&!record(c).facts.rulePokemon);
+    assert(index>=0,'NON_RULE_DRAW_COST_CHANGED');p.discard.push(p.hand.splice(index,1)[0]);
+   }
+   event(g,actor,'DISCARD',{cardIds:chosen,fromZone:'hand'});draw(g,p,chosen.length*plan.unit);break;
+  }
   case 'ABILITY_DISCARD_DRAW':{
    const chosen=ids('discard');
    for(const ident of chosen){
