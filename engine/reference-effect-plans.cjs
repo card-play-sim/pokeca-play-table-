@@ -443,6 +443,19 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ // One physical Energy per selected Pokemon; no duplicated destination.
+ const benchEach=generic.match(/^自分のベンチポケモン全員に、(山札|トラッシュ)から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚ずつつける。(そして山札を切る。)?$/);
+ if(kind==='ATTACK'&&benchEach&&Boolean(benchEach[3])===(benchEach[1]==='山札')&&/^\d+$/.test(String(entry.damage??'0')))
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),...(benchEach[1]==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(benchEach[1]==='山札'?['SHUFFLE_DECK']:[])],zone:benchEach[1]==='山札'?'deck':'discard',type:benchEach[2],limit:5,target:'bench',holderType:null,team:null,multi:true,oneEach:true,allHolders:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。')
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK','STATUS_CONDITION'],zone:'deck',type:'悪',limit:2,target:'own',holderType:'悪',team:null,multi:true,oneEach:true,poisonActive:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。')
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['ATTACH_ENERGY'],zone:'discard',type:null,limit:2,target:'bench',holderType:'無色',team:null,multi:true,oneEach:true,requiresTera:true,heal:null,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='自分の山札から「基本[悪]エネルギー」を2枚まで選び、このポケモンにつける。そして山札を切る。つけた場合、このポケモンをどくにする。'&&/^\d+$/.test(String(entry.damage??'0')))
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK','STATUS_CONDITION'],zone:'deck',type:'悪',limit:2,target:'self',holderType:null,team:null,multi:false,poisonActive:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。')
+  return {mechanic:'SUPPORTER_MEGA_HEAL_RETURN_ENERGY',commands:['HEAL','RETURN_TO_HAND'],sharedWording:true};
+
  if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
