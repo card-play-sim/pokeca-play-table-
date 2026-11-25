@@ -196,6 +196,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
+ if(m==='SUPPORTER_ROCKET_SWITCH_BOTH'){
+  reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'active');
+  reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'bench');
+ }
+ if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')reserve(r=>mon(r,null,0),'bench',1);
+ if(m==='SUPPORTER_SWITCH_EX_HEAL')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex'),'active');
  if(m==='TRAINER_SEARCH_TERA')reserve(r=>r.category==='pokemon'&&r.facts.teraBenchProtection,'deck');
  if(m==='TRAINER_TYPED_DAMAGE_BOOST'){
   const target=reserve(r=>vanilla(r)&&r.facts.types.includes(plan.type),'active');
@@ -622,6 +628,11 @@ function prepare(r, e, kind) {
       if(!card)return {blocked:'NO_TYPED_ATTACK_PAYMENT_FIXTURE'};
       own.active.energyCards.push(card);
     }
+  }
+  if(m==='SUPPORTER_SWITCH_EX_HEAL'){
+    const active=frame.game.players[0].active;
+    if(!E.getReferenceEffectRecord(active)?.name.endsWith('ex'))return {blocked:'NO_EX_SWITCH_HEAL_FIXTURE'};
+    active.damage=Math.min(active.hp-10,e.plan.amount+10);
   }
   if(m==='MASS_ENERGY_ROUTE'){
     const own=frame.game.players[0],plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
@@ -1473,6 +1484,31 @@ function verifyCase(t, e) {
     const noOpponent=JSON.parse(JSON.stringify(before));
     noOpponent.players[1].deck.push(...noOpponent.players[1].bench.splice(0));
     assert.equal(port(noOpponent).dispatch("you",o.action).ok,false);
+  }
+  if(e.plan.mechanic==='SUPPORTER_ROCKET_SWITCH_BOTH'){
+    const a=t.action||o.action,q=a.selections;
+    assert(E.getReferenceEffectRecord(before.players[0].active).name.startsWith('ロケット団の'));
+    assert.equal(after.players[0].active.id,q.ownBench[0]);
+    assert(E.getReferenceEffectRecord(after.players[0].active).name.startsWith('ロケット団の'));
+    if(before.players[1].bench.length)assert.equal(after.players[1].active.id,q.opponentBench[0]);
+    const switched=effectEvents.filter(ev=>ev?.command==='SELECT_BENCH_SWITCH');
+    assert.deepEqual(Array.from(switched,ev=>ev.playerId),before.players[1].bench.length?['you','ai']:['you']);
+    const invalid=before.players[0].bench.find(c=>!E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'));
+    if(invalid){const replay=port(before);assert.equal(replay.dispatch('you',{...a,selections:{...q,ownBench:[invalid.id]}}).ok,false);assert.deepEqual(replay.getSnapshot(),before);}
+  }
+  if(e.plan.mechanic==='SUPPORTER_BASIC_SWITCH_CONFUSE'){
+    const a=t.action||o.action,q=a.selections;
+    assert.equal(after.players[1].active.id,q.opponentBench[0]);
+    assert(E.getReferenceEffectRecord(after.players[1].active).facts.basic);
+    assert.equal(after.players[1].active.statusCondition,'CONFUSED');
+    const invalid=before.players[1].bench.find(c=>!E.getReferenceEffectRecord(c).facts.basic);
+    if(invalid){const replay=port(before);assert.equal(replay.dispatch('you',{...a,selections:{...q,opponentBench:[invalid.id]}}).ok,false);assert.deepEqual(replay.getSnapshot(),before);}
+  }
+  if(e.plan.mechanic==='SUPPORTER_SWITCH_EX_HEAL'){
+    const a=t.action||o.action,q=a.selections,old=before.players[0].active;
+    assert(E.getReferenceEffectRecord(old).name.endsWith('ex'));
+    assert.equal(after.players[0].active.id,q.ownBench[0]);
+    assert.equal(after.players[0].bench.find(c=>c.id===old.id).damage,Math.max(0,old.damage-e.plan.amount));
   }
   if (e.plan.mechanic === "SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT") {
     assert.equal(after.players[0].active.id,o.action.selections.ownBench[0]);
