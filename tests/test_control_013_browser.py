@@ -220,6 +220,14 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_BASIC_ENERGY_MOVE':
+    own=before['players'][0];resolved=after['players'][0]
+    energy=option['action']['selections']['energy'][0];target=option['action']['selections']['attachTo'][0]
+    assert any(c['id']==energy and not c.get('isSpecial') for c in own['active']['energyCards'])
+    assert not any(c['id']==energy for c in resolved['active']['energyCards'])
+    assert any(c['id']==energy for mon in resolved['bench'] if mon['id']==target for c in mon['energyCards'])
+   if m=='SCALED_ATTACK_DAMAGE' and f['e']['plan'].get('metric')=='opponentHandTrainerCount':
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in before['players'][1]['hand']] for ev in events)
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))

@@ -152,6 +152,12 @@ function additionalAttackPlan(entry,text){
    }
   }
  }
+ const handTrainers=text.match(/^相手の手札を見て、その中にあるトレーナーズの枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(handTrainers&&printed===handTrainers[1]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['REVEAL','DAMAGE'],metric:'opponentHandTrainerCount',type:null,unit:Number(handTrainers[1]),base:0,sharedWording:true};
+ const basicMove=text.match(/^このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。$/);
+ if(basicMove&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_BASIC_ENERGY_MOVE',commands:['DAMAGE','MOVE_ENERGY'],sharedWording:true};
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};

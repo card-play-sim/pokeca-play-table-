@@ -354,6 +354,10 @@ function requests(g,actor,card,effect){
    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:1,count:1}];
   }
  }
+ if(m==='ATTACK_BASIC_ENERGY_MOVE'){
+  const pool=(card.energyCards||[]).filter(basicEnergy),count=p.bench.length&&pool.length?1:0;
+  cardRequest('energy',pool,count,count);cardRequest('attachTo',p.bench,count,count);
+ }
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
@@ -845,6 +849,7 @@ function attackMetric(plan,own,other){
  if(plan.metric==='ownCounters')return (own.active.damage||0)/10;
  if(plan.metric==='ownHand')return own.hand.length;
  if(plan.metric==='opponentHand')return other.hand.length;
+ if(plan.metric==='opponentHandTrainerCount')return other.hand.filter(c=>['item','supporter','tool','stadium'].includes(record(c)?.category)).length;
  if(plan.metric==='ownPrizesTaken')return 6-own.prizes;
  if(plan.metric==='ownBasicCount')return field(own).filter(c=>record(c).facts.basic).length;
  if(plan.metric==='opponentBasicCount')return field(other).filter(c=>record(c).facts.basic).length;
@@ -1157,6 +1162,7 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,plan.base+(boardBonusApplies(g,p,o,plan)?plan.bonus:0));
    break;
   case 'SCALED_ATTACK_DAMAGE':
+   if(plan.metric==='opponentHandTrainerCount')event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
    damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
    break;
   case 'ATTACK_RESET_HAND':
@@ -1324,6 +1330,12 @@ function applyPlan(g,actor,card,effect,action){
     event(g,actor,'ATTACH_ENERGY',{energyId,targetInstanceId:benchId,fromZone:'deck'});
    }
    shuffle(g,p);break;
+  }
+  case 'ATTACK_BASIC_ENERGY_MOVE':{
+   damage(g,actor,o.active,Number(effect.damage)||0);
+   const energy=ids('energy')[0],to=ids('attachTo')[0];
+   if(energy){assert(card.energyCards.some(c=>id(c)===energy&&basicEnergy(c)),'BASIC_MOVE_WRONG_ENERGY');moveAttachedEnergy(g,actor,card,p.bench.find(c=>id(c)===to),energy);}
+   break;
   }
   case 'ATTACK_DAMAGE_MOVE_ENERGY':{
    damage(g,actor,o.active,Number.parseInt(effect.damage,10)||0);
