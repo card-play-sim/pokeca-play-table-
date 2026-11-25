@@ -1,35 +1,86 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_0833A5AEF580A6B7:57a2ec5a131c3f8dcf952379b15794bf1a2b4474587c0ffd5f3ee092f591bcb7",
   "taskFingerprint": "57a2ec5a131c3f8dcf952379b15794bf1a2b4474587c0ffd5f3ee092f591bcb7",
-  "executionFingerprint": "05a992da9f4aa281efdbc3ed932e6abcae25de2e7d977e9229c4480e509106ef",
-  "attemptId": "f91810b1-e58f-4691-ada6-c55d54d21970",
-  "status": "BLOCKED",
+  "executionFingerprint": "f5cc6176d7d726232e86792fbeb7e09153bf8fdcf6d12f38aa47079f776edf50",
+  "attemptId": "ebb77a26-9d26-4497-b931-2980e5faef77",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45911:attack:ポイズンマッスル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46056:attack:ポイズンマッスル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46064:attack:ポイズンマッスル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46763:attack:ポイズンマッスル:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "SEARCH_DECK",
+          "ATTACH_ENERGY",
+          "SHUFFLE_DECK",
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "ee099cc5f79188be92c1e6748919ff46296bb7de8b4f42734ed78f6449ef825d"
+  "checksum": "309b19e5df2bd92b9d3a7b3ac348b2926a555e2602e5d270991815571b71def5"
 }

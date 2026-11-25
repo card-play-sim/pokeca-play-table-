@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_31D8C6697ED27485:4ba78f154c615cdcb475dfd0216a62a91c9eb1daf3d5f5899f21b3ffb1391d05",
   "taskFingerprint": "4ba78f154c615cdcb475dfd0216a62a91c9eb1daf3d5f5899f21b3ffb1391d05",
-  "executionFingerprint": "05a992da9f4aa281efdbc3ed932e6abcae25de2e7d977e9229c4480e509106ef",
-  "attemptId": "d8983649-7dfe-4610-81f0-d9f32ce0add6",
-  "status": "BLOCKED",
+  "executionFingerprint": "f5cc6176d7d726232e86792fbeb7e09153bf8fdcf6d12f38aa47079f776edf50",
+  "attemptId": "7ade621a-840a-47ac-8f8f-b00fe45497ed",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "48254:supporter:ロケット団のサカキ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SUPPORTER_ROCKET_SWITCH_BOTH",
+        "commands": [
+          "SWITCH",
+          "FORCE_SWITCH"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "37260ff9724893f5898c56f1942e7f34d86b466c824363273915c23984210d2d"
+  "checksum": "291d431549a3ba59d13df3adaa2efd72898b675b4884ac5b5fdc4550b8c28222"
 }

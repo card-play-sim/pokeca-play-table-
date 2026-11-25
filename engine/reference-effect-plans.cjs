@@ -443,10 +443,26 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ // One physical Energy per selected Pokemon; no duplicated destination.
+ const benchEach=generic.match(/^自分のベンチポケモン全員に、(山札|トラッシュ)から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚ずつつける。(そして山札を切る。)?$/);
+ if(kind==='ATTACK'&&benchEach&&Boolean(benchEach[3])===(benchEach[1]==='山札')&&/^\d+$/.test(String(entry.damage??'0')))
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),...(benchEach[1]==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(benchEach[1]==='山札'?['SHUFFLE_DECK']:[])],zone:benchEach[1]==='山札'?'deck':'discard',type:benchEach[2],limit:5,target:'bench',holderType:null,team:null,multi:true,oneEach:true,allHolders:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の[悪]ポケモンを2匹まで選び、自分の山札から「基本[悪]エネルギー」を1枚ずつつける。そして山札を切る。バトルポケモンにつけた場合、そのポケモンをどくにする。')
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK','STATUS_CONDITION'],zone:'deck',type:'悪',limit:2,target:'own',holderType:'悪',team:null,multi:true,oneEach:true,poisonActive:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の場に「テラスタル」のポケモンがいるときにしか使えない。自分のベンチの[無色]ポケモンを2匹まで選び、トラッシュから基本エネルギーを1枚ずつつける。')
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['ATTACH_ENERGY'],zone:'discard',type:null,limit:2,target:'bench',holderType:'無色',team:null,multi:true,oneEach:true,requiresTera:true,heal:null,sharedWording:true};
+ if(kind==='ATTACK'&&generic==='自分の山札から「基本[悪]エネルギー」を2枚まで選び、このポケモンにつける。そして山札を切る。つけた場合、このポケモンをどくにする。'&&/^\d+$/.test(String(entry.damage??'0')))
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK','STATUS_CONDITION'],zone:'deck',type:'悪',limit:2,target:'self',holderType:null,team:null,multi:false,poisonActive:true,heal:null,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。')
+  return {mechanic:'SUPPORTER_MEGA_HEAL_RETURN_ENERGY',commands:['HEAL','RETURN_TO_HAND'],sharedWording:true};
+
  if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
   return {mechanic:'PASSIVE_IGNORE_ACTIVE_DEFENSE',commands:['DAMAGE'],sharedWording:true};
+ const retaliation=generic.match(/^このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモン(?:を(どく|やけど)にする|にダメカンを([1-9]\\d?)個のせる)。$/);
+ if(kind==='ABILITY'&&retaliation)
+  return {mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',commands:[retaliation[1]?'STATUS_CONDITION':'PLACE_DAMAGE_COUNTERS'],status:retaliation[1]==='どく'?'POISONED':retaliation[1]==='やけど'?'BURNED':null,counterCount:retaliation[2]?Number(retaliation[2]):0,sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
@@ -694,6 +710,13 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_REVEAL_OPPONENT_HAND',commands:['DAMAGE','REVEAL']};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。その後、自分のバトルポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'TRAINER_SWITCH_BOTH',commands:['FORCE_SWITCH','SWITCH']};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分のバトル場の「ロケット団のポケモン」を、ベンチの「ロケット団のポケモン」と入れ替える。その後、相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')
+  return {mechanic:'SUPPORTER_ROCKET_SWITCH_BOTH',commands:['SWITCH','FORCE_SWITCH'],sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='相手のベンチのたねポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンをこんらんにする。')
+  return {mechanic:'SUPPORTER_BASIC_SWITCH_CONFUSE',commands:['FORCE_SWITCH','STATUS_CONDITION'],sharedWording:true};
+ const switchHeal=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。「ポケモンex」をベンチに入れ替えた場合、そのポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&switchHeal)
+  return {mechanic:'SUPPORTER_SWITCH_EX_HEAL',commands:['SWITCH','HEAL'],amount:Number(switchHeal[1]),sharedWording:true};
  const switchDraw=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&switchDraw)
   return {mechanic:'SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT',commands:['SWITCH','DRAW'],limit:Number(switchDraw[1])};

@@ -209,7 +209,11 @@ async def main():
     if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
      assert attack_print==r['officialCardId']
     else:
-     assert before['players'][1]['active']['validationReference']['officialCardId']==r['officialCardId']
+     # An evolved in-play instance keeps its base identity; resolve the current print through the engine.
+     defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",before['players'][1]['active'])
+     assert defender_print==r['officialCardId'],('DEFENDER_CURRENT_PRINT_MISMATCH',defender_print,r['officialCardId'])
+     if m=='PASSIVE_FULL_HP_SURVIVAL' and not r['facts']['basic']:
+      assert before['players'][1]['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
             'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
@@ -401,6 +405,28 @@ async def main():
     defender=before['players'][1]['active']
     assert defender['referenceProtection']['opponentTurn']==before['turnNumber']
     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+   if m=='SUPPORTER_ROCKET_SWITCH_BOTH':
+    assert before['players'][0]['active']['name'].startswith('ロケット団の')
+    assert after['players'][0]['active']['name'].startswith('ロケット団の')
+    assert before['players'][0]['active']['id']!=after['players'][0]['active']['id']
+    if before['players'][1]['bench']:
+     assert before['players'][1]['active']['id']!=after['players'][1]['active']['id']
+   if m=='SUPPORTER_BASIC_SWITCH_CONFUSE':
+    assert before['players'][1]['active']['id']!=after['players'][1]['active']['id']
+    assert after['players'][1]['active']['basic'] and after['players'][1]['active']['statusCondition']=='CONFUSED'
+   if m=='SUPPORTER_SWITCH_EX_HEAL':
+    old=before['players'][0]['active'];new=next(c for c in after['players'][0]['bench'] if c['id']==old['id'])
+    assert old['name'].endswith('ex') and new['damage']==max(0,old['damage']-f['e']['plan']['amount'])
+   if m=='PASSIVE_ACTIVE_HIT_RETALIATION':
+    defender=before['players'][1]['active'];attacker=before['players'][0]['active'];plan=f['e']['plan']
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id'] and ev['details'].get('amount',0)>0 for ev in events)
+    reactions=[ev['details'] for ev in events if ev.get('details',{}).get('mechanic')=='PASSIVE_ACTIVE_HIT_RETALIATION' and ev['details'].get('effectId')==f['e']['effectId']]
+    assert len(reactions)==1 and reactions[0]['targetInstanceId']==attacker['id']
+    if plan.get('status'):
+     assert reactions[0]['status']==plan['status']
+    else:
+     assert reactions[0]['counterCount']==plan['counterCount']
+     assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==plan['counterCount'] for ev in events)
    if m=='PASSIVE_FULL_HP_SURVIVAL':
     defender=before['players'][1]['active'];survivor=after['players'][1]['active']
     assert defender['damage']==0 and survivor['id']==defender['id']
@@ -442,6 +468,18 @@ async def main():
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('oneEach'):
+     targets=[selection['attachTo'+str(i)][0] for i in range(len(picked))]
+     assert len(set(targets))==len(picked)
+    if plan.get('poisonActive'):
+     assigned=plan['target']=='self' or any(selection['attachTo'+str(i)][0]==before['players'][0]['active']['id'] for i in range(len(picked)))
+     assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')=='POISONED' and ev['details'].get('targetInstanceId')==before['players'][0]['active']['id'] for ev in events)==assigned
+   if m=='SUPPORTER_MEGA_HEAL_RETURN_ENERGY':
+    ident=option['action']['selections']['cards'][0]
+    old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==ident)
+    new=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==ident)
+    assert old['damage']>0 and new['damage']==0 and not new['energyCards']
+    assert {c['id'] for c in old['energyCards']}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
