@@ -197,8 +197,8 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
  if(m==='SUPPORTER_ROCKET_SWITCH_BOTH'){
-  reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'active');
-  reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'bench');
+  const active=reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の'),'active');
+  if(active)reserve(r=>mon(r,null,0)&&r.name.startsWith('ロケット団の')&&r.officialCardId!==active.officialCardId,'bench');
  }
  if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')reserve(r=>mon(r,null,0),'bench',1);
  if(m==='SUPPORTER_SWITCH_EX_HEAL')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex'),'active');
