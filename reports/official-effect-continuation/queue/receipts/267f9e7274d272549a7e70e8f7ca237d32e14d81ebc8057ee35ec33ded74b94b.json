@@ -1,20 +1,33 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_740B00B74A93FA32:1e301313fbf702f1cffe2cc707bf279aad876fc91b4b04e760aa2891dcd7681b",
   "taskFingerprint": "1e301313fbf702f1cffe2cc707bf279aad876fc91b4b04e760aa2891dcd7681b",
-  "executionFingerprint": "f6f54a4462c349b933a213fb5ed709047143f492d9bdce957b5bc853d359f642",
-  "attemptId": "8bda1160-2287-4551-af08-0b1353848bf9",
-  "status": "BLOCKED",
+  "executionFingerprint": "9eb0cef363c380a0c057e699bbbff4ea1050eab59c1f4046c7410c5a9d69fc6a",
+  "attemptId": "b8efc5b2-3d36-4f95-83b1-0a661e96441b",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46229:attack:カラフルキャッチ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "1043166f19ba867ce1a7dd19fbafcf6e222df37542d4090d76cef17bd8f7be7e"
+  "checksum": "8a0c452df98d03e8cd11a52fe66cac7275050f58da99a29eba61d1284809272d"
 }

@@ -1330,30 +1330,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_725598E160110E582D08",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
-      "printedDamage": "50×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "47627",
-        "48071",
-        "48079",
-        "48760"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47627.json",
-        "data/effect-extensions/evidence/48071.json",
-        "data/effect-extensions/evidence/48079.json",
-        "data/effect-extensions/evidence/48760.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7A49302E046F6B024363",
       "category": "pokemon",
       "effectKind": "ability",
@@ -1415,28 +1391,6 @@
         "data/effect-extensions/evidence/48305.json",
         "data/effect-extensions/evidence/48472.json",
         "data/effect-extensions/evidence/48709.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_841173BE17F60890CA82",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45213",
-        "45533",
-        "46833",
-        "49433"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45213.json",
-        "data/effect-extensions/evidence/45533.json",
-        "data/effect-extensions/evidence/46833.json",
-        "data/effect-extensions/evidence/49433.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -1731,32 +1685,6 @@
         "data/effect-extensions/evidence/47902.json",
         "data/effect-extensions/evidence/48714.json",
         "data/effect-extensions/evidence/49455.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B85651B9E7AB3B5F4A43",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
-      "printedDamage": "100",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47700",
-        "48070",
-        "49326",
-        "50842"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47700.json",
-        "data/effect-extensions/evidence/48070.json",
-        "data/effect-extensions/evidence/49326.json",
-        "data/effect-extensions/evidence/50842.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -2876,26 +2804,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_37BF7AD5AAD71C4CB2F6",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50406",
-        "50542",
-        "50552"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50406.json",
-        "data/effect-extensions/evidence/50542.json",
-        "data/effect-extensions/evidence/50552.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_381F17A7E36A04194894",
       "category": "pokemon",
       "effectKind": "ability",
@@ -3604,26 +3512,6 @@
         "data/effect-extensions/evidence/46309.json",
         "data/effect-extensions/evidence/48479.json",
         "data/effect-extensions/evidence/50491.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_85CF2337C1BF4F1241A0",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45934",
-        "46060",
-        "46825"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45934.json",
-        "data/effect-extensions/evidence/46060.json",
-        "data/effect-extensions/evidence/46825.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -6946,26 +6834,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_68DC30C290B4D5EB7FD9",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札から、それぞれちがうタイプの基本エネルギーを3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46229",
-        "45925"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46229.json",
-        "data/effect-extensions/evidence/45925.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_693595B95A84736B95FB",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7210,24 +7078,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47779.json",
         "data/effect-extensions/evidence/48437.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6FECD126963E27280878",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50402",
-        "50538"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50402.json",
-        "data/effect-extensions/evidence/50538.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -17824,22 +17674,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F0EC777F9331698A74D9",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "自分の山札から、それぞれちがうタイプの基本エネルギーを好きなだけ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46281"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46281.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F231B786F018E7F92D5C",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18169,5 +18003,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1694
+  "unfinishedPrints": 1671
 }
