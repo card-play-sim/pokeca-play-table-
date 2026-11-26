@@ -3144,6 +3144,13 @@ function verifyCase(t, e) {
       assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
     }
     assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+    if(e.plan.optional){
+      const skipped=replay.getSnapshot(),skipEvents=skipped.history.slice(before.history.length).map(x=>x.details);
+      assert.deepEqual(skipped.players[0].deck.map(c=>c.id),before.players[0].deck.map(c=>c.id),'DECLINED_SEARCH_MUST_NOT_SHUFFLE');
+      assert.deepEqual(skipped.players[0].hand.map(c=>c.id),before.players[0].hand.map(c=>c.id));
+      assert(!skipEvents.some(ev=>ev?.command==='SEARCH_DECK'||ev?.command==='SHUFFLE_DECK'));
+      verifyPrintedAttack(before,skipped,e,Number(e.damage));
+    }
   }
   if(e.plan.mechanic==="ATTACK_DISCARD_MULTIPLE_SELF_ENERGY"){
     const source=before.players[0].active,chosen=(t.action||o.action).selections.energy||[];
