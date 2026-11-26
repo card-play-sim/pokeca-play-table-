@@ -77,6 +77,9 @@ function additionalAttackPlan(entry,text){
  const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
  if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
   return coinPlan(Number(coinStatus[1]),0,{unit:Number(coinStatus[2]),status:statusMap[coinStatus[5]],when:coinStatus[3]==='すべてウラ'?'none':'threshold',threshold:Number(coinStatus[4]||1)});
+ const energyCoin=text.match(/^このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(energyCoin&&printed===energyCoin[1]+'×')
+  return {mechanic:'ATTACK_ATTACHED_ENERGY_COINS',commands:['COIN_FLIP','DAMAGE'],unit:Number(energyCoin[1])};
  const singleStatus=text.match(/^コインを1回投げ、?オモテなら、相手のバトルポケモンを(やけど|こんらん|ねむり|どく)にする。$/);
  if(singleStatus&&/^\d+$/.test(printed))return coinPlan(1,base,{status:statusMap[singleStatus[1]],when:'all'});
  const recoil=text.match(/^コインを([1-9])回投げ、?(?:すべて)?ウラなら、このポケモンにも([1-9]\d{0,2})ダメージ。$/);
@@ -301,6 +304,14 @@ function additionalAttackPlan(entry,text){
  const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
  if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
   return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
+ const selfEnergyReturn=text.match(/^このポケモンについている(?:\[(草|炎|水|雷|超|闘|悪|鋼)\])?エネルギーを([1-9])個選び、手札にもどす。$/);
+ if(selfEnergyReturn&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_RETURN_SELF_ENERGY',commands:[...deal,'RETURN_TO_HAND'],type:selfEnergyReturn[1]||null,count:Number(selfEnergyReturn[2])};
+ if(/^\d+$/.test(printed)&&text==='のぞむなら、このポケモンをベンチポケモンと入れ替える。')
+  return {mechanic:'SWITCH_SELF_ATTACK',commands:[...deal,'SWITCH'],optional:true};
+ const switchedDamage=text.match(/^相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンに([1-9]\d{0,2})ダメージ。$/);
+ if(switchedDamage&&printed==='0')
+  return {mechanic:'ATTACK_SWITCH_THEN_DAMAGE',commands:['FORCE_SWITCH','DAMAGE'],amount:Number(switchedDamage[1])};
  // The official coin result determines whether the selected physical Energy
  // is discarded. Always roll through match-owned deterministic RNG.
  const coinDiscard=text.match(/^コインを1回投げオモテなら、相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);

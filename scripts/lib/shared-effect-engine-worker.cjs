@@ -784,6 +784,18 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if(m==='ATTACK_ATTACHED_ENERGY_COINS'){
+    const own=frame.game.players[0];
+    for(const energy of [...own.active.energyCards])if(energy.isSpecial){
+      own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1);
+      own.deck.push(energy);
+    }
+    while(own.active.energyCards.length<2){
+      const index=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial);
+      if(index<0)return {blocked:"NO_ATTACHED_ENERGY_COIN_FIXTURE"};
+      own.active.energyCards.push(own.deck.splice(index,1)[0]);
+    }
+  }
   if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
     const other=frame.game.players[1],printed=E.getReferenceEffectRecord(other.active);
     const attack=printed.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
@@ -1588,6 +1600,41 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if (e.plan.mechanic === "SWITCH_SELF_ATTACK" && e.plan.optional) {
+    const action = t.action || o.action;
+    const target = before.players[0].bench[0];
+    if (!target) return {status:"BLOCKED", reason:"NO_OPTIONAL_SWITCH_FIXTURE"};
+    assert.equal(after.players[0].active.id,target.id);
+    if (Number(e.damage)>0) verifyPrintedAttack(before, after, e, Number(e.damage));
+    const choice = port(before);
+    assert(choice.dispatch("you", {...action, targetIds:[]}).ok);
+    assert.equal(choice.getSnapshot().players[0].active.id,before.players[0].active.id);
+    const invalid = port(before);
+    assert.equal(invalid.dispatch("you", {...action, targetIds:[defendingSide.active.id]}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+  }
+  if (e.plan.mechanic === "ATTACK_SWITCH_THEN_DAMAGE") {
+    const action = t.action || o.action;
+    const target = defendingSide.bench.find(card=>card.id===action.targetIds?.[0]);
+    if (!target) return {status:"BLOCKED",reason:"NO_FORCED_SWITCH_DAMAGE_FIXTURE"};
+    const switched = JSON.parse(JSON.stringify(before));
+    switched.players[1].active=target;
+    verifyPrintedAttack(switched,after,e,e.plan.amount);
+    assert(effectEvents.some(event=>event?.command==="SELECT_BENCH_SWITCH"&&event.benchInstanceId===target.id));
+    const invalid=port(before);
+    assert.equal(invalid.dispatch("you",{...action,targetIds:[defendingSide.active.id]}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+  }
+  if (e.plan.mechanic === "ATTACK_RETURN_SELF_ENERGY") {
+    const action=t.action||o.action,returned=action.selections.energy;
+    if (!returned.length) return {status:"BLOCKED",reason:"NO_ATTACHED_RETURN_FIXTURE"};
+    assert(returned.every(id=>after.players[0].hand.some(c=>c.id===id)));
+    assert(returned.every(id=>!after.players[0].active.energyCards.some(c=>c.id===id)));
+    if (Number(e.damage)>0) verifyPrintedAttack(before,after,e,Number(e.damage));
+    const invalid=port(before);
+    assert.equal(invalid.dispatch("you",{...action,selections:{energy:["unknown-attached-energy"]}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+  }
   if(e.plan.mechanic==='MASS_EFFECT_SEQUENCE'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],other=before.players[1],resolved=after.players[0];
     const source=[own.active,...own.bench].find(c=>c.id===t.sourceId),next=[resolved.active,...resolved.bench].find(c=>c?.id===t.sourceId);
@@ -1650,7 +1697,7 @@ function verifyCase(t, e) {
         assert.deepEqual(S.identities(before),S.identities(start));
         const replay=port(start);assert(replay.dispatch('you',action).ok);
         const end=replay.getSnapshot().players[0],drawn=first+(meets?bonus.amount:0);
-        assert.deepEqual(end.deck.map(c=>c.id),side.deck.slice(drawn).map(c=>c.id));
+        assert.deepEqual(Array.from(end.deck,c=>c.id),Array.from(side.deck.slice(drawn),c=>c.id));
         assert.equal(end.hand.length,desired-1+drawn);
       }
     }
@@ -2512,6 +2559,26 @@ function verifyCase(t, e) {
     const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
     assert.equal(tosses.length, e.plan.flips);
     verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
+  if(e.plan.mechanic==='ATTACK_ATTACHED_ENERGY_COINS'){
+    const action=t.action||o.action;
+    const energies=before.players[0].active.energyCards;
+    assert(energies.length>=2&&energies.every(c=>!c.isSpecial));
+    for(const seed of [0,682]){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(event=>event.details);
+      const actual=events.filter(event=>event?.command==='COIN_FLIP'&&typeof event.heads==='boolean');
+      let state=seed,heads=0;
+      assert.equal(actual.length,energies.length);
+      for(const toss of actual){
+        state=(Math.imul(state,1664525)+1013904223)>>>0;
+        const expected=state<0x80000000;
+        assert.equal(toss.heads,expected);
+        if(expected)heads++;
+      }
+      verifyPrintedAttack(start,end,e,heads*e.plan.unit);
+    }
   }
   if(e.plan.mechanic==='MASS_COIN_OUTCOME'){
     const q=e.plan,action=t.action||o.action,seeds=new Map();

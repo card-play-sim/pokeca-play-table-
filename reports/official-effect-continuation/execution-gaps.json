@@ -1,951 +1,207 @@
 {
-  "baseCommit": "5d16dcef32c6223465bd101fd5a242c3d62de77b",
+  "baseCommit": "3dc8007c2cf993d4e1aee81c5884ee3f0a13e28e",
   "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
   "gaps": [
     {
-      "id": "45395",
-      "kind": "attack",
+      "id": "46452",
+      "kind": "item",
       "index": 0,
-      "slot": "45395:attack:みずくみ:0",
+      "slot": "46452:item:わざマシンマシン:0",
       "status": "BLOCKED",
       "reason": "NO_MASS_TRANSFER_FIXTURE",
       "details": null
     },
     {
-      "id": "45843",
+      "id": "46235",
       "kind": "attack",
-      "index": 0,
-      "slot": "45843:attack:もぎとる:0",
+      "index": 1,
+      "slot": "46235:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
+    },
+    {
+      "id": "46313",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46313:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
+    },
+    {
+      "id": "45245",
+      "kind": "attack",
+      "index": 1,
+      "slot": "45245:attack:ちょくれつキャノン:1",
       "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
+      "reason": "NO_POSITIVE_PUBLIC_COUNT_FIXTURE",
       "details": null
     },
     {
-      "id": "47494",
+      "id": "46383",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46383:attack:ストームボルト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
+    },
+    {
+      "id": "49652",
       "kind": "ability",
       "index": 0,
-      "slot": "47494:ability:あんやのはばたき:0",
+      "slot": "49652:ability:おしながす:0",
       "status": "BLOCKED",
-      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
-      "details": []
-    },
-    {
-      "id": "48331",
-      "kind": "tool",
-      "index": 0,
-      "slot": "48331:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
       "details": null
     },
     {
-      "id": "50039",
-      "kind": "tool",
-      "index": 0,
-      "slot": "50039:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "50643",
+      "id": "50127",
       "kind": "attack",
       "index": 0,
-      "slot": "50643:attack:エナジーテール:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "50654",
-      "kind": "attack",
-      "index": 0,
-      "slot": "50654:attack:ためこむ:0",
+      "slot": "50127:attack:しれんのたび:0",
       "status": "BLOCKED",
       "reason": "NO_MASS_TRANSFER_FIXTURE",
       "details": null
     },
     {
-      "id": "50698",
+      "id": "50377",
       "kind": "attack",
-      "index": 0,
-      "slot": "50698:attack:はじきおとす:0",
+      "index": 1,
+      "slot": "50377:attack:あらぶるだいち:1",
       "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
       "details": null
     },
     {
-      "id": "45179",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45179:ability:あんやのはばたき:0",
-      "status": "BLOCKED",
-      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
-      "details": []
-    },
-    {
-      "id": "45519",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45519:ability:あんやのはばたき:0",
-      "status": "BLOCKED",
-      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
-      "details": []
-    },
-    {
-      "id": "45704",
+      "id": "50525",
       "kind": "attack",
+      "index": 1,
+      "slot": "50525:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47350",
+      "kind": "ability",
       "index": 0,
-      "slot": "45704:attack:おちゃだし:0",
+      "slot": "47350:ability:よくばりオーダー:0",
       "status": "BLOCKED",
       "reason": "NO_MASS_TRANSFER_FIXTURE",
       "details": null
     },
     {
-      "id": "46233",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46233:attack:はかいのイカリ:1",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46733",
+      "id": "47376",
       "kind": "ability",
       "index": 0,
-      "slot": "46733:ability:あんやのはばたき:0",
-      "status": "BLOCKED",
-      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
-      "details": []
-    },
-    {
-      "id": "47322",
-      "kind": "attack",
-      "index": 0,
-      "slot": "47322:attack:いっしょにおよぐ:0",
+      "slot": "47376:ability:よくばりオーダー:0",
       "status": "BLOCKED",
       "reason": "NO_MASS_TRANSFER_FIXTURE",
       "details": null
     },
     {
-      "id": "47349",
+      "id": "47453",
       "kind": "attack",
       "index": 0,
-      "slot": "47349:attack:かじりとる:0",
+      "slot": "47453:attack:ラブインパクト:0",
       "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
       "details": null
     },
     {
-      "id": "47373",
+      "id": "49150",
       "kind": "attack",
       "index": 0,
-      "slot": "47373:attack:いっしょにおよぐ:0",
+      "slot": "49150:attack:ラブインパクト:0",
       "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
       "details": null
     },
     {
-      "id": "47554",
-      "kind": "attack",
-      "index": 0,
-      "slot": "47554:attack:つつきおとす:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47638",
-      "kind": "attack",
-      "index": 0,
-      "slot": "47638:attack:ベロベロキャッチ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "47785",
-      "kind": "attack",
-      "index": 0,
-      "slot": "47785:attack:ついばむ:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47295",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47295:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48252",
-      "kind": "tool",
-      "index": 0,
-      "slot": "48252:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49613",
-      "kind": "ability",
-      "index": 0,
-      "slot": "49613:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "49717",
-      "kind": "item",
-      "index": 0,
-      "slot": "49717:item:パワープロテイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45228",
+      "id": "48818",
       "kind": "attack",
       "index": 1,
-      "slot": "45228:attack:スチールアンカー:1",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
+      "slot": "48818:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
     },
     {
-      "id": "45628",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45628:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45679",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45679:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45686",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45686:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45689",
-      "kind": "ability",
-      "index": 0,
-      "slot": "45689:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46027",
+      "id": "48993",
       "kind": "attack",
       "index": 1,
-      "slot": "46027:attack:クラウンオパール:1",
+      "slot": "48993:attack:ストームボルト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
+    },
+    {
+      "id": "48433",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48433:ability:ソーラートランス:0",
       "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
       "details": null
     },
     {
-      "id": "46170",
+      "id": "48444",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48444:ability:ソーラートランス:0",
+      "status": "BLOCKED",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48462",
       "kind": "attack",
       "index": 1,
-      "slot": "46170:attack:クラウンオパール:1",
+      "slot": "48462:attack:フロストバリア:1",
+      "status": "FAILED",
+      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
+      "details": {
+        "mechanic": "ATTACK_DAMAGE_REDUCTION",
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3545:5)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
+    },
+    {
+      "id": "47736",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47736:ability:ソーラートランス:0",
       "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
       "details": null
     },
     {
-      "id": "46178",
+      "id": "47814",
       "kind": "attack",
       "index": 1,
-      "slot": "46178:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46181",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46181:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46381",
-      "kind": "attack",
-      "index": 0,
-      "slot": "46381:attack:かみなりをよぶ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "46795",
-      "kind": "ability",
-      "index": 0,
-      "slot": "46795:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46797",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46797:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47146",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47146:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47147",
-      "kind": "attack",
-      "index": 1,
-      "slot": "47147:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47158",
-      "kind": "attack",
-      "index": 1,
-      "slot": "47158:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47315",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47315:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "47378",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47378:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "47387",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47387:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "47391",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47391:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "47927",
-      "kind": "attack",
-      "index": 0,
-      "slot": "47927:attack:つつきおとす:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48013",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48013:attack:ベロベロキャッチ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "48267",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48267:attack:いきりクロー:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48431",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48431:attack:ついばむ:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48543",
-      "kind": "ability",
-      "index": 0,
-      "slot": "48543:ability:こんじきのほのお:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "45212",
-      "kind": "tool",
-      "index": 0,
-      "slot": "45212:tool:マキシマムベルト:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45641",
-      "kind": "item",
-      "index": 0,
-      "slot": "45641:item:ハイパーアロマ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "45718",
-      "kind": "attack",
-      "index": 0,
-      "slot": "45718:attack:つつきおとす:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46195",
-      "kind": "item",
-      "index": 0,
-      "slot": "46195:item:テラスタルオーブ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "46217",
-      "kind": "item",
-      "index": 0,
-      "slot": "46217:item:テラスタルオーブ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "46258",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46258:attack:ドリルスマッシュ:1",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46288",
-      "kind": "tool",
-      "index": 0,
-      "slot": "46288:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46339",
-      "kind": "tool",
-      "index": 0,
-      "slot": "46339:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46429",
-      "kind": "attack",
-      "index": 0,
-      "slot": "46429:attack:パラボラチャージ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "46443",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "46443:supporter:シトロンの機転:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46651",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "46651:supporter:シトロンの機転:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46657",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "46657:supporter:シトロンの機転:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46806",
-      "kind": "item",
-      "index": 0,
-      "slot": "46806:item:テラスタルオーブ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "46820",
-      "kind": "tool",
-      "index": 0,
-      "slot": "46820:tool:マキシマムベルト:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49709",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "49709:supporter:ユカリ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "50075",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "50075:supporter:ユカリ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "50083",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "50083:supporter:ユカリ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47097",
-      "kind": "item",
-      "index": 0,
-      "slot": "47097:item:Nのポイントアップ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "47338",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47338:ability:おうじゃのよびごえ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47704",
-      "kind": "tool",
-      "index": 0,
-      "slot": "47704:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47791",
-      "kind": "item",
-      "index": 0,
-      "slot": "47791:item:パワープロテイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48418",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "48418:supporter:ひふきやろう:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48438",
-      "kind": "item",
-      "index": 0,
-      "slot": "48438:item:パワープロテイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48513",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "48513:supporter:ひふきやろう:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48611",
-      "kind": "ability",
-      "index": 0,
-      "slot": "48611:ability:おうじゃのよびごえ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48668",
-      "kind": "item",
-      "index": 0,
-      "slot": "48668:item:Nのポイントアップ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "48676",
-      "kind": "item",
-      "index": 0,
-      "slot": "48676:item:パワープロテイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48688",
-      "kind": "tool",
-      "index": 0,
-      "slot": "48688:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48836",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48836:attack:ベロベロキャッチ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "48876",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48876:attack:いっしょにおよぐ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49093",
-      "kind": "ability",
-      "index": 0,
-      "slot": "49093:ability:おうじゃのよびごえ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49273",
-      "kind": "attack",
-      "index": 0,
-      "slot": "49273:attack:ついばむ:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_DISCARD_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49351",
-      "kind": "item",
-      "index": 0,
-      "slot": "49351:item:Nのポイントアップ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "49368",
-      "kind": "item",
-      "index": 0,
-      "slot": "49368:item:パワープロテイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_ATTACK_BOOST_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49405",
-      "kind": "tool",
-      "index": 0,
-      "slot": "49405:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49974",
-      "kind": "item",
-      "index": 0,
-      "slot": "49974:item:Nのポイントアップ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_ROUTE_TARGET",
-      "details": null
-    },
-    {
-      "id": "50327",
-      "kind": "tool",
-      "index": 0,
-      "slot": "50327:tool:ブレイブバングル:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "50830",
-      "kind": "attack",
-      "index": 0,
-      "slot": "50830:attack:いきりクロー:0",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47190",
-      "kind": "item",
-      "index": 0,
-      "slot": "47190:item:テラスタルオーブ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "47199",
-      "kind": "tool",
-      "index": 0,
-      "slot": "47199:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47202",
-      "kind": "tool",
-      "index": 0,
-      "slot": "47202:tool:マキシマムベルト:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47886",
-      "kind": "tool",
-      "index": 0,
-      "slot": "47886:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47890",
-      "kind": "tool",
-      "index": 0,
-      "slot": "47890:tool:マキシマムベルト:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48667",
-      "kind": "attack",
-      "index": 1,
-      "slot": "48667:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48674",
-      "kind": "item",
-      "index": 0,
-      "slot": "48674:item:テラスタルオーブ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_TYPED_SEARCH_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "48683",
-      "kind": "tool",
-      "index": 0,
-      "slot": "48683:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48776",
-      "kind": "attack",
-      "index": 1,
-      "slot": "48776:attack:スチールアンカー:1",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48794",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48794:attack:おちゃだし:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48981",
-      "kind": "attack",
-      "index": 0,
-      "slot": "48981:attack:かみなりをよぶ:0",
-      "status": "BLOCKED",
-      "reason": "NO_EXACT_SEARCH_FIXTURE_RESOURCE",
-      "details": null
-    },
-    {
-      "id": "49071",
-      "kind": "ability",
-      "index": 0,
-      "slot": "49071:ability:あんやのはばたき:0",
-      "status": "BLOCKED",
-      "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
-      "details": []
-    },
-    {
-      "id": "49102",
-      "kind": "attack",
-      "index": 1,
-      "slot": "49102:attack:ドリルスマッシュ:1",
-      "status": "BLOCKED",
-      "reason": "NO_TYPED_BENCH_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49341",
-      "kind": "ability",
-      "index": 0,
-      "slot": "49341:ability:ろうれんのわざ:0",
-      "status": "BLOCKED",
-      "reason": "NO_NAMED_PRIZE_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49346",
-      "kind": "attack",
-      "index": 1,
-      "slot": "49346:attack:クラウンオパール:1",
-      "status": "BLOCKED",
-      "reason": "NO_QUALIFYING_BASIC_ATTACKER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49366",
-      "kind": "item",
-      "index": 0,
-      "slot": "49366:item:ハイパーアロマ:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_TRANSFER_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49395",
-      "kind": "tool",
-      "index": 0,
-      "slot": "49395:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49407",
-      "kind": "tool",
-      "index": 0,
-      "slot": "49407:tool:マキシマムベルト:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49426",
-      "kind": "supporter",
-      "index": 0,
-      "slot": "49426:supporter:シトロンの機転:0",
-      "status": "BLOCKED",
-      "reason": "NO_MASS_HEAL_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "49978",
-      "kind": "tool",
-      "index": 0,
-      "slot": "49978:tool:カウンターゲイン:0",
-      "status": "BLOCKED",
-      "reason": "NO_TOOL_ATTACK_FIXTURE",
-      "details": null
+      "slot": "47814:attack:フロストバリア:1",
+      "status": "FAILED",
+      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
+      "details": {
+        "mechanic": "ATTACK_DAMAGE_REDUCTION",
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3545:5)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
+      }
     }
   ]
 }
