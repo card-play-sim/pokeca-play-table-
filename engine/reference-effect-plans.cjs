@@ -511,6 +511,22 @@ function plan(entry,kind){
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
 
+ // Shared counter operations: exact remaining HP, multiplication, allocation,
+ // hand-size scaling and fixed distinct targets. Counters are not damage.
+ if(kind==='ATTACK'&&/^\d+$/.test(String(entry.damage??'0'))){
+  const cp=(mode,extra)=>({mechanic:'MASS_COUNTER_GRAMMAR',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'PLACE_DAMAGE_COUNTERS'],mode,sharedWording:true,...extra});
+  const hp=generic.match(/^(相手のバトルポケモン|相手のベンチポケモン全員|相手のポケモン[1-5]匹)(?:の|に、それぞれ)残りHPが「([1-9]\d{0,2})」になるように、ダメカンをのせる。$/);
+  if(hp)return cp('remaining',{scope:hp[1]==='相手のバトルポケモン'?'active':hp[1].includes('ベンチ')?'bench':'choice',count:Number(hp[1].match(/[1-5]/)?.[0]||0),remaining:Number(hp[2])});
+  const allocated=generic.match(/^ダメカン([1-9]\d?)個を、相手のポケモンに好きなようにのせる。$/);
+  if(allocated)return cp('allocation',{amount:Number(allocated[1]),scope:'all'});
+  const distinct=generic.match(/^相手のポケモン([2-5])匹に、それぞれダメカンを([1-9]\d?)個のせる。$/);
+  if(distinct)return cp('fixed',{scope:'choice',count:Number(distinct[1]),amount:Number(distinct[2])});
+  const hand=generic.match(/^自分の手札の枚数×([1-9]\d?)個ぶんのダメカンを、相手のバトルポケモンにのせる。$/);
+  if(hand)return cp('hand',{scope:'active',unit:Number(hand[1])});
+  const multiply=generic.match(/^相手のポケモン全員に、それぞれのっているダメカンの数が([2-9])倍になるように、ダメカンをのせる。$/);
+  if(multiply)return cp('multiply',{scope:'all',unit:Number(multiply[1])-1});
+ }
+
  // Shared, physically selected Energy transfers. Exact source, holder and
  // quantity phrases only; entry/switch/knockout-triggered transfers are separate.
  const movePlan=(source,target,count,extra={})=>({mechanic:'MASS_ATTACHED_ENERGY_MOVE',commands:[...(kind==='ATTACK'&&Number(entry.damage)>0?['DAMAGE']:[]),'MOVE_ENERGY'],source,target,count,optional:false,basic:false,type:null,multi:false,repeated:false,sharedWording:true,...extra});
