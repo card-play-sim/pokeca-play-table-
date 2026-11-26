@@ -2456,7 +2456,7 @@ function verifyCase(t, e) {
       assert(chosen.every(id=>side[plan.destination].some(c=>c.id===id)));
       assert.deepEqual(Array.from(side.active.energyCards,c=>c.id),Array.from(own.active.energyCards.filter(c=>!chosen.includes(c.id)),c=>c.id));
       const events=result.history.slice(before.history.length).map(ev=>ev.details);
-      assert.equal(events.some(ev=>ev?.command==='SHUFFLE_DECK'),bonus&&plan.destination==='deck');
+      assert.equal(events.filter(ev=>ev?.command==='SHUFFLE_DECK'&&!ev.reference).length,bonus&&plan.destination==='deck'?1:0);
       assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(result)));
     }
     if(!plan.all){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{energy:[eligible[0].id,eligible[0].id]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));}

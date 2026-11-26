@@ -225,6 +225,7 @@ async def main():
     picked=([c['id'] for c in own['active']['energyCards']] if sel['mode']==['bonus'] else []) if plan['all'] else sel['energy']
     assert set(picked)<={c['id'] for c in resolved[plan['destination']]}
     assert [c['id'] for c in resolved['active']['energyCards']]==[c['id'] for c in own['active']['energyCards'] if c['id'] not in picked]
+    assert sum(ev.get('details',{}).get('command')=='SHUFFLE_DECK' and not ev.get('details',{}).get('reference') for ev in events)==int(bool(picked) and plan['destination']=='deck')
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
