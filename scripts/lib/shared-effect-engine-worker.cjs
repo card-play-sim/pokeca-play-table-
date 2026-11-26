@@ -155,8 +155,24 @@ function fixtureResources(manifest,deckIndex,source,e){
  // allocating the test match; never manufacture counters or card identities.
  if(e.proofTeamBoost){
   const proof=e.proofTeamBoost;
-  reserve(r=>r.officialCardId===proof.holderPrint&&r.facts.basic,'bench');
-  if(proof.nonStack&&ensure(deckIndex,records.get(proof.holderPrint),2))requirements.push({side:0,zone:'bench',printId:proof.holderPrint});
+  const holder=records.get(proof.holderPrint);
+  if(holder?.facts.basic){
+   reserve(r=>r.officialCardId===proof.holderPrint&&r.facts.basic,'bench');
+   if(proof.nonStack&&ensure(deckIndex,holder,2))requirements.push({side:0,zone:'bench',printId:proof.holderPrint});
+  }else if(holder&&!proof.nonStack){
+   // Reserve the real evolutionary line, not a fabricated evolved Pokemon.
+   const line=record=>{
+    if(record.facts.basic)return [record];
+    const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
+    const previous=parent&&line(parent);return previous?[...previous,record]:null;
+   };
+   const chain=line(holder);
+   if(chain&&chain.length>1&&chain.every(record=>ensure(deckIndex,record))){
+    requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+    for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+    requirements.teamBoostChain=chain.map(record=>record.officialCardId);
+   }
+  }
  }
  if(e.proofContextCost){
   const proof=e.proofContextCost;
@@ -450,7 +466,7 @@ function prepare(r, e, kind) {
   }
   if(m==='PASSIVE_TEAM_ATTACK_BOOST'){
     const plan=e.plan;
-    if(!r.facts.basic||plan.evolvedSource||plan.evolvedTarget)return {blocked:'TEAM_BOOST_REQUIRES_EVOLUTION_FIXTURE'};
+    if(plan.evolvedSource||plan.evolvedTarget||!r.facts.basic&&plan.nonStack)return {blocked:'TEAM_BOOST_REQUIRES_EVOLUTION_FIXTURE'};
     const matches=x=>x.category==='pokemon'&&x.facts.basic&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&x.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&a.cost.length>0&&a.cost.every(t=>t==='無色'))&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
     // Prefer a real, ability-free attacker so only the printed aura changes damage.
     const attacker=[...records.values()].find(matches);
@@ -843,6 +859,25 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  let boostBasePhysical=null;
+  if(e.proofTeamBoost){
+    const own=frame.game.players[0];
+    // Ordinary printed damage comparison must not be contaminated by
+    // an unrelated special-energy penalty.
+    for(const energy of [...own.active.energyCards])if(energy.isSpecial){
+      own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1);
+      own.deck.push(energy);
+    }
+    if(fixtureRequirements.teamBoostChain){
+      const chain=fixtureRequirements.teamBoostChain;
+      const base=own.bench.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===chain[0]);
+      if(!base)return {blocked:'NO_TEAM_BOOST_EVOLUTION_BASE'};
+      boostBasePhysical=JSON.parse(JSON.stringify(base));
+      const evolved=evolveTeraFixture(port(frame.game),chain,false);
+      if(evolved.blocked)return evolved;
+      frame.game=evolved.port.getSnapshot();
+    }
+  }
   if(m==='ATTACK_ATTACHED_ENERGY_COINS'){
     const own=frame.game.players[0];
     for(const energy of [...own.active.energyCards])if(energy.isSpecial){
@@ -1562,7 +1597,7 @@ function prepare(r, e, kind) {
     };
   if (m === "BENCH_NON_RULE_PROTECTION")
     return { port: p, sourceId: frame.sourceId, kind, passive: true };
-  return { port: p, sourceId: frame.sourceId, kind };
+  return { port: p, sourceId: frame.sourceId, kind, ...(boostBasePhysical?{boostBasePhysical}:{}) };
 }
 function verifyPrintedAttack(before, after, effect, amount, reduction = 0) {
   const [own, opponent] = before.players;
@@ -2904,8 +2939,14 @@ function verifyCase(t, e) {
     const holders=own.bench.filter(c=>t.boostHolderIds.includes(c.id));
     assert.equal(holders.length,plan.nonStack?2:1);
     for(const mon of holders){
-      assert(!mon.energyCards?.length&&!mon.tools?.length&&!mon.evolutionCards?.length);
-      const card={...mon};for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];
+      assert(!mon.energyCards?.length&&!mon.tools?.length);
+      const stack=mon.evolutionCards||[];
+      if(stack.length){
+        assert.equal(t.boostBasePhysical?.id,mon.id,'MISSING_ORIGINAL_TEAM_BOOST_BASIC');
+        own.hand.push(...stack);
+      }
+      const card={...(stack.length?t.boostBasePhysical:mon)};
+      for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];
       own.hand.push(card);
     }
     own.bench=own.bench.filter(c=>!t.boostHolderIds.includes(c.id));
