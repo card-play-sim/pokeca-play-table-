@@ -2289,6 +2289,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47168",
+      "name": "ホップのバチンウニex",
+      "deckName": "ホップのバチンウニex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47168",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/047168_P_HOPPUNOBACHINUNIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スパイクサンダー",
+          "cost": [
+            "雷",
+            "雷",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "自分の山札を2枚引く。",
+          "effectId": "reference-47168-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DRAW",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "draw": 2
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきばり",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-47168-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 200,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47168.json",
+        "sha256": "3f8f933593880f9e4e09d612e5a8524626fee6462b862ab7c11aa2577803657e",
+        "htmlSha256": "3f8f933593880f9e4e09d612e5a8524626fee6462b862ab7c11aa2577803657e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47170",
       "name": "フワライド",
       "deckName": "フワライド",
@@ -6159,6 +6237,43 @@
           "SHUFFLE_DECK"
         ],
         "amount": 5
+      }
+    },
+    {
+      "officialCardId": "50784",
+      "name": "ムク",
+      "deckName": "ムク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50784",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050784_T_MUKU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50784.json",
+        "sha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
+        "htmlSha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
+        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_NON_RULE_DISCARD_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "limit": 2,
+        "unit": 3,
+        "sharedWording": true
       }
     },
     {
@@ -13022,6 +13137,87 @@
         "path": "data/effect-extensions/evidence/45351.json",
         "sha256": "6b9de7021dca34c6daec2d54ef68fa61857b41f33aa47af96786d6fe94dbd7ec",
         "htmlSha256": "6b9de7021dca34c6daec2d54ef68fa61857b41f33aa47af96786d6fe94dbd7ec",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45358",
+      "name": "テツノコウベ",
+      "deckName": "テツノコウベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45358",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVHM/045358_P_TETSUNOKOUBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブラストウインド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "",
+          "effectId": "reference-45358-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "オートマーシャル",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-45358-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45358.json",
+        "sha256": "d485759e640cb73020cf2007e749e3f3e3c1136b872ed505aba1630dee332dd4",
+        "htmlSha256": "d485759e640cb73020cf2007e749e3f3e3c1136b872ed505aba1630dee332dd4",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -22932,6 +23128,82 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46241",
+      "name": "ハギギシリ",
+      "deckName": "ハギギシリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46241",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046241_P_HAGIGISHIRI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじりつく",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。",
+          "effectId": "reference-46241-attack-0",
+          "plan": {
+            "mechanic": "RETREAT_LOCK_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげき",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-46241-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46241.json",
+        "sha256": "52708a87bf324564a6a2f123e5fec03cefb0843a2666dff1c51c936076eb0e1c",
+        "htmlSha256": "52708a87bf324564a6a2f123e5fec03cefb0843a2666dff1c51c936076eb0e1c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46245",
       "name": "アルクジラ",
       "deckName": "アルクジラ",
@@ -23783,6 +24055,82 @@
         "path": "data/effect-extensions/evidence/46278.json",
         "sha256": "031cd1b5e50411ef8f0bb869d33b99f409d30edbae4ddebb9ab18fa06794f486",
         "htmlSha256": "031cd1b5e50411ef8f0bb869d33b99f409d30edbae4ddebb9ab18fa06794f486",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46314",
+      "name": "ハギギシリ",
+      "deckName": "ハギギシリ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46314",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046314_P_HAGIGISHIRI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじりつく",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。",
+          "effectId": "reference-46314-attack-0",
+          "plan": {
+            "mechanic": "RETREAT_LOCK_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげき",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-46314-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46314.json",
+        "sha256": "6c26f93834aa2dc54c04b7a6bc21e62447c5d8d309a479ec94a0f3ccf1aaf1a0",
+        "htmlSha256": "6c26f93834aa2dc54c04b7a6bc21e62447c5d8d309a479ec94a0f3ccf1aaf1a0",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -201458,6 +201806,687 @@
         "amount": 2,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "50297",
+      "name": "ムク",
+      "deckName": "ムク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50297",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050297_T_MUKU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50297.json",
+        "sha256": "1e924948471aadc27bb97dde367c5ac259cef27bb2fd3b92dd574680db72eac7",
+        "htmlSha256": "1e924948471aadc27bb97dde367c5ac259cef27bb2fd3b92dd574680db72eac7",
+        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_NON_RULE_DISCARD_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "limit": 2,
+        "unit": 3,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50331",
+      "name": "ムク",
+      "deckName": "ムク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50331",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050331_T_MUKU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50331.json",
+        "sha256": "b3e89d47e444d51fe30f47085afd20e99c37a7f974d8d2f91646711960e587fd",
+        "htmlSha256": "b3e89d47e444d51fe30f47085afd20e99c37a7f974d8d2f91646711960e587fd",
+        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_NON_RULE_DISCARD_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "limit": 2,
+        "unit": 3,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50337",
+      "name": "ムク",
+      "deckName": "ムク",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50337",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050337_T_MUKU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50337.json",
+        "sha256": "6da6409968b2e2c8d3f0abc9be54712c5a642b27302f6d70e76e4b5ace286c8f",
+        "htmlSha256": "6da6409968b2e2c8d3f0abc9be54712c5a642b27302f6d70e76e4b5ace286c8f",
+        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
+      },
+      "mainPlan": {
+        "mechanic": "SUPPORTER_NON_RULE_DISCARD_DRAW",
+        "commands": [
+          "DISCARD",
+          "DRAW"
+        ],
+        "limit": 2,
+        "unit": 3,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50374",
+      "name": "サンドパン",
+      "deckName": "サンドパン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50374",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050374_P_SANDOPAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あなほりクロー",
+          "cost": [
+            "闘"
+          ],
+          "damage": "60",
+          "text": "相手の山札を上から1枚トラッシュする。",
+          "effectId": "reference-50374-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_OPPONENT_DECK_TOP",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "amount": 1
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきばり",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-50374-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": "サンド",
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50374.json",
+        "sha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "htmlSha256": "6a09e3695b8f8236b6827521f74794a2124c79168ec5ce700ff63b0806f7459c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47040",
+      "name": "ナンジャモのタイカイデン",
+      "deckName": "ナンジャモのタイカイデン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47040",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047040_P_NANJIXYAMONOTAIKAIDEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-47040-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "フラッシュドロー",
+          "text": "自分の番に、このポケモンについている「基本[雷]エネルギー」を1個トラッシュするなら、1回使える。自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-47040-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_TYPED_COST_DRAW_LIMIT",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "zone": "attached",
+            "type": "雷",
+            "limit": 6,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ナンジャモのカイデン",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47040.json",
+        "sha256": "e1b0663ab0ff36edbdbd70b1f332c0de47619e0c49eccb50ed86d26060c30fc4",
+        "htmlSha256": "e1b0663ab0ff36edbdbd70b1f332c0de47619e0c49eccb50ed86d26060c30fc4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47224",
+      "name": "ナンジャモのタイカイデン",
+      "deckName": "ナンジャモのタイカイデン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47224",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047224_P_NANJIXYAMONOTAIKAIDEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-47224-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "フラッシュドロー",
+          "text": "自分の番に、このポケモンについている「基本[雷]エネルギー」を1個トラッシュするなら、1回使える。自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-47224-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_TYPED_COST_DRAW_LIMIT",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "zone": "attached",
+            "type": "雷",
+            "limit": 6,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ナンジャモのカイデン",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47224.json",
+        "sha256": "13b76497dc5d54f17197fd879e01845c3282636c3183ee13ff1fb19979dc616a",
+        "htmlSha256": "13b76497dc5d54f17197fd879e01845c3282636c3183ee13ff1fb19979dc616a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48581",
+      "name": "ナンジャモのタイカイデン",
+      "deckName": "ナンジャモのタイカイデン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48581",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048581_P_NANJIXYAMONOTAIKAIDEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-48581-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "フラッシュドロー",
+          "text": "自分の番に、このポケモンについている「基本[雷]エネルギー」を1個トラッシュするなら、1回使える。自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-48581-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_TYPED_COST_DRAW_LIMIT",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "zone": "attached",
+            "type": "雷",
+            "limit": 6,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ナンジャモのカイデン",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48581.json",
+        "sha256": "07978471c4c0bbea88ea293f28c4415678386ddb2c6ddd191b6f3afd88b34b7f",
+        "htmlSha256": "07978471c4c0bbea88ea293f28c4415678386ddb2c6ddd191b6f3afd88b34b7f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48995",
+      "name": "ナンジャモのタイカイデン",
+      "deckName": "ナンジャモのタイカイデン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48995",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048995_P_NANJIXYAMONOTAIKAIDEN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-48995-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "フラッシュドロー",
+          "text": "自分の番に、このポケモンについている「基本[雷]エネルギー」を1個トラッシュするなら、1回使える。自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-48995-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_TYPED_COST_DRAW_LIMIT",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "zone": "attached",
+            "type": "雷",
+            "limit": 6,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ナンジャモのカイデン",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48995.json",
+        "sha256": "bff3f279a40e46669c2bd0a42bdf16007f376b653c4c9c61fce913143bcaec15",
+        "htmlSha256": "bff3f279a40e46669c2bd0a42bdf16007f376b653c4c9c61fce913143bcaec15",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49344",
+      "name": "テツノコウベ",
+      "deckName": "テツノコウベ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49344",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049344_P_TETSUNOKOUBE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブラストウインド",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "",
+          "effectId": "reference-49344-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "オートマーシャル",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを3個のせる。",
+          "effectId": "reference-49344-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 3,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49344.json",
+        "sha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "htmlSha256": "47460af96c57c87e07d51207ff43902eb7dc1d22241d3ffddc224a21cf63abb7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50097",
+      "name": "マフォクシー",
+      "deckName": "マフォクシー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50097",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050097_P_MAFUOKUSHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーストーム",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "30×",
+          "text": "おたがいのポケモン全員についているエネルギーの数×30ダメージ。",
+          "effectId": "reference-50097-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "bothTeamEnergy",
+            "type": null,
+            "unit": 30,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "フレアマジック",
+          "text": "自分の番に、自分の手札から「基本[炎]エネルギー」を1枚トラッシュするなら、1回使える。自分の手札が7枚になるように、山札を引く。",
+          "effectId": "reference-50097-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_TYPED_COST_DRAW_LIMIT",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "zone": "hand",
+            "type": "炎",
+            "limit": 7,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "テールナー",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50097.json",
+        "sha256": "ee396892df679f7c427408bbbca196d78cdc2e970e8a2f81b50bfb9804f13d99",
+        "htmlSha256": "ee396892df679f7c427408bbbca196d78cdc2e970e8a2f81b50bfb9804f13d99",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -202072,11 +203101,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47168",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47169",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -202279,21 +203303,6 @@
         "sha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
         "htmlSha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
         "textSha256": "68cb8900c28207c74874207f8a17c52f78f0a2a37b03b42d8b1cd94b0b1f92e3"
-      }
-    },
-    {
-      "officialCardId": "50784",
-      "name": "ムク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50784.json",
-        "sha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
-        "htmlSha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
-        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
       }
     },
     {
@@ -202567,11 +203576,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45358",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45520",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -202822,11 +203826,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46241",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46259",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -202858,11 +203857,6 @@
     },
     {
       "officialCardId": "46313",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46314",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "07029440151f2e08c07ff7d35eb99ee9136c9846b7277957d6c4f3d25990667c",
+  "registryHash": "367b614fb85e56cd89da1024099508bac212b47bad89cfc91689b60f7dc05206",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,10 +12,10 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 243,
-      "notImplemented": 131,
+      "compiled": 247,
+      "notImplemented": 127,
       "blocked": 0,
-      "executionVerifiedPrints": 39
+      "executionVerifiedPrints": 40
     },
     "item": {
       "prints": 299,
@@ -40,10 +40,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2294,
-      "notImplemented": 1367,
+      "compiled": 2305,
+      "notImplemented": 1356,
       "blocked": 15,
-      "executionVerifiedPrints": 657
+      "executionVerifiedPrints": 661
     },
     "energy": {
       "prints": 681,
@@ -741,11 +741,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47168",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47169",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -948,21 +943,6 @@
         "sha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
         "htmlSha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
         "textSha256": "68cb8900c28207c74874207f8a17c52f78f0a2a37b03b42d8b1cd94b0b1f92e3"
-      }
-    },
-    {
-      "officialCardId": "50784",
-      "name": "ムク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50784.json",
-        "sha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
-        "htmlSha256": "0a6cf8b4f1e3b227bce6a1ee70ef6e48ffae7c027c8639da0c2bd490378f2c2b",
-        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
       }
     },
     {
@@ -1236,11 +1216,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45358",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45520",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1491,11 +1466,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46241",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46259",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1527,11 +1497,6 @@
     },
     {
       "officialCardId": "46313",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46314",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6291,21 +6256,6 @@
       }
     },
     {
-      "officialCardId": "50297",
-      "name": "ムク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50297.json",
-        "sha256": "1e924948471aadc27bb97dde367c5ac259cef27bb2fd3b92dd574680db72eac7",
-        "htmlSha256": "1e924948471aadc27bb97dde367c5ac259cef27bb2fd3b92dd574680db72eac7",
-        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
-      }
-    },
-    {
       "officialCardId": "50298",
       "name": "化石採掘場",
       "category": "stadium",
@@ -6461,21 +6411,6 @@
       }
     },
     {
-      "officialCardId": "50331",
-      "name": "ムク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50331.json",
-        "sha256": "b3e89d47e444d51fe30f47085afd20e99c37a7f974d8d2f91646711960e587fd",
-        "htmlSha256": "b3e89d47e444d51fe30f47085afd20e99c37a7f974d8d2f91646711960e587fd",
-        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
-      }
-    },
-    {
       "officialCardId": "50336",
       "name": "グラジオの決戦",
       "category": "supporter",
@@ -6488,21 +6423,6 @@
         "sha256": "91bb30f9e34a8b52cf3ef6f0bc8f882bd998761316e8f1c6bd9335fa11a61d45",
         "htmlSha256": "91bb30f9e34a8b52cf3ef6f0bc8f882bd998761316e8f1c6bd9335fa11a61d45",
         "textSha256": "50438b04e7e1c96bdad850efcb8798ae7ec1f497a84dee79610653996455c459"
-      }
-    },
-    {
-      "officialCardId": "50337",
-      "name": "ムク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50337.json",
-        "sha256": "6da6409968b2e2c8d3f0abc9be54712c5a642b27302f6d70e76e4b5ace286c8f",
-        "htmlSha256": "6da6409968b2e2c8d3f0abc9be54712c5a642b27302f6d70e76e4b5ace286c8f",
-        "textSha256": "d2a22d466b26c2f0060116be6ec5b70db49ce6f13b00cae514976a0a80f08b52"
       }
     },
     {
@@ -6572,11 +6492,6 @@
     },
     {
       "officialCardId": "50373",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50374",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7290,11 +7205,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47040",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47044",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7471,11 +7381,6 @@
     },
     {
       "officialCardId": "47108",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47224",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9160,11 +9065,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48581",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48584",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9661,11 +9561,6 @@
     },
     {
       "officialCardId": "48963",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48995",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -11130,11 +11025,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49344",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49345",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -11890,11 +11780,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50097",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50267",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -12329,11 +12214,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1400
+        "count": 1389
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 337
+        "count": 333
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -12348,32 +12233,32 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "9eb0cef363c380a0c057e699bbbff4ea1050eab59c1f4046c7410c5a9d69fc6a",
+    "executionFingerprint": "4480164e703240a4d9726acd705ee5649f33a65b6bbf562ecec7d3d4d8aca9b9",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 183705,
+    "seq": 193017,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 333,
+      "SUCCEEDED": 336,
       "FAILED": 0,
-      "BLOCKED": 443
+      "BLOCKED": 440
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 267,
+        "SUCCEEDED": 269,
         "FAILED": 0,
-        "BLOCKED": 404
+        "BLOCKED": 402
       },
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 27,
+        "SUCCEEDED": 28,
         "FAILED": 0,
-        "BLOCKED": 19
+        "BLOCKED": 18
       },
       "item": {
         "PENDING": 0,
