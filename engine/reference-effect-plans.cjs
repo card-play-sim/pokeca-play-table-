@@ -385,6 +385,20 @@ function massSharedPlan(entry,kind,text){
   const teamEnergy=body.match(/^自分の山札から「(ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」と「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
   const basicOrEnergy=body.match(/^自分の山札から\[([草炎水雷超闘悪鋼])\]タイプのたねポケモンまたは「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、相手に見せて、手札に加える。そして山札を切る。$/);
   const searchPlan=(category,limit,extra)=>({mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),'SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly,sharedWording:true,...extra});
+
+  const namedExact=body.match(/^自分の(山札|トラッシュ)から「(マコモ|変化の書|ヒビキの冒険|ペパーのサンドウィッチ)」を(1枚|[2-9]枚まで|好きなだけ)選び、相手に見せて、手札に加える。(そして山札を切る。)?$/);
+  if(namedExact&&Boolean(namedExact[4])===(namedExact[1]==='山札')){
+   const zone=namedExact[1]==='山札'?'deck':'discard';
+   return {mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),...(zone==='deck'?['SEARCH_DECK']:[]),'REVEAL','ADD_TO_HAND',...(zone==='deck'?['SHUFFLE_DECK']:[])],zone,destination:'hand',category:'any',nameExact:namedExact[2],type:null,stage:null,team:null,limit:namedExact[3]==='好きなだけ'?60:parseInt(namedExact[3],10),activeOnly,sharedWording:true};
+  }
+  const propSearch=body.match(/^自分の山札から、(にげるためのエネルギーが([0-5])個|抵抗力が\[([草炎水雷超闘悪鋼竜無色])\]タイプ)のポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  if(propSearch)return searchPlan('pokemon',parseInt(propSearch[4],10),propSearch[2]!==undefined?{retreatCost:Number(propSearch[2])}:{resistanceType:propSearch[3]});
+  const namedTool=body.match(/^自分の山札から、名前に「([^「」]{1,40})」とつく「ポケモンのどうぐ」を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  if(namedTool)return searchPlan('tool',parseInt(namedTool[2],10),{nameContains:namedTool[1]});
+  const mixedRecover=body.match(/^自分のトラッシュからポケモンと基本エネルギーを合計([2-9])枚まで選び、相手に見せて、手札に加える。$/);
+  if(mixedRecover)return {mechanic:'MASS_ZONE_TRANSFER',commands:[...(damage?['DAMAGE']:[]),'REVEAL','ADD_TO_HAND'],zone:'discard',destination:'hand',category:'pokemonOrBasicEnergy',type:null,stage:null,team:null,energyType:null,limit:Number(mixedRecover[1]),activeOnly,sharedWording:true};
+  const otherTeam=body.match(/^自分の山札から「(エリカ|マリィ)のポケモン」を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
+  if(otherTeam)return searchPlan('pokemon',parseInt(otherTeam[2],10),{team:otherTeam[1]});
   if(namedSupporter)return searchPlan('supporter',parseInt(namedSupporter[2],10),{nameContains:namedSupporter[1]});
   if(teamEnergy)return searchPlan('pokemonOrBasicEnergy',Number(teamEnergy[3]),{team:teamEnergy[1],energyType:teamEnergy[2]});
   if(basicOrEnergy)return searchPlan('pokemonOrBasicEnergy',1,{type:basicOrEnergy[1],stage:0,energyType:basicOrEnergy[2]});
