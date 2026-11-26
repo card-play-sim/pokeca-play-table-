@@ -137,3 +137,27 @@ assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp2),[]);
 assert.deepEqual(retryBatch([cc],prevScope,fp),[]);
 assert.deepEqual(retryBatch([aa,bb],{...prevScope,targetIds:['1','2','3']},fp).map(x=>x.group.sharedTaskId),[mkId(1)]);
 console.log('LOCAL_UNKNOWN_EXACT_RETRY_SCOPE PASS');
+
+// Run the production repair loop against a controlled first-invalid, then
+// corrected proposal. Parsing is not execution; this proves orchestration only.
+const {focusFailedBatch,validateCandidateSyntax,generateWithRepair}=require('../scripts/local-unknown-effect-generator.cjs');
+assert.deepEqual(focusFailedBatch([aa,bb],{targetFailures:[{id:'4'}]}).map(x=>x.group.sharedTaskId),[mkId(2),mkId(1)]);
+assert.deepEqual(focusFailedBatch([aa,bb],{targetFailures:[{id:'999'}]}),[aa,bb]);
+assert.throws(()=>validateCandidateSyntax(sources,{[path]:before+'\nconst broken = ;'}),/CANDIDATE_JS_SYNTAX/);
+assert.equal(repairProfile('CANDIDATE_JS_SYNTAX:engine/example.cjs:Unexpected token',2).type,'SYNTAX');
+async function repairLoopTest(){
+ const calls=[],rejections=[];
+ const result=await generateWithRepair([aa,bb],sources,{
+  propose:async(groups,src,feedback,profile,previousPatch)=>{
+   calls.push({groups:groups.map(g=>g.sharedTaskId),type:profile.type,feedback,previousPatch});
+   return {edits:[{path,before,after:before+(calls.length===1?'\nconst broken = ;':'\nconst repaired = true;')}]};
+  },onReject:(n,reason)=>rejections.push([n,reason])});
+ assert.equal(calls.length,2);assert.equal(rejections.length,1);
+ assert.equal(calls[1].type,'SYNTAX');assert(calls[1].feedback.includes('CANDIDATE_JS_SYNTAX'));
+ assert(calls[1].previousPatch.includes('broken'));assert.deepEqual(calls[1].groups,[mkId(1)]);
+ assert.equal(result.changed[path],before+'\nconst repaired = true;');assert.equal(sources[path],before);
+ const failed=await generateWithRepair([aa],sources,{propose:async()=>({edits:[]})});
+ assert.equal(failed.changed,undefined);assert(failed.feedback.includes('INVALID_EDIT_COUNT'));
+ console.log('LOCAL_UNKNOWN_PRODUCTION_REPAIR_LOOP PASS');
+}
+repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});

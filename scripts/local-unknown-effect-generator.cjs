@@ -147,6 +147,7 @@ function repairProfile(feedback='',attempt=1){
  const reason=String(feedback);
  const type=/DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
  /MODEL_OUTPUT_TRUNCATED|finish_reason.*length/i.test(reason)?'TRUNCATED':
+ /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT/i.test(reason)?'FORMAT':
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT/i.test(reason)?'ANCHOR':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
@@ -159,6 +160,7 @@ function repairProfile(feedback='',attempt=1){
  const instructions={
  TRANSPORT:'Previous inference timed out. Produce the smallest complete patch; avoid duplicated source and long explanations.',
  TRUNCATED:'Previous output was incomplete. Return fewer, shorter exact edits; never omit closing JSON delimiters.',
+ SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor and balanced syntax. Do not change the tests.',
  FORMAT:'Previous output was not valid JSON. Use JSON string escaping, no markdown, no trailing commas, one complete object.',
  ANCHOR:'Previous edit anchor was stale or ambiguous. Choose an existing anchor ID from the supplied table. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
@@ -221,6 +223,43 @@ function attemptScope(batch,profile){
  assert(chosen.length>0,'NO_ATTEMPT_SCOPE');
  return {groups:chosen.map(x=>x.group),records:[...new Map(chosen.flatMap(x=>x.records).map(r=>[String(r.officialCardId),r])).values()]};
 }
+// Syntax compilation only: never evaluate model code on the trusted host.
+function validateCandidateSyntax(sources,changed){
+ const {Script}=require('node:vm'),{wrap}=require('node:module');
+ for(const file of allowed){
+  if(changed[file]===sources[file])continue;
+  try{new Script(wrap(changed[file]),{filename:file});}
+  catch(e){throw Error('CANDIDATE_JS_SYNTAX:'+file+':'+String(e.message).slice(0,500));}
+ }
+}
+function focusFailedBatch(batch,receipt){
+ if(!receipt||!Array.isArray(receipt.targetFailures))return batch;
+ const failures=new Set(receipt.targetFailures.map(x=>String(x?.id)).filter(x=>/^[1-9]\d{0,7}$/.test(x)));
+ if(!failures.size)return batch;
+ return [...batch].sort((a,b)=>b.records.filter(r=>failures.has(String(r.officialCardId))).length-a.records.filter(r=>failures.has(String(r.officialCardId))).length);
+}
+// This is the real generator loop, also exercised without paid inference in
+// regression tests. Every failed proposal is rejected before scratch writes.
+async function generateWithRepair(batch,sources,{feedback='',previousPatch='',propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
+ let proposal,scope,changed;
+ for(let attempt=1;attempt<=2;attempt++){
+  proposal=undefined;
+  const profile=repairProfile(feedback,attempt);
+  scope=attemptScope(batch,profile);
+  onAttempt(attempt,scope,profile);
+  try{
+   proposal=await propose(scope.groups,sources,feedback,profile,previousPatch);
+   changed=applyEdits(sources,proposal);
+   validateCandidateSyntax(sources,changed);
+   return {proposal,changed,scope,feedback:''};
+  }catch(e){
+   feedback=String(e);
+   if(proposal)previousPatch=JSON.stringify(proposal).slice(0,1800);
+   onReject(attempt,feedback,repairProfile(feedback,attempt+1),proposal);
+  }
+ }
+ return {scope,feedback};
+}
 async function main(){
  const worklist=read(process.argv[2]),out=process.argv[3],scratch=process.argv[4];
  assert(out&&scratch&&path.resolve(scratch)!==process.cwd(),'ISOLATED_TREE_REQUIRED');
@@ -250,7 +289,12 @@ async function main(){
   try{previousSelection=read(previousSelectionPath);}catch(e){console.warn('INVALID_PREVIOUS_SELECTION',String(e).slice(0,300));}
  }
  const retry=retryBatch(candidates,previousSelection,fingerprint);
- const batch=retry.length?retry:selectBatch(candidates,runNumber,{history,fingerprint});
+ let previousReceipt=null;
+ const previousReceiptPath=process.env.MODEL_PREVIOUS_RECEIPT_PATH;
+ if(retry.length&&previousReceiptPath&&fs.existsSync(previousReceiptPath)&&fs.statSync(previousReceiptPath).size<=256*1024){
+  try{previousReceipt=read(previousReceiptPath);}catch(e){console.warn('INVALID_PREVIOUS_RECEIPT',String(e).slice(0,300));}
+ }
+ const batch=retry.length?focusFailedBatch(retry,previousReceipt):selectBatch(candidates,runNumber,{history,fingerprint});
  if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
  let selectedGroups=[],records=[],targetIds=[];
  const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
@@ -258,20 +302,20 @@ async function main(){
  let previousPatch='';
  if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
  if(!feedback){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
- for(let attempt=1;attempt<=2;attempt++){
-  try{
-   const profile=repairProfile(feedback,attempt);
-   const scope=attemptScope(batch,profile);
+ const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,
+  onAttempt(attempt,scope,profile){
    selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
    const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
    write(path.join(out,'selected-'+attempt+'.json'),selected);
    write(path.join(out,'selected.json'),selected);
    write(path.join(out,'repair-profile-'+attempt+'.json'),profile);
-   proposal=await generate(selectedGroups,sources,feedback,profile,previousPatch);write(path.join(out,'model-output-'+attempt+'.json'),proposal);
-   changed=applyEdits(sources,proposal);
-   break;
-  }catch(e){feedback=String(e);if(proposal)previousPatch=JSON.stringify(proposal).slice(0,1800);write(path.join(out,'rejected-'+attempt+'.json'),{reason:feedback,nextRepair:repairProfile(feedback,attempt+1)});}
- }
+  },
+  onReject(attempt,reason,nextRepair,rejected){
+   if(rejected)write(path.join(out,'model-output-'+attempt+'.json'),rejected);
+   write(path.join(out,'rejected-'+attempt+'.json'),{reason,nextRepair});
+  }});
+ changed=outcome.changed;feedback=outcome.feedback;proposal=outcome.proposal;
+ if(proposal)write(path.join(out,'accepted-proposal.json'),proposal);
  if(!changed){saveHistory('NO_VALID_MODEL_PATCH',feedback);write(path.join(out,'result.json'),{state:'NO_VALID_MODEL_PATCH',targetIds});return;}
  // Only the isolated checkout receives generated source. No source is executed
  // in this process, and no protected files or evidence come from the model.
@@ -288,4 +332,4 @@ async function main(){
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal,retryBatch,attemptScope};
+module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};

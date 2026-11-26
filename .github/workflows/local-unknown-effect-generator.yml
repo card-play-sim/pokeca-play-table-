@@ -127,6 +127,7 @@ jobs:
             rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
             if [ "$attempt" -gt 1 ]; then
               export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
+              export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/quarantine-result.json"
               export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
               export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
             fi
