@@ -621,6 +621,17 @@ async def main():
      assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
      assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
     else:assert side['active']['id']==source['id']
+   if m=='MASS_COUNTER_GRAMMAR':
+    plan=f['e']['plan'];other=before['players'][1];own=before['players'][0];sel=option['action'].get('selections',{})
+    pool=[other['active'],*other['bench']]
+    targets=[other['active']] if plan['scope']=='active' else other['bench'] if plan['scope']=='bench' else [c for c in pool if c['id'] in sel['target']] if plan['scope']=='choice' else pool
+    total=0
+    for c in targets:
+     hit=sum(ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==c['id'] and not ev['details'].get('reference'))
+     amount=max(0,(c['hp']-c['damage']-hit-plan['remaining'])//10) if plan['mode']=='remaining' else sel['allocation'].get(c['id'],0) if plan['mode']=='allocation' else len(own['hand'])*plan['unit'] if plan['mode']=='hand' else (c['damage']+hit)//10*plan['unit'] if plan['mode']=='multiply' else plan['amount']
+     assert sum(ev['details']['counterCount'] for ev in events if ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==c['id'] and not ev['details'].get('reference'))==amount
+     total+=amount
+    assert total>0
    if m=='MASS_PLACE_COUNTERS':
     plan=f['e']['plan']
     own=before['players'][0];other=before['players'][1];targets=[other['active'],*other['bench']]
