@@ -1151,7 +1151,7 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'MASS_HEAL_OWN':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount);
+   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount==='all'?mon.damage:plan.amount);
    break;
   case 'MASS_PRIZE_DRAW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
