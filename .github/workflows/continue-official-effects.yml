@@ -60,6 +60,7 @@ jobs:
           # a previous checkpoint or leave unresolved conflicts in the worktree.
           INTAKE_BRANCH="automation/control-013-intake-${GITHUB_RUN_ID}"
           git checkout -b "$INTAKE_BRANCH"
+          echo "INTAKE_BASE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "INTAKE_BRANCH=$INTAKE_BRANCH" >> "$GITHUB_ENV"
           # Resume the newest branch with a durable checkpoint, skipping interrupted
           # branches without one. Numeric run IDs are monotonically increasing.
@@ -124,6 +125,36 @@ jobs:
           node tests/atomic-official-to-battle.test.cjs
           node scripts/run-atomic-official-battle-intake.cjs
           node tests/bulk-basic-energy-intake.test.cjs
+      - name: Count exact engine-qualified candidate prints
+        id: candidates
+        run: |
+          node -e 'const a=require("./work/card-auto-connect/candidate.json").qualified; if(!Array.isArray(a)||new Set(a.map(String)).size!==a.length)throw Error("INVALID_CANDIDATE_IDS"); console.log("count="+a.length)' >> "$GITHUB_OUTPUT"
+      - name: Verify exact candidate prints through the existing Chromium battle test
+        if: steps.candidates.outputs.count != '0'
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="$INTAKE_BASE"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="work-intake-$shard" \
+              python tests/test_control_013_browser.py > "/tmp/work-intake-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          mkdir -p artifacts
+          cp /tmp/work-intake-shard-*.log artifacts/
+          for logfile in /tmp/work-intake-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
       - name: Save checkpoint and outcomes on the automation branch for review
         if: always()
         run: |
@@ -145,6 +176,15 @@ jobs:
           # ALL workflow modifications. Keep the Work source branch untouched.
           git reset --hard "$SNAPSHOT_SHA"
           git fetch origin main
+          # Do not re-root a stale scheduled snapshot onto a newer main.
+          # Preserve its evidence on its original branch for explicit reconciliation.
+          if [ "$GITHUB_REF_NAME" != work/issue122-next-782-replay ] &&
+             [ "$(git rev-parse origin/main)" != "$INTAKE_BASE" ]; then
+            git push -u origin "$INTAKE_BRANCH"
+            echo "INTAKE_BASE_MOVED=1" >> "$GITHUB_ENV"
+            echo 'Base advanced; preserved isolated checkpoint, reconcile before release.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           git checkout -B "$INTAKE_BRANCH" origin/main
           git restore --source="$SNAPSHOT_SHA" --staged --worktree -- . ':(exclude).github/workflows'
           if git diff --cached --name-only | grep -q '^\\.github/workflows/'; then
@@ -155,32 +195,6 @@ jobs:
             git commit -m "checkpoint: official battle-verified intake replay for run $GITHUB_RUN_ID"
             git push -u origin "$INTAKE_BRANCH"
           fi
-      - name: Verify exact candidate prints through the existing Chromium battle test
-        if: github.ref_name == 'work/issue122-next-782-replay'
-        run: |
-          pip install playwright==1.56.0
-          python -m playwright install --with-deps chromium
-          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
-          server=$!
-          trap 'kill "$server"' EXIT
-          export POKECA_TEST_URL=http://127.0.0.1:8765/
-          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
-          export POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA"
-          export POKECA_INTAKE_LOCAL_CANDIDATE=1
-          export POKECA_BROWSER_SHARD_COUNT=4
-          export POKECA_BROWSER_SLOTS_ONLY=1
-          pids=()
-          for shard in 0 1 2 3; do
-            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="work-intake-$shard" \
-              python tests/test_control_013_browser.py > "/tmp/work-intake-shard-$shard.log" 2>&1 &
-            pids+=("$!")
-          done
-          rv=0
-          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
-          mkdir -p artifacts
-          cp /tmp/work-intake-shard-*.log artifacts/
-          for logfile in /tmp/work-intake-shard-*.log; do tail -n 25 "$logfile"; done
-          exit "$rv"
       - name: Open verified candidate pull request
         env:
           GH_TOKEN: ${{ github.token }}
@@ -194,12 +208,17 @@ jobs:
             echo 'No new candidate passed every effect execution gate.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
+          if [ "${INTAKE_BASE_MOVED:-0}" = 1 ]; then
+            body=$(printf 'AUTO_CONNECT_RECONCILE_REQUIRED\nBranch: %s\nVerified candidate printings: %s\nWorkflow: %s/%s/actions/runs/%s\nMain advanced during verification. Reconcile against latest main and rerun gates before merging.\n' "$INTAKE_BRANCH" "$count" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
+            gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="$body"
+            exit 0
+          fi
           # The repository currently denies pull-request creation by GITHUB_TOKEN.
           # Preserve verified output and hand over the reviewable branch to Issue #122
           # instead of failing after successfully collecting/validating official data.
           if gh pr create --base main --head "$INTAKE_BRANCH" \
             --title "CARD-AUTO-CONNECT: $count verified candidate prints" \
-            --body "Refs #122. Every candidate effect passed the existing engine worker. Merge only after required CI; published battle verification is still pending. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
+            --body "Refs #122. Every candidate effect passed the existing engine worker and candidate Chromium. Merge only after required CI; published battle verification is still pending. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
             echo "Candidate PR opened; merge only after CI and published battle checks." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "::warning::GitHub Actions cannot create this PR. Delivering the candidate branch to Issue #122."
