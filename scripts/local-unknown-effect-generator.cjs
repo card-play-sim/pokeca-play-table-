@@ -74,7 +74,7 @@ async function main(){
  const {group,records}=candidates[index],sources=Object.fromEntries(allowed.map(f=>[f,fs.readFileSync(f,'utf8')]));
  const targetIds=records.map(r=>String(r.officialCardId));
  write(path.join(out,'selected.json'),{group,targetIds,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'});
- let proposal,changed,feedback='';
+ let proposal,changed,feedback=process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
  for(let attempt=1;attempt<=2;attempt++){
   try{
    proposal=await generate(group,sources,feedback);write(path.join(out,'model-output-'+attempt+'.json'),proposal);
