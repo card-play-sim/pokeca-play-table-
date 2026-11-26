@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -19,3 +19,61 @@ assert.deepEqual(exactGroup(group,raw,new Set([id]),proof,compile),[]);
 assert.deepEqual(exactGroup({...group,exampleOfficialText:'違う効果。'},raw,new Set(),proof,compile),[]);
 assert.throws(()=>exactGroup(group,raw,new Set(),()=>({...proof(),html:'modified'}),compile));
 console.log('LOCAL_UNKNOWN_GENERATOR_CONTRACT PASS');
+
+// Batch related exact texts without losing distinct print IDs or confusing effect kinds.
+const candidate=(id,text,ids,kind='attack')=>({group:{sharedTaskId:id,exampleOfficialText:text,category:'pokemon',effectKind:kind},records:ids.map(officialCardId=>({officialCardId}))});
+const a=candidate('a','相手の手札をトラッシュし、山札を引く。',['1','2','3']);
+const b=candidate('b','自分の手札をトラッシュし、山札を引く。',['3','4']);
+const c=candidate('c','ダメカンをのせる。',['5']);
+const d=candidate('d','手札をトラッシュし、山札を引く。',['6'],'ability');
+assert.deepEqual(selectBatch([c,b,a,d],1).map(x=>x.group.sharedTaskId),['a','b']);
+assert.deepEqual(selectBatch([c,b,a,d],1,{maxGroups:1}).map(x=>x.group.sharedTaskId),['a']);
+assert.deepEqual(selectBatch([c,b,a,d],1,{maxPrints:3}).map(x=>x.group.sharedTaskId),['a']);
+assert.equal(selectBatch([c,b,a,d],2)[0].group.sharedTaskId,'a');
+assert.deepEqual(selectBatch([],1),[]);
+assert.throws(()=>selectBatch([a],0),/INVALID_RUN_NUMBER/);
+console.log('LOCAL_UNKNOWN_GENERATOR_BATCH PASS');
+
+const mkId=n=>'OFFICIAL_SHARED_MECHANIC_'+String(n).padStart(20,'0');
+const aa=candidate(mkId(1),'相手の手札をトラッシュし、山札を引く。',['1','2','3']);
+const bb=candidate(mkId(2),'自分の手札をトラッシュし、山札を引く。',['3','4']);
+const cc=candidate(mkId(3),'ダメカンをのせる。',['5']);
+const fp='a'.repeat(64),fp2='b'.repeat(64);
+let hist=recordHistory(null,[aa.group,bb.group],'QUARANTINE_FAILED',1,fp,'engine failed');
+assert.equal(hist.groups[mkId(1)].attempts,1);
+assert.equal(hist.groups[mkId(1)].feedback,'engine failed');
+assert.equal(selectBatch([aa,bb,cc],2,{history:hist,fingerprint:fp})[0].group.sharedTaskId,mkId(3));
+assert.equal(selectBatch([aa,bb,cc],2,{history:hist,fingerprint:fp2})[0].group.sharedTaskId,mkId(1));
+hist=recordHistory(hist,[aa.group],'NO_VALID_MODEL_PATCH',1,fp,'retry');
+assert.equal(hist.groups[mkId(1)].attempts,1);
+hist=recordHistory(hist,[aa.group],'QUARANTINE_FAILED',3,fp,'new run');
+assert.equal(hist.groups[mkId(1)].attempts,2);
+hist=recordHistory(hist,[aa.group],'GENERATED_NOT_TESTED',4,fp2,'new source');
+assert.equal(hist.groups[mkId(1)].attempts,1);
+assert.deepEqual(normalizeHistory({schemaVersion:1,groups:{'../../bad':{attempts:1,lastRun:2}}}).groups,{});
+assert.deepEqual(selectBatch([aa],1,{maxPrints:2}),[]);
+assert.equal(sourceFingerprint({'engine/reference-effect-plans.cjs':'a','engine/pokeca_reference_effect_runtime.cjs':'b','scripts/lib/shared-effect-engine-worker.cjs':'c'}).length,64);
+console.log('LOCAL_UNKNOWN_GENERATOR_HISTORY PASS');
+
+// Test the same HTTP transport with a real delayed loopback response and
+// independently verify a bounded deadline for a nonresponding model server.
+async function transportTest(){
+ const http=require('node:http');
+ const server=http.createServer((req,res)=>{
+  let body='';req.on('data',chunk=>body+=chunk);
+  req.on('end',()=>{
+   const input=JSON.parse(body);
+   if(input.mode==='hang')return;
+   setTimeout(()=>{res.writeHead(200,{'content-type':'application/json'});res.end(JSON.stringify({choices:[{message:{content:'ok'}}]}));},60);
+  });
+ });
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  const port=server.address().port;
+  const result=await localCompletion({mode:'delayed'},{port,timeoutMs:1000});
+  assert.equal(result.choices[0].message.content,'ok');
+  await assert.rejects(localCompletion({mode:'hang'},{port,timeoutMs:30}),/LOCAL_MODEL_DEADLINE/);
+ }finally{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
+ console.log('LOCAL_UNKNOWN_GENERATOR_HTTP PASS');
+}
+transportTest().catch(e=>{console.error(e);process.exitCode=1;});
