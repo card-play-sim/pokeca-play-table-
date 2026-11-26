@@ -1066,6 +1066,16 @@ function prepare(r, e, kind) {
     if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
     if(!own.hand.some(valid))return {blocked:'NO_TYPED_COUNTER_COST'};
   }
+  if(m==='MASS_COUNTER_GRAMMAR'){
+    const plan=e.plan,other=frame.game.players[1],own=frame.game.players[0];
+    if(plan.mode==='multiply'){other.active.damage=10;if(other.bench.length)other.bench[0].damage=20;}
+    if(plan.mode==='hand'&&!own.hand.length&&own.deck.length)own.hand.push(own.deck.shift());
+    if(plan.mode==='remaining'){
+      const pool=plan.scope==='active'?[other.active]:plan.scope==='bench'?other.bench:[other.active,...other.bench];
+      if(!pool.some(c=>c.hp>plan.remaining))return {blocked:'NO_REMAINING_HP_POSITIVE_FIXTURE'};
+      for(const c of pool)c.damage=0;
+    }
+  }
   if(m==='MASS_PLACE_COUNTERS'&&e.plan.target==='damagedOpponent'){
     const other=frame.game.players[1];other.active.damage=10;
     for(const mon of other.bench)mon.damage=0;
@@ -1944,6 +1954,31 @@ function verifyCase(t, e) {
         assert(events.some(ev=>ev?.command==='DISCARD'&&attached.every(id=>ev.cardIds.includes(id))));
       }else assert(side.active?.id===source.id&&source.energyCards.every(c=>side.active.energyCards.some(x=>x.id===c.id)));
       assert.deepEqual(Array.from(S.identities(end)),Array.from(S.identities(before)));
+    }
+  }
+  if(e.plan.mechanic==='MASS_COUNTER_GRAMMAR'){
+    const plan=e.plan,action=t.action||o.action,other=before.players[1],own=before.players[0];
+    const targets=plan.scope==='active'?[other.active]:plan.scope==='bench'?other.bench:plan.scope==='choice'?[other.active,...other.bench].filter(c=>action.selections.target.includes(c.id)):[other.active,...other.bench];
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    let positive=0;
+    for(const c of targets){
+      const hit=effectEvents.find(x=>x?.command==='DAMAGE'&&x.targetInstanceId===c.id&&!x.reference)?.amount||0;
+      const expected=plan.mode==='remaining'?Math.max(0,(c.hp-c.damage-hit-plan.remaining)/10):plan.mode==='allocation'?(action.selections.allocation[c.id]||0):plan.mode==='hand'?own.hand.length*plan.unit:plan.mode==='multiply'?(c.damage+hit)/10*plan.unit:plan.amount;
+      const moves=effectEvents.filter(x=>x?.command==='PLACE_DAMAGE_COUNTERS'&&x.targetInstanceId===c.id&&!x.reference);
+      assert.equal(moves.reduce((n,x)=>n+x.counterCount,0),expected);positive+=expected;
+    }
+    if(!positive)return {status:'BLOCKED',reason:'NO_POSITIVE_COUNTER_GRAMMAR_PROOF'};
+    if(plan.mode==='allocation'){
+      assert.equal(Object.values(action.selections.allocation).reduce((a,b)=>a+b,0),plan.amount);
+      const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{allocation:{[other.active.id]:plan.amount+1}}}).ok,false);
+      assert.deepEqual(invalid.getSnapshot(),before);
+    }
+    if(plan.mode==='remaining'&&plan.scope==='active'&&other.active.hp>plan.remaining&&Number(e.damage||0)===0){
+      const lower=JSON.parse(JSON.stringify(before));lower.players[1].active.damage=other.active.hp-plan.remaining+10;
+      if(lower.players[1].active.damage<other.active.hp){
+        const replay=port(lower);assert(replay.dispatch('you',action).ok);
+        assert(!replay.getSnapshot().history.slice(lower.history.length).some(x=>x.details?.command==='PLACE_DAMAGE_COUNTERS'&&!x.details.reference));
+      }
     }
   }
   if(e.plan.mechanic==='MASS_PLACE_COUNTERS'){
