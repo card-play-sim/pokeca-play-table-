@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1118,
-      "missing": 584
+      "connected": 1126,
+      "missing": 576
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1112,
+      "CONNECTED_UNTESTED": 1120,
       "MECHANIC_REQUIRED": 80,
-      "ENGINE_CONNECTION_REQUIRED": 500,
+      "ENGINE_CONNECTION_REQUIRED": 492,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9650,8 +9650,7 @@
       "name": "ヒビキのバクフーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47312.json"
     },
     {
@@ -9843,8 +9842,7 @@
       "name": "ヒビキのバクフーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47371.json"
     },
     {
@@ -10247,8 +10245,7 @@
       "name": "ロケット団のマタドガス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47463.json"
     },
     {
@@ -10282,8 +10279,7 @@
       "name": "ロケット団のポリゴン2",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47475.json"
     },
     {
@@ -10291,8 +10287,7 @@
       "name": "ロケット団のポリゴンZ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47476.json"
     },
     {
@@ -10445,8 +10440,7 @@
       "name": "ロケット団のマタドガス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47509.json"
     },
     {
@@ -11131,8 +11125,7 @@
       "name": "ギガイアス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47667.json"
     },
     {
@@ -12480,8 +12473,7 @@
       "name": "ギガイアス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48039.json"
     },
     {
@@ -21537,13 +21529,13 @@
       "H": {
         "total": 1864,
         "ENGINE_CONNECTED": 1190,
-        "MECHANIC_REQUIRED": 668,
-        "ENGINE_CONNECTION_REQUIRED": 6
+        "MECHANIC_REQUIRED": 667,
+        "ENGINE_CONNECTION_REQUIRED": 7
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1118,
-        "MECHANIC_REQUIRED": 573,
+        "ENGINE_CONNECTED": 1126,
+        "MECHANIC_REQUIRED": 565,
         "ENGINE_CONNECTION_REQUIRED": 7,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21560,7 +21552,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3446,
-    "unconnected": 1627
+    "engineConnected": 3454,
+    "unconnected": 1619
   }
 }
