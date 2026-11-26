@@ -474,6 +474,23 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+
+ // Shared, physically selected Energy transfers. Exact source, holder and
+ // quantity phrases only; entry/switch/knockout-triggered transfers are separate.
+ const movePlan=(source,target,count,extra={})=>({mechanic:'MASS_ATTACHED_ENERGY_MOVE',commands:[...(kind==='ATTACK'&&Number(entry.damage)>0?['DAMAGE']:[]),'MOVE_ENERGY'],source,target,count,optional:false,basic:false,type:null,multi:false,repeated:false,sharedWording:true,...extra});
+ if(kind==='ATTACK'&&/^\d+$/.test(String(entry.damage??'0'))){
+  const selfMove=generic.match(/^このポケモンについている(?:\[([草炎水雷超闘悪鋼])\])?エネルギーを(?:([1-9])個選び、|すべて、)(ベンチポケモン(?:1匹)?)(に好きなように|に)つけ替える。$/);
+  if(selfMove&&(!selfMove[2]||Number(selfMove[2])>1||selfMove[1]))return movePlan('self','ownBench',selfMove[2]?Number(selfMove[2]):null,{type:selfMove[1]||null,multi:selfMove[4]==='に好きなように'});
+  if(generic==='のぞむなら、相手のバトルポケモンについているエネルギーを1個選び、相手のベンチポケモンにつけ替える。')return movePlan('opponentActive','opponentBench',1,{optional:true});
+  if(generic==='相手の場のポケモンについているエネルギーを1個選び、相手の別のポケモンにつけ替える。')return movePlan('opponentField','opponentOther',1);
+ }
+ if(kind==='ABILITY'){
+  const move=generic.match(/^自分の番に(1回|何回でも)使える。自分の場のポケモンについている(基本エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」|エネルギー)を1個選び、(自分の別のポケモン|このポケモン)につけ替える。$/);
+  if(move)return movePlan('ownField',move[4]==='このポケモン'?'self':'ownOther',1,{basic:move[2].includes('基本'),type:move[3]||null,repeated:move[1]==='何回でも'});
+  const benchMove=generic.match(/^自分の番に何回でも使える。自分のベンチポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーを1個選び、バトルポケモンにつけ替える。$/);
+  if(benchMove)return movePlan('ownBench','ownActive',1,{type:benchMove[1],repeated:true});
+ }
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。')return movePlan('ownBench','ownActive',2,{upTo:true});
  // One physical Energy per selected Pokemon; no duplicated destination.
  const benchEach=generic.match(/^自分のベンチポケモン全員に、(山札|トラッシュ)から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚ずつつける。(そして山札を切る。)?$/);
  if(kind==='ATTACK'&&benchEach&&Boolean(benchEach[3])===(benchEach[1]==='山札')&&/^\d+$/.test(String(entry.damage??'0')))
