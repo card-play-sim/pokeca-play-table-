@@ -185242,6 +185242,66 @@
         "htmlSha256": "c43830b81fcdaecaf73a761a362d30abb53cb9bd3bba14f6d7e3f3c2d119583d",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "45758",
+      "name": "グラエナ",
+      "deckName": "グラエナ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45758",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045758_P_GURAENA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "むれでかる",
+          "cost": [
+            "悪"
+          ],
+          "damage": "30+",
+          "text": "自分のベンチに「グラエナ」がいるなら、90ダメージ追加。"
+        },
+        {
+          "name": "おいつめる",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "次の相手の番、このワザを受けたポケモンは、にげられない。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ポチエナ",
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45758.json",
+        "sha256": "2e6ec699f4b1fd23ca10088fd186909630c98f9038816eb845202f901a27ec5b",
+        "htmlSha256": "2e6ec699f4b1fd23ca10088fd186909630c98f9038816eb845202f901a27ec5b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []
