@@ -557,6 +557,11 @@ function requests(g,actor,card,effect){
   const count=Math.min(effect.plan.count,opp.length);cardRequest('target',opp,count,count);
  }
  if(m==='ATTACK_OPTIONAL_RETURN_POKEMON')add('mode','CARD',[{id:'stay',name:'場に残す'},{id:'return',name:'手札にもどす'}],1,1);
+ if(m==='MASS_COUNTER_GRAMMAR'){
+  const plan=effect.plan;
+  if(plan.mode==='allocation')add('allocation','COUNTERS',opp.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),plan.amount,plan.amount);
+  else if(plan.scope==='choice'){const count=Math.min(plan.count,opp.length);cardRequest('target',opp,count,count);}
+ }
  if(m==='MASS_PLACE_COUNTERS'&&['choice','benchChoice'].includes(effect.plan.target)){
   const pool=effect.plan.target==='benchChoice'?o.bench:opp;
   const count=Math.min(1,pool.length);cardRequest('target',pool,count,count);
@@ -1148,6 +1153,16 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_PRIZE_DRAW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
+  case 'MASS_COUNTER_GRAMMAR':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const targets=plan.scope==='active'?[o.active]:plan.scope==='bench'?o.bench:plan.scope==='choice'?field(o).filter(c=>ids('target').includes(id(c))):field(o);
+   for(const mon of targets){
+    const count=plan.mode==='remaining'?Math.max(0,(mon.hp-mon.damage-plan.remaining)/10):plan.mode==='allocation'?(action.selections?.allocation?.[id(mon)]||0):plan.mode==='hand'?p.hand.length*plan.unit:plan.mode==='multiply'?(mon.damage||0)/10*plan.unit:plan.amount;
+    assert(Number.isInteger(count)&&count>=0,'INVALID_COUNTER_GRAMMAR_QUANTITY');
+    if(count)counters(g,actor,mon,count,{attack:true});
+   }
+   break;
+  }
   case 'MASS_PLACE_COUNTERS':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=plan.target==='active'?[o.active]:plan.target==='damagedOpponent'?field(o).filter(c=>c.damage>0):plan.target==='bothAbility'?[...field(p),...field(o)].filter(c=>record(c).abilities.length>0):field(o).filter(c=>plan.target==='all'||ids('target').includes(id(c)));
