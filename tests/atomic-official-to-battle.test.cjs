@@ -70,6 +70,11 @@ for(const mandatory of ['SELECT_EXACT_OFFICIAL_PRINTS',
  'RETAIN_UNRESOLVED_CARDS_IN_ATOMIC_WORK_UNIT',
  'CHECK_PUBLISHED_PWA_BUNDLE'])
  assert(names.includes(mandatory),'missing one-work-unit stage '+mandatory);
+assert(names.indexOf('SELECT_EXACT_OFFICIAL_PRINTS') < names.indexOf('VERIFY_OFFICIAL_FACT_REPAIR_CONTRACT'));
+assert(names.indexOf('VERIFY_OFFICIAL_FACT_REPAIR_CONTRACT') < names.indexOf('REPAIR_UNCOMPILED_FACTS_FROM_OFFICIAL_EVIDENCE'));
+assert(names.indexOf('REPAIR_UNCOMPILED_FACTS_FROM_OFFICIAL_EVIDENCE') < names.indexOf('FETCH_PARSE_AND_COMPILE_WITH_SHARED_ENGINE'));
+assert.deepEqual(steps.find(([name])=>name==='REPAIR_UNCOMPILED_FACTS_FROM_OFFICIAL_EVIDENCE').slice(1),
+ ['node',['scripts/refresh-uncompiled-official-facts.cjs','--apply']]);
 assert(names.indexOf('FETCH_PARSE_AND_COMPILE_WITH_SHARED_ENGINE') <
   names.indexOf('EXECUTE_ALL_CARD_EFFECTS_IN_REAL_ENGINE'));
 assert(names.indexOf('EXECUTE_ALL_CARD_EFFECTS_IN_REAL_ENGINE') <
