@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT']);
+const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -172,6 +172,18 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   if(own.referenceExVDamageBoost?.turn===g.turnNumber&&(isEx||/V(?:MAX|STAR|-UNION)?$/.test(record(mon).name)))amount+=own.referenceExVDamageBoost.amount;
  }
  if(!bench&&find(g,id(mon))?.player.id===other.id)amount+=(own.referenceTypedDamageBoosts||[]).filter(boost=>boost.turn===g.turnNumber&&record(source).facts.types.includes(boost.type)).reduce((sum,boost)=>sum+boost.amount,0);
+ if(!bench&&other.active===mon){
+  const attacker=record(source),defender=record(mon),nonStack=new Set();
+  for(const holder of field(own))for(const a of enabledAbilities(g,holder)){
+   const p=a.plan;if(p.mechanic!=='PASSIVE_TEAM_ATTACK_BOOST')continue;
+   if(p.team&&!attacker.name.startsWith(p.team+'の'))continue;
+   if(p.types.length&&!p.types.some(t=>attacker.facts.types.includes(t)))continue;
+   if(p.evolvedSource&&attacker.facts.stage===0||p.evolvedTarget&&defender.facts.stage===0)continue;
+   if(p.nonStack&&nonStack.has(a.name))continue;
+   if(p.nonStack)nonStack.add(a.name);
+   amount+=p.amount;
+  }
+ }
  const energyPenalty=(source.energyCards||[]).reduce((sum,c)=>sum+(record(c)?.mainPlan?.mechanic==='COLORLESS_MULTI_ENERGY'?record(c).mainPlan.damagePenalty:0),0);
  const outgoing=source.referenceOutgoingDamagePenalty;
  const penalty=energyPenalty+(outgoing?.turn===g.turnNumber?outgoing.amount:0);

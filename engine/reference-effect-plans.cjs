@@ -618,6 +618,11 @@ function plan(entry,kind){
  const prizeDiscount=generic.match(/^自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、\[無色\]エネルギー([1-9])個ぶん少なくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&prizeDiscount)
   return {mechanic:'TOOL_PRIZE_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(prizeDiscount[1]),sharedWording:true};
+ // Continuous active-target attack bonuses: exact printed predicates only.
+ if(kind==='ABILITY'){
+  const aura=generic.match(/^このポケモンがいるかぎり、自分の(ポケモン|「([^「」]+)のポケモン」|\[([草炎水雷超闘悪鋼竜無色])\]ポケモン|\[([草炎水雷超闘悪鋼竜無色])\]または\[([草炎水雷超闘悪鋼竜無色])\]ポケモン|\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモン)が使うワザの、相手のバトル(ポケモン|場の進化ポケモン)へのダメージは「\+([1-9]\d{0,2})」される。(この効果は、この特性を持つポケモンが何匹いても、重ならない。)?$/);
+  if(aura)return {mechanic:'PASSIVE_TEAM_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],amount:Number(aura[8]),team:aura[2]||null,types:[aura[3],aura[4],aura[5],aura[6]].filter(Boolean),evolvedSource:!!aura[6],evolvedTarget:aura[7]==='場の進化ポケモン',nonStack:!!aura[9],sharedWording:true};
+ }
  // Exact continuous Colorless cost reductions; typed requirements are never waived.
  if(kind==='ABILITY'){
   const discardCost=generic.match(/^自分のトラッシュにある「([^「」]+)」の枚数ぶん、このポケモンがワザを使うための\[無色\]エネルギーは少なくなる。$/);

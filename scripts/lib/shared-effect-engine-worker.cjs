@@ -153,6 +153,11 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ if(e.proofTeamBoost){
+  const proof=e.proofTeamBoost;
+  reserve(r=>r.officialCardId===proof.holderPrint&&r.facts.basic,'bench');
+  if(proof.nonStack&&ensure(deckIndex,records.get(proof.holderPrint),2))requirements.push({side:0,zone:'bench',printId:proof.holderPrint});
+ }
  if(e.proofContextCost){
   const proof=e.proofContextCost;
   if(proof.mode==='discardName')reserve(r=>r.name===proof.name,'discard');
@@ -442,6 +447,20 @@ function prepare(r, e, kind) {
     const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:r.officialCardId});
     if(frame.blocked)return frame;
     return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
+  }
+  if(m==='PASSIVE_TEAM_ATTACK_BOOST'){
+    const plan=e.plan;
+    if(!r.facts.basic||plan.evolvedSource||plan.evolvedTarget)return {blocked:'TEAM_BOOST_REQUIRES_EVOLUTION_FIXTURE'};
+    const matches=x=>x.category==='pokemon'&&x.facts.basic&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&x.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&a.cost.length>0&&a.cost.every(t=>t==='無色'))&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
+    // Prefer a real, ability-free attacker so only the printed aura changes damage.
+    const attacker=[...records.values()].find(matches);
+    if(!attacker)return {blocked:'NO_TEAM_BOOST_ATTACKER'};
+    const i=attacker.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&a.cost.length>0&&a.cost.every(t=>t==='無色'));
+    const trigger={...attacker.attacks[i],effectIndex:i,proofTeamBoost:{holderPrint:r.officialCardId,nonStack:plan.nonStack}},t=prepare(attacker,trigger,'attack');
+    if(t.blocked)return t;
+    const state=t.port.getSnapshot(),holders=state.players[0].bench.filter(c=>E.getReferenceEffectRecord(c)?.officialCardId===r.officialCardId);
+    if(holders.length!==(plan.nonStack?2:1))return {blocked:'NO_EXACT_TEAM_BOOST_HOLDERS'};
+    return {...t,trigger,boostHolderIds:holders.map(c=>c.id)};
   }
   if(m==='PASSIVE_CONTEXT_COST_DISCOUNT'){
     const plan=e.plan;
@@ -2879,6 +2898,22 @@ function verifyCase(t, e) {
     assert(e.plan.attacker==='ex'?source.name.endsWith('ex'):source.abilities.length>0);
     assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===before.players[1].active.id&&ev.amount===0));
     assert.equal(after.players[1].active.damage,before.players[1].active.damage);
+  }
+  if(e.plan.mechanic==='PASSIVE_TEAM_ATTACK_BOOST'){
+    const plan=e.plan,action=t.action||o.action,baseline=JSON.parse(JSON.stringify(before)),own=baseline.players[0];
+    const holders=own.bench.filter(c=>t.boostHolderIds.includes(c.id));
+    assert.equal(holders.length,plan.nonStack?2:1);
+    for(const mon of holders){
+      assert(!mon.energyCards?.length&&!mon.tools?.length&&!mon.evolutionCards?.length);
+      const card={...mon};for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];
+      own.hand.push(card);
+    }
+    own.bench=own.bench.filter(c=>!t.boostHolderIds.includes(c.id));
+    assert.deepEqual(S.identities(before),S.identities(baseline));
+    const replay=port(baseline);assert(replay.dispatch('you',action).ok);
+    verifyPrintedAttack(baseline,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);
+    assert.deepEqual(S.identities(before),S.identities(after));
   }
   if(e.plan.mechanic==='PASSIVE_CONTEXT_COST_DISCOUNT'){
     const plan=e.plan,baseline=JSON.parse(JSON.stringify(before)),[own,other]=baseline.players;
