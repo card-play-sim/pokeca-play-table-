@@ -70,7 +70,11 @@ function batchSearchCandidate(c,plan){
 }
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
- if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.nameExact&&r?.name!==plan.nameExact)return false;
+ if(plan.retreatCost!==undefined&&r?.facts?.retreatCost!==plan.retreatCost)return false;
+ if(plan.resistanceType&&!r?.facts?.resistance?.types?.includes(plan.resistanceType))return false;
+ if(plan.category==='any')return !!r;
  if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='categorySet')return plan.categories.includes(r?.category);
  if(plan.energyTypes&&(c.kind!=='energy'||c.isSpecial||!plan.energyTypes.includes(c.energyType)))return false;
@@ -229,7 +233,11 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
-   if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?typeOf(r)===plan.energyType:r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+   if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?(!plan.energyType||typeOf(r)===plan.energyType):r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+   if(plan.nameExact&&r.name!==plan.nameExact)return false;
+   if(plan.retreatCost!==undefined&&r.facts.retreatCost!==plan.retreatCost)return false;
+   if(plan.resistanceType&&!r.facts.resistance?.types?.includes(plan.resistanceType))return false;
+   if(plan.category==='any')return true;
    if(plan.nameContains&&!r.name.includes(plan.nameContains))return false;
    if(plan.category==='categorySet')return plan.categories.includes(r.category);
    if(plan.energyTypes&&(!isBasicEnergy(r)||!plan.energyTypes.includes(typeOf(r))))return false;
