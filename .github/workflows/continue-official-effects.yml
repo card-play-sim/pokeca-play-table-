@@ -16,6 +16,8 @@ on:
       - 'scripts/stage-card-auto-connect.cjs'
       - 'scripts/atomic-battle-connection-ledger.cjs'
       - 'scripts/run-atomic-official-battle-intake.cjs'
+      - 'scripts/refresh-uncompiled-official-facts.cjs'
+      - 'tests/issue122-official-facts-refresh.test.cjs'
       - 'engine/reference-effect-plans.cjs'
       - 'engine/pokeca_reference_effect_runtime.cjs'
       - 'ui/engine.bundle.js'
