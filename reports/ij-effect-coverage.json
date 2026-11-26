@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 513,
-      "missing": 357
+      "connected": 514,
+      "missing": 356
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 512,
+      "CONNECTED_UNTESTED": 513,
       "MECHANIC_REQUIRED": 45,
-      "ENGINE_CONNECTION_REQUIRED": 311,
+      "ENGINE_CONNECTION_REQUIRED": 310,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -21470,8 +21470,7 @@
       "name": "レポーター",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50932.json"
     },
     {
@@ -21496,9 +21495,9 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1211,
-        "MECHANIC_REQUIRED": 646,
-        "ENGINE_CONNECTION_REQUIRED": 7
+        "ENGINE_CONNECTED": 1214,
+        "MECHANIC_REQUIRED": 642,
+        "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
@@ -21509,8 +21508,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 512,
-        "MECHANIC_REQUIRED": 349,
+        "ENGINE_CONNECTED": 513,
+        "MECHANIC_REQUIRED": 348,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21520,7 +21519,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3507,
-    "unconnected": 1566
+    "engineConnected": 3511,
+    "unconnected": 1562
   }
 }

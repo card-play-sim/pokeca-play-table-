@@ -4,20 +4,20 @@
   "source": "EXACT_OFFICIAL_HTML_ID_IMAGE_EFFECT_AND_ENGINE_RECEIPTS",
   "publicBattleVerified": false,
   "finalization": "ONLY_AFTER_REQUIRED_CI_MAIN_PAGES_AND_PUBLISHED_BATTLE",
-  "totalSelected": 1616,
-  "qualifiedForPublication": 50,
-  "workRemaining": 1566,
+  "totalSelected": 1566,
+  "qualifiedForPublication": 4,
+  "workRemaining": 1562,
   "counts": {
-    "QUALIFIED_PREPUBLICATION": 50,
-    "NEEDS_ENGINE_EXECUTION": 18,
-    "NEEDS_SHARED_MECHANIC": 1540,
+    "QUALIFIED_PREPUBLICATION": 4,
+    "NEEDS_ENGINE_EXECUTION": 19,
+    "NEEDS_SHARED_MECHANIC": 1535,
     "NEEDS_OFFICIAL_PARSER": 8,
     "EVIDENCE_BLOCKED": 0,
     "EFFECT_UNRESOLVED": 0,
     "PENDING_OFFICIAL_FETCH": 0
   },
   "allCardEffectsConnectedAndExecuted": false,
-  "sharedMechanicGroups": 854,
+  "sharedMechanicGroups": 847,
   "sharedMechanicWorklist": [
     {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
@@ -1727,33 +1727,6 @@
         "data/effect-extensions/evidence/47366.json",
         "data/effect-extensions/evidence/48532.json",
         "data/effect-extensions/evidence/48749.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F1EEBEE4C08A85980574",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。",
-      "printedDamage": "150",
-      "energyCost": [
-        "草",
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47539",
-        "47983",
-        "47991",
-        "48758"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47539.json",
-        "data/effect-extensions/evidence/47983.json",
-        "data/effect-extensions/evidence/47991.json",
-        "data/effect-extensions/evidence/48758.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -3949,28 +3922,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_DDFFA908453059A179C0",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。",
-      "printedDamage": "170",
-      "energyCost": [
-        "水"
-      ],
-      "officialCardIds": [
-        "45621",
-        "45678",
-        "45685"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45621.json",
-        "data/effect-extensions/evidence/45678.json",
-        "data/effect-extensions/evidence/45685.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E1BD44D3649BF59443DC",
       "category": "pokemon",
       "effectKind": "attack",
@@ -5870,28 +5821,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45154.json",
         "data/effect-extensions/evidence/46666.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4FD754656E894CCE392E",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札を5枚引く。",
-      "printedDamage": "180",
-      "energyCost": [
-        "草",
-        "炎",
-        "超"
-      ],
-      "officialCardIds": [
-        "46280",
-        "46328"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46280.json",
-        "data/effect-extensions/evidence/46328.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -10264,22 +10193,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_21D414E23CE4422B7C20",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50932"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50932.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2206226F26E93F261687",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13536,24 +13449,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_933F7BB3677F7EB6EE4B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。",
-      "printedDamage": "80",
-      "energyCost": [
-        "超"
-      ],
-      "officialCardIds": [
-        "50251"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50251.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_940530AF04FB327E7C9E",
       "category": "tool",
       "effectKind": "tool",
@@ -14844,24 +14739,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C40D4AB1877F96347156",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札を下から3枚引く。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46447"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46447.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_C674D9DFDA65F6A256FF",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16128,22 +16005,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50093.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EDE3AE498D252A54EFFF",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46131"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46131.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -18326,11 +18187,6 @@
     },
     {
       "officialCardId": "50931",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50932",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
     },
@@ -22556,8 +22412,8 @@
     },
     {
       "officialCardId": "46131",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "NEEDS_ENGINE_EXECUTION",
+      "reason": "ENGINE_EXECUTION_FAILED"
     },
     {
       "officialCardId": "46151",
@@ -22750,11 +22606,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46280",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46282",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -22831,11 +22682,6 @@
     },
     {
       "officialCardId": "46327",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46328",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -23088,11 +22934,6 @@
       "officialCardId": "46446",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46447",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46450",
@@ -24385,203 +24226,19 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45396",
+      "officialCardId": "46447",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
-      "officialCardId": "47579",
+      "officialCardId": "46280",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
-      "officialCardId": "46508",
+      "officialCardId": "46328",
       "state": "QUALIFIED_PREPUBLICATION"
     },
     {
-      "officialCardId": "47950",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45589",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45675",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45705",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45758",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45761",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45776",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "45863",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "46397",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "46646",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "46679",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "46803",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48730",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49013",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49698",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50011",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50108",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50121",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50711",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50884",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50891",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50927",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47311",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47312",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47321",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47371",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47463",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47475",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47476",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47509",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47575",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47619",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47667",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47834",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47946",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47989",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "47997",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48039",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48457",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48561",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48563",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48874",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49417",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "48812",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49178",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "49278",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
-      "officialCardId": "50909",
+      "officialCardId": "50932",
       "state": "QUALIFIED_PREPUBLICATION"
     }
   ]

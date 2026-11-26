@@ -1,25 +1,48 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_97EB8034817BB2B4:e3bd9ca7fcf46a45a8f3db281dd02eb74c1b4abe39da28e09f1e0636e3536533",
   "taskFingerprint": "e3bd9ca7fcf46a45a8f3db281dd02eb74c1b4abe39da28e09f1e0636e3536533",
-  "executionFingerprint": "b165dd12a1318fd7229f7f243950e4e1f19dd3da1839e32f1b5bad732cc6246c",
-  "attemptId": "cff97ae3-6bab-487d-84fe-bbac42de0e81",
-  "status": "BLOCKED",
+  "executionFingerprint": "95d2ce4c3d4a98faf0272d253d7859f96cd6fbf455849f348fe1388b323e5ff7",
+  "attemptId": "829d7a17-0bb3-445b-876b-f94bfb6b8d61",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46280:attack:ジルコンロード:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_HAND_ACQUISITION",
+        "commands": [
+          "DAMAGE",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "46328:attack:ジルコンロード:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_HAND_ACQUISITION",
+        "commands": [
+          "DAMAGE",
+          "DRAW"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       }
     ]
   },
-  "checksum": "a7c9bbd5d3028632d7cd68a908f3ec131934b0e30938d6d8900d208776cfa899"
+  "checksum": "5e5912004065decd93914df3fb86814b94b5cee7af5fa7d655052d2f52100bfa"
 }

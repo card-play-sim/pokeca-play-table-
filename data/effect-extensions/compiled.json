@@ -43588,6 +43588,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46447",
+      "name": "ベラカスex",
+      "deckName": "ベラカスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46447",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046447_P_BERAKASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さかさまドロー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札を下から3枚引く。",
+          "effectId": "reference-46447-attack-0",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DRAW"
+            ],
+            "mode": "bottom",
+            "amount": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "サイコキネシス",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "相手のバトルポケモンについているエネルギーの数×90ダメージ追加。",
+          "effectId": "reference-46447-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentEnergy",
+            "type": null,
+            "unit": 90,
+            "base": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 250,
+        "evolvesFrom": "シガロコ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46447.json",
+        "sha256": "a86130e2a45863dfe0cc0fc4442364fb069c291f9a21bd2fc92e1b3b6c91e7ab",
+        "htmlSha256": "a86130e2a45863dfe0cc0fc4442364fb069c291f9a21bd2fc92e1b3b6c91e7ab",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47161",
       "name": "パルデア ウパー",
       "deckName": "パルデア ウパー",
@@ -50283,6 +50366,172 @@
         "path": "data/effect-extensions/evidence/46274.json",
         "sha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
         "htmlSha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46280",
+      "name": "モトトカゲex",
+      "deckName": "モトトカゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46280",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046280_P_MOTOTOKAGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブレイクスルー",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46280-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        },
+        {
+          "name": "ジルコンロード",
+          "cost": [
+            "草",
+            "炎",
+            "超"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の山札を5枚引く。",
+          "effectId": "reference-46280-attack-1",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "mode": "draw",
+            "amount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46280.json",
+        "sha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
+        "htmlSha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46328",
+      "name": "モトトカゲex",
+      "deckName": "モトトカゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46328",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046328_P_MOTOTOKAGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブレイクスルー",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46328-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        },
+        {
+          "name": "ジルコンロード",
+          "cost": [
+            "草",
+            "炎",
+            "超"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の山札を5枚引く。",
+          "effectId": "reference-46328-attack-1",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "mode": "draw",
+            "amount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46328.json",
+        "sha256": "eb9dbcc1980ea8ce9da0a3733bf2dd2d1c3c628b55f157dd168b886c36c65b5e",
+        "htmlSha256": "eb9dbcc1980ea8ce9da0a3733bf2dd2d1c3c628b55f157dd168b886c36c65b5e",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -209150,6 +209399,58 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50932",
+      "name": "レポーター",
+      "deckName": "レポーター",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50932",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M7/050932_T_REPOTA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50932.json",
+        "sha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
+        "htmlSha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
+        "textSha256": "92a1d2ce1d2fe4fecfe4497f2096826f9eb869f71c42f0ea3c2327727511c300"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_EFFECT_SEQUENCE",
+        "commands": [
+          "DRAW",
+          "REVEAL"
+        ],
+        "steps": [
+          {
+            "op": "draw",
+            "amount": 2
+          },
+          {
+            "op": "revealHand",
+            "side": "opponent"
+          },
+          {
+            "op": "peekTop",
+            "side": "opponent",
+            "amount": 1
+          }
+        ],
+        "origin": null,
+        "activeOnly": false,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -209701,21 +210002,6 @@
         "sha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "htmlSha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "textSha256": "78bf194258225eec3dbf337912c994bc921d0a66c152c827974e43003546e6f6"
-      }
-    },
-    {
-      "officialCardId": "46131",
-      "name": "ビリオとネア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46131.json",
-        "sha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "htmlSha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "textSha256": "981338e57cfc48f8b1eedc33ffab7be0bae357b0c2a7206003a88f3ec3d9f3b8"
       }
     },
     {
@@ -211169,11 +211455,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46447",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47495",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -211459,17 +211740,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46280",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46323",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46328",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
