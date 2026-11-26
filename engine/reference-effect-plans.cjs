@@ -872,7 +872,18 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true)||evolutionTransferFallback(entry,kind,generic);
+}
+// Compose an already verified, exact transfer grammar with the canonical
+// evolution-entry window. Existing plans always take precedence.
+function evolutionTransferFallback(entry,kind,text){
+ if(kind!=='ABILITY')return null;
+ const prefix='自分の番に、このカードを手札から出して進化させたとき、1回使える。';
+ if(!text.startsWith(prefix))return null;
+ const body=text.slice(prefix.length);
+ const transfer=massSharedPlan(entry,kind,'自分の番に1回使える。'+body);
+ if(transfer?.mechanic!=='MASS_ZONE_TRANSFER'||transfer.destination!=='hand'||transfer.activeOnly||transfer.repeated)return null;
+ return {...transfer,origin:'evolve'};
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
