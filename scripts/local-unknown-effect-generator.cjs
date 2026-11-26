@@ -53,16 +53,53 @@ function excerpts(source,group,file){
 }
 // Related official-text groups are processed together; rotate the seed in
 // high-impact order, without conflating differing conditions or effect kinds.
-function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64}={}){
+// Persist only bounded, inert outcome data. A previous model artifact never
+// supplies executable code, release approval, or a reason to skip a print.
+function normalizeHistory(raw){
+ const result={schemaVersion:1,groups:{}};
+ if(raw?.schemaVersion!==1||!raw.groups||typeof raw.groups!=='object')return result;
+ for(const [id,row] of Object.entries(raw.groups).slice(0,10000)){
+  if(!/^OFFICIAL_SHARED_MECHANIC_[A-F0-9]{20}$/.test(id)||!row||typeof row!=='object')continue;
+  const attempts=Number(row.attempts),lastRun=Number(row.lastRun);
+  if(!Number.isSafeInteger(attempts)||attempts<0||attempts>100000||!Number.isSafeInteger(lastRun)||lastRun<0)continue;
+  const status=['GENERATED_NOT_TESTED','NO_VALID_MODEL_PATCH','QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED','QUARANTINE_FAILED'].includes(row.status)?row.status:'QUARANTINE_FAILED';
+  const fingerprint=/^[a-f0-9]{64}$/.test(row.fingerprint||'')?row.fingerprint:null;
+  result.groups[id]={attempts,lastRun,status,fingerprint,feedback:typeof row.feedback==='string'?row.feedback.slice(-1800):''};
+ }
+ return result;
+}
+function sourceFingerprint(sources){return sha(JSON.stringify(allowed.map(f=>[f,sha(sources[f])])));}
+function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
+ const history=normalizeHistory(raw),n=Number(runNumber);
+ assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
+ for(const group of selected){
+  const id=group.sharedTaskId;if(!/^OFFICIAL_SHARED_MECHANIC_[A-F0-9]{20}$/.test(id))continue;
+  const old=history.groups[id],same=old?.fingerprint===fingerprint;
+  const attempts=(same?old.attempts:0)+(same&&old.lastRun===n?0:1);
+  history.groups[id]={attempts,lastRun:n,status:result,fingerprint,feedback:String(feedback).slice(-1800)};
+ }
+ return normalizeHistory(history);
+}
+function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},fingerprint=null}={}){
  const ordered=[...candidates].sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
  if(!ordered.length)return [];
  const n=Number(runNumber);
  assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
- const seed=ordered[(n-1)%ordered.length],terms=['山札','手札','トラッシュ','ベンチ','エネルギー','ダメカン','サイド','コイン','きぜつ','進化','回復','入れ替え','特性','ワザ','ダメージ','どく','マヒ','ねむり','こんらん','やけど'];
+ const prior=normalizeHistory(history).groups;
+ const attempts=x=>prior[x.group.sharedTaskId]?.fingerprint===fingerprint?prior[x.group.sharedTaskId].attempts:0;
+ // Every current-source unattempted group is eligible before retries. Within
+ // that class prioritize high-impact groups; deterministic rotation breaks ties.
+ const eligible=ordered.filter(x=>new Set(x.records.map(r=>String(r.officialCardId))).size<=maxPrints);
+ if(!eligible.length)return [];
+ const min=Math.min(...eligible.map(attempts));
+ const pool=eligible.filter(x=>attempts(x)===min);
+ const maxCount=Math.max(...pool.map(x=>x.records.length));
+ const high=pool.filter(x=>x.records.length===maxCount);
+ const seed=high[(n-1)%high.length],terms=['山札','手札','トラッシュ','ベンチ','エネルギー','ダメカン','サイド','コイン','きぜつ','進化','回復','入れ替え','特性','ワザ','ダメージ','どく','マヒ','ねむり','こんらん','やけど'];
  const text=x=>x.group.exampleOfficialText;
  const features=x=>terms.filter(w=>text(x).includes(w));
  const key=new Set(features(seed));
- const related=ordered.filter(x=>x!==seed&&x.group.category===seed.group.category&&x.group.effectKind===seed.group.effectKind)
+ const related=ordered.filter(x=>x!==seed&&attempts(x)===min&&x.group.category===seed.group.category&&x.group.effectKind===seed.group.effectKind)
   .map(x=>({x,overlap:features(x).filter(w=>key.has(w)).length,score:features(x).filter(w=>key.has(w)).length/Math.max(1,new Set([...key,...features(x)]).size)}))
   .filter(x=>x.overlap>=2&&x.score>=0.5)
   .sort((a,b)=>b.score-a.score||b.x.records.length-a.x.records.length||a.x.group.sharedTaskId.localeCompare(b.x.group.sharedTaskId));
@@ -100,12 +137,22 @@ async function main(){
  }
  write(path.join(out,'evidence-blockers.json'),{state:'EVIDENCE_BLOCKED_NOT_ADOPTED',groups:evidenceFailures});
  if(!candidates.length){write(path.join(out,'result.json'),{state:'NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP'});return;}
- const batch=selectBatch(candidates,process.env.GITHUB_RUN_NUMBER||1);
- const selectedGroups=batch.map(x=>x.group),records=[...new Map(batch.flatMap(x=>x.records).map(r=>[String(r.officialCardId),r])).values()];
  const sources=Object.fromEntries(allowed.map(f=>[f,fs.readFileSync(f,'utf8')]));
+ const fingerprint=sourceFingerprint(sources);
+ const historyPath=process.env.MODEL_HISTORY_PATH;
+ let history=normalizeHistory(null);
+ if(historyPath&&fs.existsSync(historyPath)&&fs.statSync(historyPath).size<=8*1024*1024){
+  try{history=normalizeHistory(read(historyPath));}catch(e){console.warn('INVALID_PREVIOUS_HISTORY',String(e).slice(0,300));}
+ }
+ const runNumber=process.env.GITHUB_RUN_NUMBER||1;
+ const batch=selectBatch(candidates,runNumber,{history,fingerprint});
+ if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
+ const selectedGroups=batch.map(x=>x.group),records=[...new Map(batch.flatMap(x=>x.records).map(r=>[String(r.officialCardId),r])).values()];
+ const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
  const targetIds=records.map(r=>String(r.officialCardId));
- write(path.join(out,'selected.json'),{group:selectedGroups[0],groups:selectedGroups,targetIds,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'});
+ write(path.join(out,'selected.json'),{group:selectedGroups[0],groups:selectedGroups,targetIds,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'});
  let proposal,changed,feedback=process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
+ if(!feedback){const previous=history.groups[selectedGroups[0].sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
  for(let attempt=1;attempt<=2;attempt++){
   try{
    proposal=await generate(selectedGroups,sources,feedback);write(path.join(out,'model-output-'+attempt+'.json'),proposal);
@@ -113,7 +160,7 @@ async function main(){
    break;
   }catch(e){feedback=String(e);write(path.join(out,'rejected-'+attempt+'.json'),{reason:feedback});}
  }
- if(!changed){write(path.join(out,'result.json'),{state:'NO_VALID_MODEL_PATCH',targetIds});return;}
+ if(!changed){saveHistory('NO_VALID_MODEL_PATCH',feedback);write(path.join(out,'result.json'),{state:'NO_VALID_MODEL_PATCH',targetIds});return;}
  // Only the isolated checkout receives generated source. No source is executed
  // in this process, and no protected files or evidence come from the model.
  for(const f of allowed){
@@ -125,7 +172,8 @@ async function main(){
  const adopted=new Set(intake.records.map(r=>String(r.officialCardId)));
  for(const row of records)if(!adopted.has(String(row.officialCardId)))intake.records.push(row);
  write(path.join(scratch,'data/effect-extensions/intake.json'),intake);
+ saveHistory('GENERATED_NOT_TESTED','');
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={applyEdits,exactGroup,excerpts,selectBatch};
+module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint};
