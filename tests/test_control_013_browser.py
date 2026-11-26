@@ -345,6 +345,8 @@ async def main():
     assert set(selected).isdisjoint(card['id'] for card in after['players'][0]['deck'])
     revealed=any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selected for ev in events)
     assert revealed==f['e']['plan'].get('reveal',True)
+    if f['e']['plan'].get('optional'):
+     assert option['requests'][0]['min']==0, 'OPTIONAL_SEARCH_MUST_ALLOW_SKIP'
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
    if m=='ATTACK_ACCELERATE_BASIC_ENERGY':
     plan=f['e']['plan']
