@@ -149,6 +149,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
  if(m==='SCALED_ATTACK_DAMAGE'){
@@ -816,6 +817,14 @@ function prepare(r, e, kind) {
       if(!card)return {blocked:'NO_TYPED_ATTACK_PAYMENT_FIXTURE'};
       own.active.energyCards.push(card);
     }
+  }
+  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'){
+    const own=frame.game.players[0],plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
+    for(const energy of [...own.active.energyCards])if(energy.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1);own.deck.push(energy);}
+    if(!own.active.energyCards.some(eligible)){
+      const i=own.deck.findIndex(eligible);if(i>=0)own.active.energyCards.push(own.deck.splice(i,1)[0]);
+    }
+    if(!own.active.energyCards.some(eligible))return {blocked:'NO_OPTIONAL_ENERGY_BONUS_FIXTURE'};
   }
   if(m==='SUPPORTER_SWITCH_EX_HEAL'){
     const active=frame.game.players[0].active;
@@ -2670,6 +2679,24 @@ function verifyCase(t, e) {
     const defender = E.getReferenceEffectRecord(before.players[1].active);
     assert(defender.abilities.some(ability => ability.effectId === e.effectId));
     verifyPrintedAttack(before, after, t.trigger, Number(t.trigger.damage), e.plan.amount);
+  }
+  if(e.plan.mechanic==='ATTACK_OPTIONAL_ENERGY_BONUS'){
+    const own=before.players[0],plan=e.plan,action=t.action||o.action;
+    const eligible=own.active.energyCards.filter(c=>!c.isSpecial&&(!plan.type||c.energyType===plan.type));
+    if(!eligible.length)return {status:'BLOCKED',reason:'NO_OPTIONAL_ENERGY_BONUS_PROOF'};
+    for(const bonus of [false,true]){
+      const chosen=bonus?(plan.all?own.active.energyCards:eligible.slice(0,1)).map(c=>c.id):[];
+      const selections=plan.all?{mode:[bonus?'bonus':'base']}:{energy:chosen};
+      const replay=port(before);assert(replay.dispatch('you',{...action,selections}).ok);
+      const result=replay.getSnapshot(),side=result.players[0];
+      verifyPrintedAttack(before,result,e,plan.base+(bonus?plan.bonus:0));
+      assert(chosen.every(id=>side[plan.destination].some(c=>c.id===id)));
+      assert.deepEqual(Array.from(side.active.energyCards,c=>c.id),Array.from(own.active.energyCards.filter(c=>!chosen.includes(c.id)),c=>c.id));
+      const events=result.history.slice(before.history.length).map(ev=>ev.details);
+      assert.equal(events.filter(ev=>ev?.command==='SHUFFLE_DECK'&&!ev.reference).length,bonus&&plan.destination==='deck'?1:0);
+      assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(result)));
+    }
+    if(!plan.all){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{energy:[eligible[0].id,eligible[0].id]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));}
   }
   if ((t.trigger || e).plan.mechanic === "ATTACK_DISCARD_BENCH_ENERGY_BONUS") {
     const effect = t.trigger || e;

@@ -220,6 +220,12 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_OPTIONAL_ENERGY_BONUS':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];sel=option['action']['selections']
+    picked=([c['id'] for c in own['active']['energyCards']] if sel['mode']==['bonus'] else []) if plan['all'] else sel['energy']
+    assert set(picked)<={c['id'] for c in resolved[plan['destination']]}
+    assert [c['id'] for c in resolved['active']['energyCards']]==[c['id'] for c in own['active']['energyCards'] if c['id'] not in picked]
+    assert sum(ev.get('details',{}).get('command')=='SHUFFLE_DECK' and not ev.get('details',{}).get('reference') for ev in events)==int(bool(picked) and plan['destination']=='deck')
    if m=='INSPECTED_OPPONENT_HAND_TRANSFER':
     plan=f['e']['plan'];other=before['players'][1];resolved=after['players'][1]
     picked=option['action']['selections']['opponentCards']

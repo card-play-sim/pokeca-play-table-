@@ -429,6 +429,11 @@ function requests(g,actor,card,effect){
   const count=Math.min(effect.plan.count,targets.length);
   add('targetIds','POKEMON',targets.map(mon=>({instanceId:id(mon),name:mon.name})),count,count);
  }
+ if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'){
+  const plan=effect.plan,pool=(card.energyCards||[]).filter(c=>plan.all||energyUnits({...card,energyCards:[c]}).some(unit=>unit.includes(plan.type)));
+  if(plan.all)add('mode','CARD',[{id:'base',name:'追加ダメージなし'},...(pool.length?[{id:'bonus',name:'エネルギーをすべて移動して追加ダメージ'}]:[])],1,1);
+  else cardRequest('energy',pool,0,Math.min(1,pool.length));
+ }
  if(m==='ATTACK_DISCARD_BENCH_ENERGY_BONUS'){
   const attached=p.bench.flatMap(mon=>mon.energyCards||[]);
   cardRequest('energy',attached,0,Math.min(effect.plan.maxDiscard,attached.length));
@@ -1380,6 +1385,20 @@ function applyPlan(g,actor,card,effect,action){
    if(action.targetIds?.length)damage(g,actor,target(),plan.benchDamage,{bench:true});
    break;
   case 'ATTACK_IGNORE_DAMAGE_RULES':damage(g,actor,o.active,Number(effect.damage)||0,plan);break;
+  case 'ATTACK_OPTIONAL_ENERGY_BONUS':{
+   const chosen=plan.all?(ids('mode')[0]==='bonus'?(card.energyCards||[]).map(id):[]):ids('energy');
+   const moved=[];
+   for(const ident of chosen){
+    const index=card.energyCards.findIndex(c=>id(c)===ident&&(plan.all||energyUnits({...card,energyCards:[c]}).some(unit=>unit.includes(plan.type))));
+    assert(index>=0,'OPTIONAL_ENERGY_COST_CHANGED');moved.push(card.energyCards.splice(index,1)[0]);
+   }
+   if(moved.length){
+    p[plan.destination].push(...moved);
+    event(g,actor,plan.destination==='discard'?'DISCARD':plan.destination==='hand'?'RETURN_TO_HAND':'RETURN_TO_DECK',{cardIds:chosen,fromZone:'attached',sourceInstanceId:id(card)});
+    if(plan.destination==='deck')shuffle(g,p);
+   }
+   damage(g,actor,o.active,plan.base+(moved.length?plan.bonus:0));break;
+  }
   case 'ATTACK_DISCARD_BENCH_ENERGY_BONUS':{
     const chosen=ids('energy');
     assert(chosen.length<=plan.maxDiscard,'BENCH_ENERGY_TOO_MANY');
