@@ -1,5 +1,5 @@
 {
-  "baseCommit": "1aec45182af5c7209c66af1e031527298779fc81",
+  "baseCommit": "73743cf3b7d26dfe59292009a1012517e7ad90ae",
   "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
   "gaps": [
     {
@@ -11,7 +11,7 @@
       "reason": "Values have same structure but are not reference-equal:\n\n[\n  'reference-0-7',\n  'reference-0-30',\n  'reference-0-44',\n  'reference-0-29',\n  'reference-0-49',\n  'reference-0-9',\n  'reference-0-15',\n  'reference-0-53',\n  'reference-0-4',\n  'reference-0-54',\n  'reference-0-48',\n  'reference-0-8',\n  'reference-0-56',\n  'reference-0-28',\n  'reference-0-26',\n  'reference-0-36',\n  'reference-0-17',\n  'reference-0-41',\n  'reference-0-0',\n  'reference-0-20',\n  'reference-0-21',\n  'reference-0-37',\n  'reference-0-51',\n  'reference-0-5',\n  'reference-0-50',\n  'reference-0-35',\n  'reference-0-58',\n  'reference-0-25',\n  'reference-0-11',\n  'reference-0-6',\n  'reference-0-40',\n  'reference-0-42',\n  'reference-0-10',\n  'reference-0-27',\n  'reference-0-14',\n  'reference-0-43',\n  'reference-0-23',\n  'reference-0-34',\n  'reference-0-39',\n  'reference-0-57',\n  'reference-0-24'\n]\n",
       "details": {
         "mechanic": "MASS_EFFECT_SEQUENCE",
-        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'reference-0-7',\n  'reference-0-30',\n  'reference-0-44',\n  'reference-0-29',\n  'reference-0-49',\n  'reference-0-9',\n  'reference-0-15',\n  'reference-0-53',\n  'reference-0-4',\n  'reference-0-54',\n  'reference-0-48',\n  'reference-0-8',\n  'reference-0-56',\n  'reference-0-28',\n  'reference-0-26',\n  'reference-0-36',\n  'reference-0-17',\n  'reference-0-41',\n  'reference-0-0',\n  'reference-0-20',\n  'reference-0-21',\n  'reference-0-37',\n  'reference-0-51',\n  'reference-0-5',\n  'reference-0-50',\n  'reference-0-35',\n  'reference-0-58',\n  'reference-0-25',\n  'reference-0-11',\n  'reference-0-6',\n  'reference-0-40',\n  'reference-0-42',\n  'reference-0-10',\n  'reference-0-27',\n  'reference-0-14',\n  'reference-0-43',\n  'reference-0-23',\n  'reference-0-34',\n  'reference-0-39',\n  'reference-0-57',\n  'reference-0-24'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1641:16)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n\n[\n  'reference-0-7',\n  'reference-0-30',\n  'reference-0-44',\n  'reference-0-29',\n  'reference-0-49',\n  'reference-0-9',\n  'reference-0-15',\n  'reference-0-53',\n  'reference-0-4',\n  'reference-0-54',\n  'reference-0-48',\n  'reference-0-8',\n  'reference-0-56',\n  'reference-0-28',\n  'reference-0-26',\n  'reference-0-36',\n  'reference-0-17',\n  'reference-0-41',\n  'reference-0-0',\n  'reference-0-20',\n  'reference-0-21',\n  'reference-0-37',\n  'reference-0-51',\n  'reference-0-5',\n  'reference-0-50',\n  'reference-0-35',\n  'reference-0-58',\n  'reference-0-25',\n  'reference-0-11',\n  'reference-0-6',\n  'reference-0-40',\n  'reference-0-42',\n  'reference-0-10',\n  'reference-0-27',\n  'reference-0-14',\n  'reference-0-43',\n  'reference-0-23',\n  'reference-0-34',\n  'reference-0-39',\n  'reference-0-57',\n  'reference-0-24'\n]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1653:16)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -32,7 +32,7 @@
       "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
       "details": {
         "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1666:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1678:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -44,7 +44,7 @@
       "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
       "details": {
         "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1666:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1678:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -65,7 +65,7 @@
       "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
       "details": {
         "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1666:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1678:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -105,6 +105,24 @@
       "details": null
     },
     {
+      "id": "47350",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47350:ability:よくばりオーダー:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47376",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47376:ability:よくばりオーダー:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
       "id": "47453",
       "kind": "attack",
       "index": 0,
@@ -131,7 +149,7 @@
       "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
       "details": {
         "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1666:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1678:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -143,7 +161,7 @@
       "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
       "details": {
         "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1666:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1678:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -173,7 +191,7 @@
       "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
       "details": {
         "mechanic": "ATTACK_DAMAGE_REDUCTION",
-        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3453:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3478:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     },
     {
@@ -194,7 +212,7 @@
       "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
       "details": {
         "mechanic": "ATTACK_DAMAGE_REDUCTION",
-        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3453:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3563:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3478:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3588:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
       }
     }
   ]

@@ -24140,6 +24140,99 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46264",
+      "name": "クレッフィ",
+      "deckName": "クレッフィ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46264",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046264_P_KUREFFUI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さしこみドロー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札を1枚トラッシュする。その後、自分の山札を2枚引く。",
+          "effectId": "reference-46264-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "steps": [
+              {
+                "op": "discardOwnHand",
+                "amount": 1
+              },
+              {
+                "op": "draw",
+                "amount": 2
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ひっかける",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-46264-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46264.json",
+        "sha256": "2ea8ffd564d94c50b152972746d21ca7d3c736e037ed78488be0f21c7d6d7cd9",
+        "htmlSha256": "2ea8ffd564d94c50b152972746d21ca7d3c736e037ed78488be0f21c7d6d7cd9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46265",
       "name": "ジュラルドン",
       "deckName": "ジュラルドン",
@@ -29147,6 +29240,100 @@
         "path": "data/effect-extensions/evidence/46554.json",
         "sha256": "01fe530c6dccff39a3ca1349a64dac6dddc8406ed349464a2ea1f46194409a43",
         "htmlSha256": "01fe530c6dccff39a3ca1349a64dac6dddc8406ed349464a2ea1f46194409a43",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46555",
+      "name": "トロピウス",
+      "deckName": "トロピウス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46555",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046555_P_TOROPIUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじつのみのり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札を1枚トラッシュする。その後、自分の山札を3枚引く。",
+          "effectId": "reference-46555-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "steps": [
+              {
+                "op": "discardOwnHand",
+                "amount": 1
+              },
+              {
+                "op": "draw",
+                "amount": 3
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "かぜおこし",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-46555-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46555.json",
+        "sha256": "ef918c5cc8416067bf39f4f128ad223bcc6533da879351abec21fdcf499532dc",
+        "htmlSha256": "ef918c5cc8416067bf39f4f128ad223bcc6533da879351abec21fdcf499532dc",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -48972,6 +49159,95 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45900",
+      "name": "ガチグマ アカツキ",
+      "deckName": "ガチグマ アカツキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45900",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045900_P_GACHIGUMAAKATSUKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッドバイト",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "相手のバトルポケモンにのっているダメカンの数×30ダメージ追加。",
+          "effectId": "reference-45900-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentCounters",
+            "type": null,
+            "unit": 30,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "けいけんそく",
+          "text": "自分の番に、このカードを手札からベンチに出したとき、1回使える。自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。",
+          "effectId": "reference-45900-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "hand",
+            "type": "闘",
+            "limit": 2,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true,
+            "origin": "bench"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": null,
+        "retreatCost": 4,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45900.json",
+        "sha256": "314036eb006c70ca8e459a1171d6b40c1319446294dcd0e05496bb7236a255e7",
+        "htmlSha256": "314036eb006c70ca8e459a1171d6b40c1319446294dcd0e05496bb7236a255e7",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45911",
       "name": "イイネイヌex",
       "deckName": "イイネイヌex",
@@ -52489,6 +52765,95 @@
         "path": "data/effect-extensions/evidence/46714.json",
         "sha256": "73d5a95ac57e62fd6b30a42d2707acf984e6d6bc34429c6772f58af9efc15562",
         "htmlSha256": "73d5a95ac57e62fd6b30a42d2707acf984e6d6bc34429c6772f58af9efc15562",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46746",
+      "name": "ガチグマ アカツキ",
+      "deckName": "ガチグマ アカツキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46746",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046746_P_GACHIGUMAAKATSUKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッドバイト",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "相手のバトルポケモンにのっているダメカンの数×30ダメージ追加。",
+          "effectId": "reference-46746-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentCounters",
+            "type": null,
+            "unit": 30,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "けいけんそく",
+          "text": "自分の番に、このカードを手札からベンチに出したとき、1回使える。自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。",
+          "effectId": "reference-46746-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "hand",
+            "type": "闘",
+            "limit": 2,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true,
+            "origin": "bench"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": null,
+        "retreatCost": 4,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46746.json",
+        "sha256": "cdbad5b0085a32ced1459da55f723014fc546ceac25269d5be119276edf69d81",
+        "htmlSha256": "cdbad5b0085a32ced1459da55f723014fc546ceac25269d5be119276edf69d81",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -209202,6 +209567,728 @@
         "activeOnly": false,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "47259",
+      "name": "マリィのオーロンゲex",
+      "deckName": "マリィのオーロンゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47259",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVOM/047259_P_MARIINOORONGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "シャドーバレット",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "180",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-47259-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パンクアップ",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分の山札から「基本[悪]エネルギー」を5枚まで選び、自分の「マリィのポケモン」に好きなようにつける。そして山札を切る。",
+          "effectId": "reference-47259-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "悪",
+            "limit": 5,
+            "target": "own",
+            "holderType": null,
+            "team": "マリィ",
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "マリィのギモー",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47259.json",
+        "sha256": "73cb7db5f8eed57924d32b8b580b05303ea5f8814b500b257821b435be4562cf",
+        "htmlSha256": "73cb7db5f8eed57924d32b8b580b05303ea5f8814b500b257821b435be4562cf",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50003",
+      "name": "マリィのオーロンゲex",
+      "deckName": "マリィのオーロンゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50003",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/050003_P_MARIINOORONGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "シャドーバレット",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "180",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50003-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "パンクアップ",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。自分の山札から「基本[悪]エネルギー」を5枚まで選び、自分の「マリィのポケモン」に好きなようにつける。そして山札を切る。",
+          "effectId": "reference-50003-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "悪",
+            "limit": 5,
+            "target": "own",
+            "holderType": null,
+            "team": "マリィ",
+            "multi": true,
+            "heal": null,
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 320,
+        "evolvesFrom": "マリィのギモー",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50003.json",
+        "sha256": "fc3efa6041a74dfe38ebbd415088182f5011416669317ff0b90c6ffad9e3eda1",
+        "htmlSha256": "fc3efa6041a74dfe38ebbd415088182f5011416669317ff0b90c6ffad9e3eda1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49131",
+      "name": "ガチグマ アカツキ",
+      "deckName": "ガチグマ アカツキ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49131",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049131_P_GACHIGUMAAKATSUKI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッドバイト",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "相手のバトルポケモンにのっているダメカンの数×30ダメージ追加。",
+          "effectId": "reference-49131-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentCounters",
+            "type": null,
+            "unit": 30,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "けいけんそく",
+          "text": "自分の番に、このカードを手札からベンチに出したとき、1回使える。自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。",
+          "effectId": "reference-49131-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "zone": "hand",
+            "type": "闘",
+            "limit": 2,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true,
+            "origin": "bench"
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": null,
+        "retreatCost": 4,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49131.json",
+        "sha256": "2016800ae95fb00ba27e47aa085bd2d1d1aff13a36af0d1f395dc27de362acec",
+        "htmlSha256": "2016800ae95fb00ba27e47aa085bd2d1d1aff13a36af0d1f395dc27de362acec",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49229",
+      "name": "クレッフィ",
+      "deckName": "クレッフィ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49229",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049229_P_KUREFFUI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さしこみドロー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札を1枚トラッシュする。その後、自分の山札を2枚引く。",
+          "effectId": "reference-49229-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "steps": [
+              {
+                "op": "discardOwnHand",
+                "amount": 1
+              },
+              {
+                "op": "draw",
+                "amount": 2
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ひっかける",
+          "cost": [
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-49229-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49229.json",
+        "sha256": "6bb451c9b6fdcc752b09c33502390fb9c132dd8e9f709ec59d799751f92532cf",
+        "htmlSha256": "6bb451c9b6fdcc752b09c33502390fb9c132dd8e9f709ec59d799751f92532cf",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49305",
+      "name": "トロピウス",
+      "deckName": "トロピウス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49305",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049305_P_TOROPIUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かじつのみのり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札を1枚トラッシュする。その後、自分の山札を3枚引く。",
+          "effectId": "reference-49305-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DISCARD",
+              "DRAW"
+            ],
+            "steps": [
+              {
+                "op": "discardOwnHand",
+                "amount": 1
+              },
+              {
+                "op": "draw",
+                "amount": 3
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "かぜおこし",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-49305-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49305.json",
+        "sha256": "85bfd98cd6e2452365f5af1753607237210233c7806580ccca8dbd637c8a43b0",
+        "htmlSha256": "85bfd98cd6e2452365f5af1753607237210233c7806580ccca8dbd637c8a43b0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48632",
+      "name": "メガズルズキンex",
+      "deckName": "メガズルズキンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48632",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048632_P_MZURUZUKINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アウトローレッグ",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手の手札からオモテを見ないで1枚選び、トラッシュする。相手の山札を上から1枚トラッシュする。",
+          "effectId": "reference-48632-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "steps": [
+              {
+                "op": "blindDiscardOpponent",
+                "amount": 1,
+                "side": "opponent"
+              },
+              {
+                "op": "mill",
+                "side": "opponent",
+                "amount": 1
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきトサカ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを5個のせる。",
+          "effectId": "reference-48632-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "ズルッグ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48632.json",
+        "sha256": "b47a8880d3294fa5a4952560f29e807af74e32fb9b78062a98d159e6135ad2ac",
+        "htmlSha256": "b47a8880d3294fa5a4952560f29e807af74e32fb9b78062a98d159e6135ad2ac",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49991",
+      "name": "メガズルズキンex",
+      "deckName": "メガズルズキンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49991",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049991_P_MZURUZUKINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アウトローレッグ",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手の手札からオモテを見ないで1枚選び、トラッシュする。相手の山札を上から1枚トラッシュする。",
+          "effectId": "reference-49991-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "steps": [
+              {
+                "op": "blindDiscardOpponent",
+                "amount": 1,
+                "side": "opponent"
+              },
+              {
+                "op": "mill",
+                "side": "opponent",
+                "amount": 1
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきトサカ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを5個のせる。",
+          "effectId": "reference-49991-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "ズルッグ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49991.json",
+        "sha256": "1165365bf9bb20c8571c92b1ceb518a2f891c28a2da58d41555b459a9be45111",
+        "htmlSha256": "1165365bf9bb20c8571c92b1ceb518a2f891c28a2da58d41555b459a9be45111",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50001",
+      "name": "メガズルズキンex",
+      "deckName": "メガズルズキンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50001",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/050001_P_MZURUZUKINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アウトローレッグ",
+          "cost": [
+            "悪",
+            "悪",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手の手札からオモテを見ないで1枚選び、トラッシュする。相手の山札を上から1枚トラッシュする。",
+          "effectId": "reference-50001-attack-0",
+          "plan": {
+            "mechanic": "MASS_EFFECT_SEQUENCE",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "steps": [
+              {
+                "op": "blindDiscardOpponent",
+                "amount": 1,
+                "side": "opponent"
+              },
+              {
+                "op": "mill",
+                "side": "opponent",
+                "amount": 1
+              }
+            ],
+            "origin": null,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "はんげきトサカ",
+          "text": "このポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを5個のせる。",
+          "effectId": "reference-50001-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_ACTIVE_HIT_RETALIATION",
+            "commands": [
+              "PLACE_DAMAGE_COUNTERS"
+            ],
+            "status": null,
+            "counterCount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 330,
+        "evolvesFrom": "ズルッグ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50001.json",
+        "sha256": "d853284e95e6004dae886c21d5f478f9f6f50fa2d5427d274089f7891bd10212",
+        "htmlSha256": "d853284e95e6004dae886c21d5f478f9f6f50fa2d5427d274089f7891bd10212",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -210481,11 +211568,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46264",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46271",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -210592,11 +211674,6 @@
     },
     {
       "officialCardId": "46550",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46555",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -211168,7 +212245,7 @@
     {
       "officialCardId": "44963",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44969",
@@ -211406,11 +212483,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45900",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45901",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -211562,11 +212634,6 @@
     },
     {
       "officialCardId": "46739",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46746",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
