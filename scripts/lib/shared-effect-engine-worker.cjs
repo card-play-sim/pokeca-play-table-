@@ -284,7 +284,27 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_BOARD_BONUS'){
-  if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains')reserve(r=>mon(r,null,0)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name)),'bench');
+  if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
+   const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
+   if(!reserve(r=>named(r)&&r.facts.basic,'bench')){
+    const line=record=>{
+     if(record.facts.basic)return [record];
+     const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
+     const previous=parent&&line(parent);return previous?[...previous,record]:null;
+    };
+    for(const chain of legal.filter(named).map(line).filter(x=>x&&x.length>1).sort((a,b)=>a.length-b.length)){
+     const original=manifest.decks[deckIndex].cards.map(c=>({...c}));
+     const reserved=new Set(reservedPrints.get(deckIndex)||[]);
+     if(chain.every(record=>ensure(deckIndex,record))){
+      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+      requirements.namedBenchChain=chain.map(record=>record.officialCardId);
+      break;
+     }
+     manifest.decks[deckIndex].cards=original;reservedPrints.set(deckIndex,reserved);
+    }
+   }
+  }
   if(plan.predicate==='opponentType'||plan.predicate==='opponentResistance'||plan.predicate==='opponentTera'){
    const matches=r=>plan.predicate==='opponentType'?r.facts.types.includes(plan.type):plan.predicate==='opponentResistance'?!!r.facts.resistance?.types.includes(plan.type):r.facts.teraBenchProtection===true;
    reserve(r=>mon(r,null,0)&&matches(r),'active',1);
@@ -337,7 +357,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  return requirements;
 }
 function kindAttackCost(e,type){return (e.cost||[]).filter(t=>t===type||t==='無色').length;}
-function evolveTeraFixture(pp,chain){
+function evolveTeraFixture(pp,chain,requireTera=true){
         const base=pp.getSnapshot().players[0].bench.find(c=>E.getReferenceEffectRecord(c).officialCardId===chain[0]);
         if(!base)return {blocked:'NO_TERA_EVOLUTION_BASE'};
         const initial=Array.from(S.identities(pp.getSnapshot()));
@@ -357,7 +377,7 @@ function evolveTeraFixture(pp,chain){
           }
         }
         assert.deepEqual(Array.from(S.identities(pp.getSnapshot())),initial);
-        assert(pp.getSnapshot().players[0].bench.some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true));
+        assert(pp.getSnapshot().players[0].bench.some(c=>E.getReferenceEffectRecord(c).officialCardId===chain.at(-1)&&(!requireTera||E.getReferenceEffectRecord(c).facts.teraBenchProtection===true)));
         return {port:pp};
 }
 function prepare(r, e, kind) {
@@ -946,6 +966,11 @@ function prepare(r, e, kind) {
     for(const mon of targets)mon.damage=Math.min(mon.hp-10,Math.max(10,e.plan.amount+10));
   }
   if(m==='MASS_BOARD_BONUS'){
+    if(fixtureRequirements.namedBenchChain){
+      const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.namedBenchChain,false);
+      if(evolved.blocked)return evolved;
+      frame.game=evolved.port.getSnapshot();
+    }
     const g=frame.game,[own,other]=g.players,plan=e.plan;
     // Only the special-energy predicate keeps a real attached special energy.
     for(const card of [...own.active.energyCards])if(card.isSpecial&&plan.predicate!=='ownSpecialEnergy'){
@@ -1910,7 +1935,14 @@ function verifyCase(t, e) {
       case 'allDamagedBench':own.bench[0].damage=0;break;
       case 'ownBenchNamed':case 'ownBenchContains':{
         for(let i=own.bench.length-1;i>=0;i--)if(nameMatches(own.bench[i])){
-          const c=own.bench.splice(i,1)[0];own.deck.push(...c.energyCards,...c.tools,c);c.energyCards=[];c.energies=[];c.tools=[];c.damage=0;
+          const c=own.bench.splice(i,1)[0];
+          const raw=card=>{
+            const out=JSON.parse(JSON.stringify(card));
+            if(out.evolutionCards?.length){assert(out.validationBase,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,out.validationBase);}
+            for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','evolutionCards','validationBase','entryWindow','referenceEvolutionWindow'])delete out[key];
+            return out;
+          };
+          own.deck.push(...(c.energyCards||[]),...(c.tools||[]),...(c.evolutionCards||[]).map(raw),raw(c));
         }break;
       }
       case 'ownStadium':case 'stadiumContains':own.deck.push(start.stadium);start.stadium=null;start.stadiumOwner=null;break;
