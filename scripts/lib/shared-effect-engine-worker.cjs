@@ -839,6 +839,21 @@ function prepare(r, e, kind) {
     for(const c of own.deck.filter(c=>c.kind==='energy').slice(0,2)){own.deck.splice(own.deck.indexOf(c),1);target.energyCards.push(c);}
     if(!target.energyCards.length)return {blocked:'NO_MEGA_HEAL_ENERGY_FIXTURE'};
   }
+  if(m==='MASS_ATTACHED_ENERGY_MOVE'){
+    const plan=e.plan,[own,other]=frame.game.players,side=plan.source.startsWith('opponent')?other:own;
+    const sources=plan.source==='self'?[own.active]:plan.source==='opponentActive'?[other.active]:plan.source==='ownBench'?own.bench:[side.active,...side.bench];
+    const target=plan.target==='self'?own.active:plan.target==='ownActive'?own.active:null;
+    const holder=sources.find(c=>c&&c!==target);
+    if(!holder)return {blocked:'NO_MOVE_SOURCE'};
+    const eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
+    const want=Math.min(plan.count??3,3);
+    while(holder.energyCards.filter(eligible).length<want){
+      const index=side.deck.findIndex(eligible);
+      if(index<0)break;
+      holder.energyCards.push(side.deck.splice(index,1)[0]);
+    }
+    if(!holder.energyCards.some(eligible))return {blocked:'NO_MOVE_ENERGY_FIXTURE'};
+  }
   if(m==='MASS_ENERGY_ROUTE'){
     if(e.plan.requiresTera&&fixtureRequirements.teraChain){
       const tera=evolveTeraFixture(port(frame.game),fixtureRequirements.teraChain);
@@ -1534,6 +1549,27 @@ function verifyCase(t, e) {
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
       const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(closed));
     }
+  }
+  if(e.plan.mechanic==='MASS_ATTACHED_ENERGY_MOVE'){
+    const plan=e.plan,action=t.action||o.action,side=plan.source.startsWith('opponent')?1:0;
+    const prior=before.players[side],resolved=after.players[side],chosen=action.selections.energy;
+    assert(chosen.length>0);
+    const all=[prior.active,...prior.bench],next=[resolved.active,...resolved.bench];
+    for(const [i,id] of chosen.entries()){
+      const source=all.find(c=>c.energyCards.some(e=>e.id===id));
+      assert(source);
+      const energy=source.energyCards.find(e=>e.id===id);
+      assert(!plan.basic||!energy.isSpecial);
+      if(plan.type&&!energy.isSpecial)assert.equal(energy.energyType,plan.type);
+      const target=plan.target==='self'?t.sourceId:plan.target==='ownActive'?prior.active.id:action.selections['moveTo'+(plan.multi?i:0)][0];
+      assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id));
+      assert(!next.find(c=>c?.id===source.id)?.energyCards.some(e=>e.id===id));
+      assert(effectEvents.some(x=>x?.command==='MOVE_ENERGY'&&x.energyId===id&&x.sourceInstanceId===source.id&&x.targetInstanceId===target));
+    }
+    assert.equal(prior.normalEnergyAttached,resolved.normalEnergyAttached);
+    assert.deepEqual(S.identities(before),S.identities(after));
+    if(plan.optional){const skip=port(before);assert(skip.dispatch('you',{...action,selections:{energy:[],moveTo0:[]}}).ok);assert(!skip.getSnapshot().history.slice(before.history.length).some(x=>x.details?.command==='MOVE_ENERGY'&&!x.details.reference));}
+    if(action.type==='attack_turn'&&Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
   }
   if(e.plan.mechanic==='MASS_ENERGY_ROUTE'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],energy=action.selections.energy;
