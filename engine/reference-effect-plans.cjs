@@ -429,7 +429,7 @@ function massSharedPlan(entry,kind,text){
 }
 // Compose only complete, anchored, reviewed Japanese clauses. The initial
 // damage is resolved once; the ordered instructions never infer omitted text.
-function sequencePlan(entry,kind,text){
+function sequencePlan(entry,kind,text,extended=false){
  const attack=kind==='ATTACK',ability=kind==='ABILITY',trainer=kind==='MAIN'&&['item','supporter'].includes(entry.category);
  const printed=String(entry.damage??'0').normalize('NFKC');
  if(!(attack||ability||trainer)||attack&&!/^\d+$/.test(printed))return null;
@@ -442,9 +442,16 @@ function sequencePlan(entry,kind,text){
  const raw=body.match(/[^。]+。/g);
  if(!raw||raw.join('')!==body||raw.length>3)return null;
  const steps=[];
- for(const clause of raw){
+ // The extended grammar is a fallback only: previously compiled plans keep
+ // their exact representation. Every clause must match a reviewed operation.
+ if(extended&&!trainer)return null;
+ for(const [index,original] of raw.entries()){
+  const clause=extended&&index>0?original.replace(/^その後、/,''):original;
   let m;
   if((m=clause.match(/^自分の山札を([1-9])枚引く。$/)))steps.push({op:'draw',amount:Number(m[1])});
+  else if(extended&&index>0&&steps.at(-1)?.op==='draw'&&(m=clause.match(/^自分の手札が([1-9]\d?)枚以上あるなら、さらに([1-9])枚引く。$/)))steps.push({op:'drawIfHand',threshold:Number(m[1]),amount:Number(m[2])});
+  else if(extended&&clause==='相手の手札を見る。')steps.push({op:'revealHand',side:'opponent'});
+  else if(extended&&(m=clause.match(/^相手の山札を上から([1-9]\d?)枚見て、もとにもどす。$/)))steps.push({op:'peekTop',side:'opponent',amount:Number(m[1])});
   else if((m=clause.match(/^(自分|相手)の山札を上から([1-9]\d?)枚トラッシュする。$/)))steps.push({op:'mill',side:m[1]==='自分'?'own':'opponent',amount:Number(m[2])});
   else if((attack||ability)&&(m=clause.match(/^このポケモンのHPを「([1-9]\d{0,2})」回復する。$/)))steps.push({op:'healSelf',amount:Number(m[1])});
   else if(attack&&clause==='相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。'&&Number(printed)>0)steps.push({op:'drain'});
@@ -462,8 +469,10 @@ function sequencePlan(entry,kind,text){
  // A complete sequence or a distinct entry-origin/single-effect pattern only.
  if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
  if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op)))return null;
- if(trainer&&steps.some(s=>!['draw','mill'].includes(s.op)))return null;
- const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({draw:['DRAW'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
+ if(trainer&&steps.some(s=>!(extended?['draw','mill','drawIfHand','revealHand','peekTop']:['draw','mill']).includes(s.op)))return null;
+ if(extended&&(!steps.some(s=>['drawIfHand','revealHand','peekTop'].includes(s.op))&&!raw.some((s,i)=>i>0&&s.startsWith('その後、'))))return null;
+ if(extended&&steps[0]?.op!=='draw')return null;
+ const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({draw:['DRAW'],drawIfHand:['DRAW'],revealHand:['REVEAL'],peekTop:['REVEAL'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
  return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...new Set(commands)],steps,origin,activeOnly,sharedWording:true};
 }
 function plan(entry,kind){
@@ -794,7 +803,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true);
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
