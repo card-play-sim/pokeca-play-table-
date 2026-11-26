@@ -67709,72 +67709,6 @@
       }
     },
     {
-      "officialCardId": "47780",
-      "name": "ディアルガ",
-      "deckName": "ディアルガ",
-      "set": "OFFICIAL_PAGE_REFERENCE",
-      "cardNumber": "",
-      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47780",
-      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047780_P_DEIARUGA.jpg",
-      "category": "pokemon",
-      "deckPrintAdopted": false,
-      "attacks": [
-        {
-          "name": "ビーム",
-          "cost": [
-            "鋼"
-          ],
-          "damage": "30",
-          "text": ""
-        },
-        {
-          "name": "クロノバースト",
-          "cost": [
-            "鋼",
-            "鋼",
-            "無色"
-          ],
-          "damage": "80+",
-          "text": "のぞむなら、このポケモンについているエネルギーをすべて山札にもどして切り、80ダメージ追加。"
-        }
-      ],
-      "abilities": [],
-      "rulesText": [],
-      "text": "",
-      "facts": {
-        "hp": 140,
-        "evolvesFrom": null,
-        "retreatCost": 2,
-        "types": [
-          "鋼"
-        ],
-        "weakness": {
-          "types": [
-            "炎"
-          ],
-          "value": "×2"
-        },
-        "resistance": {
-          "types": [
-            "草"
-          ],
-          "value": "-30"
-        },
-        "stage": 0,
-        "basic": true,
-        "prizeCount": 1,
-        "rulePokemon": false,
-        "teraBenchProtection": false
-      },
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47780.json",
-        "sha256": "9e4f30e2feca1f7b0481eed60621f4d9d8fa9dd0a1cc4da8ab0def5ddce0c4ca",
-        "htmlSha256": "9e4f30e2feca1f7b0481eed60621f4d9d8fa9dd0a1cc4da8ab0def5ddce0c4ca",
-        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      }
-    },
-    {
       "officialCardId": "47805",
       "name": "ダダリン",
       "deckName": "ダダリン",
@@ -182369,6 +182303,59 @@
         "sha256": "d948a25240d5ae953629084b8ad82f6686bcf9b70ac55cd703e020d962659db8",
         "htmlSha256": "d948a25240d5ae953629084b8ad82f6686bcf9b70ac55cd703e020d962659db8",
         "textSha256": "51cc7193d9828e1f3353d0fbbfa3732e3e30b564e14e4706292f8f9b05e72949"
+      }
+    },
+    {
+      "officialCardId": "50904",
+      "name": "いちげきウーラオス",
+      "deckName": "いちげきウーラオス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50904",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M7/050904_P_ICHIGEKIURAOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あんこくきょうだ",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "120+",
+          "text": "のぞむなら、このポケモンについている[悪]エネルギーを1個選び、トラッシュする。その場合、140ダメージ追加。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ダクマ",
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50904.json",
+        "sha256": "6b0e53b54663d7dbf28684af56fe5634900e169b3a55f46b8689852d452e7ac4",
+        "htmlSha256": "6b0e53b54663d7dbf28684af56fe5634900e169b3a55f46b8689852d452e7ac4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     }
   ],

@@ -48670,6 +48670,91 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46234",
+      "name": "ザルード",
+      "deckName": "ザルード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46234",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046234_P_ZARUDO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リーフドレイン",
+          "cost": [
+            "草"
+          ],
+          "damage": "20",
+          "text": "このポケモンのHPを「20」回復する。",
+          "effectId": "reference-46234-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 20
+          }
+        },
+        {
+          "name": "ジャングルウィップ",
+          "cost": [
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "のぞむなら、このポケモンについているエネルギーをすべて手札にもどし、80ダメージ追加。",
+          "effectId": "reference-46234-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
+            "commands": [
+              "RETURN_TO_HAND",
+              "DAMAGE"
+            ],
+            "all": true,
+            "type": null,
+            "destination": "hand",
+            "base": 80,
+            "bonus": 80,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46234.json",
+        "sha256": "eb13e4b1f3c60fbb0e93d80e3c85c59672f9d7c897703542fa444c0be8fe2cdd",
+        "htmlSha256": "eb13e4b1f3c60fbb0e93d80e3c85c59672f9d7c897703542fa444c0be8fe2cdd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46238",
       "name": "ウガツホムラ",
       "deckName": "ウガツホムラ",
@@ -199979,6 +200064,74 @@
         "sharedWording": true,
         "nameContains": "ロケット団"
       }
+    },
+    {
+      "officialCardId": "50904",
+      "name": "いちげきウーラオス",
+      "deckName": "いちげきウーラオス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50904",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M7/050904_P_ICHIGEKIURAOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あんこくきょうだ",
+          "cost": [
+            "闘",
+            "闘",
+            "無色"
+          ],
+          "damage": "120+",
+          "text": "のぞむなら、このポケモンについている[悪]エネルギーを1個選び、トラッシュする。その場合、140ダメージ追加。",
+          "effectId": "reference-50904-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "all": false,
+            "type": "悪",
+            "destination": "discard",
+            "base": 120,
+            "bonus": 140,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ダクマ",
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50904.json",
+        "sha256": "6b0e53b54663d7dbf28684af56fe5634900e169b3a55f46b8689852d452e7ac4",
+        "htmlSha256": "6b0e53b54663d7dbf28684af56fe5634900e169b3a55f46b8689852d452e7ac4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -202403,11 +202556,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46234",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46240",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -202624,11 +202772,6 @@
     },
     {
       "officialCardId": "47673",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47780",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

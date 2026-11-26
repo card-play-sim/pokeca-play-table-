@@ -10,22 +10,22 @@
     },
     "J": {
       "total": 870,
-      "connected": 481,
-      "missing": 389
+      "connected": 482,
+      "missing": 388
     }
   },
   "counts": {
     "I": {
       "CONNECTED_UNTESTED": 1094,
-      "MECHANIC_REQUIRED": 84,
-      "ENGINE_CONNECTION_REQUIRED": 514,
+      "MECHANIC_REQUIRED": 83,
+      "ENGINE_CONNECTION_REQUIRED": 515,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 480,
+      "CONNECTED_UNTESTED": 481,
       "MECHANIC_REQUIRED": 47,
-      "ENGINE_CONNECTION_REQUIRED": 341,
+      "ENGINE_CONNECTION_REQUIRED": 340,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -3278,8 +3278,8 @@
       "name": "ディアルガ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/47780.json"
     },
     {
@@ -21308,8 +21308,7 @@
       "name": "いちげきウーラオス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50904.json"
     },
     {
@@ -21574,21 +21573,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1161,
-        "MECHANIC_REQUIRED": 702,
+        "ENGINE_CONNECTED": 1162,
+        "MECHANIC_REQUIRED": 701,
         "ENGINE_CONNECTION_REQUIRED": 1
       },
       "I": {
         "total": 1702,
         "ENGINE_CONNECTED": 1100,
-        "MECHANIC_REQUIRED": 596,
-        "ENGINE_CONNECTION_REQUIRED": 2,
+        "MECHANIC_REQUIRED": 594,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 480,
-        "MECHANIC_REQUIRED": 383,
+        "ENGINE_CONNECTED": 481,
+        "MECHANIC_REQUIRED": 382,
         "EVIDENCE_UNVERIFIED": 4,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
@@ -21598,7 +21597,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3379,
-    "unconnected": 1694
+    "engineConnected": 3381,
+    "unconnected": 1692
   }
 }

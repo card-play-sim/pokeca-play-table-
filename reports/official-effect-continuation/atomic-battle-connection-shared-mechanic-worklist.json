@@ -1601,31 +1601,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AB88E33C6D707FC7A21F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、このポケモンについている[水]エネルギーを1個手札にもどし、80ダメージ追加。",
-      "printedDamage": "120+",
-      "energyCost": [
-        "水",
-        "水"
-      ],
-      "officialCardIds": [
-        "50106",
-        "50197",
-        "50213",
-        "50219"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50106.json",
-        "data/effect-extensions/evidence/50197.json",
-        "data/effect-extensions/evidence/50213.json",
-        "data/effect-extensions/evidence/50219.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_ACA69165EA80BCEAFC05",
       "category": "pokemon",
       "effectKind": "ability",
@@ -6788,28 +6763,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5C6876A1F60D492617FB",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、このポケモンについているエネルギーをすべて山札にもどして切り、80ダメージ追加。",
-      "printedDamage": "80+",
-      "energyCost": [
-        "鋼",
-        "鋼",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47780",
-        "49218"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47780.json",
-        "data/effect-extensions/evidence/49218.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5DFD4A95D86DEA561783",
       "category": "pokemon",
       "effectKind": "attack",
@@ -7497,28 +7450,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45181.json",
         "data/effect-extensions/evidence/45182.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_79CB0C7855237E52FB2C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、このポケモンについているエネルギーをすべてトラッシュし、130ダメージ追加。",
-      "printedDamage": "200+",
-      "energyCost": [
-        "雷",
-        "雷",
-        "雷"
-      ],
-      "officialCardIds": [
-        "48463",
-        "47828"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48463.json",
-        "data/effect-extensions/evidence/47828.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -15328,26 +15259,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9FBEB92F5C4CEE82A615",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、このポケモンについている[悪]エネルギーを1個選び、トラッシュする。その場合、140ダメージ追加。",
-      "printedDamage": "120+",
-      "energyCost": [
-        "闘",
-        "闘",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50904"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50904.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A04B3128B2089DE83E1B",
       "category": "pokemon",
       "effectKind": "attack",
@@ -16778,26 +16689,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D33E02D7093B0685BEB4",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、このポケモンについているエネルギーをすべて手札にもどし、80ダメージ追加。",
-      "printedDamage": "80+",
-      "energyCost": [
-        "草",
-        "草",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46234"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46234.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D5D14BB9200EC60EA2E9",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18169,5 +18060,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1694
+  "unfinishedPrints": 1692
 }
