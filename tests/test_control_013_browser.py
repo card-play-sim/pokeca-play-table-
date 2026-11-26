@@ -220,6 +220,14 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='INSPECTED_OPPONENT_HAND_TRANSFER':
+    plan=f['e']['plan'];other=before['players'][1];resolved=after['players'][1]
+    picked=option['action']['selections']['opponentCards']
+    assert picked and set(picked)<={c['id'] for c in other['hand']}
+    assert [c['id'] for c in resolved['hand']]==[c['id'] for c in other['hand'] if c['id'] not in picked]
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in other['hand']] for ev in events)
+    if plan['destination']=='discard': assert set(picked)<={c['id'] for c in resolved['discard']}
+    else: assert [c['id'] for c in resolved['deck']]==[c['id'] for c in other['deck']]+picked
    if m=='ATTACK_BASIC_ENERGY_MOVE':
     own=before['players'][0];resolved=after['players'][0]
     energy=option['action']['selections']['energy'][0];target=option['action']['selections']['attachTo'][0]
@@ -582,8 +590,19 @@ async def main():
     else:assert side['active']['id']==source['id']
    if m=='MASS_PLACE_COUNTERS':
     plan=f['e']['plan']
-    ids=[c['id'] for c in [before['players'][1]['active'],*before['players'][1]['bench']]] if plan['target']=='all' else option['action']['selections']['target']
+    own=before['players'][0];other=before['players'][1];targets=[other['active'],*other['bench']]
+    if plan['target']=='all': ids=[c['id'] for c in targets]
+    elif plan['target']=='active': ids=[other['active']['id']]
+    elif plan['target']=='damagedOpponent': ids=[c['id'] for c in targets if c['damage']>0]
+    elif plan['target']=='bothAbility': ids=await page.evaluate("cs=>cs.filter(c=>Pokeca.getReferenceEffectRecord(c).abilities.length>0).map(c=>c.id)",[own['active'],*own['bench'],*targets])
+    else: ids=option['action']['selections']['target']
+    if plan['target']=='benchChoice': assert set(ids)<={c['id'] for c in other['bench']}
     assert all(any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==ident and ev['details'].get('counterCount')==plan['amount'] for ev in events) for ident in ids)
+   if m=='ABILITY_TYPED_COST_COUNTER':
+    plan=f['e']['plan'];energy=option['action']['selections']['discard'][0];target=option['action']['selections']['target'][0]
+    assert any(c['id']==energy and not c.get('isSpecial') and c.get('energyType')==plan['type'] for c in before['players'][0]['hand'])
+    assert energy in {c['id'] for c in after['players'][0]['discard']}
+    assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==target and ev['details'].get('counterCount')==plan['amount'] for ev in events)
    if m=='MASS_PRIZE_DRAW':
     plan=f['e']['plan'];n=min(len(before['players'][0]['deck']),plan['amount']+(plan['extra'] if before['players'][1]['prizes']<=plan['threshold'] else 0))
     assert {c['id'] for c in before['players'][0]['deck'][:n]}<={c['id'] for c in after['players'][0]['hand']}
@@ -594,6 +613,9 @@ async def main():
     picked=set(option['action']['selections']['cards'])
     assert picked and picked<={card['id'] for card in after['players'][0]['hand']}
     assert {card['id'] for card in after['players'][0]['deck']}=={card['id'] for card in before['players'][0]['deck']}-picked
+   if m=='TRAINER_TEAM_DAMAGE_REDUCTION':
+    plan=f['e']['plan']
+    assert {'turn':before['turnNumber']+1,'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTeamDamageReductions']
    if m=='TRAINER_TYPED_DAMAGE_BOOST':
     plan=f['e']['plan']
     assert {'turn':before['turnNumber'],'type':plan['type'],'amount':plan['amount']} in after['players'][0]['referenceTypedDamageBoosts']
