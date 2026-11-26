@@ -635,35 +635,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E5D800A34C3F16510E30",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
-      "printedDamage": "210",
-      "energyCost": [
-        "草",
-        "草",
-        "草",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48525",
-        "48738",
-        "47298",
-        "47377",
-        "47386"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48525.json",
-        "data/effect-extensions/evidence/48738.json",
-        "data/effect-extensions/evidence/47298.json",
-        "data/effect-extensions/evidence/47377.json",
-        "data/effect-extensions/evidence/47386.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EDBE8B1067653ED2649E",
       "category": "pokemon",
       "effectKind": "attack",
@@ -1101,28 +1072,6 @@
         "data/effect-extensions/evidence/48616.json",
         "data/effect-extensions/evidence/49989.json",
         "data/effect-extensions/evidence/49999.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6493CD7ED05A74424513",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47619",
-        "47989",
-        "47997",
-        "49417"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47619.json",
-        "data/effect-extensions/evidence/47989.json",
-        "data/effect-extensions/evidence/47997.json",
-        "data/effect-extensions/evidence/49417.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -2142,29 +2091,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_152FD21BF624A2C17E94",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、相手のバトルポケモンについているエネルギーを1個選び、相手のベンチポケモンにつけ替える。",
-      "printedDamage": "160",
-      "energyCost": [
-        "悪",
-        "悪"
-      ],
-      "officialCardIds": [
-        "45193",
-        "45531",
-        "49161"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45193.json",
-        "data/effect-extensions/evidence/45531.json",
-        "data/effect-extensions/evidence/49161.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_158AA5FE1E0343B7C4BE",
       "category": "pokemon",
       "effectKind": "ability",
@@ -2337,26 +2263,6 @@
         "data/effect-extensions/evidence/45230.json",
         "data/effect-extensions/evidence/46673.json",
         "data/effect-extensions/evidence/48789.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1E23DF3F7AE9ECC45394",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に1回使える。自分の場のポケモンについている基本エネルギーを1個選び、自分の別のポケモンにつけ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45776",
-        "45863",
-        "49278"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45776.json",
-        "data/effect-extensions/evidence/45863.json",
-        "data/effect-extensions/evidence/49278.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -3677,29 +3583,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AD00EA60F0AD6C2A62DF",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべて、ベンチポケモン1匹につけ替える。",
-      "printedDamage": "50",
-      "energyCost": [
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46235",
-        "46313",
-        "48818"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46235.json",
-        "data/effect-extensions/evidence/46313.json",
-        "data/effect-extensions/evidence/48818.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AF53BB19C24EA50E5D00",
       "category": "pokemon",
       "effectKind": "ability",
@@ -4096,26 +3979,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D85450763609AA550292",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に何回でも使える。自分の場のポケモンについている「基本[草]エネルギー」を1個選び、自分の別のポケモンにつけ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48433",
-        "48444",
-        "47736"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48433.json",
-        "data/effect-extensions/evidence/48444.json",
-        "data/effect-extensions/evidence/47736.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_DDFFA908453059A179C0",
       "category": "pokemon",
       "effectKind": "attack",
@@ -4467,28 +4330,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45738.json",
         "data/effect-extensions/evidence/46718.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_033B33B5A554E4A59C1B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべて、ベンチポケモンに好きなようにつけ替える。",
-      "printedDamage": "160",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46383",
-        "48993"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46383.json",
-        "data/effect-extensions/evidence/48993.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -7377,26 +7218,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/46262.json",
         "data/effect-extensions/evidence/49129.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_96414DE8D8E5DCE19CE0",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の場のポケモンについているエネルギーを1個選び、相手の別のポケモンにつけ替える。",
-      "printedDamage": "0",
-      "energyCost": [
-        "超"
-      ],
-      "officialCardIds": [
-        "47579",
-        "47950"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47579.json",
-        "data/effect-extensions/evidence/47950.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -10934,22 +10755,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_291FEE5A6109B4F7CE37",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に何回でも使える。自分の場のポケモンについているエネルギーを1個選び、このポケモンにつけ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "49013"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49013.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_292E81746E82FB8C1438",
       "category": "pokemon",
       "effectKind": "attack",
@@ -11864,25 +11669,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4790E987834920991193",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、相手のバトルポケモンについているエネルギーを1個選び、相手のベンチポケモンにつけ替える。",
-      "printedDamage": "80",
-      "energyCost": [
-        "超",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50121"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50121.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_484AC7B692211EE489D6",
       "category": "pokemon",
       "effectKind": "attack",
@@ -12165,25 +11951,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_57CA6EF0259EAFA54E6B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[水]エネルギーを1個選び、ベンチポケモンにつけ替える。",
-      "printedDamage": "90",
-      "energyCost": [
-        "水",
-        "水"
-      ],
-      "officialCardIds": [
-        "48563"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48563.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_58C295B74B1C76BE6096",
       "category": "pokemon",
       "effectKind": "attack",
@@ -12250,25 +12017,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50247.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5B32B2B320667D2A0AF2",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、相手のバトルポケモンについているエネルギーを1個選び、相手のベンチポケモンにつけ替える。",
-      "printedDamage": "30",
-      "energyCost": [
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47426"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47426.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13076,22 +12824,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45728.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_72052BA36C3D86CDE2D7",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に何回でも使える。自分のベンチポケモンについている[水]エネルギーを1個選び、バトルポケモンにつけ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "49652"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49652.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -17384,5 +17116,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1616
+  "unfinishedPrints": 1604
 }

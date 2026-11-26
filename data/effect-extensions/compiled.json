@@ -38374,6 +38374,96 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47579",
+      "name": "リグレー",
+      "deckName": "リグレー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47579",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047579_P_RIGURE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょっとずらす",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "相手の場のポケモンについているエネルギーを1個選び、相手の別のポケモンにつけ替える。",
+          "effectId": "reference-47579-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "opponentField",
+            "target": "opponentOther",
+            "count": 1,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ビーム",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "40",
+          "text": "",
+          "effectId": "reference-47579-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47579.json",
+        "sha256": "9b0f604d36f084c8f95ee48b4b6eb889277dd6359c4f0e6955e867c9faefbdfe",
+        "htmlSha256": "9b0f604d36f084c8f95ee48b4b6eb889277dd6359c4f0e6955e867c9faefbdfe",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47581",
       "name": "ゴビット",
       "deckName": "ゴビット",
@@ -205154,6 +205244,766 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47950",
+      "name": "リグレー",
+      "deckName": "リグレー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47950",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047950_P_RIGURE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょっとずらす",
+          "cost": [
+            "超"
+          ],
+          "damage": "0",
+          "text": "相手の場のポケモンについているエネルギーを1個選び、相手の別のポケモンにつけ替える。",
+          "effectId": "reference-47950-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "opponentField",
+            "target": "opponentOther",
+            "count": 1,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ビーム",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "40",
+          "text": "",
+          "effectId": "reference-47950-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47950.json",
+        "sha256": "36b05134420138862a9d517542852772ee2ad8ad789bbf20bbd3c7bdf4dc03ea",
+        "htmlSha256": "36b05134420138862a9d517542852772ee2ad8ad789bbf20bbd3c7bdf4dc03ea",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45776",
+      "name": "ハピナスex",
+      "deckName": "ハピナスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45776",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045776_P_HAPINASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんがえし",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-45776-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "limit": 6
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ハッピースイッチ",
+          "text": "自分の番に1回使える。自分の場のポケモンについている基本エネルギーを1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-45776-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ラッキー",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45776.json",
+        "sha256": "e58838fc4e4b39f0c4258a65a48cd9db32064ea780cc01702074c0f4f483354b",
+        "htmlSha256": "e58838fc4e4b39f0c4258a65a48cd9db32064ea780cc01702074c0f4f483354b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45863",
+      "name": "ハピナスex",
+      "deckName": "ハピナスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45863",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045863_P_HAPINASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんがえし",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-45863-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "limit": 6
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ハッピースイッチ",
+          "text": "自分の番に1回使える。自分の場のポケモンについている基本エネルギーを1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-45863-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ラッキー",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45863.json",
+        "sha256": "55d2a0d36acaa37b9027c4dd11a1b428624a9ef0ae55309b2a23280195febd32",
+        "htmlSha256": "55d2a0d36acaa37b9027c4dd11a1b428624a9ef0ae55309b2a23280195febd32",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49013",
+      "name": "マリルリex",
+      "deckName": "マリルリex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49013",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049013_P_MARIRURIEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーバルーン",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "60+",
+          "text": "このポケモンについている[超]エネルギーの数×40ダメージ追加。",
+          "effectId": "reference-49013-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownEnergy",
+            "type": "超",
+            "unit": 40,
+            "base": 60
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "シャボンあつめ",
+          "text": "自分の番に何回でも使える。自分の場のポケモンについているエネルギーを1個選び、このポケモンにつけ替える。",
+          "effectId": "reference-49013-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "self",
+            "count": 1,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "マリル",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49013.json",
+        "sha256": "377811b738e0a07de3aa4516bd4a5cc7f3596c60fb646a57ec1b6e871c4e10e0",
+        "htmlSha256": "377811b738e0a07de3aa4516bd4a5cc7f3596c60fb646a57ec1b6e871c4e10e0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50121",
+      "name": "ニャオニクス",
+      "deckName": "ニャオニクス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50121",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050121_P_NIXYAONIKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "トリックステップ",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "のぞむなら、相手のバトルポケモンについているエネルギーを1個選び、相手のベンチポケモンにつけ替える。",
+          "effectId": "reference-50121-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "opponentActive",
+            "target": "opponentBench",
+            "count": 1,
+            "optional": true,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "ニャスパー",
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50121.json",
+        "sha256": "520e079fd3a5c6685215b4f695ace245b6b4b2b71a1fcdcc626d61279cebbc72",
+        "htmlSha256": "520e079fd3a5c6685215b4f695ace245b6b4b2b71a1fcdcc626d61279cebbc72",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47619",
+      "name": "Nの筋書き",
+      "deckName": "Nの筋書き",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47619",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047619_T_NNOSUJIGAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47619.json",
+        "sha256": "f88292c490bf51c9f42f616605ded988809669971d173eea65573980eeca1b4e",
+        "htmlSha256": "f88292c490bf51c9f42f616605ded988809669971d173eea65573980eeca1b4e",
+        "textSha256": "069db5c43f84ebaa8f25fa5d412231bc72b33a399bde95fc70ff3751ae0fdb90"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "commands": [
+          "MOVE_ENERGY"
+        ],
+        "source": "ownBench",
+        "target": "ownActive",
+        "count": 2,
+        "optional": false,
+        "basic": false,
+        "type": null,
+        "multi": false,
+        "repeated": false,
+        "sharedWording": true,
+        "upTo": true
+      }
+    },
+    {
+      "officialCardId": "47989",
+      "name": "Nの筋書き",
+      "deckName": "Nの筋書き",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47989",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047989_T_NNOSUJIGAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47989.json",
+        "sha256": "2ea7a7d9ebf419c5ecf13b1a9d3624fa0cbcc695f40ac98c4904b4a6ae25ca87",
+        "htmlSha256": "2ea7a7d9ebf419c5ecf13b1a9d3624fa0cbcc695f40ac98c4904b4a6ae25ca87",
+        "textSha256": "069db5c43f84ebaa8f25fa5d412231bc72b33a399bde95fc70ff3751ae0fdb90"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "commands": [
+          "MOVE_ENERGY"
+        ],
+        "source": "ownBench",
+        "target": "ownActive",
+        "count": 2,
+        "optional": false,
+        "basic": false,
+        "type": null,
+        "multi": false,
+        "repeated": false,
+        "sharedWording": true,
+        "upTo": true
+      }
+    },
+    {
+      "officialCardId": "47997",
+      "name": "Nの筋書き",
+      "deckName": "Nの筋書き",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47997",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047997_T_NNOSUJIGAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47997.json",
+        "sha256": "ecd489318c1e9a977cd899f0d532d4bc621f5eb0b2577b2feb5480adf6ce5bf9",
+        "htmlSha256": "ecd489318c1e9a977cd899f0d532d4bc621f5eb0b2577b2feb5480adf6ce5bf9",
+        "textSha256": "069db5c43f84ebaa8f25fa5d412231bc72b33a399bde95fc70ff3751ae0fdb90"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "commands": [
+          "MOVE_ENERGY"
+        ],
+        "source": "ownBench",
+        "target": "ownActive",
+        "count": 2,
+        "optional": false,
+        "basic": false,
+        "type": null,
+        "multi": false,
+        "repeated": false,
+        "sharedWording": true,
+        "upTo": true
+      }
+    },
+    {
+      "officialCardId": "48563",
+      "name": "モスノウ",
+      "deckName": "モスノウ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48563",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048563_P_MOSUNOU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コールドサイクロン",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "90",
+          "text": "このポケモンについている[水]エネルギーを1個選び、ベンチポケモンにつけ替える。",
+          "effectId": "reference-48563-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 1,
+            "optional": false,
+            "basic": false,
+            "type": "水",
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "いざなうはね",
+          "text": "このポケモンがバトル場にいるなら、自分の番に1回使える。おたがいのプレイヤーは、それぞれ山札を1枚引く。",
+          "effectId": "reference-48563-ability-0",
+          "plan": {
+            "mechanic": "MASS_HAND_FLOW",
+            "mode": "bothDraw",
+            "amount": 1,
+            "commands": [
+              "DRAW"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": "ユキハミ",
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48563.json",
+        "sha256": "13a2b7756d33e120a61d9f26188f05ba0b8b5b9c23ad5905a4569d347e11f676",
+        "htmlSha256": "13a2b7756d33e120a61d9f26188f05ba0b8b5b9c23ad5905a4569d347e11f676",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49417",
+      "name": "Nの筋書き",
+      "deckName": "Nの筋書き",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49417",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049417_T_NNOSUJIGAKI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のベンチポケモンについているエネルギーを2個まで選び、バトルポケモンにつけ替える。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49417.json",
+        "sha256": "b674b08053931420970a30717e4873cc9ad4e60ff2c8d6746ee2701d97b70844",
+        "htmlSha256": "b674b08053931420970a30717e4873cc9ad4e60ff2c8d6746ee2701d97b70844",
+        "textSha256": "069db5c43f84ebaa8f25fa5d412231bc72b33a399bde95fc70ff3751ae0fdb90"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "commands": [
+          "MOVE_ENERGY"
+        ],
+        "source": "ownBench",
+        "target": "ownActive",
+        "count": 2,
+        "optional": false,
+        "basic": false,
+        "type": null,
+        "multi": false,
+        "repeated": false,
+        "sharedWording": true,
+        "upTo": true
+      }
+    },
+    {
+      "officialCardId": "49278",
+      "name": "ハピナスex",
+      "deckName": "ハピナスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49278",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049278_P_HAPINASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんがえし",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の手札が6枚になるように、山札を引く。",
+          "effectId": "reference-49278-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_DRAW_TO_LIMIT",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "limit": 6
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ハッピースイッチ",
+          "text": "自分の番に1回使える。自分の場のポケモンについている基本エネルギーを1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-49278-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ラッキー",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49278.json",
+        "sha256": "c0e4a37517bfcccb93a4c2c1c337b70f82335bb698be00ae8aba584211e87ffe",
+        "htmlSha256": "c0e4a37517bfcccb93a4c2c1c337b70f82335bb698be00ae8aba584211e87ffe",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -206463,11 +207313,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46235",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46259",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -206494,11 +207339,6 @@
     },
     {
       "officialCardId": "46311",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46313",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -206869,11 +207709,6 @@
     },
     {
       "officialCardId": "47566",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47579",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
