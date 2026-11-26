@@ -878,12 +878,14 @@ function plan(entry,kind){
 // evolution-entry window. Existing plans always take precedence.
 function evolutionTransferFallback(entry,kind,text){
  if(kind!=='ABILITY')return null;
- const prefix='自分の番に、このカードを手札から出して進化させたとき、1回使える。';
- if(!text.startsWith(prefix))return null;
+ const prefixes=[['自分の番に、このカードを手札から出して進化させたとき、1回使える。','evolve'],['自分の番に、このカードを手札からベンチに出したとき、1回使える。','bench']];
+ const trigger=prefixes.find(([prefix])=>text.startsWith(prefix));if(!trigger)return null;
+ const [prefix,origin]=trigger;
  const body=text.slice(prefix.length);
  const regular='自分の番に1回使える。'+body;
  const transfer=massSharedPlan(entry,kind,regular);
- if(transfer&&!transfer.activeOnly&&!transfer.repeated&&((transfer.mechanic==='MASS_ZONE_TRANSFER'&&transfer.destination==='hand')||transfer.mechanic==='MASS_ENERGY_ROUTE'))return {...transfer,origin:'evolve'};
+ if(transfer&&!transfer.activeOnly&&!transfer.repeated&&((transfer.mechanic==='MASS_ZONE_TRANSFER'&&transfer.destination==='hand')||transfer.mechanic==='MASS_ENERGY_ROUTE'&&(origin==='evolve'||!transfer.heal&&!transfer.oneEach)))return {...transfer,origin};
+ if(origin==='bench')return null;
  // The same canonical transfer primitive handles named-team acceleration.
  const team=body.match(/^自分の(山札|トラッシュ|手札)から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を([1-9])枚まで選び、自分の「(マリィ|エリカ)のポケモン」に好きなようにつける。(そして山札を切る。)?$/);
  if(team&&Boolean(team[5])===(team[1]==='山札'))return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(team[1]==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(team[1]==='山札'?['SHUFFLE_DECK']:[])],zone:({'山札':'deck','トラッシュ':'discard','手札':'hand'})[team[1]],type:team[2],limit:Number(team[3]),target:'own',holderType:null,team:team[4],multi:true,heal:null,origin:'evolve',sharedWording:true};
