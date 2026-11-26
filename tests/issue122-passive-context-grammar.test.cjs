@@ -108,3 +108,25 @@ assert.equal(plan('このポケモンがいるかぎり、自分のポケモン�
 assert.deepEqual(plan('このポケモンがいるかぎり、自分の[草]または[炎]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+20」される。').types,['草','炎']);
 assert.notEqual(plan(cases[0].text+'追加条件がある。')?.mechanic,cases[0].mechanic);
 console.log('PASSIVE_CONTEXT_GRAMMAR_EXACT_TEXT_PASS',cases.length,new Set(cases.flatMap(c=>c.ids)).size);
+
+const activeStatus=[
+ ['やけど','BURNED'],
+ ['ねむり','ASLEEP']
+];
+for(const [jp,status] of activeStatus){
+ const text='このポケモンがバトル場にいるなら、自分の番に1回使える。相手のバトルポケモンを'+jp+'にする。';
+ const result=plan(text);
+ assert.equal(result.mechanic,'MASS_EFFECT_SEQUENCE');
+ assert.equal(result.origin,'active');
+ assert.deepEqual(result.steps,[{op:'status',side:'opponent',status}]);
+ assert.notEqual(plan(text+'追加条件がある。')?.mechanic,'MASS_EFFECT_SEQUENCE');
+}
+for(const [printed,count] of [['150',3],['170',1],['80',1]]){
+ const text='のぞむなら、自分の山札から好きなカードを'+(count===1?'1枚':count+'枚まで')+'選び、手札に加える。そして山札を切る。';
+ const attackPlan=compile({records:[{officialCardId:'1',category:'pokemon',abilities:[],attacks:[{text,damage:printed,cost:['無色']}],facts:{}}]}).records[0].attacks[0].plan;
+ assert.equal(attackPlan.mechanic,'SEARCH_REVEAL_TO_HAND_ATTACK');
+ assert.equal(attackPlan.limit,count);
+ assert.equal(attackPlan.optional,true);
+ assert.equal(attackPlan.reveal,false);
+}
+console.log('ACTIVE_STATUS_AND_OPTIONAL_SEARCH_GRAMMAR_PASS');
