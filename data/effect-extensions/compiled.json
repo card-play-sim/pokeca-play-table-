@@ -1245,6 +1245,91 @@
       }
     },
     {
+      "officialCardId": "45396",
+      "name": "ヌオー",
+      "deckName": "ヌオー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45396",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/045396_P_NUO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ころがる",
+          "cost": [
+            "水"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-45396-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ずぶぬれヘッド",
+          "cost": [
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "80×",
+          "text": "自分の山札を上から3枚トラッシュし、その中にあるエネルギーの枚数×80ダメージ。",
+          "effectId": "reference-45396-attack-1",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 3,
+            "filter": "energy",
+            "type": null,
+            "team": null,
+            "unit": 80,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ウパー",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45396.json",
+        "sha256": "27b2ddb1068e0806c6f69879f3c7106dede6819cc14beb20928d6d7f7fdeb840",
+        "htmlSha256": "27b2ddb1068e0806c6f69879f3c7106dede6819cc14beb20928d6d7f7fdeb840",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45403",
       "name": "なかよしポフィン",
       "deckName": "なかよしポフィン",
@@ -205154,6 +205239,616 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "45589",
+      "name": "マグカルゴex",
+      "deckName": "マグカルゴex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45589",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045589_P_MAGUKARUGOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あついマグマ",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "相手のバトルポケモンをやけどにする。",
+          "effectId": "reference-45589-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED"
+          }
+        },
+        {
+          "name": "グラウンドバーン",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "140+",
+          "text": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるエネルギーの枚数×140ダメージ追加。",
+          "effectId": "reference-45589-attack-1",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "both",
+            "limit": 1,
+            "filter": "energy",
+            "type": null,
+            "team": null,
+            "unit": 140,
+            "base": 140,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "マグマッグ",
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45589.json",
+        "sha256": "de718861456c6d3e714c9e6bfb110588488b1b7026d8c8c04f50ca84d10e2700",
+        "htmlSha256": "de718861456c6d3e714c9e6bfb110588488b1b7026d8c8c04f50ca84d10e2700",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45675",
+      "name": "マグカルゴex",
+      "deckName": "マグカルゴex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45675",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5a/045675_P_MAGUKARUGOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あついマグマ",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "相手のバトルポケモンをやけどにする。",
+          "effectId": "reference-45675-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED"
+          }
+        },
+        {
+          "name": "グラウンドバーン",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "140+",
+          "text": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるエネルギーの枚数×140ダメージ追加。",
+          "effectId": "reference-45675-attack-1",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "both",
+            "limit": 1,
+            "filter": "energy",
+            "type": null,
+            "team": null,
+            "unit": 140,
+            "base": 140,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "マグマッグ",
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45675.json",
+        "sha256": "e2d41901877c381add913f66d8cd78d590aac405dc3e342d426151c8e143e140",
+        "htmlSha256": "e2d41901877c381add913f66d8cd78d590aac405dc3e342d426151c8e143e140",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50108",
+      "name": "クレベース",
+      "deckName": "クレベース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50108",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050108_P_KUREBESU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ひょうざんくずし",
+          "cost": [
+            "水"
+          ],
+          "damage": "60×",
+          "text": "自分の山札を上から6枚トラッシュし、その中にある「基本[水]エネルギー」の枚数×60ダメージ。",
+          "effectId": "reference-50108-attack-0",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 6,
+            "filter": "typedBasic",
+            "type": "水",
+            "team": null,
+            "unit": 60,
+            "base": 0,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "フロストスタンプ",
+          "cost": [
+            "水",
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "",
+          "effectId": "reference-50108-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "カチコール",
+        "retreatCost": 4,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50108.json",
+        "sha256": "83959460aadab9f4069ff006541a7404bd667a4c4f8a877656c66009dd2b37ed",
+        "htmlSha256": "83959460aadab9f4069ff006541a7404bd667a4c4f8a877656c66009dd2b37ed",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50891",
+      "name": "ブリムオン",
+      "deckName": "ブリムオン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50891",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M7/050891_P_BURIMUON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイケこうせん",
+          "cost": [
+            "超"
+          ],
+          "damage": "40",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-50891-attack-0",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        },
+        {
+          "name": "マジックテンタクル",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "100+",
+          "text": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるトレーナーズの枚数×100ダメージ追加。",
+          "effectId": "reference-50891-attack-1",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "both",
+            "limit": 1,
+            "filter": "trainer",
+            "type": null,
+            "team": null,
+            "unit": 100,
+            "base": 100,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "テブリム",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50891.json",
+        "sha256": "9da764a14e91057d0595be76e762ce72ffad306dd86c0c7340e23c138293f66e",
+        "htmlSha256": "9da764a14e91057d0595be76e762ce72ffad306dd86c0c7340e23c138293f66e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47321",
+      "name": "カスミのギャラドス",
+      "deckName": "カスミのギャラドス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47321",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047321_P_KASUMINOGIXYARADOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ザブザブパニック",
+          "cost": [
+            "水"
+          ],
+          "damage": "70×",
+          "text": "自分の山札を上から7枚トラッシュし、その中にある「カスミのポケモン」の枚数×70ダメージ。",
+          "effectId": "reference-47321-attack-0",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 7,
+            "filter": "teamPokemon",
+            "type": null,
+            "team": "カスミ",
+            "unit": 70,
+            "base": 0,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "たきのぼり",
+          "cost": [
+            "水",
+            "水",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "",
+          "effectId": "reference-47321-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "カスミのコイキング",
+        "retreatCost": 4,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47321.json",
+        "sha256": "bcf748809a7b27cc837b6c48c4c8673e3202883b41513b5ab59df60d2e31607c",
+        "htmlSha256": "bcf748809a7b27cc837b6c48c4c8673e3202883b41513b5ab59df60d2e31607c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48874",
+      "name": "カスミのギャラドス",
+      "deckName": "カスミのギャラドス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48874",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048874_P_KASUMINOGIXYARADOSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ザブザブパニック",
+          "cost": [
+            "水"
+          ],
+          "damage": "70×",
+          "text": "自分の山札を上から7枚トラッシュし、その中にある「カスミのポケモン」の枚数×70ダメージ。",
+          "effectId": "reference-48874-attack-0",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 7,
+            "filter": "teamPokemon",
+            "type": null,
+            "team": "カスミ",
+            "unit": 70,
+            "base": 0,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "たきのぼり",
+          "cost": [
+            "水",
+            "水",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "",
+          "effectId": "reference-48874-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "カスミのコイキング",
+        "retreatCost": 4,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48874.json",
+        "sha256": "7a8e86300e64e0b65b847369298e75385465c16f0d06098bd4819d4232515c3c",
+        "htmlSha256": "7a8e86300e64e0b65b847369298e75385465c16f0d06098bd4819d4232515c3c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48812",
+      "name": "マグカルゴex",
+      "deckName": "マグカルゴex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48812",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048812_P_MAGUKARUGOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "あついマグマ",
+          "cost": [
+            "炎",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "相手のバトルポケモンをやけどにする。",
+          "effectId": "reference-48812-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "BURNED"
+          }
+        },
+        {
+          "name": "グラウンドバーン",
+          "cost": [
+            "炎",
+            "炎",
+            "無色"
+          ],
+          "damage": "140+",
+          "text": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるエネルギーの枚数×140ダメージ追加。",
+          "effectId": "reference-48812-attack-1",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "both",
+            "limit": 1,
+            "filter": "energy",
+            "type": null,
+            "team": null,
+            "unit": 140,
+            "base": 140,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": "マグマッグ",
+        "retreatCost": 3,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48812.json",
+        "sha256": "59539cb78e1802d85b793682e6aa6b8aa04030d27f03343b1fd001243bb834b5",
+        "htmlSha256": "59539cb78e1802d85b793682e6aa6b8aa04030d27f03343b1fd001243bb834b5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -205641,11 +206336,6 @@
         "htmlSha256": "2a74486c836fe0de494473ad42671a5e321ca3170310fb979e036b1b50f25fe8",
         "textSha256": "ea8fc972c40bd82d3e8fdb97a1260938b1aa0270b3a36f45e11afe4d2f35c4d4"
       }
-    },
-    {
-      "officialCardId": "45396",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45401",

@@ -2230,30 +2230,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1C45A63C1F7502106FFC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるエネルギーの枚数×140ダメージ追加。",
-      "printedDamage": "140+",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45589",
-        "45675",
-        "48812"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45589.json",
-        "data/effect-extensions/evidence/45675.json",
-        "data/effect-extensions/evidence/48812.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1CC62C57E091078A17D2",
       "category": "energy",
       "effectKind": "energy",
@@ -4741,26 +4717,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0CB4F2B23B9ABDA88A1C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札を上から7枚トラッシュし、その中にある「カスミのポケモン」の枚数×70ダメージ。",
-      "printedDamage": "70×",
-      "energyCost": [
-        "水"
-      ],
-      "officialCardIds": [
-        "47321",
-        "48874"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47321.json",
-        "data/effect-extensions/evidence/48874.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0D76B761D5DF39FB0ED1",
       "category": "pokemon",
       "effectKind": "ability",
@@ -6023,27 +5979,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47543.json",
         "data/effect-extensions/evidence/47916.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4824E3BE3E8C6F9332CC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札を上から6枚トラッシュし、その中にある「基本[水]エネルギー」の枚数×100ダメージ。",
-      "printedDamage": "100×",
-      "energyCost": [
-        "水",
-        "水"
-      ],
-      "officialCardIds": [
-        "48462",
-        "47814"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48462.json",
-        "data/effect-extensions/evidence/47814.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -12975,24 +12910,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6E1EF9C505E0DA26D90F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札を上から6枚トラッシュし、その中にある「基本[水]エネルギー」の枚数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "水"
-      ],
-      "officialCardIds": [
-        "50108"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50108.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6E2291675AECB269B67E",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13147,26 +13064,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/49677.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_742D451899EE89BE35CA",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の山札を上から3枚トラッシュし、その中にあるエネルギーの枚数×80ダメージ。",
-      "printedDamage": "80×",
-      "energyCost": [
-        "水",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45396"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45396.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13620,25 +13517,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45799.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7ECC18D0F1EB829F66B9",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "おたがいの山札を上から1枚ずつトラッシュし、その中にあるトレーナーズの枚数×100ダメージ追加。",
-      "printedDamage": "100+",
-      "energyCost": [
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "50891"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50891.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -17384,5 +17262,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1616
+  "unfinishedPrints": 1608
 }

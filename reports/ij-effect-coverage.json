@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1123,
-      "missing": 579
+      "connected": 1125,
+      "missing": 577
     },
     "J": {
       "total": 870,
-      "connected": 502,
-      "missing": 368
+      "connected": 504,
+      "missing": 366
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1117,
+      "CONNECTED_UNTESTED": 1119,
       "MECHANIC_REQUIRED": 80,
-      "ENGINE_CONNECTION_REQUIRED": 495,
+      "ENGINE_CONNECTION_REQUIRED": 493,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 501,
+      "CONNECTED_UNTESTED": 503,
       "MECHANIC_REQUIRED": 45,
-      "ENGINE_CONNECTION_REQUIRED": 322,
+      "ENGINE_CONNECTION_REQUIRED": 320,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -9674,8 +9674,7 @@
       "name": "カスミのギャラドス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47321.json"
     },
     {
@@ -14758,8 +14757,7 @@
       "name": "カスミのギャラドス",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48874.json"
     },
     {
@@ -16942,8 +16940,7 @@
       "name": "クレベース",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50108.json"
     },
     {
@@ -21156,8 +21153,7 @@
       "name": "ブリムオン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50891.json"
     },
     {
@@ -21530,21 +21526,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1195,
-        "MECHANIC_REQUIRED": 668,
+        "ENGINE_CONNECTED": 1199,
+        "MECHANIC_REQUIRED": 664,
         "ENGINE_CONNECTION_REQUIRED": 1
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1123,
-        "MECHANIC_REQUIRED": 573,
-        "ENGINE_CONNECTION_REQUIRED": 2,
+        "ENGINE_CONNECTED": 1125,
+        "MECHANIC_REQUIRED": 569,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 501,
-        "MECHANIC_REQUIRED": 362,
+        "ENGINE_CONNECTED": 503,
+        "MECHANIC_REQUIRED": 360,
         "EVIDENCE_UNVERIFIED": 4,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
@@ -21554,7 +21550,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3457,
-    "unconnected": 1616
+    "engineConnected": 3465,
+    "unconnected": 1608
   }
 }
