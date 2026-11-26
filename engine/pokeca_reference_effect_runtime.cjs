@@ -341,6 +341,12 @@ function inspectedHandCandidate(c,plan){
  const category=record(c)?.category;
  return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(category)||plan.filter===category;
 }
+function attachedMovePool(p,o,card,plan){
+ const sources=plan.source==='self'?[card]:plan.source==='opponentActive'?[o.active]:plan.source==='opponentField'?field(o):plan.source==='ownBench'?p.bench:field(p);
+ const targets=plan.target==='self'?[card]:plan.target==='ownActive'?[p.active]:plan.target==='ownBench'?p.bench:plan.target==='opponentBench'?o.bench:plan.target==='opponentOther'?field(o):field(p);
+ const pool=sources.filter(c=>c&&targets.some(t=>t&&t!==c)).flatMap(c=>(c.energyCards||[]).filter(e=>!plan.basic||basicEnergy(e)).map(e=>({...e,containerId:id(c),moveUnits:energyUnits({...c,energyCards:[e]}).filter(u=>!plan.type||u.includes(plan.type)).length}))).filter(e=>e.moveUnits>0);
+ return {pool,targets:targets.filter(Boolean)};
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -362,6 +368,17 @@ function requests(g,actor,card,effect){
   if(plan.target!=='self'){
    cardRequest('attachTo',targets,0,Math.min(1,targets.length));
    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:1,count:1}];
+  }
+ }
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'){
+  const plan=effect.plan,{pool,targets}=attachedMovePool(p,o,card,plan);
+  const max=Math.min(plan.count??pool.length,pool.length),min=plan.count===null?max:plan.optional?0:Math.min(1,max);
+  cardRequest('energy',pool,min,max);
+  if(!['self','ownActive'].includes(plan.target)){
+   for(let i=0;i<(plan.multi?max:1);i++){
+    cardRequest('moveTo'+i,targets,0,Math.min(1,targets.length));
+    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:i+1,count:1},...(['ownOther','opponentOther'].includes(plan.target)?[{kind:'excludeSelectedField',key:'energy',field:'containerId'}]:[])];
+   }
   }
  }
  if(m==='ATTACK_BASIC_ENERGY_MOVE'){
@@ -622,6 +639,16 @@ function verifyRequests(g,actor,card,effect,action){
   assert(bench.length===(mode==='switch'?1:0),'SUPPORTER_MODE_TARGET_MISMATCH');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'){
+  const plan=effect.plan,{pool}=attachedMovePool(p,opponent(g,actor),card,plan),chosen=selected(action,'energy').map(i=>pool.find(e=>id(e)===i));
+  assert(chosen.every(Boolean),'INVALID_MOVE_ENERGY');
+  if(plan.count===null)assert(chosen.length===pool.length,'ALL_MOVE_ENERGY_REQUIRED');
+  else if(chosen.length||!plan.optional){
+   const supplied=chosen.reduce((n,e)=>n+e.moveUnits,0),required=Math.min(plan.count,pool.reduce((n,e)=>n+e.moveUnits,0));
+   if(!plan.upTo)assert(supplied>=required,'INSUFFICIENT_MOVE_ENERGY_UNITS');
+   assert(chosen.every(e=>supplied-e.moveUnits<required),'REDUNDANT_MOVE_ENERGY');
+  }
+ }
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
   // The selection specifies physical cards, but the printed quantity counts
   // their provided Energy units (including multi-unit special Energy).
@@ -665,6 +692,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
  if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,opponent(g,actor),a.plan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
@@ -758,6 +786,7 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,o,card,r.mainPlan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
    if(m==='MASS_ENERGY_ROUTE'){
     assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
     if(r.mainPlan.requiresTera)assert(field(p).some(c=>record(c).facts.teraBenchProtection===true),'TERA_POKEMON_REQUIRED');
@@ -1447,6 +1476,18 @@ function applyPlan(g,actor,card,effect,action){
    }
    shuffle(g,p);break;
   }
+  case 'MASS_ATTACHED_ENERGY_MOVE':{
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.source.startsWith('opponent')&&o.active.referenceProtection?.opponentTurn===g.turnNumber)break;
+   const {pool,targets}=attachedMovePool(p,o,card,plan);
+   for(const [i,ident] of ids('energy').entries()){
+    const entry=pool.find(c=>id(c)===ident),source=find(g,entry?.containerId)?.card;
+    const target=plan.target==='self'?card:plan.target==='ownActive'?p.active:targets.find(c=>id(c)===ids('moveTo'+(plan.multi?i:0))[0]);
+    assert(source&&target&&source!==target,'ATTACHED_ENERGY_MOVE_CHANGED');
+    moveAttachedEnergy(g,actor,source,target,ident);
+   }
+   break;
+  }
   case 'ATTACK_BASIC_ENERGY_MOVE':{
    damage(g,actor,o.active,Number(effect.damage)||0);
    const energy=ids('energy')[0],to=ids('attachTo')[0];
@@ -1781,6 +1822,16 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'&&effect.plan.count!==null){
+  const plan=effect.plan,{pool,targets}=attachedMovePool(p,opponent(g,actor),card,plan);
+  const chosen=[];let covered=0;
+  for(const c of [...pool].sort((a,b)=>b.moveUnits-a.moveUnits)){if(covered>=plan.count)break;chosen.push(c);covered+=c.moveUnits;}
+  action.selections||={};action.selections.energy=chosen.map(id);
+  if(!['self','ownActive'].includes(plan.target)){
+   const target=targets.find(t=>!chosen.some(c=>c.containerId===id(t)));
+   for(let i=0;i<(plan.multi?Math.min(plan.count,pool.length):1);i++)action.selections['moveTo'+i]=chosen.length>i&&target?[id(target)]:[];
+  }
+ }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'&&action.selections.mode[0]==='boost')action.selections.ownBench=[];
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
   const entries=(card.energyCards||[]).map((energy,index)=>({
