@@ -12,6 +12,11 @@ function commands({limit,base}) {
   if (!/^[a-f0-9]{40}$/.test(base)) throw Error('INVALID_ATOMIC_BASE_SHA');
   return [
     ['SELECT_EXACT_OFFICIAL_PRINTS','node',['scripts/list-card-auto-connect-ids.cjs',idFile]],
+    // Automatically repair outdated derived facts using the already saved,
+    // hash-verified official HTML, before compiling or retrying the same cards.
+    // The refresh helper never modifies any previously compiled print.
+    ['VERIFY_OFFICIAL_FACT_REPAIR_CONTRACT','node',['tests/issue122-official-facts-refresh.test.cjs']],
+    ['REPAIR_UNCOMPILED_FACTS_FROM_OFFICIAL_EVIDENCE','node',['scripts/refresh-uncompiled-official-facts.cjs','--apply']],
     ['FETCH_PARSE_AND_COMPILE_WITH_SHARED_ENGINE','python',[
       'scripts/continue-official-effect-intake.py','--limit',String(limit),
       '--adopt','--retry-transient','--ids',idFile]],
