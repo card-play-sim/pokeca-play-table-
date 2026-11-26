@@ -626,10 +626,10 @@ async def main():
     pool=[other['active'],*other['bench']]
     targets=[other['active']] if plan['scope']=='active' else other['bench'] if plan['scope']=='bench' else [c for c in pool if c['id'] in sel['target']] if plan['scope']=='choice' else pool
     total=0
-    for c in targets:
-     hit=sum(ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==c['id'] and not ev['details'].get('reference'))
-     amount=max(0,(c['hp']-c['damage']-hit-plan['remaining'])//10) if plan['mode']=='remaining' else sel['allocation'].get(c['id'],0) if plan['mode']=='allocation' else len(own['hand'])*plan['unit'] if plan['mode']=='hand' else (c['damage']+hit)//10*plan['unit'] if plan['mode']=='multiply' else plan['amount']
-     assert sum(ev['details']['counterCount'] for ev in events if ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==c['id'] and not ev['details'].get('reference'))==amount
+    for target_card in targets:
+     hit=sum(ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==target_card['id'] and not ev['details'].get('reference'))
+     amount=max(0,(target_card['hp']-target_card['damage']-hit-plan['remaining'])//10) if plan['mode']=='remaining' else sel['allocation'].get(target_card['id'],0) if plan['mode']=='allocation' else len(own['hand'])*plan['unit'] if plan['mode']=='hand' else (target_card['damage']+hit)//10*plan['unit'] if plan['mode']=='multiply' else plan['amount']
+     assert sum(ev['details']['counterCount'] for ev in events if ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==target_card['id'] and not ev['details'].get('reference'))==amount
      total+=amount
     assert total>0
    if m=='MASS_PLACE_COUNTERS':
