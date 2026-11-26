@@ -923,50 +923,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_214970542496715A6079",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の手札からポケモン（「ルールを持つポケモン」をのぞく）を2枚までトラッシュし、その枚数×3枚ぶん、山札を引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50784",
-        "50297",
-        "50331",
-        "50337"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50784.json",
-        "data/effect-extensions/evidence/50297.json",
-        "data/effect-extensions/evidence/50331.json",
-        "data/effect-extensions/evidence/50337.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_21E38E600B70C09928E0",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、このポケモンについている「基本[雷]エネルギー」を1個トラッシュするなら、1回使える。自分の手札が6枚になるように、山札を引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47040",
-        "47224",
-        "48581",
-        "48995"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47040.json",
-        "data/effect-extensions/evidence/47224.json",
-        "data/effect-extensions/evidence/48581.json",
-        "data/effect-extensions/evidence/48995.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_25894CCEC057E5D0B941",
       "category": "pokemon",
       "effectKind": "ability",
@@ -12670,22 +12626,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_58CE752E5DCBB32DDD4B",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、自分の手札から「基本[炎]エネルギー」を1枚トラッシュするなら、1回使える。自分の手札が7枚になるように、山札を引く。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50097"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50097.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_591A5383101D1A2BEB57",
       "category": "pokemon",
       "effectKind": "attack",
@@ -18003,5 +17943,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1671
+  "unfinishedPrints": 1662
 }
