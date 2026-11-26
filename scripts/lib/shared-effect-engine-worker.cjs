@@ -1471,7 +1471,7 @@ function prepare(r, e, kind) {
     }
   }
   const p = port(frame.game);
-  if(m==='MASS_EFFECT_SEQUENCE'&&e.plan.origin==='bench'){
+  if(kind==='ability'&&e.plan.origin==='bench'){
     if(!p.dispatch('you',{type:'bench_basic',cardId:frame.sourceId}).ok)return {blocked:'BENCH_ENTRY_FIXTURE_ACTION_REJECTED'};
     // The real entry action opens the window. A subsequent harmless action
     // must close it; verify this independently without mutating the fixture.
@@ -1678,7 +1678,7 @@ function verifyCase(t, e) {
     for(const [i,id] of energy.entries()){
       const source=own[plan.zone].find(c=>c.id===id);
       assert(source?.kind==='energy'&&!source.isSpecial&&(!plan.type||source.energyType===plan.type));
-      const targetId=plan.target==='self'?own.active.id:action.selections['attachTo'+(plan.multi?i:0)][0];
+      const targetId=plan.target==='self'?t.sourceId:action.selections['attachTo'+(plan.multi?i:0)][0];
       const previous=[own.active,...own.bench].find(c=>c.id===targetId);
       assert(previous);
       const facts=E.getReferenceEffectRecord(previous).facts;
@@ -1692,6 +1692,11 @@ function verifyCase(t, e) {
       assert(effectEvents.some(ev=>ev?.command==='ATTACH_ENERGY'&&ev.energyId===id&&ev.targetInstanceId===targetId));
     }
     assert.equal(resolved.normalEnergyAttached,own.normalEnergyAttached);
+    if(plan.origin==='bench'){
+      const source=own.bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const denied=port(closed);assert.equal(denied.dispatch('you',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(closed));
+    }
     if(plan.origin==='evolve'){
       const source=[own.active,...own.bench].find(c=>c.id===t.sourceId);
       assert(source?.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
@@ -1809,7 +1814,8 @@ function verifyCase(t, e) {
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
-    if(plan.origin==='evolve'){
+    if(plan.origin==='evolve'||plan.origin==='bench'){
+      if(plan.origin==='bench'){const source=own.bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);}
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
       const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.equal(JSON.stringify(late.getSnapshot()),JSON.stringify(closed));
     }
