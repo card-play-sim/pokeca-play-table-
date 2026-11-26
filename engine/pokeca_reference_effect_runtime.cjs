@@ -269,7 +269,11 @@ function massRouteEnergy(p,plan){
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
- if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.nameExact&&r?.name!==plan.nameExact)return false;
+ if(plan.retreatCost!==undefined&&r?.facts?.retreatCost!==plan.retreatCost)return false;
+ if(plan.resistanceType&&!r?.facts?.resistance?.types?.includes(plan.resistanceType))return false;
+ if(plan.category==='any')return !!r;
  if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='categorySet')return plan.categories.includes(r?.category);
  if(plan.energyTypes&&(!basicEnergy(c)||!plan.energyTypes.includes(c.energyType)))return false;
