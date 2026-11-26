@@ -1,13 +1,12 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B3F68F4CF51BD822:72ab0e8070268d3d8ce04789287be71432c82afcf95869377c6c54e5435d252d",
   "taskFingerprint": "72ab0e8070268d3d8ce04789287be71432c82afcf95869377c6c54e5435d252d",
-  "executionFingerprint": "e7e6d022894b9e54c70b783eaed7beae1ef35347068b833241d00e8b8426710b",
-  "attemptId": "ae60e57b-86bb-42d7-b7ac-8dbfc7d8b1b5",
-  "status": "BLOCKED",
+  "executionFingerprint": "4abed93a10a45898b0717e8e46ee76f3b51ace41249e47df6a364ad7f5545984",
+  "attemptId": "bd24becd-f481-4c44-bdac-fe34285b5ee5",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45598:attack:エナジープレス:1",
@@ -41,10 +40,20 @@
       },
       {
         "slot": "46377:attack:エネショート:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "SCALED_ATTACK_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "27be57cc7d0d783950983fdbf89f55754d28f7be31d3d1730b94264a05c31165"
+  "checksum": "92ad531ee7f561e21d832ba23382ef10b996c28f6a0fb4e87bbd07d15cbe3119"
 }
