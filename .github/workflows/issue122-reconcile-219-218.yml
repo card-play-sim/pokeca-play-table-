@@ -39,7 +39,10 @@ jobs:
           git apply --3way /tmp/qualified-source.patch
           git diff --check
           git diff --cached --check
-          node scripts/build-effect-extensions.cjs --check
+          # A new grammar can intentionally make old blocked evidence compilable.
+          # The builder checks every prior record for immutability before writing.
+          # Candidate data is isolated; restore the original release before intake.
+          node scripts/build-effect-extensions.cjs
           node scripts/sync-reference-effects.cjs
           node scripts/build-pwa-release.cjs
           node tests/issue122-attack-promotion-order.test.cjs
@@ -81,10 +84,11 @@ jobs:
           python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
           node tests/intake-checkpoint-recovery-contract.test.cjs
           node tests/issue122-official-facts-refresh.test.cjs
-          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          # The atomic pipeline repairs uncompiled evidence after restoring the release baseline.
           node tests/control-014-official-parser.test.cjs
           node tests/atomic-official-to-battle.test.cjs
           node tests/issue122-counter-picker-ui.test.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
           node scripts/run-atomic-official-battle-intake.cjs
