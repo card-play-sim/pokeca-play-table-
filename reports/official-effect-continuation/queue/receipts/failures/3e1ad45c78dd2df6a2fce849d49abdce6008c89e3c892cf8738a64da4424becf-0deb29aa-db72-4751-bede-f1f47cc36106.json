@@ -1,0 +1,24 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_B678CF8F92279D65:6e4b83aa1eda6b6c017d763b752e077b7c392f13967b3969063c8e13bce3409c",
+  "taskFingerprint": "6e4b83aa1eda6b6c017d763b752e077b7c392f13967b3969063c8e13bce3409c",
+  "executionFingerprint": "031095f490d9963d1c708f2a486b85a88eba5cc0d893f3033e14027e601fb9a1",
+  "attemptId": "0deb29aa-db72-4751-bede-f1f47cc36106",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "50706:attack:くわえてかくす:0",
+        "status": "FAILED",
+        "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-79',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n",
+        "details": {
+          "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-79',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        }
+      }
+    ]
+  },
+  "checksum": "0bb30cbcc94b9b2cd0ed3f7a5cd9a6e7f2d4e6224703e5f29b61440bcdf9817b"
+}

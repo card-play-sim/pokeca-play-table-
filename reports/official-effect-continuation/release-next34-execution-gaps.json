@@ -1,0 +1,174 @@
+{
+  "baseCommit": "9b635f4ffe530743f058fdb8700e1fa3dacb414c",
+  "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
+  "gaps": [
+    {
+      "id": "50706",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50706:attack:くわえてかくす:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-79',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-79',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "46377",
+      "kind": "attack",
+      "index": 0,
+      "slot": "46377:attack:クラッシュパルス:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-60',\n+   'reference-1-81'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-60',\n+   'reference-1-81'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47067",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47067:attack:ちょろまかす:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45758",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45758:attack:むれでかる:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50377",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50377:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50525",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50525:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47453",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47453:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47790",
+      "kind": "item",
+      "index": 0,
+      "slot": "47790:item:アイアンディフェンダー:0",
+      "status": "BLOCKED",
+      "reason": "FIXTURE_EXACT_RESOURCE_MISSING:bench",
+      "details": null
+    },
+    {
+      "id": "49150",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49150:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49173",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49173:attack:ちょろまかす:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-76'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "49347",
+      "kind": "item",
+      "index": 0,
+      "slot": "49347:item:アイアンディフェンダー:0",
+      "status": "BLOCKED",
+      "reason": "FIXTURE_EXACT_RESOURCE_MISSING:bench",
+      "details": null
+    },
+    {
+      "id": "50322",
+      "kind": "item",
+      "index": 0,
+      "slot": "50322:item:アイアンディフェンダー:0",
+      "status": "BLOCKED",
+      "reason": "FIXTURE_EXACT_RESOURCE_MISSING:bench",
+      "details": null
+    },
+    {
+      "id": "48964",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48964:attack:クラッシュパルス:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-60',\n+   'reference-1-81'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-60',\n+   'reference-1-81'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45860",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45860:attack:つきさすがんこう:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45732",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45732:attack:つきさすがんこう:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48962",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48962:attack:つきさすがんこう:0",
+      "status": "FAILED",
+      "reason": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n",
+      "details": {
+        "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'reference-1-95',\n    'reference-1-60',\n+   'reference-1-79'\n  ]\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2160:12)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3342:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    }
+  ]
+}
