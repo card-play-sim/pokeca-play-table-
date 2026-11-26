@@ -351,6 +351,10 @@ function attachedMovePool(p,o,card,plan){
  const pool=sources.filter(c=>c&&targets.some(t=>t&&t!==c)).flatMap(c=>(c.energyCards||[]).filter(e=>!plan.basic||basicEnergy(e)).map(e=>({...e,containerId:id(c),moveUnits:energyUnits({...c,energyCards:[e]}).filter(u=>!plan.type||u.includes(plan.type)).length}))).filter(e=>e.moveUnits>0);
  return {pool,targets:targets.filter(Boolean)};
 }
+function selectedAttachmentUnits(card,energy,plan){
+ const units=energyUnits({...card,energyCards:[energy]});
+ return plan.type?units.filter(types=>types.includes(plan.type)).length:units.length;
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -361,7 +365,11 @@ function requests(g,actor,card,effect){
  };
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
- if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,p.bench.length),Math.min(1,p.bench.length));
+ if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,p.bench.length),Math.min(1,p.bench.length));
+ if(m==='ATTACK_SWITCH_THEN_DAMAGE'){
+  const bench=o.active.referenceProtection?.opponentTurn===g.turnNumber?[]:o.bench;
+  add('targetIds','POKEMON',bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,bench.length),Math.min(1,bench.length));
+ }
  if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,o.bench.length),Math.min(1,o.bench.length));
  if(m==='ATTACK_ACCELERATE_BASIC_ENERGY'){
   const plan=effect.plan,targets=(plan.target==='self'?[card]:plan.target==='bench'?p.bench:own).filter(c=>!plan.holderType||record(c).facts.types.includes(plan.holderType));
@@ -391,10 +399,10 @@ function requests(g,actor,card,effect){
  }
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
- if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
   // Printed Energy "個" can be supplied by one physical multi-unit Energy card.
   const eligible=(card.energyCards||[]).filter(energy=>
-    energyUnits({...card,energyCards:[energy]}).length>0);
+    selectedAttachmentUnits(card,energy,effect.plan)>0);
   cardRequest('energy',eligible,Math.min(1,eligible.length),
     Math.min(effect.plan.count,eligible.length));
  }
@@ -663,10 +671,10 @@ function verifyRequests(g,actor,card,effect,action){
    assert(chosen.every(e=>supplied-e.moveUnits<required),'REDUNDANT_MOVE_ENERGY');
   }
  }
- if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
   // The selection specifies physical cards, but the printed quantity counts
   // their provided Energy units (including multi-unit special Energy).
-  const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+  const contribution=energy=>selectedAttachmentUnits(card,energy,effect.plan);
   const available=(card.energyCards||[]).filter(energy=>contribution(energy)>0);
   const choice=selected(action,'energy').map(ident=>available.find(e=>id(e)===ident));
   assert(choice.every(Boolean),'INVALID_SELF_ENERGY_SELECTION');
@@ -1308,6 +1316,12 @@ function applyPlan(g,actor,card,effect,action){
   case 'CONDITIONAL_ATTACK_BONUS':
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
    break;
+  case 'ATTACK_ATTACHED_ENERGY_COINS':{
+   let heads=0;
+   for(const unit of energyUnits(card))if(coin(g,actor))heads++;
+   damage(g,actor,o.active,heads*plan.unit);
+   break;
+  }
   case 'MASS_COIN_OUTCOME':{
    let heads=0;
    for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
@@ -1552,7 +1566,25 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
-  case 'SWITCH_SELF_ATTACK':if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);break;
+  case 'SWITCH_SELF_ATTACK':
+   if(plan.optional&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);
+   break;
+  case 'ATTACK_SWITCH_THEN_DAMAGE':
+   if(action.targetIds?.length){
+    chooseBenchSwitch(g,actor,o,action.targetIds[0]);
+    damage(g,actor,o.active,plan.amount);
+   }
+   break;
+  case 'ATTACK_RETURN_SELF_ENERGY':
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const ident of ids('energy')){
+    const index=card.energyCards.findIndex(energy=>id(energy)===ident);
+    assert(index>=0,'SELF_ENERGY_RETURN_TARGET_CHANGED');
+    p.hand.push(card.energyCards.splice(index,1)[0]);
+    event(g,actor,'RETURN_TO_HAND',{cardIds:[ident],sourceInstanceId:id(card),fromZone:'attached'});
+   }
+   break;
   case 'HAND_LIMIT_DRAW_ATTACK':if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'ABILITY_SWITCH_OWN':chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);break;
@@ -1871,6 +1903,7 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='SWITCH_SELF_ATTACK'&&effect.plan.optional&&p.bench.length)action.targetIds=[id(p.bench[0])];
  if(m==='MASS_ATTACHED_ENERGY_MOVE'&&effect.plan.count!==null){
   const plan=effect.plan,{pool,targets}=attachedMovePool(p,opponent(g,actor),card,plan);
   const chosen=[];let covered=0;
@@ -1882,9 +1915,9 @@ function completeAction(g,actor,option){
   }
  }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'&&action.selections.mode[0]==='boost')action.selections.ownBench=[];
- if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
   const entries=(card.energyCards||[]).map((energy,index)=>({
-    energy,index,units:energyUnits({...card,energyCards:[energy]}).length
+    energy,index,units:selectedAttachmentUnits(card,energy,effect.plan)
   })).filter(e=>e.units>0).sort((a,b)=>b.units-a.units||a.index-b.index);
   const chosen=[];let covered=0;
   for(const entry of entries){
