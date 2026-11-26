@@ -544,10 +544,14 @@ async def main():
     assert picked
     for i,ident in enumerate(picked):
      assert any(c['id']==ident and c['kind']=='energy' and not c.get('isSpecial') for c in before['players'][0][plan['zone']])
-     target=before['players'][0]['active']['id'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
+     target=f['sourceId'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('origin')=='bench':
+     source=next(c for c in before['players'][0]['bench'] if c['id']==option['action']['sourceInstanceId'])
+     assert source['entryWindow']==before['referenceActionSequence']
+     assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",source)==r['officialCardId']
     if plan.get('origin')=='evolve':
      source=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==option['action']['sourceInstanceId'])
      assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
