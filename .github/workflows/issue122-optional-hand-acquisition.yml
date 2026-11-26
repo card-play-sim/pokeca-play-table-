@@ -86,7 +86,7 @@ jobs:
           const oldIds=new Set(prior.map(r=>String(r.officialCardId)));
           const added=[...current.keys()].filter(id=>!oldIds.has(id)).sort();
           assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
-          const previous=JSON.parse(execFileSync('git',['show','03bcf12e371514641d05013fd03bee600d94feb0:reports/official-effect-continuation/optional-hand-acquisition-exact-delta.json'],{encoding:'utf8'})).added;
+          const previous=JSON.parse(execFileSync('git',['show','03bcf12e371514641d05013fd03bee600d94feb0:reports/official-effect-continuation/counter-grammar-exact-delta.json'],{encoding:'utf8'})).added;
           for(const id of [...previous,'50932'])assert(added.includes(String(id)),'PREVIOUS_QUALIFIED_PRINT_MISSING:'+id);
           fs.mkdirSync('artifacts',{recursive:true});
           fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base,added,count:added.length},null,2));
