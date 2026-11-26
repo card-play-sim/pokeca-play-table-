@@ -1,0 +1,54 @@
+name: Issue122 stage exact 11-print follow-up without losing prior proofs
+on:
+  push:
+    branches: [battle/issue122-publish-next11-20261126]
+    paths: ['.github/workflows/issue122-stage-next11.yml']
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconcile verified checkpoint with previous publication candidate
+        run: |
+          set -euo pipefail
+          base=3a88dd935e00fafd62b38c5cb2bb56a3e97b8790
+          checkpoint=$(git rev-parse 69ec3d5ed)
+          git merge-base --is-ancestor "$base" HEAD
+          git read-tree --reset -u "$checkpoint"
+          # Preserve every path from the previous publication, including its proof reports.
+          git diff --cached --name-only --diff-filter=D -z HEAD | while IFS= read -r -d '' p; do git restore --source=HEAD --staged --worktree -- "$p"; done
+          node <<'NODE'
+          const fs=require('node:fs'),a=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const read=sha=>JSON.parse(execFileSync('git',['show',sha+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const prior=read('3a88dd935e00fafd62b38c5cb2bb56a3e97b8790');
+          const current=JSON.parse(fs.readFileSync(path)).records;
+          const ids=new Map(current.map(x=>[String(x.officialCardId),x]));
+          a.equal(ids.size,current.length);
+          for(const x of prior)a.deepEqual(ids.get(String(x.officialCardId)),x,'PRIOR_RECORD_CHANGED:'+x.officialCardId);
+          const old=new Set(prior.map(x=>String(x.officialCardId)));
+          const added=[...ids.keys()].filter(x=>!old.has(x)).sort();
+          const proof=JSON.parse(fs.readFileSync('reports/official-effect-continuation/release-next47-exact-delta.json'));
+          a.equal(proof.count,55);
+          a.equal(added.length,11);
+          for(const id of added)a.ok(proof.added.includes(id),'UNPROVEN_ID:'+id);
+          fs.writeFileSync('reports/official-effect-continuation/release-next11-exact-delta.json',JSON.stringify({base:'3a88dd935e00fafd62b38c5cb2bb56a3e97b8790',added,count:added.length},null,2)+'\n');
+          console.log('EXACT_NEXT_11',added);
+          NODE
+          git diff --cached --check
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          git add reports/official-effect-continuation/release-next11-exact-delta.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Stage exact 11 proven prints after 35-print candidate; preserve all prior records'
+          git push origin HEAD:battle/issue122-publish-next11-20261126
