@@ -150,6 +150,9 @@ function repairProfile(feedback='',attempt=1){
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT/i.test(reason)?'FORMAT':
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT/i.test(reason)?'ANCHOR':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
+ /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
+ /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
+ /ENGINE_EXECUTION_FAILED|NO_EXECUTION_RECEIPT|NO_SELECTED_PRINT_QUALIFIED|EXECUTION_EVIDENCE_INCOMPLETE/i.test(reason)?'EXECUTION':
  reason?'ENGINE':'INITIAL';
  const compact=type==='TRANSPORT'||type==='TRUNCATED'||attempt>1;
  const instructions={
@@ -158,6 +161,9 @@ function repairProfile(feedback='',attempt=1){
  FORMAT:'Previous output was not valid JSON. Use JSON string escaping, no markdown, no trailing commas, one complete object.',
  ANCHOR:'Previous edit anchor was stale or ambiguous. Choose an existing anchor ID from the supplied table. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
+ INTEGRITY:'The candidate changed or lost a protected record or receipt. Preserve all prior compiled records and fix source semantics; never edit data, receipts or gates.',
+ COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar, then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
+ EXECUTION:'Compilation alone did not yield a proven target. Use each reported failed slot and reason to repair the actual runtime action, target legality and worker fixture; retain positive and negative state checks.',
  ENGINE:'Repair the concrete failure using the provided diagnostics. Preserve all previously verified behavior.',
  INITIAL:'Implement the smallest reusable change with executable validation.'
  };
