@@ -209150,6 +209150,58 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50932",
+      "name": "レポーター",
+      "deckName": "レポーター",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50932",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M7/050932_T_REPOTA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50932.json",
+        "sha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
+        "htmlSha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
+        "textSha256": "92a1d2ce1d2fe4fecfe4497f2096826f9eb869f71c42f0ea3c2327727511c300"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_EFFECT_SEQUENCE",
+        "commands": [
+          "DRAW",
+          "REVEAL"
+        ],
+        "steps": [
+          {
+            "op": "draw",
+            "amount": 2
+          },
+          {
+            "op": "revealHand",
+            "side": "opponent"
+          },
+          {
+            "op": "peekTop",
+            "side": "opponent",
+            "amount": 1
+          }
+        ],
+        "origin": null,
+        "activeOnly": false,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -209701,21 +209753,6 @@
         "sha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "htmlSha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "textSha256": "78bf194258225eec3dbf337912c994bc921d0a66c152c827974e43003546e6f6"
-      }
-    },
-    {
-      "officialCardId": "46131",
-      "name": "ビリオとネア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46131.json",
-        "sha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "htmlSha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "textSha256": "981338e57cfc48f8b1eedc33ffab7be0bae357b0c2a7206003a88f3ec3d9f3b8"
       }
     },
     {

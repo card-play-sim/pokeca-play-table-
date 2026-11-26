@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "registryHash": "48a829c2c99ebf75e0ef4a526374d5b6ee95ab7ead7c1728dc159e7c33edabb9",
+  "registryHash": "e7686ec80b43ba4147838d997534a9aa6e986ed6ce38716c29c33631505043af",
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
@@ -12,8 +12,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 259,
-      "notImplemented": 115,
+      "compiled": 261,
+      "notImplemented": 113,
       "blocked": 0,
       "executionVerifiedPrints": 41
     },
@@ -678,21 +678,6 @@
         "sha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "htmlSha256": "69631d3b90b2e62dd4835e6dd07bd33ea27feb9b138b98e639412a46917d59a2",
         "textSha256": "78bf194258225eec3dbf337912c994bc921d0a66c152c827974e43003546e6f6"
-      }
-    },
-    {
-      "officialCardId": "46131",
-      "name": "ビリオとネア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46131.json",
-        "sha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "htmlSha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
-        "textSha256": "981338e57cfc48f8b1eedc33ffab7be0bae357b0c2a7206003a88f3ec3d9f3b8"
       }
     },
     {
@@ -6800,21 +6785,6 @@
       }
     },
     {
-      "officialCardId": "50932",
-      "name": "レポーター",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50932.json",
-        "sha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
-        "htmlSha256": "f9a95c3d67d8d19d1d7161ccd7ff517a1bd2cbcf7f13c141a7af97b34a09ea25",
-        "textSha256": "92a1d2ce1d2fe4fecfe4497f2096826f9eb869f71c42f0ea3c2327727511c300"
-      }
-    },
-    {
       "officialCardId": "50933",
       "name": "ファイトアリーナ",
       "category": "stadium",
@@ -11523,7 +11493,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 315
+        "count": 313
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -11538,10 +11508,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "b165dd12a1318fd7229f7f243950e4e1f19dd3da1839e32f1b5bad732cc6246c",
+    "executionFingerprint": "6b5a001da7262746a186d3a6c27ad2064008fa2be9dbadab888525ac9f02cc18",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 202329,
+    "seq": 211641,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
