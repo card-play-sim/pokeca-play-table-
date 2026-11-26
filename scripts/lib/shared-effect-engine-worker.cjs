@@ -999,7 +999,7 @@ function prepare(r, e, kind) {
   if(m==='MASS_HEAL_OWN'){
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
     if(!targets.length)return {blocked:'NO_MASS_HEAL_FIXTURE'};
-    for(const mon of targets)mon.damage=Math.min(mon.hp-10,Math.max(10,e.plan.amount+10));
+    for(const mon of targets)mon.damage=Math.min(mon.hp-10,e.plan.amount==='all'?70:Math.max(10,e.plan.amount+10));
   }
   if(m==='MASS_BOARD_BONUS'){
     if(fixtureRequirements.namedBenchChain){
@@ -1955,9 +1955,14 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='MASS_HEAL_OWN'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0];
+    if(plan.origin==='evolve'){
+      const source=[own.active,...own.bench].find(c=>c.id===t.sourceId);assert(source?.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const denied=port(closed);assert.equal(denied.dispatch('you',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(closed));
+    }
     const targets=(plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>(!plan.type||E.getReferenceEffectRecord(c).facts.types.includes(plan.type))&&(plan.target!=='choice'||action.selections.cards.includes(c.id))&&c.damage>0);
     assert(targets.length>0);
-    for(const mon of targets){const next=[resolved.active,...resolved.bench].find(c=>c.id===mon.id);assert(next);assert.equal(next.damage,Math.max(0,mon.damage-plan.amount));}
+    for(const mon of targets){const next=[resolved.active,...resolved.bench].find(c=>c.id===mon.id);assert(next);assert.equal(next.damage,plan.amount==='all'?0:Math.max(0,mon.damage-plan.amount));}
   }
   if(e.plan.mechanic==='MASS_PRIZE_DRAW'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0];
