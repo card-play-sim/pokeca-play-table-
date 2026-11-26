@@ -58,9 +58,9 @@ jobs:
           for(const r of old)assert.deepEqual(current.get(String(r.officialCardId)),r,'PREVIOUS_RECORD_CHANGED:'+r.officialCardId);
           const previous=new Set(old.map(r=>String(r.officialCardId))),added=[...current.keys()].filter(id=>!previous.has(id)).sort();
           assert(added.length>0,'NO_QUALIFIED_PRINTS');
-          const requested=["50363","50372","50378","50397","50524","45966","45963","46155","48925","48935","47539","47983","47991","48758","47300","47366","48532","48749","47769","48427","49134","45239","45557","48848","47083","48658","49285","49645","50060","46352","46462","45962"];
+          const requested=["50363","50372","50378","50397","50524","45966","45963","46155","48925","48935","47539","47983","47991","48758","47300","47366","48532","48749","47769","48427","49134","45239","45557","48848","47083","48658","49285","49645","50060","46352","46462","45962","47025","47233","47244","48845","46232","46312","48775","45621","45678","45685","50251"];
           const qualified=requested.filter(id=>added.includes(id));
-          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base,added,count:added.length,qualified,requested},null,2));
+          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base,added,count:added.length,qualified,requested,minimumManualGoal:30,minimumManualGoalMet:added.length>=30},null,2));
           NODE
           node scripts/build-effect-extensions.cjs --check
           node scripts/sync-reference-effects.cjs --check
