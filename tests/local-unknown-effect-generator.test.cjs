@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -77,3 +77,18 @@ async function transportTest(){
  console.log('LOCAL_UNKNOWN_GENERATOR_HTTP PASS');
 }
 transportTest().catch(e=>{console.error(e);process.exitCode=1;});
+
+// The model actually returned fenced JSON in run 45825665165.
+const modelProposal={edits:[{path,before,after:before+'\nconst newEffect = true;'}]};
+const json=JSON.stringify(modelProposal);
+const fence='```';
+assert.deepEqual(parseModelProposal(json,'stop'),modelProposal);
+assert.deepEqual(parseModelProposal(fence+'json\n'+json+'\n'+fence,'stop'),modelProposal);
+assert.deepEqual(parseModelProposal(fence+'\r\n'+json+'\r\n'+fence,'stop'),modelProposal);
+assert.throws(()=>parseModelProposal(json,'length'),/MODEL_OUTPUT_TRUNCATED/);
+assert.throws(()=>parseModelProposal('explanation\n'+fence+'json\n'+json+'\n'+fence,'stop'));
+assert.throws(()=>parseModelProposal(fence+'json\n'+json+'\n'+fence+'\n'+fence+'json\n'+json+'\n'+fence,'stop'));
+assert.throws(()=>parseModelProposal('[]','stop'),/MODEL_PROPOSAL_SCHEMA/);
+assert.throws(()=>applyEdits(sources,parseModelProposal('{"edits":[]}','stop')),/INVALID_EDIT_COUNT/);
+assert.throws(()=>applyEdits(sources,parseModelProposal(JSON.stringify({edits:[{path:'.github/workflows/unsafe.yml',before,after:'no'}]}),'stop')),/PROTECTED_PATH/);
+console.log('LOCAL_UNKNOWN_GENERATOR_RESPONSE_FORMAT PASS');
