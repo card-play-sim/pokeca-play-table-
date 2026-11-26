@@ -4,6 +4,8 @@ on:
     branches: [battle/issue122-counter-grammar-20261126, automation/unknown-effect-batch-resilience-20261126, main]
     paths:
       - '.github/workflows/local-unknown-effect-generator.yml'
+      - 'scripts/local-unknown-effect-generator.cjs'
+      - 'tests/local-unknown-effect-generator.test.cjs'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
