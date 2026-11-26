@@ -129,12 +129,21 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate,base,bonus:Number(bonus),
    ...(type?{type}:{threshold:Number(prizes||hand||stage||extraEnergy)})};
  }
+ const stadiumBonus=text.match(/^場にスタジアムが出ているなら、([1-9]\d{0,2})ダメージ追加。その後、そのスタジアムをトラッシュする。$/);
+ if(stadiumBonus&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE','DISCARD'],predicate:'stadiumPresent',discardStadium:true,base,bonus:Number(stadiumBonus[1]),sharedWording:true};
+ const recoilBonus=text.match(/^のぞむなら、([1-9]\d{0,2})ダメージ追加。その場合、このポケモンにも([1-9]\d{0,2})ダメージ。$/);
+ if(recoilBonus&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'ATTACK_OPTIONAL_RECOIL_BONUS',commands:['DAMAGE'],base,bonus:Number(recoilBonus[1]),recoil:Number(recoilBonus[2])};
  // Exact printed board predicates. Unknown clauses never fall back to damage only.
  if(base!==null&&printed.endsWith('+')){
   const boardBonus=text.match(/^(.+)、([1-9]\d{0,2})ダメージ追加。$/);
   if(boardBonus){
    const clause=boardBonus[1],bonus=Number(boardBonus[2]);
    const patterns=[
+    ['becameActive',/^この番に?、このポケモンがベンチからバトル場に出ていたなら$/],
+    ['sharedFieldType',/^自分の場に、相手の場のポケモンと同じタイプのポケモンがいるなら$/],
+    ['ownNamedEnergy',/^このポケモンに「([^「」]{1,40}エネルギー)」がついているなら$/,'name'],
     ['ownHandEmpty',/^自分の手札が1枚もないなら$/],
     ['ownPrizesExact',/^自分のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
     ['opponentPrizesExact',/^相手のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
@@ -262,6 +271,20 @@ function additionalAttackPlan(entry,text){
  const benchTypedCounters=text.match(/^自分のベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモン全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。$/);
  if(benchTypedCounters&&printed===benchTypedCounters[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchTypedCounters',type:benchTypedCounters[1],unit:Number(benchTypedCounters[2]),base:0,sharedWording:true};
+ const benchNamedCounters=text.match(/^自分のベンチの「([^「」]{1,40})」全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(benchNamedCounters&&printed===benchNamedCounters[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchNamedCounters',name:benchNamedCounters[1],unit:Number(benchNamedCounters[2]),base:0,sharedWording:true};
+ const energyCardCounts=[
+  ['ownAttachedSpecialCards',/^このポケモンについている特殊エネルギーの枚数×([1-9]\d{0,2})ダメージ。$/],
+  ['opponentAttachedSpecialCards',/^相手のポケモン全員についている特殊エネルギーの枚数×([1-9]\d{0,2})ダメージ。$/],
+  ['ownAttachedBasicCards',/^このポケモンについている基本エネルギーの数×([1-9]\d{0,2})ダメージ。$/],
+  ['ownDistinctBasicTypes',/^自分のポケモン全員についている基本エネルギーのタイプの数×([1-9]\d{0,2})ダメージ。$/]
+ ];
+ for(const [metric,pattern] of energyCardCounts){
+  const match=text.match(pattern);
+  if(match&&printed===match[1]+'×')
+   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric,unit:Number(match[1]),base:0,sharedWording:true};
+ }
  const typedCount=text.match(/^自分の場の\[(草|炎|水|雷|超|闘|悪|鋼|無色|竜)\]ポケモンの数×([1-9]\d{0,2})ダメージ。$/);
  if(typedCount&&printed===typedCount[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTypedPokemonCount',type:typedCount[1],unit:Number(typedCount[2]),base:0};

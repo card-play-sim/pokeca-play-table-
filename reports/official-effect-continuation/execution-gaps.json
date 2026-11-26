@@ -1,5 +1,5 @@
 {
-  "baseCommit": "3dc8007c2cf993d4e1aee81c5884ee3f0a13e28e",
+  "baseCommit": "8c9e1753cf475659071d5d462293db71bf637cb8",
   "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
   "gaps": [
     {
@@ -12,28 +12,13 @@
       "details": null
     },
     {
-      "id": "46235",
+      "id": "47426",
       "kind": "attack",
       "index": 1,
-      "slot": "46235:attack:サニーアシスト:1",
-      "status": "FAILED",
-      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
-      "details": {
-        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
-    },
-    {
-      "id": "46313",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46313:attack:サニーアシスト:1",
-      "status": "FAILED",
-      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
-      "details": {
-        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
+      "slot": "47426:attack:バッドサンダー:1",
+      "status": "BLOCKED",
+      "reason": "NO_NAMED_ENERGY_PREDICATE_FIXTURE",
+      "details": null
     },
     {
       "id": "45245",
@@ -42,27 +27,6 @@
       "slot": "45245:attack:ちょくれつキャノン:1",
       "status": "BLOCKED",
       "reason": "NO_POSITIVE_PUBLIC_COUNT_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "46383",
-      "kind": "attack",
-      "index": 1,
-      "slot": "46383:attack:ストームボルト:1",
-      "status": "FAILED",
-      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
-      "details": {
-        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
-    },
-    {
-      "id": "49652",
-      "kind": "ability",
-      "index": 0,
-      "slot": "49652:ability:おしながす:0",
-      "status": "BLOCKED",
-      "reason": "NO_MOVE_ENERGY_FIXTURE",
       "details": null
     },
     {
@@ -127,81 +91,6 @@
       "status": "BLOCKED",
       "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
       "details": null
-    },
-    {
-      "id": "48818",
-      "kind": "attack",
-      "index": 1,
-      "slot": "48818:attack:サニーアシスト:1",
-      "status": "FAILED",
-      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
-      "details": {
-        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
-    },
-    {
-      "id": "48993",
-      "kind": "attack",
-      "index": 1,
-      "slot": "48993:attack:ストームボルト:1",
-      "status": "FAILED",
-      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
-      "details": {
-        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
-        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
-    },
-    {
-      "id": "48433",
-      "kind": "ability",
-      "index": 0,
-      "slot": "48433:ability:ソーラートランス:0",
-      "status": "BLOCKED",
-      "reason": "NO_MOVE_ENERGY_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48444",
-      "kind": "ability",
-      "index": 0,
-      "slot": "48444:ability:ソーラートランス:0",
-      "status": "BLOCKED",
-      "reason": "NO_MOVE_ENERGY_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "48462",
-      "kind": "attack",
-      "index": 1,
-      "slot": "48462:attack:フロストバリア:1",
-      "status": "FAILED",
-      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
-      "details": {
-        "mechanic": "ATTACK_DAMAGE_REDUCTION",
-        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3545:5)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
-    },
-    {
-      "id": "47736",
-      "kind": "ability",
-      "index": 0,
-      "slot": "47736:ability:ソーラートランス:0",
-      "status": "BLOCKED",
-      "reason": "NO_MOVE_ENERGY_FIXTURE",
-      "details": null
-    },
-    {
-      "id": "47814",
-      "kind": "attack",
-      "index": 1,
-      "slot": "47814:attack:フロストバリア:1",
-      "status": "FAILED",
-      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
-      "details": {
-        "mechanic": "ATTACK_DAMAGE_REDUCTION",
-        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3545:5)\n    at Object.run (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/workspace/work/auto-003-batch/work/unused/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:514:28)\n    at emit (node:internal/child_process:1020:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:91:21)"
-      }
     }
   ]
 }

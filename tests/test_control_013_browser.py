@@ -220,6 +220,16 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='MASS_BOARD_BONUS' and f['e']['plan'].get('discardStadium'):
+    stadium_id=before['stadium']['id']
+    owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])
+    assert after['stadium'] is None and any(card['id']==stadium_id for card in owner['discard'])
+    assert any(event.get('details',{}).get('fromZone')=='stadium' and stadium_id in event['details'].get('cardIds',[]) for event in events)
+   if m=='ATTACK_OPTIONAL_RECOIL_BONUS':
+    assert option['action']['selections']['recoilBonus']==['accept-recoil']
+    assert any(event.get('details',{}).get('command')=='DAMAGE'
+               and event['details'].get('targetInstanceId')==before['players'][0]['active']['id']
+               and event['details'].get('amount')==f['e']['plan']['recoil'] for event in events)
    if m=='ATTACK_OPTIONAL_ENERGY_BONUS':
     plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];sel=option['action']['selections']
     picked=([c['id'] for c in own['active']['energyCards']] if sel['mode']==['bonus'] else []) if plan['all'] else sel['energy']

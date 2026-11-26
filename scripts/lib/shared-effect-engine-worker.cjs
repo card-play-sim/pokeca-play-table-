@@ -170,6 +170,9 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
   if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(plan.metric==='ownBenchNamedCounters')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(plan.metric))
+   reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',plan.metric.startsWith('opponent')?1:0);
   if(plan.metric==='ownBenchTypedCounters')reserve(r=>mon(r,plan.type,0),'bench');
   if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
   if(plan.metric==='opponentDiscardBasic')reserve(isBasicEnergy,'discard',1);
@@ -305,6 +308,13 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_BOARD_BONUS'){
+  if(plan.predicate==='becameActive')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
+  if(plan.predicate==='sharedFieldType'){
+   reserve(r=>mon(r,null,0)&&r.facts.types.some(type=>source.facts.types.includes(type)),'active',1);
+   reserve(r=>mon(r,null,0)&&r.facts.types.every(type=>!source.facts.types.includes(type)),'bench',1);
+  }
+  if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
+  if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
   if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
    const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
    if(!reserve(r=>named(r)&&r.facts.basic,'bench')){
@@ -1025,6 +1035,33 @@ function prepare(r, e, kind) {
       own.active.energyCards.splice(own.active.energyCards.indexOf(card),1);own.deck.push(card);
     }
     if(plan.predicate==='ownSpecialEnergy'&&!own.active.energyCards.some(c=>c.isSpecial))return {blocked:'NO_SPECIAL_ENERGY_PREDICATE_FIXTURE'};
+    if(plan.predicate==='becameActive'){
+      if(!own.bench.length)return {blocked:'NO_BENCH_TO_ACTIVE_FIXTURE'};
+      const source=own.active;
+      [own.active,own.bench[0]]=[own.bench[0],source];
+      const swap=c=>c.cardType==='ITEM'&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='SWITCH';
+      if(!own.hand.some(swap)){
+        const i=own.deck.findIndex(swap);
+        if(i<0)return {blocked:'NO_BENCH_TO_ACTIVE_SWITCH_ITEM'};
+        own.hand.push(own.deck.splice(i,1)[0]);
+      }
+      const item=own.hand.find(swap);
+      const replay=port(g);
+      const moved=replay.dispatch('you',{type:'play_item',cardId:item.id,selections:{bench:[source.id]}});
+      if(!moved.ok)return {blocked:'BENCH_TO_ACTIVE_SWITCH_REJECTED'};
+      frame.game=replay.getSnapshot();
+    }
+    if(plan.predicate==='stadiumPresent'){
+      const i=own.deck.findIndex(c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c).mainPlan?.mechanic==='JAMMING');
+      if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
+      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+    }
+    if(plan.predicate==='ownNamedEnergy'){
+      const eligible=c=>c.kind==='energy'&&c.name===plan.name;
+      const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
+      if(!zone)return {blocked:'NO_NAMED_ENERGY_PREDICATE_FIXTURE'};
+      own.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+    }
     if(plan.predicate==='ownHandEmpty')own.deck.push(...own.hand.splice(0));
     if(plan.predicate==='ownDeckAtMost')own.discard.push(...own.deck.splice(plan.threshold));
     if(plan.predicate==='ownPrizesExact'||plan.predicate==='opponentPrizesExact'){
@@ -1307,6 +1344,30 @@ function prepare(r, e, kind) {
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (e.plan.metric === "ownCounters") own.active.damage = 20;
     if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if(e.plan.metric==='ownBenchNamedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).name===e.plan.name)c.damage=20;
+    if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(e.plan.metric)){
+      const side=e.plan.metric.startsWith('opponent')?opponent:own;
+      const holders=e.plan.metric.startsWith('opponent')?side.bench:[side.active];
+      const special=c=>c.kind==='energy'&&c.isSpecial&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='IGNITION';
+      const zone=[side.deck,side.hand].find(cards=>cards.some(special));
+      if(!zone||!holders.length)return {blocked:'NO_PHYSICAL_SPECIAL_ENERGY_COUNT_FIXTURE'};
+      holders[0].energyCards.push(zone.splice(zone.findIndex(special),1)[0]);
+    }
+    if(e.plan.metric==='ownDistinctBasicTypes'&&own.bench.length){
+      const costs=e.cost.filter(t=>t!=='無色');
+      const basics=own.active.energyCards.filter(c=>!c.isSpecial);
+      const payment=[];
+      for(const type of costs){
+        const card=basics.find(c=>c.energyType===type&&!payment.includes(c));
+        if(!card)return {blocked:'MISSING_DISTINCT_TYPES_ATTACK_PAYMENT'};
+        payment.push(card);
+      }
+      for(const card of basics.sort((a,b)=>Number(costs.includes(b.energyType))-Number(costs.includes(a.energyType))))
+        if(payment.length<e.cost.length&&!payment.includes(card))payment.push(card);
+      for(const card of basics)if(!payment.includes(card))own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(card),1)[0]);
+      const candidate=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&!payment.some(a=>a.energyType===c.energyType));
+      if(candidate>=0)own.bench[0].energyCards.push(own.deck.splice(candidate,1)[0]);
+    }
     if(e.plan.metric==='ownBenchTypedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type))c.damage=10;
     if (e.plan.metric === "ownDamagedBenchCount" && own.bench.length) own.bench[0].damage=10;
     if (e.plan.metric === "ownPrizesTaken" && own.prizeCards.length>1) {own.prizes--;own.hand.push(own.prizeCards.pop());}
@@ -1318,7 +1379,7 @@ function prepare(r, e, kind) {
       }
     }
     for (const energy of [...own.active.energyCards]) {
-      if (!energy.isSpecial) continue;
+      if (!energy.isSpecial||e.plan.metric==='ownAttachedSpecialCards') continue;
       own.active.energyCards.splice(own.active.energyCards.indexOf(energy), 1);
       own.deck.push(energy);
     }
@@ -1722,7 +1783,10 @@ function verifyCase(t, e) {
       assert(!plan.basic||!energy.isSpecial);
       if(plan.type&&!energy.isSpecial)assert.equal(energy.energyType,plan.type);
       const target=plan.target==='self'?t.sourceId:plan.target==='ownActive'?prior.active.id:action.selections['moveTo'+(plan.multi?i:0)][0];
-      assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id));
+      assert.notEqual(target,source.id);
+      const attached=next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id);
+      const expired=E.getReferenceEffectRecord(energy)?.mainPlan?.mechanic==='IGNITION'&&after.turnNumber>before.turnNumber&&resolved.discard.some(c=>c.id===id);
+      assert(attached||expired,'ATTACHED_ENERGY_DESTINATION_MISSING:'+id+':'+target);
       assert(!next.find(c=>c?.id===source.id)?.energyCards.some(e=>e.id===id));
       assert(effectEvents.some(x=>x?.command==='MOVE_ENERGY'&&x.energyId===id&&x.sourceInstanceId===source.id&&x.targetInstanceId===target));
     }
@@ -2109,6 +2173,19 @@ function verifyCase(t, e) {
     const invalid=own.hand.find(c=>c.kind!=='energy'||c.isSpecial||c.energyType!==e.plan.type);
     if(invalid){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,discard:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));}
   }
+  if(e.plan.mechanic==='ATTACK_OPTIONAL_RECOIL_BONUS'){
+    const plan=e.plan,action=t.action||o.action;
+    assert.deepEqual(Array.from(action.selections.recoilBonus),['accept-recoil']);
+    verifyPrintedAttack(before,after,e,plan.base+plan.bonus);
+    assert(effectEvents.some(event=>event?.command==='DAMAGE'&&event.targetInstanceId===before.players[0].active.id&&event.amount===plan.recoil));
+    const replay=port(before);
+    assert(replay.dispatch('you',{...action,selections:{recoilBonus:[]}}).ok);
+    verifyPrintedAttack(before,replay.getSnapshot(),e,plan.base);
+    assert(!replay.getSnapshot().history.slice(before.history.length).some(event=>event.details?.command==='DAMAGE'&&event.details.targetInstanceId===before.players[0].active.id));
+    const invalid=port(before);
+    assert.equal(invalid.dispatch('you',{...action,selections:{recoilBonus:['other']}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+  }
   if(e.plan.mechanic==='MASS_BOARD_BONUS'){
     const plan=e.plan,action=t.action||o.action;
     const rec=c=>E.getReferenceEffectRecord(c);
@@ -2117,6 +2194,10 @@ function verifyCase(t, e) {
     const positive=g=>{
       const [own,other]=g.players;
       switch(plan.predicate){
+        case 'becameActive':return g.history.some(h=>h.turnNumber===g.turnNumber&&h.player===own.id&&h.details?.command==='SWITCH'&&h.details.activeInstanceId===own.active.id);
+        case 'sharedFieldType':return [own.active,...own.bench].some(a=>[other.active,...other.bench].some(b=>rec(a).facts.types.some(type=>rec(b).facts.types.includes(type))));
+        case 'ownNamedEnergy':return own.active.energyCards.some(c=>c.name===plan.name);
+        case 'stadiumPresent':return Boolean(g.stadium);
         case 'ownHandEmpty':return own.hand.length===0;
         case 'ownDeckAtMost':return own.deck.length<=plan.threshold;
         case 'ownPrizesExact':return own.prizes===plan.threshold;
@@ -2133,6 +2214,19 @@ function verifyCase(t, e) {
     if(!positive(before))return {status:'BLOCKED',reason:'NO_POSITIVE_BOARD_PREDICATE_FIXTURE'};
     const start=JSON.parse(JSON.stringify(before)),[own,other]=start.players;
     switch(plan.predicate){
+      case 'becameActive':start.history.find(h=>h.details?.command==='SWITCH'&&h.details.activeInstanceId===own.active.id).turnNumber--;break;
+      case 'stadiumPresent':own.deck.push(start.stadium);start.stadium=null;start.stadiumOwner=null;break;
+      case 'ownNamedEnergy':for(const c of [...own.active.energyCards])if(c.name===plan.name)own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(c),1)[0]);break;
+      case 'sharedFieldType':{
+        const i=other.bench.findIndex(c=>rec(c).facts.types.every(type=>!rec(own.active).facts.types.includes(type)));
+        if(i<0)return {status:'BLOCKED',reason:'NO_NEGATIVE_SHARED_TYPE_FIXTURE'};
+        [other.active,other.bench[i]]=[other.bench[i],other.active];
+        for(const side of [own,other])for(const card of side.bench.splice(0)){
+          assert(!card.evolutionCards?.length&&!card.tools?.length&&!card.energyCards?.length);
+          side.deck.push(card);
+        }
+        break;
+      }
       case 'ownHandEmpty':own.hand.push(own.deck.shift());break;
       case 'ownDeckAtMost':while(own.deck.length<=plan.threshold&&own.discard.length)own.deck.push(own.discard.pop());break;
       case 'ownPrizesExact':case 'opponentPrizesExact':{
@@ -2168,6 +2262,10 @@ function verifyCase(t, e) {
     // Special energy with damage penalty or a stadium modifier must not be
     // declared qualified by a simplified damage formula.
     if(plan.predicate==='ownSpecialEnergy'&&before.players[0].active.energyCards.some(c=>c.isSpecial&&rec(c)?.mainPlan?.damagePenalty))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_PENALTY_PROOF_REQUIRED'};
+    if(plan.discardStadium){
+      assert.equal(after.stadium,null);
+      assert(after.players.find(p=>p.id===before.stadiumOwner).discard.some(c=>c.id===before.stadium.id));
+    }
     verifyPrintedAttack(before,after,e,plan.base+plan.bonus);
     verifyPrintedAttack(start,replay.getSnapshot(),e,plan.base);
   }
@@ -2639,6 +2737,11 @@ function verifyCase(t, e) {
       ownNamedOrExCount:[attackingSide.active,...attackingSide.bench].filter(c=>[e.plan.name,e.plan.name+'ex'].includes(E.getReferenceEffectRecord(c).name)).length,
       bothNameContainsCount:[attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench].filter(c=>[e.plan.name,e.plan.secondName].some(n=>E.getReferenceEffectRecord(c).name.includes(n))).length,
       ownBenchNamedCount:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).length,
+      ownBenchNamedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).reduce((n,c)=>n+c.damage/10,0),
+      ownAttachedBasicCards:attackingSide.active.energyCards.filter(c=>!c.isSpecial).length,
+      ownAttachedSpecialCards:attackingSide.active.energyCards.filter(c=>c.isSpecial).length,
+      opponentAttachedSpecialCards:[defendingSide.active,...defendingSide.bench].flatMap(c=>c.energyCards).filter(c=>c.isSpecial).length,
+      ownDistinctBasicTypes:new Set([attackingSide.active,...attackingSide.bench].flatMap(c=>c.energyCards).filter(c=>!c.isSpecial).map(c=>c.energyType)).size,
       ownBenchTypedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).reduce((n,c)=>n+c.damage/10,0),
       ownTypedPokemonCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).length,
       bothActiveEnergy: count([attackingSide.active,defendingSide.active]),
@@ -2662,6 +2765,26 @@ function verifyCase(t, e) {
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
+    if(['ownBenchNamedCounters','ownAttachedBasicCards','ownAttachedSpecialCards','opponentAttachedSpecialCards','ownDistinctBasicTypes'].includes(e.plan.metric)){
+      if(metrics[e.plan.metric]===0)return {status:'BLOCKED',reason:'NO_POSITIVE_PHYSICAL_COUNT_FIXTURE'};
+      if(e.plan.metric==='ownDistinctBasicTypes'&&metrics.ownDistinctBasicTypes<2)return {status:'BLOCKED',reason:'NO_MULTIPLE_BASIC_TYPES_FIXTURE'};
+      const start=JSON.parse(JSON.stringify(before)),[own,other]=start.players;
+      if(e.plan.metric==='ownBenchNamedCounters')for(const c of own.bench)c.damage=0;
+      if(e.plan.metric==='ownAttachedSpecialCards'||e.plan.metric==='opponentAttachedSpecialCards'){
+        const side=e.plan.metric.startsWith('opponent')?other:own;
+        for(const c of [side.active,...side.bench])for(const energy of c.energyCards.filter(a=>a.isSpecial))
+          side.deck.push(c.energyCards.splice(c.energyCards.indexOf(energy),1)[0]);
+      }
+      if(e.plan.metric==='ownDistinctBasicTypes')for(const c of own.bench)for(const energy of c.energyCards.filter(a=>!a.isSpecial))
+        own.deck.push(c.energyCards.splice(c.energyCards.indexOf(energy),1)[0]);
+      if(e.plan.metric!=='ownAttachedBasicCards'){
+        const expected=e.plan.metric==='ownDistinctBasicTypes'?new Set(own.active.energyCards.filter(c=>!c.isSpecial).map(c=>c.energyType)).size:0;
+        assert(expected<metrics[e.plan.metric]);
+        const replay=port(start);
+        assert(replay.dispatch('you',t.action||o.action).ok);
+        verifyPrintedAttack(start,replay.getSnapshot(),e,expected*e.plan.unit);
+      }
+    }
     if(['ownDiscardNamedCard','ownDiscardSupporterContains','ownNamedOrExCount','bothNameContainsCount','ownBenchNamedCount','ownBenchTypedCounters','opponentDiscardBasic','opponentDiscardItem','opponentExVCount','ownDamagedCount','opponentAbilityCount','ownNamedAttackCount','ownTeamNameCount','ownDiscardTypedPokemon','ownDiscardNamedAttack'].includes(e.plan.metric)&&metrics[e.plan.metric]===0)
       return {status:'BLOCKED',reason:'NO_POSITIVE_PUBLIC_COUNT_FIXTURE'};
     assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
