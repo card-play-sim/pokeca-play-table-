@@ -426,6 +426,14 @@ function requests(g,actor,card,effect){
   const eligible=own.flatMap(mon=>(mon.energyCards||[]).filter(basicEnergy));
   cardRequest('energy',eligible,0,eligible.length);
  }
+ if(m==='MASS_HAND_ACQUISITION'&&effect.plan.mode!=='bottom'){
+  const plan=effect.plan,limit=Math.min(plan.amount,p.deck.length);
+  add('acquire','CARD',[...(limit?[{id:'do',name:plan.mode==='search'?'山札を探す':'山札を引く',max:limit}]:[]),{id:'skip',name:'使わない',max:0}],1,1);
+  if(plan.mode==='search'&&limit){
+   deckRequest('cards',p.deck,0,limit);
+   out.at(-1).dependencies=[plan.exact?{kind:'countWhenSelected',key:'acquire',value:'do',count:1}:{kind:'maxFromSelection',key:'acquire',field:'max',divisor:1}];
+  }
+ }
  if(m==='ATTACK_OPTIONAL_DRAW_TO_LIMIT'&&p.hand.length<effect.plan.limit&&p.deck.length){
   add('drawChoice','CARD',[{id:'draw',name:'山札を引く'},{id:'skip',name:'引かない'}],1,1);
  }
@@ -1226,6 +1234,17 @@ function applyPlan(g,actor,card,effect,action){
    const energy=ids('energy');
    discardSelectedAttachment(g,actor,p,field(p),energy);
    damage(g,actor,o.active,energy.length*plan.unit);
+   break;
+  }
+  case 'MASS_HAND_ACQUISITION':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.mode==='bottom'){
+    const n=Math.min(p.deck.length,plan.amount);
+    if(n){p.deck.unshift(...p.deck.splice(p.deck.length-n,n).reverse());draw(g,p,n);}
+   }else if(ids('acquire')[0]==='do'){
+    if(plan.mode==='search')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:false});
+    else draw(g,p,Math.min(plan.amount,p.deck.length));
+   }
    break;
   }
   case 'ATTACK_OPTIONAL_DRAW_TO_LIMIT':
