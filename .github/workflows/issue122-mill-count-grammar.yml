@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/issue122-mill-count-grammar.yml'
       - 'tests/test_control_013_browser.py'
+      - 'scripts/build-intake-verification-fixtures.cjs'
   workflow_dispatch:
 permissions:
   contents: write
