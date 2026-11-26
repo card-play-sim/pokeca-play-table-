@@ -630,6 +630,16 @@ async def main():
      assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
      assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
     else:assert side['active']['id']==source['id']
+   if m=='MASS_HAND_ACQUISITION':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];selection=option['action'].get('selections',{})
+    count=min(plan['amount'],len(own['deck']))
+    picked=([x['id'] for x in own['deck'][-count:][::-1]] if plan['mode']=='bottom' else [x['id'] for x in own['deck'][:count]] if plan['mode']=='draw' else selection['cards'])
+    assert picked and set(picked)<={x['id'] for x in resolved['hand']}
+    assert len(resolved['hand'])==len(own['hand'])+len(picked)
+    if plan['mode']=='bottom':assert [x['id'] for x in resolved['deck']]==[x['id'] for x in own['deck'][:-count]]
+    if plan['mode']=='search':
+     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' and not ev['details'].get('reference') for ev in events)
+     assert not any(ev.get('details',{}).get('command')=='REVEAL' and not ev['details'].get('reference') for ev in events)
    if m=='MASS_COUNTER_GRAMMAR':
     plan=f['e']['plan'];other=before['players'][1];own=before['players'][0];sel=option['action'].get('selections',{})
     pool=[other['active'],*other['bench']]
