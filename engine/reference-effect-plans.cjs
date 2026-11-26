@@ -530,6 +530,16 @@ function plan(entry,kind){
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
 
+ if(kind==='ATTACK'&&/^\d+$/.test(String(entry.damage??'0'))){
+  const acquire=(mode,amount,extra={})=>({mechanic:'MASS_HAND_ACQUISITION',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),...(mode==='search'?['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK']:['DRAW'])],mode,amount,sharedWording:true,...extra});
+  const optional=generic.match(/^のぞむなら、自分の山札を([1-9]\d?)枚引く。$/);
+  if(optional)return acquire('draw',Number(optional[1]));
+  const bottom=generic.match(/^自分の山札を下から([1-9]\d?)枚引く。$/);
+  if(bottom)return acquire('bottom',Number(bottom[1]));
+  const search=generic.match(/^のぞむなら、自分の山札から好きなカードを(1枚|[3-9]枚まで)選び、手札に加える。そして山札を切る。$/);
+  if(search)return acquire('search',parseInt(search[1],10),{exact:search[1]==='1枚'});
+ }
+
  // Shared counter operations: exact remaining HP, multiplication, allocation,
  // hand-size scaling and fixed distinct targets. Counters are not damage.
  if(kind==='ATTACK'&&/^\d+$/.test(String(entry.damage??'0'))){

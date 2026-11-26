@@ -651,6 +651,16 @@ async def main():
      assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
      assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
     else:assert side['active']['id']==source['id']
+   if m=='MASS_HAND_ACQUISITION':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];selection=option['action'].get('selections',{})
+    count=min(plan['amount'],len(own['deck']))
+    picked=([x['id'] for x in own['deck'][-count:][::-1]] if plan['mode']=='bottom' else [x['id'] for x in own['deck'][:count]] if plan['mode']=='draw' else selection['cards'])
+    assert picked and set(picked)<={x['id'] for x in resolved['hand']}
+    assert len(resolved['hand'])==len(own['hand'])+len(picked)
+    if plan['mode']=='bottom':assert [x['id'] for x in resolved['deck']]==[x['id'] for x in own['deck'][:-count]]
+    if plan['mode']=='search':
+     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' and not ev['details'].get('reference') for ev in events)
+     assert not any(ev.get('details',{}).get('command')=='REVEAL' and not ev['details'].get('reference') for ev in events)
    if m=='MASS_COUNTER_GRAMMAR':
     plan=f['e']['plan'];other=before['players'][1];own=before['players'][0];sel=option['action'].get('selections',{})
     pool=[other['active'],*other['bench']]
@@ -731,7 +741,14 @@ async def main():
   c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
   await ready()
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
+  await page.locator('#menu-open').tap()
+  await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
+  # The menu opens a second sheet; it does not open the OS file chooser.
+  file_input=page.locator('#reference-deck-import')
+  await file_input.wait_for(state='visible',timeout=15000)
+  async with page.expect_file_chooser(timeout=15000) as chooser:
+   await file_input.tap()
+  await (await chooser.value).set_files(str(PREFIX/'example-decks.json'))
   try:
    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
   except Exception:

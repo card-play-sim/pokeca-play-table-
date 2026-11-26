@@ -43775,6 +43775,89 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46447",
+      "name": "ベラカスex",
+      "deckName": "ベラカスex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46447",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046447_P_BERAKASUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "さかさまドロー",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札を下から3枚引く。",
+          "effectId": "reference-46447-attack-0",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DRAW"
+            ],
+            "mode": "bottom",
+            "amount": 3,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "サイコキネシス",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "相手のバトルポケモンについているエネルギーの数×90ダメージ追加。",
+          "effectId": "reference-46447-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentEnergy",
+            "type": null,
+            "unit": 90,
+            "base": 20
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 250,
+        "evolvesFrom": "シガロコ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46447.json",
+        "sha256": "a86130e2a45863dfe0cc0fc4442364fb069c291f9a21bd2fc92e1b3b6c91e7ab",
+        "htmlSha256": "a86130e2a45863dfe0cc0fc4442364fb069c291f9a21bd2fc92e1b3b6c91e7ab",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47161",
       "name": "パルデア ウパー",
       "deckName": "パルデア ウパー",
@@ -50559,6 +50642,172 @@
         "path": "data/effect-extensions/evidence/46274.json",
         "sha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
         "htmlSha256": "56d0827196ed14d6a77c93f66913273495f21400ecad84fd57e588caf32ae37a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46280",
+      "name": "モトトカゲex",
+      "deckName": "モトトカゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46280",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046280_P_MOTOTOKAGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブレイクスルー",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46280-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        },
+        {
+          "name": "ジルコンロード",
+          "cost": [
+            "草",
+            "炎",
+            "超"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の山札を5枚引く。",
+          "effectId": "reference-46280-attack-1",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "mode": "draw",
+            "amount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46280.json",
+        "sha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
+        "htmlSha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46328",
+      "name": "モトトカゲex",
+      "deckName": "モトトカゲex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46328",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046328_P_MOTOTOKAGEEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ブレイクスルー",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46328-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        },
+        {
+          "name": "ジルコンロード",
+          "cost": [
+            "草",
+            "炎",
+            "超"
+          ],
+          "damage": "180",
+          "text": "のぞむなら、自分の山札を5枚引く。",
+          "effectId": "reference-46328-attack-1",
+          "plan": {
+            "mechanic": "MASS_HAND_ACQUISITION",
+            "commands": [
+              "DAMAGE",
+              "DRAW"
+            ],
+            "mode": "draw",
+            "amount": 5,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 210,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46328.json",
+        "sha256": "eb9dbcc1980ea8ce9da0a3733bf2dd2d1c3c628b55f157dd168b886c36c65b5e",
+        "htmlSha256": "eb9dbcc1980ea8ce9da0a3733bf2dd2d1c3c628b55f157dd168b886c36c65b5e",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -210289,6 +210538,518 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "49652",
+      "name": "ジュゴン",
+      "deckName": "ジュゴン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49652",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049652_P_JIXYUGON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "スプラッシュ",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "60",
+          "text": "",
+          "effectId": "reference-49652-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "おしながす",
+          "text": "自分の番に何回でも使える。自分のベンチポケモンについている[水]エネルギーを1個選び、バトルポケモンにつけ替える。",
+          "effectId": "reference-49652-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownBench",
+            "target": "ownActive",
+            "count": 1,
+            "optional": false,
+            "basic": false,
+            "type": "水",
+            "multi": false,
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": "パウワウ",
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49652.json",
+        "sha256": "39b57e864c873ca307bf6b64eb57f3c87fb846746363c9250946f2b01967a784",
+        "htmlSha256": "39b57e864c873ca307bf6b64eb57f3c87fb846746363c9250946f2b01967a784",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48433",
+      "name": "メガフシギバナex",
+      "deckName": "メガフシギバナex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48433",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048433_P_MFUSHIGIBANAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジャングルダンプ",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "草"
+          ],
+          "damage": "240",
+          "text": "このポケモンのHPを「30」回復する。",
+          "effectId": "reference-48433-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ソーラートランス",
+          "text": "自分の番に何回でも使える。自分の場のポケモンについている「基本[草]エネルギー」を1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-48433-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": "草",
+            "multi": false,
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 380,
+        "evolvesFrom": "フシギソウ",
+        "retreatCost": 4,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48433.json",
+        "sha256": "bc34c310bc48336f14ed18620fbb88cd3a7519ba9cb11cab1eeb9954380a02e3",
+        "htmlSha256": "bc34c310bc48336f14ed18620fbb88cd3a7519ba9cb11cab1eeb9954380a02e3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48444",
+      "name": "メガフシギバナex",
+      "deckName": "メガフシギバナex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48444",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048444_P_MFUSHIGIBANAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジャングルダンプ",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "草"
+          ],
+          "damage": "240",
+          "text": "このポケモンのHPを「30」回復する。",
+          "effectId": "reference-48444-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ソーラートランス",
+          "text": "自分の番に何回でも使える。自分の場のポケモンについている「基本[草]エネルギー」を1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-48444-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": "草",
+            "multi": false,
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 380,
+        "evolvesFrom": "フシギソウ",
+        "retreatCost": 4,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48444.json",
+        "sha256": "adb29be3828dcefd3bfaefb5a84813838f424dcb5f577e595c107215aa45b13f",
+        "htmlSha256": "adb29be3828dcefd3bfaefb5a84813838f424dcb5f577e595c107215aa45b13f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48462",
+      "name": "メガユキノオーex",
+      "deckName": "メガユキノオーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48462",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/048462_P_MYUKINOOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アバランチハンマー",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "100×",
+          "text": "自分の山札を上から6枚トラッシュし、その中にある「基本[水]エネルギー」の枚数×100ダメージ。",
+          "effectId": "reference-48462-attack-0",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 6,
+            "filter": "typedBasic",
+            "type": "水",
+            "team": null,
+            "unit": 100,
+            "base": 0,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "フロストバリア",
+          "cost": [
+            "水",
+            "水",
+            "水"
+          ],
+          "damage": "200",
+          "text": "次の相手の番、このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-48462-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ユキカブリ",
+        "retreatCost": 4,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48462.json",
+        "sha256": "1bc422df74bfbf562933deeadf098cac98374e3c309064307e4d28e387a475dd",
+        "htmlSha256": "1bc422df74bfbf562933deeadf098cac98374e3c309064307e4d28e387a475dd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47736",
+      "name": "メガフシギバナex",
+      "deckName": "メガフシギバナex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47736",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047736_P_MFUSHIGIBANAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジャングルダンプ",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "草"
+          ],
+          "damage": "240",
+          "text": "このポケモンのHPを「30」回復する。",
+          "effectId": "reference-47736-attack-0",
+          "plan": {
+            "mechanic": "HEAL_SELF_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "HEAL"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ソーラートランス",
+          "text": "自分の番に何回でも使える。自分の場のポケモンについている「基本[草]エネルギー」を1個選び、自分の別のポケモンにつけ替える。",
+          "effectId": "reference-47736-ability-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "MOVE_ENERGY"
+            ],
+            "source": "ownField",
+            "target": "ownOther",
+            "count": 1,
+            "optional": false,
+            "basic": true,
+            "type": "草",
+            "multi": false,
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 380,
+        "evolvesFrom": "フシギソウ",
+        "retreatCost": 4,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47736.json",
+        "sha256": "d4ac12d3d6543ed4c2f46495e0c1e96f0f71b23584ef343ff6b6f7f410148f16",
+        "htmlSha256": "d4ac12d3d6543ed4c2f46495e0c1e96f0f71b23584ef343ff6b6f7f410148f16",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47814",
+      "name": "メガユキノオーex",
+      "deckName": "メガユキノオーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47814",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1S/047814_P_MYUKINOOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アバランチハンマー",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "100×",
+          "text": "自分の山札を上から6枚トラッシュし、その中にある「基本[水]エネルギー」の枚数×100ダメージ。",
+          "effectId": "reference-47814-attack-0",
+          "plan": {
+            "mechanic": "MASS_MILL_COUNT_DAMAGE",
+            "commands": [
+              "DISCARD",
+              "DAMAGE"
+            ],
+            "scope": "own",
+            "limit": 6,
+            "filter": "typedBasic",
+            "type": "水",
+            "team": null,
+            "unit": 100,
+            "base": 0,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "フロストバリア",
+          "cost": [
+            "水",
+            "水",
+            "水"
+          ],
+          "damage": "200",
+          "text": "次の相手の番、このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-47814-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ユキカブリ",
+        "retreatCost": 4,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47814.json",
+        "sha256": "d2fbf23027207d394bcd1c452f9c7b017b5a20a565f4d5d3e1ba130aafb63acd",
+        "htmlSha256": "d2fbf23027207d394bcd1c452f9c7b017b5a20a565f4d5d3e1ba130aafb63acd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -212283,11 +213044,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46447",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47495",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -212568,17 +213324,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46280",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46323",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46328",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

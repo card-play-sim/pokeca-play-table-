@@ -153,6 +153,34 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ // Reserve the actual printed Energy type before prize/hand allocation.
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'&&plan.type){
+  const side=plan.source.startsWith('opponent')?1:0,index=side===0?deckIndex:1-deckIndex;
+  const energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,index);
+  const cost=side===0?kindAttackCost(e,plan.type):0;
+  const count=plan.count===null?1:Math.min(plan.count,3);
+  if(ensure(index,energy,cost+count))
+   for(let i=0;i<count;i++)requirements.push({side,zone:'deck',printId:energy.officialCardId});
+ }
+ // Damage-reduction proof needs an attacker which survives the printed
+ // attack and can execute a nonzero ordinary return attack.
+ if(m==='ATTACK_DAMAGE_REDUCTION'){
+  const attacker=reserve(r=>vanilla(r)&&!r.abilities.length&&
+   r.facts.hp>Number(e.damage||0)*(r.facts.weakness?.types.some(t=>source.facts.types.includes(t))?2:1)&&
+   vanilla(r).cost.length<=3&&Number(vanilla(r).damage)>0,'active',1);
+  if(attacker){
+   const costs=new Map();
+   for(const type of vanilla(attacker).cost){
+    const actual=type==='無色'?(attacker.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type;
+    costs.set(actual,(costs.get(actual)||0)+1);
+   }
+   for(const [type,count] of costs){
+    const energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===type,1-deckIndex);
+    if(ensure(1-deckIndex,energy,count))
+     for(let i=0;i<count;i++)requirements.push({side:1,zone:'deck',printId:energy.officialCardId});
+   }
+  }
+ }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
@@ -1065,6 +1093,12 @@ function prepare(r, e, kind) {
     const own=frame.game.players[0],valid=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
     if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
     if(!own.hand.some(valid))return {blocked:'NO_TYPED_COUNTER_COST'};
+  }
+  if(m==='MASS_HAND_ACQUISITION'){
+    const own=frame.game.players[0];
+    if(!own.deck.length)return {blocked:'NO_HAND_ACQUISITION_FIXTURE'};
+    const specials=own.active.energyCards.filter(c=>c.isSpecial);
+    own.active.energyCards=own.active.energyCards.filter(c=>!c.isSpecial);own.deck.push(...specials);
   }
   if(m==='MASS_COUNTER_GRAMMAR'){
     const plan=e.plan,other=frame.game.players[1],own=frame.game.players[0];
@@ -2012,6 +2046,29 @@ function verifyCase(t, e) {
         assert(events.some(ev=>ev?.command==='DISCARD'&&attached.every(id=>ev.cardIds.includes(id))));
       }else assert(side.active?.id===source.id&&source.energyCards.every(c=>side.active.energyCards.some(x=>x.id===c.id)));
       assert.deepEqual(Array.from(S.identities(end)),Array.from(S.identities(before)));
+    }
+  }
+  if(e.plan.mechanic==='MASS_HAND_ACQUISITION'){
+    const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],selection=action.selections||{};
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    const count=Math.min(plan.amount,own.deck.length),expected=plan.mode==='bottom'?own.deck.slice(-count).reverse().map(c=>c.id):plan.mode==='draw'?own.deck.slice(0,count).map(c=>c.id):selection.cards;
+    assert(expected.length>0);
+    assert(expected.every(id=>resolved.hand.some(c=>c.id===id)));
+    assert.equal(resolved.hand.length,own.hand.length+expected.length);
+    if(plan.mode==='bottom')assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(0,-count).map(c=>c.id));
+    if(plan.mode==='search'){
+      assert(effectEvents.some(x=>x?.command==='SHUFFLE_DECK'&&!x.reference));
+      assert(!effectEvents.some(x=>x?.command==='REVEAL'&&!x.reference));
+    }
+    if(plan.mode!=='bottom'){
+      assert.deepEqual(Array.from(selection.acquire),['do']);
+      const skip=port(before);assert(skip.dispatch('you',{...action,selections:{acquire:['skip'],cards:[]}}).ok);
+      assert.deepEqual(skip.getSnapshot().players[0].hand,own.hand);
+      assert.deepEqual(skip.getSnapshot().players[0].deck,own.deck);
+      if(plan.mode==='search'){
+        const bad=port(before);assert.equal(bad.dispatch('you',{...action,selections:{acquire:['skip'],cards:[own.deck[0].id]}}).ok,false);
+        assert.deepEqual(bad.getSnapshot(),before);
+      }
     }
   }
   if(e.plan.mechanic==='MASS_COUNTER_GRAMMAR'){
