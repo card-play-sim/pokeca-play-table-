@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/issue122-union72-full-gates.yml'
       - 'tests/test_control_013_browser.py'
+      - 'scripts/build-intake-verification-fixtures.cjs'
   workflow_dispatch:
 permissions:
   contents: write
@@ -155,6 +156,7 @@ jobs:
           for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
           for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
           test "$rv" -eq 0
+          test -s work/card-auto-connect/browser/example-decks.json
           unset POKECA_BROWSER_SLOTS_ONLY
           POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=union72-full-ai python tests/test_control_013_browser.py > artifacts/union72-full-ai.log 2>&1 || { tail -n 40 artifacts/union72-full-ai.log; exit 1; }
           tail -n 10 artifacts/union72-full-ai.log
@@ -169,7 +171,7 @@ jobs:
           cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/union72-execution-gaps.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tests/atomic-official-to-battle.test.cjs tests/issue122-attack-promotion-order.test.cjs engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git add scripts/build-intake-verification-fixtures.cjs tests/atomic-official-to-battle.test.cjs tests/issue122-attack-promotion-order.test.cjs engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: common mechanics with exact browser evidence'
             checkpoint="battle/issue122-union72-qualified-$GITHUB_RUN_ID"
