@@ -22,6 +22,7 @@ async function main(){
  assert.equal(state.players[0].active.id,defender.id,'knockout must wait for attacker promotion');
  assert.equal(state.pendingReferenceChoice.kind,'PROMOTE');assert.equal(state.pendingReferenceChoice.playerId,'ai');
  assert(!state.pendingPrizeSelection);
+ assert.equal(state.referenceAttackAwaitingPromotion,true,'attack resolution must remain pending until the mandatory replacement is selected');
  assert(state.players[1].hand.some(c=>c.id===attacker.id));
  for(const energy of attacker.energyCards)assert(state.players[1].hand.some(c=>c.id===energy.id));
  const saved=port.getResumeSnapshot();assert(port.restoreSession(saved).ok);assert.equal(JSON.stringify(port.getSnapshot()),JSON.stringify(state));
