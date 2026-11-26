@@ -441,6 +441,11 @@ function requests(g,actor,card,effect){
   cardRequest('opponentCards',pool,plan.optional?0:count,count);
   if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(o.hand)};
  }
+ if(m==='MASS_EFFECT_SEQUENCE'){
+  const first=effect.plan.steps[0];
+  if(first.op==='discardOwnHand'){const n=Math.min(first.amount,p.hand.length);cardRequest('sequenceDiscard',p.hand,n,n);}
+  if(first.op==='blindDiscardOpponent'){const n=Math.min(first.amount,o.hand.length);add('sequenceBlind','CARD',o.hand.map((_,i)=>({id:'hand-slot-'+i,name:'相手の手札 '+(i+1)})),n,n);}
+ }
  if(m==='ATTACK_BLIND_HAND_CHOICE'){
   const count=Math.min(effect.plan.amount,o.hand.length);
   add('blindHand','CARD',o.hand.map((_,i)=>({id:'hand-slot-'+i,name:'相手の手札 '+(i+1)})),count,count);
@@ -1079,6 +1084,8 @@ function applyPlan(g,actor,card,effect,action){
     const target=step.side==='opponent'?defender:card;
     const protectedTarget=step.side==='opponent'&&action.type==='attack_turn'&&defender.referenceProtection?.opponentTurn===g.turnNumber;
     switch(step.op){
+     case 'discardOwnHand':moveChosen(g,p,'hand',ids('sequenceDiscard'),'discard',false);break;
+     case 'blindDiscardOpponent':if(!protectedTarget)resolveBlindHand(g,actor,o,ids('sequenceBlind'),'discard');break;
      case 'draw':draw(g,p,step.amount);break;
      case 'drawIfHand':if(p.hand.length>=step.threshold)draw(g,p,step.amount);break;
      case 'revealHand':event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});break;
