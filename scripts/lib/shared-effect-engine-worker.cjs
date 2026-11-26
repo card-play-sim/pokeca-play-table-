@@ -153,6 +153,11 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ if(e.proofContextCost){
+  const proof=e.proofContextCost;
+  if(proof.mode==='discardName')reserve(r=>r.name===proof.name,'discard');
+  if(proof.mode==='ownAllNames')for(const name of proof.names)if(source.name!==name)reserve(r=>mon(r,null,0)&&r.name===name,'bench');
+ }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
@@ -442,7 +447,7 @@ function prepare(r, e, kind) {
     const plan=e.plan;
     const attackIndex=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
     if(attackIndex<0)return {blocked:'NO_CONTEXT_COST_ATTACK_FIXTURE'};
-    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofContextCost:plan},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
     const game=t.port.getSnapshot(),[own,other]=game.players;
     if(plan.mode==='discardName'){
@@ -456,7 +461,7 @@ function prepare(r, e, kind) {
     }else if(plan.mode==='opponentBench'){
       if(!other.bench.length)return {blocked:'NO_CONTEXT_COST_BENCH_FIXTURE'};
     }else if(plan.mode==='ownAllNames'){
-      return {blocked:'NAMED_FIELD_REQUIRES_FULL_PHYSICAL_FIXTURE'};
+      if(!plan.names.every(name=>[own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c)?.name===name)))return {blocked:'NO_CONTEXT_COST_NAMED_FIELD_FIXTURE'};
     }
     const discount=plan.mode==='discardName'?own.discard.filter(c=>E.getReferenceEffectRecord(c)?.name===plan.name).length:plan.mode==='opponentBench'?other.bench.length:trigger.cost.length;
     const keep=[];
@@ -2885,10 +2890,14 @@ function verifyCase(t, e) {
       other.deck.push(other.hand.pop());
     }else if(plan.mode==='opponentBench'){
       // Preserve physical cards and attachments while removing the opponent Bench condition.
-      for(const mon of other.bench){other.hand.push(...(mon.energyCards||[]),...(mon.tools||[]));other.hand.push(...(mon.evolutionStack||[]));const card={...mon};delete card.energyCards;delete card.tools;delete card.evolutionStack;other.hand.push(card);}
+      for(const mon of other.bench){other.hand.push(...(mon.energyCards||[]),...(mon.tools||[]),...(mon.evolutionCards||[]));const card={...mon};for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];other.hand.push(card);}
       other.bench=[];
     }else if(plan.mode==='ownAllNames'){
-      return {status:'BLOCKED',reason:'NAMED_FIELD_NEGATIVE_FIXTURE_REQUIRED'};
+      const i=own.bench.findIndex(c=>plan.names.includes(E.getReferenceEffectRecord(c)?.name)&&!c.energyCards?.length&&!c.tools?.length&&!c.evolutionCards?.length);
+      if(i<0)return {status:'BLOCKED',reason:'NAMED_FIELD_NEGATIVE_FIXTURE_REQUIRED'};
+      const mon=own.bench.splice(i,1)[0],card={...mon};
+      for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];
+      own.hand.push(card);
     }
     assert.deepEqual(S.identities(before),S.identities(baseline));
     const replay=port(baseline);
