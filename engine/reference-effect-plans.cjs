@@ -158,6 +158,10 @@ function additionalAttackPlan(entry,text){
  const basicMove=text.match(/^このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。$/);
  if(basicMove&&/^\d+$/.test(printed))
   return {mechanic:'ATTACK_BASIC_ENERGY_MOVE',commands:['DAMAGE','MOVE_ENERGY'],sharedWording:true};
+ // A strict compositional grammar: mill scope, physical-card filter and printed multiplier.
+ const millCount=text.match(/^(自分の山札を上から([1-9]\d?)枚|おたがいの山札を上から1枚ずつ)トラッシュし、その中にある(エネルギー|トレーナーズ|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」|「([^「」]{1,40})のポケモン」)の枚数×([1-9]\d{0,2})ダメージ(追加)?。$/);
+ if(millCount&&(millCount[7]?base!==null&&printed.endsWith('+'):printed===millCount[6]+'×'))
+  return {mechanic:'MASS_MILL_COUNT_DAMAGE',commands:['DISCARD','DAMAGE'],scope:millCount[2]?'own':'both',limit:millCount[2]?Number(millCount[2]):1,filter:millCount[4]?'typedBasic':millCount[5]?'teamPokemon':millCount[3]==='トレーナーズ'?'trainer':'energy',type:millCount[4]||null,team:millCount[5]||null,unit:Number(millCount[6]),base:millCount[7]?base:0,sharedWording:true};
  const numeric=text.match(/^(相手のバトルポケモンのにげるためのエネルギーの数|自分のトラッシュにあるエネルギーの枚数)×([1-9]\d{0,2})ダメージ追加。$/);
  if(numeric&&base!==null&&printed.endsWith('+'))
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:numeric[1].startsWith('相手')?'opponentRetreat':'ownDiscardEnergy',type:null,unit:Number(numeric[2]),base};
