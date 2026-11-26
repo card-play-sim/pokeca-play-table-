@@ -1595,6 +1595,18 @@ function verifyCase(t, e) {
     let ownCursor=0,otherCursor=0,handCount=own.hand.length-(plan.steps.some(s=>s.op==='drawIfHand')?1:0);
     for(const step of plan.steps){
       const target=step.side==='opponent'?after.players[1].active:next;
+      if(step.op==='discardOwnHand'){
+        const chosen=action.selections.sequenceDiscard||[];
+        assert.equal(chosen.length,Math.min(step.amount,own.hand.length));
+        assert(chosen.every(id=>own.hand.some(c=>c.id===id)&&resolved.discard.some(c=>c.id===id)&&!resolved.hand.some(c=>c.id===id)));
+        handCount-=chosen.length;
+      }
+      if(step.op==='blindDiscardOpponent'){
+        const req=o.requests.find(r=>r.key==='sequenceBlind');
+        assert(req&&req.candidates.every(c=>/^hand-slot-\d+$/.test(c.id)&&!c.validationReference));
+        const moved=other.hand.filter(c=>!after.players[1].hand.some(x=>x.id===c.id));
+        assert.equal(moved.length,Math.min(step.amount,other.hand.length));assert(moved.every(c=>after.players[1].discard.some(x=>x.id===c.id)));
+      }
       if(step.op==='draw'||step.op==='drawIfHand'&&handCount>=step.threshold){
         const drawn=own.deck.slice(ownCursor,ownCursor+step.amount);
         assert(drawn.every(c=>resolved.hand.some(x=>x.id===c.id)));
