@@ -41,8 +41,12 @@ jobs:
           s=p.read_text()
           old="  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))"
           new="""  await page.locator('#menu-open').tap()
+          +  await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
+          +  # The menu opens a second sheet; it does not open the OS file chooser.
+          +  file_input=page.locator('#reference-deck-import')
+          +  await file_input.wait_for(state='visible',timeout=15000)
           +  async with page.expect_file_chooser(timeout=15000) as chooser:
-          +   await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
+          +   await file_input.tap()
           +  await (await chooser.value).set_files(str(PREFIX/'example-decks.json'))"""
           new=new.replace('\n+','\n')
           assert s.count(old)==1,'IMPORT_TEST_SOURCE_CHANGED'
