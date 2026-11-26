@@ -6,6 +6,7 @@ on:
       - '.github/workflows/local-unknown-effect-generator.yml'
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'tests/local-unknown-effect-generator.test.cjs'
+      - 'scripts/verify-unknown-quarantine-receipt.py'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -31,6 +32,7 @@ jobs:
       - name: Verify generator boundaries and restore exact source checkpoint
         run: |
           node tests/local-unknown-effect-generator.test.cjs
+          python scripts/verify-unknown-quarantine-receipt.py --self-test
           found=0
           for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
             if ! git fetch origin "$checkpoint"; then continue; fi
@@ -155,24 +157,7 @@ jobs:
               node scripts/build-pwa-release.cjs --check
             ' > "$out/engine.log" 2>&1; then
               # No generated modules run on the host. A candidate is not a release.
-              if python - "$out" "$scratch" <<'PY'
-          import json,sys
-          from pathlib import Path
-          out,scratch=map(Path,sys.argv[1:])
-          def read(p):
-              assert p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(scratch.resolve() if p.is_relative_to(scratch) else p.parent.resolve()) and p.stat().st_size < 64*1024*1024
-              return json.loads(p.read_text())
-          prior=json.loads(Path('data/effect-extensions/compiled.json').read_text())['records']
-          current=read(scratch/'data/effect-extensions/compiled.json')['records']
-          indexed={str(r['officialCardId']):r for r in current}
-          assert len(indexed)==len(current)
-          assert all(indexed.get(str(r['officialCardId']))==r for r in prior)
-          receipt=read(scratch/'work/model-candidate/candidate.json')
-          selected=read(out/'selected.json')['targetIds']
-          qualified=sorted(set(selected)&set(map(str,receipt['qualified'])))
-          assert qualified and all(i in indexed for i in qualified)
-          (out/'quarantine-result.json').write_text(json.dumps({'state':'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED','selected':selected,'sandboxQualified':qualified,'publicBattleVerified':[]},indent=2)+'\n')
-          PY
+              if python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1
               then
                 persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
                 echo 'An isolated generated patch has a candidate result. Independent review and normal Chromium/Pages gates are still required.'
