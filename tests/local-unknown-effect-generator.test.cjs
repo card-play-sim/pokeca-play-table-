@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -103,3 +103,17 @@ assert.equal(repairProfile('PROTECTED_PATH',2).type,'PROTECTED');
 assert.equal(repairProfile('AssertionError: expected battle state',2).type,'ENGINE');
 assert.equal(repairProfile('').type,'INITIAL');
 console.log('LOCAL_UNKNOWN_ADAPTIVE_REPAIR PASS');
+
+// Synthetic excerpt labels were selected by all four model replies in run 45847577140.
+const realLine=' const deckEnergyCount = player.deck.length;';
+const fixtureSource={ [path]:['function plan(text){',realLine,' const repeatedEnergyCount = player.deck.length;',' const repeatedEnergyCount = player.deck.length;','}'].join('\n') };
+const anchorMap=modelAnchors(fixtureSource,{exampleOfficialText:'山札のエネルギー'},4500);
+const selectedAnchor=[...anchorMap].find(([,e])=>e.before===realLine);
+assert(selectedAnchor,'REAL_SOURCE_ANCHOR_REQUIRED');
+assert(![...anchorMap.values()].some(e=>e.before.includes('source lines')||e.before.includes('repeatedEnergyCount')));
+const resolved=resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],after:realLine+'\n const newVerifiedCount = deckEnergyCount;'}]},anchorMap);
+assert(applyEdits(fixtureSource,resolved)[path].includes('newVerifiedCount'));
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'// source lines 216-231',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],path:'.github/workflows/unsafe.yml',after:'fake'}]},anchorMap),/PROTECTED_PATH/);
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],before:'different',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
+console.log('LOCAL_UNKNOWN_EXACT_ANCHOR_IDS PASS');
