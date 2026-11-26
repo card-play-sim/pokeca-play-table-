@@ -131,8 +131,23 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           if ! git diff --cached --quiet; then
-            git commit -m 'checkpoint: six common mechanics with exact browser evidence'
-            git push origin HEAD:battle/issue122-counter-grammar-20261126
+            git commit -m 'checkpoint: common mechanics with exact browser evidence'
+            checkpoint="battle/issue122-counter-qualified-$GITHUB_RUN_ID"
+            git branch "$checkpoint"
+            # Always preserve the verified delta, even if the author has
+            # advanced the integration branch while browser verification ran.
+            git bundle create artifacts/qualified-checkpoint.bundle "$checkpoint" "^$GITHUB_SHA"
+            git rev-parse HEAD > artifacts/qualified-checkpoint-sha.txt
+            git fetch origin battle/issue122-counter-grammar-20261126
+            if [ "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA" ] &&
+               git push origin HEAD:battle/issue122-counter-grammar-20261126; then
+              echo 'Verified checkpoint advanced integration branch.' >> "$GITHUB_STEP_SUMMARY"
+            elif git push origin "HEAD:refs/heads/$checkpoint"; then
+              echo "Integration branch advanced. Preserved verified checkpoint on $checkpoint; reconcile against latest source before release." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo '::warning::Verified checkpoint could not push; recover the exact commit from qualified-checkpoint.bundle artifact.'
+              echo 'Verified checkpoint is preserved in the run artifact, not the integration branch.' >> "$GITHUB_STEP_SUMMARY"
+            fi
           fi
       - uses: actions/upload-artifact@v4
         if: always()
@@ -141,6 +156,9 @@ jobs:
           path: |
             work/card-auto-connect/
             artifacts/all-remaining-*
+            artifacts/qualified-checkpoint.bundle
+            artifacts/qualified-checkpoint-sha.txt
+            artifacts/exact-release-delta.json
             reports/official-effect-continuation/
             data/official-effect-intake/checkpoint.json
             test-results/
