@@ -438,6 +438,41 @@ function prepare(r, e, kind) {
     if(frame.blocked)return frame;
     return {port:port(frame.game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
+  if(m==='PASSIVE_CONTEXT_COST_DISCOUNT'){
+    const plan=e.plan;
+    const attackIndex=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    if(attackIndex<0)return {blocked:'NO_CONTEXT_COST_ATTACK_FIXTURE'};
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),[own,other]=game.players;
+    if(plan.mode==='discardName'){
+      const eligible=c=>E.getReferenceEffectRecord(c)?.name===plan.name;
+      for(const zone of [own.hand,own.deck]){const i=zone.findIndex(eligible);if(i>=0){own.discard.push(zone.splice(i,1)[0]);break;}}
+      if(!own.discard.some(eligible))return {blocked:'NO_CONTEXT_COST_DISCARD_FIXTURE'};
+    }else if(plan.mode==='opponentHandExact'){
+      while(other.hand.length>plan.count)other.deck.push(other.hand.pop());
+      while(other.hand.length<plan.count&&other.deck.length)other.hand.push(other.deck.pop());
+      if(other.hand.length!==plan.count)return {blocked:'NO_CONTEXT_COST_HAND_FIXTURE'};
+    }else if(plan.mode==='opponentBench'){
+      if(!other.bench.length)return {blocked:'NO_CONTEXT_COST_BENCH_FIXTURE'};
+    }else if(plan.mode==='ownAllNames'){
+      return {blocked:'NAMED_FIELD_REQUIRES_FULL_PHYSICAL_FIXTURE'};
+    }
+    const discount=plan.mode==='discardName'?own.discard.filter(c=>E.getReferenceEffectRecord(c)?.name===plan.name).length:plan.mode==='opponentBench'?other.bench.length:trigger.cost.length;
+    const keep=[];
+    for(const type of trigger.cost.filter(c=>c!=='無色')){
+      const i=own.active.energyCards.findIndex(c=>!c.isSpecial&&c.energyType===type);
+      if(i<0)return {blocked:'NO_CONTEXT_COST_TYPED_PAYMENT'};
+      keep.push(own.active.energyCards.splice(i,1)[0]);
+    }
+    for(let n=Math.max(0,trigger.cost.filter(c=>c==='無色').length-discount);n>0;n--){
+      const i=own.active.energyCards.findIndex(c=>!c.isSpecial);
+      if(i<0)return {blocked:'NO_CONTEXT_COST_COLORLESS_PAYMENT'};
+      keep.push(own.active.energyCards.splice(i,1)[0]);
+    }
+    own.deck.push(...own.active.energyCards);own.active.energyCards=keep;
+    return {...t,port:port(game),trigger};
+  }
   if(m==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
     const attackIndex=r.attacks.findIndex(a=>a.name===e.plan.attackName&&a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
     if(attackIndex<0)return {blocked:'NO_NAMED_PRIZE_ATTACK_FIXTURE'};
@@ -2839,6 +2874,27 @@ function verifyCase(t, e) {
     assert(e.plan.attacker==='ex'?source.name.endsWith('ex'):source.abilities.length>0);
     assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===before.players[1].active.id&&ev.amount===0));
     assert.equal(after.players[1].active.damage,before.players[1].active.damage);
+  }
+  if(e.plan.mechanic==='PASSIVE_CONTEXT_COST_DISCOUNT'){
+    const plan=e.plan,baseline=JSON.parse(JSON.stringify(before)),[own,other]=baseline.players;
+    const action=t.action||o.action;
+    if(plan.mode==='discardName'){
+      const eligible=c=>E.getReferenceEffectRecord(c)?.name===plan.name;
+      own.deck.push(...own.discard.filter(eligible));own.discard=own.discard.filter(c=>!eligible(c));
+    }else if(plan.mode==='opponentHandExact'){
+      other.deck.push(other.hand.pop());
+    }else if(plan.mode==='opponentBench'){
+      // Preserve physical cards and attachments while removing the opponent Bench condition.
+      for(const mon of other.bench){other.hand.push(...(mon.energyCards||[]),...(mon.tools||[]));other.hand.push(...(mon.evolutionStack||[]));const card={...mon};delete card.energyCards;delete card.tools;delete card.evolutionStack;other.hand.push(card);}
+      other.bench=[];
+    }else if(plan.mode==='ownAllNames'){
+      return {status:'BLOCKED',reason:'NAMED_FIELD_NEGATIVE_FIXTURE_REQUIRED'};
+    }
+    assert.deepEqual(S.identities(before),S.identities(baseline));
+    const replay=port(baseline);
+    assert.equal(replay.dispatch('you',action).ok,false,'CONTEXT_DISCOUNT_MUST_REQUIRE_CONDITION');
+    assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(replay.getSnapshot()))),B.canonical(baseline));
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
   }
   if(e.plan.mechanic==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
     const baseline=JSON.parse(JSON.stringify(before)),other=baseline.players[1];

@@ -618,6 +618,15 @@ function plan(entry,kind){
  const prizeDiscount=generic.match(/^自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、\[無色\]エネルギー([1-9])個ぶん少なくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&prizeDiscount)
   return {mechanic:'TOOL_PRIZE_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(prizeDiscount[1]),sharedWording:true};
+ // Exact continuous Colorless cost reductions; typed requirements are never waived.
+ if(kind==='ABILITY'){
+  const discardCost=generic.match(/^自分のトラッシュにある「([^「」]+)」の枚数ぶん、このポケモンがワザを使うための\[無色\]エネルギーは少なくなる。$/);
+  if(discardCost)return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'discardName',name:discardCost[1],sharedWording:true};
+  if(generic==='相手のベンチポケモンの数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。')return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'opponentBench',sharedWording:true};
+  const handCost=generic.match(/^相手の手札が([1-9])枚なら、このポケモンはワザを使うための\[無色\]エネルギーが、すべてなくなる。$/);
+  if(handCost)return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'opponentHandExact',count:Number(handCost[1]),sharedWording:true};
+  if(generic==='自分の場に「トルネロス」「ボルトロス」「ランドロス」「ラブトロス」がいるなら、このポケモンはワザを使うための[無色]エネルギーが、すべてなくなる。')return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'ownAllNames',names:['トルネロス','ボルトロス','ランドロス','ラブトロス'],sharedWording:true};
+ }
  const namedDiscount=generic.match(/^相手がすでにとったサイドの枚数ぶん、このポケモンが「([^「」]+)」を使うための\[無色\]エネルギーは少なくなる。$/);
  if(kind==='ABILITY'&&namedDiscount)
   return {mechanic:'PASSIVE_NAMED_PRIZE_DISCOUNT',commands:['MODIFY_ATTACK_COST'],attackName:namedDiscount[1],sharedWording:true};
