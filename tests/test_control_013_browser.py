@@ -557,8 +557,15 @@ async def main():
      elif plan['target']=='ownActive':target=old['active']['id']
      else:target=selection['moveTo'+str(i if plan['multi'] else 0)][0]
      assert source['id']!=target
-     assert any(c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
-     assert any(ev.get('details',{}).get('command')=='MOVE_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target for ev in events)
+     move=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='MOVE_ENERGY'
+               and ev['details'].get('energyId')==ident and ev['details'].get('sourceInstanceId')==source['id']
+               and ev['details'].get('targetInstanceId')==target)
+     attached=any(c and c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
+     if not attached:
+      energy=next(c for c in source['energyCards'] if c['id']==ident)
+      assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.mainPlan.mechanic",energy)=='IGNITION'
+      assert after['turnNumber']>before['turnNumber'] and any(c['id']==ident for c in new['discard'])
+      assert any(ev.get('details',{}).get('command')=='DISCARD' and ident in ev['details'].get('cardIds',[]) for ev in events[move+1:])
     assert old['normalEnergyAttached']==new['normalEnergyAttached']
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
