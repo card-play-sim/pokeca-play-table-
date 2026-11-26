@@ -1373,7 +1373,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
-   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:plan.reveal!==false});
+   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK'&&(!plan.optional||ids('cards').length))searchSelectedDeck(g,actor,p,ids('cards'),{reveal:plan.reveal!==false});
    if(m==='HUNT')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:false});
    if(m==='PHANTOM')for(const [ident,count] of Object.entries(action.selections?.allocation||{}))counters(g,actor,find(g,ident).card,count,{attack:true});
    if(m==='COIN_PROTECT'&&coin(g,actor))card.referenceProtection={opponentTurn:g.turnNumber+1};
