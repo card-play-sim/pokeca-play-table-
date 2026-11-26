@@ -255,6 +255,15 @@ async def main():
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='MASS_MILL_COUNT_DAMAGE':
+    plan=f['e']['plan']
+    for i in ([0,1] if plan['scope']=='both' else [0]):
+     side=before['players'][i]
+     discarded=[c['id'] for c in side['deck'][:plan['limit']]]
+     assert set(discarded)<={c['id'] for c in after['players'][i]['discard']}
+     assert any(ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck' and ev['details'].get('playerId')==side['id'] and ev['details'].get('cardIds')==discarded for ev in events)
+    assert f['printedDamageEvents']
+    assert all(event in events for event in f['printedDamageEvents'])
    if m=='ATTACK_DISCARD_OWN_DECK_TOP':
     own=before['players'][0]
     discarded=[card['id'] for card in own['deck'][:f['e']['plan']['amount']]]
@@ -498,23 +507,62 @@ async def main():
      assert {c['id'] for c in before['players'][1]['deck'][:heads]}<={c['id'] for c in after['players'][1]['discard']}
    if m=='MASS_EFFECT_SEQUENCE':
     own,other=before['players'];resolved=after['players'][0]
-    for step in f['e']['plan']['steps']:
-     if step['op']=='draw':
-      assert {c['id'] for c in own['deck'][:step['amount']]}<={c['id'] for c in resolved['hand']}
+    steps=f['e']['plan']['steps'];cursors=[0,0];hand_count=len(own['hand'])-(1 if any(s['op']=='drawIfHand' for s in steps) else 0)
+    for step in steps:
+     if step['op']=='discardOwnHand':
+      chosen=option['action'].get('selections',{}).get('sequenceDiscard',[])
+      assert len(chosen)==min(step['amount'],len(own['hand']))
+      assert set(chosen)<={c['id'] for c in own['hand']} and set(chosen)<={c['id'] for c in resolved['discard']}
+      assert not set(chosen)&{c['id'] for c in resolved['hand']}
+      hand_count-=len(chosen)
+     if step['op']=='blindDiscardOpponent':
+      req=next(rq for rq in option['requests'] if rq['key']=='sequenceBlind')
+      assert all(c['id'].startswith('hand-slot-') and not c.get('validationReference') for c in req['candidates'])
+      moved={c['id'] for c in other['hand']}-{c['id'] for c in after['players'][1]['hand']}
+      assert len(moved)==min(step['amount'],len(other['hand'])) and moved<={c['id'] for c in after['players'][1]['discard']}
+     if step['op']=='draw' or (step['op']=='drawIfHand' and hand_count>=step['threshold']):
+      picked=own['deck'][cursors[0]:cursors[0]+step['amount']]
+      assert {c['id'] for c in picked}<={c['id'] for c in resolved['hand']}
+      cursors[0]+=len(picked);hand_count+=len(picked)
+     if step['op']=='revealHand' or step['op']=='peekTop':
+      zone='hand' if step['op']=='revealHand' else 'deck'
+      picked=other['hand'] if zone=='hand' else other['deck'][cursors[1]:cursors[1]+step['amount']]
+      assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('fromZone')==zone and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in picked] for ev in events)
      if step['op']=='mill':
       index=1 if step['side']=='opponent' else 0
-      assert {c['id'] for c in before['players'][index]['deck'][:step['amount']]}<={c['id'] for c in after['players'][index]['discard']}
+      picked=before['players'][index]['deck'][cursors[index]:cursors[index]+step['amount']]
+      assert {c['id'] for c in picked}<={c['id'] for c in after['players'][index]['discard']}
+      cursors[index]+=len(picked)
      if step['op']=='status':
       assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==step['status'] for ev in events)
+   if m=='MASS_ATTACHED_ENERGY_MOVE':
+    plan=f['e']['plan'];selection=option['action']['selections'];chosen=selection['energy']
+    side=1 if plan['source'].startswith('opponent') else 0
+    old=before['players'][side];new=after['players'][side]
+    assert chosen
+    for i,ident in enumerate(chosen):
+     source=next(c for c in [old['active'],*old['bench']] if ident in {e['id'] for e in c['energyCards']})
+     target=ident
+     if plan['target']=='self':target=option['action']['sourceInstanceId']
+     elif plan['target']=='ownActive':target=old['active']['id']
+     else:target=selection['moveTo'+str(i if plan['multi'] else 0)][0]
+     assert source['id']!=target
+     assert any(c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
+     assert any(ev.get('details',{}).get('command')=='MOVE_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target for ev in events)
+    assert old['normalEnergyAttached']==new['normalEnergyAttached']
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
     assert picked
     for i,ident in enumerate(picked):
      assert any(c['id']==ident and c['kind']=='energy' and not c.get('isSpecial') for c in before['players'][0][plan['zone']])
-     target=before['players'][0]['active']['id'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
+     target=f['sourceId'] if plan['target']=='self' else selection['attachTo'+str(i if plan['multi'] else 0)][0]
      mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
      assert ident in {c['id'] for c in mon['energyCards']}
     assert before['players'][0]['normalEnergyAttached']==after['players'][0]['normalEnergyAttached']
+    if plan.get('origin')=='bench':
+     source=next(c for c in before['players'][0]['bench'] if c['id']==option['action']['sourceInstanceId'])
+     assert source['entryWindow']==before['referenceActionSequence']
+     assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",source)==r['officialCardId']
     if plan.get('origin')=='evolve':
      source=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==option['action']['sourceInstanceId'])
      assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
@@ -542,9 +590,11 @@ async def main():
      assert all(c['id'] not in picked or c['kind'] in ('trainer','tool','stadium') for c in before['players'][0]['deck'])
     assert picked and picked<={card['id'] for card in before['players'][0][plan['zone']]}
     if plan.get('nameContains'):
-     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.category==='supporter'&&r.name.includes(args.name);})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'name':plan['nameContains']})
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.category===args.category&&r.name.includes(args.name);})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'name':plan['nameContains'],'category':plan['category']})
     if plan['category']=='pokemonOrBasicEnergy':
-     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return c.kind==='energy'?!c.isSpecial&&c.energyType===p.energyType:r.category==='pokemon'&&(!p.type||r.facts.types.includes(p.type))&&(p.stage===null||r.facts.stage===p.stage)&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'plan':plan})
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return c.kind==='energy'?!c.isSpecial&&(!p.energyType||c.energyType===p.energyType):r.category==='pokemon'&&(!p.type||r.facts.types.includes(p.type))&&(p.stage===null||r.facts.stage===p.stage)&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'plan':plan})
+    if plan.get('nameExact') or plan.get('retreatCost') is not None or plan.get('resistanceType') or plan.get('team'):
+     assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return (!p.nameExact||r.name===p.nameExact)&&(p.retreatCost===undefined||r.facts.retreatCost===p.retreatCost)&&(!p.resistanceType||r.facts.resistance?.types?.includes(p.resistanceType))&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked and (plan['category']!='pokemonOrBasicEnergy' or c['kind']=='pokemon')],'plan':plan})
     if plan.get('categories') or plan.get('distinctBy'):
      selected_cards=[c for c in before['players'][0][plan['zone']] if c['id'] in picked]
      assert await page.evaluate("(args)=>{const p=args.plan,cs=args.cards,rec=c=>Pokeca.getReferenceEffectRecord(c);const group=c=>p.distinctBy==='energyType'?c.energyType:rec(c).category;return cs.every(c=>(!p.categories||p.categories.includes(rec(c).category))&&(!p.energyTypes||!c.isSpecial&&p.energyTypes.includes(c.energyType)))&&(!p.distinctBy||new Set(cs.map(group)).size===cs.length);}",{'cards':selected_cards,'plan':plan})
@@ -583,6 +633,12 @@ async def main():
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
     new={c['id']:c for c in [after['players'][0]['active'],*after['players'][0]['bench']]}
     assert any(c['damage']>new[c['id']]['damage'] for c in old if c['id'] in new and (not chosen or c['id'] in chosen))
+    if plan['amount']=='all':
+     targets=chosen if plan['target']=='choice' else ([old[0]['id']] if plan['target']=='active' else [c['id'] for c in old])
+     assert targets and all(new[ident]['damage']==0 for ident in targets)
+    if plan.get('origin')=='evolve':
+     source=next(c for c in old if c['id']==option['action']['sourceInstanceId'])
+     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
    if m=='ABILITY_EVOLVE_MULTI_COUNTERS':
     source=before['players'][0]['active'];plan=f['e']['plan'];targets=option['action']['selections']['target']
     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
@@ -595,6 +651,17 @@ async def main():
      assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
      assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
     else:assert side['active']['id']==source['id']
+   if m=='MASS_COUNTER_GRAMMAR':
+    plan=f['e']['plan'];other=before['players'][1];own=before['players'][0];sel=option['action'].get('selections',{})
+    pool=[other['active'],*other['bench']]
+    targets=[other['active']] if plan['scope']=='active' else other['bench'] if plan['scope']=='bench' else [c for c in pool if c['id'] in sel['target']] if plan['scope']=='choice' else pool
+    total=0
+    for target_card in targets:
+     hit=sum(ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==target_card['id'] and not ev['details'].get('reference'))
+     amount=max(0,(target_card['hp']-target_card['damage']-hit-plan['remaining'])//10) if plan['mode']=='remaining' else sel['allocation'].get(target_card['id'],0) if plan['mode']=='allocation' else len(own['hand'])*plan['unit'] if plan['mode']=='hand' else (target_card['damage']+hit)//10*plan['unit'] if plan['mode']=='multiply' else plan['amount']
+     assert sum(ev['details']['counterCount'] for ev in events if ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==target_card['id'] and not ev['details'].get('reference'))==amount
+     total+=amount
+    assert total>0
    if m=='MASS_PLACE_COUNTERS':
     plan=f['e']['plan']
     own=before['players'][0];other=before['players'][1];targets=[other['active'],*other['bench']]
@@ -683,7 +750,13 @@ async def main():
    state=await snap()
    if state['status']=='finished':break
    actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
-   result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return {ok:r.ok,actions:r.actions,stage:r.stage};}',actor);assert result['ok'],result
+   result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return r;}',actor)
+   if not result['ok']:
+    failure={'turn':turn,'actor':actor,'result':result,'before':state,'after':await snap()}
+    (ROOT/'artifacts').mkdir(exist_ok=True)
+    (ROOT/'artifacts/control-013-ai-policy-failure.json').write_text(json.dumps(failure,ensure_ascii=False,indent=2))
+    print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
+   assert result['ok'],result
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
   final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
   await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)

@@ -110,3 +110,31 @@ assert.throws(()=>deferUnverifiedPromotions({records:[sourceRows[1]]},
   {records:[{...sourceRows[1],source:{path:'conflict'}}]},new Set(['old-deferred']),
   new Set(),[],[{id:'old-deferred'}]),/DEFERRED_EVIDENCE_CONFLICT/);
 console.log('ATOMIC_OFFICIAL_TO_BATTLE PASS: acquisition + mechanic + physical execution one work unit; exact shared task groups; unresolved never completed');
+
+const {compile}=require('../engine/reference-effect-plans.cjs');
+const compose=text=>compile({records:[{officialCardId:'9000',category:'supporter',name:'test',text,attacks:[],abilities:[]}]}).records[0].mainPlan;
+assert.deepEqual(compose('自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。').steps,[{op:'draw',amount:2},{op:'drawIfHand',threshold:10,amount:2}]);
+assert.deepEqual(compose('自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。').steps,[{op:'draw',amount:2},{op:'revealHand',side:'opponent'},{op:'peekTop',side:'opponent',amount:1}]);
+assert.equal(compose('自分の山札を2枚引く。その後、未知の効果を実行する。'),null);
+assert.equal(compose('自分の山札を2枚引く。相手の手札を見る。未知の効果を実行する。'),null);
+
+const evolutionTransfer=text=>compile({records:[{officialCardId:'9001',category:'pokemon',name:'test',text:'',attacks:[],abilities:[{text}]}]}).records[0].abilities[0].plan;
+const evolutionPrefix='自分の番に、このカードを手札から出して進化させたとき、1回使える。';
+const evolutionRecovery=evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。');
+assert.equal(evolutionRecovery.mechanic,'MASS_ZONE_TRANSFER');assert.equal(evolutionRecovery.origin,'evolve');assert.equal(evolutionRecovery.zone,'discard');assert.equal(evolutionRecovery.nameExact,'ペパーのサンドウィッチ');assert.equal(evolutionRecovery.limit,2);
+assert.equal(evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。未知の効果。'),null);
+const fullHeal=evolutionTransfer(evolutionPrefix+'自分のポケモン1匹のHPを、すべて回復する。');
+assert.equal(fullHeal.mechanic,'MASS_HEAL_OWN');assert.equal(fullHeal.origin,'evolve');assert.equal(fullHeal.amount,'all');assert.equal(fullHeal.target,'choice');
+const route=evolutionTransfer(evolutionPrefix+'自分の山札から「基本[悪]エネルギー」を5枚まで選び、自分の「マリィのポケモン」に好きなようにつける。そして山札を切る。');
+assert.equal(route.mechanic,'MASS_ENERGY_ROUTE');assert.equal(route.origin,'evolve');assert.equal(route.team,'マリィ');assert.equal(route.limit,5);
+assert.equal(evolutionTransfer(evolutionPrefix+'自分のポケモン1匹のHPを、すべて回復する。その後、未知の効果。'),null);
+const benchPrefix='自分の番に、このカードを手札からベンチに出したとき、1回使える。';
+const entryEnergy=evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。');
+assert.equal(entryEnergy.mechanic,'MASS_ENERGY_ROUTE');assert.equal(entryEnergy.origin,'bench');assert.equal(entryEnergy.zone,'hand');assert.equal(entryEnergy.target,'self');assert.equal(entryEnergy.type,'闘');assert.equal(entryEnergy.limit,2);
+assert.equal(evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。その後、未知の効果。'),null);
+// Unlisted combinations are synthesized as executable, ordered shared operations.
+const synthAttack=(text,damage='0')=>compile({records:[{officialCardId:'9002',category:'pokemon',name:'test',text:'',attacks:[{text,damage,cost:[]}],abilities:[]}]}).records[0].attacks[0].plan;
+assert.deepEqual(synthAttack('自分の手札を1枚トラッシュする。その後、自分の山札を3枚引く。').steps,[{op:'discardOwnHand',amount:1},{op:'draw',amount:3}]);
+assert.deepEqual(synthAttack('相手の手札からオモテを見ないで1枚選び、トラッシュする。相手の山札を上から1枚トラッシュする。','160').steps,[{op:'blindDiscardOpponent',amount:1,side:'opponent'},{op:'mill',side:'opponent',amount:1}]);
+assert.deepEqual(synthAttack('自分の手札を2枚トラッシュする。その後、自分の山札を4枚引く。次の相手の番、相手は手札からグッズを出して使えない。').steps.map(s=>s.op),['discardOwnHand','draw','itemLock']);
+assert.equal(synthAttack('自分の手札を1枚トラッシュする。その後、未知の効果を実行する。'),null);

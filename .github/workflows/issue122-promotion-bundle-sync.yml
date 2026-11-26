@@ -1,0 +1,60 @@
+name: Issue122 integrate promotion regression and synchronize generated release
+on:
+  push:
+    branches: [battle/issue122-counter-grammar-20261126]
+    paths:
+      - '.github/workflows/issue122-promotion-bundle-sync.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-promotion-bundle-sync
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild and validate the promotion fix without changing qualified prints
+        run: |
+          set -euo pipefail
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node tests/issue122-attack-promotion-order.test.cjs
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          git diff --exit-code -- data/effect-extensions/compiled.json data/effect-extensions/intake.json
+          git diff --check
+      - name: Persist synchronized release candidate (never deploy)
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add ui/engine.bundle.js sw.js data/reference-effects/plans.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Synchronize promotion runtime bundle and PWA after regression'
+          checkpoint="battle/issue122-promotion-synced-$GITHUB_RUN_ID"
+          mkdir -p artifacts
+          git branch "$checkpoint"
+          git bundle create artifacts/promotion-synced.bundle "$checkpoint" "^$GITHUB_SHA"
+          git fetch origin battle/issue122-counter-grammar-20261126
+          if [ "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA" ]; then
+            git push origin HEAD:battle/issue122-counter-grammar-20261126
+          else
+            git push origin "HEAD:refs/heads/$checkpoint"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: promotion-synchronized-candidate
+          path: artifacts/
+          if-no-files-found: ignore

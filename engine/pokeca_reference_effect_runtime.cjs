@@ -269,7 +269,11 @@ function massRouteEnergy(p,plan){
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
- if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?c.energyType===plan.energyType:r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+ if(plan.nameExact&&r?.name!==plan.nameExact)return false;
+ if(plan.retreatCost!==undefined&&r?.facts?.retreatCost!==plan.retreatCost)return false;
+ if(plan.resistanceType&&!r?.facts?.resistance?.types?.includes(plan.resistanceType))return false;
+ if(plan.category==='any')return !!r;
  if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
  if(plan.category==='categorySet')return plan.categories.includes(r?.category);
  if(plan.energyTypes&&(!basicEnergy(c)||!plan.energyTypes.includes(c.energyType)))return false;
@@ -341,6 +345,12 @@ function inspectedHandCandidate(c,plan){
  const category=record(c)?.category;
  return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(category)||plan.filter===category;
 }
+function attachedMovePool(p,o,card,plan){
+ const sources=plan.source==='self'?[card]:plan.source==='opponentActive'?[o.active]:plan.source==='opponentField'?field(o):plan.source==='ownBench'?p.bench:field(p);
+ const targets=plan.target==='self'?[card]:plan.target==='ownActive'?[p.active]:plan.target==='ownBench'?p.bench:plan.target==='opponentBench'?o.bench:plan.target==='opponentOther'?field(o):field(p);
+ const pool=sources.filter(c=>c&&targets.some(t=>t&&t!==c)).flatMap(c=>(c.energyCards||[]).filter(e=>!plan.basic||basicEnergy(e)).map(e=>({...e,containerId:id(c),moveUnits:energyUnits({...c,energyCards:[e]}).filter(u=>!plan.type||u.includes(plan.type)).length}))).filter(e=>e.moveUnits>0);
+ return {pool,targets:targets.filter(Boolean)};
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -362,6 +372,17 @@ function requests(g,actor,card,effect){
   if(plan.target!=='self'){
    cardRequest('attachTo',targets,0,Math.min(1,targets.length));
    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:1,count:1}];
+  }
+ }
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'){
+  const plan=effect.plan,{pool,targets}=attachedMovePool(p,o,card,plan);
+  const max=Math.min(plan.count??pool.length,pool.length),min=plan.count===null?max:plan.optional?0:Math.min(1,max);
+  cardRequest('energy',pool,min,max);
+  if(!['self','ownActive'].includes(plan.target)){
+   for(let i=0;i<(plan.multi?max:1);i++){
+    cardRequest('moveTo'+i,targets,0,Math.min(1,targets.length));
+    out.at(-1).dependencies=[{kind:'countFromSelection',key:'energy',threshold:i+1,count:1},...(['ownOther','opponentOther'].includes(plan.target)?[{kind:'excludeSelectedField',key:'energy',field:'containerId'}]:[])];
+   }
   }
  }
  if(m==='ATTACK_BASIC_ENERGY_MOVE'){
@@ -419,6 +440,11 @@ function requests(g,actor,card,effect){
   const count=plan.all?pool.length:Math.min(plan.limit,pool.length);
   cardRequest('opponentCards',pool,plan.optional?0:count,count);
   if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(o.hand)};
+ }
+ if(m==='MASS_EFFECT_SEQUENCE'){
+  const first=effect.plan.steps[0];
+  if(first.op==='discardOwnHand'){const n=Math.min(first.amount,p.hand.length);cardRequest('sequenceDiscard',p.hand,n,n);}
+  if(first.op==='blindDiscardOpponent'){const n=Math.min(first.amount,o.hand.length);add('sequenceBlind','CARD',o.hand.map((_,i)=>({id:'hand-slot-'+i,name:'相手の手札 '+(i+1)})),n,n);}
  }
  if(m==='ATTACK_BLIND_HAND_CHOICE'){
   const count=Math.min(effect.plan.amount,o.hand.length);
@@ -536,6 +562,11 @@ function requests(g,actor,card,effect){
   const count=Math.min(effect.plan.count,opp.length);cardRequest('target',opp,count,count);
  }
  if(m==='ATTACK_OPTIONAL_RETURN_POKEMON')add('mode','CARD',[{id:'stay',name:'場に残す'},{id:'return',name:'手札にもどす'}],1,1);
+ if(m==='MASS_COUNTER_GRAMMAR'){
+  const plan=effect.plan;
+  if(plan.mode==='allocation')add('allocation','COUNTERS',opp.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),plan.amount,plan.amount);
+  else if(plan.scope==='choice'){const count=Math.min(plan.count,opp.length);cardRequest('target',opp,count,count);}
+ }
  if(m==='MASS_PLACE_COUNTERS'&&['choice','benchChoice'].includes(effect.plan.target)){
   const pool=effect.plan.target==='benchChoice'?o.bench:opp;
   const count=Math.min(1,pool.length);cardRequest('target',pool,count,count);
@@ -622,6 +653,16 @@ function verifyRequests(g,actor,card,effect,action){
   assert(bench.length===(mode==='switch'?1:0),'SUPPORTER_MODE_TARGET_MISMATCH');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'){
+  const plan=effect.plan,{pool}=attachedMovePool(p,opponent(g,actor),card,plan),chosen=selected(action,'energy').map(i=>pool.find(e=>id(e)===i));
+  assert(chosen.every(Boolean),'INVALID_MOVE_ENERGY');
+  if(plan.count===null)assert(chosen.length===pool.length,'ALL_MOVE_ENERGY_REQUIRED');
+  else if(chosen.length||!plan.optional){
+   const supplied=chosen.reduce((n,e)=>n+e.moveUnits,0),required=Math.min(plan.count,pool.reduce((n,e)=>n+e.moveUnits,0));
+   if(!plan.upTo)assert(supplied>=required,'INSUFFICIENT_MOVE_ENERGY_UNITS');
+   assert(chosen.every(e=>supplied-e.moveUnits<required),'REDUNDANT_MOVE_ENERGY');
+  }
+ }
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
   // The selection specifies physical cards, but the printed quantity counts
   // their provided Energy units (including multi-unit special Energy).
@@ -665,6 +706,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER')assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
  if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,opponent(g,actor),a.plan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
@@ -758,6 +800,7 @@ function preflight(g,actor,action){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    }
+   if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,o,card,r.mainPlan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
    if(m==='MASS_ENERGY_ROUTE'){
     assert(massRouteTargets(p,card,r.mainPlan).length&&(r.mainPlan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,r.mainPlan).length>0),'NO_MASS_ENERGY_ROUTE');
     if(r.mainPlan.requiresTera)assert(field(p).some(c=>record(c).facts.teraBenchProtection===true),'TERA_POKEMON_REQUIRED');
@@ -847,6 +890,9 @@ function resolveMixedTop(g,actor,p,plan,chosenIds){
 }
 function finishAttack(g,actor){
  g.attackUsed=true;g.referenceAttackTurnPending=actor;
+ // Preserve the attacker's mandatory replacement before resolving defender knockout.
+ if(g.pendingReferenceChoice?.kind==='PROMOTE'&&g.pendingReferenceChoice.playerId===actor&&!player(g,actor).active){g.referenceAttackAwaitingPromotion=true;return;}
+ delete g.referenceAttackAwaitingPromotion;
  while(g.referenceReactions?.length){
   const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);if(!attacker)continue;
   if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
@@ -918,6 +964,12 @@ function attackMetric(plan,own,other){
  if(plan.metric==='ownBenchStageTwoCount')return own.bench.filter(c=>record(c).facts.stage===2).length;
  if(plan.metric==='ownDamagedBenchCount')return own.bench.filter(c=>c.damage>0).length;
  if(plan.metric==='opponentTeamCounters')return field(other).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownDiscardNamedCard')return own.discard.filter(c=>record(c)?.name===plan.name).length;
+ if(plan.metric==='ownDiscardSupporterContains')return own.discard.filter(c=>record(c)?.category==='supporter'&&record(c).name.includes(plan.name)).length;
+ if(plan.metric==='ownNamedOrExCount')return field(own).filter(c=>[plan.name,plan.name+'ex'].includes(record(c).name)).length;
+ if(plan.metric==='bothNameContainsCount')return [...field(own),...field(other)].filter(c=>[plan.name,plan.secondName].some(n=>record(c).name.includes(n))).length;
+ if(plan.metric==='ownBenchNamedCount')return own.bench.filter(c=>record(c).name===plan.name).length;
+ if(plan.metric==='ownBenchTypedCounters')return own.bench.filter(c=>record(c).facts.types.includes(plan.type)).reduce((n,c)=>n+(c.damage||0)/10,0);
  if(plan.metric==='ownTypedPokemonCount')return field(own).filter(c=>record(c).facts.types.includes(plan.type)).length;
  if(plan.metric==='ownPokemon')return field(own).length;
  if(plan.metric==='opponentPrizesTaken')return 6-other.prizes;
@@ -1035,7 +1087,12 @@ function applyPlan(g,actor,card,effect,action){
     const target=step.side==='opponent'?defender:card;
     const protectedTarget=step.side==='opponent'&&action.type==='attack_turn'&&defender.referenceProtection?.opponentTurn===g.turnNumber;
     switch(step.op){
+     case 'discardOwnHand':moveChosen(g,p,'hand',ids('sequenceDiscard'),'discard',false);break;
+     case 'blindDiscardOpponent':if(!protectedTarget)resolveBlindHand(g,actor,o,ids('sequenceBlind'),'discard');break;
      case 'draw':draw(g,p,step.amount);break;
+     case 'drawIfHand':if(p.hand.length>=step.threshold)draw(g,p,step.amount);break;
+     case 'revealHand':event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});break;
+     case 'peekTop':event(g,actor,'REVEAL',{cardIds:o.deck.slice(0,step.amount).map(id),fromZone:'deck',privateTo:actor});break;
      case 'mill':{const side=step.side==='opponent'?o:p,discarded=side.deck.splice(0,step.amount);side.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});break;}
      case 'healSelf':if(card.damage>0)heal(g,actor,card,step.amount);break;
      case 'drain':if(amount>0&&card.damage>0)heal(g,actor,card,amount);break;
@@ -1104,11 +1161,21 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'MASS_HEAL_OWN':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount);
+   for(const mon of massHealTargets(p,plan))if(mon.damage>0&&(plan.target!=='choice'||ids('cards').includes(id(mon))))heal(g,actor,mon,plan.amount==='all'?mon.damage:plan.amount);
    break;
   case 'MASS_PRIZE_DRAW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
+  case 'MASS_COUNTER_GRAMMAR':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   const targets=plan.scope==='active'?[o.active]:plan.scope==='bench'?o.bench:plan.scope==='choice'?field(o).filter(c=>ids('target').includes(id(c))):field(o);
+   for(const mon of targets){
+    const count=plan.mode==='remaining'?Math.max(0,(mon.hp-mon.damage-plan.remaining)/10):plan.mode==='allocation'?(action.selections?.allocation?.[id(mon)]||0):plan.mode==='hand'?p.hand.length*plan.unit:plan.mode==='multiply'?(mon.damage||0)/10*plan.unit:plan.amount;
+    assert(Number.isInteger(count)&&count>=0,'INVALID_COUNTER_GRAMMAR_QUANTITY');
+    if(count)counters(g,actor,mon,count,{attack:true});
+   }
+   break;
+  }
   case 'MASS_PLACE_COUNTERS':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=plan.target==='active'?[o.active]:plan.target==='damagedOpponent'?field(o).filter(c=>c.damage>0):plan.target==='bothAbility'?[...field(p),...field(o)].filter(c=>record(c).abilities.length>0):field(o).filter(c=>plan.target==='all'||ids('target').includes(id(c)));
@@ -1271,6 +1338,17 @@ function applyPlan(g,actor,card,effect,action){
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    resetHand(g,p,plan.amount);
    break;
+  case 'MASS_MILL_COUNT_DAMAGE':{
+   let count=0;
+   for(const side of plan.scope==='both'?[p,o]:[p]){
+    const discarded=side.deck.splice(0,plan.limit);
+    side.discard.push(...discarded);
+    count+=discarded.filter(c=>plan.filter==='typedBasic'?basicEnergy(c)&&c.energyType===plan.type:plan.filter==='energy'?c.kind==='energy':plan.filter==='trainer'?['item','supporter','tool','stadium'].includes(record(c)?.category):c.kind==='pokemon'&&record(c).name.startsWith(plan.team+'の')).length;
+    event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});
+   }
+   damage(g,actor,o.active,plan.base+plan.unit*count);
+   break;
+  }
   case 'ATTACK_DISCARD_OWN_DECK_TOP':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const cards=p.deck.splice(0,plan.amount);
@@ -1446,6 +1524,18 @@ function applyPlan(g,actor,card,effect,action){
     event(g,actor,'ATTACH_ENERGY',{energyId,targetInstanceId:benchId,fromZone:'deck'});
    }
    shuffle(g,p);break;
+  }
+  case 'MASS_ATTACHED_ENERGY_MOVE':{
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.source.startsWith('opponent')&&o.active.referenceProtection?.opponentTurn===g.turnNumber)break;
+   const {pool,targets}=attachedMovePool(p,o,card,plan);
+   for(const [i,ident] of ids('energy').entries()){
+    const entry=pool.find(c=>id(c)===ident),source=find(g,entry?.containerId)?.card;
+    const target=plan.target==='self'?card:plan.target==='ownActive'?p.active:targets.find(c=>id(c)===ids('moveTo'+(plan.multi?i:0))[0]);
+    assert(source&&target&&source!==target,'ATTACHED_ENERGY_MOVE_CHANGED');
+    moveAttachedEnergy(g,actor,source,target,ident);
+   }
+   break;
   }
   case 'ATTACK_BASIC_ENERGY_MOVE':{
    damage(g,actor,o.active,Number(effect.damage)||0);
@@ -1669,7 +1759,7 @@ function execute(g,actor,action){
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId);
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
-  if(choice.kind==='CIRCULATOR')finishAttack(g,g.referenceAttackTurnPending);
+  if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
  }else if(action.type==='attach_energy'){
   const card=p.hand.splice(action.cardIndex,1)[0],mon=action.target==='active'?p.active:p.bench[action.target];mon.energyCards.push(card);p.normalEnergyAttached=true;event(g,actor,'ATTACH_ENERGY',{cardId:id(card),targetInstanceId:id(mon)});
  }else if(action.type==='retreat'){
@@ -1697,7 +1787,7 @@ function afterAction(g,before,actor,action){
  if(action.type==='evolve'){
   const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
  }
- if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;}
+ if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;delete g.referenceAttackAwaitingPromotion;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
   const a=g.referenceAttackTurnPending;delete g.referenceAttackTurnPending;functions().Core.endTurn(g,a);
  }
@@ -1781,6 +1871,16 @@ function completeAction(g,actor,option){
  const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'&&effect.plan.count!==null){
+  const plan=effect.plan,{pool,targets}=attachedMovePool(p,opponent(g,actor),card,plan);
+  const chosen=[];let covered=0;
+  for(const c of [...pool].sort((a,b)=>b.moveUnits-a.moveUnits)){if(covered>=plan.count)break;chosen.push(c);covered+=c.moveUnits;}
+  action.selections||={};action.selections.energy=chosen.map(id);
+  if(!['self','ownActive'].includes(plan.target)){
+   const target=targets.find(t=>!chosen.some(c=>c.containerId===id(t)));
+   for(let i=0;i<(plan.multi?Math.min(plan.count,pool.length):1);i++)action.selections['moveTo'+i]=chosen.length>i&&target?[id(target)]:[];
+  }
+ }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'&&action.selections.mode[0]==='boost')action.selections.ownBench=[];
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
   const entries=(card.energyCards||[]).map((energy,index)=>({
