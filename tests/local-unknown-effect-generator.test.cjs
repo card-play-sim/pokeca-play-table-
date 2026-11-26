@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -92,3 +92,14 @@ assert.throws(()=>parseModelProposal('[]','stop'),/MODEL_PROPOSAL_SCHEMA/);
 assert.throws(()=>applyEdits(sources,parseModelProposal('{"edits":[]}','stop')),/INVALID_EDIT_COUNT/);
 assert.throws(()=>applyEdits(sources,parseModelProposal(JSON.stringify({edits:[{path:'.github/workflows/unsafe.yml',before,after:'no'}]}),'stop')),/PROTECTED_PATH/);
 console.log('LOCAL_UNKNOWN_GENERATOR_RESPONSE_FORMAT PASS');
+
+// Use the exact errors observed in run 45825665165 and verify the next repair differs.
+const timeoutRepair=repairProfile('Error: LOCAL_MODEL_TRANSPORT:LOCAL_MODEL_DEADLINE',2);
+assert.equal(timeoutRepair.type,'TRANSPORT');assert.equal(timeoutRepair.groups,1);assert(timeoutRepair.maxTokens<repairProfile().maxTokens);
+assert.equal(repairProfile('SyntaxError: Unexpected token backtick',2).type,'FORMAT');
+assert.equal(repairProfile('MODEL_OUTPUT_TRUNCATED',2).type,'TRUNCATED');
+assert.equal(repairProfile('NONUNIQUE_OR_STALE_ANCHOR',2).type,'ANCHOR');
+assert.equal(repairProfile('PROTECTED_PATH',2).type,'PROTECTED');
+assert.equal(repairProfile('AssertionError: expected battle state',2).type,'ENGINE');
+assert.equal(repairProfile('').type,'INITIAL');
+console.log('LOCAL_UNKNOWN_ADAPTIVE_REPAIR PASS');

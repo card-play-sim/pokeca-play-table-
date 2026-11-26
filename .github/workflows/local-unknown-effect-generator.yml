@@ -119,7 +119,10 @@ jobs:
             git -C "$scratch" checkout --detach "$(git rev-parse HEAD)"
             git -C "$scratch" remote remove origin
             rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
-            if [ "$attempt" -gt 1 ]; then export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"; fi
+            if [ "$attempt" -gt 1 ]; then
+              export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
+              export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
+            fi
             node scripts/local-unknown-effect-generator.cjs "$RUNNER_TEMP/unknown-worklist.json" "$out" "$scratch"
             if [ "$(node -p "require('$out/result.json').state")" != GENERATED_NOT_TESTED ]; then
               printf 'No validated patch in attempt %s\n' "$attempt"
@@ -178,7 +181,7 @@ jobs:
             printf 'Attempt %s did not clear quarantine. Retry with failure feedback.\n' "$attempt"
           done
           echo 'No verified local-generation candidate. Retain unresolved source for later runs.'
-          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE (JSON wrapper normalization enabled)' >> "$GITHUB_STEP_SUMMARY"
+          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE (adaptive repair enabled)' >> "$GITHUB_STEP_SUMMARY"
           exit 1
       - uses: actions/upload-artifact@v4
         if: always()
