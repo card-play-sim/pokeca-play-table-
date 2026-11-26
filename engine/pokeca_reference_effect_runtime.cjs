@@ -1271,6 +1271,17 @@ function applyPlan(g,actor,card,effect,action){
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    resetHand(g,p,plan.amount);
    break;
+  case 'MASS_MILL_COUNT_DAMAGE':{
+   let count=0;
+   for(const side of plan.scope==='both'?[p,o]:[p]){
+    const discarded=side.deck.splice(0,plan.limit);
+    side.discard.push(...discarded);
+    count+=discarded.filter(c=>plan.filter==='typedBasic'?basicEnergy(c)&&c.energyType===plan.type:plan.filter==='energy'?c.kind==='energy':plan.filter==='trainer'?['item','supporter','tool','stadium'].includes(record(c)?.category):c.kind==='pokemon'&&record(c).name.startsWith(plan.team+'の')).length;
+    event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});
+   }
+   damage(g,actor,o.active,plan.base+plan.unit*count);
+   break;
+  }
   case 'ATTACK_DISCARD_OWN_DECK_TOP':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const cards=p.deck.splice(0,plan.amount);
