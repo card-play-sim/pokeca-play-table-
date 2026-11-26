@@ -918,6 +918,12 @@ function attackMetric(plan,own,other){
  if(plan.metric==='ownBenchStageTwoCount')return own.bench.filter(c=>record(c).facts.stage===2).length;
  if(plan.metric==='ownDamagedBenchCount')return own.bench.filter(c=>c.damage>0).length;
  if(plan.metric==='opponentTeamCounters')return field(other).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownDiscardNamedCard')return own.discard.filter(c=>record(c)?.name===plan.name).length;
+ if(plan.metric==='ownDiscardSupporterContains')return own.discard.filter(c=>record(c)?.category==='supporter'&&record(c).name.includes(plan.name)).length;
+ if(plan.metric==='ownNamedOrExCount')return field(own).filter(c=>[plan.name,plan.name+'ex'].includes(record(c).name)).length;
+ if(plan.metric==='bothNameContainsCount')return [...field(own),...field(other)].filter(c=>[plan.name,plan.secondName].some(n=>record(c).name.includes(n))).length;
+ if(plan.metric==='ownBenchNamedCount')return own.bench.filter(c=>record(c).name===plan.name).length;
+ if(plan.metric==='ownBenchTypedCounters')return own.bench.filter(c=>record(c).facts.types.includes(plan.type)).reduce((n,c)=>n+(c.damage||0)/10,0);
  if(plan.metric==='ownTypedPokemonCount')return field(own).filter(c=>record(c).facts.types.includes(plan.type)).length;
  if(plan.metric==='ownPokemon')return field(own).length;
  if(plan.metric==='opponentPrizesTaken')return 6-other.prizes;
