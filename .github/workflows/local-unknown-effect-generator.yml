@@ -113,7 +113,7 @@ jobs:
             if [ ! -f "$out/selected.json" ]; then return; fi
             local feedback=""
             if [ -f "$out/engine.log" ]; then feedback="$(tail -c 1800 "$out/engine.log")"; fi
-            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
+            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
           }
           for attempt in 1 2; do
             scratch="$RUNNER_TEMP/model-scratch-$attempt"
@@ -124,6 +124,7 @@ jobs:
             git -C "$scratch" remote remove origin
             rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
             if [ "$attempt" -gt 1 ]; then
+              export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
               export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
               export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
             fi

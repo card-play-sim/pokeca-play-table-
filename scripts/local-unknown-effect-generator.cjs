@@ -207,6 +207,18 @@ async function generate(groups,sources,feedback='',profile=repairProfile(feedbac
  const raw=result.choices?.[0]?.message?.content;
  return resolveAnchorProposal(parseModelProposal(raw,result.choices?.[0]?.finish_reason),anchors);
 }
+// Retry only the still-evidence-verified groups from the previous same-source
+// attempt. Do not feed a different official effect an unrelated failure log.
+function retryBatch(candidates,previous,fingerprint){
+ if(!previous||previous.fingerprint!==fingerprint||!Array.isArray(previous.groups)||!Array.isArray(previous.targetIds))return [];
+ const ids=new Set(previous.targetIds.map(String)),byGroup=new Map(candidates.map(x=>[x.group.sharedTaskId,x]));
+ return [...new Set(previous.groups.map(g=>g?.sharedTaskId))].map(id=>byGroup.get(id)).filter(x=>x&&x.records.length&&x.records.every(r=>ids.has(String(r.officialCardId))));
+}
+function attemptScope(batch,profile){
+ const chosen=batch.slice(0,profile.groups);
+ assert(chosen.length>0,'NO_ATTEMPT_SCOPE');
+ return {groups:chosen.map(x=>x.group),records:[...new Map(chosen.flatMap(x=>x.records).map(r=>[String(r.officialCardId),r])).values()]};
+}
 async function main(){
  const worklist=read(process.argv[2]),out=process.argv[3],scratch=process.argv[4];
  assert(out&&scratch&&path.resolve(scratch)!==process.cwd(),'ISOLATED_TREE_REQUIRED');
@@ -230,19 +242,28 @@ async function main(){
   try{history=normalizeHistory(read(historyPath));}catch(e){console.warn('INVALID_PREVIOUS_HISTORY',String(e).slice(0,300));}
  }
  const runNumber=process.env.GITHUB_RUN_NUMBER||1;
- const batch=selectBatch(candidates,runNumber,{history,fingerprint});
+ let previousSelection=null;
+ const previousSelectionPath=process.env.MODEL_PREVIOUS_SELECTION_PATH;
+ if(previousSelectionPath&&fs.existsSync(previousSelectionPath)&&fs.statSync(previousSelectionPath).size<=256*1024){
+  try{previousSelection=read(previousSelectionPath);}catch(e){console.warn('INVALID_PREVIOUS_SELECTION',String(e).slice(0,300));}
+ }
+ const retry=retryBatch(candidates,previousSelection,fingerprint);
+ const batch=retry.length?retry:selectBatch(candidates,runNumber,{history,fingerprint});
  if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
- const selectedGroups=batch.map(x=>x.group),records=[...new Map(batch.flatMap(x=>x.records).map(r=>[String(r.officialCardId),r])).values()];
+ let selectedGroups=[],records=[],targetIds=[];
  const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
- const targetIds=records.map(r=>String(r.officialCardId));
- write(path.join(out,'selected.json'),{group:selectedGroups[0],groups:selectedGroups,targetIds,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'});
- let proposal,changed,feedback=process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
+ let proposal,changed,feedback=retry.length&&process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
  let previousPatch='';
- if(process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
- if(!feedback){const previous=history.groups[selectedGroups[0].sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
+ if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
+ if(!feedback){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
  for(let attempt=1;attempt<=2;attempt++){
   try{
    const profile=repairProfile(feedback,attempt);
+   const scope=attemptScope(batch,profile);
+   selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
+   const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
+   write(path.join(out,'selected-'+attempt+'.json'),selected);
+   write(path.join(out,'selected.json'),selected);
    write(path.join(out,'repair-profile-'+attempt+'.json'),profile);
    proposal=await generate(selectedGroups,sources,feedback,profile,previousPatch);write(path.join(out,'model-output-'+attempt+'.json'),proposal);
    changed=applyEdits(sources,proposal);
@@ -265,4 +286,4 @@ async function main(){
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal};
+module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal,retryBatch,attemptScope};

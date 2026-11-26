@@ -123,3 +123,17 @@ assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PR
 assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"reason":"ENGINE_EXECUTION_FAILED"}]}',2).type,'EXECUTION');
 assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"PRIOR_RECORD_CHANGED"}',2).type,'INTEGRITY');
 console.log('LOCAL_UNKNOWN_RECEIPT_REPAIR_ROUTING PASS');
+
+// Compact repair may expose one group only: never adopt or count the other groups.
+const {retryBatch,attemptScope}=require('../scripts/local-unknown-effect-generator.cjs');
+const fullScope=attemptScope([aa,bb,cc],{groups:2});
+assert.deepEqual(fullScope.groups.map(x=>x.sharedTaskId),[mkId(1),mkId(2)]);
+assert.deepEqual(fullScope.records.map(x=>String(x.officialCardId)),['1','2','3','4']);
+const narrowScope=attemptScope([aa,bb,cc],{groups:1});
+assert.deepEqual(narrowScope.records.map(x=>String(x.officialCardId)),['1','2','3']);
+const prevScope={fingerprint:fp,groups:fullScope.groups,targetIds:fullScope.records.map(x=>String(x.officialCardId))};
+assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp).map(x=>x.group.sharedTaskId),[mkId(1),mkId(2)]);
+assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp2),[]);
+assert.deepEqual(retryBatch([cc],prevScope,fp),[]);
+assert.deepEqual(retryBatch([aa,bb],{...prevScope,targetIds:['1','2','3']},fp).map(x=>x.group.sharedTaskId),[mkId(1)]);
+console.log('LOCAL_UNKNOWN_EXACT_RETRY_SCOPE PASS');
