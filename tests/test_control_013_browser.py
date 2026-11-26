@@ -618,6 +618,11 @@ async def main():
     old=[before['players'][0]['active'],*before['players'][0]['bench']]
     new={c['id']:c for c in [after['players'][0]['active'],*after['players'][0]['bench']]}
     assert any(c['damage']>new[c['id']]['damage'] for c in old if c['id'] in new and (not chosen or c['id'] in chosen))
+    if plan['amount']=='all':
+     assert chosen and all(new[ident]['damage']==0 for ident in chosen)
+    if plan.get('origin')=='evolve':
+     source=next(c for c in old if c['id']==option['action']['sourceInstanceId'])
+     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
    if m=='ABILITY_EVOLVE_MULTI_COUNTERS':
     source=before['players'][0]['active'];plan=f['e']['plan'];targets=option['action']['selections']['target']
     assert source['evolutionCards'] and source['referenceEvolutionWindow']==before['referenceActionSequence']
