@@ -24,4 +24,13 @@ assert.match(workflow,/AUTO_CONNECT_CANDIDATE_READY/,'candidate must be handed o
 assert.match(workflow,/gh api "repos\/\$GITHUB_REPOSITORY\/issues\/122\/comments"/,'fallback must use the existing issue');
 assert.match(workflow,/if gh pr create --base main/,'PR create failure must not abort the candidate handoff');
 assert.match(workflow,/node tests\/auto-connect-workflow-recovery.test.cjs/,'workflow must run this regression before official intake');
+const candidateStep=workflow.indexOf('id: candidates');
+const browserStep=workflow.indexOf('name: Verify exact candidate prints');
+const saveStep=workflow.indexOf('name: Save checkpoint and outcomes');
+const prStep=workflow.indexOf('name: Open verified candidate pull request');
+assert(candidateStep>=0&&candidateStep<browserStep&&browserStep<saveStep&&saveStep<prStep,'candidate DOM gate must precede checkpoint promotion and PR');
+assert.match(workflow,/if: steps\.candidates\.outputs\.count != '0'/,'scheduled candidates require browser proof, not only Work replay');
+assert.match(workflow,/export POKECA_INTAKE_RELEASE_BASE="\$INTAKE_BASE"/,'verify exact checkout base');
+assert.match(workflow,/INTAKE_BASE_MOVED=1/,'preserve rather than overwrite newer main');
+assert.match(workflow,/AUTO_CONNECT_RECONCILE_REQUIRED/,'stale base must hand off for reconciliation');
 console.log('PASS: J/I-first validated official IDs and safe PR-disabled candidate handoff');
