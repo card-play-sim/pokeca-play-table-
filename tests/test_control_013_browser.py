@@ -498,12 +498,21 @@ async def main():
      assert {c['id'] for c in before['players'][1]['deck'][:heads]}<={c['id'] for c in after['players'][1]['discard']}
    if m=='MASS_EFFECT_SEQUENCE':
     own,other=before['players'];resolved=after['players'][0]
-    for step in f['e']['plan']['steps']:
-     if step['op']=='draw':
-      assert {c['id'] for c in own['deck'][:step['amount']]}<={c['id'] for c in resolved['hand']}
+    steps=f['e']['plan']['steps'];cursors=[0,0];hand_count=len(own['hand'])-(1 if any(s['op']=='drawIfHand' for s in steps) else 0)
+    for step in steps:
+     if step['op']=='draw' or (step['op']=='drawIfHand' and hand_count>=step['threshold']):
+      picked=own['deck'][cursors[0]:cursors[0]+step['amount']]
+      assert {c['id'] for c in picked}<={c['id'] for c in resolved['hand']}
+      cursors[0]+=len(picked);hand_count+=len(picked)
+     if step['op']=='revealHand' or step['op']=='peekTop':
+      zone='hand' if step['op']=='revealHand' else 'deck'
+      picked=other['hand'] if zone=='hand' else other['deck'][cursors[1]:cursors[1]+step['amount']]
+      assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('fromZone')==zone and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in picked] for ev in events)
      if step['op']=='mill':
       index=1 if step['side']=='opponent' else 0
-      assert {c['id'] for c in before['players'][index]['deck'][:step['amount']]}<={c['id'] for c in after['players'][index]['discard']}
+      picked=before['players'][index]['deck'][cursors[index]:cursors[index]+step['amount']]
+      assert {c['id'] for c in picked}<={c['id'] for c in after['players'][index]['discard']}
+      cursors[index]+=len(picked)
      if step['op']=='status':
       assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==step['status'] for ev in events)
    if m=='MASS_ENERGY_ROUTE':
