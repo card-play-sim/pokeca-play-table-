@@ -1643,6 +1643,94 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46229",
+      "name": "イーブイ",
+      "deckName": "イーブイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46229",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV-P/046229_P_IBUI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "カラフルキャッチ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札から、それぞれちがうタイプの基本エネルギーを3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-46229-attack-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "basicEnergy",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 3,
+            "activeOnly": false,
+            "sharedWording": true,
+            "distinctBy": "energyType"
+          }
+        },
+        {
+          "name": "ずつき",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-46229-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46229.json",
+        "sha256": "ce0e573e6065c4d3f21e536c815ef07be4dcce108a0c052ce695885be037027f",
+        "htmlSha256": "ce0e573e6065c4d3f21e536c815ef07be4dcce108a0c052ce695885be037027f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46295",
       "name": "シャリタツ",
       "deckName": "シャリタツ",
@@ -19332,6 +19420,94 @@
         "path": "data/effect-extensions/evidence/45923.json",
         "sha256": "8002124535e561b1865856e9f3bfba3580afcb5c9b065652de66aed3352e7673",
         "htmlSha256": "8002124535e561b1865856e9f3bfba3580afcb5c9b065652de66aed3352e7673",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45925",
+      "name": "イーブイ",
+      "deckName": "イーブイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45925",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045925_P_IBUI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "カラフルキャッチ",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札から、それぞれちがうタイプの基本エネルギーを3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-45925-attack-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "basicEnergy",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 3,
+            "activeOnly": false,
+            "sharedWording": true,
+            "distinctBy": "energyType"
+          }
+        },
+        {
+          "name": "ずつき",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20",
+          "text": "",
+          "effectId": "reference-45925-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45925.json",
+        "sha256": "001efc9dcec0052fad6a6235ef8cedaa1627dc52bcb18bb8974725136e7ae023",
+        "htmlSha256": "001efc9dcec0052fad6a6235ef8cedaa1627dc52bcb18bb8974725136e7ae023",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -39770,6 +39946,90 @@
         "path": "data/effect-extensions/evidence/47698.json",
         "sha256": "cd232d0dea0161646f4dcdae8608cbe234e93b737a632351a68f93f8d577706d",
         "htmlSha256": "cd232d0dea0161646f4dcdae8608cbe234e93b737a632351a68f93f8d577706d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47700",
+      "name": "トルネロス",
+      "deckName": "トルネロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47700",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047700_P_TORUNEROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かぜをまとう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、このポケモンにつける。",
+          "effectId": "reference-47700-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "self"
+          }
+        },
+        {
+          "name": "ぼうふう",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
+          "effectId": "reference-47700-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47700.json",
+        "sha256": "5aa6bac07261b17b17b2fd3b67dfbb613276e0bd1fdc5d82a35e1b37ac47263b",
+        "htmlSha256": "5aa6bac07261b17b17b2fd3b67dfbb613276e0bd1fdc5d82a35e1b37ac47263b",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -199979,6 +200239,1225 @@
         "sharedWording": true,
         "nameContains": "ロケット団"
       }
+    },
+    {
+      "officialCardId": "48070",
+      "name": "トルネロス",
+      "deckName": "トルネロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48070",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048070_P_TORUNEROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かぜをまとう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、このポケモンにつける。",
+          "effectId": "reference-48070-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "self"
+          }
+        },
+        {
+          "name": "ぼうふう",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
+          "effectId": "reference-48070-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48070.json",
+        "sha256": "1d6835739b9d38e3d0d34e2b73f4caedba12e3c0b5e7dad16cd1b97c0d6735e5",
+        "htmlSha256": "1d6835739b9d38e3d0d34e2b73f4caedba12e3c0b5e7dad16cd1b97c0d6735e5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45213",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45213",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045213_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45213.json",
+        "sha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
+        "htmlSha256": "3497120b3d9d2ab8e3ec47cd15dc102a994dd93488b4be0fe7e8ad1c0a50cc70",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45533",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45533",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5K/045533_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45533.json",
+        "sha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
+        "htmlSha256": "af0faaf576eaffd43c7f1b541ee0f845bd319c7b839069f687e556ad60183fe7",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "45934",
+      "name": "アクロマの執念",
+      "deckName": "アクロマの執念",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45934",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045934_T_AKUROMANOSHIXYUUNEN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45934.json",
+        "sha256": "5451040389c8477b566b7eeff234315533b08e328a2a9e5929b9f01e5b9f5958",
+        "htmlSha256": "5451040389c8477b566b7eeff234315533b08e328a2a9e5929b9f01e5b9f5958",
+        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "stadium",
+          "energy"
+        ],
+        "distinctBy": "category"
+      }
+    },
+    {
+      "officialCardId": "46060",
+      "name": "アクロマの執念",
+      "deckName": "アクロマの執念",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46060",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/046060_T_AKUROMANOSHIXYUUNEN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46060.json",
+        "sha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
+        "htmlSha256": "745484f17f42d5283d15113522061b47206b9f1abfd4a9d91786825c79c99e31",
+        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "stadium",
+          "energy"
+        ],
+        "distinctBy": "category"
+      }
+    },
+    {
+      "officialCardId": "46281",
+      "name": "エネルギー転送PRO",
+      "deckName": "エネルギー転送PRO",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46281",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046281_T_ENERUGITENSOUPRO.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から、それぞれちがうタイプの基本エネルギーを好きなだけ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46281.json",
+        "sha256": "9b1ba3bedd921e05938bf50920d2d66e5b85d5e29c4a682faf1b07a5275b4d00",
+        "htmlSha256": "9b1ba3bedd921e05938bf50920d2d66e5b85d5e29c4a682faf1b07a5275b4d00",
+        "textSha256": "39fdba542c6976027b911a988fa31be34686834d0390c01ac2686d15348dbd5f"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "basicEnergy",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 8,
+        "activeOnly": false,
+        "sharedWording": true,
+        "distinctBy": "energyType"
+      }
+    },
+    {
+      "officialCardId": "46825",
+      "name": "アクロマの執念",
+      "deckName": "アクロマの執念",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46825",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046825_T_AKUROMANOSHIXYUUNEN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からスタジアムとエネルギーを1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46825.json",
+        "sha256": "e4cc004374ab0b6b266f804970c07debfd4fb5a19e49319a6a415725420110b0",
+        "htmlSha256": "e4cc004374ab0b6b266f804970c07debfd4fb5a19e49319a6a415725420110b0",
+        "textSha256": "b64cc01d1ff850ef8b74aeb2468d5c994828fcd9b255363bb60450a698c6bd7b"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "stadium",
+          "energy"
+        ],
+        "distinctBy": "category"
+      }
+    },
+    {
+      "officialCardId": "46833",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46833",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046833_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46833.json",
+        "sha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
+        "htmlSha256": "1f0f4e2c408f9ccd7f6cb382800611b32a266c520aefc40aa66140f1fbfe6d87",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50402",
+      "name": "ぼうけんのランタン",
+      "deckName": "ぼうけんのランタン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50402",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050402_T_BOUKENNORANTAN.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50402.json",
+        "sha256": "fde549f646023980cc10db3de75df80ee3c2ae73bf6af48692ebf19885e7ef78",
+        "htmlSha256": "fde549f646023980cc10db3de75df80ee3c2ae73bf6af48692ebf19885e7ef78",
+        "textSha256": "8c1dc7e56d126fa30b3b179be83ba038227a39a255b5c0fb2f44d7cb426c85af"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "basicEnergy",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "energyTypes": [
+          "炎",
+          "雷"
+        ],
+        "distinctBy": "energyType"
+      }
+    },
+    {
+      "officialCardId": "50406",
+      "name": "ギリー",
+      "deckName": "ギリー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50406",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050406_T_GIRI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50406.json",
+        "sha256": "f58cfdb827f34342284592927d9209b25929140dce8e735c0290d0cc60fa9e23",
+        "htmlSha256": "f58cfdb827f34342284592927d9209b25929140dce8e735c0290d0cc60fa9e23",
+        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 3,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "supporter",
+          "stadium"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50538",
+      "name": "ぼうけんのランタン",
+      "deckName": "ぼうけんのランタン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50538",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050538_T_BOUKENNORANTAN.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札から「基本[炎]エネルギー」と「基本[雷]エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50538.json",
+        "sha256": "71da81a84700d63f168e5e8b95d9e53ce4fa1a9085a10d73e5f83c175641ba8a",
+        "htmlSha256": "71da81a84700d63f168e5e8b95d9e53ce4fa1a9085a10d73e5f83c175641ba8a",
+        "textSha256": "8c1dc7e56d126fa30b3b179be83ba038227a39a255b5c0fb2f44d7cb426c85af"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "basicEnergy",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "energyTypes": [
+          "炎",
+          "雷"
+        ],
+        "distinctBy": "energyType"
+      }
+    },
+    {
+      "officialCardId": "50542",
+      "name": "ギリー",
+      "deckName": "ギリー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50542",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050542_T_GIRI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50542.json",
+        "sha256": "ee32b8855e6611cec363c9e4c6b65457e56051ed8a3a66a29c505a12c496150c",
+        "htmlSha256": "ee32b8855e6611cec363c9e4c6b65457e56051ed8a3a66a29c505a12c496150c",
+        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 3,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "supporter",
+          "stadium"
+        ]
+      }
+    },
+    {
+      "officialCardId": "50552",
+      "name": "ギリー",
+      "deckName": "ギリー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50552",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050552_T_GIRI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札からサポートとスタジアムを合計3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50552.json",
+        "sha256": "e9d6285c49d84367909f0d25029c6875c16809685afdb0772053872e3d642030",
+        "htmlSha256": "e9d6285c49d84367909f0d25029c6875c16809685afdb0772053872e3d642030",
+        "textSha256": "ef4eed8dae6f766ed7c799975af2f7b25e26cc26a8115d650598db859171018a"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "categorySet",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 3,
+        "activeOnly": false,
+        "sharedWording": true,
+        "categories": [
+          "supporter",
+          "stadium"
+        ]
+      }
+    },
+    {
+      "officialCardId": "47627",
+      "name": "エルフーンex",
+      "deckName": "エルフーンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47627",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047627_P_ERUFUNEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーギフト",
+          "cost": [
+            "草"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。",
+          "effectId": "reference-47627-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": null,
+            "limit": 3,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ワンダーコットン",
+          "cost": [
+            "草"
+          ],
+          "damage": "50×",
+          "text": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
+          "effectId": "reference-47627-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "REVEAL",
+              "DAMAGE"
+            ],
+            "metric": "opponentHandTrainerCount",
+            "type": null,
+            "unit": 50,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": "モンメン",
+        "retreatCost": 0,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47627.json",
+        "sha256": "5ce7cc75d53cb032d8108c9f8a59d103b231b3df1638259a444500505f60b26f",
+        "htmlSha256": "5ce7cc75d53cb032d8108c9f8a59d103b231b3df1638259a444500505f60b26f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48071",
+      "name": "エルフーンex",
+      "deckName": "エルフーンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48071",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048071_P_ERUFUNEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーギフト",
+          "cost": [
+            "草"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。",
+          "effectId": "reference-48071-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": null,
+            "limit": 3,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ワンダーコットン",
+          "cost": [
+            "草"
+          ],
+          "damage": "50×",
+          "text": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
+          "effectId": "reference-48071-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "REVEAL",
+              "DAMAGE"
+            ],
+            "metric": "opponentHandTrainerCount",
+            "type": null,
+            "unit": 50,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": "モンメン",
+        "retreatCost": 0,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48071.json",
+        "sha256": "422c0d2198a3fcb1e1723e174fad533b31bebb7eef360108e77dd782979958c4",
+        "htmlSha256": "422c0d2198a3fcb1e1723e174fad533b31bebb7eef360108e77dd782979958c4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48079",
+      "name": "エルフーンex",
+      "deckName": "エルフーンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48079",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048079_P_ERUFUNEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーギフト",
+          "cost": [
+            "草"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。",
+          "effectId": "reference-48079-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": null,
+            "limit": 3,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ワンダーコットン",
+          "cost": [
+            "草"
+          ],
+          "damage": "50×",
+          "text": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
+          "effectId": "reference-48079-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "REVEAL",
+              "DAMAGE"
+            ],
+            "metric": "opponentHandTrainerCount",
+            "type": null,
+            "unit": 50,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": "モンメン",
+        "retreatCost": 0,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48079.json",
+        "sha256": "5a6e026645b6ded1525aacb89ad2c4b61d714ce119312e2a796f7823a21eb7de",
+        "htmlSha256": "5a6e026645b6ded1525aacb89ad2c4b61d714ce119312e2a796f7823a21eb7de",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48760",
+      "name": "エルフーンex",
+      "deckName": "エルフーンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48760",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048760_P_ERUFUNEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーギフト",
+          "cost": [
+            "草"
+          ],
+          "damage": "0",
+          "text": "自分の山札から基本エネルギーを3枚まで選び、自分のポケモンに好きなようにつける。そして山札を切る。",
+          "effectId": "reference-48760-attack-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": null,
+            "limit": 3,
+            "target": "own",
+            "holderType": null,
+            "team": null,
+            "multi": true,
+            "heal": null,
+            "activeOnly": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ワンダーコットン",
+          "cost": [
+            "草"
+          ],
+          "damage": "50×",
+          "text": "相手の手札を見て、その中にあるトレーナーズの枚数×50ダメージ。",
+          "effectId": "reference-48760-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "REVEAL",
+              "DAMAGE"
+            ],
+            "metric": "opponentHandTrainerCount",
+            "type": null,
+            "unit": 50,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": "モンメン",
+        "retreatCost": 0,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48760.json",
+        "sha256": "6765d70d683fa55d2ce41b0f9502e50ff2f516a3ca654ca6ff1e6aaade6b96ad",
+        "htmlSha256": "6765d70d683fa55d2ce41b0f9502e50ff2f516a3ca654ca6ff1e6aaade6b96ad",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49326",
+      "name": "トルネロス",
+      "deckName": "トルネロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49326",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049326_P_TORUNEROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かぜをまとう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、このポケモンにつける。",
+          "effectId": "reference-49326-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "self"
+          }
+        },
+        {
+          "name": "ぼうふう",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
+          "effectId": "reference-49326-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49326.json",
+        "sha256": "a5c902bdb104c448ba75c6aae579184ed9f294dbc36ddea5a059bc63ed40e234",
+        "htmlSha256": "a5c902bdb104c448ba75c6aae579184ed9f294dbc36ddea5a059bc63ed40e234",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50842",
+      "name": "トルネロス",
+      "deckName": "トルネロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50842",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MG/050842_P_TORUNEROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かぜをまとう",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の手札から基本エネルギーを1枚選び、このポケモンにつける。",
+          "effectId": "reference-50842-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACH_BASIC_FROM_HAND",
+            "commands": [
+              "ATTACH_ENERGY"
+            ],
+            "target": "self"
+          }
+        },
+        {
+          "name": "ぼうふう",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "このポケモンについている基本エネルギーを1個選び、ベンチポケモンにつけ替える。",
+          "effectId": "reference-50842-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_BASIC_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50842.json",
+        "sha256": "599dcee31f40f211605adfa97696165025fdcadd92862de00d094d0e36bba380",
+        "htmlSha256": "599dcee31f40f211605adfa97696165025fdcadd92862de00d094d0e36bba380",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49433",
+      "name": "探検家の先導",
+      "deckName": "探検家の先導",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49433",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049433_T_TANKENKANOSENDOU.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の山札を上から6枚見て、その中からカードを2枚選び、手札に加える。残りのカードはトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49433.json",
+        "sha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
+        "htmlSha256": "35ec650bfaf93c0ae6856d53e485fb3c7f5340e16e934d941ea8b832abfd90fa",
+        "textSha256": "5b435d94c7052e97af5f72fd121c00f6e4eb8b5e2c8e7346f8990f7388b31e93"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TOP_SELECT_DISCARD",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "DISCARD"
+        ],
+        "limit": 6,
+        "amount": 2,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -200551,11 +202030,6 @@
         "htmlSha256": "e3179dbd1d3a0e50230acceae5cea5c81bb816ea7cd88b81443f29d47a97c2e3",
         "textSha256": "981338e57cfc48f8b1eedc33ffab7be0bae357b0c2a7206003a88f3ec3d9f3b8"
       }
-    },
-    {
-      "officialCardId": "46229",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46309",
@@ -201278,11 +202752,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45925",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45945",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -201814,11 +203283,6 @@
     },
     {
       "officialCardId": "47668",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47700",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

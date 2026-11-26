@@ -220,6 +220,14 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='ATTACK_BASIC_ENERGY_MOVE':
+    own=before['players'][0];resolved=after['players'][0]
+    energy=option['action']['selections']['energy'][0];target=option['action']['selections']['attachTo'][0]
+    assert any(c['id']==energy and not c.get('isSpecial') for c in own['active']['energyCards'])
+    assert not any(c['id']==energy for c in resolved['active']['energyCards'])
+    assert any(c['id']==energy for mon in resolved['bench'] if mon['id']==target for c in mon['energyCards'])
+   if m=='SCALED_ATTACK_DAMAGE' and f['e']['plan'].get('metric')=='opponentHandTrainerCount':
+    assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('privateTo')=='you' and ev['details'].get('cardIds')==[c['id'] for c in before['players'][1]['hand']] for ev in events)
    if m=='ATTACK_RESET_HAND':
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
@@ -370,6 +378,15 @@ async def main():
      source=next(card for card in [resolved['active'],*resolved['bench']] if card and card['id']==ident)
      assert selected[0] in {card['id'] for card in source['energyCards']}
      assert own['normalEnergyAttached']==resolved['normalEnergyAttached']
+   if m=='TRAINER_TOP_SELECT_DISCARD':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0]
+    top=own['deck'][:plan['limit']];picked=set(option['action']['selections']['cards'])
+    assert len(picked)==min(plan['amount'],len(top))
+    assert picked<={c['id'] for c in top}
+    assert picked<={c['id'] for c in resolved['hand']}
+    assert ({c['id'] for c in top}-picked)<={c['id'] for c in resolved['discard']}
+    assert [c['id'] for c in resolved['deck']]==[c['id'] for c in own['deck'][len(top):]]
+    assert not any(ev.get('details',{}).get('command') in ('REVEAL','SHUFFLE_DECK') and not ev.get('details',{}).get('reference') for ev in events)
    if m in ('TRAINER_TOP_TYPED_SEARCH','TRAINER_TOP_POKEMON_TRAINER'):
     plan=f['e']['plan']
     picked=set(option['action']['selections']['cards'])
@@ -505,6 +522,9 @@ async def main():
      assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.category==='supporter'&&r.name.includes(args.name);})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'name':plan['nameContains']})
     if plan['category']=='pokemonOrBasicEnergy':
      assert await page.evaluate("(args)=>args.cards.every(c=>{const r=Pokeca.getReferenceEffectRecord(c),p=args.plan;return c.kind==='energy'?!c.isSpecial&&c.energyType===p.energyType:r.category==='pokemon'&&(!p.type||r.facts.types.includes(p.type))&&(p.stage===null||r.facts.stage===p.stage)&&(!p.team||r.name.startsWith(p.team+'の'));})",{'cards':[c for c in before['players'][0][plan['zone']] if c['id'] in picked],'plan':plan})
+    if plan.get('categories') or plan.get('distinctBy'):
+     selected_cards=[c for c in before['players'][0][plan['zone']] if c['id'] in picked]
+     assert await page.evaluate("(args)=>{const p=args.plan,cs=args.cards,rec=c=>Pokeca.getReferenceEffectRecord(c);const group=c=>p.distinctBy==='energyType'?c.energyType:rec(c).category;return cs.every(c=>(!p.categories||p.categories.includes(rec(c).category))&&(!p.energyTypes||!c.isSpecial&&p.energyTypes.includes(c.energyType)))&&(!p.distinctBy||new Set(cs.map(group)).size===cs.length);}",{'cards':selected_cards,'plan':plan})
     assert picked<={card['id'] for card in after['players'][0][plan['destination']]}
     assert not picked&{card['id'] for card in after['players'][0][plan['zone']]}
    if m=='MASS_ENERGY_COUNT_DISCARD':
