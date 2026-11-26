@@ -73,14 +73,15 @@ for (const r of selected) {
       }
       const game = p.getSnapshot();
       if (!p.dispatch("you", option.action).ok) continue;
+      const observedDamageEvents = p.getSnapshot().history.slice(game.history.length).filter(event =>
+        (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
+        (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"));
       const printedDamageEvents = ["VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE",
           "ACTIVE_AND_BENCH_DAMAGE", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP",
           "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ATTACK_DISCARD_BENCH_ENERGY_BONUS",
           "PASSIVE_ROCKET_TEAM_ATTACK_GATE", "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
-          "CONDITIONAL_ATTACK_BONUS", "SCALED_ATTACK_DAMAGE", "ANY_DAMAGE", "FIXED_COIN_HITS","MASS_CONTEXT_BONUS","MASS_BOARD_BONUS","MASS_ENERGY_COUNT_DISCARD"].includes(e.plan.mechanic)
-        ? p.getSnapshot().history.slice(game.history.length).filter(event =>
-            (event.details?.command === "DAMAGE" && event.details.targetInstanceId) ||
-            (event.details?.command === "COIN_FLIP" && typeof event.details.heads === "boolean"))
+          "CONDITIONAL_ATTACK_BONUS", "SCALED_ATTACK_DAMAGE", "ANY_DAMAGE", "FIXED_COIN_HITS","MASS_CONTEXT_BONUS","MASS_BOARD_BONUS","MASS_ENERGY_COUNT_DISCARD"].includes(e.plan.mechanic) || observedDamageEvents.length
+        ? observedDamageEvents
         : undefined;
       const sharedAttackEvents = ["ATTACK_DISCARD_FIELD_BASIC","ATTACK_OPTIONAL_DRAW_TO_LIMIT","ATTACK_DISCARD_DEFENDER_ENERGY",
         "ATTACK_HEAL_OWN_TARGET","ATTACK_SPLASH_OWN_BENCH","ATTACK_DISABLE_SELECTED_MOVE","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL",
