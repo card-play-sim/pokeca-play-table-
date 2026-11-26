@@ -1827,6 +1827,17 @@ function verifyCase(t, e) {
       assert.deepEqual(after.players[1].deck.map(c=>c.id),other.deck.map(c=>c.id));
       assert.deepEqual(after.players[1].hand.map(c=>c.id),other.hand.map(c=>c.id));
     }
+    if(plan.origin==='active'&&plan.steps.length===1&&plan.steps[0].op==='status'){
+      assert.equal(after.players[1].active.statusCondition,plan.steps[0].status);
+      const activeOnly=JSON.parse(JSON.stringify(before)),side=activeOnly.players[0];
+      assert(side.bench.length>0,'NO_ACTIVE_ONLY_NEGATIVE_FIXTURE');
+      const source=side.active;side.active=side.bench.shift();side.bench.push(source);
+      const denied=port(activeOnly);
+      assert.equal(denied.dispatch('you',action).ok,false,'BENCH_STATUS_ABILITY_MUST_BE_REJECTED');
+      assert.deepEqual(S.identities(before),S.identities(activeOnly));
+      const used=port(after);
+      assert.equal(used.dispatch('you',action).ok,false,'ACTIVE_STATUS_ABILITY_ONCE_PER_TURN');
+    }
     if(['bench','evolve'].includes(plan.origin)){
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
       const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(closed));
@@ -3598,6 +3609,13 @@ function verifyCase(t, e) {
       assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
     }
     assert(replay.dispatch("you", {...action, selections:{cards:[]}}).ok);
+    if(e.plan.optional){
+      const skipped=replay.getSnapshot(),prior=before.players[0];
+      assert.deepEqual(Array.from(skipped.players[0].deck,c=>c.id),Array.from(prior.deck,c=>c.id));
+      assert.deepEqual(Array.from(skipped.players[0].hand,c=>c.id),Array.from(prior.hand,c=>c.id));
+      assert(!skipped.history.slice(before.history.length).some(event=>['SEARCH_DECK','SHUFFLE_DECK','REVEAL'].includes(event.details?.command)));
+      if(Number(e.damage)>0)verifyPrintedAttack(before,skipped,e,Number(e.damage));
+    }
   }
   if(e.plan.mechanic==="ATTACK_DISCARD_MULTIPLE_SELF_ENERGY"){
     const source=before.players[0].active,chosen=(t.action||o.action).selections.energy||[];
