@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -19,3 +19,17 @@ assert.deepEqual(exactGroup(group,raw,new Set([id]),proof,compile),[]);
 assert.deepEqual(exactGroup({...group,exampleOfficialText:'違う効果。'},raw,new Set(),proof,compile),[]);
 assert.throws(()=>exactGroup(group,raw,new Set(),()=>({...proof(),html:'modified'}),compile));
 console.log('LOCAL_UNKNOWN_GENERATOR_CONTRACT PASS');
+
+// Batch related exact texts without losing distinct print IDs or confusing effect kinds.
+const candidate=(id,text,ids,kind='attack')=>({group:{sharedTaskId:id,exampleOfficialText:text,category:'pokemon',effectKind:kind},records:ids.map(officialCardId=>({officialCardId}))});
+const a=candidate('a','相手の手札をトラッシュし、山札を引く。',['1','2','3']);
+const b=candidate('b','自分の手札をトラッシュし、山札を引く。',['3','4']);
+const c=candidate('c','ダメカンをのせる。',['5']);
+const d=candidate('d','手札をトラッシュし、山札を引く。',['6'],'ability');
+assert.deepEqual(selectBatch([c,b,a,d],1).map(x=>x.group.sharedTaskId),['a','b']);
+assert.deepEqual(selectBatch([c,b,a,d],1,{maxGroups:1}).map(x=>x.group.sharedTaskId),['a']);
+assert.deepEqual(selectBatch([c,b,a,d],1,{maxPrints:3}).map(x=>x.group.sharedTaskId),['a']);
+assert.equal(selectBatch([c,b,a,d],2)[0].group.sharedTaskId,'b');
+assert.deepEqual(selectBatch([],1),[]);
+assert.throws(()=>selectBatch([a],0),/INVALID_RUN_NUMBER/);
+console.log('LOCAL_UNKNOWN_GENERATOR_BATCH PASS');
