@@ -1080,6 +1080,9 @@ function applyPlan(g,actor,card,effect,action){
     const protectedTarget=step.side==='opponent'&&action.type==='attack_turn'&&defender.referenceProtection?.opponentTurn===g.turnNumber;
     switch(step.op){
      case 'draw':draw(g,p,step.amount);break;
+     case 'drawIfHand':if(p.hand.length>=step.threshold)draw(g,p,step.amount);break;
+     case 'revealHand':event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});break;
+     case 'peekTop':event(g,actor,'REVEAL',{cardIds:o.deck.slice(0,step.amount).map(id),fromZone:'deck',privateTo:actor});break;
      case 'mill':{const side=step.side==='opponent'?o:p,discarded=side.deck.splice(0,step.amount);side.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});break;}
      case 'healSelf':if(card.damage>0)heal(g,actor,card,step.amount);break;
      case 'drain':if(amount>0&&card.damage>0)heal(g,actor,card,amount);break;
