@@ -1,4 +1,4 @@
-name: Issue122 six common effect families full atomic qualification
+name: Issue122 compositional common effect families full atomic qualification
 on:
   push:
     branches: [battle/issue122-counter-grammar-20261126]
@@ -42,7 +42,7 @@ jobs:
           grep -q 'ATTACK_OPTIONAL_RETURN_POKEMON' engine/pokeca_reference_effect_runtime.cjs
           grep -q 'NO_EVOLVED_SOURCE_FULL_LINE' scripts/lib/shared-effect-engine-worker.cjs
           grep -q 'ensure(deckIndex,source,2)' scripts/lib/shared-effect-engine-worker.cjs
-      - name: Require all six source families in the same candidate
+      - name: Require previous and newly composed source families in the same candidate
         run: |
           grep -q 'namedBenchChain' scripts/lib/shared-effect-engine-worker.cjs
           grep -q 'ownDiscardNamedCard' engine/reference-effect-plans.cjs || grep -q 'ownDiscardName' engine/reference-effect-plans.cjs
@@ -50,6 +50,8 @@ jobs:
           grep -q 'MASS_ATTACHED_ENERGY_MOVE' engine/pokeca_reference_effect_runtime.cjs
           grep -q 'MASS_MILL_COUNT_DAMAGE' engine/pokeca_reference_effect_runtime.cjs
           grep -q 'MASS_COUNTER_GRAMMAR' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'evolutionTransferFallback' engine/reference-effect-plans.cjs
+          grep -q 'drawIfHand' engine/pokeca_reference_effect_runtime.cjs
       - name: Verify source and resume exact saved official evidence
         run: |
           node --check engine/reference-effect-plans.cjs
