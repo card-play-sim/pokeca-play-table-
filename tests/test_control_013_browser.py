@@ -506,6 +506,21 @@ async def main():
       assert {c['id'] for c in before['players'][index]['deck'][:step['amount']]}<={c['id'] for c in after['players'][index]['discard']}
      if step['op']=='status':
       assert any(ev.get('details',{}).get('command')=='STATUS_CONDITION' and ev['details'].get('status')==step['status'] for ev in events)
+   if m=='MASS_ATTACHED_ENERGY_MOVE':
+    plan=f['e']['plan'];selection=option['action']['selections'];chosen=selection['energy']
+    side=1 if plan['source'].startswith('opponent') else 0
+    old=before['players'][side];new=after['players'][side]
+    assert chosen
+    for i,ident in enumerate(chosen):
+     source=next(c for c in [old['active'],*old['bench']] if ident in {e['id'] for e in c['energyCards']})
+     target=ident
+     if plan['target']=='self':target=option['action']['sourceInstanceId']
+     elif plan['target']=='ownActive':target=old['active']['id']
+     else:target=selection['moveTo'+str(i if plan['multi'] else 0)][0]
+     assert source['id']!=target
+     assert any(c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
+     assert any(ev.get('details',{}).get('command')=='MOVE_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target for ev in events)
+    assert old['normalEnergyAttached']==new['normalEnergyAttached']
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']
     assert picked
