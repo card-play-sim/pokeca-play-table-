@@ -881,9 +881,17 @@ function evolutionTransferFallback(entry,kind,text){
  const prefix='自分の番に、このカードを手札から出して進化させたとき、1回使える。';
  if(!text.startsWith(prefix))return null;
  const body=text.slice(prefix.length);
- const transfer=massSharedPlan(entry,kind,'自分の番に1回使える。'+body);
- if(transfer?.mechanic!=='MASS_ZONE_TRANSFER'||transfer.destination!=='hand'||transfer.activeOnly||transfer.repeated)return null;
- return {...transfer,origin:'evolve'};
+ const regular='自分の番に1回使える。'+body;
+ const transfer=massSharedPlan(entry,kind,regular);
+ if(transfer&&!transfer.activeOnly&&!transfer.repeated&&((transfer.mechanic==='MASS_ZONE_TRANSFER'&&transfer.destination==='hand')||transfer.mechanic==='MASS_ENERGY_ROUTE'))return {...transfer,origin:'evolve'};
+ // The same canonical transfer primitive handles named-team acceleration.
+ const team=body.match(/^自分の(山札|トラッシュ|手札)から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を([1-9])枚まで選び、自分の「(マリィ|エリカ)のポケモン」に好きなようにつける。(そして山札を切る。)?$/);
+ if(team&&Boolean(team[5])===(team[1]==='山札'))return {mechanic:'MASS_ENERGY_ROUTE',commands:[...(team[1]==='山札'?['SEARCH_DECK']:[]),'ATTACH_ENERGY',...(team[1]==='山札'?['SHUFFLE_DECK']:[])],zone:({'山札':'deck','トラッシュ':'discard','手札':'hand'})[team[1]],type:team[2],limit:Number(team[3]),target:'own',holderType:null,team:team[4],multi:true,heal:null,origin:'evolve',sharedWording:true};
+ const full=body.match(/^自分の(ポケモン1匹|ポケモン全員|バトルポケモン)のHPを、すべて回復する。$/);
+ if(full)return {mechanic:'MASS_HEAL_OWN',commands:['HEAL'],type:null,target:full[1]==='ポケモン1匹'?'choice':full[1]==='ポケモン全員'?'all':'active',amount:'all',origin:'evolve',sharedWording:true};
+ const healing=transfer?.mechanic==='MASS_HEAL_OWN'?transfer:handAndHealPlan(entry,kind,regular);
+ if(healing&&['MASS_HEAL_OWN','MASS_HEAL_SCOPE'].includes(healing.mechanic))return {...healing,origin:'evolve'};
+ return null;
 }
 function compile(catalog){
  return {...catalog,commandExtensions:[{name:'BENCH_FROM_ZONE',purpose:'Move selected physical Pokemon from HAND/DECK to BENCH through canonical entry rules'},{name:'MODIFY_MAX_HP',purpose:'Apply the source-verified continuous maximum-HP modifier; preserve existing damage'}],records:catalog.records.map(r=>({...r,
