@@ -1,7 +1,7 @@
 name: Local unknown effect code generation quarantine
 on:
   push:
-    branches: [battle/issue122-counter-grammar-20261126, main]
+    branches: [battle/issue122-counter-grammar-20261126, automation/unknown-effect-batch-resilience-20261126, main]
     paths:
       - '.github/workflows/local-unknown-effect-generator.yml'
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
   synthesize:
     if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
     runs-on: ubuntu-24.04
-    timeout-minutes: 150
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
