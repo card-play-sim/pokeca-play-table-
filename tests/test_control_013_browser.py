@@ -255,6 +255,15 @@ async def main():
     own=before['players'][0]
     assert len(after['players'][0]['hand'])==min(f['e']['plan']['amount'],len(own['hand'])+len(own['deck']))
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
+   if m=='MASS_MILL_COUNT_DAMAGE':
+    plan=f['e']['plan']
+    for i in ([0,1] if plan['scope']=='both' else [0]):
+     side=before['players'][i]
+     discarded=[c['id'] for c in side['deck'][:plan['limit']]]
+     assert set(discarded)<={c['id'] for c in after['players'][i]['discard']}
+     assert any(ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck' and ev['details'].get('playerId')==side['id'] and ev['details'].get('cardIds')==discarded for ev in events)
+    assert f['printedDamageEvents']
+    assert all(event in events for event in f['printedDamageEvents'])
    if m=='ATTACK_DISCARD_OWN_DECK_TOP':
     own=before['players'][0]
     discarded=[card['id'] for card in own['deck'][:f['e']['plan']['amount']]]
