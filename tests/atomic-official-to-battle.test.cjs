@@ -110,3 +110,10 @@ assert.throws(()=>deferUnverifiedPromotions({records:[sourceRows[1]]},
   {records:[{...sourceRows[1],source:{path:'conflict'}}]},new Set(['old-deferred']),
   new Set(),[],[{id:'old-deferred'}]),/DEFERRED_EVIDENCE_CONFLICT/);
 console.log('ATOMIC_OFFICIAL_TO_BATTLE PASS: acquisition + mechanic + physical execution one work unit; exact shared task groups; unresolved never completed');
+
+const {compile}=require('../engine/reference-effect-plans.cjs');
+const compose=text=>compile({records:[{officialCardId:'9000',category:'supporter',name:'test',text,attacks:[],abilities:[]}]}).records[0].mainPlan;
+assert.deepEqual(compose('自分の山札を2枚引く。その後、自分の手札が10枚以上あるなら、さらに2枚引く。').steps,[{op:'draw',amount:2},{op:'drawIfHand',threshold:10,amount:2}]);
+assert.deepEqual(compose('自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。').steps,[{op:'draw',amount:2},{op:'revealHand',side:'opponent'},{op:'peekTop',side:'opponent',amount:1}]);
+assert.equal(compose('自分の山札を2枚引く。その後、未知の効果を実行する。'),null);
+assert.equal(compose('自分の山札を2枚引く。相手の手札を見る。未知の効果を実行する。'),null);
