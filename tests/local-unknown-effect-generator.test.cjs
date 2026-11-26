@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -54,3 +54,26 @@ assert.deepEqual(normalizeHistory({schemaVersion:1,groups:{'../../bad':{attempts
 assert.deepEqual(selectBatch([aa],1,{maxPrints:2}),[]);
 assert.equal(sourceFingerprint({'engine/reference-effect-plans.cjs':'a','engine/pokeca_reference_effect_runtime.cjs':'b','scripts/lib/shared-effect-engine-worker.cjs':'c'}).length,64);
 console.log('LOCAL_UNKNOWN_GENERATOR_HISTORY PASS');
+
+// Test the same HTTP transport with a real delayed loopback response and
+// independently verify a bounded deadline for a nonresponding model server.
+async function transportTest(){
+ const http=require('node:http');
+ const server=http.createServer((req,res)=>{
+  let body='';req.on('data',chunk=>body+=chunk);
+  req.on('end',()=>{
+   const input=JSON.parse(body);
+   if(input.mode==='hang')return;
+   setTimeout(()=>{res.writeHead(200,{'content-type':'application/json'});res.end(JSON.stringify({choices:[{message:{content:'ok'}}]}));},60);
+  });
+ });
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  const port=server.address().port;
+  const result=await localCompletion({mode:'delayed'},{port,timeoutMs:1000});
+  assert.equal(result.choices[0].message.content,'ok');
+  await assert.rejects(localCompletion({mode:'hang'},{port,timeoutMs:30}),/LOCAL_MODEL_DEADLINE/);
+ }finally{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}
+ console.log('LOCAL_UNKNOWN_GENERATOR_HTTP PASS');
+}
+transportTest().catch(e=>{console.error(e);process.exitCode=1;});
