@@ -1066,6 +1066,12 @@ function prepare(r, e, kind) {
     if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
     if(!own.hand.some(valid))return {blocked:'NO_TYPED_COUNTER_COST'};
   }
+  if(m==='MASS_HAND_ACQUISITION'){
+    const own=frame.game.players[0];
+    if(!own.deck.length)return {blocked:'NO_HAND_ACQUISITION_FIXTURE'};
+    const specials=own.active.energyCards.filter(c=>c.isSpecial);
+    own.active.energyCards=own.active.energyCards.filter(c=>!c.isSpecial);own.deck.push(...specials);
+  }
   if(m==='MASS_COUNTER_GRAMMAR'){
     const plan=e.plan,other=frame.game.players[1],own=frame.game.players[0];
     if(plan.mode==='multiply'){other.active.damage=10;if(other.bench.length)other.bench[0].damage=20;}
@@ -1987,6 +1993,29 @@ function verifyCase(t, e) {
         assert(events.some(ev=>ev?.command==='DISCARD'&&attached.every(id=>ev.cardIds.includes(id))));
       }else assert(side.active?.id===source.id&&source.energyCards.every(c=>side.active.energyCards.some(x=>x.id===c.id)));
       assert.deepEqual(Array.from(S.identities(end)),Array.from(S.identities(before)));
+    }
+  }
+  if(e.plan.mechanic==='MASS_HAND_ACQUISITION'){
+    const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],selection=action.selections||{};
+    if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    const count=Math.min(plan.amount,own.deck.length),expected=plan.mode==='bottom'?own.deck.slice(-count).reverse().map(c=>c.id):plan.mode==='draw'?own.deck.slice(0,count).map(c=>c.id):selection.cards;
+    assert(expected.length>0);
+    assert(expected.every(id=>resolved.hand.some(c=>c.id===id)));
+    assert.equal(resolved.hand.length,own.hand.length+expected.length);
+    if(plan.mode==='bottom')assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(0,-count).map(c=>c.id));
+    if(plan.mode==='search'){
+      assert(effectEvents.some(x=>x?.command==='SHUFFLE_DECK'&&!x.reference));
+      assert(!effectEvents.some(x=>x?.command==='REVEAL'&&!x.reference));
+    }
+    if(plan.mode!=='bottom'){
+      assert.deepEqual(Array.from(selection.acquire),['do']);
+      const skip=port(before);assert(skip.dispatch('you',{...action,selections:{acquire:['skip'],cards:[]}}).ok);
+      assert.deepEqual(skip.getSnapshot().players[0].hand,own.hand);
+      assert.deepEqual(skip.getSnapshot().players[0].deck,own.deck);
+      if(plan.mode==='search'){
+        const bad=port(before);assert.equal(bad.dispatch('you',{...action,selections:{acquire:['skip'],cards:[own.deck[0].id]}}).ok,false);
+        assert.deepEqual(bad.getSnapshot(),before);
+      }
     }
   }
   if(e.plan.mechanic==='MASS_COUNTER_GRAMMAR'){
