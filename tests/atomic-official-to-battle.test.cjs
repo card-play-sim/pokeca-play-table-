@@ -117,3 +117,9 @@ assert.deepEqual(compose('自分の山札を2枚引く。その後、自分の�
 assert.deepEqual(compose('自分の山札を2枚引く。相手の手札を見る。相手の山札を上から1枚見て、もとにもどす。').steps,[{op:'draw',amount:2},{op:'revealHand',side:'opponent'},{op:'peekTop',side:'opponent',amount:1}]);
 assert.equal(compose('自分の山札を2枚引く。その後、未知の効果を実行する。'),null);
 assert.equal(compose('自分の山札を2枚引く。相手の手札を見る。未知の効果を実行する。'),null);
+
+const evolutionTransfer=text=>compile({records:[{officialCardId:'9001',category:'pokemon',name:'test',text:'',attacks:[],abilities:[{text}]}]}).records[0].abilities[0].plan;
+const evolutionPrefix='自分の番に、このカードを手札から出して進化させたとき、1回使える。';
+const evolutionRecovery=evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。');
+assert.equal(evolutionRecovery.mechanic,'MASS_ZONE_TRANSFER');assert.equal(evolutionRecovery.origin,'evolve');assert.equal(evolutionRecovery.zone,'discard');assert.equal(evolutionRecovery.nameExact,'ペパーのサンドウィッチ');assert.equal(evolutionRecovery.limit,2);
+assert.equal(evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。未知の効果。'),null);
