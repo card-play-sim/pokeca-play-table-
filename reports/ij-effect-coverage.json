@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1100,
-      "missing": 602
+      "connected": 1102,
+      "missing": 600
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1094,
+      "CONNECTED_UNTESTED": 1096,
       "MECHANIC_REQUIRED": 83,
-      "ENGINE_CONNECTION_REQUIRED": 515,
+      "ENGINE_CONNECTION_REQUIRED": 513,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -3278,8 +3278,7 @@
       "name": "ディアルガ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47780.json"
     },
     {
@@ -6494,8 +6493,7 @@
       "name": "ディアルガ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49218.json"
     },
     {
@@ -21579,9 +21577,9 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1100,
+        "ENGINE_CONNECTED": 1102,
         "MECHANIC_REQUIRED": 594,
-        "ENGINE_CONNECTION_REQUIRED": 4,
+        "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21597,7 +21595,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3381,
-    "unconnected": 1692
+    "engineConnected": 3383,
+    "unconnected": 1690
   }
 }

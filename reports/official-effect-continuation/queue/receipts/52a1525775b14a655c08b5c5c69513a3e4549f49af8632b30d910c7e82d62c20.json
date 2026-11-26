@@ -1,20 +1,31 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_4E6DFCF3F4DA4DEB:3df97fe80c201d744754fbdd478cd14d1abc5ff3b3fa7b926bf514ab01cc1d2d",
   "taskFingerprint": "3df97fe80c201d744754fbdd478cd14d1abc5ff3b3fa7b926bf514ab01cc1d2d",
-  "executionFingerprint": "3400e66d946a7aefa0e80f8a07982af93c80f466a9288cd6d004e7afb642a5ad",
-  "attemptId": "99b40772-2c52-4ad9-810d-6df860f9e2d7",
-  "status": "BLOCKED",
+  "executionFingerprint": "c09bba0cc94bdb88971331ff843e2328379c82ba1feb56408d7d9f2adde7270c",
+  "attemptId": "3f88217c-ff4c-46d2-8bf7-e1541d4edeae",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47780:attack:クロノバースト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "8a7cf7267b883def3edb0d88cb90427bec8ed318198f95876412c29211a41eea"
+  "checksum": "c06773bc72fc0e32b51c0245746d7f31eeb616513a414d473298de3390ae1281"
 }

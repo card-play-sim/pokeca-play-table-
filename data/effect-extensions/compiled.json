@@ -200132,6 +200132,184 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47780",
+      "name": "ディアルガ",
+      "deckName": "ディアルガ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47780",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047780_P_DEIARUGA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ビーム",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-47780-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "クロノバースト",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "のぞむなら、このポケモンについているエネルギーをすべて山札にもどして切り、80ダメージ追加。",
+          "effectId": "reference-47780-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
+            "commands": [
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK",
+              "DAMAGE"
+            ],
+            "all": true,
+            "type": null,
+            "destination": "deck",
+            "base": 80,
+            "bonus": 80,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47780.json",
+        "sha256": "9e4f30e2feca1f7b0481eed60621f4d9d8fa9dd0a1cc4da8ab0def5ddce0c4ca",
+        "htmlSha256": "9e4f30e2feca1f7b0481eed60621f4d9d8fa9dd0a1cc4da8ab0def5ddce0c4ca",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49218",
+      "name": "ディアルガ",
+      "deckName": "ディアルガ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49218",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049218_P_DEIARUGA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ビーム",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "30",
+          "text": "",
+          "effectId": "reference-49218-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "クロノバースト",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "80+",
+          "text": "のぞむなら、このポケモンについているエネルギーをすべて山札にもどして切り、80ダメージ追加。",
+          "effectId": "reference-49218-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
+            "commands": [
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK",
+              "DAMAGE"
+            ],
+            "all": true,
+            "type": null,
+            "destination": "deck",
+            "base": 80,
+            "bonus": 80,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49218.json",
+        "sha256": "8e5553ab8cd7b52033466cfbe14f1308bcd2a5d7035642c06d1117835361fff2",
+        "htmlSha256": "8e5553ab8cd7b52033466cfbe14f1308bcd2a5d7035642c06d1117835361fff2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

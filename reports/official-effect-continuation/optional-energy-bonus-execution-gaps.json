@@ -1,19 +1,7 @@
 {
-  "baseCommit": "2118c1f8f888d0431098421cd061f6683248f7e8",
+  "baseCommit": "9ade17cd80e10816e985148ae12b2d713f1d0156",
   "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
   "gaps": [
-    {
-      "id": "47780",
-      "kind": "attack",
-      "index": 1,
-      "slot": "47780:attack:クロノバースト:1",
-      "status": "FAILED",
-      "reason": "Expected values to be strictly equal:\n\ntrue !== false\n",
-      "details": {
-        "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
-        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2459:14)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3132:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
-      }
-    },
     {
       "id": "45758",
       "kind": "attack",
@@ -58,18 +46,6 @@
       "status": "BLOCKED",
       "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
       "details": null
-    },
-    {
-      "id": "49218",
-      "kind": "attack",
-      "index": 1,
-      "slot": "49218:attack:クロノバースト:1",
-      "status": "FAILED",
-      "reason": "Expected values to be strictly equal:\n\ntrue !== false\n",
-      "details": {
-        "mechanic": "ATTACK_OPTIONAL_ENERGY_BONUS",
-        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:2459:14)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3132:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
-      }
     }
   ]
 }
