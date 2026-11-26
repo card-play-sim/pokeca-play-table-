@@ -310,8 +310,9 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='TRAINER_TEAM_DAMAGE_REDUCTION'){
   const attacker=reserve(r=>vanilla(r),'active',1);
   if(attacker)ensureAttackCost(attacker,1-deckIndex);
-  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'active');
-  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'bench');
+  const active=reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'active');
+  const bench=reserve(r=>mon(r,plan.type,0)&&!r.abilities.length&&r.officialCardId!==active?.officialCardId,'bench');
+  if(!bench&&active&&ensure(deckIndex,active,2))requirements.push({side:0,zone:'bench',printId:active.officialCardId});
   if(plan.type)reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type)&&!r.abilities.length,'bench');
  }
  if(m==='TRAINER_TYPED_DAMAGE_BOOST'){
@@ -2166,10 +2167,12 @@ function verifyCase(t, e) {
     const valid=c=>{const k=E.getReferenceEffectRecord(c)?.category;return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(k)||plan.filter===k;};
     if(!chosen.length)return {status:'BLOCKED',reason:'NO_INSPECTED_HAND_SELECTION_PROOF'};
     assert(chosen.every(id=>other.hand.some(c=>c.id===id&&valid(c))));
-    assert.deepEqual(Array.from(resolved.hand,c=>c.id),Array.from(other.hand.filter(c=>!chosen.includes(c.id)),c=>c.id));
+    const drawCount=after.turnNumber>before.turnNumber&&after.turnPlayer==='ai'&&other.deck.length?1:0;
+    const expectedHand=[...Array.from(other.hand.filter(c=>!chosen.includes(c.id)),c=>c.id),...Array.from(other.deck.slice(0,drawCount),c=>c.id)];
+    assert.deepEqual(Array.from(resolved.hand,c=>c.id),expectedHand);
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.privateTo==='you'&&ev.fromZone==='hand'&&JSON.stringify(ev.cardIds)===JSON.stringify(other.hand.map(c=>c.id))));
     if(plan.destination==='discard')assert(chosen.every(id=>resolved.discard.some(c=>c.id===id)));
-    else {assert.deepEqual(Array.from(resolved.deck,c=>c.id),[...Array.from(other.deck,c=>c.id),...Array.from(chosen)]);assert(!effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));}
+    else {assert.deepEqual(Array.from(resolved.deck,c=>c.id),[...Array.from(other.deck.slice(drawCount),c=>c.id),...Array.from(chosen)]);assert(!effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));}
     if(plan.all)assert.equal(chosen.length,other.hand.filter(valid).length);
     if(plan.filter!=='any'){
       const invalid=other.hand.find(c=>!valid(c));

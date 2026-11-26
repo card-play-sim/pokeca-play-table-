@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1118,
-      "missing": 584
+      "connected": 1123,
+      "missing": 579
     },
     "J": {
       "total": 870,
-      "connected": 501,
-      "missing": 369
+      "connected": 502,
+      "missing": 368
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1112,
+      "CONNECTED_UNTESTED": 1117,
       "MECHANIC_REQUIRED": 80,
-      "ENGINE_CONNECTION_REQUIRED": 500,
+      "ENGINE_CONNECTION_REQUIRED": 495,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 500,
+      "CONNECTED_UNTESTED": 501,
       "MECHANIC_REQUIRED": 45,
-      "ENGINE_CONNECTION_REQUIRED": 323,
+      "ENGINE_CONNECTION_REQUIRED": 322,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -1049,8 +1049,7 @@
       "name": "イーブイ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50706.json"
     },
     {
@@ -1282,8 +1281,7 @@
       "name": "Nのチョロネコ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47067.json"
     },
     {
@@ -6378,8 +6376,7 @@
       "name": "Nのチョロネコ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49173.json"
     },
     {
@@ -11547,8 +11544,7 @@
       "name": "アイアンディフェンダー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47790.json"
     },
     {
@@ -15494,8 +15490,7 @@
       "name": "アイアンディフェンダー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49347.json"
     },
     {
@@ -17964,8 +17959,7 @@
       "name": "アイアンディフェンダー",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50322.json"
     },
     {
@@ -21536,23 +21530,23 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1190,
+        "ENGINE_CONNECTED": 1195,
         "MECHANIC_REQUIRED": 668,
-        "ENGINE_CONNECTION_REQUIRED": 6
+        "ENGINE_CONNECTION_REQUIRED": 1
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1118,
+        "ENGINE_CONNECTED": 1123,
         "MECHANIC_REQUIRED": 573,
-        "ENGINE_CONNECTION_REQUIRED": 7,
+        "ENGINE_CONNECTION_REQUIRED": 2,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 500,
+        "ENGINE_CONNECTED": 501,
         "MECHANIC_REQUIRED": 362,
         "EVIDENCE_UNVERIFIED": 4,
-        "ENGINE_CONNECTION_REQUIRED": 3
+        "ENGINE_CONNECTION_REQUIRED": 2
       },
       "basicEnergyException": {
         "total": 638,
@@ -21560,7 +21554,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3446,
-    "unconnected": 1627
+    "engineConnected": 3457,
+    "unconnected": 1616
   }
 }
