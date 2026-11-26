@@ -169,6 +169,13 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentAbilityCount')reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
+ if(m==='MASS_MILL_COUNT_DAMAGE'){
+  const filter=r=>plan.filter==='typedBasic'?isBasicEnergy(r)&&typeOf(r)===plan.type:plan.filter==='energy'?r.category==='energy':plan.filter==='trainer'?['item','supporter','tool','stadium'].includes(r.category):r.category==='pokemon'&&r.name.startsWith(plan.team+'の');
+  const chosen=reserve(filter,'deck');
+  if(chosen?.category==='energy')reserveEnergy(typeOf(chosen),kindAttackCost(e,typeOf(chosen))+1);
+  if(plan.scope==='both')reserve(filter,'deck',1);
+ }
+
  if(m==='ATTACK_NAMED_DISCARD_BENCH'){
   const target=pick(r=>mon(r,null,0)&&r.name===plan.name);
   if(target){
@@ -1196,6 +1203,15 @@ function prepare(r, e, kind) {
     const [own,other]=frame.game.players;
     if(e.plan.heal)own.active.damage=Math.min(e.plan.heal,own.active.hp-10);
     for(const energy of [...own.active.energyCards])if(energy.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1);own.deck.push(energy);}
+  }
+  if(m==='MASS_MILL_COUNT_DAMAGE'){
+    const plan=e.plan,own=frame.game.players[0];
+    const filter=c=>plan.filter==='typedBasic'?c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type:plan.filter==='energy'?c.kind==='energy':plan.filter==='trainer'?['item','supporter','tool','stadium'].includes(E.getReferenceEffectRecord(c)?.category):c.kind==='pokemon'&&E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の');
+    for(const side of plan.scope==='both'?frame.game.players:[own]){
+      const index=side.deck.findIndex(filter);
+      if(index>=0)side.deck.unshift(side.deck.splice(index,1)[0]);
+    }
+    if(!(plan.scope==='both'?frame.game.players:[own]).some(side=>side.deck.slice(0,plan.limit).some(filter)))return {blocked:'NO_MILL_POSITIVE_FIXTURE'};
   }
   if (m === "SCALED_ATTACK_DAMAGE") {
     const [own, opponent] = frame.game.players;
@@ -2446,6 +2462,20 @@ function verifyCase(t, e) {
     assert(effectEvents.some(event => event?.command === "SHUFFLE_DECK"));
     assert(effectEvents.some(event => event?.command === "RETURN_TO_DECK" &&
       JSON.stringify(event.cardIds) === JSON.stringify(attackingSide.hand.map(card => card.id))));
+  }
+  if(e.plan.mechanic==='MASS_MILL_COUNT_DAMAGE'){
+    const plan=e.plan,filter=c=>plan.filter==='typedBasic'?c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type:plan.filter==='energy'?c.kind==='energy':plan.filter==='trainer'?['item','supporter','tool','stadium'].includes(E.getReferenceEffectRecord(c)?.category):c.kind==='pokemon'&&E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の');
+    let count=0;
+    for(const i of plan.scope==='both'?[0,1]:[0]){
+      const side=before.players[i],picked=side.deck.slice(0,plan.limit);
+      count+=picked.filter(filter).length;
+      assert(picked.every(c=>after.players[i].discard.some(x=>x.id===c.id)));
+      assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ev.fromZone==='deck'&&ev.playerId===side.id&&JSON.stringify(ev.cardIds)===JSON.stringify(picked.map(c=>c.id))));
+    }
+    assert(count>0,'NO_POSITIVE_MILL_COUNT_PROOF');
+    verifyPrintedAttack(before,after,e,plan.base+count*plan.unit);
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),after);
   }
   if (e.plan.mechanic === "ATTACK_DISCARD_OWN_DECK_TOP") {
     const discarded = attackingSide.deck.slice(0, e.plan.amount).map(card => card.id);
