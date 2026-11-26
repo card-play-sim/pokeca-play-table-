@@ -10710,6 +10710,87 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50706",
+      "name": "イーブイ",
+      "deckName": "イーブイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50706",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050706_P_IBUI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "くわえてかくす",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見て、その中からグッズを1枚選び、相手の山札の下にもどす。",
+          "effectId": "reference-50706-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "REVEAL",
+              "RETURN_TO_DECK"
+            ],
+            "filter": "item",
+            "destination": "bottom",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "たいあたり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-50706-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50706.json",
+        "sha256": "35e559b6f32ada1877aec1fc310df063c0ea596fdfa040687e43e0afd917963c",
+        "htmlSha256": "35e559b6f32ada1877aec1fc310df063c0ea596fdfa040687e43e0afd917963c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50710",
       "name": "ヒスイ ゾロア",
       "deckName": "ヒスイ ゾロア",
@@ -25262,6 +25343,91 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46377",
+      "name": "ロトム",
+      "deckName": "ロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46377",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046377_P_ROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "クラッシュパルス",
+          "cost": [
+            "雷"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見て、その中にある「グッズ」と「ポケモンのどうぐ」を、すべてトラッシュする。",
+          "effectId": "reference-46377-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "REVEAL",
+              "DISCARD"
+            ],
+            "filter": "itemTool",
+            "destination": "discard",
+            "all": true,
+            "limit": null,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "エネショート",
+          "cost": [
+            "雷"
+          ],
+          "damage": "20×",
+          "text": "相手のバトルポケモンについているエネルギーの数×20ダメージ。",
+          "effectId": "reference-46377-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentEnergy",
+            "type": null,
+            "unit": 20,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46377.json",
+        "sha256": "ea39054c09bd17d4a7410dc42a6a237a5636855131cc3280ca25bdb4878b3c83",
+        "htmlSha256": "ea39054c09bd17d4a7410dc42a6a237a5636855131cc3280ca25bdb4878b3c83",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46378",
       "name": "シママ",
       "deckName": "シママ",
@@ -32032,6 +32198,74 @@
         "path": "data/effect-extensions/evidence/47064.json",
         "sha256": "990201b9e1b82a3e86ad43d72f3d879d96992a9e094f0cb09768b5d2a9d1f6bd",
         "htmlSha256": "990201b9e1b82a3e86ad43d72f3d879d96992a9e094f0cb09768b5d2a9d1f6bd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47067",
+      "name": "Nのチョロネコ",
+      "deckName": "Nのチョロネコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47067",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047067_P_NNOCHIXYORONEKO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょろまかす",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手の手札を見て、その中からカードを1枚選び、相手の山札の下にもどす。",
+          "effectId": "reference-47067-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK"
+            ],
+            "filter": "any",
+            "destination": "bottom",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47067.json",
+        "sha256": "de6f4dacf858a9feeee08f4b1f9c9af623c58b7fa2dbbf2f579178268b472436",
+        "htmlSha256": "de6f4dacf858a9feeee08f4b1f9c9af623c58b7fa2dbbf2f579178268b472436",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -203032,6 +203266,42 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47790",
+      "name": "アイアンディフェンダー",
+      "deckName": "アイアンディフェンダー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47790",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047790_T_AIANDEIFUENDA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "次の相手の番、自分の[鋼]ポケモン全員が、相手のポケモンから受けるワザのダメージは「-30」される。（新しく場に出したポケモンもふくむ。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47790.json",
+        "sha256": "16676b1b103f318e165c471cc3174df870716667f3622406748003f90054a6df",
+        "htmlSha256": "16676b1b103f318e165c471cc3174df870716667f3622406748003f90054a6df",
+        "textSha256": "9020e50bb664d6563de9d5345e141078b2cc37eb3280346a01a2d5a4a3ed4dad"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TEAM_DAMAGE_REDUCTION",
+        "commands": [
+          "PREVENT_DAMAGE"
+        ],
+        "type": "鋼",
+        "amount": 30,
+        "sharedWording": true
+      }
+    },
+    {
       "officialCardId": "48403",
       "name": "ブリジュラス",
       "deckName": "ブリジュラス",
@@ -203267,6 +203537,74 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "49173",
+      "name": "Nのチョロネコ",
+      "deckName": "Nのチョロネコ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49173",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049173_P_NNOCHIXYORONEKO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ちょろまかす",
+          "cost": [
+            "悪",
+            "無色"
+          ],
+          "damage": "30",
+          "text": "相手の手札を見て、その中からカードを1枚選び、相手の山札の下にもどす。",
+          "effectId": "reference-49173-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "RETURN_TO_DECK"
+            ],
+            "filter": "any",
+            "destination": "bottom",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49173.json",
+        "sha256": "d2173da6f568fba446801e30352a1eecc153def0416f6c5ad986c1f53b1630fa",
+        "htmlSha256": "d2173da6f568fba446801e30352a1eecc153def0416f6c5ad986c1f53b1630fa",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "49218",
       "name": "ディアルガ",
       "deckName": "ディアルガ",
@@ -203354,6 +203692,78 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "49347",
+      "name": "アイアンディフェンダー",
+      "deckName": "アイアンディフェンダー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49347",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049347_T_AIANDEIFUENDA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "次の相手の番、自分の[鋼]ポケモン全員が、相手のポケモンから受けるワザのダメージは「-30」される。（新しく場に出したポケモンもふくむ。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49347.json",
+        "sha256": "228d301572c6265a92f6239116bbd550597678c53602ca13dd4e4873d666a97b",
+        "htmlSha256": "228d301572c6265a92f6239116bbd550597678c53602ca13dd4e4873d666a97b",
+        "textSha256": "9020e50bb664d6563de9d5345e141078b2cc37eb3280346a01a2d5a4a3ed4dad"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TEAM_DAMAGE_REDUCTION",
+        "commands": [
+          "PREVENT_DAMAGE"
+        ],
+        "type": "鋼",
+        "amount": 30,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50322",
+      "name": "アイアンディフェンダー",
+      "deckName": "アイアンディフェンダー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50322",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050322_T_AIANDEIFUENDA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "次の相手の番、自分の[鋼]ポケモン全員が、相手のポケモンから受けるワザのダメージは「-30」される。（新しく場に出したポケモンもふくむ。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50322.json",
+        "sha256": "56c8a12f91960ccf9117d400f0b801d7027eac43f533bb609afcc76a94606fec",
+        "htmlSha256": "56c8a12f91960ccf9117d400f0b801d7027eac43f533bb609afcc76a94606fec",
+        "textSha256": "9020e50bb664d6563de9d5345e141078b2cc37eb3280346a01a2d5a4a3ed4dad"
+      },
+      "mainPlan": {
+        "mechanic": "TRAINER_TEAM_DAMAGE_REDUCTION",
+        "commands": [
+          "PREVENT_DAMAGE"
+        ],
+        "type": "鋼",
+        "amount": 30,
+        "sharedWording": true
+      }
     },
     {
       "officialCardId": "47118",
@@ -203453,6 +203863,91 @@
         "path": "data/effect-extensions/evidence/48779.json",
         "sha256": "e1d8c7afd021f652b353ea320b527f0fc3ba699194f98f6393d606c735afa4cd",
         "htmlSha256": "e1d8c7afd021f652b353ea320b527f0fc3ba699194f98f6393d606c735afa4cd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48964",
+      "name": "ロトム",
+      "deckName": "ロトム",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48964",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048964_P_ROTOMU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "クラッシュパルス",
+          "cost": [
+            "雷"
+          ],
+          "damage": "0",
+          "text": "相手の手札を見て、その中にある「グッズ」と「ポケモンのどうぐ」を、すべてトラッシュする。",
+          "effectId": "reference-48964-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "REVEAL",
+              "DISCARD"
+            ],
+            "filter": "itemTool",
+            "destination": "discard",
+            "all": true,
+            "limit": null,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "エネショート",
+          "cost": [
+            "雷"
+          ],
+          "damage": "20×",
+          "text": "相手のバトルポケモンについているエネルギーの数×20ダメージ。",
+          "effectId": "reference-48964-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentEnergy",
+            "type": null,
+            "unit": 20,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 80,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48964.json",
+        "sha256": "636d58ab4cac4b9581369f183e44b0d6c6c282e1d444bf19121e9ad2928655e2",
+        "htmlSha256": "636d58ab4cac4b9581369f183e44b0d6c6c282e1d444bf19121e9ad2928655e2",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -203914,6 +204409,91 @@
         "path": "data/effect-extensions/evidence/48463.json",
         "sha256": "dc54df28bcf7efbd6af5654c3bcdb4cc69216fb91a63b5d24e9dc191cfd7149a",
         "htmlSha256": "dc54df28bcf7efbd6af5654c3bcdb4cc69216fb91a63b5d24e9dc191cfd7149a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45860",
+      "name": "レントラーex",
+      "deckName": "レントラーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45860",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045860_P_RENTORAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "つきさすがんこう",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "相手の手札を見て、その中からカードを1枚選び、トラッシュする。",
+          "effectId": "reference-45860-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "DISCARD"
+            ],
+            "filter": "any",
+            "destination": "discard",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ボルトストライク",
+          "cost": [
+            "雷",
+            "雷"
+          ],
+          "damage": "250",
+          "text": "このポケモンについているエネルギーを、すべてトラッシュする。",
+          "effectId": "reference-45860-attack-1",
+          "plan": {
+            "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 310,
+        "evolvesFrom": "ルクシオ",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45860.json",
+        "sha256": "51553df5bc82c679aed2cfd0f88309735ba44d1958ef0ead24a5e6e531a7dab2",
+        "htmlSha256": "51553df5bc82c679aed2cfd0f88309735ba44d1958ef0ead24a5e6e531a7dab2",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -204401,6 +204981,176 @@
         "path": "data/effect-extensions/evidence/47828.json",
         "sha256": "34eae3da9edeba9c8b008f88d182ea96550cb4b15a0d065f5751d27d33827c10",
         "htmlSha256": "34eae3da9edeba9c8b008f88d182ea96550cb4b15a0d065f5751d27d33827c10",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45732",
+      "name": "レントラーex",
+      "deckName": "レントラーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45732",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045732_P_RENTORAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "つきさすがんこう",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "相手の手札を見て、その中からカードを1枚選び、トラッシュする。",
+          "effectId": "reference-45732-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "DISCARD"
+            ],
+            "filter": "any",
+            "destination": "discard",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ボルトストライク",
+          "cost": [
+            "雷",
+            "雷"
+          ],
+          "damage": "250",
+          "text": "このポケモンについているエネルギーを、すべてトラッシュする。",
+          "effectId": "reference-45732-attack-1",
+          "plan": {
+            "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 310,
+        "evolvesFrom": "ルクシオ",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45732.json",
+        "sha256": "9cf8e3108c148f90807c33bc19f2018501120057eacc4e79eeeac1c4aba332c8",
+        "htmlSha256": "9cf8e3108c148f90807c33bc19f2018501120057eacc4e79eeeac1c4aba332c8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48962",
+      "name": "レントラーex",
+      "deckName": "レントラーex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48962",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048962_P_RENTORAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "つきさすがんこう",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "120",
+          "text": "相手の手札を見て、その中からカードを1枚選び、トラッシュする。",
+          "effectId": "reference-48962-attack-0",
+          "plan": {
+            "mechanic": "INSPECTED_OPPONENT_HAND_TRANSFER",
+            "commands": [
+              "DAMAGE",
+              "REVEAL",
+              "DISCARD"
+            ],
+            "filter": "any",
+            "destination": "discard",
+            "all": false,
+            "limit": 1,
+            "optional": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ボルトストライク",
+          "cost": [
+            "雷",
+            "雷"
+          ],
+          "damage": "250",
+          "text": "このポケモンについているエネルギーを、すべてトラッシュする。",
+          "effectId": "reference-48962-attack-1",
+          "plan": {
+            "mechanic": "DISCARD_ALL_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 310,
+        "evolvesFrom": "ルクシオ",
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48962.json",
+        "sha256": "c43830b81fcdaecaf73a761a362d30abb53cb9bd3bba14f6d7e3f3c2d119583d",
+        "htmlSha256": "c43830b81fcdaecaf73a761a362d30abb53cb9bd3bba14f6d7e3f3c2d119583d",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
