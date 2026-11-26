@@ -153,6 +153,34 @@ function fixtureResources(manifest,deckIndex,source,e){
  };
  // Reserve a real registered physical print for each counted zone before
  // allocating the test match; never manufacture counters or card identities.
+ // Reserve the actual printed Energy type before prize/hand allocation.
+ if(m==='MASS_ATTACHED_ENERGY_MOVE'&&plan.type){
+  const side=plan.source.startsWith('opponent')?1:0,index=side===0?deckIndex:1-deckIndex;
+  const energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,index);
+  const cost=side===0?kindAttackCost(e,plan.type):0;
+  const count=plan.count===null?1:Math.min(plan.count,3);
+  if(ensure(index,energy,cost+count))
+   for(let i=0;i<count;i++)requirements.push({side,zone:'deck',printId:energy.officialCardId});
+ }
+ // Damage-reduction proof needs an attacker which survives the printed
+ // attack and can execute a nonzero ordinary return attack.
+ if(m==='ATTACK_DAMAGE_REDUCTION'){
+  const attacker=reserve(r=>vanilla(r)&&!r.abilities.length&&
+   r.facts.hp>Number(e.damage||0)*(r.facts.weakness?.types.some(t=>source.facts.types.includes(t))?2:1)&&
+   vanilla(r).cost.length<=3&&Number(vanilla(r).damage)>0,'active',1);
+  if(attacker){
+   const costs=new Map();
+   for(const type of vanilla(attacker).cost){
+    const actual=type==='無色'?(attacker.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type;
+    costs.set(actual,(costs.get(actual)||0)+1);
+   }
+   for(const [type,count] of costs){
+    const energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===type,1-deckIndex);
+    if(ensure(1-deckIndex,energy,count))
+     for(let i=0;i<count;i++)requirements.push({side:1,zone:'deck',printId:energy.officialCardId});
+   }
+  }
+ }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
