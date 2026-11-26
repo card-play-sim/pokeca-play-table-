@@ -175,7 +175,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
   if(find(g,id(mon))?.player.id===other.id&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&(a.plan.attacker==='ex'?record(source).name.endsWith('ex'):record(source).abilities.some(x=>abilityEnabled(g,source,x)))))return 0;
-  if(find(g,id(mon))?.player.id===other.id&&mon.referenceBasicDamageProtection?.turn===g.turnNumber&&record(source).facts.basic&&!record(source).facts.types.includes(mon.referenceBasicDamageProtection.exceptType))return 0;
+  if(find(g,id(mon))?.player.id===other.id&&mon.referenceBasicDamageProtection?.turn===g.turnNumber&&record(source).facts.basic&&(!mon.referenceBasicDamageProtection.exceptType||!record(source).facts.types.includes(mon.referenceBasicDamageProtection.exceptType)))return 0;
  }
  if(!bench){
   const r=record(mon),types=record(source).facts.types||[];
@@ -192,6 +192,8 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
    .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION')
    .reduce((sum,a)=>sum+a.plan.amount,0);
   amount=Math.max(0,amount-reduction);
+  const teamReduction=(other.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber&&(!x.type||record(mon).facts.types.includes(x.type))).reduce((sum,x)=>sum+x.amount,0);
+  amount=Math.max(0,amount-teamReduction);
   if(mon.referenceDamageReduction?.turn===g.turnNumber)
    amount=Math.max(0,amount-mon.referenceDamageReduction.amount);
  }
@@ -335,6 +337,10 @@ function mixedTopCategory(c,plan){
  }
  return null;
 }
+function inspectedHandCandidate(c,plan){
+ const category=record(c)?.category;
+ return plan.filter==='any'||plan.filter==='itemTool'&&['item','tool'].includes(category)||plan.filter===category;
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -408,6 +414,12 @@ function requests(g,actor,card,effect){
   const count=Math.min(1,attacks.length);
   add('attackChoice','CARD',attacks,count,count);
  }
+ if(m==='INSPECTED_OPPONENT_HAND_TRANSFER'){
+  const plan=effect.plan,pool=o.hand.filter(c=>inspectedHandCandidate(c,plan));
+  const count=plan.all?pool.length:Math.min(plan.limit,pool.length);
+  cardRequest('opponentCards',pool,plan.optional?0:count,count);
+  if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(o.hand)};
+ }
  if(m==='ATTACK_BLIND_HAND_CHOICE'){
   const count=Math.min(effect.plan.amount,o.hand.length);
   add('blindHand','CARD',o.hand.map((_,i)=>({id:'hand-slot-'+i,name:'相手の手札 '+(i+1)})),count,count);
@@ -416,6 +428,11 @@ function requests(g,actor,card,effect){
   const targets=spreadTargets(effect.plan,p,o);
   const count=Math.min(effect.plan.count,targets.length);
   add('targetIds','POKEMON',targets.map(mon=>({instanceId:id(mon),name:mon.name})),count,count);
+ }
+ if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'){
+  const plan=effect.plan,pool=(card.energyCards||[]).filter(c=>plan.all||energyUnits({...card,energyCards:[c]}).some(unit=>unit.includes(plan.type)));
+  if(plan.all)add('mode','CARD',[{id:'base',name:'追加ダメージなし'},...(pool.length?[{id:'bonus',name:'エネルギーをすべて移動して追加ダメージ'}]:[])],1,1);
+  else cardRequest('energy',pool,0,Math.min(1,pool.length));
  }
  if(m==='ATTACK_DISCARD_BENCH_ENERGY_BONUS'){
   const attached=p.bench.flatMap(mon=>mon.energyCards||[]);
@@ -519,7 +536,14 @@ function requests(g,actor,card,effect){
   const count=Math.min(effect.plan.count,opp.length);cardRequest('target',opp,count,count);
  }
  if(m==='ATTACK_OPTIONAL_RETURN_POKEMON')add('mode','CARD',[{id:'stay',name:'場に残す'},{id:'return',name:'手札にもどす'}],1,1);
- if(m==='MASS_PLACE_COUNTERS'&&effect.plan.target==='choice')cardRequest('target',opp,1,1);
+ if(m==='MASS_PLACE_COUNTERS'&&['choice','benchChoice'].includes(effect.plan.target)){
+  const pool=effect.plan.target==='benchChoice'?o.bench:opp;
+  const count=Math.min(1,pool.length);cardRequest('target',pool,count,count);
+ }
+ if(m==='ABILITY_TYPED_COST_COUNTER'){
+  cardRequest('discard',p.hand.filter(c=>basicEnergy(c)&&c.energyType===effect.plan.type),1,1);
+  cardRequest('target',opp,1,1);
+ }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'){
   add('mode','CARD',[{id:'boost',name:'ダメージを+30'},{id:'switch',name:'バトル場とベンチを入れ替える'}].filter(c=>c.id==='boost'||p.bench.length),1,1);
   cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
@@ -650,6 +674,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
+ if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');
  if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
   const plan=a.plan;
   assert((plan.zone==='attached'?card.energyCards:p.hand).some(c=>basicEnergy(c)&&c.energyType===plan.type),'TYPED_DRAW_COST_MISSING');
@@ -751,6 +776,7 @@ function preflight(g,actor,action){
    if(m==='SUPPORTER_SWITCH_EX_HEAL')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SWITCH_THEN_DRAW_TO_LIMIT')assert(p.bench.length>0,'NO_OWN_BENCH');
    if(m==='SUPPORTER_SEARCH_BY_STAGE')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='INSPECTED_OPPONENT_HAND_TRANSFER')assert(o.hand.length>0,'NO_OPPONENT_HAND_TO_INSPECT');
    if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')assert(p.deck.length>0&&p.hand.some(c=>c.kind==='pokemon'&&!record(c).facts.rulePokemon),'NO_NON_RULE_DRAW_COST');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
@@ -1083,10 +1109,33 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_PRIZE_DRAW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    draw(g,p,plan.amount+(o.prizes<=plan.threshold?plan.extra:0));break;
-  case 'MASS_PLACE_COUNTERS':
+  case 'MASS_PLACE_COUNTERS':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   for(const mon of field(o))if(plan.target==='all'||ids('target').includes(id(mon)))counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
+   const targets=plan.target==='active'?[o.active]:plan.target==='damagedOpponent'?field(o).filter(c=>c.damage>0):plan.target==='bothAbility'?[...field(p),...field(o)].filter(c=>record(c).abilities.length>0):field(o).filter(c=>plan.target==='all'||ids('target').includes(id(c)));
+   for(const mon of targets)counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
    break;
+  }
+  case 'ABILITY_TYPED_COST_COUNTER':{
+   const index=p.hand.findIndex(c=>id(c)===ids('discard')[0]&&basicEnergy(c)&&c.energyType===plan.type);
+   assert(index>=0,'COUNTER_COST_CHANGED');
+   const target=field(o).find(c=>id(c)===ids('target')[0]);assert(target,'COUNTER_TARGET_CHANGED');
+   const energy=p.hand.splice(index,1)[0];p.discard.push(energy);
+   event(g,actor,'DISCARD',{cardIds:[id(energy)],fromZone:'hand',sourceInstanceId:id(card)});
+   counters(g,actor,target,plan.amount);break;
+  }
+  case 'INSPECTED_OPPONENT_HAND_TRANSFER':{
+   if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(action.type==='attack_turn'&&o.active.referenceProtection?.opponentTurn===g.turnNumber)break;
+   event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
+   const chosen=ids('opponentCards'),moved=[];
+   for(const ident of chosen){
+    const index=o.hand.findIndex(c=>id(c)===ident&&inspectedHandCandidate(c,plan));
+    assert(index>=0,'INSPECTED_HAND_SELECTION_CHANGED');moved.push(o.hand.splice(index,1)[0]);
+   }
+   if(plan.destination==='discard')o.discard.push(...moved);else o.deck.push(...moved);
+   event(g,actor,plan.destination==='discard'?'DISCARD':'RETURN_TO_DECK',{cardIds:chosen,fromZone:'hand',...(plan.destination==='bottom'?{position:'bottom',privateTo:actor}:{})});
+   break;
+  }
   case 'ATTACK_BLIND_HAND_CHOICE':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
@@ -1336,6 +1385,20 @@ function applyPlan(g,actor,card,effect,action){
    if(action.targetIds?.length)damage(g,actor,target(),plan.benchDamage,{bench:true});
    break;
   case 'ATTACK_IGNORE_DAMAGE_RULES':damage(g,actor,o.active,Number(effect.damage)||0,plan);break;
+  case 'ATTACK_OPTIONAL_ENERGY_BONUS':{
+   const chosen=plan.all?(ids('mode')[0]==='bonus'?(card.energyCards||[]).map(id):[]):ids('energy');
+   const moved=[];
+   for(const ident of chosen){
+    const index=card.energyCards.findIndex(c=>id(c)===ident&&(plan.all||energyUnits({...card,energyCards:[c]}).some(unit=>unit.includes(plan.type))));
+    assert(index>=0,'OPTIONAL_ENERGY_COST_CHANGED');moved.push(card.energyCards.splice(index,1)[0]);
+   }
+   if(moved.length){
+    p[plan.destination].push(...moved);
+    event(g,actor,plan.destination==='discard'?'DISCARD':plan.destination==='hand'?'RETURN_TO_HAND':'RETURN_TO_DECK',{cardIds:chosen,fromZone:'attached',sourceInstanceId:id(card)});
+    if(plan.destination==='deck')shuffle(g,p);
+   }
+   damage(g,actor,o.active,plan.base+(moved.length?plan.bonus:0));break;
+  }
   case 'ATTACK_DISCARD_BENCH_ENERGY_BONUS':{
     const chosen=ids('energy');
     assert(chosen.length<=plan.maxDiscard,'BENCH_ENERGY_TOO_MANY');
@@ -1404,6 +1467,10 @@ function applyPlan(g,actor,card,effect,action){
   case 'HAND_LIMIT_DRAW_ABILITY':draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
   case 'ABILITY_SWITCH_OWN':chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);break;
   case 'ABILITY_SEARCH_TYPED_EVOLUTION':case 'TRAINER_SEARCH_TERA':searchSelectedDeck(g,actor,p,ids('cards'));break;
+  case 'TRAINER_TEAM_DAMAGE_REDUCTION':
+   p.referenceTeamDamageReductions=(p.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber+1);
+   p.referenceTeamDamageReductions.push({turn:g.turnNumber+1,type:plan.type,amount:plan.amount});
+   break;
   case 'TRAINER_TYPED_DAMAGE_BOOST':
    p.referenceTypedDamageBoosts||=[];
    p.referenceTypedDamageBoosts=p.referenceTypedDamageBoosts.filter(boost=>boost.turn===g.turnNumber);
@@ -1794,7 +1861,7 @@ function statuses(g){
  for(const {player:p,card} of inPlay(g)){
   const r=record(card),add=(suffix,label,effect,duration)=>out.push({id:'reference-'+id(card)+'-'+suffix,short:label,label,scope:'POKEMON',targetInstanceId:id(card),playerId:p.id,sourceCard:r.name,sourceEffect:effect,start:'公式参照版の効果解決時',duration,removal:'ベンチへの移動・進化・期限終了など、エンジンの条件に従う',condition:'参照ID '+r.officialCardId,description:label});
   if(card.referenceProtection&&g.turnNumber<=card.referenceProtection.opponentTurn)add('protection','ワザのダメージ・効果を受けない','あなをほる','次の相手の番の終わりまで');
-  if(card.referenceBasicDamageProtection&&g.turnNumber<=card.referenceBasicDamageProtection.turn)add('basic-protection','無色以外のたねポケモンのワザのダメージを受けない','前の番のワザ','次の相手の番の終わりまで');
+  if(card.referenceBasicDamageProtection&&g.turnNumber<=card.referenceBasicDamageProtection.turn)add('basic-protection',card.referenceBasicDamageProtection.exceptType?card.referenceBasicDamageProtection.exceptType+'以外のたねポケモンのワザのダメージを受けない':'たねポケモンのワザのダメージを受けない','前の番のワザ','次の相手の番の終わりまで');
   if(card.referenceDamageReduction?.turn===g.turnNumber)add('attack-damage-reduction','受けるワザのダメージ −'+card.referenceDamageReduction.amount,'前の番のワザ','この番の終わりまで');
   if(card.referenceCannotRetreatTurn===g.turnNumber)add('retreat-lock','この番はにげられない','相手のワザ','この番の終わりまで');
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');

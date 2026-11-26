@@ -1,0 +1,139 @@
+name: Issue122 integrate qualified prints plus optional energy effects with 23-print release candidate
+on:
+  push:
+    branches: [battle/issue122-release-next-energy-20261126]
+    paths:
+      - '.github/workflows/issue122-release-next-energy.yml'
+      - 'tests/test_control_013_browser.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-release-next-energy
+  cancel-in-progress: false
+jobs:
+  all-remaining:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      INTAKE_LIMIT: '10000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify manually reconciled exact source families
+        run: |
+          grep -q 'TRAINER_TOP_SELECT_DISCARD' engine/reference-effect-plans.cjs
+          grep -q 'MASS_SEARCH_DUPLICATE_GROUP' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'pokemonOrBasicEnergy' engine/reference-effect-plans.cjs
+          grep -q 'NO_MIXED_SEARCH_BOTH_CATEGORY_FIXTURE' scripts/lib/shared-effect-engine-worker.cjs
+          grep -q 'opponentHandTrainerCount' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_BASIC_ENERGY_MOVE' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'ABILITY_TYPED_COST_DRAW_LIMIT' engine/reference-effect-plans.cjs
+          grep -q 'SUPPORTER_NON_RULE_DISCARD_DRAW' engine/pokeca_reference_effect_runtime.cjs
+      - name: Verify merged Crobat and named discard source families
+        run: |
+          grep -q 'ABILITY_EVOLVE_MULTI_COUNTERS' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_NAMED_DISCARD_BENCH' engine/reference-effect-plans.cjs
+          grep -q 'ATTACK_OPTIONAL_RETURN_POKEMON' engine/pokeca_reference_effect_runtime.cjs
+          grep -q 'NO_EVOLVED_SOURCE_FULL_LINE' scripts/lib/shared-effect-engine-worker.cjs
+          grep -q 'ensure(deckIndex,source,2)' scripts/lib/shared-effect-engine-worker.cjs
+      - name: Verify source and resume exact saved official evidence
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          # Start from the persisted, verified 91-print checkpoint, not an older snapshot.
+          node tests/issue122-ability-cost-draw.test.cjs
+          python -m unittest discover -s tests -p test_restore_official_intake_evidence.py
+          node tests/intake-checkpoint-recovery-contract.test.cjs
+          node tests/issue122-official-facts-refresh.test.cjs
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          node tests/control-014-official-parser.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+          node tests/issue122-counter-picker-ui.test.cjs
+      - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
+        run: |
+          node scripts/run-atomic-official-battle-intake.cjs
+          mkdir -p artifacts
+          mv work/card-auto-connect artifacts/first-pass-intake
+          node scripts/run-atomic-official-battle-intake.cjs
+      - name: Require 36 qualified prints and bound additional exact energy IDs and all previous verified records
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const read=sha=>JSON.parse(execFileSync('git',['show',sha+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const records=JSON.parse(fs.readFileSync(path,'utf8')).records;
+          const current=new Map(records.map(r=>[String(r.officialCardId),r]));
+          assert.equal(current.size,records.length);
+          const prior=read('8c0fa5c423917517b342d34140c1eece189594c3');
+          for(const sha of ["8c0fa5c423917517b342d34140c1eece189594c3","5fb884c78c3483253435726da6e628b85d03d9ee","269293b2dae46dc5d6abdebd55c5745accc8003c","f4ce42bea7d6654886382fa65b4c70ac22cb5cc2","406b6960807bfd8bcf5a4d4ff3fc27652730cfae","cefd514f72ac7cf82ec2692fc64628e1b8205f53","324aa8aaf5981c9b918906e6f342407b190daacc","7e86fecc1594ef1ebdac56af3934c2f419e6ee62","df1a56df4b7bd01dd0671753ace5809002308865"])
+            for(const old of read(sha))assert.deepEqual(current.get(String(old.officialCardId)),old,'QUALIFIED_RECORD_CHANGED:'+sha+':'+old.officialCardId);
+          const oldIds=new Set(prior.map(r=>String(r.officialCardId)));
+          const added=[...current.keys()].filter(id=>!oldIds.has(id)).sort();
+          const required=["45214","45358","45534","45539","45910","45950","46234","46241","46314","46392","46444","46652","46658","47040","47118","47168","47224","48403","48581","48779","48995","49037","49196","49344","49444","49681","49700","50097","50133","50297","50331","50337","50374","50784","50828","50904"], allowed=new Set(["45214","45358","45534","45539","45910","45950","46234","46241","46314","46392","46444","46652","46658","47040","47118","47168","47224","47780","47828","48403","48463","48581","48779","48995","49037","49196","49218","49344","49444","49681","49700","50097","50106","50133","50197","50213","50219","50297","50331","50337","50374","50784","50828","50904"]);
+          for(const id of required)assert(added.includes(id),'QUALIFIED_ID_MISSING:'+id);
+          for(const id of added)assert(allowed.has(id),'UNEXPECTED_NEW_ID_REVIEW_REQUIRED:'+id);
+          fs.mkdirSync('artifacts',{recursive:true});
+          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base:'8c0fa5c423917517b342d34140c1eece189594c3',added,count:added.length},null,2));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify candidate exact-print browser gameplay
+        run: |
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 > /tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="8c0fa5c423917517b342d34140c1eece189594c3"
+          export POKECA_INTAKE_LOCAL_CANDIDATE=1
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          mkdir -p artifacts
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python tests/test_control_013_browser.py > "artifacts/all-remaining-shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
+          exit "$rv"
+      - name: Persist battle-qualified candidate on isolated branch only
+        if: success()
+        run: |
+          git diff --check
+          mkdir -p reports/official-effect-continuation
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/release-next-energy-candidate.json
+          cp artifacts/exact-release-delta.json reports/official-effect-continuation/release-next-energy-exact-delta.json
+          cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/release-next-energy-execution-gaps.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          if ! git diff --cached --quiet; then
+            git commit -m 'checkpoint: qualified prints and optional energy unified with published main and Chromium verified'
+            git push origin HEAD:battle/issue122-release-next-energy-20261126
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue122-release-next-energy-evidence
+          path: |
+            work/card-auto-connect/
+            artifacts/all-remaining-*
+            reports/official-effect-continuation/
+            data/official-effect-intake/checkpoint.json
+            test-results/
+          if-no-files-found: warn
+          retention-days: 90
