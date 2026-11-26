@@ -237,6 +237,24 @@ function additionalAttackPlan(entry,text){
  const discardNamed=text.match(/^自分のトラッシュにある、ワザ「([^「」]{1,40})」を持つポケモンの枚数×([1-9]\d{0,2})ダメージ。$/);
  if(discardNamed&&printed===discardNamed[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardNamedAttack',name:discardNamed[1],unit:Number(discardNamed[2]),base:0};
+ const namedSupporter=text.match(/^自分のトラッシュにある「([^「」]{1,40})」の枚数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(namedSupporter&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardNamedCard',name:namedSupporter[1],unit:Number(namedSupporter[2]),base,sharedWording:true};
+ const supporterContains=text.match(/^自分のトラッシュにある、名前に「([^「」]{1,40})」とつくサポートの枚数×([1-9]\d{0,2})ダメージ。$/);
+ if(supporterContains&&printed===supporterContains[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardSupporterContains',name:supporterContains[1],unit:Number(supporterContains[2]),base:0,sharedWording:true};
+ const exactField=text.match(/^自分の場の「([^「」（）]{1,40})（『ポケモンex』をふくむ）」の数×([1-9]\d{0,2})ダメージ。$/);
+ if(exactField&&printed===exactField[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownNamedOrExCount',name:exactField[1],unit:Number(exactField[2]),base:0,sharedWording:true};
+ const bothNames=text.match(/^おたがいの場の、名前に「([^「」]{1,40})」または「([^「」]{1,40})」とつくポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(bothNames&&printed===bothNames[3]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'bothNameContainsCount',name:bothNames[1],secondName:bothNames[2],unit:Number(bothNames[3]),base:0,sharedWording:true};
+ const benchNamed=text.match(/^自分のベンチの「([^「」]{1,40})」の数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(benchNamed&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchNamedCount',name:benchNamed[1],unit:Number(benchNamed[2]),base,sharedWording:true};
+ const benchTypedCounters=text.match(/^自分のベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモン全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(benchTypedCounters&&printed===benchTypedCounters[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchTypedCounters',type:benchTypedCounters[1],unit:Number(benchTypedCounters[2]),base:0,sharedWording:true};
  const typedCount=text.match(/^自分の場の\[(草|炎|水|雷|超|闘|悪|鋼|無色|竜)\]ポケモンの数×([1-9]\d{0,2})ダメージ。$/);
  if(typedCount&&printed===typedCount[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTypedPokemonCount',type:typedCount[1],unit:Number(typedCount[2]),base:0};
