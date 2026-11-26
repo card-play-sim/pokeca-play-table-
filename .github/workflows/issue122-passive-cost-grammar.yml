@@ -1,0 +1,109 @@
+name: Issue122 continuous cost grammar all remaining qualification
+on:
+  push:
+    branches: [battle/issue122-passive-cost-grammar-20261127]
+    paths:
+      - '.github/workflows/issue122-passive-cost-grammar.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-passive-cost-grammar
+  cancel-in-progress: false
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check exact source grammar and prior records
+        run: |
+          set -euo pipefail
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node --check tests/fixtures/control-005-scenarios.js
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          node tests/atomic-official-to-battle.test.cjs
+      - name: Reprocess every remaining exact ID through actual atomic intake
+        run: |
+          set -euo pipefail
+          node scripts/run-atomic-official-battle-intake.cjs
+          mkdir -p artifacts
+          mv work/card-auto-connect artifacts/first-pass-intake
+          node scripts/run-atomic-official-battle-intake.cjs
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json',base='8c9e1753cf475659071d5d462293db71bf637cb8';
+          const old=JSON.parse(execFileSync('git',['show',base+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const rows=JSON.parse(fs.readFileSync(path,'utf8')).records,current=new Map(rows.map(r=>[String(r.officialCardId),r]));
+          assert.equal(rows.length,current.size);
+          for(const r of old)assert.deepEqual(current.get(String(r.officialCardId)),r,'PREVIOUS_RECORD_CHANGED:'+r.officialCardId);
+          const previous=new Set(old.map(r=>String(r.officialCardId))),added=[...current.keys()].filter(id=>!previous.has(id)).sort();
+          assert(added.length>0,'NO_QUALIFIED_PRINTS');
+          const requested=['50363','50372','50378','50397','50524','45966','45963','46155','48925','48935','45239','45557','48848','49645','50060'];
+          const qualified=requested.filter(id=>added.includes(id));
+          fs.writeFileSync('artifacts/exact-release-delta.json',JSON.stringify({base,added,count:added.length,qualified,requested},null,2));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify exact-print Chromium battles
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/intake-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE="8c9e1753cf475659071d5d462293db71bf637cb8"
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="cost-grammar-$shard" python tests/test_control_013_browser.py >"artifacts/shard-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/shard-*.log; do tail -n 30 "$f"; done
+          test "$rv" = 0
+      - name: Save verified candidate without modifying main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p reports/official-effect-continuation
+          cp artifacts/exact-release-delta.json reports/official-effect-continuation/passive-cost-exact-delta.json
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/passive-cost-candidate.json
+          cp work/card-auto-connect/execution-gaps.json reports/official-effect-continuation/passive-cost-execution-gaps.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: continuous cost conditions with exact browser evidence'
+          checkpoint="battle/issue122-cost-qualified-$GITHUB_RUN_ID"
+          git branch "$checkpoint"
+          git bundle create artifacts/qualified-checkpoint.bundle "$checkpoint" "^$GITHUB_SHA"
+          git push origin "HEAD:refs/heads/$checkpoint"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: passive-cost-grammar-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 90
