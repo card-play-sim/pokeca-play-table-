@@ -128,3 +128,7 @@ assert.equal(fullHeal.mechanic,'MASS_HEAL_OWN');assert.equal(fullHeal.origin,'ev
 const route=evolutionTransfer(evolutionPrefix+'自分の山札から「基本[悪]エネルギー」を5枚まで選び、自分の「マリィのポケモン」に好きなようにつける。そして山札を切る。');
 assert.equal(route.mechanic,'MASS_ENERGY_ROUTE');assert.equal(route.origin,'evolve');assert.equal(route.team,'マリィ');assert.equal(route.limit,5);
 assert.equal(evolutionTransfer(evolutionPrefix+'自分のポケモン1匹のHPを、すべて回復する。その後、未知の効果。'),null);
+const benchPrefix='自分の番に、このカードを手札からベンチに出したとき、1回使える。';
+const entryEnergy=evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。');
+assert.equal(entryEnergy.mechanic,'MASS_ENERGY_ROUTE');assert.equal(entryEnergy.origin,'bench');assert.equal(entryEnergy.zone,'hand');assert.equal(entryEnergy.target,'self');assert.equal(entryEnergy.type,'闘');assert.equal(entryEnergy.limit,2);
+assert.equal(evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。その後、未知の効果。'),null);
