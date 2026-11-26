@@ -885,6 +885,11 @@ function resolveMixedTop(g,actor,p,plan,chosenIds){
 }
 function finishAttack(g,actor){
  g.attackUsed=true;g.referenceAttackTurnPending=actor;
+ // A return-to-zone attack must promote its own replacement before resolving
+ // the defender's knockout (official Speed Break ruling). Preserve that choice
+ // instead of allowing Core.resolveKnockouts to overwrite it.
+ if(g.pendingReferenceChoice?.kind==='PROMOTE'&&g.pendingReferenceChoice.playerId===actor&&!player(g,actor).active){g.referenceAttackAwaitingPromotion=true;return;}
+ delete g.referenceAttackAwaitingPromotion;
  while(g.referenceReactions?.length){
   const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);if(!attacker)continue;
   if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
@@ -1749,7 +1754,7 @@ function execute(g,actor,action){
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId);
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
-  if(choice.kind==='CIRCULATOR')finishAttack(g,g.referenceAttackTurnPending);
+  if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
  }else if(action.type==='attach_energy'){
   const card=p.hand.splice(action.cardIndex,1)[0],mon=action.target==='active'?p.active:p.bench[action.target];mon.energyCards.push(card);p.normalEnergyAttached=true;event(g,actor,'ATTACH_ENERGY',{cardId:id(card),targetInstanceId:id(mon)});
  }else if(action.type==='retreat'){
@@ -1777,7 +1782,7 @@ function afterAction(g,before,actor,action){
  if(action.type==='evolve'){
   const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
  }
- if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;}
+ if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;delete g.referenceAttackAwaitingPromotion;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
   const a=g.referenceAttackTurnPending;delete g.referenceAttackTurnPending;functions().Core.endTurn(g,a);
  }
