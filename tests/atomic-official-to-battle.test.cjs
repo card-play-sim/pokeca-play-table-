@@ -132,3 +132,9 @@ const benchPrefix='自分の番に、このカードを手札からベンチに�
 const entryEnergy=evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。');
 assert.equal(entryEnergy.mechanic,'MASS_ENERGY_ROUTE');assert.equal(entryEnergy.origin,'bench');assert.equal(entryEnergy.zone,'hand');assert.equal(entryEnergy.target,'self');assert.equal(entryEnergy.type,'闘');assert.equal(entryEnergy.limit,2);
 assert.equal(evolutionTransfer(benchPrefix+'自分の手札から「基本[闘]エネルギー」を2枚まで選び、このポケモンにつける。その後、未知の効果。'),null);
+// Unlisted combinations are synthesized as executable, ordered shared operations.
+const synthAttack=(text,damage='0')=>compile({records:[{officialCardId:'9002',category:'pokemon',name:'test',text:'',attacks:[{text,damage,cost:[]}],abilities:[]}]}).records[0].attacks[0].plan;
+assert.deepEqual(synthAttack('自分の手札を1枚トラッシュする。その後、自分の山札を3枚引く。').steps,[{op:'discardOwnHand',amount:1},{op:'draw',amount:3}]);
+assert.deepEqual(synthAttack('相手の手札からオモテを見ないで1枚選び、トラッシュする。相手の山札を上から1枚トラッシュする。','160').steps,[{op:'blindDiscardOpponent',amount:1,side:'opponent'},{op:'mill',side:'opponent',amount:1}]);
+assert.deepEqual(synthAttack('自分の手札を2枚トラッシュする。その後、自分の山札を4枚引く。次の相手の番、相手は手札からグッズを出して使えない。').steps.map(s=>s.op),['discardOwnHand','draw','itemLock']);
+assert.equal(synthAttack('自分の手札を1枚トラッシュする。その後、未知の効果を実行する。'),null);
