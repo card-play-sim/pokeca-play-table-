@@ -152,6 +152,7 @@ function repairProfile(feedback='',attempt=1){
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
  /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
  /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
+ /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
  /ENGINE_EXECUTION_FAILED|NO_EXECUTION_RECEIPT|NO_SELECTED_PRINT_QUALIFIED|EXECUTION_EVIDENCE_INCOMPLETE/i.test(reason)?'EXECUTION':
  reason?'ENGINE':'INITIAL';
  const compact=type==='TRANSPORT'||type==='TRUNCATED'||attempt>1;
@@ -163,6 +164,7 @@ function repairProfile(feedback='',attempt=1){
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
  INTEGRITY:'The candidate changed or lost a protected record or receipt. Preserve all prior compiled records and fix source semantics; never edit data, receipts or gates.',
  COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar, then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
+ BROWSER:'The isolated browser gate failed. Repair actual legal actions, UI/AI parity and state transitions using the reported failure; never change browser tests or receipt gates.',
  EXECUTION:'Compilation alone did not yield a proven target. Use each reported failed slot and reason to repair the actual runtime action, target legality and worker fixture; retain positive and negative state checks.',
  ENGINE:'Repair the concrete failure using the provided diagnostics. Preserve all previously verified behavior.',
  INITIAL:'Implement the smallest reusable change with executable validation.'

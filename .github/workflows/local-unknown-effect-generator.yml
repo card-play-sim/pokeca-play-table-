@@ -7,6 +7,7 @@ on:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'tests/local-unknown-effect-generator.test.cjs'
       - 'scripts/verify-unknown-quarantine-receipt.py'
+      - 'scripts/verify-unknown-quarantine-browser.py'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -33,6 +34,7 @@ jobs:
         run: |
           node tests/local-unknown-effect-generator.test.cjs
           python scripts/verify-unknown-quarantine-receipt.py --self-test
+          python scripts/verify-unknown-quarantine-browser.py --self-test
           found=0
           for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
             if ! git fetch origin "$checkpoint"; then continue; fi
@@ -160,9 +162,37 @@ jobs:
               # No generated modules run on the host. A candidate is not a release.
               if python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1
               then
-                persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
-                echo 'An isolated generated patch has a candidate result. Independent review and normal Chromium/Pages gates are still required.'
-                exit 0
+                # Build trusted dependencies from an empty context, not generated source.
+                if ! docker image inspect pokeca-quarantine-browser:local >/dev/null 2>&1; then
+                  context="$(mktemp -d "$RUNNER_TEMP/browser-build.XXXXXX")"
+                  cat > "$context/Dockerfile" <<'DOCKERFILE'
+          FROM node:22-bookworm
+          RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+          ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+          RUN python3 -m venv /opt/pw && /opt/pw/bin/pip install --no-cache-dir playwright==1.56.0 && /opt/pw/bin/python -m playwright install --with-deps chromium && chmod -R a+rX /opt/pw-browsers
+          DOCKERFILE
+                  docker build -t pokeca-quarantine-browser:local "$context"
+                  rm -rf "$context"
+                fi
+                # Generated JS stays offline and isolated; no token, home, or socket.
+                if timeout 45m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
+                  base="$(git rev-parse HEAD)"
+                  export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
+                  /opt/pw/bin/python -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
+                  server=$!
+                  trap "kill $server 2>/dev/null || true" EXIT
+                  for n in 1 2 3 4 5; do
+                    if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()"; then break; fi
+                    sleep 1
+                  done
+                  /opt/pw/bin/python tests/test_control_013_browser.py
+                ' > "$out/browser.log" 2>&1 && python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/browser.log" 2>&1; then
+                  persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
+                  echo 'Isolated exact-print Chromium passed. Independent review, full-deck AI, normal CI and published Pages checks remain mandatory.'
+                  exit 0
+                fi
+                printf '\nBROWSER_EXECUTION_FAILED\n' >> "$out/engine.log"
+                tail -c 1300 "$out/browser.log" >> "$out/engine.log"
               fi
             fi
             persist_history "$out" QUARANTINE_FAILED
