@@ -123,3 +123,8 @@ const evolutionPrefix='自分の番に、このカードを手札から出して
 const evolutionRecovery=evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。');
 assert.equal(evolutionRecovery.mechanic,'MASS_ZONE_TRANSFER');assert.equal(evolutionRecovery.origin,'evolve');assert.equal(evolutionRecovery.zone,'discard');assert.equal(evolutionRecovery.nameExact,'ペパーのサンドウィッチ');assert.equal(evolutionRecovery.limit,2);
 assert.equal(evolutionTransfer(evolutionPrefix+'自分のトラッシュから「ペパーのサンドウィッチ」を2枚まで選び、相手に見せて、手札に加える。未知の効果。'),null);
+const fullHeal=evolutionTransfer(evolutionPrefix+'自分のポケモン1匹のHPを、すべて回復する。');
+assert.equal(fullHeal.mechanic,'MASS_HEAL_OWN');assert.equal(fullHeal.origin,'evolve');assert.equal(fullHeal.amount,'all');assert.equal(fullHeal.target,'choice');
+const route=evolutionTransfer(evolutionPrefix+'自分の山札から「基本[悪]エネルギー」を5枚まで選び、自分の「マリィのポケモン」に好きなようにつける。そして山札を切る。');
+assert.equal(route.mechanic,'MASS_ENERGY_ROUTE');assert.equal(route.origin,'evolve');assert.equal(route.team,'マリィ');assert.equal(route.limit,5);
+assert.equal(evolutionTransfer(evolutionPrefix+'自分のポケモン1匹のHPを、すべて回復する。その後、未知の効果。'),null);
