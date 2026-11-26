@@ -161,6 +161,12 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(!reserved&&source.attacks.some(a=>a.name===plan.name)&&ensure(deckIndex,source,2))
     requirements.push({side:0,zone:'discard',printId:source.officialCardId});
   }
+  if(plan.metric==='ownDiscardNamedCard')reserve(r=>r.name===plan.name,'discard');
+  if(plan.metric==='ownDiscardSupporterContains')reserve(r=>r.category==='supporter'&&r.name.includes(plan.name),'discard');
+  if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
+  if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
+  if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(plan.metric==='ownBenchTypedCounters')reserve(r=>mon(r,plan.type,0),'bench');
   if(plan.metric==='ownDiscardTypedPokemon')reserve(r=>mon(r,plan.type),'discard');
   if(plan.metric==='opponentDiscardBasic')reserve(isBasicEnergy,'discard',1);
   if(plan.metric==='opponentDiscardItem')reserve(r=>r.category==='item','discard',1);
@@ -1214,6 +1220,7 @@ function prepare(r, e, kind) {
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (e.plan.metric === "ownCounters") own.active.damage = 20;
     if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if(e.plan.metric==='ownBenchTypedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type))c.damage=10;
     if (e.plan.metric === "ownDamagedBenchCount" && own.bench.length) own.bench[0].damage=10;
     if (e.plan.metric === "ownPrizesTaken" && own.prizeCards.length>1) {own.prizes--;own.hand.push(own.prizeCards.pop());}
     if (["opponentEnergy", "opponentTeamEnergy", "bothActiveEnergy", "bothTeamEnergy"].includes(e.plan.metric)) {
@@ -1236,6 +1243,8 @@ function prepare(r, e, kind) {
     const discardFilters={
       opponentDiscardBasic:c=>c.kind==='energy'&&!c.isSpecial,
       opponentDiscardItem:c=>E.getReferenceEffectRecord(c)?.category==='item',
+      ownDiscardNamedCard:c=>E.getReferenceEffectRecord(c)?.name===e.plan.name,
+      ownDiscardSupporterContains:c=>E.getReferenceEffectRecord(c)?.category==='supporter'&&E.getReferenceEffectRecord(c).name.includes(e.plan.name),
       ownDiscardTypedPokemon:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.types.includes(e.plan.type),
       ownDiscardNamedAttack:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.attacks.some(a=>a.name===e.plan.name)
     };
@@ -2370,6 +2379,12 @@ function verifyCase(t, e) {
       ownBenchStageTwoCount: attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).facts.stage===2).length,
       ownDamagedBenchCount: attackingSide.bench.filter(c=>c.damage>0).length,
       opponentTeamCounters: [defendingSide.active,...defendingSide.bench].reduce((n,c)=>n+c.damage/10,0),
+      ownDiscardNamedCard:attackingSide.discard.filter(c=>E.getReferenceEffectRecord(c)?.name===e.plan.name).length,
+      ownDiscardSupporterContains:attackingSide.discard.filter(c=>E.getReferenceEffectRecord(c)?.category==='supporter'&&E.getReferenceEffectRecord(c).name.includes(e.plan.name)).length,
+      ownNamedOrExCount:[attackingSide.active,...attackingSide.bench].filter(c=>[e.plan.name,e.plan.name+'ex'].includes(E.getReferenceEffectRecord(c).name)).length,
+      bothNameContainsCount:[attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench].filter(c=>[e.plan.name,e.plan.secondName].some(n=>E.getReferenceEffectRecord(c).name.includes(n))).length,
+      ownBenchNamedCount:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).length,
+      ownBenchTypedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).reduce((n,c)=>n+c.damage/10,0),
       ownTypedPokemonCount: [attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type)).length,
       bothActiveEnergy: count([attackingSide.active,defendingSide.active]),
       bothTeamEnergy: count([attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench]),
@@ -2392,7 +2407,7 @@ function verifyCase(t, e) {
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
-    if(['opponentDiscardBasic','opponentDiscardItem','opponentExVCount','ownDamagedCount','opponentAbilityCount','ownNamedAttackCount','ownTeamNameCount','ownDiscardTypedPokemon','ownDiscardNamedAttack'].includes(e.plan.metric)&&metrics[e.plan.metric]===0)
+    if(['ownDiscardNamedCard','ownDiscardSupporterContains','ownNamedOrExCount','bothNameContainsCount','ownBenchNamedCount','ownBenchTypedCounters','opponentDiscardBasic','opponentDiscardItem','opponentExVCount','ownDamagedCount','opponentAbilityCount','ownNamedAttackCount','ownTeamNameCount','ownDiscardTypedPokemon','ownDiscardNamedAttack'].includes(e.plan.metric)&&metrics[e.plan.metric]===0)
       return {status:'BLOCKED',reason:'NO_POSITIVE_PUBLIC_COUNT_FIXTURE'};
     assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
     if(e.plan.metric==='opponentHandTrainerCount'){
@@ -2408,6 +2423,8 @@ function verifyCase(t, e) {
     const discardMetricFilters={
       opponentDiscardBasic:c=>c.kind==='energy'&&!c.isSpecial,
       opponentDiscardItem:c=>E.getReferenceEffectRecord(c)?.category==='item',
+      ownDiscardNamedCard:c=>E.getReferenceEffectRecord(c)?.name===e.plan.name,
+      ownDiscardSupporterContains:c=>E.getReferenceEffectRecord(c)?.category==='supporter'&&E.getReferenceEffectRecord(c).name.includes(e.plan.name),
       ownDiscardTypedPokemon:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.facts.types.includes(e.plan.type),
       ownDiscardNamedAttack:c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.attacks.some(a=>a.name===e.plan.name)
     };
