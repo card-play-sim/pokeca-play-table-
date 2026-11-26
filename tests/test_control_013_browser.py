@@ -509,6 +509,17 @@ async def main():
     own,other=before['players'];resolved=after['players'][0]
     steps=f['e']['plan']['steps'];cursors=[0,0];hand_count=len(own['hand'])-(1 if any(s['op']=='drawIfHand' for s in steps) else 0)
     for step in steps:
+     if step['op']=='discardOwnHand':
+      chosen=option['action'].get('selections',{}).get('sequenceDiscard',[])
+      assert len(chosen)==min(step['amount'],len(own['hand']))
+      assert set(chosen)<={c['id'] for c in own['hand']} and set(chosen)<={c['id'] for c in resolved['discard']}
+      assert not set(chosen)&{c['id'] for c in resolved['hand']}
+      hand_count-=len(chosen)
+     if step['op']=='blindDiscardOpponent':
+      req=next(rq for rq in option['requests'] if rq['key']=='sequenceBlind')
+      assert all(c['id'].startswith('hand-slot-') and not c.get('validationReference') for c in req['candidates'])
+      moved={c['id'] for c in other['hand']}-{c['id'] for c in after['players'][1]['hand']}
+      assert len(moved)==min(step['amount'],len(other['hand'])) and moved<={c['id'] for c in after['players'][1]['discard']}
      if step['op']=='draw' or (step['op']=='drawIfHand' and hand_count>=step['threshold']):
       picked=own['deck'][cursors[0]:cursors[0]+step['amount']]
       assert {c['id'] for c in picked}<={c['id'] for c in resolved['hand']}
