@@ -476,18 +476,21 @@ function sequencePlan(entry,kind,text,extended=false){
   body=body.slice(found[0].length);origin=found[1];activeOnly=origin==='active';
  }
  const raw=body.match(/[^。]+。/g);
- if(!raw||raw.join('')!==body||raw.length>3)return null;
+ const generatedAttack=extended==='attack';
+ if(!raw||raw.join('')!==body||raw.length>(generatedAttack?8:3))return null;
  const steps=[];
  // The extended grammar is a fallback only: previously compiled plans keep
  // their exact representation. Every clause must match a reviewed operation.
- if(extended&&!trainer)return null;
+ if(generatedAttack?!attack:extended&&!trainer)return null;
  for(const [index,original] of raw.entries()){
   const clause=extended&&index>0?original.replace(/^その後、/,''):original;
   let m;
-  if((m=clause.match(/^自分の山札を([1-9])枚引く。$/)))steps.push({op:'draw',amount:Number(m[1])});
-  else if(extended&&index>0&&steps.at(-1)?.op==='draw'&&(m=clause.match(/^自分の手札が([1-9]\d?)枚以上あるなら、さらに([1-9])枚引く。$/)))steps.push({op:'drawIfHand',threshold:Number(m[1]),amount:Number(m[2])});
-  else if(extended&&clause==='相手の手札を見る。')steps.push({op:'revealHand',side:'opponent'});
-  else if(extended&&(m=clause.match(/^相手の山札を上から([1-9]\d?)枚見て、もとにもどす。$/)))steps.push({op:'peekTop',side:'opponent',amount:Number(m[1])});
+  if(generatedAttack&&index===0&&(m=clause.match(/^自分の手札を([1-9])枚(?:選び、)?トラッシュする。$/)))steps.push({op:'discardOwnHand',amount:Number(m[1])});
+  else if(generatedAttack&&index===0&&(m=clause.match(/^相手の手札からオモテを見ないで([1-9])枚選び、トラッシュする。$/)))steps.push({op:'blindDiscardOpponent',amount:Number(m[1]),side:'opponent'});
+  else if((m=clause.match(/^自分の山札を([1-9])枚引く。$/)))steps.push({op:'draw',amount:Number(m[1])});
+  else if(extended&&!generatedAttack&&index>0&&steps.at(-1)?.op==='draw'&&(m=clause.match(/^自分の手札が([1-9]\d?)枚以上あるなら、さらに([1-9])枚引く。$/)))steps.push({op:'drawIfHand',threshold:Number(m[1]),amount:Number(m[2])});
+  else if(extended&&!generatedAttack&&clause==='相手の手札を見る。')steps.push({op:'revealHand',side:'opponent'});
+  else if(extended&&!generatedAttack&&(m=clause.match(/^相手の山札を上から([1-9]\d?)枚見て、もとにもどす。$/)))steps.push({op:'peekTop',side:'opponent',amount:Number(m[1])});
   else if((m=clause.match(/^(自分|相手)の山札を上から([1-9]\d?)枚トラッシュする。$/)))steps.push({op:'mill',side:m[1]==='自分'?'own':'opponent',amount:Number(m[2])});
   else if((attack||ability)&&(m=clause.match(/^このポケモンのHPを「([1-9]\d{0,2})」回復する。$/)))steps.push({op:'healSelf',amount:Number(m[1])});
   else if(attack&&clause==='相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。'&&Number(printed)>0)steps.push({op:'drain'});
@@ -506,9 +509,16 @@ function sequencePlan(entry,kind,text,extended=false){
  if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
  if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op)))return null;
  if(trainer&&steps.some(s=>!(extended?['draw','mill','drawIfHand','revealHand','peekTop']:['draw','mill']).includes(s.op)))return null;
- if(extended&&(!steps.some(s=>['drawIfHand','revealHand','peekTop'].includes(s.op))&&!raw.some((s,i)=>i>0&&s.startsWith('その後、'))))return null;
- if(extended&&steps[0]?.op!=='draw')return null;
- const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({draw:['DRAW'],drawIfHand:['DRAW'],revealHand:['REVEAL'],peekTop:['REVEAL'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
+ if(generatedAttack){
+  // Synthesize a new program only when every clause is recognized and the
+  // pre-action choice never depends on a later draw or state mutation.
+  if(steps.length<2||!['discardOwnHand','blindDiscardOpponent'].includes(steps[0].op)||steps.slice(1).some(s=>!['draw','mill','healSelf','drain','status','retreatLock','attackLock','reduce','discardAttached','itemLock','noWeakness'].includes(s.op)))return null;
+  if(new Set(steps.map(s=>s.op)).size!==steps.length)return null;
+ }else{
+  if(extended&&(!steps.some(s=>['drawIfHand','revealHand','peekTop'].includes(s.op))&&!raw.some((s,i)=>i>0&&s.startsWith('その後、'))))return null;
+  if(extended&&steps[0]?.op!=='draw')return null;
+ }
+ const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({discardOwnHand:['DISCARD'],blindDiscardOpponent:['DISCARD'],draw:['DRAW'],drawIfHand:['DRAW'],revealHand:['REVEAL'],peekTop:['REVEAL'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
  return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...new Set(commands)],steps,origin,activeOnly,sharedWording:true};
 }
 function plan(entry,kind){
@@ -872,7 +882,7 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
- const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true)||evolutionTransferFallback(entry,kind,generic);
+ const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true)||evolutionTransferFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,'attack');
 }
 // Compose an already verified, exact transfer grammar with the canonical
 // evolution-entry window. Existing plans always take precedence.
