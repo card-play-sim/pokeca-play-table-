@@ -1509,12 +1509,21 @@ function verifyCase(t, e) {
     const plan=e.plan,action=t.action||o.action,own=before.players[0],other=before.players[1],resolved=after.players[0];
     const source=[own.active,...own.bench].find(c=>c.id===t.sourceId),next=[resolved.active,...resolved.bench].find(c=>c?.id===t.sourceId);
     if(action.type==='attack_turn'&&Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    let ownCursor=0,otherCursor=0,handCount=own.hand.length-(plan.steps.some(s=>s.op==='drawIfHand')?1:0);
     for(const step of plan.steps){
       const target=step.side==='opponent'?after.players[1].active:next;
-      if(step.op==='draw')assert(own.deck.slice(0,step.amount).every(c=>resolved.hand.some(x=>x.id===c.id)));
+      if(step.op==='draw'||step.op==='drawIfHand'&&handCount>=step.threshold){
+        const drawn=own.deck.slice(ownCursor,ownCursor+step.amount);
+        assert(drawn.every(c=>resolved.hand.some(x=>x.id===c.id)));
+        ownCursor+=drawn.length;handCount+=drawn.length;
+      }
+      if(step.op==='revealHand')assert(effectEvents.some(x=>x?.command==='REVEAL'&&x.fromZone==='hand'&&x.privateTo==='you'&&JSON.stringify(x.cardIds)===JSON.stringify(other.hand.map(c=>c.id))));
+      if(step.op==='peekTop')assert(effectEvents.some(x=>x?.command==='REVEAL'&&x.fromZone==='deck'&&x.privateTo==='you'&&JSON.stringify(x.cardIds)===JSON.stringify(other.deck.slice(otherCursor,otherCursor+step.amount).map(c=>c.id))));
       if(step.op==='mill'){
         const side=step.side==='opponent'?other:own,result=after.players[step.side==='opponent'?1:0];
-        assert(side.deck.slice(0,step.amount).every(c=>result.discard.some(x=>x.id===c.id)));
+        const cursor=step.side==='opponent'?otherCursor:ownCursor,picked=side.deck.slice(cursor,cursor+step.amount);
+        assert(picked.every(c=>result.discard.some(x=>x.id===c.id)));
+        if(step.side==='opponent')otherCursor+=picked.length;else ownCursor+=picked.length;
       }
       if(step.op==='healSelf'||step.op==='drain'){
         const amount=step.op==='healSelf'?step.amount:effectEvents.find(x=>x?.command==='DAMAGE'&&x.targetInstanceId===other.active.id)?.amount;
@@ -1529,6 +1538,30 @@ function verifyCase(t, e) {
       if(step.op==='discardAttached')assert(source.energyCards.every(c=>resolved.discard.some(x=>x.id===c.id)));
       if(step.op==='itemLock')assert(after.referenceItemLock.some(x=>x.playerId==='ai'&&x.turnNumber===before.turnNumber+1));
       if(step.op==='noWeakness')assert.equal(next.referenceNoWeaknessTurn,before.turnNumber+1);
+    }
+    if(plan.steps.some(s=>s.op==='drawIfHand')){
+      const bonus=plan.steps.find(s=>s.op==='drawIfHand'),first=plan.steps[0].amount;
+      // Prove both sides of the threshold using real physical cards.
+      for(const meets of [false,true]){
+        const start=JSON.parse(JSON.stringify(before)),side=start.players[0];
+        const desired=bonus.threshold-first+1-(meets?0:1);
+        assert(desired>=1,'INVALID_THRESHOLD_FIXTURE');
+        const sourceId=t.sourceId;
+        while(side.hand.length>desired){
+          const i=side.hand.findIndex(c=>c.id!==sourceId);assert(i>=0);side.deck.push(side.hand.splice(i,1)[0]);
+        }
+        while(side.hand.length<desired){assert(side.deck.length);side.hand.push(side.deck.shift());}
+        assert(side.deck.length>=first+bonus.amount);
+        assert.deepEqual(S.identities(before),S.identities(start));
+        const replay=port(start);assert(replay.dispatch('you',action).ok);
+        const end=replay.getSnapshot().players[0],drawn=first+(meets?bonus.amount:0);
+        assert.deepEqual(end.deck.map(c=>c.id),side.deck.slice(drawn).map(c=>c.id));
+        assert.equal(end.hand.length,desired-1+drawn);
+      }
+    }
+    if(plan.steps.some(s=>['revealHand','peekTop'].includes(s.op))&&!plan.steps.some(s=>s.op==='mill'&&s.side==='opponent')){
+      assert.deepEqual(after.players[1].deck.map(c=>c.id),other.deck.map(c=>c.id));
+      assert.deepEqual(after.players[1].hand.map(c=>c.id),other.hand.map(c=>c.id));
     }
     if(['bench','evolve'].includes(plan.origin)){
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
