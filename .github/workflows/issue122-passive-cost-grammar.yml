@@ -4,6 +4,11 @@ on:
     branches: [battle/issue122-passive-cost-grammar-20261127]
     paths:
       - '.github/workflows/issue122-passive-cost-grammar.yml'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'tests/fixtures/control-005-scenarios.js'
+      - 'tests/issue122-passive-context-grammar.test.cjs'
   workflow_dispatch:
 permissions:
   contents: write
