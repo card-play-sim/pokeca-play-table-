@@ -1809,11 +1809,13 @@ function verifyCase(t, e) {
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.origin==='evolve'){
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.equal(JSON.stringify(late.getSnapshot()),JSON.stringify(closed));
+    }
     if(plan.requiresTera){
       const tera=c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true;
       assert([own.active,...own.bench].some(tera));
-      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
-      const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.equal(JSON.stringify(late.getSnapshot()),JSON.stringify(closed));
       if(!tera(own.active)){
         const absent=JSON.parse(JSON.stringify(before)),side=absent.players[0];
         for(const c of side.bench.filter(tera)){
