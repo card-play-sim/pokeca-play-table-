@@ -103,6 +103,7 @@ jobs:
           test "$ready" = 1
           # Record outcomes on the trusted host, not in generated source.
           # The same workflow's two attempts count as one scheduled attempt.
+          # Response-format regression is checked before CPU inference; retain exact failure feedback.
           persist_history() {
             local out="$1" state="$2"
             if [ ! -f "$out/selected.json" ]; then return; fi
@@ -177,7 +178,7 @@ jobs:
             printf 'Attempt %s did not clear quarantine. Retry with failure feedback.\n' "$attempt"
           done
           echo 'No verified local-generation candidate. Retain unresolved source for later runs.'
-          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE' >> "$GITHUB_STEP_SUMMARY"
+          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE (JSON wrapper normalization enabled)' >> "$GITHUB_STEP_SUMMARY"
           exit 1
       - uses: actions/upload-artifact@v4
         if: always()
