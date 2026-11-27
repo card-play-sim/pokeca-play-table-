@@ -42,12 +42,40 @@ concurrency:
   group: ${{ github.event_name == 'issue_comment' && !(github.event.issue.number == 122 && !github.event.issue.pull_request && github.event.comment.user.login == github.repository_owner && github.event.comment.body == '/card-auto-connect') && format('incremental-official-effect-ignored-{0}', github.run_id) || 'incremental-official-effect-intake' }}
   cancel-in-progress: false
 jobs:
+  scheduled-completion:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      stop: ${{ steps.check.outputs.stop }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'schedule'
+        with:
+          persist-credentials: false
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          stop=false
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            stop="$(python scripts/audit-exact-target-completion.py --scheduled-stop)" || stop=false
+          fi
+          if [ "$stop" != true ]; then stop=false; fi
+          echo "stop=$stop" >> "$GITHUB_OUTPUT"
+          if [ "$stop" = true ]; then
+            echo 'All 2775 target prints have current-main public battle evidence; scheduled fixed-target work paused.' >> "$GITHUB_STEP_SUMMARY"
+          fi
   continue:
+    needs: scheduled-completion
     if: >-
-      github.event_name != 'issue_comment' ||
+      needs.scheduled-completion.outputs.stop != 'true' &&
+      (github.event_name != 'issue_comment' ||
       (github.event.issue.number == 122 && !github.event.issue.pull_request &&
        github.event.comment.user.login == github.repository_owner &&
-       github.event.comment.body == '/card-auto-connect')
+       github.event.comment.body == '/card-auto-connect'))
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:

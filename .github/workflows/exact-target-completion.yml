@@ -6,6 +6,8 @@ on:
       - 'scripts/audit-exact-target-completion.py'
       - 'reports/official-effect-continuation/fixed-2775-scope.json'
       - '.github/workflows/exact-target-completion.yml'
+      - '.github/workflows/local-unknown-effect-generator.yml'
+      - '.github/workflows/continue-official-effects.yml'
 permissions:
   contents: read
 jobs:
