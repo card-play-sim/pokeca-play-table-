@@ -77,6 +77,21 @@ function additionalAttackPlan(entry,text){
  const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
  if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
   return coinPlan(Number(coinStatus[1]),0,{unit:Number(coinStatus[2]),status:statusMap[coinStatus[5]],when:coinStatus[3]==='すべてウラ'?'none':'threshold',threshold:Number(coinStatus[4]||1)});
+ const tierCoin=text.match(/^コインを3回投げる。オモテが1回なら、([1-9]\d{0,2})ダメージ追加。オモテが2回なら、([1-9]\d{0,2})ダメージ追加。すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
+ if(tierCoin&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'fixed',flips:3,base,bonuses:[0,...tierCoin.slice(1).map(Number)],sharedWording:true};
+ const typedBoardCoin=text.match(/^自分の場の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedBoardCoin&&printed===typedBoardCoin[2]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'ownTypedBoard',type:typedBoardCoin[1],unit:Number(typedBoardCoin[2]),base:0,sharedWording:true};
+ const typedEnergyCoin=text.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedEnergyCoin&&printed===typedEnergyCoin[2]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'ownTypedEnergy',type:typedEnergyCoin[1],unit:Number(typedEnergyCoin[2]),base:0,sharedWording:true};
+ const bothEnergyCoin=text.match(/^おたがいのバトルポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(bothEnergyCoin&&printed===bothEnergyCoin[1]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'bothActiveEnergy',unit:Number(bothEnergyCoin[1]),base:0,sharedWording:true};
+ const opponentTails=text.match(/^相手は相手自身のベンチポケモンの数ぶんコインを投げる。相手のバトルポケモンに、ウラの数×([1-9]\d{0,2})ダメージ。このワザのダメージは弱点・抵抗力を計算しない。$/);
+ if(opponentTails&&printed===opponentTails[1]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'opponentBench',unit:Number(opponentTails[1]),base:0,tails:true,skipWeakness:true,skipResistance:true,sharedWording:true};
  const energyCoin=text.match(/^このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
  if(energyCoin&&printed===energyCoin[1]+'×')
   return {mechanic:'ATTACK_ATTACHED_ENERGY_COINS',commands:['COIN_FLIP','DAMAGE'],unit:Number(energyCoin[1])};
