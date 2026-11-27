@@ -3,6 +3,8 @@ on:
   workflow_run:
     workflows: ["Unknown effect verified review handoff"]
     types: [completed]
+  schedule:
+    - cron: '*/5 * * * *'
   issue_comment:
     types: [created]
   workflow_dispatch:
@@ -38,7 +40,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     env:
-      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1' && 'reviewed-composition-v1' || '' }}
+      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1') && 'reviewed-composition-v1' || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -204,11 +206,11 @@ jobs:
     concurrency:
       group: unknown-effect-candidate-propose
       cancel-in-progress: false
-    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1'))
+    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1' && 'reviewed-composition-v1' || '' }}
+      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1') && 'reviewed-composition-v1' || '' }}
     permissions:
       contents: write
       pull-requests: write
@@ -288,3 +290,108 @@ jobs:
           body=$(printf 'AUTO_CONNECT_CANDIDATE_READY\nKind: %s\nBranch: %s\nHead: %s\nBase: %s\nWorkflow: %s/%s/actions/runs/%s\nUse the permitted GitHub connection to create or find the exact candidate PR, independently review, run all required CI, then merge and verify Pages bytes and published gameplay. Never count a branch or draft as published.\n' "$kind" "$branch" "$commit" "$(git rev-parse HEAD^)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
           gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="$body"
           printf '%s\n' "$body" >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    # The approved main workflow enables only independently reproduced
+    # compiler-only candidates. GitHub review and CI protection still apply.
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    concurrency:
+      group: unknown-effect-candidate-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+      issues: write
+    env:
+      UNKNOWN_EFFECT_CANDIDATE_POLICY: reviewed-composition-v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Release exact candidates using existing PR and Pages gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base="$(git rev-parse HEAD)"
+          live_main() { gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha; }
+          test "$(live_main)" = "$base"
+          ensure_public() {
+            local sha="$1" previous="$2" file rows state waiting=0
+            for file in deploy-play-table-pages.yml verify-published-pwa.yml published-mobile-browser.yml; do
+              rows="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$file/runs?head_sha=$sha&per_page=30" --jq '.workflow_runs | sort_by(.id) | last // {}')"
+              state="$(jq -r '.conclusion // .status // "missing"' <<< "$rows")"
+              case "$state" in
+                success) ;;
+                missing)
+                  test "$(live_main)" = "$sha" || return 1
+                  if [ "$file" = published-mobile-browser.yml ]; then
+                    gh workflow run "$file" --ref main -f "intake_base=$previous" || return 1
+                  else
+                    gh workflow run "$file" --ref main || return 1
+                  fi
+                  waiting=1 ;;
+                *) echo "$file: $state; existing release not yet verified"; waiting=1 ;;
+              esac
+            done
+            return "$waiting"
+          }
+          if ! git diff --quiet HEAD^1 HEAD -- data/effect-extensions/compiled.json; then
+            if ! ensure_public "$base" "$(git rev-parse HEAD^1)"; then
+              echo 'Previous release is not yet publicly verified.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          fi
+          python scripts/export-unknown-replay-candidate.py --self-test
+          gh pr list --state open --base main --limit 100 --json number,headRefName,headRefOid,isDraft,title,headRepositoryOwner,isCrossRepository > "$RUNNER_TEMP/open-release-prs.json"
+          while IFS= read -r pr; do
+            number="$(jq -er .number <<< "$pr")"
+            branch="$(jq -er .headRefName <<< "$pr")"
+            head="$(jq -er .headRefOid <<< "$pr")"
+            title="$(jq -er .title <<< "$pr")"
+            [[ "$branch" =~ ^automation/unknown-policy-candidate-([1-9][0-9]{0,19})-([a-f0-9]{64})-([a-f0-9]{40})$ ]] || continue
+            origin="${BASH_REMATCH[1]}" patch="${BASH_REMATCH[2]}" candidate_base="${BASH_REMATCH[3]}"
+            [ "$candidate_base" = "$base" ] || continue
+            [[ "$title" =~ ^Verified\ unknown-effect\ candidate\ ([1-9][0-9]{0,19})$ ]] || continue
+            replay="${BASH_REMATCH[1]}"
+            [[ "$number" =~ ^[1-9][0-9]*$ && "$head" =~ ^[a-f0-9]{40}$ ]] || continue
+            jq -e --arg owner "$GITHUB_REPOSITORY_OWNER" '.isCrossRepository==false and .headRepositoryOwner.login==$owner' <<< "$pr" >/dev/null || continue
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$replay" > "$RUNNER_TEMP/release-origin.json"
+            jq -e --arg repo "$GITHUB_REPOSITORY" '.conclusion=="success" and .event=="workflow_run" and .head_branch=="main" and .head_repository.full_name==$repo and .path==".github/workflows/unknown-effect-approved-replay.yml"' "$RUNNER_TEMP/release-origin.json" >/dev/null || continue
+            out="$(mktemp -d "$RUNNER_TEMP/release.XXXXXX")"
+            gh run download "$replay" --name unknown-effect-read-only-preview --dir "$out" || continue
+            jq -e --arg origin "$origin" --arg patch "$patch" --arg base "$base" '(.originRunId|tostring)==$origin and .approvedPatchSha256==$patch and .latestMain==$base and .reviewOnly==true' "$out/verified-replay.json" >/dev/null || continue
+            # Independently re-stage verified bytes; never execute candidate code.
+            git reset --hard "$base"
+            if ! python scripts/export-unknown-replay-candidate.py stage "$GITHUB_WORKSPACE" "$out"; then
+              git reset --hard "$base"
+              git clean -fd
+              continue
+            fi
+            expected="$(git write-tree)"
+            git reset --hard "$base"
+            git clean -fd
+            actual="$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$head" --jq .tree.sha)"
+            [ "$expected" = "$actual" ] || continue
+            if [ "$(jq -r .isDraft <<< "$pr")" = true ]; then
+              gh pr ready "$number" || true
+              continue
+            fi
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$head&event=pull_request&per_page=100" > "$RUNNER_TEMP/release-checks.json"
+            if ! python scripts/export-unknown-replay-candidate.py release-checks "$RUNNER_TEMP/release-checks.json" "$head" "$GITHUB_REPOSITORY"; then continue; fi
+            gh pr view "$number" --json headRefOid,baseRefOid,isDraft,mergeStateStatus,reviewDecision,state > "$RUNNER_TEMP/release-pr.json"
+            jq -e --arg head "$head" --arg base "$base" '.headRefOid==$head and .baseRefOid==$base and .isDraft==false and .state=="OPEN" and .mergeStateStatus=="CLEAN" and (.reviewDecision=="" or .reviewDecision=="APPROVED")' "$RUNNER_TEMP/release-pr.json" >/dev/null || continue
+            test "$(live_main)" = "$base"
+            # No admin override or bypass of required review.
+            gh pr merge "$number" --merge --match-head-commit "$head"
+            merged="$(gh pr view "$number" --json state,mergeCommit --jq 'if .state=="MERGED" then .mergeCommit.oid else "" end')"
+            [[ "$merged" =~ ^[a-f0-9]{40}$ ]] || exit 0
+            test "$(live_main)" = "$merged"
+            gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="Automatic verified candidate merged: #$number, head $head, main $merged, replay $replay. Public gameplay verification is still pending."
+            ensure_public "$merged" "$base" || true
+            exit 0
+          done < <(jq -c '.[]' "$RUNNER_TEMP/open-release-prs.json")
