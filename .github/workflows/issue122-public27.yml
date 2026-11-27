@@ -1,0 +1,68 @@
+name: Issue122 27-print public Chromium and exact release verification
+on:
+  push:
+    branches: [battle/issue122-public27-20261128]
+    paths: ['.github/workflows/issue122-public27.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b7553a2b55be8707ac661c7fa685e605533c9420
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact 27 new prints and full previous record preservation
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),a=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json';
+          const old=JSON.parse(execFileSync('git',['show','45a39f42f43da31b331c37aa7a3b10607fe389b2:'+p],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const now=JSON.parse(fs.readFileSync(p)).records,m=new Map(now.map(r=>[String(r.officialCardId),r])),ids=new Set(old.map(r=>String(r.officialCardId)));
+          a.equal(m.size,now.length);for(const row of old)a.deepEqual(m.get(String(row.officialCardId)),row);
+          a.deepEqual([...m.keys()].filter(id=>!ids.has(id)).sort(),['45239','45557','46025','46026','46273','46462','47034','47345','47644','47769','48018','48427','48630','48848','48913','48950','49134','49645','49968','50060','50230','50303','50363','50372','50378','50397','50524']);
+          NODE
+          node scripts/build-pwa-release.cjs --check
+      - name: Verify deployed assets against exact merged commit
+        env:
+          RELEASE_VERIFY_ATTEMPTS: '30'
+          RELEASE_VERIFY_INTERVAL_MS: '30000'
+        run: node scripts/verify-published-pwa.cjs
+      - name: Install Chromium
+        run: |
+          python -m pip install playwright==1.56.0
+          bash scripts/install-ci-chromium.sh
+      - name: All new slots on public URL
+        env:
+          POKECA_TEST_URL: https://card-play-sim.github.io/pokeca-play-table-/
+          POKECA_INTAKE_RELEASE_BASE: 45a39f42f43da31b331c37aa7a3b10607fe389b2
+          POKECA_INTAKE_PREFIX: work/card-auto-connect/browser
+          POKECA_BROWSER_SHARD_COUNT: '4'
+          POKECA_BROWSER_SHARD_INDEX: ${{ matrix.shard }}
+          POKECA_BROWSER_SLOTS_ONLY: '1'
+          POKECA_INTAKE_ARTIFACT: public27-shard-${{ matrix.shard }}
+        run: |
+          mkdir -p work/card-auto-connect/browser artifacts
+          python tests/test_control_013_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public27-shard-${{ matrix.shard }}
+          path: |
+            artifacts/
+            test-results/
+            work/card-auto-connect/browser/
+          if-no-files-found: warn
