@@ -1,0 +1,108 @@
+name: Issue122 search and draw family qualification
+on:
+  push:
+    branches: [battle/issue122-search-draw-current-20261127]
+    paths: ['.github/workflows/issue122-search-draw-current.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-search-draw-current
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact merged source and preserve latest compiled baseline
+        run: |
+          set -euo pipefail
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          mkdir -p artifacts
+          node tests/issue122-search-and-draw-families.test.cjs
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base='d3bf734a7d06bab4cc8fc77bc8d3d35c0d0d457d';
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const required=['45227','45599','47051','47164','47272','49056'].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/search-and-draw-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('SEARCH_DRAW_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PRIOR_QUALIFIED_PRINT_MISSING');
+          assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="search-and-draw-$shard" python tests/test_control_013_browser.py >"artifacts/search-and-draw-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/search-and-draw-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=search-draw-current-full-ai python tests/test_control_013_browser.py >artifacts/search-draw-current-full-ai.log 2>&1 || { tail -n 30 artifacts/search-draw-current-full-ai.log; exit 1; }
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/search-and-draw-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/search-and-draw-candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: qualified conditional board count effects'
+          git push origin "HEAD:refs/heads/battle/issue122-search-draw-current-qualified-$GITHUB_RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: search-and-draw-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
