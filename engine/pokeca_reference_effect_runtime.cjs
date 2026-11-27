@@ -241,7 +241,7 @@ function canHealOrClearStatus(card){return card.damage>0||!!card.statusCondition
 function isMegaEvolutionEx(card){return card.kind==='pokemon'&&String(record(card).rulesText).includes('メガシンカexがきぜつしたとき');}
 function attackSearchCandidate(c,plan){
  const r=record(c),typed=c.kind==='pokemon'&&r?.facts.types?.includes(plan.type);
- if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact);
  switch(plan.filter){
   case 'any':return true;
   case 'basicEnergy':return basicEnergy(c);
@@ -471,7 +471,7 @@ function requests(g,actor,card,effect){
   const eligible=own.flatMap(mon=>(mon.energyCards||[]).filter(basicEnergy));
   cardRequest('energy',eligible,0,eligible.length);
  }
- if(m==='ATTACK_OPTIONAL_DRAW_TO_LIMIT'&&p.hand.length<effect.plan.limit&&p.deck.length){
+ if(m==='ATTACK_OPTIONAL_DRAW_TO_LIMIT'&&(effect.plan.fixedDraw||p.hand.length<effect.plan.limit)&&p.deck.length){
   add('drawChoice','CARD',[{id:'draw',name:'山札を引く'},{id:'skip',name:'引かない'}],1,1);
  }
  if(m==='ATTACK_HEAL_OWN_TARGET')cardRequest('healTarget',own,1,1);
@@ -1322,7 +1322,7 @@ function applyPlan(g,actor,card,effect,action){
   }
   case 'ATTACK_OPTIONAL_DRAW_TO_LIMIT':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(ids('drawChoice')[0]==='draw')draw(g,p,Math.max(0,plan.limit-p.hand.length));
+   if(ids('drawChoice')[0]==='draw')draw(g,p,plan.fixedDraw?plan.limit:Math.max(0,plan.limit-p.hand.length));
    break;
   case 'ATTACK_BASIC_DAMAGE_PROTECTION':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
