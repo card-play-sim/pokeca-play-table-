@@ -1,4 +1,4 @@
-name: 条件付きダメージ軽減2系統・全残件検証
+name: HP限定入替・条件軽減・攻撃条件12枚一括全残件検証
 on:
   push:
     branches: [battle/issue122-conditional-reduction-20261128]
@@ -41,6 +41,9 @@ jobs:
               p.write_text(s.replace(change['from'],change['to']))
           PY
           git add engine scripts
+          git cat-file -e 602e7b16f9e73c454610ebabb2c7578d95937ff8^{commit}
+          git diff --binary 9c77aab1934ad3917cc680dfe0642474311a997d 602e7b16f9e73c454610ebabb2c7578d95937ff8 -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/test_control_013_browser.py | git apply --3way --index
+          git diff --cached --check
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
           node --check scripts/lib/shared-effect-engine-worker.cjs
@@ -78,7 +81,7 @@ jobs:
           const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
           assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
           // 50781 has a separate unsupported named next-turn attack; retain it unresolved.
-          const required=["47057","49089","50376","45941","46151","48736"].filter(id=>!old.has(id));
+          const required=["47057","49089","50376","45941","46151","48736","46424","46649","49299","50371","50534","50550"].filter(id=>!old.has(id));
           const added=[...now.keys()].filter(id=>!old.has(id)).sort();
           const candidate=require('./work/card-auto-connect/candidate.json');
           const verified=new Set(candidate.qualified.map(String));
