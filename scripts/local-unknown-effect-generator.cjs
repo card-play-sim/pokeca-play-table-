@@ -256,7 +256,7 @@ function repairProfile(feedback='',attempt=1){
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT|MODEL_ANCHOR_LABEL_LEAK/i.test(reason)?'ANCHOR':
  /MODEL_ARRAY_SEPARATOR_LOST|MODEL_DUPLICATE_DEFINITION/i.test(reason)?'SYNTAX':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
- /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
+ /TARGET_NOT_COMPILED|MODEL_UNCALLED_COMPILER_HELPER/i.test(reason)?'COMPILE':
  /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
  /NO_LEGAL_VERIFICATION_FIXTURE/i.test(reason)?'FIXTURE':
  /ENGINE_EXECUTION_FAILED|NO_EXECUTION_RECEIPT|NO_SELECTED_PRINT_QUALIFIED|EXECUTION_EVIDENCE_INCOMPLETE/i.test(reason)?'EXECUTION':
@@ -270,7 +270,7 @@ function repairProfile(feedback='',attempt=1){
  ANCHOR:'Previous edit anchor was stale or ambiguous. Copy an existing anchor ID from the supplied table. For compiler additions use insertBefore with only new code; the host preserves the original. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
  INTEGRITY:'The candidate changed or lost a protected record or receipt. Undo changes to existing grammar and plans. Add a separate exact new rule guarded by the official effect kind and complete text. Preserve all prior compiled records; never edit data, receipts or gates.',
- COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar, then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
+ COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar in the actual return path of plan(); never insert an uncalled helper. Then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
  FIXTURE:'The worker could not construct a legal verification action. Use the exact printed identity, evolution chain, turn/zone, resources and disabled reasons to repair fixture preparation. Do not weaken legality, fabricate resources or bypass positive and negative execution checks.',
  BROWSER:'The isolated browser gate failed. Repair actual legal actions, UI/AI parity and state transitions using the reported failure; never change browser tests or receipt gates.',
  EXECUTION:'Compilation alone did not yield a proven target. Use each reported failed slot and reason to repair the actual runtime action, target legality and worker fixture; retain positive and negative state checks.',
@@ -380,7 +380,7 @@ function selectReviewedBatch(candidates,history,fingerprint){
  }
  return selected;
 }
-function omitRejectedPatch(feedback){return /MODEL_OFF_TARGET_DEFINITION|NONUNIQUE_OR_STALE_ANCHOR|MODEL_DUPLICATE_DEFINITION|MODEL_ANCHOR_LABEL_LEAK/.test(String(feedback));}
+function omitRejectedPatch(feedback){return /MODEL_OFF_TARGET_DEFINITION|NONUNIQUE_OR_STALE_ANCHOR|MODEL_DUPLICATE_DEFINITION|MODEL_ANCHOR_LABEL_LEAK|MODEL_UNCALLED_COMPILER_HELPER/.test(String(feedback));}
 async function generate(groups,sources,feedback='',profile=repairProfile(feedback),previousPatch=''){
  if(!feedback){const proposal=reviewedProposal(groups,sources);if(proposal)return proposal;}
  if(process.env.MODEL_REVIEWED_ONLY==='1')throw Error('REVIEWED_COMPOSITION_UNAVAILABLE_NO_INFERENCE');
@@ -416,6 +416,16 @@ function validateCandidateSyntax(sources,changed){
   catch(e){throw Error('CANDIDATE_JS_SYNTAX:'+file+':'+String(e.message).slice(0,500));}
  }
 }
+// Conservative preflight; isolated engine and browser verification remain mandatory.
+function validateCompilerHelperUse(sources,changed){
+ const old=sources[allowed[0]]||'',next=changed[allowed[0]]||'';
+ if(old===next)return;
+ const count=(str,name)=>(str.match(/[A-Za-z_$][\w$]*/g)||[]).filter(token=>token===name).length;
+ for(const match of next.matchAll(/^\s*(?:const\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s+)?(?:\([^)\n]*\)|[A-Za-z_$][\w$]*)\s*=>|(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\()/gm)){
+  const name=match[1]||match[2];
+  if(count(old,name)===0)assert(count(next,name)>1,'MODEL_UNCALLED_COMPILER_HELPER:'+name);
+ }
+}
 function focusFailedBatch(batch,receipt){
  if(!receipt||!Array.isArray(receipt.targetFailures))return batch;
  const failures=new Set(receipt.targetFailures.map(x=>String(x?.id)).filter(x=>/^[1-9]\d{0,7}$/.test(x)));
@@ -449,6 +459,7 @@ async function generateWithRepair(batch,sources,{feedback='',previousPatch='',pr
    validateDefinitionScope(scope.groups,proposal);
    changed=applyEdits(sources,proposal);
    validateCandidateSyntax(sources,changed);
+   validateCompilerHelperUse(sources,changed);
    return {proposal,changed,scope,feedback:''};
   }catch(e){
    feedback=String(e);
@@ -553,4 +564,4 @@ if(require.main===module){
   try{console.log(probeReviewed(read(process.argv[3]))?'1':'0');}catch(e){console.error(e);process.exitCode=1;}
  }else main().catch(e=>{console.error(e);process.exitCode=1;});
 }
-module.exports={omitRejectedPatch,routeForInputs,validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={validateCompilerHelperUse,omitRejectedPatch,routeForInputs,validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
