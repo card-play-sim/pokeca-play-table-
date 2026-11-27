@@ -241,6 +241,20 @@ async def main():
             if event.get('details',{}).get('command')=='DAMAGE'
             and event['details'].get('targetInstanceId') in {mon['id'] for mon in other['bench']}}
     assert expected and expected==actual
+   if m=='ATTACK_MOVE_BENCH_COUNTERS':
+    plan=f['e']['plan'];moves=option['action'];own=before['players'][0];other=before['players'][1]
+    source=next(card for card in own['bench'] if card['id']==moves['selections']['counterSource'][0])
+    target=other['active']['id'] if plan['targetActive'] else moves['targetIds'][0]
+    assert source['damage']>0
+    assert next(card for card in after['players'][0]['bench'] if card['id']==source['id'])['damage']==0
+    assert any(event.get('details',{}).get('command')=='MOVE_DAMAGE_COUNTERS'
+               and event['details'].get('sourceInstanceId')==source['id']
+               and event['details'].get('targetInstanceId')==target
+               and event['details'].get('counterCount')==source['damage']//10 for event in events)
+   if m=='ATTACK_SPREAD_DAMAGE' and f['e']['plan'].get('counterUnit'):
+    target=option['action']['targetIds'][0]
+    expected=[event for event in f['printedDamageEvents'] if event['details'].get('targetInstanceId')==target]
+    assert len(expected)==1 and expected[0] in events
    if m=='ATTACK_RECYCLE_BASIC_ENERGY':
     plan=f['e']['plan'];own=before['players'][0]
     ids=[card['id'] for card in own['discard'] if card['kind']=='energy' and not card.get('isSpecial') and card['energyType']==plan['type']]
