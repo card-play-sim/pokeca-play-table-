@@ -389,8 +389,6 @@ function additionalAttackPlan(entry,text){
  const discardOpponentAttachments=text.match(/^相手のポケモン全員についている(「ポケモンのどうぐ」と「特殊エネルギー」|特殊エネルギー)を、すべてトラッシュする。$/);
  if(discardOpponentAttachments&&/^\d+$/.test(printed))
   return {mechanic:'ATTACK_DISCARD_OPPONENT_ATTACHMENTS',commands:[...deal,'DISCARD'],tools:discardOpponentAttachments[1].startsWith('「ポケモンのどうぐ」'),sharedWording:true};
- const optionalFixedDraw=text.match(/^のぞむなら、自分の山札を([1-9]\d?)枚引く。$/);
- if(optionalFixedDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalFixedDraw[1]),fixedDraw:true,sharedWording:true};
  const optionalDraw=text.match(/^のぞむなら、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
  if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
  const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
