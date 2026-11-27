@@ -54319,6 +54319,76 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46425",
+      "name": "ザングース",
+      "deckName": "ザングース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46425",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046425_P_ZANGUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "れんぞくぎり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10+",
+          "text": "コインを3回投げる。オモテが1回なら、20ダメージ追加。オモテが2回なら、50ダメージ追加。すべてオモテなら、80ダメージ追加。",
+          "effectId": "reference-46425-attack-0",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "fixed",
+            "flips": 3,
+            "base": 10,
+            "bonuses": [
+              0,
+              20,
+              50,
+              80
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46425.json",
+        "sha256": "1863fe998485e99fa3125119f30dd3de668fbf4dc84561a1095ce486b56a2ea3",
+        "htmlSha256": "1863fe998485e99fa3125119f30dd3de668fbf4dc84561a1095ce486b56a2ea3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46431",
       "name": "ワッカネズミ",
       "deckName": "ワッカネズミ",
@@ -227115,6 +227185,1045 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "45245",
+      "name": "クワガノン",
+      "deckName": "クワガノン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45245",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045245_P_KUWAGANON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "マッハボルト",
+          "cost": [
+            "雷"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-45245-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ちょくれつキャノン",
+          "cost": [
+            "雷",
+            "雷"
+          ],
+          "damage": "120+",
+          "text": "自分のベンチの「デンヂムシ」の数×80ダメージ追加。",
+          "effectId": "reference-45245-attack-1",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchNamedCount",
+            "name": "デンヂムシ",
+            "unit": 80,
+            "base": 120,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "デンヂムシ",
+        "retreatCost": 2,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45245.json",
+        "sha256": "a4fb75a67790f26709048d74e9a0bdcf94b4a633cb2947bc5b041e4bbe5f7ae1",
+        "htmlSha256": "a4fb75a67790f26709048d74e9a0bdcf94b4a633cb2947bc5b041e4bbe5f7ae1",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46342",
+      "name": "ナッシー",
+      "deckName": "ナッシー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46342",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046342_P_NASSHI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たまなげアワー",
+          "cost": [
+            "草"
+          ],
+          "damage": "60×",
+          "text": "おたがいのバトルポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×60ダメージ。",
+          "effectId": "reference-46342-attack-0",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "bothActiveEnergy",
+            "unit": 60,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": "タマタマ",
+        "retreatCost": 2,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46342.json",
+        "sha256": "60b7e73d5e7f384054c63c392439d5f2b53f15005b2fc0156b46b34a718d0b1a",
+        "htmlSha256": "60b7e73d5e7f384054c63c392439d5f2b53f15005b2fc0156b46b34a718d0b1a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47431",
+      "name": "ロケット団のスリーパー",
+      "deckName": "ロケット団のスリーパー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47431",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047431_P_ROKETTODANNOSURIPA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイコショット",
+          "cost": [
+            "超"
+          ],
+          "damage": "40",
+          "text": "",
+          "effectId": "reference-47431-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ベンチをあやつる",
+          "cost": [
+            "超",
+            "超",
+            "超"
+          ],
+          "damage": "80×",
+          "text": "相手は相手自身のベンチポケモンの数ぶんコインを投げる。相手のバトルポケモンに、ウラの数×80ダメージ。このワザのダメージは弱点・抵抗力を計算しない。",
+          "effectId": "reference-47431-attack-1",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "opponentBench",
+            "unit": 80,
+            "base": 0,
+            "tails": true,
+            "skipWeakness": true,
+            "skipResistance": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": "ロケット団のスリープ",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47431.json",
+        "sha256": "24b44320730d8e32f608f289a5efa6ec18213c28e9d06dad960fe0a579aeb886",
+        "htmlSha256": "24b44320730d8e32f608f289a5efa6ec18213c28e9d06dad960fe0a579aeb886",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47677",
+      "name": "ズルズキン",
+      "deckName": "ズルズキン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47677",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047677_P_ZURUZUKIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ごろつきアタック",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "60×",
+          "text": "自分の場の[悪]ポケモンの数ぶんコインを投げ、オモテの数×60ダメージ。",
+          "effectId": "reference-47677-attack-0",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "ownTypedBoard",
+            "type": "悪",
+            "unit": 60,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ズルッグ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47677.json",
+        "sha256": "bea5b1c570abf34731948018343fb7b010e3fa939528bfc55e0e695d24700669",
+        "htmlSha256": "bea5b1c570abf34731948018343fb7b010e3fa939528bfc55e0e695d24700669",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48049",
+      "name": "ズルズキン",
+      "deckName": "ズルズキン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48049",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048049_P_ZURUZUKIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ごろつきアタック",
+          "cost": [
+            "悪",
+            "悪"
+          ],
+          "damage": "60×",
+          "text": "自分の場の[悪]ポケモンの数ぶんコインを投げ、オモテの数×60ダメージ。",
+          "effectId": "reference-48049-attack-0",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "ownTypedBoard",
+            "type": "悪",
+            "unit": 60,
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ズルッグ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48049.json",
+        "sha256": "2653241551487460926ca42249a3b0564c1df71427618d6b823e1772f9ab0d39",
+        "htmlSha256": "2653241551487460926ca42249a3b0564c1df71427618d6b823e1772f9ab0d39",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49005",
+      "name": "ロケット団のスリーパー",
+      "deckName": "ロケット団のスリーパー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49005",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049005_P_ROKETTODANNOSURIPA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "サイコショット",
+          "cost": [
+            "超"
+          ],
+          "damage": "40",
+          "text": "",
+          "effectId": "reference-49005-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "ベンチをあやつる",
+          "cost": [
+            "超",
+            "超",
+            "超"
+          ],
+          "damage": "80×",
+          "text": "相手は相手自身のベンチポケモンの数ぶんコインを投げる。相手のバトルポケモンに、ウラの数×80ダメージ。このワザのダメージは弱点・抵抗力を計算しない。",
+          "effectId": "reference-49005-attack-1",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "opponentBench",
+            "unit": 80,
+            "base": 0,
+            "tails": true,
+            "skipWeakness": true,
+            "skipResistance": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": "ロケット団のスリープ",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49005.json",
+        "sha256": "a011d7767428f0091e6f8069e826605afc5e3c20735b5eb1e4dc564445caf9ba",
+        "htmlSha256": "a011d7767428f0091e6f8069e826605afc5e3c20735b5eb1e4dc564445caf9ba",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49303",
+      "name": "ザングース",
+      "deckName": "ザングース",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49303",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049303_P_ZANGUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "れんぞくぎり",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10+",
+          "text": "コインを3回投げる。オモテが1回なら、20ダメージ追加。オモテが2回なら、50ダメージ追加。すべてオモテなら、80ダメージ追加。",
+          "effectId": "reference-49303-attack-0",
+          "plan": {
+            "mechanic": "MASS_COUNT_COIN_DAMAGE",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "metric": "fixed",
+            "flips": 3,
+            "base": 10,
+            "bonuses": [
+              0,
+              20,
+              50,
+              80
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49303.json",
+        "sha256": "2a121be8a5b46fbb9ac2640f63d48bb89edfd55e2f540672e32e81b904936d3a",
+        "htmlSha256": "2a121be8a5b46fbb9ac2640f63d48bb89edfd55e2f540672e32e81b904936d3a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48525",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48525",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048525_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-48525-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-48525-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48525.json",
+        "sha256": "837cd3591811acc5484aec519cd6aaeb8adc4a9420357dc9381fc51b7e47b8a0",
+        "htmlSha256": "837cd3591811acc5484aec519cd6aaeb8adc4a9420357dc9381fc51b7e47b8a0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48738",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48738",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048738_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-48738-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-48738-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48738.json",
+        "sha256": "580de8716ccb88d26c9744fa07e9d3894a522a4f3b5ee8de8cada0d840269b60",
+        "htmlSha256": "580de8716ccb88d26c9744fa07e9d3894a522a4f3b5ee8de8cada0d840269b60",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47298",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47298",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047298_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47298-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47298-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47298.json",
+        "sha256": "fd0eab7d234c562ca5d434f8cf4175a2f5084365b74f43e11130fc2b42b1c776",
+        "htmlSha256": "fd0eab7d234c562ca5d434f8cf4175a2f5084365b74f43e11130fc2b42b1c776",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47377",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47377",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047377_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47377-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47377-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47377.json",
+        "sha256": "db829567469430f41fb3102df5c353631775947364acf7873e444f37c56919af",
+        "htmlSha256": "db829567469430f41fb3102df5c353631775947364acf7873e444f37c56919af",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47386",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47386",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047386_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47386-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47386-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47386.json",
+        "sha256": "2b8c2edfb175ac47f03e9b5d9b05743b92ee7a32c4c6e9b0a3809c61e1fa50d2",
+        "htmlSha256": "2b8c2edfb175ac47f03e9b5d9b05743b92ee7a32c4c6e9b0a3809c61e1fa50d2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -229185,11 +230294,6 @@
     },
     {
       "officialCardId": "46421",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46425",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
