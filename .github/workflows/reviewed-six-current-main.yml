@@ -298,7 +298,7 @@ jobs:
           git fetch origin c64385f246c21de769d46f8c16463461eb1b162c 9c77aab1934ad3917cc680dfe0642474311a997d
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git merge --ours --no-commit --no-ff c64385f246c21de769d46f8c16463461eb1b162c
+          git merge -s ours --no-commit --no-ff c64385f246c21de769d46f8c16463461eb1b162c
           python - "$RUNNER_TEMP/six.zip" <<'PY'
           import sys,zipfile,json,hashlib,subprocess,tempfile
           from pathlib import Path
