@@ -45,12 +45,49 @@ async def select_effect_targets(page, option):
    await page.locator(f'#selection-cards [data-selection-id="{ident}"]').tap(timeout=12000)
   await page.locator('#selection-confirm').tap()
 
+def candidate_fixture_fingerprint():
+ # Only an explicitly prepared local candidate may reuse a fixture set.
+ # Bind the receipt to the exact source, engine, deck data and generated
+ # files so stale fixtures cannot silently reduce release coverage.
+ assert os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1'
+ assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/'
+ base=os.environ['POKECA_INTAKE_RELEASE_BASE']
+ files=[
+  ROOT/'ui/engine.bundle.js',ROOT/'data/effect-extensions/compiled.json',
+  ROOT/'data/effect-extensions/intake.json',ROOT/'data/fixed-test-decks.json',
+  ROOT/'scripts/build-intake-verification-fixtures.cjs',
+  ROOT/'scripts/lib/shared-effect-engine-worker.cjs',
+  ROOT/'tests/fixtures/control-005-scenarios.js',
+  ROOT/'tests/fixtures/control-009-extension-manifest.cjs',
+  PREFIX/'browser-fixtures.json',PREFIX/'example-decks.json',
+ ]
+ return {'base':base,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+         'patterns':os.environ.get('POKECA_INTAKE_PATTERNS',''),
+         'perPattern':os.environ.get('POKECA_INTAKE_PER_PATTERN',''),
+         'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
+
+def prepare_candidate_fixtures():
+ receipt=PREFIX/'browser-fixture-reuse-receipt.json'
+ mode=os.environ.get('POKECA_INTAKE_FIXTURE_MODE','')
+ if mode=='reuse':
+  assert json.loads(receipt.read_text())==candidate_fixture_fingerprint(),'CANDIDATE_FIXTURE_FINGERPRINT_MISMATCH'
+ else:
+  assert mode in ('','prepare'),'INVALID_CANDIDATE_FIXTURE_MODE'
+  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT)
+  if mode=='prepare':
+   data=candidate_fixture_fingerprint()
+   temporary=receipt.with_suffix('.tmp')
+   temporary.write_text(json.dumps(data,sort_keys=True))
+   temporary.replace(receipt)
+ return mode
+
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  if os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1':
   assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/' and release_base
   release_base=None
- subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
+ if prepare_candidate_fixtures()=='prepare':return
+ fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
  shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
  shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
  assert 1<=shard_count<=16 and 0<=shard_index<shard_count,'INVALID_BROWSER_SHARD'
@@ -228,7 +265,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -381,6 +418,24 @@ async def main():
     assert entered['validationReference']['officialCardId']==r['officialCardId']
     assert entered['stage']==before_source['stage']
     assert all(card['id']!=ident for card in after['players'][0]['hand'])
+   if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):
+    source=before['players'][0]['active']
+    assert source['energyCards']
+    assert source['retreatCost']==(r['facts']['retreatCost'] if m=='PASSIVE_EMPTY_ENERGY_RETREAT' else 0)
+    if m=='PASSIVE_TYPED_TEAM_RETREAT':
+     assert any(card.get('energyType')==f['e']['plan']['energyType'] and not card.get('isSpecial') for card in source['energyCards'])
+    if m=='PASSIVE_EMPTY_ENERGY_RETREAT':
+     own=after['players'][0]
+     current=next((card for card in [own['active'],*own['bench']] if card and card['id']==source['id']),None)
+     if current and not current['energyCards']:assert current['retreatCost']==0
+   if m=='COIN_UNTIL_TAILS_MILL':
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)]
+    assert flips and flips[-1] is False and all(flips[:-1])
+    enemy=before['players'][1]
+    expected=[card['id'] for card in enemy['deck'][:len(flips)-1]]
+    discarded=[ident for ev in events if ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck' and ev['details'].get('owner')==enemy['id'] for ident in ev['details']['cardIds']]
+    assert discarded==expected
+    assert all(any(card['id']==ident for card in after['players'][1]['discard']) for ident in expected)
    if m=='COIN_UNTIL_TAILS_DAMAGE':
     flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
     assert flips and flips[-1] is False and all(flips[:-1])
@@ -565,6 +620,16 @@ async def main():
     else:
      assert reactions[0]['counterCount']==plan['counterCount']
      assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==plan['counterCount'] for ev in events)
+   if m in ('PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL'):
+    defender=before['players'][1]['active']
+    survivor=after['players'][1]['active']
+    assert survivor and survivor['id']==defender['id']
+    assert any(ev.get('details',{}).get('mechanic')==m and ev['details'].get('effectId')==f['e']['effectId'] and ev['details'].get('heads') is True for ev in events)
+    hits=[ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id']]
+    assert hits
+    if m=='PASSIVE_COIN_DAMAGE_GUARD':assert hits[0]==0 and survivor['damage']==defender['damage']
+    else:assert survivor['hp']-survivor['damage']==10
+    assert before['players'][0]['prizes']==after['players'][0]['prizes']
    if m=='PASSIVE_FULL_HP_SURVIVAL':
     defender=before['players'][1]['active'];survivor=after['players'][1]['active']
     assert defender['damage']==0 and survivor['id']==defender['id']
