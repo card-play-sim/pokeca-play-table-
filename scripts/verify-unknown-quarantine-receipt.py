@@ -55,11 +55,16 @@ def inspect(prior, current, receipt, selection, gaps):
         reason = ("QUALIFIED_RECORD_MISSING" if key in missing else
                   blockers.get(key, "NO_EXECUTION_RECEIPT" if key in indexed else "TARGET_NOT_COMPILED"))
         failures.append({"id": key, "reason": reason, "gaps": details.get(key, [])})
+    required = selection.get("requiredTogether", [])
+    if not isinstance(required, list) or len(set(map(str, required))) != len(required) or not set(map(str, required)) <= set(selected):
+        raise ValueError("INVALID_DEPENDENCY_SCOPE")
+    dependency_missing = set(map(str, required)) - set(proved)
     state = ("PRIOR_RECORD_CHANGED" if changed else
              "QUALIFIED_RECORD_MISSING" if missing else
+             "DEPENDENT_EFFECTS_INCOMPLETE" if dependency_missing else
              "NO_SELECTED_PRINT_QUALIFIED" if not proved else
              "QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED")
-    return {"state": state, "selected": selected, "sandboxQualified": proved if not changed and not missing else [],
+    return {"state": state, "selected": selected, "sandboxQualified": proved if not changed and not missing and not dependency_missing else [],
             "publicBattleVerified": [], "changedPriorIds": changed[:16], "targetFailures": failures}
 
 def main(out, scratch, workspace):
@@ -110,6 +115,7 @@ def self_test():
     assert gap["details"] == ["ENERGY_COST_UNPAID", "NOT_ACTIVE", "x"*100]
     assert blocked["sandboxQualified"] == []
     assert fixture_diagnostics({"fake": "PASS"}) == []
+    assert inspect(old, new, {"qualified": ["2"]}, {**selection,"requiredTogether":["2","3"]}, gaps)["state"] == "DEPENDENT_EFFECTS_INCOMPLETE"
     print("UNKNOWN_QUARANTINE_FIXTURE_DIAGNOSTICS PASS")
     print("UNKNOWN_QUARANTINE_RECEIPT_SELF_TEST PASS")
 

@@ -2,6 +2,7 @@
 """Approved patch replay entry: validate bytes and paths, never execute source."""
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -66,6 +67,34 @@ def main(root, origin, run_id, attempt, approved, repo, out):
     (out / "replay-entry.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
     print("APPROVED_PATCH_APPLIES_REPLAY_REQUIRED", len(changed))
 
+def resolve_event(event, event_name, owner, dispatch):
+    if event_name == "workflow_dispatch":
+        values = dispatch
+    elif event_name == "issue_comment":
+        issue, comment = event["issue"], event["comment"]
+        if (event.get("action") != "created" or issue["number"] != 122 or "pull_request" in issue or
+                comment["author_association"] != "OWNER" or comment["user"]["login"] != owner or
+                event.get("repository", {}).get("owner", {}).get("login") != owner):
+            raise ValueError("UNAUTHORIZED_REVIEW_COMMENT")
+        match = re.fullmatch(r"APPROVE_UNKNOWN_REPLAY ([1-9][0-9]{0,19}) (attempt-[12]) ([a-f0-9]{64})", comment["body"])
+        if not match:
+            raise ValueError("INVALID_REVIEW_COMMENT_FORMAT")
+        values = match.groups()
+    else:
+        raise ValueError("UNSUPPORTED_APPROVAL_EVENT")
+    run, attempt, digest = values
+    if not re.fullmatch(r"[1-9][0-9]{0,19}", run) or attempt not in ("attempt-1", "attempt-2") or not re.fullmatch(r"[a-f0-9]{64}", digest):
+        raise ValueError("INVALID_APPROVAL_INPUTS")
+    return {"origin_run":run, "attempt":attempt, "approved_patch_sha256":digest}
+
+def emit_approval(event_file, output_file):
+    event = json.loads(Path(event_file).read_text(encoding="utf-8"))
+    dispatch = tuple(os.environ.get(name,"") for name in ("DISPATCH_RUN","DISPATCH_ATTEMPT","DISPATCH_SHA"))
+    values = resolve_event(event, os.environ["APPROVAL_EVENT"], os.environ["OWNER"], dispatch)
+    with Path(output_file).open("a", encoding="utf-8") as stream:
+        for key, value in values.items():
+            stream.write(key+"="+value+"\n")
+
 def self_test():
     digest = "a" * 64
     manifest = {"state":"REVIEW_REQUIRED_NOT_RELEASED","publicBattleVerified":[],
@@ -86,10 +115,31 @@ def self_test():
         pass
     else:
         raise AssertionError("WRONG_APPROVAL_ACCEPTED")
+    event = {"action":"created","issue":{"number":122},"repository":{"owner":{"login":"owner"}},
+             "comment":{"author_association":"OWNER","user":{"login":"owner"},
+                        "body":"APPROVE_UNKNOWN_REPLAY 123 attempt-1 "+digest}}
+    expected = {"origin_run":"123","attempt":"attempt-1","approved_patch_sha256":digest}
+    assert resolve_event(event,"issue_comment","owner",()) == expected
+    assert resolve_event({},"workflow_dispatch","owner",("123","attempt-1",digest)) == expected
+    for wrong in [
+        {**event,"action":"edited"},
+        {**event,"issue":{"number":123}},
+        {**event,"issue":{"number":122,"pull_request":{}}},
+        {**event,"comment":{**event["comment"],"author_association":"CONTRIBUTOR"}},
+        {**event,"comment":{**event["comment"],"user":{"login":"other"}}},
+        {**event,"comment":{**event["comment"],"body":event["comment"]["body"]+"\nextra=bad"}},
+    ]:
+        try:
+            resolve_event(wrong,"issue_comment","owner",())
+        except ValueError:
+            continue
+        raise AssertionError("UNAUTHORIZED_OR_MALFORMED_APPROVAL_ACCEPTED")
     print("UNKNOWN_APPROVED_REPLAY_SELF_TEST PASS")
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--self-test"]:
         self_test()
+    elif len(sys.argv)==4 and sys.argv[1]=="--resolve-event":
+        emit_approval(*sys.argv[2:])
     else:
         main(*sys.argv[1:])
