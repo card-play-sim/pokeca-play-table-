@@ -786,6 +786,9 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_BASIC_DAMAGE_PROTECTION',commands:['DAMAGE','PREVENT_DAMAGE'],exceptType:'無色',sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。')
   return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンにエネルギーがついていないなら、このポケモンのにげるためのエネルギーは、すべてなくなる。')return {mechanic:'PASSIVE_EMPTY_ENERGY_RETREAT',commands:['MODIFY_RETREAT_COST'],sharedWording:true};
+ const typedRetreat=generic.match(/^このポケモンがいるかぎり、\[([草炎水雷超闘悪鋼])\]エネルギーがついている自分のポケモン全員のにげるためのエネルギーは、すべてなくなる。$/);
+ if(kind==='ABILITY'&&typedRetreat)return {mechanic:'PASSIVE_TYPED_TEAM_RETREAT',commands:['MODIFY_RETREAT_COST'],energyType:typedRetreat[1],sharedWording:true};
  const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
   return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
