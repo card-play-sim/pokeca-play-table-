@@ -100,6 +100,25 @@ function firstReservable(candidates,predicate,ensure,excludedId){
  }
  return null;
 }
+// Each requirement consumes a distinct physical card, even when two
+// requirements refer to the same registered print in different zones.
+function requiredCopies(requirements,side,printId){
+ return 1+requirements.filter(r=>r.side===side&&r.printId===printId).length;
+}
+// A complete evolution line is a single reservation transaction. Restore
+// the deck and its protected IDs if any physical parent cannot be reserved.
+function tryReserveChain(deck,reservedPrints,index,chain,ensure){
+ const original=deck.cards.map(c=>({...c}));
+ const had=reservedPrints.has(index),reserved=new Set(reservedPrints.get(index)||[]);
+ let ok=false;
+ try{ok=chain.every(record=>ensure(index,record));return ok;}
+ finally{
+  if(!ok){
+   deck.cards=original;
+   if(had)reservedPrints.set(index,reserved);else reservedPrints.delete(index);
+  }
+ }
+}
 // Test manifests use only real, exact registered official prints. Reserve
 // physical cards before the scenario allocates prizes, bench and attack costs.
 // This helper never changes a release manifest or marks a print as verified.
@@ -153,7 +172,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  function reserve(predicate,zone,side=0){
   const index=side===0?deckIndex:1-deckIndex;
   const existing=manifest.decks[index].cards.map(lookup).filter(Boolean);
-  const record=firstReservable([...existing,...legal],predicate,r=>ensure(index,r),source.officialCardId);
+  const record=firstReservable([...existing,...legal],predicate,r=>ensure(index,r,requiredCopies(requirements,side,r.officialCardId)),source.officialCardId);
   if(!record)return null;
   requirements.push({side,zone,printId:record.officialCardId});return record;
  }
@@ -231,7 +250,7 @@ function fixtureResources(manifest,deckIndex,source,e){
    const before=parent&&chain(parent);return before?[...before,record]:null;
   };
   const line=chain(source);
-  if(line&&line.slice(0,-1).every(x=>ensure(deckIndex,x))){
+  if(line&&tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,line.slice(0,-1),ensure)){
    requirements.evolvedSourceChain=line.map(x=>x.officialCardId);
    for(const parent of line.slice(0,-1))requirements.push({side:0,zone:'hand',printId:parent.officialCardId});
   }
@@ -251,7 +270,7 @@ function fixtureResources(manifest,deckIndex,source,e){
     const occupied=new Set(requirements.filter(x=>x.side===0).map(x=>x.printId));
     const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1&&x.every(record=>!occupied.has(record.officialCardId))).sort((x,y)=>x.length-y.length);
     for(const chain of options){
-     if(chain.every(record=>ensure(deckIndex,record))){
+     if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
       requirements.teraChain=chain.map(record=>record.officialCardId);break;
@@ -366,15 +385,12 @@ function fixtureResources(manifest,deckIndex,source,e){
      const previous=parent&&line(parent);return previous?[...previous,record]:null;
     };
     for(const chain of legal.filter(named).map(line).filter(x=>x&&x.length>1).sort((a,b)=>a.length-b.length)){
-     const original=manifest.decks[deckIndex].cards.map(c=>({...c}));
-     const reserved=new Set(reservedPrints.get(deckIndex)||[]);
-     if(chain.every(record=>ensure(deckIndex,record))){
+     if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
       requirements.namedBenchChain=chain.map(record=>record.officialCardId);
       break;
      }
-     manifest.decks[deckIndex].cards=original;reservedPrints.set(deckIndex,reserved);
     }
    }
   }
@@ -3986,6 +4002,8 @@ function verifyPrintedDamage(evidence) {
 }
 module.exports = {
   firstReservable,
+  requiredCopies,
+  tryReserveChain,
   prepare,
   effectOption,
   verifyCase,
