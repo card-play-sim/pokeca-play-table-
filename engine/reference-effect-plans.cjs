@@ -407,6 +407,10 @@ function additionalAttackPlan(entry,text){
  const coinDiscard=text.match(/^コインを1回投げオモテなら、相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
  if(coinDiscard&&base!==null&&!printed.endsWith('+'))
   return {mechanic:'ATTACK_COIN_DISCARD_DEFENDER_ENERGY',commands:[...deal,'COIN_FLIP','DISCARD'],specialOnly:Boolean(coinDiscard[1])};
+ const typedDiscard=text.match(/^相手のバトルポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーを1個選び、トラッシュする。$/);
+ if(typedDiscard)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:false,type:typedDiscard[1]};
+ if(text==='相手のバトル場の「ポケモンex」についているエネルギーを1個選び、トラッシュする。')
+  return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:false,defenderEx:true};
  const discardEnergy=text.match(/^相手のバトルポケモンについている(特殊)?エネルギーを1個選び、トラッシュする。$/);
  if(discardEnergy)return {mechanic:'ATTACK_DISCARD_DEFENDER_ENERGY',commands:[...deal,'DISCARD'],specialOnly:Boolean(discardEnergy[1])};
  const healTarget=text.match(/^自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
@@ -838,6 +842,8 @@ function plan(entry,kind){
  const firstTurnDraw=generic.match(/^このカードは、先攻プレイヤーの最初の番でも使える。自分の手札をすべてトラッシュし、山札を([1-9][0-9]?)枚引く。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&firstTurnDraw)
   return {mechanic:'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW',commands:['DISCARD','DRAW'],amount:Number(firstTurnDraw[1])};
+ if(kind==='ATTACK'&&generic==='のぞむなら、場に出ているスタジアムをトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))
+  return {mechanic:'ATTACK_DISCARD_STADIUM',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'DISCARD'],optional:true};
  if(kind==='ATTACK'&&generic==='場に出ているスタジアムをトラッシュする。'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_DISCARD_STADIUM',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'DISCARD']};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードは、自分の手札を3枚トラッシュしなければ使えない。自分の山札から「グッズ」「ポケモンのどうぐ」「サポート」「スタジアム」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')
