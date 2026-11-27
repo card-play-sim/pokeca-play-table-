@@ -275,6 +275,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
   if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(['ownBenchTeamCounters','ownNamedTeamEnergy'].includes(plan.metric))
+   reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
+  if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(plan.metric))
+   reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
   if(plan.metric==='ownBenchNamedCounters')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
   if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(plan.metric))
    reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',plan.metric.startsWith('opponent')?1:0);
@@ -1687,6 +1691,25 @@ function prepare(r, e, kind) {
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (e.plan.metric === "ownCounters") own.active.damage = 20;
     if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if(e.plan.metric==='ownBenchTeamCounters'){
+      const targets=own.bench.filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の'));
+      if(!targets.length)return {blocked:'NO_TEAM_COUNTER_FIXTURE'};
+      for(const c of own.bench)c.damage=targets.includes(c)?20:10;
+    }
+    if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(e.plan.metric)){
+      const plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type;
+      const targets=own.bench.filter(c=>plan.metric==='ownBenchWithTypedEnergy'||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'));
+      if(!targets.length)return {blocked:'NO_TYPED_ENERGY_BENCH_FIXTURE'};
+      const zone=[own.deck,own.hand].find(z=>z.some(eligible));
+      if(zone)targets[0].energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      else {
+        const attached=own.active.energyCards;
+        const typed=attached.filter(eligible).length;
+        if(typed<=e.cost.filter(t=>t===plan.type).length||attached.filter(c=>!c.isSpecial).length<=e.cost.length)return {blocked:'NO_EXTRA_TYPED_ENERGY_FIXTURE'};
+        targets[0].energyCards.push(attached.splice(attached.findIndex(eligible),1)[0]);
+      }
+      if(!targets[0].energyCards.some(eligible))return {blocked:'NO_POSITIVE_TYPED_ENERGY_FIXTURE'};
+    }
     if(e.plan.metric==='ownBenchNamedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).name===e.plan.name)c.damage=20;
     if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(e.plan.metric)){
       const side=e.plan.metric.startsWith('opponent')?opponent:own;
@@ -3314,6 +3337,9 @@ function verifyCase(t, e) {
       ownNamedOrExCount:[attackingSide.active,...attackingSide.bench].filter(c=>[e.plan.name,e.plan.name+'ex'].includes(E.getReferenceEffectRecord(c).name)).length,
       bothNameContainsCount:[attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench].filter(c=>[e.plan.name,e.plan.secondName].some(n=>E.getReferenceEffectRecord(c).name.includes(n))).length,
       ownBenchNamedCount:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).length,
+      ownBenchTeamCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の')).reduce((n,c)=>n+c.damage/10,0),
+      ownNamedTeamEnergy:[attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の')).flatMap(c=>c.energyCards).filter(c=>!c.isSpecial&&c.energyType===e.plan.type).length,
+      ownBenchWithTypedEnergy:attackingSide.bench.filter(c=>c.energyCards.some(a=>!a.isSpecial&&a.energyType===e.plan.type)).length,
       ownBenchNamedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).reduce((n,c)=>n+c.damage/10,0),
       ownAttachedBasicCards:attackingSide.active.energyCards.filter(c=>!c.isSpecial).length,
       ownAttachedSpecialCards:attackingSide.active.energyCards.filter(c=>c.isSpecial).length,
@@ -3341,6 +3367,25 @@ function verifyCase(t, e) {
       opponentEnergy: count([defendingSide.active]),
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
+    if(['ownBenchTeamCounters','ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(e.plan.metric)){
+      if(!metrics[e.plan.metric])return {status:'BLOCKED',reason:'NO_POSITIVE_TEAM_BOARD_COUNT_FIXTURE'};
+      const start=JSON.parse(JSON.stringify(before)),own=start.players[0],plan=e.plan;
+      let remaining=0;
+      if(plan.metric==='ownBenchTeamCounters'){
+        for(const c of own.bench)if(E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'))c.damage=0;
+      }else{
+        for(const c of own.bench){
+          if(plan.metric==='ownNamedTeamEnergy'&&!E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'))continue;
+          const removed=c.energyCards.filter(a=>!a.isSpecial&&a.energyType===plan.type);
+          c.energyCards=c.energyCards.filter(a=>!removed.includes(a));own.deck.push(...removed);
+        }
+        if(plan.metric==='ownNamedTeamEnergy'&&E.getReferenceEffectRecord(own.active).name.startsWith(plan.team+'の'))remaining=own.active.energyCards.filter(a=>!a.isSpecial&&a.energyType===plan.type).length;
+      }
+      assert(remaining<metrics[plan.metric],'TEAM_COUNT_NEGATIVE_FIXTURE_MUST_CHANGE_COUNT');
+      assert.deepEqual(S.identities(before),S.identities(start));
+      const replay=port(start);assert(replay.dispatch('you',t.action||o.action).ok);
+      verifyPrintedAttack(start,replay.getSnapshot(),e,plan.base+plan.unit*remaining);
+    }
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
     if(['ownBenchNamedCounters','ownAttachedBasicCards','ownAttachedSpecialCards','opponentAttachedSpecialCards','ownDistinctBasicTypes'].includes(e.plan.metric)){
       if(metrics[e.plan.metric]===0)return {status:'BLOCKED',reason:'NO_POSITIVE_PHYSICAL_COUNT_FIXTURE'};
