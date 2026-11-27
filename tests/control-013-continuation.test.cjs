@@ -44,6 +44,19 @@ const hashes = [
 // Budget the outer subprocess for the actual catalog scale; the worker
 // still enforces its per-task timeout and the CI job retains its hard limit.
 const replayBudgetMs=Math.max(120000,Math.min(1800000,raw.records.length*300));
+// Intermediate classification cannot execute or reuse old queue approvals.
+const queueFile="reports/official-effect-continuation/queue/queue.json";
+const priorQueue=fs.existsSync(queueFile)?B.hash(fs.readFileSync(queueFile)):null;
+const classify=spawnSync(process.execPath,["scripts/connect-official-effect-intake.cjs","--classification-only"],
+ {encoding:"utf8",timeout:replayBudgetMs,maxBuffer:32*1024*1024});
+assert.equal(classify.status,0,classify.stderr);
+const classified=JSON.parse(classify.stdout);
+assert.equal(classified.fullReplayDeferred,true);
+assert.equal(classified.registryHash,null);
+assert.equal(classified.queue.state,"CLASSIFIED_ONLY_FULL_REPLAY_REQUIRED");
+assert.equal(classified.queue.counts,null);
+assert(Object.values(classified.categories).every(c=>c.executionVerifiedPrints===0));
+assert.equal(fs.existsSync(queueFile)?B.hash(fs.readFileSync(queueFile)):null,priorQueue);
 const run = spawnSync(
   "python",
   [
@@ -66,6 +79,8 @@ assert.equal(
 let report = JSON.parse(
   fs.readFileSync("reports/official-effect-continuation/status.json"),
 );
+assert.equal(report.fullReplayDeferred,false);
+assert.match(report.registryHash,/^[a-f0-9]{64}$/);
 if(report.queue.counts.FAILED){
  const file="reports/official-effect-continuation/queue/queue.json";
  const queue=JSON.parse(fs.readFileSync(file,"utf8"));
