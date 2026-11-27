@@ -1030,6 +1030,9 @@ function attackMetric(plan,own,other){
  if(plan.metric==='ownDiscardSupporterContains')return own.discard.filter(c=>record(c)?.category==='supporter'&&record(c).name.includes(plan.name)).length;
  if(plan.metric==='ownNamedOrExCount')return field(own).filter(c=>[plan.name,plan.name+'ex'].includes(record(c).name)).length;
  if(plan.metric==='bothNameContainsCount')return [...field(own),...field(other)].filter(c=>[plan.name,plan.secondName].some(n=>record(c).name.includes(n))).length;
+ if(plan.metric==='ownBenchNameContains')return own.bench.filter(c=>record(c).name.includes(plan.name)).length;
+ if(plan.metric==='ownDamagedNameContains')return field(own).filter(c=>c.damage>0&&record(c).name.includes(plan.name)).length;
+ if(plan.metric==='ownBenchMegaCount')return own.bench.filter(isMegaEvolutionEx).length;
  if(plan.metric==='ownBenchNamedCount')return own.bench.filter(c=>record(c).name===plan.name).length;
  if(plan.metric==='ownBenchTypedCounters')return own.bench.filter(c=>record(c).facts.types.includes(plan.type)).reduce((n,c)=>n+(c.damage||0)/10,0);
  if(plan.metric==='ownBenchNamedCounters')return own.bench.filter(c=>record(c).name===plan.name).reduce((n,c)=>n+(c.damage||0)/10,0);
