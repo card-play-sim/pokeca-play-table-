@@ -43,13 +43,18 @@ let hist=recordHistory(null,[aa.group,bb.group],'QUARANTINE_FAILED',1,fp,'engine
 assert.equal(hist.groups[mkId(1)].attempts,1);
 assert.equal(hist.groups[mkId(1)].feedback,'engine failed');
 assert.equal(selectBatch([aa,bb,cc],2,{history:hist,fingerprint:fp})[0].group.sharedTaskId,mkId(3));
-assert.equal(selectBatch([aa,bb,cc],2,{history:hist,fingerprint:fp2})[0].group.sharedTaskId,mkId(1));
+assert.equal(selectBatch([aa,bb,cc],2,{history:hist,fingerprint:fp2})[0].group.sharedTaskId,mkId(3));
+assert.equal(hist.groups[mkId(1)].totalAttempts,1);
 hist=recordHistory(hist,[aa.group],'NO_VALID_MODEL_PATCH',1,fp,'retry');
 assert.equal(hist.groups[mkId(1)].attempts,1);
 hist=recordHistory(hist,[aa.group],'QUARANTINE_FAILED',3,fp,'new run');
 assert.equal(hist.groups[mkId(1)].attempts,2);
 hist=recordHistory(hist,[aa.group],'GENERATED_NOT_TESTED',4,fp2,'new source');
 assert.equal(hist.groups[mkId(1)].attempts,1);
+assert.equal(hist.groups[mkId(1)].totalAttempts,3);
+assert.equal(selectBatch([aa,bb,cc],5,{history:hist,fingerprint:'c'.repeat(64)})[0].group.sharedTaskId,mkId(3));
+// Old schema records are safely migrated without losing their attempt counts.
+assert.equal(normalizeHistory({schemaVersion:1,groups:{[mkId(1)]:{attempts:4,lastRun:8,status:'QUARANTINE_FAILED',fingerprint:fp}}}).groups[mkId(1)].totalAttempts,4);
 assert.deepEqual(normalizeHistory({schemaVersion:1,groups:{'../../bad':{attempts:1,lastRun:2}}}).groups,{});
 assert.deepEqual(selectBatch([aa],1,{maxPrints:2}),[]);
 assert.equal(sourceFingerprint({'engine/reference-effect-plans.cjs':'a','engine/pokeca_reference_effect_runtime.cjs':'b','scripts/lib/shared-effect-engine-worker.cjs':'c'}).length,64);

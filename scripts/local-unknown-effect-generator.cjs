@@ -64,7 +64,8 @@ function normalizeHistory(raw){
   if(!Number.isSafeInteger(attempts)||attempts<0||attempts>100000||!Number.isSafeInteger(lastRun)||lastRun<0)continue;
   const status=['GENERATED_NOT_TESTED','NO_VALID_MODEL_PATCH','QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED','QUARANTINE_FAILED'].includes(row.status)?row.status:'QUARANTINE_FAILED';
   const fingerprint=/^[a-f0-9]{64}$/.test(row.fingerprint||'')?row.fingerprint:null;
-  result.groups[id]={attempts,lastRun,status,fingerprint,feedback:typeof row.feedback==='string'?row.feedback.slice(-1800):''};
+  const lifetime=Number.isSafeInteger(row.totalAttempts)&&row.totalAttempts>=attempts&&row.totalAttempts<=100000?row.totalAttempts:attempts;
+  result.groups[id]={attempts,totalAttempts:lifetime,lastRun,status,fingerprint,feedback:typeof row.feedback==='string'?row.feedback.slice(-1800):''};
  }
  return result;
 }
@@ -76,7 +77,8 @@ function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
   const id=group.sharedTaskId;if(!/^OFFICIAL_SHARED_MECHANIC_[A-F0-9]{20}$/.test(id))continue;
   const old=history.groups[id],same=old?.fingerprint===fingerprint;
   const attempts=(same?old.attempts:0)+(same&&old.lastRun===n?0:1);
-  history.groups[id]={attempts,lastRun:n,status:result,fingerprint,feedback:String(feedback).slice(-1800)};
+  const totalAttempts=Math.min(100000,(old?.totalAttempts||0)+(old?.lastRun===n?0:1));
+  history.groups[id]={attempts,totalAttempts:Math.max(attempts,totalAttempts),lastRun:n,status:result,fingerprint,feedback:String(feedback).slice(-1800)};
  }
  return normalizeHistory(history);
 }
@@ -86,9 +88,10 @@ function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},
  const n=Number(runNumber);
  assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
  const prior=normalizeHistory(history).groups;
- const attempts=x=>prior[x.group.sharedTaskId]?.fingerprint===fingerprint?prior[x.group.sharedTaskId].attempts:0;
- // Every current-source unattempted group is eligible before retries. Within
- // that class prioritize high-impact groups; deterministic rotation breaks ties.
+ const attempts=x=>prior[x.group.sharedTaskId]?.totalAttempts||0;
+ // A changing main must not reset the scheduler's fairness. Keep lifetime
+ // attempt counts across source revisions; only source-specific feedback and
+ // retry patch reuse are reset by a new fingerprint. Untried groups come first.
  const eligible=ordered.filter(x=>new Set(x.records.map(r=>String(r.officialCardId))).size<=maxPrints);
  if(!eligible.length)return [];
  const min=Math.min(...eligible.map(attempts));
