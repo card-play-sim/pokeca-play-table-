@@ -1,0 +1,516 @@
+{
+  "baseCommit": "ed436b0433ba9769f77296d222c1d83542a26df9",
+  "scope": "DIAGNOSTIC_NOT_BATTLE_APPROVAL",
+  "gaps": [
+    {
+      "id": "45966",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45966:ability:したごしらえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46452",
+      "kind": "item",
+      "index": 0,
+      "slot": "46452:item:わざマシンマシン:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46235",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46235:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1916:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "46313",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46313:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1916:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "45239",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45239:ability:ハッスルプレー:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45245",
+      "kind": "attack",
+      "index": 1,
+      "slot": "45245:attack:ちょくれつキャノン:1",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_PUBLIC_COUNT_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45557",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45557:ability:ハッスルプレー:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "45962",
+      "kind": "attack",
+      "index": 0,
+      "slot": "45962:attack:ハイドロクラッシュ:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "45962",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45962:ability:げんしのこころえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_TEAM_BOOST_HOLDER_EVOLUTION_LINE",
+      "details": null
+    },
+    {
+      "id": "45963",
+      "kind": "ability",
+      "index": 0,
+      "slot": "45963:ability:したごしらえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46155",
+      "kind": "ability",
+      "index": 0,
+      "slot": "46155:ability:したごしらえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "46383",
+      "kind": "attack",
+      "index": 1,
+      "slot": "46383:attack:ストームボルト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1916:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "46462",
+      "kind": "attack",
+      "index": 0,
+      "slot": "46462:attack:かいてんアタック:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "49645",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49645:ability:スナイパーアイ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "49652",
+      "kind": "ability",
+      "index": 0,
+      "slot": "49652:ability:おしながす:0",
+      "status": "BLOCKED",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50060",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50060:ability:スナイパーアイ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50127",
+      "kind": "attack",
+      "index": 0,
+      "slot": "50127:attack:しれんのたび:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50363",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50363:ability:けしんだんけつ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50372",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50372:ability:けしんだんけつ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50377",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50377:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50378",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50378:ability:けしんだんけつ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50397",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50397:ability:けしんだんけつ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50524",
+      "kind": "ability",
+      "index": 0,
+      "slot": "50524:ability:けしんだんけつ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "50525",
+      "kind": "attack",
+      "index": 1,
+      "slot": "50525:attack:あらぶるだいち:1",
+      "status": "BLOCKED",
+      "reason": "NO_STADIUM_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47300",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47300:attack:リーフステップ:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "47300",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47300:ability:グローリーエール:0",
+      "status": "BLOCKED",
+      "reason": "NO_TEAM_BOOST_ATTACKER",
+      "details": null
+    },
+    {
+      "id": "47350",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47350:ability:よくばりオーダー:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47366",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47366:attack:リーフステップ:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "47366",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47366:ability:グローリーエール:0",
+      "status": "BLOCKED",
+      "reason": "NO_TEAM_BOOST_ATTACKER",
+      "details": null
+    },
+    {
+      "id": "47376",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47376:ability:よくばりオーダー:0",
+      "status": "BLOCKED",
+      "reason": "NO_MASS_TRANSFER_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47453",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47453:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47539",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47539:attack:グラスオーダー:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": {
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n\n    at verifyPrintedAttack (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1701:3)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3718:29)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47769",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47769:attack:ぶちかます:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "47983",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47983:attack:グラスオーダー:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": {
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n\n    at verifyPrintedAttack (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1701:3)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3718:29)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47991",
+      "kind": "attack",
+      "index": 0,
+      "slot": "47991:attack:グラスオーダー:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": {
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n\n    at verifyPrintedAttack (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1701:3)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3718:29)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48427",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48427:attack:ぶちかます:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "48532",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48532:attack:リーフステップ:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "48532",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48532:ability:グローリーエール:0",
+      "status": "BLOCKED",
+      "reason": "NO_TEAM_BOOST_ATTACKER",
+      "details": null
+    },
+    {
+      "id": "48749",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48749:attack:リーフステップ:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "48749",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48749:ability:グローリーエール:0",
+      "status": "BLOCKED",
+      "reason": "NO_TEAM_BOOST_ATTACKER",
+      "details": null
+    },
+    {
+      "id": "48758",
+      "kind": "attack",
+      "index": 0,
+      "slot": "48758:attack:グラスオーダー:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": {
+        "mechanic": "SEARCH_REVEAL_TO_HAND_ATTACK",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n\n    at verifyPrintedAttack (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1701:3)\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3718:29)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "49134",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49134:attack:ぶちかます:0",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(changes.some(event => event.details?.command === \"DAMAGE\" &&\n",
+      "details": null
+    },
+    {
+      "id": "49150",
+      "kind": "attack",
+      "index": 0,
+      "slot": "49150:attack:ラブインパクト:0",
+      "status": "BLOCKED",
+      "reason": "NO_POSITIVE_BOARD_PREDICATE_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48818",
+      "kind": "attack",
+      "index": 1,
+      "slot": "48818:attack:サニーアシスト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1916:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48848",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48848:ability:ハッスルプレー:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48925",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48925:ability:したごしらえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_DISCARD_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48935",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48935:ability:したごしらえ:0",
+      "status": "BLOCKED",
+      "reason": "NO_CONTEXT_COST_ATTACK_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48993",
+      "kind": "attack",
+      "index": 1,
+      "slot": "48993:attack:ストームボルト:1",
+      "status": "FAILED",
+      "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+      "details": {
+        "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+        "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1916:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "48433",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48433:ability:ソーラートランス:0",
+      "status": "BLOCKED",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48444",
+      "kind": "ability",
+      "index": 0,
+      "slot": "48444:ability:ソーラートランス:0",
+      "status": "BLOCKED",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "48462",
+      "kind": "attack",
+      "index": 1,
+      "slot": "48462:attack:フロストバリア:1",
+      "status": "FAILED",
+      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
+      "details": {
+        "mechanic": "ATTACK_DAMAGE_REDUCTION",
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3845:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    },
+    {
+      "id": "47736",
+      "kind": "ability",
+      "index": 0,
+      "slot": "47736:ability:ソーラートランス:0",
+      "status": "BLOCKED",
+      "reason": "NO_MOVE_ENERGY_FIXTURE",
+      "details": null
+    },
+    {
+      "id": "47814",
+      "kind": "attack",
+      "index": 1,
+      "slot": "47814:attack:フロストバリア:1",
+      "status": "FAILED",
+      "reason": "NO_INCOMING_ATTACK_DAMAGE_FIXTURE",
+      "details": {
+        "mechanic": "ATTACK_DAMAGE_REDUCTION",
+        "stack": "AssertionError [ERR_ASSERTION]: NO_INCOMING_ATTACK_DAMAGE_FIXTURE\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3845:5)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3955:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+      }
+    }
+  ]
+}

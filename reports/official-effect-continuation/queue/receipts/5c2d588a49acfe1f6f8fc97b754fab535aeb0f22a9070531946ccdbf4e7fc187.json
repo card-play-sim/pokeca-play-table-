@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B56481B5BD4D43D0:bcdca5c8f8326362610e64d2189baf76f8b8e3e5311631b6c92f25d3b3934af3",
   "taskFingerprint": "bcdca5c8f8326362610e64d2189baf76f8b8e3e5311631b6c92f25d3b3934af3",
-  "executionFingerprint": "9e1aff7f17ae920aa2166eaaddc97abd3a7f719d18f9dd5808740a08d0eb28bf",
-  "attemptId": "a2029f9f-9a79-4409-afdd-4ca04c638fe9",
-  "status": "BLOCKED",
+  "executionFingerprint": "722f7f1c2362f5deb228843d670ab0bcfbdae1f8031272887517d8c8fc1069d7",
+  "attemptId": "aa63f5e8-84e3-4af3-80d1-b5f6560bc54d",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47335:attack:サンダーブリッツ:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_SPREAD_DAMAGE",
+        "commands": [
+          "DISCARD",
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "892caecb5e34e5e4840016fc954da4be00b54640cbe502614c8fda89fb04f49c"
+  "checksum": "62389c381fe66207c6e45c04094ab6f3912e4b22cebe4bb08231f1d03dcc3211"
 }

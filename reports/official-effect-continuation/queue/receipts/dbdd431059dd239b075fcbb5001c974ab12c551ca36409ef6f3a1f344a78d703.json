@@ -1,20 +1,30 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_F1D83E11C5AB05A7:8c4942a82af6a04889872e39ebf3af5bd137e600c012e98d7d220ab2d13f7221",
   "taskFingerprint": "8c4942a82af6a04889872e39ebf3af5bd137e600c012e98d7d220ab2d13f7221",
-  "executionFingerprint": "9e1aff7f17ae920aa2166eaaddc97abd3a7f719d18f9dd5808740a08d0eb28bf",
-  "attemptId": "f5d3374c-b56d-41f1-811b-7a6a9dd176cc",
-  "status": "BLOCKED",
+  "executionFingerprint": "722f7f1c2362f5deb228843d670ab0bcfbdae1f8031272887517d8c8fc1069d7",
+  "attemptId": "be9df87e-d2ad-4cab-b135-ca639ec6486e",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45576:attack:アーマーキャノン:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+        "commands": [
+          "DAMAGE",
+          "DISCARD"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "a3f58cb7eb8e71690c5aa615b92de5e2768219aa73e83a70d87b383fb23855d9"
+  "checksum": "26f5dbeb03b6bc340f439ea3ceff72718f9b0529f9865ce94fdf0039d20a50d6"
 }
