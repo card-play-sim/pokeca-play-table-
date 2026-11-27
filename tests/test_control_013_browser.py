@@ -736,47 +736,58 @@ async def main():
    print(json.dumps(report,ensure_ascii=False))
    await c.close();await b.close()
    return
-  # Run the imported-deck match independently of any pending fixture choices.
+  # Independent imported-deck games must finish AND execute a new print.
+  # One legal random opening can finish without ever drawing a candidate.
+  # Repeat deterministic openings; do not count a match without new effects.
   await c.close()
-  c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
-  await ready()
-  await page.locator('#menu-open').tap()
-  await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
-  # The menu opens a second sheet; it does not open the OS file chooser.
-  file_input=page.locator('#reference-deck-import')
-  await file_input.wait_for(state='visible',timeout=15000)
-  async with page.expect_file_chooser(timeout=15000) as chooser:
-   await file_input.tap()
-  await (await chooser.value).set_files(str(PREFIX/'example-decks.json'))
-  try:
-   await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
-  except Exception:
-   raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
-  await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
-  await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
-  for _ in range(10):
-   pending=(await snap()).get('pendingReferenceChoice')
-   if not pending:break
-   if pending['playerId']=='you':await page.locator('#reference-choice button').first.tap()
-   else:await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
-  await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
-  if await toggle.count():await toggle.tap()
-  else:await page.locator('#sheet-close').tap()
-  for turn in range(120):
-   state=await snap()
-   if state['status']=='finished':break
-   actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
-   result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return r;}',actor)
-   if not result['ok']:
-    failure={'turn':turn,'actor':actor,'result':result,'before':state,'after':await snap()}
-    (ROOT/'artifacts').mkdir(exist_ok=True)
-    (ROOT/'artifacts/control-013-ai-policy-failure.json').write_text(json.dumps(failure,ensure_ascii=False,indent=2))
-    print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
-   assert result['ok'],result
-   await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
-  final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
-  await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
+  match=None
+  attempted_matches=[]
+  for seed in (2, 17, 101, 257, 1009, 8191, 65537, 104729):
+   c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
+   await ready()
+   await page.locator('#menu-open').tap()
+   await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
+   # The menu opens a second sheet; it does not open the OS file chooser.
+   file_input=page.locator('#reference-deck-import')
+   await file_input.wait_for(state='visible',timeout=15000)
+   async with page.expect_file_chooser(timeout=15000) as chooser:
+    await file_input.tap()
+   await (await chooser.value).set_files(str(PREFIX/'example-decks.json'))
+   try:
+    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
+   except Exception:
+    raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
+   await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',seed);await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
+   for _ in range(10):
+    pending=(await snap()).get('pendingReferenceChoice')
+    if not pending:break
+    if pending['playerId']=='you':await page.locator('#reference-choice button').first.tap()
+    else:await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
+   await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
+   if await toggle.count():await toggle.tap()
+   else:await page.locator('#sheet-close').tap()
+   for turn in range(120):
+    state=await snap()
+    if state['status']=='finished':break
+    actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
+    result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return r;}',actor)
+    if not result['ok']:
+     failure={'turn':turn,'actor':actor,'result':result,'before':state,'after':await snap()}
+     (ROOT/'artifacts').mkdir(exist_ok=True)
+     (ROOT/'artifacts/control-013-ai-policy-failure.json').write_text(json.dumps(failure,ensure_ascii=False,indent=2))
+     print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
+    assert result['ok'],result
+    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',seed,turn,actor,{'ok':result['ok'],'actions':result.get('actions')},flush=True)
+   final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});match={'seed':seed,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
+   await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
+   attempted_matches.append(match)
+   print('EXPANDED_MATCH_COVERAGE',json.dumps(match,ensure_ascii=False),flush=True)
+   if used:break
+   await c.close()
+  assert match and match['executedNewPrints'],f'NO_NEW_PRINT_EXECUTED_IN_COMPLETED_MATCHES:{attempted_matches}'
+  match={**match,'attemptedMatches':attempted_matches}
   assert not errors,errors
   report={'url':page.url,'expandedAIMatch':match,'newPrints':len({f['r']['officialCardId'] for f in fixtures}),'newPatterns':len(set(f['e']['plan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/('artifacts/'+os.environ.get('POKECA_INTAKE_ARTIFACT','control-013')+'-browser.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
 if __name__=='__main__':
