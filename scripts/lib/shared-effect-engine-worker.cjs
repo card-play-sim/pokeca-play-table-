@@ -428,6 +428,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='MASS_ENERGY_ROUTE'&&plan.requiresTera)reserveTera('active');
+ if(m==='MASS_ENERGY_ROUTE'&&plan.origin==='activeEntry')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
@@ -1924,6 +1925,21 @@ function prepare(r, e, kind) {
       return {port:pp,sourceId:now.id,kind};
     }
   }
+  if(kind==='ability'&&e.plan.origin==='activeEntry'){
+    const own=frame.game.players[0];
+    if(own.active?.id!==frame.sourceId||!own.bench.length)return {blocked:'NO_ACTIVE_ENTRY_FIXTURE'};
+    const source=own.active;
+    [own.active,own.bench[0]]=[own.bench[0],source];
+    const swap=c=>c.cardType==='ITEM'&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='SWITCH';
+    if(!own.hand.some(swap)){
+      const i=own.deck.findIndex(swap);if(i<0)return {blocked:'NO_ACTIVE_ENTRY_SWITCH_ITEM'};
+      own.hand.push(own.deck.splice(i,1)[0]);
+    }
+    const item=own.hand.find(swap),replay=port(frame.game);
+    const moved=replay.dispatch('you',{type:'play_item',cardId:item.id,selections:{bench:[source.id]}});
+    if(!moved.ok)return {blocked:'ACTIVE_ENTRY_SWITCH_REJECTED'};
+    frame.game=replay.getSnapshot();
+  }
   const p = port(frame.game);
   if(kind==='ability'&&e.plan.origin==='bench'){
     if(!p.dispatch('you',{type:'bench_basic',cardId:frame.sourceId}).ok)return {blocked:'BENCH_ENTRY_FIXTURE_ACTION_REJECTED'};
@@ -2218,6 +2234,18 @@ function verifyCase(t, e) {
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
       const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);
       assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(closed));
+    }
+    if(plan.origin==='activeEntry'){
+      assert.equal(own.active.id,t.sourceId);
+      assert.equal(own.active.referenceActiveEntryWindow,before.referenceActionSequence);
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const denied=port(closed);assert.equal(denied.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(closed));
+      const noEntry=JSON.parse(JSON.stringify(before));delete noEntry.players[0].active.referenceActiveEntryWindow;
+      const initial=port(noEntry);assert.equal(initial.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(initial.getSnapshot()),JSON.stringify(noEntry));
+      const twice=port(after);assert.equal(twice.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(twice.getSnapshot()),JSON.stringify(after));
     }
     if(plan.oneEach){
       const selectedTargets=energy.map((_,i)=>action.selections['attachTo'+i][0]);

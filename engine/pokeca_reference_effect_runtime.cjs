@@ -146,7 +146,7 @@ function refresh(g){
   }
  }
 }
-function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
+function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceActiveEntryWindow','referenceActiveEntryTurn','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
 function returnStack(g,p,mon,zone){
  const stack=[reduced(mon),...(mon.evolutionCards||[]).map(reduced),...(mon.energyCards||[]),...(mon.tools||[])];
  if(p.active===mon)p.active=null;else p.bench.splice(p.bench.indexOf(mon),1);
@@ -777,6 +777,7 @@ function abilityOrigin(a){
  if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
+ if(a.plan?.origin==='activeEntry')return {zones:['ACTIVE'],entry:false};
  if(a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION')return {zones:['ACTIVE'],entry:false};
  if(text.startsWith('このポケモンがバトル場にいるなら'))return {zones:['ACTIVE'],entry:false};
  return {zones:['ACTIVE','BENCH'],entry:false};
@@ -788,6 +789,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(origin.zones.includes(zone),'ABILITY_SOURCE_ZONE:'+origin.zones.join('|'));
  assert(!origin.entry||card.entryWindow===g.referenceActionSequence,'BENCH_ENTRY_WINDOW_REQUIRED');
  if(a.plan.origin==='evolve')assert(card.referenceEvolutionWindow===g.referenceActionSequence,'EVOLUTION_ENTRY_WINDOW_REQUIRED');
+ if(a.plan.origin==='activeEntry')assert(g.turnPlayer===actor&&card.referenceActiveEntryWindow===g.referenceActionSequence&&card.referenceActiveEntryTurn===g.turnNumber,'ACTIVE_ENTRY_WINDOW_REQUIRED');
  if(a.plan.requiresTera)assert(field(p).some(c=>record(c).facts.teraBenchProtection===true),'TERA_POKEMON_REQUIRED');
  if(m==='MASS_EFFECT_SEQUENCE'&&a.plan.steps.every(s=>s.op==='healSelf'))assert(card.damage>0,'ABILITY_HEAL_UNAVAILABLE');
  assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
@@ -1989,6 +1991,13 @@ function execute(g,actor,action){
 function afterAction(g,before,actor,action){
  if(!g.referenceEffectValidation)return;
  g.referenceActionSequence=(g.referenceActionSequence||0)+1;
+ // Only a real own-turn bench-to-active transition opens this one-action window.
+ if(g.turnPlayer===actor&&before.turnPlayer===actor&&g.turnNumber===before.turnNumber&&!g.referenceAttackTurnPending&&!['attack','attack_turn','effect_attack'].includes(action.type)){
+  const active=player(g,actor).active,prior=player(before,actor);
+  if(active&&prior.active?.id!==id(active)&&prior.bench.some(c=>id(c)===id(active))&&record(active)?.abilities.some(a=>a.plan?.origin==='activeEntry')){
+   active.referenceActiveEntryWindow=g.referenceActionSequence;active.referenceActiveEntryTurn=g.turnNumber;
+  }
+ }
  if(['bench_basic','play_active_basic'].includes(action.type)){
   const c=field(player(g,actor)).find(c=>id(c)===action.cardId);if(c&&action.type==='bench_basic'){onBench(g,player(g,actor),c,true);c.entryWindow=g.referenceActionSequence;}
  }

@@ -227115,6 +227115,521 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48525",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48525",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048525_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-48525-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-48525-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48525.json",
+        "sha256": "837cd3591811acc5484aec519cd6aaeb8adc4a9420357dc9381fc51b7e47b8a0",
+        "htmlSha256": "837cd3591811acc5484aec519cd6aaeb8adc4a9420357dc9381fc51b7e47b8a0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48738",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48738",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048738_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-48738-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-48738-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48738.json",
+        "sha256": "580de8716ccb88d26c9744fa07e9d3894a522a4f3b5ee8de8cada0d840269b60",
+        "htmlSha256": "580de8716ccb88d26c9744fa07e9d3894a522a4f3b5ee8de8cada0d840269b60",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47298",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47298",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047298_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47298-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47298-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47298.json",
+        "sha256": "fd0eab7d234c562ca5d434f8cf4175a2f5084365b74f43e11130fc2b42b1c776",
+        "htmlSha256": "fd0eab7d234c562ca5d434f8cf4175a2f5084365b74f43e11130fc2b42b1c776",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47377",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47377",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047377_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47377-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47377-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47377.json",
+        "sha256": "db829567469430f41fb3102df5c353631775947364acf7873e444f37c56919af",
+        "htmlSha256": "db829567469430f41fb3102df5c353631775947364acf7873e444f37c56919af",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47386",
+      "name": "メガヤンマex",
+      "deckName": "メガヤンマex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47386",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047386_P_MYANMAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ジェットサイクロン",
+          "cost": [
+            "草",
+            "草",
+            "草",
+            "無色"
+          ],
+          "damage": "210",
+          "text": "このポケモンについているエネルギーを3個選び、ベンチポケモン1匹につけ替える。",
+          "effectId": "reference-47386-attack-0",
+          "plan": {
+            "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+            "commands": [
+              "DAMAGE",
+              "MOVE_ENERGY"
+            ],
+            "source": "self",
+            "target": "ownBench",
+            "count": 3,
+            "optional": false,
+            "basic": false,
+            "type": null,
+            "multi": false,
+            "repeated": false,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バズブースト",
+          "text": "自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。",
+          "effectId": "reference-47386-ability-0",
+          "plan": {
+            "mechanic": "MASS_ENERGY_ROUTE",
+            "commands": [
+              "SEARCH_DECK",
+              "ATTACH_ENERGY",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "type": "草",
+            "limit": 3,
+            "target": "self",
+            "holderType": null,
+            "team": null,
+            "multi": false,
+            "heal": null,
+            "activeOnly": true,
+            "origin": "activeEntry",
+            "repeated": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 280,
+        "evolvesFrom": "ヤンヤンマ",
+        "retreatCost": 1,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47386.json",
+        "sha256": "2b8c2edfb175ac47f03e9b5d9b05743b92ee7a32c4c6e9b0a3809c61e1fa50d2",
+        "htmlSha256": "2b8c2edfb175ac47f03e9b5d9b05743b92ee7a32c4c6e9b0a3809c61e1fa50d2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

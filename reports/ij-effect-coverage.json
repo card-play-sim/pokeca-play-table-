@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1248,
-      "missing": 454
+      "connected": 1253,
+      "missing": 449
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1242,
+      "CONNECTED_UNTESTED": 1247,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 397,
+      "ENGINE_CONNECTION_REQUIRED": 392,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9512,8 +9512,7 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47298.json"
     },
     {
@@ -9778,8 +9777,7 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47377.json"
     },
     {
@@ -9827,8 +9825,7 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47386.json"
     },
     {
@@ -13646,8 +13643,7 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48525.json"
     },
     {
@@ -14421,8 +14417,7 @@
       "name": "メガヤンマex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48738.json"
     },
     {
@@ -21362,8 +21357,8 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1248,
-        "MECHANIC_REQUIRED": 441,
+        "ENGINE_CONNECTED": 1253,
+        "MECHANIC_REQUIRED": 436,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21380,7 +21375,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3732,
-    "unconnected": 1341
+    "engineConnected": 3737,
+    "unconnected": 1336
   }
 }
