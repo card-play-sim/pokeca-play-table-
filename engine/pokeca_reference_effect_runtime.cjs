@@ -1465,6 +1465,15 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,heads*plan.unit);
    break;
   }
+  case 'COIN_UNTIL_TAILS_MILL':{
+   let heads=0;
+   while(coin(g,actor))assert(++heads<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');
+   damage(g,actor,o.active,plan.base);
+   const moved=o.deck.splice(0,heads);
+   o.discard.push(...moved);
+   if(moved.length)event(g,actor,'DISCARD',{cardIds:moved.map(id),fromZone:'deck',owner:o.id});
+   break;
+  }
   case 'MASS_COIN_OUTCOME':{
    let heads=0;
    for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
