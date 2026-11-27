@@ -1,7 +1,7 @@
 name: Local unknown effect code generation quarantine
 on:
   push:
-    branches: [automation/unknown-effect-batch-resilience-20261126, main]
+    branches: [automation/unknown-effect-batch-resilience-20261126, automation/reviewed-composition-first-20261128, automation/reviewed-composition-repair-20261128, main]
     paths:
       - '.github/workflows/local-unknown-effect-generator.yml'
       - 'scripts/local-unknown-effect-generator.cjs'
@@ -20,13 +20,15 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: local-unknown-effect-generator
+  group: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128') && 'reviewed-composition-qualification' || 'local-unknown-effect-generator' }}
   cancel-in-progress: false
 jobs:
   synthesize:
     if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
     runs-on: ubuntu-24.04
     timeout-minutes: 180
+    env:
+      MODEL_REVIEWED_ONLY: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128') && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +69,7 @@ jobs:
           printf '{"schemaVersion":1,"groups":{}}\n' > "$history"
           # Read one bounded JSON member. Never extract or execute previous
           # generated source, test scripts, or model output on the host.
-          for id in $(gh run list --workflow local-unknown-effect-generator.yml --limit 20 --status completed --json databaseId --jq '.[].databaseId'); do
+          for id in $(gh run list --workflow local-unknown-effect-generator.yml --branch main --limit 20 --status completed --json databaseId --jq '.[].databaseId'); do
             if [ "$id" = "$GITHUB_RUN_ID" ]; then continue; fi
             artifact="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts" --jq '.artifacts[] | select(.name=="local-unknown-effect-quarantine" and .expired==false and .size_in_bytes<52428800) | .id' | head -1)"
             if [ -z "$artifact" ]; then continue; fi
@@ -92,7 +94,20 @@ jobs:
           done
           echo "MODEL_HISTORY_PATH=$history" >> "$GITHUB_ENV"
           cp "$history" "$RUNNER_TEMP/model-artifacts/history.json"
+      - name: Choose evidence-verified reviewed route before model setup
+        run: |
+          set -euo pipefail
+          if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then
+            exit 0
+          fi
+          ready="$(node scripts/local-unknown-effect-generator.cjs --reviewed-probe "$RUNNER_TEMP/unknown-worklist.json")"
+          case "$ready" in
+            1) echo "MODEL_REVIEWED_ONLY=1" >> "$GITHUB_ENV"; echo "Using reviewed composition without model setup." ;;
+            0) echo "No untried reviewed composition. Use local inference." ;;
+            *) echo "Invalid reviewed probe output" >&2; exit 1 ;;
+          esac
       - name: Build pinned local CPU inference and verify public model bytes
+        if: env.MODEL_REVIEWED_ONLY != '1'
         run: |
           git clone --depth 1 --branch b10488 https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/llama"
           cmake -S "$RUNNER_TEMP/llama" -B "$RUNNER_TEMP/llama-build" -DCMAKE_BUILD_TYPE=Release -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF
@@ -104,16 +119,20 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/model-artifacts"
-          "$RUNNER_TEMP/llama-build/bin/llama-server" --model "$RUNNER_TEMP/model.gguf" --alias local-coder --ctx-size 24576 --threads 4 --parallel 1 --n-gpu-layers 0 --host 127.0.0.1 --port 8093 > "$RUNNER_TEMP/model-artifacts/local-model.log" 2>&1 &
-          model_pid=$!
-          trap 'kill "$model_pid" 2>/dev/null || true' EXIT
-          ready=0
-          for n in $(seq 1 180); do
-            if curl --silent --fail http://127.0.0.1:8093/health >/dev/null; then ready=1; break; fi
-            kill -0 "$model_pid"
-            sleep 2
-          done
-          test "$ready" = 1
+          if [ "$MODEL_REVIEWED_ONLY" != 1 ]; then
+            "$RUNNER_TEMP/llama-build/bin/llama-server" --model "$RUNNER_TEMP/model.gguf" --alias local-coder --ctx-size 24576 --threads 4 --parallel 1 --n-gpu-layers 0 --host 127.0.0.1 --port 8093 > "$RUNNER_TEMP/model-artifacts/local-model.log" 2>&1 &
+            model_pid=$!
+            trap 'kill "$model_pid" 2>/dev/null || true' EXIT
+            ready=0
+            for n in $(seq 1 180); do
+              if curl --silent --fail http://127.0.0.1:8093/health >/dev/null; then ready=1; break; fi
+              kill -0 "$model_pid"
+              sleep 2
+            done
+            test "$ready" = 1
+          else
+            docker pull node:22-bookworm
+          fi
           # Record outcomes on the trusted host, not in generated source.
           # The same workflow's two attempts count as one scheduled attempt.
           # Response-format regression is checked before CPU inference; retain exact failure feedback.
@@ -122,7 +141,7 @@ jobs:
             if [ ! -f "$out/selected.json" ]; then return; fi
             local feedback=""
             if [ -f "$out/engine.log" ]; then feedback="$(python scripts/unknown-repair-feedback.py "$out/engine.log")"; fi
-            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
+            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback,row.intendedStrategy||'');fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
           }
           for attempt in 1 2; do
             scratch="$RUNNER_TEMP/model-scratch-$attempt"
@@ -149,6 +168,7 @@ jobs:
               printf 'No validated patch in attempt %s\n' "$attempt"
               node -e 'const fs=require("fs"),p=process.argv[1];for(const f of fs.readdirSync(p).filter(x=>x.startsWith("rejected-"))){console.log(fs.readFileSync(p+"/"+f,"utf8"));} console.log(fs.readFileSync(p+"/result.json","utf8"));' "$out" > "$out/engine.log"
               persist_history "$out" NO_VALID_MODEL_PATCH
+              if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then break; fi
               continue
             fi
             git -C "$scratch" diff -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs > "$out/proposal.patch"
@@ -193,13 +213,17 @@ jobs:
                 if timeout 65m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
                   base="$(git rev-parse HEAD)"
                   export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
-                  /opt/pw/bin/python -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
+                  /opt/pw/bin/python -u -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
                   server=$!
-                  trap "kill $server 2>/dev/null || true" EXIT
-                  for n in 1 2 3 4 5; do
-                    if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()"; then break; fi
+                  trap "cat /tmp/browser-http.log >&2; kill $server 2>/dev/null || true" EXIT
+                  ready=0
+                  for n in $(seq 1 15); do
+                    if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()" 2>/dev/null; then ready=1; break; fi
+                    kill -0 "$server"
                     sleep 1
                   done
+                  test "$ready" = 1
+                  node scripts/build-pwa-release.cjs --check
                   /opt/pw/bin/python tests/test_control_013_browser.py
                   unset POKECA_BROWSER_SLOTS_ONLY
                   export POKECA_INTAKE_ARTIFACT=unknown-quarantine-full-ai
@@ -214,6 +238,7 @@ jobs:
               fi
             fi
             persist_history "$out" QUARANTINE_FAILED
+            if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then break; fi
             printf 'Attempt %s did not clear quarantine. Retry with failure feedback.\n' "$attempt"
           done
           echo 'No verified local-generation candidate. Retain unresolved source for later runs.'
