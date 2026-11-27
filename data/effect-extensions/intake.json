@@ -197775,6 +197775,68 @@
         "htmlSha256": "2a121be8a5b46fbb9ac2640f63d48bb89edfd55e2f540672e32e81b904936d3a",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "49657",
+      "name": "ボルケニオン",
+      "deckName": "ボルケニオン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49657",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/049657_P_BORUKENION.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "かいりき",
+          "cost": [
+            "水",
+            "無色"
+          ],
+          "damage": "50",
+          "text": ""
+        },
+        {
+          "name": "パワフルスチーム",
+          "cost": [
+            "水",
+            "水",
+            "無色"
+          ],
+          "damage": "90×",
+          "text": "このポケモンについている[水]エネルギーの数ぶんコインを投げ、オモテの数×90ダメージ。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49657.json",
+        "sha256": "83761845f38d9137bde462d8a89c6980d6c4914e9aebc92ab12205a0c6e29cd0",
+        "htmlSha256": "83761845f38d9137bde462d8a89c6980d6c4914e9aebc92ab12205a0c6e29cd0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []

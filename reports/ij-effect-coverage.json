@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 551,
-      "missing": 319
+      "connected": 552,
+      "missing": 318
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 550,
+      "CONNECTED_UNTESTED": 551,
       "MECHANIC_REQUIRED": 43,
-      "ENGINE_CONNECTION_REQUIRED": 275,
+      "ENGINE_CONNECTION_REQUIRED": 274,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -6796,8 +6796,7 @@
       "name": "ボルケニオン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49657.json"
     },
     {
@@ -21365,9 +21364,9 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 550,
+        "ENGINE_CONNECTED": 551,
         "MECHANIC_REQUIRED": 311,
-        "ENGINE_CONNECTION_REQUIRED": 4,
+        "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21376,7 +21375,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3739,
-    "unconnected": 1334
+    "engineConnected": 3740,
+    "unconnected": 1333
   }
 }
