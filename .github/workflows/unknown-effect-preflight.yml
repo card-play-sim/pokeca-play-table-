@@ -8,6 +8,14 @@ on:
       - 'tests/local-unknown-effect-generator.test.cjs'
       - '.github/workflows/local-unknown-effect-generator.yml'
       - '.github/workflows/unknown-effect-preflight.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/local-unknown-effect-generator.cjs'
+      - 'scripts/verify-unknown-quarantine-*.py'
+      - 'tests/local-unknown-effect-generator.test.cjs'
+      - '.github/workflows/local-unknown-effect-generator.yml'
+      - '.github/workflows/unknown-effect-preflight.yml'
   workflow_dispatch:
 permissions:
   contents: read
