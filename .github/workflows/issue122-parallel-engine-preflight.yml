@@ -6,6 +6,10 @@ on:
       - '.github/workflows/issue122-parallel-engine-preflight.yml'
       - 'scripts/stage-card-auto-connect.cjs'
       - 'tests/atomic-official-to-battle.test.cjs'
+      - 'scripts/connect-official-effect-intake.cjs'
+      - 'scripts/continue-official-effect-intake.py'
+      - 'scripts/run-atomic-official-battle-intake.cjs'
+      - 'tests/control-013-continuation.test.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,7 +19,7 @@ concurrency:
 jobs:
   parity:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,6 +77,11 @@ jobs:
             console.log('ENGINE_PARALLEL_PARITY_PASS',JSON.stringify(out));
           })().catch(e=>{console.error(e);process.exitCode=1});
           NODE
+      - name: Confirm intermediate classification and unchanged mandatory full replay
+        run: |
+          python -m py_compile scripts/continue-official-effect-intake.py
+          node --check scripts/connect-official-effect-intake.cjs
+          node tests/control-013-continuation.test.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
