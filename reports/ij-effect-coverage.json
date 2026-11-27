@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1259,
-      "missing": 443
+      "connected": 1261,
+      "missing": 441
     },
     "J": {
       "total": 870,
-      "connected": 554,
-      "missing": 316
+      "connected": 555,
+      "missing": 315
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1253,
-      "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 386,
+      "CONNECTED_UNTESTED": 1255,
+      "MECHANIC_REQUIRED": 52,
+      "ENGINE_CONNECTION_REQUIRED": 385,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 553,
+      "CONNECTED_UNTESTED": 554,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 273,
+      "ENGINE_CONNECTION_REQUIRED": 272,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -1224,8 +1224,7 @@
       "name": "レジロック",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47057.json"
     },
     {
@@ -6103,8 +6102,7 @@
       "name": "レジロック",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49089.json"
     },
     {
@@ -17989,8 +17987,7 @@
       "name": "ハガネール",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50376.json"
     },
     {
@@ -21348,15 +21345,15 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1259,
-        "MECHANIC_REQUIRED": 430,
+        "ENGINE_CONNECTED": 1261,
+        "MECHANIC_REQUIRED": 428,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 553,
-        "MECHANIC_REQUIRED": 308,
+        "ENGINE_CONNECTED": 554,
+        "MECHANIC_REQUIRED": 307,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21366,7 +21363,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3750,
-    "unconnected": 1323
+    "engineConnected": 3753,
+    "unconnected": 1320
   }
 }

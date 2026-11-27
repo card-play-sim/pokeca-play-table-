@@ -34140,6 +34140,83 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47057",
+      "name": "レジロック",
+      "deckName": "レジロック",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47057",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047057_P_REJIROKKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "バスターラリアット",
+          "cost": [
+            "闘",
+            "闘",
+            "闘"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは抵抗力を計算しない。",
+          "effectId": "reference-47057-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipResistance": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がんせきアーマー",
+          "text": "このポケモンにエネルギーがついているなら、このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-47057-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30,
+            "condition": "hasEnergy",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47057.json",
+        "sha256": "06564e5a06e5b47395f3156a653895b722dd1f3b56746417253b64a8d4b5685d",
+        "htmlSha256": "06564e5a06e5b47395f3156a653895b722dd1f3b56746417253b64a8d4b5685d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47058",
       "name": "ヤンチャム",
       "deckName": "ヤンチャム",
@@ -228493,6 +228570,161 @@
         "repeated": false,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "50376",
+      "name": "ハガネール",
+      "deckName": "ハガネール",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50376",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050376_P_HAGANERU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ハードスイング",
+          "cost": [
+            "闘",
+            "闘",
+            "無色",
+            "無色"
+          ],
+          "damage": "150",
+          "text": "このワザのダメージは抵抗力を計算しない。",
+          "effectId": "reference-50376-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipResistance": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "こうみつどアーマー",
+          "text": "このポケモンのHPがまんたんの状態なら、このポケモンが相手のポケモンから受けるワザのダメージは「-60」される。",
+          "effectId": "reference-50376-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 60,
+            "condition": "fullHp",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 190,
+        "evolvesFrom": "イワーク",
+        "retreatCost": 4,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50376.json",
+        "sha256": "75d8adeaafc21e26812a7681519cf40d532cca51cda42e42a39f760ef32a624f",
+        "htmlSha256": "75d8adeaafc21e26812a7681519cf40d532cca51cda42e42a39f760ef32a624f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49089",
+      "name": "レジロック",
+      "deckName": "レジロック",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49089",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049089_P_REJIROKKU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "バスターラリアット",
+          "cost": [
+            "闘",
+            "闘",
+            "闘"
+          ],
+          "damage": "120",
+          "text": "このワザのダメージは抵抗力を計算しない。",
+          "effectId": "reference-49089-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_IGNORE_DAMAGE_RULES",
+            "commands": [
+              "DAMAGE"
+            ],
+            "skipResistance": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "がんせきアーマー",
+          "text": "このポケモンにエネルギーがついているなら、このポケモンが受けるワザのダメージは「-30」される。",
+          "effectId": "reference-49089-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 30,
+            "condition": "hasEnergy",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49089.json",
+        "sha256": "9dbe1daacdc56f5161c67374b30ff79374ee8e81c68bc9ab39b96fc69799f2d8",
+        "htmlSha256": "9dbe1daacdc56f5161c67374b30ff79374ee8e81c68bc9ab39b96fc69799f2d8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -229877,11 +230109,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47057",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47059",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -230129,7 +230356,7 @@
     {
       "officialCardId": "44432",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44433",
