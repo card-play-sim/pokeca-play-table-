@@ -214,7 +214,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   // Printed continuous abilities reduce damage taken from an attack after
   // weakness/resistance. Suppressed abilities do not apply.
   const reduction=enabledAbilities(g,mon)
-   .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION')
+   .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&(!a.plan.condition||a.plan.condition==='hasEnergy'&&(mon.energyCards||[]).length>0||a.plan.condition==='fullHp'&&(mon.damage||0)===0))
    .reduce((sum,a)=>sum+a.plan.amount,0);
   amount=Math.max(0,amount-reduction);
   const teamReduction=(other.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber&&(!x.type||record(mon).facts.types.includes(x.type))).reduce((sum,x)=>sum+x.amount,0);

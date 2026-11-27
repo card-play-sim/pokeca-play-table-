@@ -696,7 +696,7 @@ function prepare(r, e, kind) {
     other.active.referenceProtection={opponentTurn:g.turnNumber};
     return {...t,port:port(g),trigger};
   }
-  if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'){
+  if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'||m==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&e.plan.condition){
     const attacker=records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
@@ -736,6 +736,16 @@ function prepare(r, e, kind) {
       assert.equal(game.turnPlayer,'you');
       assert.deepEqual(Array.from(S.identities(game)),identities);
       assert.equal(E.getReferenceEffectRecord(game.players[1].active).officialCardId,r.officialCardId);
+    }
+    if(m==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&e.plan.condition){
+      const [own,other]=game.players,defender=other.active;
+      for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}
+      if(e.plan.condition==='hasEnergy'&&!defender.energyCards.length){
+        const i=other.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial);
+        if(i<0)return {blocked:'NO_CONDITIONAL_REDUCTION_ENERGY'};
+        defender.energyCards.push(other.deck.splice(i,1)[0]);
+      }
+      if(e.plan.condition==='fullHp')assert.equal(defender.damage,0);
     }
     return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
@@ -3888,6 +3898,19 @@ function verifyCase(t, e) {
     const defender = E.getReferenceEffectRecord(before.players[1].active);
     assert(defender.abilities.some(ability => ability.effectId === e.effectId));
     verifyPrintedAttack(before, after, t.trigger, Number(t.trigger.damage), e.plan.amount);
+    if(e.plan.condition){
+      const start=JSON.parse(JSON.stringify(before)),side=start.players[1],mon=side.active;
+      if(e.plan.condition==='hasEnergy'){
+        assert(mon.energyCards.length>0);side.deck.push(...mon.energyCards.splice(0));mon.energies=[];
+      }else{assert.equal(mon.damage,0);mon.damage=10;}
+      const retry=port(start),action=t.action||o.action;
+      assert(retry.dispatch('you',action).ok);
+      const result=retry.getSnapshot();
+      verifyPrintedAttack(start,result,t.trigger,Number(t.trigger.damage),0);
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(result)));
+      assert(retry.restoreSession(retry.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(retry.getSnapshot()),JSON.stringify(result));
+    }
   }
   if(e.plan.mechanic==='ATTACK_OPTIONAL_ENERGY_BONUS'){
     const own=before.players[0],plan=e.plan,action=t.action||o.action;
