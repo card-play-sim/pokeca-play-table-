@@ -1,0 +1,67 @@
+name: Issue122 reconcile verified 13 prints with latest main
+on:
+  push:
+    branches: [battle/issue122-union13-main-reconcile-20261128]
+    paths: ['.github/workflows/issue122-union13-main-reconcile.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: issue122-union13-main-reconcile
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconcile independently verified candidate without changing main
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate=fc397343db66ceb82fa87d53355f22b136518367
+          git fetch origin main battle/issue122-union13-repair-qualified-46066883264
+          test "$(git rev-parse origin/battle/issue122-union13-repair-qualified-46066883264)" = "$candidate"
+          base=$(git rev-parse origin/main)
+          ancestor=$(git merge-base "$base" "$candidate")
+          git diff --name-only "$ancestor" "$base" | sort -u > /tmp/main-paths
+          git diff --name-only "$ancestor" "$candidate" | sort -u > /tmp/candidate-paths
+          comm -12 /tmp/main-paths /tmp/candidate-paths > /tmp/overlap
+          if test -s /tmp/overlap; then cat /tmp/overlap; echo 'OVERLAPPING_CHANGE_REQUIRES_REVIEW'; exit 1; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout --detach "$base"
+          git merge --no-ff --no-edit "$candidate"
+          git diff --name-only "$base" HEAD | sort -u > /tmp/merged-paths
+          diff -u /tmp/candidate-paths /tmp/merged-paths
+          while IFS= read -r path; do git diff --exit-code "$base" HEAD -- "$path"; done < /tmp/main-paths
+          while IFS= read -r path; do git diff --exit-code "$candidate" HEAD -- "$path"; done < /tmp/candidate-paths
+          BASE="$base" CANDIDATE="$candidate" node <<'NODE'
+          const fs=require('node:fs'), assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const read=(ref)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const before=read(process.env.BASE), candidate=read(process.env.CANDIDATE), after=JSON.parse(fs.readFileSync(path)).records;
+          const key=r=>String(r.officialCardId), old=new Map(before.map(r=>[key(r),r])), next=new Map(after.map(r=>[key(r),r]));
+          assert.equal(next.size,after.length); assert.deepEqual(after,candidate);
+          for(const [id,row] of old) assert.deepEqual(next.get(id),row,'PUBLISHED_RECORD_CHANGED:'+id);
+          const expected=['45245','46342','46425','47298','47377','47386','47677','48049','48525','48738','49005','49303','47431'].sort();
+          const added=[...next.keys()].filter(id=>!old.has(id)).sort();
+          assert.deepEqual(added,expected);
+          const receipt=JSON.parse(fs.readFileSync('reports/official-effect-continuation/union13-repair-exact-delta.json'));
+          assert.deepEqual(receipt.added.map(String).sort(),expected); assert.equal(receipt.count,13); assert.deepEqual(receipt.missing,[]);
+          console.log('EXACT_RECONCILED_DELTA',JSON.stringify({base:process.env.BASE,candidate:process.env.CANDIDATE,added}));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+          node --test tests/local-unknown-effect-generator.test.cjs
+          git diff --exit-code
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$base"
+          git push origin "HEAD:refs/heads/battle/issue122-union13-reconciled-$GITHUB_RUN_ID"
+          echo "RECONCILED_HEAD=$(git rev-parse HEAD)"
