@@ -723,7 +723,7 @@ function prepare(r, e, kind) {
     return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
   if(['PASSIVE_FULL_HP_SURVIVAL','PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL'].includes(m)){
-    const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>=r.facts.hp);
+    const attacker=records.get('50359'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(m!=='PASSIVE_FULL_HP_SURVIVAL'||Number(a.damage)>=r.facts.hp));
     if(!(attackIndex>=0))return {blocked:'NO_SURVIVAL_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
     const parent=r.facts.basic?null:[...records.values()].find(c=>c.name===r.facts.evolvesFrom&&c.facts.basic&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan));
@@ -782,6 +782,9 @@ function prepare(r, e, kind) {
       if(!zone)return {blocked:'NO_PHYSICAL_DEFENSIVE_COIN_ENERGY'};
       side.active.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.energyType),1)[0]);
     }
+    // The coin-based survival text does not require full HP. Exercise
+    // lethal damage on the already-injured real defender, without changing printed HP.
+    if(m==='PASSIVE_COIN_KO_SURVIVAL')game.players[1].active.damage=game.players[1].active.hp-10;
     if(m!=='PASSIVE_FULL_HP_SURVIVAL')game.referenceRngState=0;
     return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
