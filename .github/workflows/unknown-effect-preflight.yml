@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/unknown-repair-feedback.py'
       - 'tests/local-unknown-effect-generator.test.cjs'
       - '.github/workflows/local-unknown-effect-generator.yml'
       - '.github/workflows/unknown-effect-preflight.yml'
@@ -13,6 +14,7 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/unknown-repair-feedback.py'
       - 'tests/local-unknown-effect-generator.test.cjs'
       - '.github/workflows/local-unknown-effect-generator.yml'
       - '.github/workflows/unknown-effect-preflight.yml'
@@ -35,3 +37,4 @@ jobs:
           node tests/local-unknown-effect-generator.test.cjs
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
+          python scripts/unknown-repair-feedback.py --self-test
