@@ -105,6 +105,8 @@ function additionalAttackPlan(entry,text){
  if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
  const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
  if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
+ if(/^\d+$/.test(printed)&&text==='ウラが出るまでコインを投げ、オモテの数ぶん、相手の山札を上からトラッシュする。')
+  return {mechanic:'COIN_UNTIL_TAILS_MILL',commands:['COIN_FLIP','DAMAGE','DISCARD'],base,sharedWording:true};
  const mill=text.match(/^コインを([1-9])回投げ、オモテの数ぶん、相手の山札を上からトラッシュする。$/);
  if(mill&&/^\d+$/.test(printed))return coinPlan(Number(mill[1]),base,{mill:true,when:'threshold',threshold:1});
  const allBonus=text.match(/^コインを([2-9])回投げ、すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
