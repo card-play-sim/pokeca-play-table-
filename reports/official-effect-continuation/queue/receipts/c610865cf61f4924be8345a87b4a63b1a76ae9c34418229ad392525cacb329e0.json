@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_20221F16A95EBCDA:22d4273cf863367d3e1723994693d7a85a516be5c9fbe92a32f22ee1a8d6a38d",
   "taskFingerprint": "22d4273cf863367d3e1723994693d7a85a516be5c9fbe92a32f22ee1a8d6a38d",
-  "executionFingerprint": "cb8d07d2b637f5408d53cfb3a07f1be09f259b0d2e4fbb6341dbfab586df9c9a",
-  "attemptId": "d49bf31b-cb15-45fc-bb40-a27326fc427d",
+  "executionFingerprint": "4f9a5ef3597a433ab3270a54c36bde87009d97908510a5d09f481c4548b63922",
+  "attemptId": "1678691d-002f-432f-9032-f3b69c63ce07",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -126,13 +126,33 @@
       },
       {
         "slot": "46240:attack:ブラックフロスト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46323:attack:ブラックフロスト:1",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46492:attack:かみなり:1",
@@ -151,5 +171,5 @@
       }
     ]
   },
-  "checksum": "b9fac9d3c25294a43e572ca2494cc5dd67e9720efd7f1ed8e224c385f32bb38e"
+  "checksum": "503488b9af42ce1a271f11700b08bc47bae252079bff3a6f5fbfc753e9fdbda3"
 }
