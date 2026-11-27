@@ -105,7 +105,9 @@ if (previous && missing.length)
 if (!previous && fixtures.length < (requested.size ? requested.size * perPattern : 5))
   throw Error("INSUFFICIENT_INTAKE_VERIFICATION_CASES");
 B.atomic(prefix + "/browser-fixtures.json", fixtures);
-if (!previous) {
+// Local candidate runs also exercise a complete imported-deck match. A
+// published release receipt still uses exact-print slots only.
+if (!previous || process.env.POKECA_INTAKE_LOCAL_CANDIDATE === "1") {
   const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json")),
     manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
       fixed,
