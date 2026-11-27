@@ -177,6 +177,13 @@ def self_test():
     assert not scheduled_stop(receipt,h,h,{**run,"head_branch":"other"})
     assert not scheduled_stop(receipt,h,h,{**run,"conclusion":"failure"})
     assert not scheduled_stop(receipt,h,h,{**run,"path":"other.yml"})
+    # The job condition must override implicit success() so a failed receipt
+    # lookup or runner failure does not silently halt unfinished intake.
+    for filename in ("local-unknown-effect-generator.yml","continue-official-effects.yml"):
+        workflow = (Path(".github/workflows") / filename).read_text()
+        assert "needs: scheduled-completion" in workflow
+        assert "always() && !cancelled() && needs.scheduled-completion.outputs.stop != 'true'" in workflow
+        assert 'stop="$(python scripts/audit-exact-target-completion.py --scheduled-stop)" || stop=false' in workflow
     print("EXACT_TARGET_COMPLETION_SELF_TEST PASS")
 
 def main():

@@ -54,7 +54,7 @@ jobs:
           fi
   synthesize:
     needs: scheduled-completion
-    if: needs.scheduled-completion.outputs.stop != 'true' && github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
+    if: always() && !cancelled() && needs.scheduled-completion.outputs.stop != 'true' && github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:

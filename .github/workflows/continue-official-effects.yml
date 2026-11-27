@@ -71,7 +71,7 @@ jobs:
   continue:
     needs: scheduled-completion
     if: >-
-      needs.scheduled-completion.outputs.stop != 'true' &&
+      always() && !cancelled() && needs.scheduled-completion.outputs.stop != 'true' &&
       (github.event_name != 'issue_comment' ||
       (github.event.issue.number == 122 && !github.event.issue.pull_request &&
        github.event.comment.user.login == github.repository_owner &&
