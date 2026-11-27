@@ -1,7 +1,9 @@
 'use strict';
 const fs = require('node:fs');
 const vm = require('node:vm');
-const {spawnSync} = require('node:child_process');
+const {spawnSync,spawn} = require('node:child_process');
+const os = require('node:os');
+const path = require('node:path');
 const B = require('./lib/shared-effect-batch.cjs');
 const read = path => JSON.parse(fs.readFileSync(path, 'utf8'));
 const intakePath = 'data/effect-extensions/intake.json';
@@ -102,7 +104,85 @@ function deferUnverifiedPromotions(intake, checkpoint, baseIntake, baseCompiled,
   return deferred;
 }
 
-function run(baseCommit, directory) {
+// Keep all effect slots of an exact print together. Largest print groups
+// go first, then the least-loaded shard; deterministic ties by ID/index.
+function partitionEvidence(evidence, count) {
+  if (!Number.isSafeInteger(count) || count < 1 || count > 8) throw Error('INVALID_ENGINE_SHARD_COUNT');
+  const byPrint=new Map(),seen=new Set();
+  for(const row of evidence){
+    const slot=B.slot(row);
+    if(seen.has(slot))throw Error('DUPLICATE_CANDIDATE_SLOT:'+slot);
+    seen.add(slot);
+    const key=String(row.officialCardId);
+    if(!byPrint.has(key))byPrint.set(key,[]);
+    byPrint.get(key).push(row);
+  }
+  const shards=Array.from({length:Math.min(count,byPrint.size)},()=>[]);
+  const groups=[...byPrint.entries()].sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0]));
+  for(const [,rows] of groups){
+    let i=0;for(let j=1;j<shards.length;j++)if(shards[j].length<shards[i].length)i=j;
+    shards[i].push(...rows.sort((a,b)=>B.slot(a).localeCompare(B.slot(b))));
+  }
+  return shards;
+}
+// Missing/failed receipts cannot promote a card. Reject foreign or duplicate
+// results, even if another shard already passed that effect.
+function mergeShardResults(shards, receipts) {
+  if(shards.length!==receipts.length)throw Error('ENGINE_SHARD_RECEIPT_COUNT');
+  const fingerprints=new Set(),merged=new Map();
+  for(let i=0;i<shards.length;i++){
+    const {executionFingerprint, cases}=receipts[i];
+    if(!/^[a-f0-9]{64}$/.test(executionFingerprint||''))throw Error('ENGINE_SHARD_FINGERPRINT_MISSING');
+    fingerprints.add(executionFingerprint);
+    const expected=new Set(shards[i].map(B.slot));
+    for(const result of cases){
+      if(!expected.has(result.slot)||merged.has(result.slot))throw Error('FOREIGN_OR_DUPLICATE_ENGINE_SLOT:'+result.slot);
+      if(!['SUCCEEDED','BLOCKED','FAILED'].includes(result.status))throw Error('INVALID_ENGINE_SLOT_STATUS');
+      merged.set(result.slot,result);
+    }
+    for(const slot of expected)if(!merged.has(slot))merged.set(slot,{slot,status:'BLOCKED',reason:'ENGINE_SHARD_SLOT_RECEIPT_MISSING'});
+  }
+  if(fingerprints.size>1)throw Error('ENGINE_SHARD_FINGERPRINT_CONFLICT');
+  return merged;
+}
+async function executeEvidenceShards(evidence,directory){
+  const fallback=Math.max(1,Math.min(4,os.availableParallelism(),Math.floor(os.totalmem()/(3*1024**3))));
+  const count=Number(process.env.POKECA_ENGINE_SHARDS||fallback);
+  const shards=partitionEvidence(evidence,count);
+  B.atomic(directory+'/candidate-evidence.json',evidence);
+  const root=directory+'/candidate-queue';
+  if(fs.existsSync(root))throw Error('CANDIDATE_QUEUE_MUST_BE_FRESH');
+  fs.mkdirSync(root,{recursive:true});
+  const started=Date.now();
+  const outcomes=await Promise.allSettled(shards.map(async(rows,index)=>{
+    const queue=root+'/shard-'+index,source=directory+'/candidate-evidence-'+index+'.json';
+    B.atomic(source,rows);
+    const log=fs.openSync(directory+'/engine-shard-'+index+'.log','wx');
+    try{
+      await new Promise((resolve,reject)=>{
+        const child=spawn(process.execPath,['scripts/process-shared-effect-batch.cjs',queue,source,
+          '--limit',String(rows.length),'--max-tasks',String(rows.length)],{stdio:['ignore',log,log]});
+        child.once('error',reject);
+        child.once('close',(code,signal)=>code===0?resolve():reject(Error('ENGINE_SHARD_FAILED:'+index+':'+(signal||code))));
+      });
+    }finally{fs.closeSync(log);}
+    const report=read(queue+'/last-run.json').run;
+    if(report.stopped||report.staleSuccesses!==0)throw Error('ENGINE_SHARD_INCOMPLETE:'+index);
+    const cases=[];
+    for(const job of Object.values(read(queue+'/queue.json').jobs)){
+      if(!job.summary?.cases?.length)continue;
+      if(job.attempt?.executionFingerprint!==report.executionFingerprint)throw Error('ENGINE_JOB_FINGERPRINT_CONFLICT:'+index);
+      cases.push(...job.summary.cases);
+    }
+    console.log('ENGINE_SHARD_DONE '+index+' slots='+rows.length+' receipts='+cases.length);
+    return {executionFingerprint:report.executionFingerprint,cases};
+  }));
+  const failures=outcomes.flatMap((row,i)=>row.status==='rejected'?[{shard:i,reason:String(row.reason)}]:[]);
+  B.atomic(directory+'/engine-parallel-summary.json',{shards:shards.length,slots:evidence.length,elapsedMs:Date.now()-started,failures,completed:outcomes.map((row,i)=>({shard:i,status:row.status,slots:shards[i].length}))});
+  if(failures.length)throw Error('ENGINE_PARALLEL_INFRASTRUCTURE_FAILURE:'+JSON.stringify(failures));
+  return mergeShardResults(shards,outcomes.map(row=>row.value));
+}
+async function run(baseCommit, directory) {
   const gitRead = path => {
     const result = spawnSync('git', ['show', baseCommit + ':' + path], {encoding: 'utf8', maxBuffer: 32 * 1024 * 1024});
     if (result.status !== 0) throw Error(result.stderr);
@@ -140,17 +220,9 @@ function run(baseCommit, directory) {
   const results = new Map(),diagnostics = new Map();
   fs.mkdirSync(directory, {recursive: true});
   if (evidence.length) {
-    const path = directory + '/candidate-evidence.json';
-    const queue = directory + '/candidate-queue';
-    // Always execute against this candidate bundle. Old receipts may describe other code.
-    if (fs.existsSync(queue)) throw Error('CANDIDATE_QUEUE_MUST_BE_FRESH');
-    B.atomic(path, evidence);
-    const result = spawnSync(process.execPath, ['scripts/process-shared-effect-batch.cjs', queue, path,
-      '--limit', String(evidence.length), '--max-tasks', String(evidence.length)],
-    {encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
-    if (result.status !== 0) throw Error(result.stderr || result.stdout);
-    for (const job of Object.values(read(queue + '/queue.json').jobs)) {
-      for (const test of job.summary?.cases || []) {results.set(test.slot, test.status);diagnostics.set(test.slot,{status:test.status,reason:test.reason||null,details:test.details||null});}
+    for(const [slot,test] of await executeEvidenceShards(evidence,directory)){
+      results.set(slot,test.status);
+      diagnostics.set(slot,{status:test.status,reason:test.reason||null,details:test.details||null});
     }
   }
   if (printedDamage.length) {
@@ -197,5 +269,5 @@ function run(baseCommit, directory) {
 
 }
 
-if (require.main === module) run(process.argv[2], process.argv[3]);
-module.exports = {requiredSlots, allExecuted, verifiedBasicEnergy, verifyBasicEnergyRuntime, deferUnverifiedPromotions};
+if (require.main === module) run(process.argv[2], process.argv[3]).catch(error=>{console.error(error);process.exitCode=1;});
+module.exports = {requiredSlots, allExecuted, verifiedBasicEnergy, verifyBasicEnergyRuntime, deferUnverifiedPromotions, partitionEvidence, mergeShardResults, executeEvidenceShards};
