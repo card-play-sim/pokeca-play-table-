@@ -62,6 +62,24 @@ def audit(target, current, proven):
             "automaticStopAuthorized":False,
             "physicalAndroidVerified":False}
 
+def authorize_stop(report, head, latest_main, full_public_run, delivery_verified):
+    """Only an independently verified full target and current public build may stop.
+    A partial/delta-only audit can never grant permission by itself.
+    """
+    return bool(
+        re.fullmatch(r"[a-f0-9]{40}", head or "") and head == latest_main
+        and report.get("currentCommit") == head
+        and report.get("state") == "TARGET_PUBLIC_EVIDENCE_COMPLETE"
+        and report.get("targetCount") == 2775
+        and report.get("verifiedByThisAudit") == 2775
+        and report.get("remainingByThisAudit") == 0
+        and report.get("missingIds") == [] and report.get("missingCompiledIds") == []
+        and report.get("allTargetEvidencePresent") is True
+        and full_public_run.get("commit") == head
+        and full_public_run.get("success") is True
+        and delivery_verified is True
+    )
+
 def verify_delta_receipt(receipt, before, after):
     require(receipt.get("state") == "PUBLIC_DELTA_VERIFIED" and receipt.get("publicUrl") == URL,
             "NOT_PUBLIC_DELTA_RECEIPT")
@@ -88,6 +106,18 @@ def self_test():
         try: verify_delta_receipt(bad,{},{"2":x})
         except ValueError: continue
         raise AssertionError("FALSE_COMPLETION_ACCEPTED")
+    h = "a"*40
+    done = {"currentCommit":h,"state":"TARGET_PUBLIC_EVIDENCE_COMPLETE","targetCount":2775,
+            "verifiedByThisAudit":2775,"remainingByThisAudit":0,"missingIds":[],
+            "missingCompiledIds":[],"allTargetEvidencePresent":True}
+    public = {"commit":h,"success":True}
+    assert authorize_stop(done,h,h,public,True)
+    assert not authorize_stop({**done,"remainingByThisAudit":1},h,h,public,True)
+    assert not authorize_stop({**done,"missingIds":["2"]},h,h,public,True)
+    assert not authorize_stop(done,h,"b"*40,public,True)
+    assert not authorize_stop(done,h,h,{"commit":"b"*40,"success":True},True)
+    assert not authorize_stop(done,h,h,public,False)
+    assert not authorize_stop({**done,"verifiedByThisAudit":2774},h,h,public,True)
     print("EXACT_TARGET_COMPLETION_SELF_TEST PASS")
 
 def main():
