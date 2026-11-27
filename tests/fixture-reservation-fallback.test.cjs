@@ -1,0 +1,11 @@
+"use strict";
+const assert=require("node:assert/strict");
+const {firstReservable}=require("../scripts/lib/shared-effect-engine-worker.cjs");
+const a={officialCardId:"1",category:"pokemon"},b={officialCardId:"2",category:"pokemon"},c={officialCardId:"3",category:"energy"},source={officialCardId:"4",category:"pokemon"};
+const tried=[];
+assert.equal(firstReservable([null,source,a,a,c,b],r=>r.category==="pokemon",r=>{tried.push(r.officialCardId);return r===b;},source.officialCardId),b);
+assert.deepEqual(tried,["1","2"]);
+assert.equal(firstReservable([a,b],()=>true,()=>false),null);
+assert.equal(firstReservable([a,b],()=>true,()=>true),a);
+assert.equal(firstReservable([source],()=>true,()=>{throw Error("SOURCE_MUST_NOT_BE_RESERVED");},source.officialCardId),null);
+console.log("FIXTURE_RESERVATION_FALLBACK PASS");
