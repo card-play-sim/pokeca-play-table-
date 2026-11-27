@@ -196,3 +196,13 @@ console.log(
 
 // Keep generic official ability compiler guards in the required shared-effects CI job.
 require('./test-generic-official-ability-draw.cjs');
+
+// Exact switch-triggered acceleration grammar; reject missing timing and trailing effects.
+{
+ const text='自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本[草]エネルギー」を3枚まで選び、このポケモンにつける。そして山札を切る。';
+ const row={officialCardId:'99999999',category:'pokemon',name:'fixture',attacks:[],abilities:[{name:'fixture',text}]};
+ const plan=compile({records:[row]}).records[0].abilities[0].plan;
+ assert.equal(plan.origin,'activeEntry');assert.equal(plan.type,'草');assert.equal(plan.limit,3);assert.equal(plan.target,'self');
+ assert.equal(compile({records:[{...row,abilities:[{name:'fixture',text:text+'さらに山札を引く。'}]}]}).records[0].abilities[0].plan,null);
+ assert.equal(compile({records:[{...row,attacks:[{text,damage:'0',cost:[]}],abilities:[]}]}).records[0].attacks[0].plan,null);
+}
