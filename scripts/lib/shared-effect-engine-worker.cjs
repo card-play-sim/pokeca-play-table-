@@ -169,6 +169,9 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownDiscardSupporterContains')reserve(r=>r.category==='supporter'&&r.name.includes(plan.name),'discard');
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
+  if(plan.metric==='ownBenchNameContains')reserve(r=>mon(r,null,0)&&r.name.includes(plan.name),'bench');
+  if(plan.metric==='ownDamagedNameContains'&&!source.name.includes(plan.name))reserve(r=>mon(r,null,0)&&r.name.includes(plan.name),'bench');
+  if(plan.metric==='ownBenchMegaCount')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
   if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
   if(plan.metric==='ownBenchNamedCounters')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
   if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(plan.metric))
@@ -1440,6 +1443,7 @@ function prepare(r, e, kind) {
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (e.plan.metric === "ownCounters") own.active.damage = 20;
     if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if(e.plan.metric==='ownDamagedNameContains')for(const c of [own.active,...own.bench])if(E.getReferenceEffectRecord(c).name.includes(e.plan.name))c.damage=10;
     if(e.plan.metric==='ownBenchNamedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).name===e.plan.name)c.damage=20;
     if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(e.plan.metric)){
       const side=e.plan.metric.startsWith('opponent')?opponent:own;
@@ -2991,6 +2995,9 @@ function verifyCase(t, e) {
       ownDiscardSupporterContains:attackingSide.discard.filter(c=>E.getReferenceEffectRecord(c)?.category==='supporter'&&E.getReferenceEffectRecord(c).name.includes(e.plan.name)).length,
       ownNamedOrExCount:[attackingSide.active,...attackingSide.bench].filter(c=>[e.plan.name,e.plan.name+'ex'].includes(E.getReferenceEffectRecord(c).name)).length,
       bothNameContainsCount:[attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench].filter(c=>[e.plan.name,e.plan.secondName].some(n=>E.getReferenceEffectRecord(c).name.includes(n))).length,
+      ownBenchNameContains:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name.includes(e.plan.name)).length,
+      ownDamagedNameContains:[attackingSide.active,...attackingSide.bench].filter(c=>c.damage>0&&E.getReferenceEffectRecord(c).name.includes(e.plan.name)).length,
+      ownBenchMegaCount:attackingSide.bench.filter(c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき')).length,
       ownBenchNamedCount:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).length,
       ownBenchNamedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).reduce((n,c)=>n+c.damage/10,0),
       ownAttachedBasicCards:attackingSide.active.energyCards.filter(c=>!c.isSpecial).length,
@@ -3042,6 +3049,26 @@ function verifyCase(t, e) {
     }
     if(['ownDiscardNamedCard','ownDiscardSupporterContains','ownNamedOrExCount','bothNameContainsCount','ownBenchNamedCount','ownBenchTypedCounters','opponentDiscardBasic','opponentDiscardItem','opponentExVCount','ownDamagedCount','opponentAbilityCount','ownNamedAttackCount','ownTeamNameCount','ownDiscardTypedPokemon','ownDiscardNamedAttack'].includes(e.plan.metric)&&metrics[e.plan.metric]===0)
       return {status:'BLOCKED',reason:'NO_POSITIVE_PUBLIC_COUNT_FIXTURE'};
+    if(['ownBenchNameContains','ownDamagedNameContains','ownBenchMegaCount'].includes(e.plan.metric)){
+      if(!metrics[e.plan.metric])return {status:'BLOCKED',reason:'NO_POSITIVE_CONDITIONAL_BOARD_FIXTURE'};
+      const start=JSON.parse(JSON.stringify(before)),side=start.players[0];
+      if(e.plan.metric==='ownDamagedNameContains'){
+        for(const c of [side.active,...side.bench])if(E.getReferenceEffectRecord(c).name.includes(e.plan.name))c.damage=0;
+      }else{
+        const matches=c=>e.plan.metric==='ownBenchNameContains'?E.getReferenceEffectRecord(c).name.includes(e.plan.name):String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき');
+        const removed=side.bench.filter(matches);
+        if(removed.some(c=>c.evolutionCards?.length||c.energyCards?.length||c.tools?.length))return {status:'BLOCKED',reason:'NO_PHYSICAL_NEGATIVE_BOARD_FIXTURE'};
+        for(const mon of removed){
+          const card={...mon};
+          for(const key of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','statusCondition'])delete card[key];
+          side.hand.push(card);
+        }
+        side.bench=side.bench.filter(c=>!matches(c));
+      }
+      assert.deepEqual(S.identities(before),S.identities(start));
+      const replay=port(start);assert(replay.dispatch('you',t.action||o.action).ok);
+      verifyPrintedAttack(start,replay.getSnapshot(),e,e.plan.base);
+    }
     assert(Number.isFinite(metrics[e.plan.metric]),"MISSING_BOARD_COUNT_METRIC");
     if(e.plan.metric==='opponentHandTrainerCount'){
       assert(metrics.opponentHandTrainerCount>0);
