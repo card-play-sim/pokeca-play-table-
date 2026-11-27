@@ -303,6 +303,8 @@ function additionalAttackPlan(entry,text){
  // Official printings select an exact number of physical attached Energy cards.
  // All energy choices must be resolved by the common engine picker rather than
  // inventing card-specific actions; a zero-attachment case discards zero.
+ const typedSelfEnergyDiscard=text.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーを([1-9])個選び、トラッシュする。$/);
+ if(typedSelfEnergyDiscard&&/^\d+$/.test(printed))return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],type:typedSelfEnergyDiscard[1],count:Number(typedSelfEnergyDiscard[2]),sharedWording:true};
  const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
  if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
   return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
@@ -488,6 +490,9 @@ function sequencePlan(entry,kind,text,extended=false){
   const found=prefixes.find(([prefix])=>body.startsWith(prefix));if(!found)return null;
   body=body.slice(found[0].length);origin=found[1];activeOnly=origin==='active';
  }
+ // Exact two-clause printed effect; preserve the attachment operation before status.
+ if(attack){const combo=body.match(/^このポケモンについているエネルギーをすべてトラッシュし、相手のバトルポケモンを(マヒ|ねむり|こんらん|どく|やけど)にする。$/);
+  if(combo)return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...(Number(printed)>0?['DAMAGE']:[]),'DISCARD','STATUS_CONDITION'],steps:[{op:'discardAttached'},{op:'status',side:'opponent',status:({'マヒ':'PARALYZED','ねむり':'ASLEEP','こんらん':'CONFUSED','どく':'POISONED','やけど':'BURNED'})[combo[1]]}],origin:null,activeOnly:false,sharedWording:true};}
  const raw=body.match(/[^。]+。/g);
  const generatedAttack=extended==='attack';
  if(!raw||raw.join('')!==body||raw.length>(generatedAttack?8:3))return null;
