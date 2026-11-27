@@ -318,30 +318,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_34015C1C374E07D7B30C",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の場に「トルネロス」「ボルトロス」「ランドロス」「ラブトロス」がいるなら、このポケモンはワザを使うための[無色]エネルギーが、すべてなくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50363",
-        "50372",
-        "50378",
-        "50397",
-        "50524"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50363.json",
-        "data/effect-extensions/evidence/50372.json",
-        "data/effect-extensions/evidence/50378.json",
-        "data/effect-extensions/evidence/50397.json",
-        "data/effect-extensions/evidence/50524.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_43C993E0AEABC574AFD4",
       "category": "pokemon",
       "effectKind": "ability",
@@ -484,30 +460,6 @@
         "data/effect-extensions/evidence/50155.json",
         "data/effect-extensions/evidence/50202.json",
         "data/effect-extensions/evidence/50216.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AB52038F1DB40FE88829",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45966",
-        "45963",
-        "46155",
-        "48925",
-        "48935"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45966.json",
-        "data/effect-extensions/evidence/45963.json",
-        "data/effect-extensions/evidence/46155.json",
-        "data/effect-extensions/evidence/48925.json",
-        "data/effect-extensions/evidence/48935.json"
       ],
       "printCount": 5,
       "effectSlots": 5
@@ -980,32 +932,6 @@
         "data/effect-extensions/evidence/49457.json",
         "data/effect-extensions/evidence/46848.json",
         "data/effect-extensions/evidence/47220.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_4B19F1E297CBDD2662CC",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のポケモン1匹に、120ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45601",
-        "45667",
-        "50590",
-        "48926"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45601.json",
-        "data/effect-extensions/evidence/45667.json",
-        "data/effect-extensions/evidence/50590.json",
-        "data/effect-extensions/evidence/48926.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -1500,28 +1426,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B9D070DADFBF600386B5",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分のポケモンが使うワザの、相手のバトルポケモンへのダメージは「+20」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47539",
-        "47983",
-        "47991",
-        "48758"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47539.json",
-        "data/effect-extensions/evidence/47983.json",
-        "data/effect-extensions/evidence/47991.json",
-        "data/effect-extensions/evidence/48758.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BC1E2C0A521773D2D972",
       "category": "pokemon",
       "effectKind": "ability",
@@ -1671,77 +1575,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E3CC541DBC850D4DBA86",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがバトル場にいるなら、自分の番に1回使える。相手のバトルポケモンをやけどにする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47025",
-        "47233",
-        "47244",
-        "48845"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47025.json",
-        "data/effect-extensions/evidence/47233.json",
-        "data/effect-extensions/evidence/47244.json",
-        "data/effect-extensions/evidence/48845.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E4DDE85B1395A7DF5E3D",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分の「シロナのポケモン」が使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47300",
-        "47366",
-        "48532",
-        "48749"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47300.json",
-        "data/effect-extensions/evidence/47366.json",
-        "data/effect-extensions/evidence/48532.json",
-        "data/effect-extensions/evidence/48749.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F1EEBEE4C08A85980574",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。",
-      "printedDamage": "150",
-      "energyCost": [
-        "草",
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47539",
-        "47983",
-        "47991",
-        "48758"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47539.json",
-        "data/effect-extensions/evidence/47983.json",
-        "data/effect-extensions/evidence/47991.json",
-        "data/effect-extensions/evidence/48758.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F321E921CA212B3E60BD",
       "category": "pokemon",
       "effectKind": "ability",
@@ -1846,26 +1679,6 @@
         "data/effect-extensions/evidence/45190.json",
         "data/effect-extensions/evidence/45522.json",
         "data/effect-extensions/evidence/49147.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0AA7476FE6873B627095",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分の[闘]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47769",
-        "48427",
-        "49134"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47769.json",
-        "data/effect-extensions/evidence/48427.json",
-        "data/effect-extensions/evidence/49134.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -2000,50 +1813,6 @@
         "data/effect-extensions/evidence/45933.json",
         "data/effect-extensions/evidence/46071.json",
         "data/effect-extensions/evidence/49399.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_11E7AD616DE59E35F09F",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがバトル場にいるなら、自分の番に1回使える。相手のバトルポケモンをねむりにする。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46232",
-        "46312",
-        "48775"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46232.json",
-        "data/effect-extensions/evidence/46312.json",
-        "data/effect-extensions/evidence/48775.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_12C073C97F4133E14F79",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[炎]エネルギーを1個選び、トラッシュする。",
-      "printedDamage": "200",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45576",
-        "45427",
-        "48862"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45576.json",
-        "data/effect-extensions/evidence/45427.json",
-        "data/effect-extensions/evidence/48862.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -2308,29 +2077,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2DA07BC2A04B768F238C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のバトルポケモンをマヒにする。",
-      "printedDamage": "70",
-      "energyCost": [
-        "水",
-        "水"
-      ],
-      "officialCardIds": [
-        "45889",
-        "48887",
-        "50014"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45889.json",
-        "data/effect-extensions/evidence/48887.json",
-        "data/effect-extensions/evidence/50014.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2DF8CDC3ADACB09B1295",
       "category": "pokemon",
       "effectKind": "attack",
@@ -2583,30 +2329,6 @@
         "data/effect-extensions/evidence/47668.json",
         "data/effect-extensions/evidence/48040.json",
         "data/effect-extensions/evidence/49107.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_47405A46049C20BA6BB7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のベンチポケモン1匹にも、90ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "90",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47024",
-        "48550",
-        "48835"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47024.json",
-        "data/effect-extensions/evidence/48550.json",
-        "data/effect-extensions/evidence/48835.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -2948,30 +2670,6 @@
         "data/effect-extensions/evidence/46724.json",
         "data/effect-extensions/evidence/47132.json",
         "data/effect-extensions/evidence/49014.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_750D8F3198336CE33A52",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2個トラッシュし、相手のポケモン2匹に、それぞれ120ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "水",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45621",
-        "45678",
-        "45685"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45621.json",
-        "data/effect-extensions/evidence/45678.json",
-        "data/effect-extensions/evidence/45685.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -3426,26 +3124,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AC329E57B11C349FCA3A",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "相手のベンチポケモンの数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45239",
-        "45557",
-        "48848"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45239.json",
-        "data/effect-extensions/evidence/45557.json",
-        "data/effect-extensions/evidence/48848.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AF53BB19C24EA50E5D00",
       "category": "pokemon",
       "effectKind": "ability",
@@ -3842,28 +3520,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_DDFFA908453059A179C0",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。",
-      "printedDamage": "170",
-      "energyCost": [
-        "水"
-      ],
-      "officialCardIds": [
-        "45621",
-        "45678",
-        "45685"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45621.json",
-        "data/effect-extensions/evidence/45678.json",
-        "data/effect-extensions/evidence/45685.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E1BD44D3649BF59443DC",
       "category": "pokemon",
       "effectKind": "attack",
@@ -3881,26 +3537,6 @@
         "data/effect-extensions/evidence/47345.json",
         "data/effect-extensions/evidence/48630.json",
         "data/effect-extensions/evidence/49968.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E5396312DA8B32715A8E",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分の「ホップのポケモン」が使うワザの、相手のバトルポケモンへのダメージは「+30」される。この効果は、この特性を持つポケモンが何匹いても、重ならない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47083",
-        "48658",
-        "49285"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47083.json",
-        "data/effect-extensions/evidence/48658.json",
-        "data/effect-extensions/evidence/49285.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -4251,28 +3887,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45208.json",
         "data/effect-extensions/evidence/49358.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_07E78498139DE3C72B8D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[草]エネルギーを1個選び、トラッシュする。",
-      "printedDamage": "40",
-      "energyCost": [
-        "草",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45225",
-        "45545"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45225.json",
-        "data/effect-extensions/evidence/45545.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -4894,28 +4508,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_25B6956AFF6DF28E11F5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2個トラッシュし、相手のベンチポケモン1匹にも、50ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "150",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49308",
-        "50024"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49308.json",
-        "data/effect-extensions/evidence/50024.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_25D82E653368E3DC1C2E",
       "category": "pokemon",
       "effectKind": "attack",
@@ -5237,28 +4829,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47482.json",
         "data/effect-extensions/evidence/49390.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_343EBF2A806790148960",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2個トラッシュし、相手のポケモン2匹に、それぞれ60ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48407",
-        "48498"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48407.json",
-        "data/effect-extensions/evidence/48498.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -5727,28 +5297,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50560.json",
         "data/effect-extensions/evidence/50627.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_52369B53C9D29E3FADA2",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを3個トラッシュし、相手のポケモン1匹に、280ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48801",
-        "50034"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48801.json",
-        "data/effect-extensions/evidence/50034.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -7537,24 +7085,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BC08A262B783B684B765",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "相手の手札が4枚なら、このポケモンはワザを使うための[無色]エネルギーが、すべてなくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "49645",
-        "50060"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49645.json",
-        "data/effect-extensions/evidence/50060.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_BC82E285E0CA2BBEF219",
       "category": "item",
       "effectKind": "item",
@@ -8380,28 +7910,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EAE923971A35B7C7391E",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2個トラッシュし、相手のベンチポケモン1匹にも、120ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "120",
-      "energyCost": [
-        "炎",
-        "炎",
-        "無色"
-      ],
-      "officialCardIds": [
-        "47413",
-        "47505"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47413.json",
-        "data/effect-extensions/evidence/47505.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EB5B312F9440E9AC5ACF",
       "category": "pokemon",
       "effectKind": "attack",
@@ -9138,26 +8646,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45252.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_0B7FB38F3D6E84AE806B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[炎]エネルギーを1個選び、トラッシュする。",
-      "printedDamage": "130",
-      "energyCost": [
-        "炎",
-        "炎",
-        "炎"
-      ],
-      "officialCardIds": [
-        "50094"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50094.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -10045,26 +9533,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_27725385D0EC6F9FEF58",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のベンチポケモン1匹にも、100ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "100",
-      "energyCost": [
-        "鋼",
-        "鋼",
-        "鋼"
-      ],
-      "officialCardIds": [
-        "50916"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50916.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_28014405360624DFDA22",
       "category": "pokemon",
       "effectKind": "attack",
@@ -10151,26 +9619,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50373.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2A39FBE0520D67AEAFE7",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[雷]エネルギーを1個選び、トラッシュする。",
-      "printedDamage": "150",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48942"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48942.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -10992,22 +10440,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50143.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_48C19FD4318D09C1DCDF",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分の[炎]タイプの進化ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+10」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46352"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46352.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -12083,26 +11515,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_731EC053CF8631348FC4",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のポケモン1匹に、120ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "悪",
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "46534"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46534.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7328A2470433A5E69656",
       "category": "pokemon",
       "effectKind": "ability",
@@ -12768,28 +12180,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_889B500A3034AAFC91A4",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のポケモン3匹に、それぞれ110ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "水",
-        "水",
-        "鋼",
-        "鋼",
-        "無色"
-      ],
-      "officialCardIds": [
-        "45922"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45922.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_899EFABCF2B9D9C4ACEC",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13096,24 +12486,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_933F7BB3677F7EB6EE4B",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "のぞむなら、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。",
-      "printedDamage": "80",
-      "energyCost": [
-        "超"
-      ],
-      "officialCardIds": [
-        "50251"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50251.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_940530AF04FB327E7C9E",
       "category": "tool",
       "effectKind": "tool",
@@ -13149,22 +12521,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_94A169F6F49482679DFF",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分の[草]または[炎]ポケモンが使うワザの、相手のバトルポケモンへのダメージは「+20」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46462"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46462.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_94DC4FCAFBA3D3EDCCA4",
       "category": "pokemon",
       "effectKind": "ability",
@@ -13176,26 +12532,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47417.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9569A06F1187D999E4E3",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[雷]エネルギーを2個選び、トラッシュする。",
-      "printedDamage": "140",
-      "energyCost": [
-        "雷",
-        "雷",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50665"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50665.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13476,22 +12812,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9DD090FC5FC487C1D8B1",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、自分のポケモンが使うワザの、相手のバトル場の進化ポケモンへのダメージは「+30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45962"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45962.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_9E6A2E97DC9FEFA1C9F4",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13561,26 +12881,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/45997.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A13914A69FCD8FE98BFD",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーを2個トラッシュし、相手のポケモン1匹に、120ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "悪",
-        "悪",
-        "無色"
-      ],
-      "officialCardIds": [
-        "48266"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48266.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -14778,26 +14078,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D5D14BB9200EC60EA2E9",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについているエネルギーをすべてトラッシュし、相手のポケモン1匹に、90ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色",
-        "無色",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49644"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49644.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D71F40171F2AB46BFA24",
       "category": "item",
       "effectKind": "item",
@@ -15658,26 +14938,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F231B786F018E7F92D5C",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[闘]エネルギーを2個選び、トラッシュする。",
-      "printedDamage": "140",
-      "energyCost": [
-        "闘",
-        "闘",
-        "無色"
-      ],
-      "officialCardIds": [
-        "50684"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50684.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F3272FFE932FAE5B70B7",
       "category": "pokemon",
       "effectKind": "attack",
@@ -15987,5 +15247,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1535
+  "unfinishedPrints": 1491
 }
