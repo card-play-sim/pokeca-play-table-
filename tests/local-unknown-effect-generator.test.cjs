@@ -18,6 +18,14 @@ assert.deepEqual(exactGroup(group,raw,new Set(),proof,compile),[row]);
 assert.deepEqual(exactGroup(group,raw,new Set([id]),proof,compile),[]);
 assert.deepEqual(exactGroup({...group,exampleOfficialText:'違う効果。'},raw,new Set(),proof,compile),[]);
 assert.throws(()=>exactGroup(group,raw,new Set(),()=>({...proof(),html:'modified'}),compile));
+// Exact failure modes from quarantine run 45972683023.
+const arrayRow=" ['BENCH_NON_RULE_PROTECTION','official text',['PREVENT_DAMAGE']],";
+assert.throws(()=>applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:'[F0_31] '+arrayRow}]}),/MODEL_ANCHOR_LABEL_LEAK/);
+assert.throws(()=>applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:arrayRow.slice(0,-1)}]}),/MODEL_ARRAY_SEPARATOR_LOST/);
+const nextRow=" ['NEXT_MECHANIC','another official text',['DAMAGE']],";
+assert.equal(applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:arrayRow+'\n'+nextRow}]})[path],arrayRow+'\n'+nextRow);
+assert.equal(repairProfile('MODEL_ANCHOR_LABEL_LEAK',2).type,'ANCHOR');
+assert.equal(repairProfile('MODEL_ARRAY_SEPARATOR_LOST',2).type,'SYNTAX');
 console.log('LOCAL_UNKNOWN_GENERATOR_CONTRACT PASS');
 
 // Batch related exact texts without losing distinct print IDs or confusing effect kinds.
