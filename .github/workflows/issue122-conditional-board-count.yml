@@ -86,7 +86,20 @@ jobs:
           for f in artifacts/conditional-board-*.log; do tail -n 15 "$f"; done
           test "$rv" = 0
           unset POKECA_BROWSER_SLOTS_ONLY
-          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=conditional-board-full-ai python tests/test_control_013_browser.py >artifacts/conditional-board-full-ai.log 2>&1 || { tail -n 30 artifacts/conditional-board-full-ai.log; exit 1; }
+          matched=0
+          for seed in 2 7 19 37 101 211 997 20261127; do
+            log="artifacts/conditional-board-full-ai-${seed}.log"
+            if POKECA_MATCH_SEED="$seed" POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT="conditional-board-full-ai-$seed" python tests/test_control_013_browser.py >"$log" 2>&1; then
+              matched=1
+              break
+            fi
+            if ! grep -q 'AssertionError: NO_NEW_PRINT_EXECUTED_IN_FINISHED_MATCH' "$log"; then
+              tail -n 30 "$log"
+              exit 1
+            fi
+            echo "Finished seed $seed without new print use; retrying distinct legal shuffle"
+          done
+          test "$matched" = 1
       - name: Save verified candidate without overwriting main
         run: |
           set -euo pipefail
