@@ -6392,6 +6392,82 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50779",
+      "name": "ハリテヤマ",
+      "deckName": "ハリテヤマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50779",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050779_P_HARITEYAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ワイルドプレス",
+          "cost": [
+            "闘",
+            "闘",
+            "闘"
+          ],
+          "damage": "210",
+          "text": "このポケモンにも70ダメージ。",
+          "effectId": "reference-50779-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 70
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "どすこいキャッチャー",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+          "effectId": "reference-50779-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_EVOLVE_FORCE_SWITCH",
+            "commands": [
+              "FORCE_SWITCH"
+            ],
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "マクノシタ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50779.json",
+        "sha256": "52dc69655d2245f697fd645784ca53be8457b2669bc5a6a09845dde7ea1e1fac",
+        "htmlSha256": "52dc69655d2245f697fd645784ca53be8457b2669bc5a6a09845dde7ea1e1fac",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50780",
       "name": "ゴース",
       "deckName": "ゴース",
@@ -228224,6 +228300,232 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47094",
+      "name": "ホップのバイウールー",
+      "deckName": "ホップのバイウールー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47094",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047094_P_HOPPUNOBAIURU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ずつき",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "",
+          "effectId": "reference-47094-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "チャレンジホーン",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+          "effectId": "reference-47094-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_EVOLVE_FORCE_SWITCH",
+            "commands": [
+              "FORCE_SWITCH"
+            ],
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ホップのウールー",
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47094.json",
+        "sha256": "101e9fc6a2f52cf759eb795a5cba174d96e5f59d5dae90393ba90def92201469",
+        "htmlSha256": "101e9fc6a2f52cf759eb795a5cba174d96e5f59d5dae90393ba90def92201469",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47758",
+      "name": "ハリテヤマ",
+      "deckName": "ハリテヤマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47758",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047758_P_HARITEYAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ワイルドプレス",
+          "cost": [
+            "闘",
+            "闘",
+            "闘"
+          ],
+          "damage": "210",
+          "text": "このポケモンにも70ダメージ。",
+          "effectId": "reference-47758-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 70
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "どすこいキャッチャー",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+          "effectId": "reference-47758-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_EVOLVE_FORCE_SWITCH",
+            "commands": [
+              "FORCE_SWITCH"
+            ],
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 150,
+        "evolvesFrom": "マクノシタ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47758.json",
+        "sha256": "7cf09a541ba264e078cb1ae6769b27e1aa176cb1c0ea40f888a197e6567bb45a",
+        "htmlSha256": "7cf09a541ba264e078cb1ae6769b27e1aa176cb1c0ea40f888a197e6567bb45a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48664",
+      "name": "ホップのバイウールー",
+      "deckName": "ホップのバイウールー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48664",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048664_P_HOPPUNOBAIURU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ずつき",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "80",
+          "text": "",
+          "effectId": "reference-48664-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "チャレンジホーン",
+          "text": "自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。",
+          "effectId": "reference-48664-ability-0",
+          "plan": {
+            "mechanic": "ABILITY_EVOLVE_FORCE_SWITCH",
+            "commands": [
+              "FORCE_SWITCH"
+            ],
+            "origin": "evolve",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ホップのウールー",
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48664.json",
+        "sha256": "cd012add1e19d420f94db58c14bfeea59b298680d1aebae5a828b01716bae7d4",
+        "htmlSha256": "cd012add1e19d420f94db58c14bfeea59b298680d1aebae5a828b01716bae7d4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -228974,11 +229276,6 @@
     },
     {
       "officialCardId": "50561",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50779",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

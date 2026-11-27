@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1257,
-      "missing": 445
+      "connected": 1261,
+      "missing": 441
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1251,
-      "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 388,
+      "CONNECTED_UNTESTED": 1255,
+      "MECHANIC_REQUIRED": 52,
+      "ENGINE_CONNECTION_REQUIRED": 385,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9139,8 +9139,7 @@
       "name": "ホップのバイウールー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47094.json"
     },
     {
@@ -11326,8 +11325,7 @@
       "name": "ハリテヤマ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47758.json"
     },
     {
@@ -14042,8 +14040,7 @@
       "name": "ホップのバイウールー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48664.json"
     },
     {
@@ -20135,8 +20132,7 @@
       "name": "ハリテヤマ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50779.json"
     },
     {
@@ -21353,8 +21349,8 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1257,
-        "MECHANIC_REQUIRED": 432,
+        "ENGINE_CONNECTED": 1261,
+        "MECHANIC_REQUIRED": 428,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21371,7 +21367,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3745,
-    "unconnected": 1328
+    "engineConnected": 3749,
+    "unconnected": 1324
   }
 }
