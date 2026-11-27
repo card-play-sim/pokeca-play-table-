@@ -339,3 +339,16 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
    assert.match(entry.reviewedKey,/^[a-f0-9]{64}$/);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
  }
+
+{
+ const {reviewedPlan}=require('../scripts/local-unknown-effect-generator.cjs');
+ const team={category:'item',effectKind:'item',exampleOfficialText:'自分の山札からたねポケモンの「ホップのポケモン」を2枚まで選び、ベンチに出す。そして山札を切る。'};
+ const any={...team,exampleOfficialText:'自分の山札からたねポケモンを好きなだけ選び、ベンチに出す。そして山札を切る。'};
+ const attack={category:'pokemon',effectKind:'attack',printedDamage:'0',exampleOfficialText:'自分の山札から「アメタマ」を2枚まで選び、ベンチに出す。そして山札を切る。'};
+ assert.equal(reviewedPlan(team).plan.team,'ホップ');assert.equal(reviewedPlan(team).plan.limit,2);
+ assert.equal(reviewedPlan(any).plan.limit,5);assert.equal(reviewedPlan(any).plan.team,undefined);
+ assert.equal(reviewedPlan(attack).plan.nameExact,'アメタマ');assert.equal(reviewedPlan(attack).plan.limit,2);
+ assert.equal(reviewedPlan({...team,exampleOfficialText:team.exampleOfficialText.replace('たね','1進化')}),null);
+ assert.equal(reviewedPlan({...attack,exampleOfficialText:attack.exampleOfficialText.replace('アメタマ','ランプラー')}),null);
+ assert.equal(reviewedPlan({...team,effectKind:'supporter'}),null);
+}

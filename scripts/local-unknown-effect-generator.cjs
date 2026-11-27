@@ -344,7 +344,14 @@ function reviewedPlan(group){
   const m=generic.match(/^自分のトラッシュから「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を(1枚|[2-9]枚まで)選び、(自分の\[([草炎水雷超闘悪鋼竜無色])\]ポケモン1匹|ベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモン)につける。$/);
   if(m&&(m[4]||m[2]==='1枚'))return {kind:'MAIN',category:kind,generic,plan:{mechanic:'MASS_ENERGY_ROUTE',commands:['ATTACH_ENERGY'],zone:'discard',type:m[1],limit:parseInt(m[2],10),target:m[5]?'bench':'own',holderType:m[4]||m[5],team:null,multi:false,heal:null,activeOnly:false,repeated:false,sharedWording:true}};
  }
+ if(kind==='item'&&group.category==='item'){
+  const bench=generic.match(/^自分の山札からたねポケモン(?:の「(ホップ)のポケモン」)?を(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+  if(bench)return {kind:'MAIN',category:'item',generic,plan:{mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:['SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:bench[2]==='好きなだけ'?5:parseInt(bench[2],10),...(bench[1]?{team:bench[1]}:{}),batchSearch:true,sharedWording:true}};
+ }
  if(kind==='attack'&&group.category==='pokemon'&&/^\d+$/.test(String(group.printedDamage))){
+  const named=generic.match(/^自分の山札から「(アメタマ)」を(1枚|[2-5]枚まで)選び、ベンチに出す。そして山札を切る。$/);
+  if(named)return {kind:'ATTACK',damage:String(group.printedDamage),generic,plan:{mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(Number(group.printedDamage)>0?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:parseInt(named[2],10),nameExact:named[1],batchSearch:true,sharedWording:true}};
+
   const m=generic.match(/^自分のトラッシュからポケモンと基本エネルギーを合計([2-9])枚まで選び、相手に見せて、山札にもどして切る。$/);
   if(m)return {kind:'ATTACK',damage:String(group.printedDamage),generic,plan:{mechanic:'MASS_ZONE_TRANSFER',commands:[...(Number(group.printedDamage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK','SHUFFLE_DECK'],zone:'discard',destination:'deck',category:'pokemonOrBasicEnergy',type:null,stage:null,team:null,energyType:null,limit:Number(m[1]),activeOnly:false,sharedWording:true}};
  }

@@ -1,7 +1,7 @@
 name: Local unknown effect code generation quarantine
 on:
   push:
-    branches: [automation/unknown-effect-batch-resilience-20261126, automation/reviewed-composition-first-20261128, automation/reviewed-composition-repair-20261128, main]
+    branches: [automation/unknown-effect-batch-resilience-20261126, automation/reviewed-composition-first-20261128, automation/reviewed-composition-repair-20261128, automation/reviewed-bench-search-next-20261128, main]
     paths:
       - '.github/workflows/local-unknown-effect-generator.yml'
       - 'scripts/local-unknown-effect-generator.cjs'
@@ -23,7 +23,7 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128') && 'reviewed-composition-qualification' || 'local-unknown-effect-generator' }}
+  group: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128' || github.ref == 'refs/heads/automation/reviewed-bench-search-next-20261128') && 'reviewed-composition-qualification' || 'local-unknown-effect-generator' }}
   cancel-in-progress: false
 jobs:
   synthesize:
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
-      MODEL_REVIEWED_ONLY: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128') && '1' || '0' }}
+      MODEL_REVIEWED_ONLY: ${{ (github.ref == 'refs/heads/automation/reviewed-composition-first-20261128' || github.ref == 'refs/heads/automation/reviewed-composition-repair-20261128' || github.ref == 'refs/heads/automation/reviewed-bench-search-next-20261128') && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
         with:
