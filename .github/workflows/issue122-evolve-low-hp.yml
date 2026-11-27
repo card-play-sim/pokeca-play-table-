@@ -27,7 +27,13 @@ jobs:
       - name: Validate common source and preserve published baseline
         run: |
           set -euo pipefail
-          git merge-base --is-ancestor 56d3c99a612d49fb83ee23bd8adb3e61e774a195 HEAD
+          git fetch origin main battle/issue122-union33-replay-qualified-46075612872
+          git checkout --detach 555f050a4a73bd3f72433623ea01f24a4f7fc843
+          git merge-base --is-ancestor 6f6f9f841f25adbc0b63a2238c51b932c94fcf7a HEAD
+          git diff --binary 56d3c99a612d49fb83ee23bd8adb3e61e774a195 8dc3bcd171c79b537883dfd07a8f7436090e5d58 -- engine scripts tests >/tmp/low-hp-source.patch
+          test -s /tmp/low-hp-source.patch
+          git apply --3way --index /tmp/low-hp-source.patch
+          test -z "$(git diff --name-only --diff-filter=U)"
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
           node --check scripts/lib/shared-effect-engine-worker.cjs
