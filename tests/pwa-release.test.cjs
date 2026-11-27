@@ -62,3 +62,21 @@ async function sameVersionControllerReplacement(){
  console.log('PASS initial coherent claim skips reload while real worker replacement saves and reloads');
 }
 sameVersionControllerReplacement().catch(e=>{console.error(e);process.exitCode=1;});
+
+async function firstInstallWithOfflineHint({unreachable=false}={}){
+ const handlers={},timers=[];let registrations=0,updates=0;
+ const doc={querySelector:()=>({content:BUILD}),getElementById:()=>null,addEventListener(){},createElement:()=>({setAttribute(){}}),body:{append(){}}};
+ const worker={postMessage(message,ports){ports[0].reply({build:BUILD,files:{},cacheName:'verified-release'});}};
+ const sw={controller:null,addEventListener:(key,fn)=>handlers[key]=fn,register:async()=>{registrations++;if(unreachable)throw Error('origin unavailable');return {update:async()=>{updates++;}};}};
+ const win={PokecaMobileBuild:BUILD,PokecaMobile:{features:{manualOpening:true}}};
+ vm.runInNewContext(fs.readFileSync('ui/app-update.js','utf8'),{window:win,document:doc,navigator:{serviceWorker:sw,onLine:false},isSecureContext:true,location:{reload(){throw Error('unexpected reload');}},MessageChannel:class{constructor(){this.port1={close(){}};this.port2={reply:data=>this.port1.onmessage({data})};}},setTimeout:f=>timers.push(f)});
+ await new Promise(setImmediate);
+ assert.equal(registrations,1,'a connectivity hint must not suppress initial registration');
+ if(unreachable){assert.equal(updates,0);assert.equal(win.PokecaUpdateStatus.state,'update-failed');assert.equal(timers.length,1);return;}
+ assert.equal(updates,1);
+ sw.controller=worker;handlers.controllerchange();await new Promise(setImmediate);
+ assert.equal(win.PokecaUpdateStatus.state,'ready','ready requires actual verified controller response');
+ const result=await win.PokecaUpdates.checkForUpdate({userInitiated:true});
+ assert.equal(result.ok,false);assert.equal(result.state,'offline');assert.equal(updates,1,'offline updates still blocked after initial worker installation');
+}
+(async()=>{await firstInstallWithOfflineHint();await firstInstallWithOfflineHint({unreachable:true});console.log('PASS initial verified worker registration with offline connectivity hint; unreachable origin fails closed');})().catch(e=>{console.error(e);process.exitCode=1;});
