@@ -804,7 +804,9 @@ async def main():
    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
   except Exception:
    raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
-  await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+  match_seed=int(os.environ.get('POKECA_MATCH_SEED','2'))
+  assert 0<match_seed<4294967296,'INVALID_MATCH_SEED'
+  await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',match_seed);await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
   for _ in range(10):
    pending=(await snap()).get('pendingReferenceChoice')
@@ -826,7 +828,10 @@ async def main():
     print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
    assert result['ok'],result
    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
-  final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
+  final=await snap();assert final['status']=='finished','AI_MATCH_NOT_FINISHED'
+  new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids})
+  assert used,'NO_NEW_PRINT_EXECUTED_IN_FINISHED_MATCH'
+  match={'seed':match_seed,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
   await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
   assert not errors,errors
   report={'url':page.url,'expandedAIMatch':match,'newPrints':len({f['r']['officialCardId'] for f in fixtures}),'newPatterns':len(set(f['e']['plan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/('artifacts/'+os.environ.get('POKECA_INTAKE_ARTIFACT','control-013')+'-browser.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
