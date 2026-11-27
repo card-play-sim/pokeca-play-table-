@@ -35,8 +35,11 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+# Ordinary issue comments must not evict queued intake runs. Only the exact
+# authorized command shares the real intake concurrency group. Skipped events
+# use a unique run-specific group and can never cancel a scheduled intake.
 concurrency:
-  group: incremental-official-effect-intake
+  group: ${{ github.event_name == 'issue_comment' && !(github.event.issue.number == 122 && !github.event.issue.pull_request && github.event.comment.user.login == github.repository_owner && github.event.comment.body == '/card-auto-connect') && format('incremental-official-effect-ignored-{0}', github.run_id) || 'incremental-official-effect-intake' }}
   cancel-in-progress: false
 jobs:
   continue:
