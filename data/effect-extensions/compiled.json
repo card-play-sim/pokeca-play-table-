@@ -228493,6 +228493,474 @@
         "repeated": false,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "46424",
+      "name": "ケッキングex",
+      "deckName": "ケッキングex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46424",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046424_P_KEKKINGUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートスイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "280",
+          "text": "このポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-46424-attack-0",
+          "plan": {
+            "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "さぼりたいしつ",
+          "text": "相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。",
+          "effectId": "reference-46424-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "opponentExV",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 340,
+        "evolvesFrom": "ヤルキモノ",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46424.json",
+        "sha256": "a660ef31d2a10a6e03f375029151c9aaa0cdddd279a9c4871cec3fdfaa853d9b",
+        "htmlSha256": "a660ef31d2a10a6e03f375029151c9aaa0cdddd279a9c4871cec3fdfaa853d9b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46649",
+      "name": "ケッキングex",
+      "deckName": "ケッキングex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46649",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046649_P_KEKKINGUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートスイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "280",
+          "text": "このポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-46649-attack-0",
+          "plan": {
+            "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "さぼりたいしつ",
+          "text": "相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。",
+          "effectId": "reference-46649-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "opponentExV",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 340,
+        "evolvesFrom": "ヤルキモノ",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46649.json",
+        "sha256": "d781f89dfdf90b402360ba4d6886022e545ab009814614c7ead8351231bfe293",
+        "htmlSha256": "d781f89dfdf90b402360ba4d6886022e545ab009814614c7ead8351231bfe293",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49299",
+      "name": "ケッキングex",
+      "deckName": "ケッキングex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49299",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049299_P_KEKKINGUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "グレートスイング",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "280",
+          "text": "このポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-49299-attack-0",
+          "plan": {
+            "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "さぼりたいしつ",
+          "text": "相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。",
+          "effectId": "reference-49299-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "opponentExV",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 340,
+        "evolvesFrom": "ヤルキモノ",
+        "retreatCost": 4,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49299.json",
+        "sha256": "a10abb9c0751f04b68be105ac15f2962c8d45875b95c0e12baf0f7a5ef8bc467",
+        "htmlSha256": "a10abb9c0751f04b68be105ac15f2962c8d45875b95c0e12baf0f7a5ef8bc467",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50371",
+      "name": "メガゴルーグex",
+      "deckName": "メガゴルーグex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50371",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050371_P_MGORUGUIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ゴライアスパンチ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "300",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-50371-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "きどうせいげん",
+          "text": "自分の手札が10枚以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-50371-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "ownHand",
+            "required": 10,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ゴビット",
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50371.json",
+        "sha256": "2fa27a9a4cd468e505e8bba7bc9cae21ed1c9ec6b1dcd472ffe622ad3211c4a8",
+        "htmlSha256": "2fa27a9a4cd468e505e8bba7bc9cae21ed1c9ec6b1dcd472ffe622ad3211c4a8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50534",
+      "name": "メガゴルーグex",
+      "deckName": "メガゴルーグex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50534",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050534_P_MGORUGUIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ゴライアスパンチ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "300",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-50534-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "きどうせいげん",
+          "text": "自分の手札が10枚以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-50534-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "ownHand",
+            "required": 10,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ゴビット",
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50534.json",
+        "sha256": "0854a569bfd5e3b9aa95b8e9560cca7ae6f9a349438122340f1a4d203eeb1162",
+        "htmlSha256": "0854a569bfd5e3b9aa95b8e9560cca7ae6f9a349438122340f1a4d203eeb1162",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50550",
+      "name": "メガゴルーグex",
+      "deckName": "メガゴルーグex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50550",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6/050550_P_MGORUGUIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ゴライアスパンチ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "300",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-50550-attack-0",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "きどうせいげん",
+          "text": "自分の手札が10枚以上のときにしか、このポケモンはワザが使えない。",
+          "effectId": "reference-50550-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_CONTEXT_ATTACK_GATE",
+            "commands": [
+              "ADD_STATE"
+            ],
+            "mode": "ownHand",
+            "required": 10,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ゴビット",
+        "retreatCost": 3,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50550.json",
+        "sha256": "171b40e1d395c5fd2991eb45b19b725be7974877b06eaaffdfc9f4ee48de6120",
+        "htmlSha256": "171b40e1d395c5fd2991eb45b19b725be7974877b06eaaffdfc9f4ee48de6120",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

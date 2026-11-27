@@ -1692,26 +1692,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_158AA5FE1E0343B7C4BE",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の手札が10枚以上のときにしか、このポケモンはワザが使えない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50371",
-        "50534",
-        "50550"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50371.json",
-        "data/effect-extensions/evidence/50534.json",
-        "data/effect-extensions/evidence/50550.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1753C21473FEE9483833",
       "category": "pokemon",
       "effectKind": "attack",
@@ -2674,26 +2654,6 @@
         "data/effect-extensions/evidence/45724.json",
         "data/effect-extensions/evidence/45846.json",
         "data/effect-extensions/evidence/46699.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AF53BB19C24EA50E5D00",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46424",
-        "46649",
-        "49299"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46424.json",
-        "data/effect-extensions/evidence/46649.json",
-        "data/effect-extensions/evidence/49299.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -6543,24 +6503,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D9306FC8B0FB222F006C",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50160",
-        "50208"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50160.json",
-        "data/effect-extensions/evidence/50208.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_D96FF45171D4B240BEC8",
       "category": "pokemon",
       "effectKind": "attack",
@@ -7052,24 +6994,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50296.json",
         "data/effect-extensions/evidence/50330.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F10AA9119DBC3CAA9210",
-      "category": "item",
-      "effectKind": "item",
-      "exampleOfficialText": "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "48299",
-        "50071"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/48299.json",
-        "data/effect-extensions/evidence/50071.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -9433,24 +9357,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/49605.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5751A9D8251EBE417AA6",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分のトラッシュからポケモンと基本エネルギーを合計3枚まで選び、相手に見せて、山札にもどして切る。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "50694"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50694.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13696,5 +13602,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1328
+  "unfinishedPrints": 1317
 }

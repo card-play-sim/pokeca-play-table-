@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 554,
-      "missing": 316
+      "connected": 557,
+      "missing": 313
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 553,
+      "CONNECTED_UNTESTED": 556,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 273,
+      "ENGINE_CONNECTION_REQUIRED": 270,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -17972,8 +17972,7 @@
       "name": "メガゴルーグex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50371.json"
     },
     {
@@ -18469,8 +18468,7 @@
       "name": "メガゴルーグex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50534.json"
     },
     {
@@ -18580,8 +18578,7 @@
       "name": "メガゴルーグex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50550.json"
     },
     {
@@ -21342,8 +21339,8 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1300,
-        "MECHANIC_REQUIRED": 557,
+        "ENGINE_CONNECTED": 1303,
+        "MECHANIC_REQUIRED": 554,
         "ENGINE_CONNECTION_REQUIRED": 7
       },
       "I": {
@@ -21355,8 +21352,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 553,
-        "MECHANIC_REQUIRED": 308,
+        "ENGINE_CONNECTED": 556,
+        "MECHANIC_REQUIRED": 305,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21366,7 +21363,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3750,
-    "unconnected": 1323
+    "engineConnected": 3756,
+    "unconnected": 1317
   }
 }
