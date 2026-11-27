@@ -1480,7 +1480,7 @@ function prepare(r, e, kind) {
     }
     if (!attached) return {blocked:"NO_ATTACHED_TOOL_FIXTURE_RESOURCE"};
   }
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_MILL", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -4066,6 +4066,23 @@ function verifyCase(t, e) {
       verifyPrintedAttack(start, end, e, base + damage / 10 * perCounter);
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if(e.plan.mechanic==='COIN_UNTIL_TAILS_MILL'){
+    const action=t.action||o.action;
+    assert(before.players[1].deck.length>=2);
+    for(const [seed,heads] of [[682,0],[3,1],[0,2]]){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
+      assert.deepEqual(events.filter(x=>x?.command==='COIN_FLIP').map(x=>x.heads),[...Array(heads).fill(true),false]);
+      const expected=start.players[1].deck.slice(0,heads).map(c=>c.id);
+      assert.deepEqual(end.players[1].deck.map(c=>c.id),start.players[1].deck.slice(heads).map(c=>c.id));
+      assert.deepEqual(end.players[1].discard.slice(start.players[1].discard.length,start.players[1].discard.length+heads).map(c=>c.id),expected);
+      verifyPrintedAttack(start,end,e,e.plan.base);
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(),end);
     }
   }
   if (e.plan.mechanic === "COIN_UNTIL_TAILS_DAMAGE") {
