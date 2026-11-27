@@ -203,3 +203,17 @@ async function repairLoopTest(){
  console.log('LOCAL_UNKNOWN_PRODUCTION_REPAIR_LOOP PASS');
 }
 repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
+
+// Actual quarantine run 45989556763: ability generation edited attack-only acceleration.
+{
+ const gen=require('../scripts/local-unknown-effect-generator.cjs');
+ const file='engine/reference-effect-plans.cjs';
+ const source=['function additionalAttackPlan(entry,text){',' const wrong= text.match(/山札からエネルギーをベンチにつける/);',' return wrong;','}','function plan(entry,kind){',' const right= text.match(/山札からエネルギーをベンチにつける/);',' return right;','}'].join('\n');
+ const group={effectKind:'ability',exampleOfficialText:'山札からエネルギーをベンチにつける'};
+ const ability=gen.modelAnchors({[file]:source},group,4000);
+ const attack=gen.modelAnchors({[file]:source},{...group,effectKind:'attack'},4000);
+ assert(![...ability.values()].some(x=>x.before.includes('const wrong=')));
+ assert([...ability.values()].some(x=>x.before.includes('const right=')));
+ assert([...attack.values()].some(x=>x.before.includes('const wrong=')));
+ assert.equal(gen.repairProfile('JSON.stringify(...) Error: EXTENSION_IMMUTABLE_SOURCE_CONFLICT:45496:compiled facts differ').type,'INTEGRITY');
+}
