@@ -1,0 +1,140 @@
+name: 相手にげるエネルギー増加・全残件対戦検証
+on:
+  push:
+    branches: [battle/issue122-opponent-retreat-20261128]
+    paths: ['.github/workflows/issue122-opponent-retreat.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-opponent-retreat
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate common source and preserve published baseline
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout --detach origin/main
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          changes=json.loads("[{\"path\":\"engine/reference-effect-plans.cjs\",\"from\":\" const typedRetreat=generic.match(\",\"to\":\" const opponentRetreat=generic.match(/^このポケモンがいるかぎり、相手のバトルポケモンは、にげるためのエネルギーが([1-9])個ぶん多くなる。$/);\\n if(kind==='ABILITY'&&opponentRetreat)return {mechanic:'PASSIVE_OPPONENT_RETREAT_INCREASE',commands:['MODIFY_RETREAT_COST'],amount:Number(opponentRetreat[1]),sharedWording:true};\\n const typedRetreat=generic.match(\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\"'PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT']);\",\"to\":\"'PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_OPPONENT_RETREAT_INCREASE']);\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\"  // Continuous retreat modifiers are recomputed after each action.\",\"to\":\"  if(p.active)p.active.retreatCost+=field(opponent(g,p.id)).flatMap(c=>enabledAbilities(g,c)).filter(a=>a.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE').reduce((sum,a)=>sum+a.plan.amount,0);\\n  // Continuous retreat modifiers are recomputed after each action.\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"  if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){\",\"to\":\"  if(m==='PASSIVE_OPPONENT_RETREAT_INCREASE'){\\n    const attackIndex=r.attacks.findIndex(a=>a.plan?.mechanic==='SCALED_ATTACK_DAMAGE'&&a.plan.metric==='opponentRetreat');\\n    if(attackIndex<0)return {blocked:'NO_RETREAT_INCREASE_TRIGGER'};\\n    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');\\n    if(t.blocked)return t;\\n    const start=t.port.getSnapshot(),[own,other]=start.players,holder=own.active;\\n    if(!holder||E.getReferenceEffectRecord(holder).officialCardId!==r.officialCardId||!other.active||!other.bench.length||!own.bench.length)return {blocked:'NO_RETREAT_INCREASE_FIXTURE'};\\n    if(other.active.tools?.length||E.getReferenceEffectRecord(other.active).abilities.length||[...own.bench,...other.bench].some(c=>E.getReferenceEffectRecord(c).abilities.length))return {blocked:'RETREAT_INCREASE_CONFOUNDED'};\\n    assert.equal(other.active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost+e.plan.amount);\\n    assert.equal(holder.retreatCost,r.facts.retreatCost);\\n    for(const c of other.bench)assert.equal(c.retreatCost,E.getReferenceEffectRecord(c).facts.retreatCost);\\n    const removed=JSON.parse(JSON.stringify(start)),ours=removed.players[0],mon=ours.active;\\n    ours.active=ours.bench.shift();ours.deck.push(...(mon.energyCards||[]),...(mon.tools||[]),...(mon.evolutionCards||[]));\\n    const bare={...(mon.evolutionCards?.length?mon.validationBase:mon),id:mon.id};\\n    for(const k of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','evolvedTurn','statusCondition','validationBase'])delete bare[k];\\n    ours.hand.push(bare);\\n    const baseline=port(removed).getSnapshot();\\n    assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(baseline)));\\n    assert.equal(baseline.players[1].active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost);\\n    return {...t,trigger};\\n  }\\n  if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"  if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(e.plan.mechanic)){\",\"to\":\"  if(e.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE'){\\n    const [own,other]=before.players;\\n    assert(E.getReferenceEffectRecord(own.active).abilities.some(a=>a.effectId===e.effectId));\\n    assert.equal(other.active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost+e.plan.amount);\\n    verifyPrintedAttack(before,after,t.trigger,t.trigger.plan.base+t.trigger.plan.unit*other.active.retreatCost);\\n    const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:own.active.id,abilityId:e.effectId}).ok,false);\\n    assert.equal(JSON.stringify(B.canonical(bad.getSnapshot())),JSON.stringify(B.canonical(before)));\\n  }\\n  if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(e.plan.mechanic)){\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT',\",\"to\":\"elif not trigger or m in ('PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT',\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"   if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):\",\"to\":\"   if m=='PASSIVE_OPPONENT_RETREAT_INCREASE':\\n    other=before['players'][1]['active']\\n    printed=await page.evaluate(\\\"c=>Pokeca.getReferenceEffectRecord(c).facts.retreatCost\\\",other)\\n    assert other['retreatCost']==printed+f['e']['plan']['amount']\\n    assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])\\n   if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):\"}]")
+          for change in changes:
+              p=Path(change['path']); s=p.read_text()
+              assert s.count(change['from'])==1,change['path']
+              p.write_text(s.replace(change['from'],change['to']))
+          PY
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          mkdir -p artifacts
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Print exact evolution target diagnostics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          def visit(x,p):
+              if isinstance(x,dict):
+                  slot=x.get('slot')
+                  if isinstance(slot,str) and any(slot.startswith(i+':') for i in ('50255','50317','50333')) and x.get('status') in ('FAILED','BLOCKED'):
+                      print(p,json.dumps(x,ensure_ascii=False)[:5000])
+                  for v in x.values(): visit(v,p)
+              elif isinstance(x,list):
+                  for v in x: visit(v,p)
+          for p in pathlib.Path('work/card-auto-connect').rglob('*.json'):
+              try: visit(json.loads(p.read_text()),str(p))
+              except (ValueError,OSError): pass
+          PY
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const required=["50255","50317","50333"].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/opponent-retreat-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PREVIOUSLY_QUALIFIED_PRINT_MISSING');
+          console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
+          assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          bash scripts/install-ci-chromium.sh
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="opponent-retreat-$shard" python tests/test_control_013_browser.py >"artifacts/opponent-retreat-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/opponent-retreat-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=opponent-retreat-full-ai python tests/test_control_013_browser.py >artifacts/opponent-retreat-full-ai.log 2>&1 || { tail -n 30 artifacts/opponent-retreat-full-ai.log; exit 1; }
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/opponent-retreat-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/opponent-retreat-candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: verified opponent retreat increase'
+          ref="HEAD:refs/heads/battle/issue122-opponent-retreat-qualified-$GITHUB_RUN_ID"
+          for attempt in 1 2 3; do
+            if git push origin "$ref"; then exit 0; fi
+            sleep $((attempt*5))
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opponent-retreat-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
