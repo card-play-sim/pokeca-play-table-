@@ -17,8 +17,26 @@ function applyEdits(sources,proposal){
   assert(!/\[F\d+_\d+\]/.test(edit.after),'MODEL_ANCHOR_LABEL_LEAK');
   // Preserve separators for a whole-line array entry. Removing the final
   // comma can turn the next row into a computed property access.
-  if (/^\s*\[['"]/.test(edit.before)&&/,\s*$/.test(edit.before))
+  if (/^\s*\[['"]/.test(edit.before)&&/,\s*$/.test(edit.before)){
    assert(/,\s*$/.test(edit.after),'MODEL_ARRAY_SEPARATOR_LOST');
+   // Every inserted definition row needs its own separator. A missing comma
+   // before the preserved anchor can parse as computed access and crash at load.
+   const rows=edit.after.split('\n').filter(line=>line.trim());
+   assert(rows.every(line=>/^\s*\[['"]/.test(line)&&/,\s*$/.test(line)),'MODEL_ARRAY_SEPARATOR_LOST');
+   // Reject a duplicate literal mechanic/text pair even with changed whitespace.
+   // Do not rewrite punctuation or infer a different official effect.
+   const pair=line=>{
+    const m=/^\s*\[\s*(['"])([^'"]+)\1\s*,\s*(['"])([^'"]+)\3\s*,/.exec(line);
+    return m?JSON.stringify([m[2],m[4]]):null;
+   };
+   const existing=new Set(result[edit.path].split('\n').map(pair).filter(Boolean));
+   for(const line of rows){
+    if(line===edit.before)continue;
+    const key=pair(line);
+    assert(key&&!existing.has(key),'MODEL_DUPLICATE_DEFINITION');
+    existing.add(key);
+   }
+  }
   assert(result[edit.path].split(edit.before).length===2,'NONUNIQUE_OR_STALE_ANCHOR:'+edit.path);
   // Unknown official effects require a separate parser rule. Preserve the old
   // exact anchor line; immutable compiled-record comparison remains mandatory.
@@ -234,7 +252,7 @@ function repairProfile(feedback='',attempt=1){
  /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT|MODEL_EDIT_OPERATION_REQUIRED/i.test(reason)?'FORMAT':
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT|MODEL_ANCHOR_LABEL_LEAK/i.test(reason)?'ANCHOR':
- /MODEL_ARRAY_SEPARATOR_LOST/i.test(reason)?'SYNTAX':
+ /MODEL_ARRAY_SEPARATOR_LOST|MODEL_DUPLICATE_DEFINITION/i.test(reason)?'SYNTAX':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
  /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
  /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
@@ -245,7 +263,7 @@ function repairProfile(feedback='',attempt=1){
  const instructions={
  TRANSPORT:'Previous inference timed out. Produce the smallest complete patch; avoid duplicated source and long explanations.',
  TRUNCATED:'Previous output was incomplete. Return fewer, shorter exact edits; never omit closing JSON delimiters.',
- SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor, balanced syntax and array separators. Do not change the tests.',
+ SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor, balanced syntax and a comma after each inserted definition row. Never duplicate an existing mechanic/text pair. Do not change the tests.',
  FORMAT:'Previous output was not valid JSON. Use JSON string escaping, no markdown, no trailing commas, one complete object.',
  ANCHOR:'Previous edit anchor was stale or ambiguous. Copy an existing anchor ID from the supplied table. For compiler additions use insertBefore with only new code; the host preserves the original. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',

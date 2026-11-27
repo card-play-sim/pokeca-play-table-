@@ -265,6 +265,20 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.deepEqual(selectBatch([a,b],1,{maxPrints:1}),[]);
 }
 
+// Actual run 46002169346: a duplicate RECON row without a trailing comma
+// parsed as computed access and crashed at module load. Reject before scratch.
+{
+ const compiler='engine/reference-effect-plans.cjs';
+ const existing=" ['RECON','official existing text',['SEARCH_DECK']],";
+ const duplicate="['RECON', 'official existing text', ['SEARCH_DECK']]";
+ const fresh=" ['RECON','different exact text',['SEARCH_DECK']],";
+ const src={[compiler]:existing};
+ assert.throws(()=>applyEdits(src,{edits:[{path:compiler,before:existing,after:duplicate+'\n'+existing}]}),/MODEL_ARRAY_SEPARATOR_LOST/);
+ assert.throws(()=>applyEdits(src,{edits:[{path:compiler,before:existing,after:duplicate+',\n'+existing}]}),/MODEL_DUPLICATE_DEFINITION/);
+ assert.equal(applyEdits(src,{edits:[{path:compiler,before:existing,after:fresh+'\n'+existing}]})[compiler],fresh+'\n'+existing);
+ assert.equal(repairProfile('MODEL_DUPLICATE_DEFINITION').type,'SYNTAX');
+}
+
 // Production composition path: whole exact printed wording only, parameters
 // and zone/holder semantics taken from the reviewed grammar, not model output.
 {
