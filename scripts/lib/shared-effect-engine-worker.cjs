@@ -265,7 +265,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
  if(m==='MASS_COUNT_COIN_DAMAGE'){
   if(plan.metric==='ownTypedBoard')reserve(r=>mon(r,plan.type,0),'bench');
-  if(plan.metric==='ownTypedEnergy')reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
+  if(plan.metric==='ownTypedEnergy'){
+   const typed=r=>isBasicEnergy(r)&&typeOf(r)===plan.type;
+   const energy=firstReservable([...manifest.decks[deckIndex].cards.map(lookup).filter(Boolean),...legal],typed,r=>ensure(deckIndex,r,kindAttackCost(e,plan.type)+2),source.officialCardId);
+   if(energy)requirements.push({side:0,zone:'deck',printId:energy.officialCardId});
+  }
   if(plan.metric==='bothActiveEnergy')reserveEnergy(null,2,1-deckIndex);
   if(plan.metric==='opponentBench')reserve(r=>mon(r,null,0),'bench',1);
  }
