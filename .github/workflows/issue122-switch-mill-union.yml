@@ -68,7 +68,36 @@ jobs:
           p.write_text(s.replace(anchor,block+anchor))
           PY
           git add tests/fixtures/control-009-extension-manifest.cjs tests/test_control_013_browser.py
-          apply_sources "$old" 288c853acad76e58c41963e9ba24e2ee3c208b75
+          # The two switch plans insert adjacent clauses; combine those exact
+          # changes without overwriting the earlier self-switch implementation.
+          git diff --binary "$old" 288c853acad76e58c41963e9ba24e2ee3c208b75 -- scripts > /tmp/evolve-worker.patch
+          git apply --3way --index /tmp/evolve-worker.patch
+          git show 288c853acad76e58c41963e9ba24e2ee3c208b75:engine/reference-effect-plans.cjs >/tmp/evolve-plans.cjs
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('engine/reference-effect-plans.cjs')
+          s=p.read_text()
+          source=Path('/tmp/evolve-plans.cjs').read_text()
+          anchor=" if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')"
+          begin=" if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')"
+          assert s.count(anchor)==1 and source.count(begin)==1 and begin not in s
+          block=source[source.index(begin):source.index(anchor,source.index(begin))]
+          assert "mechanic:'ABILITY_EVOLVE_FORCE_SWITCH'" in block
+          p.write_text(s.replace(anchor,block+anchor))
+          p=Path('engine/pokeca_reference_effect_runtime.cjs')
+          s=p.read_text()
+          def replace(a,b):
+              global s
+              assert s.count(a)==1,a
+              s=s.replace(a,b)
+          replace("if(['SWITCH','BOSS'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);","if(['SWITCH','BOSS','ABILITY_EVOLVE_FORCE_SWITCH'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);")
+          a=" if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');"
+          replace(a," if(m==='ABILITY_EVOLVE_FORCE_SWITCH')assert(opponent(g,actor).bench.length>0,'NO_OPPONENT_BENCH');\n"+a)
+          replace("case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;","case 'ABILITY_EVOLVE_FORCE_SWITCH':case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;")
+          p.write_text(s)
+          PY
+          git add engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs
+          test -z "$(git diff --name-only --diff-filter=U)"
           apply_sources 8bab0ac2e795927ef9a4f10fee372025c48b0458 d33e1d81af2e95de67d14baa1b6204544279bf58
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
