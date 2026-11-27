@@ -1,4 +1,4 @@
-name: Issue122 union 33 previously qualified prints and residual recovery
+name: 合格済み34枚の統合・未公開21枚の再検証
 on:
   push:
     branches: [battle/issue122-union33-replay-20261128]
@@ -29,8 +29,9 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin main battle/issue122-union14-qualified-46067882689 battle/issue122-coin-defense-qualified-46071225435 battle/issue122-retreat-context-qualified-46072036077
+          git fetch origin main battle/issue122-union14-qualified-46067882689 battle/issue122-coin-defense-qualified-46073664159 battle/issue122-retreat-context-qualified-46072036077
           git checkout --detach origin/main
+          git merge-base --is-ancestor d7a611644a59087a534b83e18843354160ab9f86 HEAD
           apply_sources() {
             local base="$1" head="$2" ref="$3"
             test "$(git rev-parse "origin/$ref")" = "$head"
@@ -38,7 +39,7 @@ jobs:
             if test -s /tmp/qualified-source.patch; then git apply --3way --index /tmp/qualified-source.patch; fi
           }
           apply_sources 8a19ec8648b01abbc210e2849c0ac991d6509f1c 83d30ba36a8a66044bf51049ea16933acd2e3749 battle/issue122-union14-qualified-46067882689
-          apply_sources 9ac25855d46d6eba263b1dd237d9fc4792a647cf c65ea1a145d72de2fac510cc074c4a324f0d0155 battle/issue122-coin-defense-qualified-46071225435
+          apply_sources 9ac25855d46d6eba263b1dd237d9fc4792a647cf 7c3f2427f0b1306ad0a52e638df546698cd980b9 battle/issue122-coin-defense-qualified-46073664159
           apply_sources 8a19ec8648b01abbc210e2849c0ac991d6509f1c 1c6b5f1fda257ad05823f5196b850357df244b5c battle/issue122-retreat-context-qualified-46072036077
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
@@ -60,7 +61,7 @@ jobs:
           const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
           const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
           assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
-          const required=["47298","47377","47386","48525","48738","46342","46425","47431","47677","48049","49005","49303","45245","49657","45747","45850","46426","46641","46737","48616","49075","49989","49999","50155","50202","50216","46012","46161","46774","47314","48541","49241","49957"].filter(id=>!old.has(id));
+          const required=["47298","47377","47386","48525","48738","46342","46425","47431","47677","48049","49005","49303","45245","49657","45747","45850","46426","46641","46737","48616","49075","49989","49999","50155","50202","50216","50258","46012","46161","46774","47314","48541","49241","49957"].filter(id=>!old.has(id));
           const added=[...now.keys()].filter(id=>!old.has(id)).sort();
           const candidate=require('./work/card-auto-connect/candidate.json');
           const verified=new Set(candidate.qualified.map(String));
