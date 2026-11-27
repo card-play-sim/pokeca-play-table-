@@ -193294,6 +193294,65 @@
         "htmlSha256": "18ef30275f7eb140de07945a5ac9ca3520c82b47ec3aeaa59a81e00acd07a079",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "49056",
+      "name": "リーリエのキュワワー",
+      "deckName": "リーリエのキュワワー",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49056",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049056_P_RIRIENOKIXYUWAWA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はなまねき",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分の山札からたねポケモンの「リーリエのポケモン」を好きなだけ選び、ベンチに出す。そして山札を切る。"
+        },
+        {
+          "name": "ぱっときえる",
+          "cost": [
+            "超"
+          ],
+          "damage": "30",
+          "text": "このポケモンと、ついているすべてのカードを、手札にもどす。"
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49056.json",
+        "sha256": "cded76d9c342ddf6a7e79ab29ca308a9d04ef69f544582bcf5f0bdb667b28750",
+        "htmlSha256": "cded76d9c342ddf6a7e79ab29ca308a9d04ef69f544582bcf5f0bdb667b28750",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []
