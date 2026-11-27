@@ -246,3 +246,21 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:next,after:original}]},anchors),/MODEL_EDIT_OPERATION_REQUIRED/);
  assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:original}]},anchors),/MODEL_DUPLICATE_INSERTION_ANCHOR/);
 }
+
+// Actual rejected Palafin ex ability must include the explicitly named
+// transform ability even when a compact repair would otherwise select one.
+{
+ const restriction='このカードは、「イルカマン」の特性「マイティチェンジ」の効果によってしか場に出せない。';
+ const transform='自分の番に、このポケモンがバトル場からベンチにもどったとき、1回使える。自分の山札から「イルカマンex」を1枚選び、このカードと入れ替える（ついているカード・ダメカン・特殊状態・効果などは、すべて引きつぐ）。入れ替えたなら、このカードは山札にもどす。そして山札を切る。';
+ const a={group:{sharedTaskId:mkId(301),effectKind:'ability',category:'pokemon',exampleOfficialText:restriction},records:[{officialCardId:'45727',name:'イルカマンex'}]};
+ const b={group:{sharedTaskId:mkId(302),effectKind:'ability',category:'pokemon',exampleOfficialText:transform},records:[{officialCardId:'45726',name:'イルカマン',abilities:[{name:'マイティチェンジ',text:transform}]}]};
+ const batch=selectBatch([a,b],1);
+ assert.equal(batch.length,2);
+ const scope=attemptScope(batch,{groups:1});
+ assert.equal(scope.groups.length,2);
+ assert.deepEqual(scope.requiredTogether.sort(),['45726','45727']);
+ const prev={groups:scope.groups,targetIds:['45726','45727'],fingerprint:fp};
+ assert.equal(retryBatch([a,b],prev,fp).length,2);
+ assert.deepEqual(retryBatch([a,b],{...prev,targetIds:['45727']},fp),[]);
+ assert.deepEqual(selectBatch([a,b],1,{maxPrints:1}),[]);
+}
