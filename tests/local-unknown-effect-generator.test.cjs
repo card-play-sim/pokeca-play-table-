@@ -352,3 +352,16 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(reviewedPlan({...attack,exampleOfficialText:attack.exampleOfficialText.replace('アメタマ','ランプラー')}),null);
  assert.equal(reviewedPlan({...team,effectKind:'supporter'}),null);
 }
+
+{
+ const {validateDefinitionScope}=require('../scripts/local-unknown-effect-generator.cjs');
+ const target='このカードは、相手のサイドの残り枚数が2枚以下のときにしか使えない。';
+ const old=" ['RECON','既存の公式効果。',['DRAW']],";
+ const wrong=" ['SUPPORTER_MEGA_HEAL_RETURN_ENERGY','自分の「メガシンカex」1匹のHPを、すべて回復する。',['HEAL']],";
+ const row=" ['NEW_TARGET','"+target+"',['ADD_STATE']],";
+ const group=[{exampleOfficialText:target}];
+ const prop=line=>({edits:[{path:'engine/reference-effect-plans.cjs',before:old,after:line+'\n'+old}]});
+ assert.throws(()=>validateDefinitionScope(group,prop(wrong)),/MODEL_OFF_TARGET_DEFINITION/);
+ assert.doesNotThrow(()=>validateDefinitionScope(group,prop(row)));
+ assert.equal(repairProfile('MODEL_OFF_TARGET_DEFINITION').type,'INTEGRITY');
+}
