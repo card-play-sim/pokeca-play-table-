@@ -189,6 +189,9 @@ jobs:
               node scripts/build-effect-extensions.cjs
               node scripts/sync-reference-effects.cjs
               node scripts/stage-card-auto-connect.cjs "$base" work/model-candidate
+              # A zero-qualification attempt cannot produce legal new-print fixtures.
+              # Fail early; the trusted host will extract the exact target failures.
+              node -e "const r=require(\"./work/model-candidate/candidate.json\");if(!Array.isArray(r.qualified)||!r.qualified.length)throw Error(\"NO_SELECTED_PRINT_QUALIFIED\")"
               git restore --source=HEAD -- data/effect-extensions/compiled.json
               node scripts/build-effect-extensions.cjs
               node scripts/sync-reference-effects.cjs
@@ -242,6 +245,13 @@ jobs:
                 fi
                 printf '\nBROWSER_EXECUTION_FAILED\n' >> "$out/engine.log"
                 python scripts/unknown-repair-feedback.py "$out/browser.log" >> "$out/engine.log"
+              fi
+            else
+              # Even if the sandbox fails before fixture generation, preserve
+              # its bounded, inert target receipt for the next repair attempt.
+              # This diagnostic never converts an unsuccessful engine run to PASS.
+              if [ -f "$scratch/work/model-candidate/candidate.json" ]; then
+                python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1 || true
               fi
             fi
             persist_history "$out" QUARANTINE_FAILED
