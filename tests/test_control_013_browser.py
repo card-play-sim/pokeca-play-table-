@@ -206,8 +206,23 @@ async def main():
     attack_print=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",before['players'][0]['active'])
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
+    if m=='PASSIVE_TEAM_ATTACK_BOOST':
+     proof=trigger['proofTeamBoost'];plan=f['e']['plan']
+     own=before['players'][0];other=before['players'][1]
+     assert attack_print==proof['attackerChain'][-1]
+     defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",other['active'])
+     assert defender_print==proof['defenderChain'][-1]
+     holders=await page.evaluate("cards=>cards.map(c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId)",own['bench'])
+     assert holders.count(r['officialCardId'])==(2 if plan.get('nonStack') else 1)
+     assert proof['holderPrint']==r['officialCardId']
+     if plan.get('evolvedSource'):assert own['active']['evolutionCards']
+     if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
+     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
+     assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
+    elif not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
+     if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
+      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
     else:
      # An evolved in-play instance keeps its base identity; resolve the current print through the engine.
      defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",before['players'][1]['active'])

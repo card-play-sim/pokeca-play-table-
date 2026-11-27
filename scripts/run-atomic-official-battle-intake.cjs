@@ -19,7 +19,7 @@ function commands({limit,base}) {
     ['REPAIR_UNCOMPILED_FACTS_FROM_OFFICIAL_EVIDENCE','node',['scripts/refresh-uncompiled-official-facts.cjs','--apply']],
     ['FETCH_PARSE_AND_COMPILE_WITH_SHARED_ENGINE','python',[
       'scripts/continue-official-effect-intake.py','--limit',String(limit),
-      '--adopt','--retry-transient','--ids',idFile]],
+      '--adopt','--retry-transient','--ids',idFile,'--classification-only']],
     ['EXECUTE_ALL_CARD_EFFECTS_IN_REAL_ENGINE','node',[
       'scripts/stage-card-auto-connect.cjs',base,work]],
     // Restore the prior compiled artifact, not the official source evidence.
