@@ -107,6 +107,15 @@ function requiredCopies(requirements,side,printId){
 }
 // A complete evolution line is a single reservation transaction. Restore
 // the deck and its protected IDs if any physical parent cannot be reserved.
+// Enumerate exact registered parent alternatives. Stage decreases strictly,
+// so no cyclic evolution or fabricated print can enter a fixture.
+function* evolutionLines(record,candidates){
+ if(record.facts.basic){yield [record];return;}
+ for(const parent of candidates){
+  if(parent.category!=='pokemon'||parent.name!==record.facts.evolvesFrom||parent.facts.stage!==record.facts.stage-1)continue;
+  for(const prefix of evolutionLines(parent,candidates))yield [...prefix,record];
+ }
+}
 function tryReserveChain(deck,reservedPrints,index,chain,ensure){
  const original=deck.cards.map(c=>({...c}));
  const had=reservedPrints.has(index),reserved=new Set(reservedPrints.get(index)||[]);
@@ -244,15 +253,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)||m==='MASS_BOARD_BONUS'&&plan.predicate==='evolvedFromThisTurn')&&!source.facts.basic){
-  const chain=record=>{
-   if(record.facts.basic)return [record];
-   const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
-   const before=parent&&chain(parent);return before?[...before,record]:null;
-  };
-  const line=chain(source);
-  if(line&&tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,line.slice(0,-1),ensure)){
+  for(const line of evolutionLines(source,legal)){
+   if(!tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,line.slice(0,-1),(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId))))continue;
    requirements.evolvedSourceChain=line.map(x=>x.officialCardId);
    for(const parent of line.slice(0,-1))requirements.push({side:0,zone:'hand',printId:parent.officialCardId});
+   break;
   }
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
@@ -262,18 +267,16 @@ function fixtureResources(manifest,deckIndex,source,e){
    // evolution line, not an evolved card inserted into the field.
    const basic=reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,zone);
    if(!basic){
-    const line=r=>{
-     if(r.facts.basic)return [r];
-     const parent=legal.find(x=>x.category==='pokemon'&&x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1);
-     const previous=parent&&line(parent);return previous?[...previous,r]:null;
-    };
     const occupied=new Set(requirements.filter(x=>x.side===0).map(x=>x.printId));
-    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1&&x.every(record=>!occupied.has(record.officialCardId))).sort((x,y)=>x.length-y.length);
-    for(const chain of options){
-     if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
-      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
-      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
-      requirements.teraChain=chain.map(record=>record.officialCardId);break;
+    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true&&!r.facts.basic).sort((x,y)=>x.facts.stage-y.facts.stage);
+    outer:for(const target of options){
+     for(const chain of evolutionLines(target,legal)){
+      if(chain.some(record=>occupied.has(record.officialCardId)))continue;
+      if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
+       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+       requirements.teraChain=chain.map(record=>record.officialCardId);break outer;
+      }
      }
     }
    }
@@ -379,17 +382,14 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
    const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
    if(!reserve(r=>named(r)&&r.facts.basic,'bench')){
-    const line=record=>{
-     if(record.facts.basic)return [record];
-     const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
-     const previous=parent&&line(parent);return previous?[...previous,record]:null;
-    };
-    for(const chain of legal.filter(named).map(line).filter(x=>x&&x.length>1).sort((a,b)=>a.length-b.length)){
-     if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
-      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
-      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
-      requirements.namedBenchChain=chain.map(record=>record.officialCardId);
-      break;
+    outer:for(const target of legal.filter(r=>named(r)&&!r.facts.basic).sort((a,b)=>a.facts.stage-b.facts.stage)){
+     for(const chain of evolutionLines(target,legal)){
+      if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId)))){
+       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+       requirements.namedBenchChain=chain.map(record=>record.officialCardId);
+       break outer;
+      }
      }
     }
    }
@@ -4002,6 +4002,7 @@ function verifyPrintedDamage(evidence) {
 }
 module.exports = {
   firstReservable,
+  evolutionLines,
   requiredCopies,
   tryReserveChain,
   prepare,
