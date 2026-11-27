@@ -261,6 +261,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserveEnergy(plan.type,2,1-deckIndex);
   reserve(r=>isBasicEnergy(r)&&typeOf(r)!==plan.type,'deck',1);
  }
+ const contextGate=source.abilities?.find(a=>a.plan?.mechanic==='PASSIVE_CONTEXT_ATTACK_GATE')?.plan;
+ if(contextGate?.mode==='opponentExV'){
+  reserve(r=>mon(r,null,0)&&!r.facts.rulePokemon&&!r.abilities.length,'active',1);
+  reserve(r=>mon(r,null,0)&&(r.name.endsWith('ex')||/V(?:MAX|STAR)?$/.test(r.name))&&!r.abilities.length,'bench',1);
+ }
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
  if(m==='MASS_COUNT_COIN_DAMAGE'){
@@ -573,7 +578,7 @@ function prepare(r, e, kind) {
     if(!own.bench.length||!E.getReferenceEffectRecord(other.active).abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.plan.exceptAbilityName))return {blocked:'NO_SUPPRESSION_TARGET_FIXTURE'};
     return {...t,trigger};
   }
-  if (m === "PASSIVE_ROCKET_TEAM_ATTACK_GATE") {
+  if (["PASSIVE_ROCKET_TEAM_ATTACK_GATE","PASSIVE_CONTEXT_ATTACK_GATE"].includes(m)) {
     const attackIndex = r.attacks.findIndex(attack => attack.plan);
     if (attackIndex < 0) return { blocked: "NO_PASSIVE_TRIGGER_ATTACK" };
     const trigger = { ...r.attacks[attackIndex], effectIndex: attackIndex };
@@ -1136,6 +1141,19 @@ function prepare(r, e, kind) {
       if(!card){const i=own.prizeCards.findIndex(eligible);if(i>=0&&own.deck.length){card=own.prizeCards[i];own.prizeCards[i]=own.deck.shift();}}
       if(!card)return {blocked:'NO_TYPED_ATTACK_PAYMENT_FIXTURE'};
       own.active.energyCards.push(card);
+    }
+  }
+  if(kind==='attack'){
+    const gate=r.abilities.find(a=>a.plan?.mechanic==='PASSIVE_CONTEXT_ATTACK_GATE')?.plan;
+    if(gate?.mode==='ownHand'){
+      const own=frame.game.players[0];
+      while(own.hand.length<gate.required&&own.deck.length)own.hand.push(own.deck.shift());
+      while(own.hand.length>gate.required)own.deck.unshift(own.hand.pop());
+      if(own.hand.length!==gate.required)return {blocked:'NO_CONTEXT_ATTACK_HAND_FIXTURE'};
+    }
+    if(gate?.mode==='opponentExV'){
+      const other=frame.game.players[1],qualifies=c=>{const name=E.getReferenceEffectRecord(c).name;return name.endsWith('ex')||/V(?:MAX|STAR)?$/.test(name);};
+      if(qualifies(other.active)||!other.bench.some(qualifies))return {blocked:'NO_CONTEXT_ATTACK_BOARD_FIXTURE'};
     }
   }
   if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'){
@@ -3928,6 +3946,27 @@ function verifyCase(t, e) {
       assert.equal(invalid.dispatch("you", { ...action, selections: { energy } }).ok, false);
       assert.deepEqual(invalid.getSnapshot(), before);
     }
+  }
+  if(e.plan.mechanic==='PASSIVE_CONTEXT_ATTACK_GATE'){
+    const short=JSON.parse(JSON.stringify(before)),[own,other]=short.players,plan=e.plan;
+    if(plan.mode==='ownHand'){
+      assert.equal(own.hand.length,plan.required);own.deck.unshift(own.hand.pop());
+    }else{
+      const qualifies=c=>{const name=E.getReferenceEffectRecord(c).name;return name.endsWith('ex')||/V(?:MAX|STAR)?$/.test(name);};
+      assert(!qualifies(other.active)&&other.bench.some(qualifies));
+      for(const c of other.bench.filter(qualifies)){
+        assert(!c.evolutionCards?.length&&!c.tools?.length&&!c.energyCards?.length);
+        other.bench.splice(other.bench.indexOf(c),1);
+        for(const k of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'])delete c[k];
+        other.deck.push(c);
+      }
+    }
+    const replay=port(short),saved=replay.getSnapshot(),option=effectOption({...t,port:replay},e);
+    assert((option.errors||option.disabledReasons).includes('CONTEXT_ATTACK_REQUIREMENT'));
+    assert.equal(replay.dispatch('you',o.action).ok,false);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(saved));
+    assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(saved));
   }
   if (e.plan.mechanic === "PASSIVE_ROCKET_TEAM_ATTACK_GATE") {
     const short = structuredClone(before);

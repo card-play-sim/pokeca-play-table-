@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST']);
+const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_CONTEXT_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -859,6 +859,11 @@ function preflight(g,actor,action){
    // Continuous Rocket Team ability: include the attacking Pokemon itself.
    // Suppressed abilities must not block a legitimate attack.
    for(const ability of enabledAbilities(g,mon)){
+    if(ability.plan.mechanic==='PASSIVE_CONTEXT_ATTACK_GATE'){
+     const plan=ability.plan;
+     const eligible=plan.mode==='ownHand'?p.hand.length>=plan.required:field(opponent(g,actor)).some(c=>record(c).name.endsWith('ex')||/V(?:MAX|STAR)?$/.test(record(c).name));
+     assert(eligible,'CONTEXT_ATTACK_REQUIREMENT');
+    }
     if(ability.plan.mechanic==='PASSIVE_ROCKET_TEAM_ATTACK_GATE'){
      const available=field(p).filter(c=>record(c).name.startsWith('ロケット団の')).length;
      assert(available>=ability.plan.required,'ROCKET_TEAM_ATTACK_REQUIREMENT');

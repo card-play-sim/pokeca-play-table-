@@ -867,6 +867,11 @@ function plan(entry,kind){
  // official ability itself. This is continuous and never a manual action.
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるかぎり、相手のバトルポケモンの特性(「あんやのはばたき」をのぞく)は、すべてなくなる。')
   return {mechanic:'ACTIVE_OPPONENT_ABILITY_SUPPRESSION',commands:['ADD_STATE'],exceptAbilityName:'あんやのはばたき'};
+ const handAttackGate=generic.match(/^自分の手札が([1-9]\d?)枚以上のときにしか、このポケモンはワザが使えない。$/);
+ if(kind==='ABILITY'&&handAttackGate)
+  return {mechanic:'PASSIVE_CONTEXT_ATTACK_GATE',commands:['ADD_STATE'],mode:'ownHand',required:Number(handAttackGate[1]),sharedWording:true};
+ if(kind==='ABILITY'&&generic==='相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。')
+  return {mechanic:'PASSIVE_CONTEXT_ATTACK_GATE',commands:['ADD_STATE'],mode:'opponentExV',sharedWording:true};
  const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
  if(kind==='ABILITY'&&rocketGate)
   return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};
