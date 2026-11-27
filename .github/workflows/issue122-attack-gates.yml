@@ -114,7 +114,12 @@ jobs:
           git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           git diff --cached --check
           git commit -m 'checkpoint: verified contextual attack gates'
-          git push origin "HEAD:refs/heads/battle/issue122-attack-gates-qualified-$GITHUB_RUN_ID"
+          ref="HEAD:refs/heads/battle/issue122-attack-gates-qualified-$GITHUB_RUN_ID"
+          for attempt in 1 2 3; do
+            if git push origin "$ref"; then exit 0; fi
+            sleep $((attempt*5))
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         if: always()
         with:
