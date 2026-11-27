@@ -260,7 +260,7 @@ function canHealOrClearStatus(card){return card.damage>0||!!card.statusCondition
 function isMegaEvolutionEx(card){return card.kind==='pokemon'&&String(record(card).rulesText).includes('メガシンカexがきぜつしたとき');}
 function attackSearchCandidate(c,plan){
  const r=record(c),typed=c.kind==='pokemon'&&r?.facts.types?.includes(plan.type);
- if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact);
  switch(plan.filter){
   case 'any':return true;
   case 'basicEnergy':return basicEnergy(c);

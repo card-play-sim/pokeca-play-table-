@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Keep bounded, inert repair diagnostics without breaking Japanese UTF-8 or JSON."""
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -44,6 +45,16 @@ def feedback(text):
             compact = prefix + json.dumps(row, ensure_ascii=False, separators=(",", ":"))
             if units(compact) <= LIMIT:
                 return compact
+    # Node prints the full failing source line before the actual Error.
+    # Preserve the concrete immutable-record conflict, not its stack trace.
+    # Do not treat a source-code line containing the error token as a receipt.
+    for line in reversed(lines):
+        match = re.fullmatch(r"Error: EXTENSION_IMMUTABLE_SOURCE_CONFLICT:([1-9][0-9]{0,7}):(missing|compiled facts differ): recompile evidence and review parser before adoption", line.strip())
+        if match:
+            return "QUARANTINE_COMPILER_FEEDBACK " + json.dumps(
+                {"state":"EXTENSION_IMMUTABLE_SOURCE_CONFLICT",
+                 "protectedPrintId":match.group(1),"reason":match.group(2)},
+                separators=(",", ":"))
     return tail(text)
 
 def self_test():
@@ -58,6 +69,12 @@ def self_test():
     assert feedback(line + "\nBROWSER_EXECUTION_FAILED\nmissing DOM").endswith("missing DOM")
     assert units(feedback("😀" * 2000)) == LIMIT
     assert feedback("simple failure\n") == "simple failure"
+    error = "Error: EXTENSION_IMMUTABLE_SOURCE_CONFLICT:45496:compiled facts differ: recompile evidence and review parser before adoption"
+    actual = "if(JSON.stringify(current))throw Error('EXTENSION_IMMUTABLE_SOURCE_CONFLICT:'+prior.officialCardId);\n" + error + "\n" + "    at Module._compile (node:internal/modules/cjs/loader:1913:10)\n"*20
+    result = feedback(actual)
+    assert json.loads(result.split(" ",1)[1]) == {"state":"EXTENSION_IMMUTABLE_SOURCE_CONFLICT","protectedPrintId":"45496","reason":"compiled facts differ"}
+    assert feedback("Error: EXTENSION_IMMUTABLE_SOURCE_CONFLICT:bad:missing: recompile evidence and review parser before adoption").startswith("Error:")
+    assert feedback(actual + "\n" + browser).startswith(PREFIXES[1])
     print("UNKNOWN_REPAIR_FEEDBACK_SELF_TEST PASS")
 
 if __name__ == "__main__":
