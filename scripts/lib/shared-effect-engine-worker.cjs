@@ -181,6 +181,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(proof.mode==='ownAllNames')for(const name of proof.names)if(source.name!==name)reserve(r=>mon(r,null,0)&&r.name===name,'bench');
  }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
+ if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&plan.type)reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+plan.count));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
   reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+2));
  if(m==='SCALED_ATTACK_DAMAGE'){
@@ -1065,6 +1066,30 @@ function prepare(r, e, kind) {
       if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_TRANSFER_FIXTURE'};
+  }
+  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&e.plan.type){
+    const own=frame.game.players[0],plan=e.plan,attached=own.active.energyCards;
+    // Typed cost verification uses real basic energies plus a deliberately
+    // nonmatching energy; no fabricated energy symbols or physical cards.
+    for(const c of [...attached])if(c.isSpecial){attached.splice(attached.indexOf(c),1);own.deck.push(c);}
+    for(const type of e.cost.filter(t=>t!=='無色')){
+      const required=e.cost.filter(t=>t===type).length;
+      while(attached.filter(c=>c.energyType===type).length<required){
+        const i=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===type);
+        if(i<0)return {blocked:'NO_TYPED_DISCARD_PAYMENT_FIXTURE'};
+        attached.push(own.deck.splice(i,1)[0]);
+      }
+    }
+    while(attached.filter(c=>c.energyType===plan.type).length<plan.count||attached.length<e.cost.length){
+      const i=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type);
+      if(i<0)return {blocked:'NO_TYPED_DISCARD_FIXTURE'};
+      attached.push(own.deck.splice(i,1)[0]);
+    }
+    if(!attached.some(c=>c.energyType!==plan.type)){
+      const i=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType!==plan.type);
+      if(i<0)return {blocked:'NO_WRONG_TYPE_DISCARD_FIXTURE'};
+      attached.push(own.deck.splice(i,1)[0]);
+    }
   }
   if(m==='MASS_ENERGY_COUNT_DISCARD'){
     const own=frame.game.players[0],plan=e.plan;
@@ -3623,6 +3648,16 @@ function verifyCase(t, e) {
     assert(chosen.length>0&&chosen.every(id=>attached.some(c=>c.id===id)),"MISSING_SELF_ENERGY_DISCARD_FIXTURE");
     assert(chosen.every(id=>after.players[0].discard.some(c=>c.id===id)),"SELF_ENERGY_NOT_DISCARDED");
     const replay=port(before);
+    if(e.plan.type){
+      assert.equal(chosen.length,e.plan.count);
+      assert(chosen.every(id=>attached.find(c=>c.id===id)?.energyType===e.plan.type));
+      const wrong=attached.find(c=>c.energyType!==e.plan.type);
+      assert(wrong,'NO_TYPED_DISCARD_NEGATIVE_RESOURCE');
+      const wrongSelection=[wrong.id,...chosen.slice(1)];
+      assert.equal(replay.dispatch('you',{...(t.action||o.action),selections:{...(t.action||o.action).selections,energy:wrongSelection}}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+      assert(after.players[0].active.energyCards.some(c=>c.id===wrong.id),'WRONG_TYPE_ENERGY_MUST_REMAIN');
+    }
     assert.equal(replay.dispatch("you",{...(t.action||o.action),selections:{...(t.action||o.action).selections,energy:[chosen[0],chosen[0]]}}).ok,false);
     assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
     verifyPrintedAttack(before,after,e,Number(e.damage)||0);
