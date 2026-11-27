@@ -1,0 +1,29 @@
+name: Unknown effect automation deterministic preflight
+on:
+  push:
+    branches: [automation/unknown-effect-batch-resilience-20261126, automation/unknown-repair-main-integration-20261127, main]
+    paths:
+      - 'scripts/local-unknown-effect-generator.cjs'
+      - 'scripts/verify-unknown-quarantine-*.py'
+      - 'tests/local-unknown-effect-generator.test.cjs'
+      - '.github/workflows/local-unknown-effect-generator.yml'
+      - '.github/workflows/unknown-effect-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          node --check scripts/local-unknown-effect-generator.cjs
+          node tests/local-unknown-effect-generator.test.cjs
+          python scripts/verify-unknown-quarantine-receipt.py --self-test
+          python scripts/verify-unknown-quarantine-browser.py --self-test
