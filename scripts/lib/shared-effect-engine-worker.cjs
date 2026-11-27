@@ -2834,7 +2834,7 @@ function verifyCase(t, e) {
       const active=JSON.parse(JSON.stringify(before)),side=active.players[0],i=side.bench.findIndex(c=>c.id===t.sourceId);
       [side.active,side.bench[i]]=[side.bench[i],side.active];
       const denied=port(active);assert.equal(denied.dispatch('you',action).ok,false,'SELF_SWITCH_ACTIVE_DENIED');
-      assert.deepEqual(denied.getSnapshot(),active);
+      assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(denied.getSnapshot()))),B.canonical(active),'SELF_SWITCH_REJECTION_MUST_NOT_MUTATE_STATE');
     }
     assert(resolved.bench.some(c=>c.id===own.active.id));
     assert.equal(p.dispatch("you",action).ok,false);
