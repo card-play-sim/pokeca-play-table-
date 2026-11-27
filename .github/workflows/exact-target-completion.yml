@@ -1,0 +1,27 @@
+name: Exact target completion gate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-exact-target-completion.py'
+      - 'reports/official-effect-continuation/fixed-2775-scope.json'
+      - '.github/workflows/exact-target-completion.yml'
+permissions:
+  contents: read
+jobs:
+  exact-target:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: |
+          git fetch origin ffb92e6a492944ed1ad0c583d9953a97605a5280
+          python scripts/audit-exact-target-completion.py --self-test
+          python scripts/audit-exact-target-completion.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exact-target-audit
+          path: target-completion-audit.json
+          if-no-files-found: error
