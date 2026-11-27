@@ -332,6 +332,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
+ if(e.proofRetreatTeamRecipient)reserve(r=>mon(r,null,0)&&r.facts.retreatCost>0&&!r.abilities.length,'bench');
  function reserveTera(zone){
    // Prefer a real basic Tera. Otherwise reserve the complete physical
    // evolution line, not an evolved card inserted into the field.
@@ -549,7 +550,7 @@ function prepare(r, e, kind) {
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){
     const attackIndex=r.attacks.findIndex(a=>a.plan);
     if(attackIndex<0)return {blocked:'NO_RETREAT_CONTEXT_TRIGGER'};
-    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex};
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofRetreatTeamRecipient:m==='PASSIVE_TYPED_TEAM_RETREAT'};
     const t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
     const game=t.port.getSnapshot(),own=game.players[0],mon=own.active;
