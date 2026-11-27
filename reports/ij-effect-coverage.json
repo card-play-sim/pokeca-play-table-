@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1257,
-      "missing": 445
+      "connected": 1259,
+      "missing": 443
     },
     "J": {
       "total": 870,
-      "connected": 551,
-      "missing": 319
+      "connected": 554,
+      "missing": 316
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1251,
+      "CONNECTED_UNTESTED": 1253,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 388,
+      "ENGINE_CONNECTION_REQUIRED": 386,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 550,
-      "MECHANIC_REQUIRED": 43,
-      "ENGINE_CONNECTION_REQUIRED": 275,
+      "CONNECTED_UNTESTED": 553,
+      "MECHANIC_REQUIRED": 42,
+      "ENGINE_CONNECTION_REQUIRED": 273,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -995,8 +995,7 @@
       "name": "ディアルガ",
       "mark": "J",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50694.json"
     },
     {
@@ -12723,8 +12722,7 @@
       "name": "ワンダーパッチ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48299.json"
     },
     {
@@ -16597,8 +16595,7 @@
       "name": "ワンダーパッチ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50071.json"
     },
     {
@@ -16988,8 +16985,7 @@
       "name": "ジプソ",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50160.json"
     },
     {
@@ -17212,8 +17208,7 @@
       "name": "ジプソ",
       "mark": "J",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50208.json"
     },
     {
@@ -21353,15 +21348,15 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1257,
-        "MECHANIC_REQUIRED": 432,
+        "ENGINE_CONNECTED": 1259,
+        "MECHANIC_REQUIRED": 430,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 550,
-        "MECHANIC_REQUIRED": 311,
+        "ENGINE_CONNECTED": 553,
+        "MECHANIC_REQUIRED": 308,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21371,7 +21366,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3745,
-    "unconnected": 1328
+    "engineConnected": 3750,
+    "unconnected": 1323
   }
 }

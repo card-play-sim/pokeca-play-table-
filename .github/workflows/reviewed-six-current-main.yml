@@ -163,6 +163,7 @@ jobs:
               node scripts/build-effect-extensions.cjs
               node scripts/sync-reference-effects.cjs
               node scripts/build-pwa-release.cjs
+              node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
               node tests/control-014-shared-effects.test.cjs
               node tests/control-011-engine-batch.test.cjs
               node tests/atomic-official-to-battle.test.cjs
@@ -206,6 +207,43 @@ jobs:
                   export POKECA_INTAKE_ARTIFACT=unknown-quarantine-full-ai
                   /opt/pw/bin/python tests/test_control_013_browser.py
                 ' > "$out/browser.log" 2>&1 && python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/browser.log" 2>&1; then
+                  python - "$scratch" "$out" "$RUNNER_TEMP/model-artifacts/release-candidate" <<'PY'
+          import json,sys,subprocess
+          from pathlib import Path
+          from importlib import import_module
+          sys.path.insert(0,'scripts')
+          e=import_module('export-unknown-replay-candidate')
+          s,o,d=map(Path,sys.argv[1:])
+          target={'46220','47099','48678','49374','49382','50340'}
+          engine=json.loads((o/'quarantine-result.json').read_text())
+          browser=json.loads((o/'browser-result.json').read_text())
+          assert set(engine['sandboxQualified'])==set(browser['sandboxBrowserQualified'])==target
+          assert engine['changedPriorIds']==[] and engine['targetFailures']==[] and browser['fullDeckAIMatchVerified'] is True
+          base='9c77aab1934ad3917cc680dfe0642474311a997d'
+          assert e.git('.', 'rev-parse','HEAD^2').decode().strip()==base
+          files={p:e.safe_bytes(s,p) for p in e.FIXED|e.evidence_paths(target)}
+          old=e.index(e.git('.', 'show',base+':data/effect-extensions/compiled.json'))
+          new=e.index(files['data/effect-extensions/compiled.json'])
+          assert e.unchanged_delta(old,new)==target
+          prior=e.index(e.git('.', 'show',base+':data/effect-extensions/intake.json'))
+          current=e.index(files['data/effect-extensions/intake.json'])
+          saved=e.index(e.git('.', 'show',base+':data/official-effect-intake/checkpoint.json'))
+          assert not e.verified_intake_delta(prior,current,old,saved,target)
+          for key in target:
+              p='data/effect-extensions/evidence/'+key+'.json'
+              proof=json.loads(files[p]); row=current[key]
+              assert e.digest(proof['html'].encode())==proof['htmlSha256']==row['source']['sha256']
+              assert proof['url']==row['officialPageUrl']=='https://www.pokemon-card.com/card-search/details.php/card/'+key and row['source']['path']==p
+              if Path(p).exists(): assert Path(p).read_bytes()==files[p]
+          subprocess.run(['git','apply','--cached',str(o/'proposal.patch')],check=True)
+          for name in ['engine/reference-effect-plans.cjs','engine/pokeca_reference_effect_runtime.cjs','scripts/lib/shared-effect-engine-worker.cjs','scripts/local-unknown-effect-generator.cjs','tests/local-unknown-effect-generator.test.cjs']:
+              files[name]=e.git('.','show',':'+name)
+              assert files[name]==e.safe_bytes(s,name)
+          for name,data in files.items():
+              dest=d/'files'/name; dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
+          (d/'manifest.json').write_text(json.dumps({'base':base,'ids':sorted(target),'files':{k:e.digest(v) for k,v in files.items()},'state':'INDEPENDENTLY_REVIEWED_CANDIDATE_NOT_RELEASED','publicBattleVerified':[]},indent=2)+'\n')
+          print('EXACT_SIX_RELEASE_CANDIDATE_PREPARED')
+          PY
                   persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
                   echo 'Isolated exact-print Chromium and completed imported-deck AI match passed. Independent review, normal CI and published Pages checks remain mandatory.'
                   exit 0
