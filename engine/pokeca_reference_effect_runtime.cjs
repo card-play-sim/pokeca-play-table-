@@ -1442,6 +1442,21 @@ function applyPlan(g,actor,card,effect,action){
   case 'CONDITIONAL_ATTACK_BONUS':
    damage(g,actor,o.active,plan.base+(attackBonusApplies(plan.predicate,p,o.active)?plan.bonus:0));
    break;
+  case 'MASS_COUNT_COIN_DAMAGE':{
+   const count=plan.metric==='fixed'?plan.flips:
+    plan.metric==='ownTypedBoard'?field(p).filter(c=>record(c).facts.types.includes(plan.type)).length:
+    plan.metric==='ownTypedEnergy'?energyUnits(card).filter(unit=>unit.includes(plan.type)).length:
+    plan.metric==='bothActiveEnergy'?energyUnits(card).length+energyUnits(o.active).length:
+    plan.metric==='opponentBench'?o.bench.length:null;
+   assert(Number.isInteger(count)&&count>=0,'INVALID_BOARD_COIN_COUNT');
+   let hits=0;
+   for(let i=0;i<count;i++){
+    const heads=coin(g,plan.tails?o.id:actor);
+    if(plan.tails?!heads:heads)hits++;
+   }
+   damage(g,actor,o.active,plan.base+(plan.bonuses?plan.bonuses[hits]:hits*plan.unit),{skipWeakness:!!plan.skipWeakness,skipResistance:!!plan.skipResistance});
+   break;
+  }
   case 'ATTACK_ATTACHED_ENERGY_COINS':{
    let heads=0;
    for(const unit of energyUnits(card))if(coin(g,actor))heads++;
