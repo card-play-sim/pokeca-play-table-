@@ -18,6 +18,14 @@ assert.deepEqual(exactGroup(group,raw,new Set(),proof,compile),[row]);
 assert.deepEqual(exactGroup(group,raw,new Set([id]),proof,compile),[]);
 assert.deepEqual(exactGroup({...group,exampleOfficialText:'違う効果。'},raw,new Set(),proof,compile),[]);
 assert.throws(()=>exactGroup(group,raw,new Set(),()=>({...proof(),html:'modified'}),compile));
+// Exact failure modes from quarantine run 45972683023.
+const arrayRow=" ['BENCH_NON_RULE_PROTECTION','official text',['PREVENT_DAMAGE']],";
+assert.throws(()=>applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:'[F0_31] '+arrayRow}]}),/MODEL_ANCHOR_LABEL_LEAK/);
+assert.throws(()=>applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:arrayRow.slice(0,-1)}]}),/MODEL_ARRAY_SEPARATOR_LOST/);
+const nextRow=" ['NEXT_MECHANIC','another official text',['DAMAGE']],";
+assert.equal(applyEdits({[path]:arrayRow},{edits:[{path,before:arrayRow,after:arrayRow+'\n'+nextRow}]})[path],arrayRow+'\n'+nextRow);
+assert.equal(repairProfile('MODEL_ANCHOR_LABEL_LEAK',2).type,'ANCHOR');
+assert.equal(repairProfile('MODEL_ARRAY_SEPARATOR_LOST',2).type,'SYNTAX');
 console.log('LOCAL_UNKNOWN_GENERATOR_CONTRACT PASS');
 
 // Batch related exact texts without losing distinct print IDs or confusing effect kinds.
@@ -56,7 +64,13 @@ assert.equal(selectBatch([aa,bb,cc],5,{history:hist,fingerprint:'c'.repeat(64)})
 // Old schema records are safely migrated without losing their attempt counts.
 assert.equal(normalizeHistory({schemaVersion:1,groups:{[mkId(1)]:{attempts:4,lastRun:8,status:'QUARANTINE_FAILED',fingerprint:fp}}}).groups[mkId(1)].totalAttempts,4);
 assert.deepEqual(normalizeHistory({schemaVersion:1,groups:{'../../bad':{attempts:1,lastRun:2}}}).groups,{});
-assert.deepEqual(selectBatch([aa],1,{maxPrints:2}),[]);
+assert.deepEqual(selectBatch([aa],1,{maxPrints:2})[0].records.map(r=>r.officialCardId),['1','2']);
+assert.throws(()=>selectBatch([aa],1,{maxPrints:0}),/INVALID_PRINT_BUDGET/);
+const largeGroup=candidate(mkId(4),'山札からカードを引く。',Array.from({length:70},(_,i)=>String(i+100)));
+const largeBatch=selectBatch([largeGroup],1);
+assert.equal(largeBatch[0].records.length,64);
+assert.equal(largeGroup.records.length,70);
+assert.deepEqual(selectBatch([{...largeGroup,records:largeGroup.records.slice(64)}],2)[0].records.map(r=>r.officialCardId),['164','165','166','167','168','169']);
 assert.equal(sourceFingerprint({'engine/reference-effect-plans.cjs':'a','engine/pokeca_reference_effect_runtime.cjs':'b','scripts/lib/shared-effect-engine-worker.cjs':'c'}).length,64);
 console.log('LOCAL_UNKNOWN_GENERATOR_HISTORY PASS');
 
@@ -149,6 +163,11 @@ assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp).map(x=>x.group.sharedTaskId
 assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp2),[]);
 assert.deepEqual(retryBatch([cc],prevScope,fp),[]);
 assert.deepEqual(retryBatch([aa,bb],{...prevScope,targetIds:['1','2','3']},fp).map(x=>x.group.sharedTaskId),[mkId(1)]);
+const largeScope=attemptScope(largeBatch,{groups:1});
+const largePrev={fingerprint:fp,groups:largeScope.groups,targetIds:largeScope.records.map(r=>String(r.officialCardId))};
+assert.equal(retryBatch([largeGroup],largePrev,fp)[0].records.length,64);
+assert.deepEqual(retryBatch([largeGroup],{...largePrev,targetIds:largePrev.targetIds.slice(1)},fp),[]);
+console.log('LOCAL_UNKNOWN_LARGE_GROUP_BOUNDARY PASS');
 console.log('LOCAL_UNKNOWN_EXACT_RETRY_SCOPE PASS');
 
 // Run the production repair loop against a controlled first-invalid, then

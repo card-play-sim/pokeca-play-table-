@@ -12,6 +12,13 @@ function applyEdits(sources,proposal){
  for(const edit of proposal.edits){
   assert(allowed.includes(edit.path)&&Object.hasOwn(result,edit.path),'PROTECTED_PATH');
   assert(typeof edit.before==='string'&&edit.before.length>=24&&edit.before.length<=12000&&typeof edit.after==='string'&&edit.after.length<=20000&&edit.after!==edit.before,'INVALID_EDIT');
+  // A copied prompt annotation is not executable source. JS parsing alone
+  // accepts [F0_31] as an expression, so reject it before writing a patch.
+  assert(!/\[F\d+_\d+\]/.test(edit.after),'MODEL_ANCHOR_LABEL_LEAK');
+  // Preserve separators for a whole-line array entry. Removing the final
+  // comma can turn the next row into a computed property access.
+  if (/^\s*\[['"]/.test(edit.before)&&/,\s*$/.test(edit.before))
+   assert(/,\s*$/.test(edit.after),'MODEL_ARRAY_SEPARATOR_LOST');
   assert(result[edit.path].split(edit.before).length===2,'NONUNIQUE_OR_STALE_ANCHOR:'+edit.path);
   result[edit.path]=result[edit.path].replace(edit.before,()=>edit.after);
  }
@@ -82,8 +89,18 @@ function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
  }
  return normalizeHistory(history);
 }
+// Large exact-text groups must not be permanently excluded by the per-run
+// print budget. Select only a bounded subset of independently verified rows.
+// Once that common mechanic is implemented, the existing atomic batch
+// reprocesses the remaining prints; no omitted print is counted as qualified.
+function boundedCandidate(candidate,maxPrints){
+ const records=[...new Map(candidate.records.map(r=>[String(r.officialCardId),r])).values()];
+ if(records.length<=maxPrints)return candidate;
+ return {...candidate,records:records.slice(0,maxPrints)};
+}
 function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},fingerprint=null}={}){
- const ordered=[...candidates].sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
+ assert(Number.isSafeInteger(maxPrints)&&maxPrints>=1,'INVALID_PRINT_BUDGET');
+ const ordered=candidates.filter(x=>x.records.length).map(x=>boundedCandidate(x,maxPrints)).sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
  if(!ordered.length)return [];
  const n=Number(runNumber);
  assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
@@ -92,7 +109,7 @@ function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},
  // A changing main must not reset the scheduler's fairness. Keep lifetime
  // attempt counts across source revisions; only source-specific feedback and
  // retry patch reuse are reset by a new fingerprint. Untried groups come first.
- const eligible=ordered.filter(x=>new Set(x.records.map(r=>String(r.officialCardId))).size<=maxPrints);
+ const eligible=ordered;
  if(!eligible.length)return [];
  const min=Math.min(...eligible.map(attempts));
  const pool=eligible.filter(x=>attempts(x)===min);
@@ -152,7 +169,8 @@ function repairProfile(feedback='',attempt=1){
  /MODEL_OUTPUT_TRUNCATED|finish_reason.*length/i.test(reason)?'TRUNCATED':
  /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT/i.test(reason)?'FORMAT':
- /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT/i.test(reason)?'ANCHOR':
+ /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT|MODEL_ANCHOR_LABEL_LEAK/i.test(reason)?'ANCHOR':
+ /MODEL_ARRAY_SEPARATOR_LOST/i.test(reason)?'SYNTAX':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
  /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
  /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
@@ -163,7 +181,7 @@ function repairProfile(feedback='',attempt=1){
  const instructions={
  TRANSPORT:'Previous inference timed out. Produce the smallest complete patch; avoid duplicated source and long explanations.',
  TRUNCATED:'Previous output was incomplete. Return fewer, shorter exact edits; never omit closing JSON delimiters.',
- SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor and balanced syntax. Do not change the tests.',
+ SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor, balanced syntax and array separators. Do not change the tests.',
  FORMAT:'Previous output was not valid JSON. Use JSON string escaping, no markdown, no trailing commas, one complete object.',
  ANCHOR:'Previous edit anchor was stale or ambiguous. Choose an existing anchor ID from the supplied table. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
@@ -233,7 +251,7 @@ async function generate(groups,sources,feedback='',profile=repairProfile(feedbac
 // attempt. Do not feed a different official effect an unrelated failure log.
 function retryBatch(candidates,previous,fingerprint){
  if(!previous||previous.fingerprint!==fingerprint||!Array.isArray(previous.groups)||!Array.isArray(previous.targetIds))return [];
- const ids=new Set(previous.targetIds.map(String)),byGroup=new Map(candidates.map(x=>[x.group.sharedTaskId,x]));
+ const ids=new Set(previous.targetIds.map(String)),byGroup=new Map(candidates.map(x=>[x.group.sharedTaskId,boundedCandidate(x,64)]));
  return [...new Set(previous.groups.map(g=>g?.sharedTaskId))].map(id=>byGroup.get(id)).filter(x=>x&&x.records.length&&x.records.every(r=>ids.has(String(r.officialCardId))));
 }
 function attemptScope(batch,profile){
