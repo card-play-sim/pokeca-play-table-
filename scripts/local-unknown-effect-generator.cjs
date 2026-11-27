@@ -376,6 +376,7 @@ function selectReviewedBatch(candidates,history,fingerprint){
 }
 async function generate(groups,sources,feedback='',profile=repairProfile(feedback),previousPatch=''){
  if(!feedback){const proposal=reviewedProposal(groups,sources);if(proposal)return proposal;}
+ if(process.env.MODEL_REVIEWED_ONLY==='1')throw Error('REVIEWED_COMPOSITION_UNAVAILABLE_NO_INFERENCE');
  // attemptScope already enforces the budget and mandatory dependencies.
  const group={...groups[0],exampleOfficialText:groups.map(g=>g.exampleOfficialText).join('\n')};
  const anchors=modelAnchors(sources,group,profile.excerptChars);
@@ -471,7 +472,7 @@ async function main(){
   try{previousReceipt=read(previousReceiptPath);}catch(e){console.warn('INVALID_PREVIOUS_RECEIPT',String(e).slice(0,300));}
  }
  const reviewed=retry.length?[]:selectReviewedBatch(candidates,history,fingerprint);
- const batch=retry.length?focusFailedBatch(retry,previousReceipt):reviewed.length?reviewed:selectBatch(candidates,runNumber,{history,fingerprint});
+ const batch=retry.length?focusFailedBatch(retry,previousReceipt):reviewed.length?reviewed:process.env.MODEL_REVIEWED_ONLY==='1'?[]:selectBatch(candidates,runNumber,{history,fingerprint});
  if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
  let selectedGroups=[],records=[],targetIds=[];
  const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
@@ -506,7 +507,7 @@ async function main(){
  for(const row of records)if(!adopted.has(String(row.officialCardId)))intake.records.push(row);
  write(path.join(scratch,'data/effect-extensions/intake.json'),intake);
  saveHistory('GENERATED_NOT_TESTED','');
- write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
+ write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',strategy:proposal.strategy||'LOCAL_MODEL',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
 module.exports={reviewedPlan,reviewedProposal,selectReviewedBatch,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
