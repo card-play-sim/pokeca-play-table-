@@ -182,6 +182,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentAbilityCount')reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
+ if(m==='ATTACK_MOVE_BENCH_COUNTERS'&&plan.team)reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
  if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
   reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'discard');
   reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
@@ -1332,6 +1333,12 @@ function prepare(r, e, kind) {
     if (e.plan.predicate === "opponentDamaged") opponent.active.damage = 10;
     if (e.plan.predicate === "ownBenchDamaged" && own.bench.length) own.bench[0].damage = 10;
   }
+  if(m==='ATTACK_MOVE_BENCH_COUNTERS'){
+    const own=frame.game.players[0],source=own.bench.find(c=>!e.plan.team||E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の'));
+    if(!source||source.hp<=40)return {blocked:'NO_DAMAGED_BENCH_COUNTER_SOURCE_FIXTURE'};
+    source.damage=40;
+  }
+  if(m==='ATTACK_SPREAD_DAMAGE'&&e.plan.counterUnit)frame.game.players[1].active.damage=20;
   if(m==='ATTACK_SPREAD_DAMAGE'&&e.plan.requiresDamage){
     const bench=frame.game.players[1].bench;
     if(!bench.length)return {blocked:'NO_DAMAGED_BENCH_FIXTURE'};
@@ -2604,6 +2611,15 @@ function verifyCase(t, e) {
     assert(chosen.length>0);
     assert(chosen.every(id=>effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===id
       &&(!plan.ignoreDefense||step.amount===plan.amount))));
+    if(plan.counterUnit){
+      assert.deepEqual(Array.from(chosen),[defendingSide.active.id]);
+      assert(defendingSide.active.damage>0);
+      verifyPrintedAttack(before,after,e,defendingSide.active.damage/10*plan.counterUnit);
+      const replay=port(before),bench=defendingSide.bench[0];
+      assert(bench);
+      assert(replay.dispatch('you',{...action,targetIds:[bench.id]}).ok);
+      assert(replay.getSnapshot().history.slice(before.history.length).some(step=>step.details?.command==='DAMAGE'&&step.details.targetInstanceId===bench.id&&step.details.amount===0));
+    }
     if(plan.prizeUnit||plan.requiresDamage){
       const expected=plan.prizeUnit?(6-defendingSide.prizes)*plan.prizeUnit:plan.amount;
       const benchEvents=effectEvents.filter(step=>step?.command==='DAMAGE'&&targets.some(c=>c.id===step.targetInstanceId));
@@ -2623,6 +2639,24 @@ function verifyCase(t, e) {
       assert(replay.dispatch('you',next).ok);
       assert(!replay.getSnapshot().history.slice(before.history.length).some(step=>step.details?.command==='DAMAGE'&&step.details.amount>0&&other.bench.some(mon=>mon.id===step.details.targetInstanceId)));
     }
+  }
+  if(e.plan.mechanic==='ATTACK_MOVE_BENCH_COUNTERS'){
+    const plan=e.plan,action=t.action||o.action;
+    const source=attackingSide.bench.find(c=>c.id===action.selections.counterSource[0]);
+    const target=plan.targetActive?defendingSide.active:[defendingSide.active,...defendingSide.bench].find(c=>c.id===action.targetIds[0]);
+    assert(source.damage>=40&&target);
+    if(plan.team)assert(E.getReferenceEffectRecord(source).name.startsWith(plan.team+'の'));
+    assert.equal(after.players[0].bench.find(c=>c.id===source.id).damage,0);
+    assert(effectEvents.some(step=>step?.command==='MOVE_DAMAGE_COUNTERS'&&step.sourceInstanceId===source.id&&step.targetInstanceId===target.id&&step.counterCount===source.damage/10));
+    const invalid=port(before);
+    assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,counterSource:[attackingSide.active.id]}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+    const blocked=JSON.parse(JSON.stringify(before)),side=blocked.players[1];
+    [side.active,...side.bench].find(c=>c.id===target.id).referenceProtection={opponentTurn:blocked.turnNumber};
+    const replay=port(blocked);
+    assert(replay.dispatch('you',action).ok);
+    assert.equal(replay.getSnapshot().players[0].bench.find(c=>c.id===source.id).damage,source.damage);
+    assert(!replay.getSnapshot().history.slice(before.history.length).some(step=>step.details?.command==='MOVE_DAMAGE_COUNTERS'&&!step.details.reference));
   }
   if(e.plan.mechanic==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const plan=e.plan,action=t.action||o.action;

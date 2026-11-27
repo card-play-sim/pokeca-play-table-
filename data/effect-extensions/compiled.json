@@ -36648,6 +36648,91 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47433",
+      "name": "ロケット団のソーナンス",
+      "deckName": "ロケット団のソーナンス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47433",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047433_P_ROKETTODANNOSONANSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ロケットミラー",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のベンチの「ロケット団のポケモン」を1匹選び、選んだポケモンにのっているダメカンをすべて、相手のバトルポケモンにのせ替える。",
+          "effectId": "reference-47433-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": "ロケット団",
+            "targetActive": true,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "とびだしヘッド",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-47433-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47433.json",
+        "sha256": "4d2d3340f4996a74ceaa9332fe8f3a4ea45733aca4bedbf4ab0f82aad6242ad2",
+        "htmlSha256": "4d2d3340f4996a74ceaa9332fe8f3a4ea45733aca4bedbf4ab0f82aad6242ad2",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47434",
       "name": "ロケット団のリーシャン",
       "deckName": "ロケット団のリーシャン",
@@ -37709,6 +37794,91 @@
         "path": "data/effect-extensions/evidence/47506.json",
         "sha256": "74ae0165c9a5d4a1c4b6faec29f73e04615186585b160a69e04b5b16e882da13",
         "htmlSha256": "74ae0165c9a5d4a1c4b6faec29f73e04615186585b160a69e04b5b16e882da13",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47507",
+      "name": "ロケット団のソーナンス",
+      "deckName": "ロケット団のソーナンス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47507",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV10/047507_P_ROKETTODANNOSONANSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ロケットミラー",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のベンチの「ロケット団のポケモン」を1匹選び、選んだポケモンにのっているダメカンをすべて、相手のバトルポケモンにのせ替える。",
+          "effectId": "reference-47507-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": "ロケット団",
+            "targetActive": true,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "とびだしヘッド",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-47507-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 110,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47507.json",
+        "sha256": "a64ada6602229c29bbed611263fab55a35b95847dd162e166d1dd94b6ff6756a",
+        "htmlSha256": "a64ada6602229c29bbed611263fab55a35b95847dd162e166d1dd94b6ff6756a",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -216176,6 +216346,500 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "47659",
+      "name": "デスカーン",
+      "deckName": "デスカーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47659",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047659_P_DESUKAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のびるダメカーン",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のベンチポケモンを1匹選び、選んだポケモンにのっているダメカンをすべて、相手のポケモン1匹にのせ替える。",
+          "effectId": "reference-47659-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": null,
+            "targetActive": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "まどわす",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-47659-attack-1",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "デスマス",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47659.json",
+        "sha256": "c33bec4a054e683bd3e59a169d0ec1eb9591e1437a0ccc51182e81629ce37ac6",
+        "htmlSha256": "c33bec4a054e683bd3e59a169d0ec1eb9591e1437a0ccc51182e81629ce37ac6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48032",
+      "name": "デスカーン",
+      "deckName": "デスカーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48032",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048032_P_DESUKAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のびるダメカーン",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のベンチポケモンを1匹選び、選んだポケモンにのっているダメカンをすべて、相手のポケモン1匹にのせ替える。",
+          "effectId": "reference-48032-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": null,
+            "targetActive": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "まどわす",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-48032-attack-1",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "デスマス",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48032.json",
+        "sha256": "c7801c669b87c9d497e125bde3388103fb6f884105c32831884aa2cbc9974f91",
+        "htmlSha256": "c7801c669b87c9d497e125bde3388103fb6f884105c32831884aa2cbc9974f91",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49038",
+      "name": "デスカーン",
+      "deckName": "デスカーン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49038",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049038_P_DESUKAN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "のびるダメカーン",
+          "cost": [
+            "超",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のベンチポケモンを1匹選び、選んだポケモンにのっているダメカンをすべて、相手のポケモン1匹にのせ替える。",
+          "effectId": "reference-49038-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": null,
+            "targetActive": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "まどわす",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "60",
+          "text": "相手のバトルポケモンをこんらんにする。",
+          "effectId": "reference-49038-attack-1",
+          "plan": {
+            "mechanic": "CONFUSION",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "デスマス",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49038.json",
+        "sha256": "b1523ee116bcab152797ceace629389c553b8765f1d15d208a2cf95282e309ef",
+        "htmlSha256": "b1523ee116bcab152797ceace629389c553b8765f1d15d208a2cf95282e309ef",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50093",
+      "name": "キュウコン",
+      "deckName": "キュウコン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50093",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050093_P_KIXYUUKON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "きゅうびうつし",
+          "cost": [
+            "炎"
+          ],
+          "damage": "0",
+          "text": "自分のベンチポケモンを1匹選び、選んだポケモンにのっているダメカンをすべて、相手のバトルポケモンにのせ替える。",
+          "effectId": "reference-50093-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_MOVE_BENCH_COUNTERS",
+            "commands": [
+              "MOVE_DAMAGE_COUNTERS"
+            ],
+            "team": null,
+            "targetActive": true,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "おにび",
+          "cost": [
+            "炎",
+            "炎"
+          ],
+          "damage": "70",
+          "text": "",
+          "effectId": "reference-50093-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": "ロコン",
+        "retreatCost": 1,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50093.json",
+        "sha256": "344c2a25250db820b2cb5a0fb6ff2ac85f88ac448f8064d43d4d1862be3905a9",
+        "htmlSha256": "344c2a25250db820b2cb5a0fb6ff2ac85f88ac448f8064d43d4d1862be3905a9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50560",
+      "name": "ゲッコウガex",
+      "deckName": "ゲッコウガex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50560",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050560_P_GEKKOUGAIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんみつぎり",
+          "cost": [
+            "水"
+          ],
+          "damage": "0",
+          "text": "相手のポケモン1匹に、そのポケモンにのっているダメカンの数×30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50560-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "opponent",
+            "count": 1,
+            "counterUnit": 30,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "アクアエッジ",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "160",
+          "text": "",
+          "effectId": "reference-50560-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ゲコガシラ",
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50560.json",
+        "sha256": "6bae47cb7f1e3c7b3cb9da4453e702a847e925eedc2b9cbfc879d86b264fab04",
+        "htmlSha256": "6bae47cb7f1e3c7b3cb9da4453e702a847e925eedc2b9cbfc879d86b264fab04",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50627",
+      "name": "ゲッコウガex",
+      "deckName": "ゲッコウガex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50627",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050627_P_GEKKOUGAIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おんみつぎり",
+          "cost": [
+            "水"
+          ],
+          "damage": "0",
+          "text": "相手のポケモン1匹に、そのポケモンにのっているダメカンの数×30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-50627-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPREAD_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "scope": "opponent",
+            "count": 1,
+            "counterUnit": 30,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "アクアエッジ",
+          "cost": [
+            "水",
+            "水"
+          ],
+          "damage": "160",
+          "text": "",
+          "effectId": "reference-50627-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": "ゲコガシラ",
+        "retreatCost": 1,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50627.json",
+        "sha256": "83787ef9602bdcccfccda3e997ae92989bde377111ad4eae1f60e18749686787",
+        "htmlSha256": "83787ef9602bdcccfccda3e997ae92989bde377111ad4eae1f60e18749686787",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -217760,11 +218424,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47433",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47435",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -217791,11 +218450,6 @@
     },
     {
       "officialCardId": "47479",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47507",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

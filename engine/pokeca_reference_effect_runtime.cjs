@@ -476,6 +476,12 @@ function requests(g,actor,card,effect){
   const count=Math.min(effect.plan.amount,o.hand.length);
   add('blindHand','CARD',o.hand.map((_,i)=>({id:'hand-slot-'+i,name:'相手の手札 '+(i+1)})),count,count);
  }
+ if(m==='ATTACK_MOVE_BENCH_COUNTERS'){
+  const sources=counterMoveSources(p,effect.plan),count=sources.length?1:0;
+  cardRequest('counterSource',sources,count,count);
+  if(!effect.plan.targetActive)
+   add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),count,count);
+ }
  if(m==='ATTACK_SPREAD_DAMAGE'&&effect.plan.count!==null){
   const targets=spreadTargets(effect.plan,p,o);
   const count=Math.min(effect.plan.count,targets.length);
@@ -954,12 +960,13 @@ function chooseBenchSwitch(g,actor,owner,selectedId){
  switchMon(g,owner,selectedId);
  event(g,actor,'SELECT_BENCH_SWITCH',{playerId:owner.id,benchInstanceId:selectedId});
 }
-function moveDamageCounters(g,actor,source,target,count){
+function moveDamageCounters(g,actor,source,target,count,{attack=false,max=3}={}){
  assert(source&&target&&source!==target,'COUNTER_MOVE_TARGET_INVALID');
- assert(Number.isInteger(count)&&count>=1&&count<=3,'COUNTER_MOVE_COUNT_INVALID');
+ assert(Number.isInteger(count)&&count>=1&&count<=max,'COUNTER_MOVE_COUNT_INVALID');
  assert((source.damage||0)>=count*10,'COUNTER_MOVE_SOURCE_INSUFFICIENT');
+ if(attack&&target.referenceProtection?.opponentTurn===g.turnNumber)return;
  source.damage-=count*10;
- counters(g,actor,target,count);
+ counters(g,actor,target,count,{attack});
  event(g,actor,'MOVE_DAMAGE_COUNTERS',{sourceInstanceId:id(source),targetInstanceId:id(target),counterCount:count});
 }
 function moveAttachedEnergy(g,actor,source,target,energyId){
@@ -1043,6 +1050,9 @@ function contextBonus(g,effect,own,other){
   case 'ownEnergyType':return energyUnits(source).some(unit=>unit.includes(p.type));
   default:throw Error('UNKNOWN_ATTACK_CONTEXT_BONUS');
  }
+}
+function counterMoveSources(own,plan){
+ return own.bench.filter(c=>c.damage>0&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
 }
 function spreadTargets(plan,own,other){
  if(plan.scope==='ownBench')return own.bench;
@@ -1248,12 +1258,22 @@ function applyPlan(g,actor,card,effect,action){
    if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
     resolveBlindHand(g,actor,o,ids('blindHand'),plan.destination);
    break;
+  case 'ATTACK_MOVE_BENCH_COUNTERS':{
+   const source=counterMoveSources(p,plan).find(c=>id(c)===ids('counterSource')[0]);
+   const defender=plan.targetActive?o.active:target();
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(source&&defender){
+    const count=source.damage/10;
+    moveDamageCounters(g,actor,source,defender,count,{attack:true,max:count});
+   }
+   break;
+  }
   case 'ATTACK_SPREAD_DAMAGE':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=spreadTargets(plan,p,o);
    const amount=plan.prizeUnit===undefined?plan.amount:(6-o.prizes)*plan.prizeUnit;
    for(const mon of targets)
-    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,amount,
+    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.counterUnit?mon.damage/10*plan.counterUnit:amount,
       {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense,skipResistance:plan.ignoreDefense});
    break;
   }
