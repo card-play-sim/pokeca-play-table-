@@ -1,4 +1,4 @@
-name: Issue122 reconcile verified 13 prints with latest main
+name: 13枚の公開統合・最新main再照合
 on:
   push:
     branches: [battle/issue122-union13-main-reconcile-20261128]
@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          candidate=fc397343db66ceb82fa87d53355f22b136518367
+          candidate=cc6ea9318523252093b81df352ee14309f41562b
           git fetch origin main battle/issue122-union13-repair-qualified-46066883264
           test "$(git rev-parse origin/battle/issue122-union13-repair-qualified-46066883264)" = "$candidate"
           base=$(git rev-parse origin/main)
