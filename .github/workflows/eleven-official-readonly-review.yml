@@ -1,0 +1,47 @@
+name: Actual eleven-print official read-only review
+on:
+  push:
+    branches: [automation/eleven-official-readonly-review-20261128]
+    paths: ['.github/workflows/eleven-official-readonly-review.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  review:
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.ref == 'refs/heads/automation/eleven-official-readonly-review-20261128'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: local-unknown-effect-quarantine
+          run-id: 46069858420
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/eleven
+      - name: Independently verify exact source, actual official text and full replay scope
+        run: |
+          set -euo pipefail
+          git fetch origin automation/control-013-intake-46064020518
+          checkpoint="$(git rev-parse FETCH_HEAD)"
+          python scripts/verify-unknown-approved-replay.py --preview "$RUNNER_TEMP/eleven" 021e332b15f70f595d15fb99624c536d566f546a 46069858420 "$GITHUB_WORKSPACE" "$RUNNER_TEMP/review" "$checkpoint"
+          python - "$RUNNER_TEMP/review/replay-entry.json" <<'PY'
+          import json,sys
+          p=json.load(open(sys.argv[1]))
+          expected={"46220","47099","48299","48678","49374","49382","50071","50160","50208","50340","50694"}
+          assert p["state"]=="PREVIEW_PATCH_APPLIES_REPLAY_REQUIRED" and p["reviewOnly"] is True
+          assert set(p["requiredQualifiedIds"])==expected and p["publicBattleVerified"]==[]
+          assert {x["id"] for x in p["independentOfficialScope"]["proofs"]}==expected
+          print("ELEVEN_OFFICIAL_SCOPE_EXACT_REPLAY_ENTRY_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eleven-official-readonly-proof
+          path: ${{ runner.temp }}/review/
+          if-no-files-found: error
