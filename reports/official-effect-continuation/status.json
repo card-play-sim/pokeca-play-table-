@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "969ee4d1a39532bc87d9a799016d72f140bb6b91600c2e35b4f3b0703b1887af",
-  "classifiedRegistryHash": "969ee4d1a39532bc87d9a799016d72f140bb6b91600c2e35b4f3b0703b1887af",
+  "registryHash": "9ba58fbc5538b07792eec418fdbbdbdec4dccc3deda12468eca123dd9a841586",
+  "classifiedRegistryHash": "9ba58fbc5538b07792eec418fdbbdbdec4dccc3deda12468eca123dd9a841586",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -42,8 +42,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2632,
-      "notImplemented": 1024,
+      "compiled": 2635,
+      "notImplemented": 1021,
       "blocked": 20,
       "executionVerifiedPrints": 732
     },
@@ -3334,11 +3334,6 @@
       }
     },
     {
-      "officialCardId": "45941",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45943",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3672,11 +3667,6 @@
         "htmlSha256": "e1615f28f298f0815a840271df478e57e700fbc784293b280f4edebf159dc7c5",
         "textSha256": "13aa491f5b798c5ced13749853b4c693524236b2bbe03f05d723cec81fc84e71"
       }
-    },
-    {
-      "officialCardId": "46151",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46161",
@@ -8963,11 +8953,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48736",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48766",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -10282,7 +10267,7 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1057
+        "count": 1054
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
@@ -10301,10 +10286,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "1fb923635346bac3b82877fc7c00170400ce645ea60248cde7b1151a15d77458",
+    "executionFingerprint": "619465467bc7872a255d569f7bff6784a092058dec6fe7c1e869a3cdecd7d154",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 232593,
+    "seq": 234921,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
