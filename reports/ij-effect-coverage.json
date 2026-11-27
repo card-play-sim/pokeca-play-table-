@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1273,
-      "missing": 429
+      "connected": 1275,
+      "missing": 427
     },
     "J": {
       "total": 870,
-      "connected": 559,
-      "missing": 311
+      "connected": 560,
+      "missing": 310
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1267,
-      "MECHANIC_REQUIRED": 51,
-      "ENGINE_CONNECTION_REQUIRED": 374,
+      "CONNECTED_UNTESTED": 1269,
+      "MECHANIC_REQUIRED": 50,
+      "ENGINE_CONNECTION_REQUIRED": 373,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 558,
+      "CONNECTED_UNTESTED": 559,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 268,
+      "ENGINE_CONNECTION_REQUIRED": 267,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -1224,8 +1224,7 @@
       "name": "レジロック",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47057.json"
     },
     {
@@ -6101,8 +6100,7 @@
       "name": "レジロック",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49089.json"
     },
     {
@@ -17972,8 +17970,7 @@
       "name": "ハガネール",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50376.json"
     },
     {
@@ -21323,21 +21320,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1313,
-        "MECHANIC_REQUIRED": 544,
+        "ENGINE_CONNECTED": 1316,
+        "MECHANIC_REQUIRED": 541,
         "ENGINE_CONNECTION_REQUIRED": 7
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1273,
-        "MECHANIC_REQUIRED": 416,
+        "ENGINE_CONNECTED": 1275,
+        "MECHANIC_REQUIRED": 414,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 558,
-        "MECHANIC_REQUIRED": 304,
+        "ENGINE_CONNECTED": 559,
+        "MECHANIC_REQUIRED": 303,
         "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21347,7 +21344,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3782,
-    "unconnected": 1291
+    "engineConnected": 3788,
+    "unconnected": 1285
   }
 }

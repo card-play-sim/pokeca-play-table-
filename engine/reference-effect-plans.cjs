@@ -786,6 +786,9 @@ function plan(entry,kind){
   return {mechanic:'TRAINER_SWITCH_OR_EX_V_BOOST',commands:['SWITCH','MODIFY_DAMAGE'],amount:30,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンがベンチにいるなら、自分の番に1回使える。このポケモンをバトルポケモンと入れ替える。')
   return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],selfBenchOnly:true,sharedWording:true};
+ const evolveLowHpSwitch=generic.match(/^自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチの残りHPが「([1-9]\d{0,2})」以下のポケモンを1匹選び、バトルポケモンと入れ替える。$/);
+ if(kind==='ABILITY'&&evolveLowHpSwitch)
+  return {mechanic:'ABILITY_EVOLVE_FORCE_SWITCH',commands:['FORCE_SWITCH'],origin:'evolve',maxRemainingHp:Number(evolveLowHpSwitch[1]),sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')
   return {mechanic:'ABILITY_EVOLVE_FORCE_SWITCH',commands:['FORCE_SWITCH'],origin:'evolve',sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
@@ -882,6 +885,9 @@ function plan(entry,kind){
  const rocketGate=generic.match(/^自分の場の「ロケット団のポケモン」が([1-6])匹以上のときにしか、このポケモンはワザが使えない。$/);
  if(kind==='ABILITY'&&rocketGate)
   return {mechanic:'PASSIVE_ROCKET_TEAM_ATTACK_GATE',commands:['ADD_STATE'],required:Number(rocketGate[1])};
+ const conditionalReduction=generic.match(/^(このポケモンにエネルギーがついているなら、このポケモンが受ける|このポケモンのHPがまんたんの状態なら、このポケモンが相手のポケモンから受ける)ワザのダメージは「-([1-9][0-9]{0,2})」される。$/);
+ if(kind==='ABILITY'&&conditionalReduction)
+  return {mechanic:'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],amount:Number(conditionalReduction[2]),condition:conditionalReduction[1].startsWith('このポケモンにエネルギー')?'hasEnergy':'fullHp',sharedWording:true};
  const incomingReduction=generic.match(/^このポケモンが受けるワザのダメージは「-([1-9][0-9]{0,2})」される。$/);
  if(kind==='ABILITY'&&incomingReduction)
   return {mechanic:'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION',commands:['PREVENT_DAMAGE'],amount:Number(incomingReduction[1])};
