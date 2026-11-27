@@ -320,6 +320,12 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'PHANTOM',commands:[...deal,'PLACE_DAMAGE_COUNTERS'],counterCount:Number(benchCounters[1]),sharedWording:true};
  if(text==='場にスタジアムが出ていないなら、このワザは失敗。'&&base>0)
   return {mechanic:'FULL_BENCH_REQUIRED_DAMAGE',commands:['DAMAGE'],requiresStadium:true,sharedWording:true};
+ const moveBenchCounters=text.match(/^自分のベンチ(?:の「(ロケット団|ナンジャモ|シロナ|ホップ|カスミ|ヒビキ|リーリエ|N)のポケモン」|ポケモン)を1匹選び、選んだポケモンにのっているダメカンをすべて、相手の(ポケモン1匹|バトルポケモン)にのせ替える。$/);
+ if(moveBenchCounters&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_MOVE_BENCH_COUNTERS',commands:[...deal,'MOVE_DAMAGE_COUNTERS'],team:moveBenchCounters[1]||null,targetActive:moveBenchCounters[2]==='バトルポケモン',sharedWording:true};
+ const chosenCounters=text.match(/^相手のポケモン1匹に、そのポケモンにのっているダメカンの数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(chosenCounters&&printed==='0')
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponent',count:1,counterUnit:Number(chosenCounters[1]),sharedWording:true};
  const benchPrizeSpread=text.match(/^相手のベンチポケモン全員にも、それぞれ、相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(benchPrizeSpread&&base>0&&/^\d+$/.test(printed))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponentBench',count:null,prizeUnit:Number(benchPrizeSpread[1]),sharedWording:true};

@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1184,
-      "missing": 518
+      "connected": 1189,
+      "missing": 513
     },
     "J": {
       "total": 870,
-      "connected": 526,
-      "missing": 344
+      "connected": 529,
+      "missing": 341
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1178,
-      "MECHANIC_REQUIRED": 71,
-      "ENGINE_CONNECTION_REQUIRED": 443,
+      "CONNECTED_UNTESTED": 1183,
+      "MECHANIC_REQUIRED": 69,
+      "ENGINE_CONNECTION_REQUIRED": 440,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 525,
+      "CONNECTED_UNTESTED": 528,
       "MECHANIC_REQUIRED": 45,
-      "ENGINE_CONNECTION_REQUIRED": 298,
+      "ENGINE_CONNECTION_REQUIRED": 295,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -2102,8 +2102,7 @@
       "name": "ロケット団のソーナンス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47433.json"
     },
     {
@@ -2301,8 +2300,7 @@
       "name": "ロケット団のソーナンス",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47507.json"
     },
     {
@@ -11042,8 +11040,7 @@
       "name": "デスカーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47659.json"
     },
     {
@@ -12391,8 +12388,7 @@
       "name": "デスカーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48032.json"
     },
     {
@@ -14878,8 +14874,7 @@
       "name": "デスカーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49038.json"
     },
     {
@@ -16813,8 +16808,7 @@
       "name": "キュウコン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50093.json"
     },
     {
@@ -18901,8 +18895,7 @@
       "name": "ゲッコウガex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50627.json"
     },
     {
@@ -20189,8 +20182,7 @@
       "name": "ゲッコウガex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50560.json"
     },
     {
@@ -21451,15 +21443,15 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1184,
-        "MECHANIC_REQUIRED": 504,
+        "ENGINE_CONNECTED": 1189,
+        "MECHANIC_REQUIRED": 499,
         "ENGINE_CONNECTION_REQUIRED": 10,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 525,
-        "MECHANIC_REQUIRED": 336,
+        "ENGINE_CONNECTED": 528,
+        "MECHANIC_REQUIRED": 333,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21469,7 +21461,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3595,
-    "unconnected": 1478
+    "engineConnected": 3603,
+    "unconnected": 1470
   }
 }
