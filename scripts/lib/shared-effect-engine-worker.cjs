@@ -580,12 +580,12 @@ function prepare(r, e, kind) {
     };
     const holderChain=line(r);
     if(!holderChain)return {blocked:'NO_TEAM_BOOST_HOLDER_EVOLUTION_LINE'};
-    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&a.cost.length>0&&a.cost.every(t=>t==='無色'));
+    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=100&&a.cost.length>0&&a.cost.every(t=>['草','炎','水','雷','超','闘','悪','鋼','無色'].includes(t)));
     const matches=x=>x.category==='pokemon'&&x.officialCardId!==r.officialCardId&&x.name!==r.name&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&attackIndex(x)>=0&&(plan.evolvedSource?x.facts.stage>0:x.facts.basic)&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
     const attackerChain=all.filter(matches).map(line).find(chain=>chain&&!chain.some(x=>holderChain.some(h=>h.deckName===x.deckName)));
     if(!attackerChain)return {blocked:'NO_TEAM_BOOST_ATTACKER'};
     const attacker=attackerChain.at(-1),i=attackIndex(attacker),damage=Number(attacker.attacks[i].damage);
-    const defenders=all.filter(x=>x.category==='pokemon'&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>2*(damage+plan.amount)&&!x.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
+    const defenders=all.filter(x=>x.category==='pokemon'&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>damage+plan.amount&&!x.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
     const defenderChain=defenders.map(line).find(Boolean);
     if(!defenderChain)return {blocked:'NO_TEAM_BOOST_DEFENDER'};
     const ids=chain=>chain.map(x=>x.officialCardId);
@@ -600,7 +600,9 @@ function prepare(r, e, kind) {
   }
   if(m==='PASSIVE_CONTEXT_COST_DISCOUNT'){
     const plan=e.plan;
-    const attackIndex=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    const preferred=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    // A continuous cost modifier applies to every printed attack, not just fixed-damage attacks.
+    const attackIndex=preferred>=0?preferred:r.attacks.findIndex(a=>a.cost.includes('無色')&&a.plan);
     if(attackIndex<0)return {blocked:'NO_CONTEXT_COST_ATTACK_FIXTURE'};
     const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofContextCost:plan},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -3585,9 +3587,15 @@ function verifyCase(t, e) {
     }
     assert.deepEqual(S.identities(before),S.identities(baseline));
     const replay=port(baseline);
-    assert.equal(replay.dispatch('you',action).ok,false,'CONTEXT_DISCOUNT_MUST_REQUIRE_CONDITION');
+    const denied=replay.dispatch('you',action);
+    assert.equal(denied.ok,false,'CONTEXT_DISCOUNT_MUST_REQUIRE_CONDITION');
+    assert(JSON.stringify(denied).includes('INSUFFICIENT_VERIFIED_ENERGY'),'CONTEXT_DISCOUNT_NEGATIVE_MUST_FAIL_PAYMENT:'+JSON.stringify(denied));
     assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(replay.getSnapshot()))),B.canonical(baseline));
-    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
+    // The attack's complete independent effect slot still has to pass its own verifier.
+    // Here verify the exact printed action was executed at the discounted payment.
+    assert(after.history.slice(before.history.length).some(ev=>ev.type==='attack'&&ev.details?.effectId===t.trigger.effectId&&ev.details.referenceOfficialCardId===E.getReferenceEffectRecord(before.players[0].active).officialCardId),'DISCOUNTED_PRINTED_ATTACK_MISSING');
+    if(['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(t.trigger.plan.mechanic)&&Number(t.trigger.damage)>0)
+      verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
   }
   if(e.plan.mechanic==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
     const baseline=JSON.parse(JSON.stringify(before)),other=baseline.players[1];
@@ -3823,8 +3831,31 @@ function verifyCase(t, e) {
       'OPPONENT_HAND_REVEAL_NOT_EXACT');
     verifyPrintedAttack(before,after,e,Number(e.damage)||0);
   }
-  if (e.plan.mechanic === "VANILLA_DAMAGE")
-    verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "VANILLA_DAMAGE"){
+    // Include the attacker's own continuous damage ability, and any other
+    // exact printed team bonuses present in this fixture. Do not infer a
+    // bonus from the observed DAMAGE event. Verify the amount independently.
+    const attacker=E.getReferenceEffectRecord(before.players[0].active),defender=E.getReferenceEffectRecord(before.players[1].active);
+    const stadium=before.stadium&&E.getReferenceEffectRecord(before.stadium)?.mainPlan?.mechanic;
+    const suppressed=record=>stadium==='WATCHTOWER'&&record.facts.types.includes('無色')||stadium==='SUPPRESS_RULE_ABILITIES'&&record.facts.rulePokemon;
+    const bonuses=[],unique=new Set();
+    for(const holder of [before.players[0].active,...before.players[0].bench]){
+      const printed=E.getReferenceEffectRecord(holder);
+      if(suppressed(printed))continue;
+      for(const ability of printed.abilities){
+        const plan=ability.plan;
+        if(plan?.mechanic!=='PASSIVE_TEAM_ATTACK_BOOST')continue;
+        if(holder===before.players[0].active&&!suppressed(defender)&&defender.abilities.some(a=>a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'&&a.plan.exceptAbilityName!==ability.name))continue;
+        if(plan.team&&!attacker.name.startsWith(plan.team+'の'))continue;
+        if(plan.types.length&&!plan.types.some(type=>attacker.facts.types.includes(type)))continue;
+        if(plan.evolvedSource&&attacker.facts.stage===0||plan.evolvedTarget&&defender.facts.stage===0)continue;
+        if(plan.nonStack&&unique.has(ability.name))continue;
+        if(plan.nonStack)unique.add(ability.name);
+        bonuses.push(plan.amount);
+      }
+    }
+    verifyPrintedAttack(before, after, e, Number(e.damage)+bonuses.reduce((sum,n)=>sum+n,0));
+  }
   if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
     const action = t.action || o.action;
     const { discard, cards } = action.selections;
