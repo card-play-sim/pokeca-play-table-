@@ -562,6 +562,24 @@ function prepare(r, e, kind) {
     assert(physical.length,'RETREAT_CONTEXT_REQUIRES_PHYSICAL_ENERGY');
     if(!self&&!physical.some(c=>!c.isSpecial&&c.energyType===e.plan.energyType))return {blocked:'NO_TYPED_RETREAT_ENERGY'};
     assert.equal(mon.retreatCost,self?r.facts.retreatCost:0);
+    if(!self){
+      // Verify the aura reaches a different Pokémon, not only its source,
+      // and neither an untyped recipient nor the opponent is discounted.
+      const team=structuredClone(game),ours=team.players[0],holder=ours.active;
+      const recipient=ours.bench.find(c=>E.getReferenceEffectRecord(c).facts.retreatCost>0&&!c.tools?.length&&!E.getReferenceEffectRecord(c).abilities.length);
+      if(!recipient)return {blocked:'NO_TYPED_RETREAT_TEAM_RECIPIENT'};
+      const typed=holder.energyCards.find(c=>!c.isSpecial&&c.energyType===e.plan.energyType);
+      assert(typed);
+      ours.deck.push(...recipient.energyCards.splice(0));
+      const prior=port(team).getSnapshot(),priorRecipient=prior.players[0].bench.find(c=>c.id===recipient.id);
+      assert.equal(priorRecipient.retreatCost,E.getReferenceEffectRecord(priorRecipient).facts.retreatCost);
+      recipient.energyCards.push(holder.energyCards.splice(holder.energyCards.findIndex(c=>c.id===typed.id),1)[0]);
+      const changed=port(team).getSnapshot(),changedRecipient=changed.players[0].bench.find(c=>c.id===recipient.id);
+      assert.equal(changedRecipient.retreatCost,0);
+      assert(changedRecipient.energyCards.some(c=>c.id===typed.id));
+      assert.deepEqual(S.identities(prior),S.identities(changed));
+      assert.equal(changed.players[1].active.retreatCost,prior.players[1].active.retreatCost);
+    }
     const free=self?zero:port(game),before=free.getSnapshot();
     const retreat=E.getLegalActions(before,'you').actions.find(a=>a.type==='retreat'&&!(a.energyIds||[]).length);
     assert(retreat,'NO_LEGAL_FREE_RETREAT_ACTION');
