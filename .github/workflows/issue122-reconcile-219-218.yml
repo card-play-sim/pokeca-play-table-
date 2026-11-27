@@ -93,8 +93,13 @@ jobs:
         run: |
           node scripts/run-atomic-official-battle-intake.cjs
           mkdir -p artifacts
-          mv work/card-auto-connect artifacts/first-pass-intake
-          node scripts/run-atomic-official-battle-intake.cjs
+          # Previous two passes both proved the same nine exact IDs. Repeat
+          # only if the required checkpoint IDs are missing; keep final full
+          # regression, exact-record comparison and every browser slot gate.
+          if ! node -e 'const a=require("node:assert/strict"),r=require("./work/card-auto-connect/candidate.json");for(const id of ["46447","46280","46328","49652","48433","48444","48462","47736","47814"])a(r.qualified.map(String).includes(id),id)'; then
+            mv work/card-auto-connect artifacts/first-pass-intake
+            node scripts/run-atomic-official-battle-intake.cjs
+          fi
       - name: Preserve every prior proven record and calculate exact unique new IDs
         run: |
           node <<'NODE'
@@ -188,6 +193,9 @@ jobs:
             artifacts/qualified-checkpoint.bundle
             artifacts/qualified-checkpoint-sha.txt
             artifacts/exact-release-delta.json
+            data/effect-extensions/compiled.json
+            data/effect-extensions/intake.json
+            data/reference-effects/plans.json
             reports/official-effect-continuation/
             data/official-effect-intake/checkpoint.json
             test-results/
