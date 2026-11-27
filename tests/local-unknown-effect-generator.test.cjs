@@ -231,3 +231,36 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert([...anchors.values()].some(x=>x.before===insertion));
  assert.equal(repairProfile('MODEL_COMPILER_ANCHOR_REMOVED').type,'INTEGRITY');
 }
+
+// Real run 45993305278 lost a RECON row while attempting a new ability.
+{
+ const compiler='engine/reference-effect-plans.cjs';
+ const original=" ['RECON','自分の番に1回使える。自分の山札を上から2枚見て、どちらか1枚を選び、手札に加える。残りのカードは、山札の下にもどす。',['SEARCH_DECK','ADD_TO_HAND','RETURN_TO_DECK']],";
+ const next=" ['FIXTURE_ONLY','new rule',['ADD_STATE']],";
+ const anchors=new Map([['F0_12',{path:compiler,before:original}]]);
+ for(const [op,expected] of [['insertBefore',next+'\n'+original],['insertAfter',original+'\n'+next]]){
+  const result=resolveAnchorProposal({edits:[{anchor:'F0_12',[op]:next}]},anchors);
+  assert.equal(applyEdits({[compiler]:original},result)[compiler],expected);
+ }
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_99',insertBefore:next}]},anchors),/NONUNIQUE_OR_STALE_ANCHOR:F0_99/);
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:next,after:original}]},anchors),/MODEL_EDIT_OPERATION_REQUIRED/);
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:original}]},anchors),/MODEL_DUPLICATE_INSERTION_ANCHOR/);
+}
+
+// Actual rejected Palafin ex ability must include the explicitly named
+// transform ability even when a compact repair would otherwise select one.
+{
+ const restriction='このカードは、「イルカマン」の特性「マイティチェンジ」の効果によってしか場に出せない。';
+ const transform='自分の番に、このポケモンがバトル場からベンチにもどったとき、1回使える。自分の山札から「イルカマンex」を1枚選び、このカードと入れ替える（ついているカード・ダメカン・特殊状態・効果などは、すべて引きつぐ）。入れ替えたなら、このカードは山札にもどす。そして山札を切る。';
+ const a={group:{sharedTaskId:mkId(301),effectKind:'ability',category:'pokemon',exampleOfficialText:restriction},records:[{officialCardId:'45727',name:'イルカマンex'}]};
+ const b={group:{sharedTaskId:mkId(302),effectKind:'ability',category:'pokemon',exampleOfficialText:transform},records:[{officialCardId:'45726',name:'イルカマン',abilities:[{name:'マイティチェンジ',text:transform}]}]};
+ const batch=selectBatch([a,b],1);
+ assert.equal(batch.length,2);
+ const scope=attemptScope(batch,{groups:1});
+ assert.equal(scope.groups.length,2);
+ assert.deepEqual(scope.requiredTogether.sort(),['45726','45727']);
+ const prev={groups:scope.groups,targetIds:['45726','45727'],fingerprint:fp};
+ assert.equal(retryBatch([a,b],prev,fp).length,2);
+ assert.deepEqual(retryBatch([a,b],{...prev,targetIds:['45727']},fp),[]);
+ assert.deepEqual(selectBatch([a,b],1,{maxPrints:1}),[]);
+}
