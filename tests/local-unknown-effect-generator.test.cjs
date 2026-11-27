@@ -278,3 +278,64 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(applyEdits(src,{edits:[{path:compiler,before:existing,after:fresh+'\n'+existing}]})[compiler],fresh+'\n'+existing);
  assert.equal(repairProfile('MODEL_DUPLICATE_DEFINITION').type,'SYNTAX');
 }
+
+// Production composition path: whole exact printed wording only, parameters
+// and zone/holder semantics taken from the reviewed grammar, not model output.
+{
+ const {reviewedPlan,reviewedProposal,selectReviewedBatch}=require('../scripts/local-unknown-effect-generator.cjs');
+ const steel={sharedTaskId:mkId(701),category:'supporter',effectKind:'supporter',exampleOfficialText:'自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。'};
+ const psychic={sharedTaskId:mkId(702),category:'item',effectKind:'item',exampleOfficialText:'自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。'};
+ const recovery={sharedTaskId:mkId(703),category:'pokemon',effectKind:'attack',printedDamage:'0',exampleOfficialText:'自分のトラッシュからポケモンと基本エネルギーを合計3枚まで選び、相手に見せて、山札にもどして切る。'};
+ assert.deepEqual([reviewedPlan(steel).plan.limit,reviewedPlan(steel).plan.holderType,reviewedPlan(steel).plan.multi],[2,'鋼',false]);
+ assert.equal(reviewedPlan(psychic).plan.target,'bench');
+ assert.equal(reviewedPlan(recovery).plan.destination,'deck');
+ assert.equal(reviewedPlan({...recovery,printedDamage:'20+'}),null);
+ assert.equal(reviewedPlan({...steel,effectKind:'ability'}),null);
+ assert.equal(reviewedPlan({...steel,exampleOfficialText:steel.exampleOfficialText+'その後、山札を引く。'}),null);
+ assert.equal(reviewedPlan({...psychic,exampleOfficialText:psychic.exampleOfficialText.replace('1枚','2枚まで')}),null);
+ const anchor=" const p=byText.get(text);return p?{...p}:evolutionTransferFallback(entry,kind,generic);";
+ const path='engine/reference-effect-plans.cjs';
+ const src={[path]:'function test(entry,kind,generic){\n'+anchor+'\n}'};
+ const proposal=reviewedProposal([steel,psychic,recovery],src);
+ assert.equal(proposal.strategy,'REVIEWED_COMPOSITION');
+ const changed=applyEdits(src,proposal);
+ validateCandidateSyntax(src,changed);
+ assert(changed[path].includes(anchor));
+ assert(changed[path].includes('"MASS_ENERGY_ROUTE"'));
+ assert(changed[path].includes('"MASS_ZONE_TRANSFER"'));
+ assert.equal(reviewedProposal([steel,{...recovery,printedDamage:'20+'}],src),null);
+ assert.equal(reviewedProposal([steel],{[path]:'missing anchor'}),null);
+ const rows=[steel,psychic,recovery].map((group,i)=>({group,records:[{officialCardId:String(i+1)}]}));
+ assert(selectReviewedBatch(rows,{},fp).length>0);
+ const history=recordHistory(null,[steel,psychic,recovery],'QUARANTINE_FAILED',1,fp,'failed');
+ assert.equal(selectReviewedBatch(rows,history,fp).length,3,'legacy model failure must not suppress reviewed composition');
+ const reviewedHistory=recordHistory(history,[steel,psychic,recovery],'QUARANTINE_FAILED',2,fp,'failed','REVIEWED_COMPOSITION');
+ assert.equal(selectReviewedBatch(rows,reviewedHistory,fp).length,0);
+ assert.equal(selectReviewedBatch(rows,reviewedHistory,fp2).length,3);
+ const laterModel=recordHistory(reviewedHistory,[steel],'QUARANTINE_FAILED',3,fp,'model failed','LOCAL_MODEL');
+ assert.equal(selectReviewedBatch(rows,laterModel,fp).length,0);
+ const modified={...steel,exampleOfficialText:steel.exampleOfficialText.replace('2枚まで','3枚まで')};
+ assert.equal(selectReviewedBatch([{...rows[0],group:modified}],laterModel,fp).length,1);
+}
+
+ // Exercise the workflow's actual shell-quoted persistence command, not a
+ // separately retyped approximation. A passing browser must save its history.
+ {
+  const fs=require('node:fs'),os=require('node:os'),p=require('node:path'),{spawnSync}=require('node:child_process');
+  const workflow=fs.readFileSync('.github/workflows/local-unknown-effect-generator.yml','utf8');
+  const line=workflow.split('\n').find(l=>l.includes('const history=recordHistory(old,row.groups'));
+  assert(line,'history command missing');
+  const dir=fs.mkdtempSync(p.join(os.tmpdir(),'reviewed-history-'));
+  try{
+   const base=p.join(dir,'base.json'),out=p.join(dir,'attempt-1'),artifacts=p.join(dir,'model-artifacts');
+   fs.mkdirSync(out);fs.mkdirSync(artifacts);
+   fs.writeFileSync(base,JSON.stringify({schemaVersion:1,groups:{}}));
+   const group={sharedTaskId:'OFFICIAL_SHARED_MECHANIC_'+ 'A'.repeat(20),category:'item',effectKind:'item',exampleOfficialText:'自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。'};
+   fs.writeFileSync(p.join(out,'selected.json'),JSON.stringify({groups:[group],fingerprint:'b'.repeat(64),intendedStrategy:'REVIEWED_COMPOSITION'}));
+   const result=spawnSync('bash',['-euc',line.trim()],{encoding:'utf8',env:{...process.env,MODEL_HISTORY_PATH:base,RUNNER_TEMP:dir,GITHUB_RUN_NUMBER:'1',out,state:'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED',feedback:''}});
+   assert.equal(result.status,0,result.stderr);
+   const entry=JSON.parse(fs.readFileSync(p.join(artifacts,'history.json'),'utf8')).groups[group.sharedTaskId];
+   assert.equal(entry.status,'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED');
+   assert.match(entry.reviewedKey,/^[a-f0-9]{64}$/);
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+ }

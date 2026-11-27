@@ -91,7 +91,13 @@ async def main():
                               and row['match'] and row['remoteSha256']==asset for row in delivery['results'])
   else:
    await page.goto(url,wait_until='domcontentloaded')
-  async def ready():await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&window.PokecaImageRegistryStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
+  async def ready():
+   try:
+    await page.wait_for_function('window.PokecaUpdateStatus?.state==="ready"&&window.PokecaImageRegistryStatus?.state==="ready"&&document.getElementById("save-status").textContent==="自動保存済"',timeout=60000)
+   except PlaywrightTimeoutError:
+    print("BROWSER_READY_DIAGNOSTIC",json.dumps(await page.evaluate("""()=>({url:location.href,update:window.PokecaUpdateStatus,images:window.PokecaImageRegistryStatus,save:document.getElementById('save-status')?.textContent,saveError:document.getElementById('save-status')?.title,online:navigator.onLine,secure:isSecureContext,worker:navigator.serviceWorker?.controller?.scriptURL})"""),ensure_ascii=False,default=str),flush=True)
+    print("BROWSER_PAGE_ERRORS",json.dumps(errors[-15:]),flush=True)
+    raise
   async def snap():return await page.evaluate('PokecaMobile.port.getSnapshot()')
   await ready()
   for f in fixtures:

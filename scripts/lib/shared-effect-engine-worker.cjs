@@ -2302,7 +2302,8 @@ function verifyCase(t, e) {
         const target=pool.find(c=>c.kind===kind);
         if(!target)return {status:'BLOCKED',reason:'NO_MIXED_SEARCH_BOTH_CATEGORY_FIXTURE'};
         const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[target.id]}}).ok);
-        const end=replay.getSnapshot();assert(end.players[0].hand.some(c=>c.id===target.id));
+        const end=replay.getSnapshot();assert(end.players[0][plan.destination].some(c=>c.id===target.id));
+        assert(!end.players[0][plan.zone].some(c=>c.id===target.id));
         assert.deepEqual(S.identities(before),S.identities(end));
       }
     }
