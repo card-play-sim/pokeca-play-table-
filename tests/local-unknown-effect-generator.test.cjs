@@ -56,7 +56,13 @@ assert.equal(selectBatch([aa,bb,cc],5,{history:hist,fingerprint:'c'.repeat(64)})
 // Old schema records are safely migrated without losing their attempt counts.
 assert.equal(normalizeHistory({schemaVersion:1,groups:{[mkId(1)]:{attempts:4,lastRun:8,status:'QUARANTINE_FAILED',fingerprint:fp}}}).groups[mkId(1)].totalAttempts,4);
 assert.deepEqual(normalizeHistory({schemaVersion:1,groups:{'../../bad':{attempts:1,lastRun:2}}}).groups,{});
-assert.deepEqual(selectBatch([aa],1,{maxPrints:2}),[]);
+assert.deepEqual(selectBatch([aa],1,{maxPrints:2})[0].records.map(r=>r.officialCardId),['1','2']);
+assert.throws(()=>selectBatch([aa],1,{maxPrints:0}),/INVALID_PRINT_BUDGET/);
+const largeGroup=candidate(mkId(4),'山札からカードを引く。',Array.from({length:70},(_,i)=>String(i+100)));
+const largeBatch=selectBatch([largeGroup],1);
+assert.equal(largeBatch[0].records.length,64);
+assert.equal(largeGroup.records.length,70);
+assert.deepEqual(selectBatch([{...largeGroup,records:largeGroup.records.slice(64)}],2)[0].records.map(r=>r.officialCardId),['164','165','166','167','168','169']);
 assert.equal(sourceFingerprint({'engine/reference-effect-plans.cjs':'a','engine/pokeca_reference_effect_runtime.cjs':'b','scripts/lib/shared-effect-engine-worker.cjs':'c'}).length,64);
 console.log('LOCAL_UNKNOWN_GENERATOR_HISTORY PASS');
 
