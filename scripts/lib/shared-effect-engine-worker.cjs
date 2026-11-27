@@ -59,7 +59,7 @@ function port(game) {
 }
 function batchSearchCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c),pokemon=c.kind==='pokemon',typed=pokemon&&r?.facts.types?.includes(plan.type),basic=c.kind==='energy'&&!c.isSpecial&&['草','炎','水','雷','超','闘','悪','鋼'].includes(c.energyType);
- if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return pokemon&&r?.facts.basic&&(!plan.type||typed);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return pokemon&&r?.facts.basic&&(!plan.type||typed)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact);
  if(plan.filter==='any')return true;
  if(plan.filter==='basicEnergy')return basic;
  if(plan.filter==='typedBasicEnergy')return basic&&c.energyType===plan.type;
@@ -397,7 +397,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(e.plan.batchSearch){
-  const filter=r=>m==='SEARCH_BASIC_TO_BENCH_ATTACK'?mon(r,plan.type,0):
+  const filter=r=>m==='SEARCH_BASIC_TO_BENCH_ATTACK'?mon(r,plan.type,0)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact):
    plan.filter==='any'?r.category==='item':
    plan.filter==='basicEnergy'?isBasicEnergy(r):
    plan.filter==='typedBasicEnergy'?isBasicEnergy(r)&&typeOf(r)===plan.type:

@@ -7,6 +7,7 @@ on:
       - 'scripts/verify-unknown-quarantine-*.py'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
+      - 'scripts/export-unknown-replay-candidate.py'
       - '.github/workflows/unknown-effect-approved-replay.yml'
       - 'scripts/unknown-repair-feedback.py'
       - 'tests/local-unknown-effect-generator.test.cjs'
@@ -19,6 +20,7 @@ on:
       - 'scripts/verify-unknown-quarantine-*.py'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
+      - 'scripts/export-unknown-replay-candidate.py'
       - '.github/workflows/unknown-effect-approved-replay.yml'
       - 'scripts/unknown-repair-feedback.py'
       - 'tests/local-unknown-effect-generator.test.cjs'
@@ -47,3 +49,4 @@ jobs:
           python scripts/verify-unknown-quarantine-handoff.py --self-test
           python scripts/verify-unknown-approved-replay.py --self-test
           python scripts/prepare-unknown-replay-intake.py --self-test
+          python scripts/export-unknown-replay-candidate.py --self-test
