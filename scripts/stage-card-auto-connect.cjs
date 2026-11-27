@@ -202,8 +202,18 @@ async function run(baseCommit, directory) {
   const slotsById = new Map();
   const basicCandidates = new Map();
   const blockers = [];
+  // Optional exact target isolation for independently blocked prerequisites.
+  // Unselected prints retain explicit blockers and enter the normal retry ledger.
+  const rawScope=process.env.POKECA_INTAKE_EXACT_TARGETS;
+  const scope=rawScope?new Set(rawScope.split(',')):null;
+  if(scope){
+    if([...scope].some(id=>!/^[1-9][0-9]{0,7}$/.test(id)))throw Error('INVALID_EXACT_TARGET_SCOPE');
+    const available=new Set(candidates.map(r=>String(r.officialCardId)));
+    for(const id of scope)if(!available.has(id))throw Error('EXACT_TARGET_NOT_CANDIDATE:'+id);
+  }
   for (const record of candidates) {
     const id = record.officialCardId;
+    if(scope&&!scope.has(String(id))){blockers.push({id,reason:'DEFERRED_EXACT_TARGET_SCOPE'});continue;}
     const card = cards.get(id);
     const basic = verifiedBasicEnergy(record, card);
     const reason = !card || !(['H','I','J'].includes(card.regulationMark) || basic)
