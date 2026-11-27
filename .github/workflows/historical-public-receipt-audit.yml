@@ -95,8 +95,19 @@ jobs:
           report["receiptCollection"]="ANCHORS_AND_UP_TO_100_RECENT_SUCCESSFUL_RUNS"
           report["currentCommit"]=a.git("rev-parse","HEAD").decode().strip()
           report["runs"]=results
+          # Stop requires all 2775 exact rows, plus a successful public run of
+          # the identical current main commit. Recheck delivery bytes separately.
+          head=report["currentCommit"]
+          report["automaticStopAuthorized"]=False
+          if report["allTargetEvidencePresent"]:
+              current=api("/git/ref/heads/main")["object"]["sha"]
+              current_runs=[x for x in results if x["state"]=="PUBLIC_RECEIPTS_VERIFIED" and x["head"]==head]
+              if head==current and current_runs:
+                  delivery=subprocess.run(["node","scripts/verify-published-pwa.cjs"],check=False).returncode==0
+                  current=api("/git/ref/heads/main")["object"]["sha"]
+                  report["automaticStopAuthorized"]=a.authorize_stop(report,head,current,{"commit":head,"success":True},delivery)
           Path("historical-public-receipt-audit.json").write_text(json.dumps(report,indent=2)+"\n")
-          print(json.dumps({"verifiedByThisAudit":report["verifiedByThisAudit"],"targetCount":len(target),"runs":[{k:v for k,v in x.items() if k!="printIds"} for x in results],"automaticStopAuthorized":False}))
+          print(json.dumps({"verifiedByThisAudit":report["verifiedByThisAudit"],"targetCount":len(target),"runs":[{k:v for k,v in x.items() if k!="printIds"} for x in results],"automaticStopAuthorized":report["automaticStopAuthorized"]}))
           assert any(x["state"]=="PUBLIC_RECEIPTS_VERIFIED" for x in results),"NO_VERIFIED_HISTORICAL_RECEIPTS"
           PY
       - uses: actions/upload-artifact@v4
