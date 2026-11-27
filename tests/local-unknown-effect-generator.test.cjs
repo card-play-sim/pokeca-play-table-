@@ -127,6 +127,14 @@ assert(applyEdits(fixtureSource,resolved)[path].includes('newVerifiedCount'));
 assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'// source lines 216-231',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
 assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],path:'.github/workflows/unsafe.yml',after:'fake'}]},anchorMap),/PROTECTED_PATH/);
 assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],before:'different',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
+const {annotatedModelContext}=require('../scripts/local-unknown-effect-generator.cjs');
+const context=annotatedModelContext(fixtureSource,{exampleOfficialText:'山札のエネルギー'},4500,anchorMap);
+assert(context.includes('['+selectedAnchor[0]+'] '+realLine));
+assert.equal(context.split(realLine).length-1,1);
+assert.equal(context.split('['+selectedAnchor[0]+']').length-1,1);
+assert.throws(()=>annotatedModelContext(fixtureSource,{exampleOfficialText:'山札のエネルギー'},1,anchorMap),/MODEL_CONTEXT_ANCHOR_MISSING/);
+assert(repairProfile('LOCAL_MODEL_DEADLINE',2).excerptChars<repairProfile().excerptChars);
+console.log('LOCAL_UNKNOWN_COMPACT_CONTEXT PASS');
 console.log('LOCAL_UNKNOWN_EXACT_ANCHOR_IDS PASS');
 
 // Exact receipt failure selects the component requiring repair, not a generic retry.
