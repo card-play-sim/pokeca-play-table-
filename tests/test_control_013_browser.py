@@ -125,13 +125,13 @@ async def main():
       name=c['validationReference']['officialName']
       return name.endswith(('ex','V','VMAX','VSTAR'))
      assert not qualified(other['active']) and any(qualified(c) for c in other['bench'])
-     for c in list(other['bench']):
-      if qualified(c):
-       assert not c.get('energyCards') and not c.get('tools') and not c.get('evolutionCards')
-       other['bench'].remove(c)
+     for bench_card in list(other['bench']):
+      if qualified(bench_card):
+       assert not bench_card.get('energyCards') and not bench_card.get('tools') and not bench_card.get('evolutionCards')
+       other['bench'].remove(bench_card)
        for key in ('cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'):
-        c.pop(key,None)
-       other['deck'].append(c)
+        bench_card.pop(key,None)
+       other['deck'].append(bench_card)
     await load_game(short)
     await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
     await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
