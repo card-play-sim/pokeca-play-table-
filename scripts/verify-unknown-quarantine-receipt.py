@@ -18,6 +18,12 @@ def index_records(records):
         raise ValueError("DUPLICATE_COMPILED_PRINT")
     return indexed
 
+def fixture_diagnostics(value):
+    """Bound inert worker details; never interpret generated diagnostic data."""
+    if not isinstance(value, list):
+        return []
+    return [item[:100] for item in value[:4] if isinstance(item, str)]
+
 def inspect(prior, current, receipt, selection, gaps):
     old, indexed = index_records(prior), index_records(current)
     changed = sorted(key for key, value in old.items() if indexed.get(key) != value)
@@ -40,6 +46,7 @@ def inspect(prior, current, receipt, selection, gaps):
             "index": gap.get("index"),
             "status": str(gap.get("status", ""))[:40],
             "reason": str(gap.get("reason", ""))[:100],
+            "details": fixture_diagnostics(gap.get("details")),
         })
     failures = []
     for key in selected:
@@ -69,7 +76,14 @@ def main(out, scratch, workspace):
     (out / "quarantine-result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     # A short final line survives the existing 1800-character feedback limit.
     summary = {key: result[key] for key in ("state", "reason", "changedPriorIds") if key in result}
-    summary["targetFailures"] = result.get("targetFailures", [])[:4]
+    # Keep complete JSON and the first actionable fixture reason within the
+    # generator's 1800-character feedback window. Never truncate JSON mid-field.
+    summary["targetFailures"] = []
+    for failure in result.get("targetFailures", [])[:4]:
+        trial = {**summary, "targetFailures": summary["targetFailures"] + [failure]}
+        if len(json.dumps(trial, ensure_ascii=False, separators=(",", ":"))) > 1550:
+            break
+        summary = trial
     print("QUARANTINE_RECEIPT_FEEDBACK " + json.dumps(summary, ensure_ascii=False, separators=(",", ":")))
     return 0 if result["state"] == "QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED" else 1
 
@@ -87,6 +101,16 @@ def self_test():
     assert inspect(old, new, {"qualified": ["3"]}, selection, gaps)["state"] == "QUALIFIED_RECORD_MISSING"
     assert inspect(old, [{"officialCardId": "1", "plan": "changed"}] + new[1:], {"qualified": ["2"]}, selection, gaps)["state"] == "PRIOR_RECORD_CHANGED"
     assert inspect(old, new, {"qualified": ["1"]}, selection, gaps)["state"] == "NO_SELECTED_PRINT_QUALIFIED"
+    fixture = {"gaps": [{"id": "2", "kind": "attack", "index": 0,
+                         "status": "BLOCKED", "reason": "NO_LEGAL_VERIFICATION_FIXTURE",
+                         "details": ["ENERGY_COST_UNPAID", "NOT_ACTIVE", {"ignored": True}, "x"*500, "overflow"]}]}
+    blocked = inspect(old, new, receipt, selection, fixture)
+    gap = blocked["targetFailures"][0]["gaps"][0]
+    assert gap["reason"] == "NO_LEGAL_VERIFICATION_FIXTURE"
+    assert gap["details"] == ["ENERGY_COST_UNPAID", "NOT_ACTIVE", "x"*100]
+    assert blocked["sandboxQualified"] == []
+    assert fixture_diagnostics({"fake": "PASS"}) == []
+    print("UNKNOWN_QUARANTINE_FIXTURE_DIAGNOSTICS PASS")
     print("UNKNOWN_QUARANTINE_RECEIPT_SELF_TEST PASS")
 
 if __name__ == "__main__":
