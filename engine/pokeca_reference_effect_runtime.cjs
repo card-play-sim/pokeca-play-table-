@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL','PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT']);
+const passive=new Set(['PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL','PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -219,7 +219,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   // Printed continuous abilities reduce damage taken from an attack after
   // weakness/resistance. Suppressed abilities do not apply.
   const reduction=enabledAbilities(g,mon)
-   .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION')
+   .filter(a=>a.plan.mechanic==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&(!a.plan.condition||a.plan.condition==='hasEnergy'&&(mon.energyCards||[]).length>0||a.plan.condition==='fullHp'&&(mon.damage||0)===0))
    .reduce((sum,a)=>sum+a.plan.amount,0);
   amount=Math.max(0,amount-reduction);
   const teamReduction=(other.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber&&(!x.type||record(mon).facts.types.includes(x.type))).reduce((sum,x)=>sum+x.amount,0);
@@ -723,7 +723,10 @@ function requests(g,actor,card,effect){
  if(m==='RECOVER_TYPED_DISCARD'){const pool=p.discard.filter(c=>typedRecoveryCandidate(c,effect.plan));cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
  if(m==='RECOVER_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='STRETCHER')cardRequest('cards',p.discard.filter(c=>c.kind==='pokemon'||basicEnergy(c)),1,1);
- if(['SWITCH','BOSS','ABILITY_EVOLVE_FORCE_SWITCH'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);
+ if(['SWITCH','BOSS','ABILITY_EVOLVE_FORCE_SWITCH'].includes(m)){
+  const pool=m==='SWITCH'?p.bench:o.bench;
+  cardRequest('bench',m==='ABILITY_EVOLVE_FORCE_SWITCH'&&effect.plan.maxRemainingHp?pool.filter(c=>c.hp-(c.damage||0)>0&&c.hp-(c.damage||0)<=effect.plan.maxRemainingHp):pool,1,1);
+ }
  if(m==='ENERGY_SWITCH'){
   cardRequest('energy',own.flatMap(c=>(c.energyCards||[]).filter(basicEnergy).map(e=>({...e,containerId:id(c)}))),1,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),1,1);out.at(-1).dependencies=[{kind:'excludeSelectedField',key:'energy',field:'containerId'}];
  }
@@ -824,7 +827,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN'){assert(p.bench.length>0,'NO_OWN_BENCH');if(a.plan.selfBenchOnly)assert(zone==='BENCH'&&p.bench.some(c=>id(c)===id(card)),'BENCH_SOURCE_REQUIRED');}
- if(m==='ABILITY_EVOLVE_FORCE_SWITCH')assert(opponent(g,actor).bench.length>0,'NO_OPPONENT_BENCH');
+ if(m==='ABILITY_EVOLVE_FORCE_SWITCH')assert(opponent(g,actor).bench.some(c=>!a.plan.maxRemainingHp||(c.hp-(c.damage||0)>0&&c.hp-(c.damage||0)<=a.plan.maxRemainingHp)),'NO_OPPONENT_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');
@@ -880,6 +883,11 @@ function preflight(g,actor,action){
    // Continuous Rocket Team ability: include the attacking Pokemon itself.
    // Suppressed abilities must not block a legitimate attack.
    for(const ability of enabledAbilities(g,mon)){
+    if(ability.plan.mechanic==='PASSIVE_CONTEXT_ATTACK_GATE'){
+     const plan=ability.plan;
+     const eligible=plan.mode==='ownHand'?p.hand.length>=plan.required:field(opponent(g,actor)).some(c=>record(c).name.endsWith('ex')||/V(?:MAX|STAR)?$/.test(record(c).name));
+     assert(eligible,'CONTEXT_ATTACK_REQUIREMENT');
+    }
     if(ability.plan.mechanic==='PASSIVE_ROCKET_TEAM_ATTACK_GATE'){
      const available=field(p).filter(c=>record(c).name.startsWith('ロケット団の')).length;
      assert(available>=ability.plan.required,'ROCKET_TEAM_ATTACK_REQUIREMENT');
@@ -1973,7 +1981,12 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_DAMAGE':{const mon=find(g,ids('cards')[0]);assert(mon?.player===p&&Number.isSafeInteger(plan.amount)&&plan.amount>0,'INVALID_HEAL_TARGET');heal(g,actor,mon.card,plan.amount);break;}
   case 'COIN_FORCE_SWITCH':if(coin(g,actor))chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'SWITCH':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
-  case 'ABILITY_EVOLVE_FORCE_SWITCH':case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
+  case 'ABILITY_EVOLVE_FORCE_SWITCH':{
+   const chosen=o.bench.find(c=>id(c)===ids('bench')[0]);
+   assert(chosen&&(!plan.maxRemainingHp||(chosen.hp-(chosen.damage||0)>0&&chosen.hp-(chosen.damage||0)<=plan.maxRemainingHp)),'SWITCH_BENCH_TARGET_INVALID');
+   chooseBenchSwitch(g,actor,o,id(chosen));break;
+  }
+  case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'REPELLENT':assert(o.bench.length>0,'NO_OPPONENT_BENCH');g.pendingReferenceChoice={kind:'SWITCH',playerId:o.id,options:o.bench.map(id)};break;
   case 'RED_CARD':resetHand(g,o,3,true);break;
   case 'LILLIE':resetHand(g,p,p.prizes===6?8:6);break;

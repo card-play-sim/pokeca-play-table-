@@ -150,6 +150,31 @@ async def main():
    await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
    if await toggle.count():await toggle.tap()
    else:await page.locator('#sheet-close').tap()
+   if m=='PASSIVE_CONTEXT_ATTACK_GATE':
+    short=await snap()
+    own,other=short['players']
+    plan=f['e']['plan']
+    if plan['mode']=='ownHand':
+     assert len(own['hand'])==plan['required']
+     own['deck'].insert(0,own['hand'].pop())
+    else:
+     def qualified(c):
+      name=c['validationReference']['officialName']
+      return name.endswith(('ex','V','VMAX','VSTAR'))
+     assert not qualified(other['active']) and any(qualified(c) for c in other['bench'])
+     for bench_card in list(other['bench']):
+      if qualified(bench_card):
+       assert not bench_card.get('energyCards') and not bench_card.get('tools') and not bench_card.get('evolutionCards')
+       other['bench'].remove(bench_card)
+       for key in ('cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'):
+        bench_card.pop(key,None)
+       other['deck'].append(bench_card)
+    await load_game(short)
+    await page.locator(f'#self-active [data-card-id="{ident}"]').tap()
+    await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
+    assert await page.locator(attack_selector).is_disabled()
+    await page.locator('#sheet-close').tap()
+    await load_game(f['game'])
    if m=='PASSIVE_ROCKET_TEAM_ATTACK_GATE':
     short=await snap()
     own=short['players'][0]
@@ -265,7 +290,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -277,7 +302,7 @@ async def main():
       assert before['players'][1]['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
-            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
+            'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
