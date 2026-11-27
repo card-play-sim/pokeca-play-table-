@@ -348,7 +348,13 @@ function reviewedProposal(groups,sources){
 function selectReviewedBatch(candidates,history,fingerprint){
  const prior=normalizeHistory(history).groups;
  const ready=candidates.filter(x=>x.records.length&&reviewedPlan(x.group)&&prior[x.group.sharedTaskId]?.fingerprint!==fingerprint);
- return ready.length?selectBatch(ready,1,{maxGroups:6,maxPrints:64,history,fingerprint}):[];
+ const ordered=linkExplicitDependencies(ready.map(x=>boundedCandidate(x,64))).sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
+ let selected=[];
+ for(const row of ordered){
+  const next=expandRequired([...selected,row],ordered,6,64);
+  if(next.length)selected=next;
+ }
+ return selected;
 }
 async function generate(groups,sources,feedback='',profile=repairProfile(feedback),previousPatch=''){
  if(!feedback){const proposal=reviewedProposal(groups,sources);if(proposal)return proposal;}
