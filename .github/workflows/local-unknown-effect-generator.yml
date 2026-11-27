@@ -4,6 +4,10 @@ on:
     branches: [automation/unknown-effect-batch-resilience-20261126, main]
     paths:
       - '.github/workflows/local-unknown-effect-generator.yml'
+      - 'scripts/local-unknown-effect-generator.cjs'
+      - 'tests/local-unknown-effect-generator.test.cjs'
+      - 'scripts/verify-unknown-quarantine-receipt.py'
+      - 'scripts/verify-unknown-quarantine-browser.py'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -29,6 +33,8 @@ jobs:
       - name: Verify generator boundaries and restore exact source checkpoint
         run: |
           node tests/local-unknown-effect-generator.test.cjs
+          python scripts/verify-unknown-quarantine-receipt.py --self-test
+          python scripts/verify-unknown-quarantine-browser.py --self-test
           found=0
           for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
             if ! git fetch origin "$checkpoint"; then continue; fi
@@ -103,12 +109,13 @@ jobs:
           test "$ready" = 1
           # Record outcomes on the trusted host, not in generated source.
           # The same workflow's two attempts count as one scheduled attempt.
+          # Response-format regression is checked before CPU inference; retain exact failure feedback.
           persist_history() {
             local out="$1" state="$2"
             if [ ! -f "$out/selected.json" ]; then return; fi
             local feedback=""
             if [ -f "$out/engine.log" ]; then feedback="$(tail -c 1800 "$out/engine.log")"; fi
-            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
+            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
           }
           for attempt in 1 2; do
             scratch="$RUNNER_TEMP/model-scratch-$attempt"
@@ -118,7 +125,12 @@ jobs:
             git -C "$scratch" checkout --detach "$(git rev-parse HEAD)"
             git -C "$scratch" remote remove origin
             rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
-            if [ "$attempt" -gt 1 ]; then export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"; fi
+            if [ "$attempt" -gt 1 ]; then
+              export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
+              export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/quarantine-result.json"
+              export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
+              export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
+            fi
             node scripts/local-unknown-effect-generator.cjs "$RUNNER_TEMP/unknown-worklist.json" "$out" "$scratch"
             if [ "$(node -p "require('$out/result.json').state")" != GENERATED_NOT_TESTED ]; then
               printf 'No validated patch in attempt %s\n' "$attempt"
@@ -149,35 +161,46 @@ jobs:
               node scripts/build-pwa-release.cjs --check
             ' > "$out/engine.log" 2>&1; then
               # No generated modules run on the host. A candidate is not a release.
-              if python - "$out" "$scratch" <<'PY'
-          import json,sys
-          from pathlib import Path
-          out,scratch=map(Path,sys.argv[1:])
-          def read(p):
-              assert p.is_file() and not p.is_symlink() and p.resolve().is_relative_to(scratch.resolve() if p.is_relative_to(scratch) else p.parent.resolve()) and p.stat().st_size < 64*1024*1024
-              return json.loads(p.read_text())
-          prior=json.loads(Path('data/effect-extensions/compiled.json').read_text())['records']
-          current=read(scratch/'data/effect-extensions/compiled.json')['records']
-          indexed={str(r['officialCardId']):r for r in current}
-          assert len(indexed)==len(current)
-          assert all(indexed.get(str(r['officialCardId']))==r for r in prior)
-          receipt=read(scratch/'work/model-candidate/candidate.json')
-          selected=read(out/'selected.json')['targetIds']
-          qualified=sorted(set(selected)&set(map(str,receipt['qualified'])))
-          assert qualified and all(i in indexed for i in qualified)
-          (out/'quarantine-result.json').write_text(json.dumps({'state':'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED','selected':selected,'sandboxQualified':qualified,'publicBattleVerified':[]},indent=2)+'\n')
-          PY
+              if python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1
               then
-                persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
-                echo 'An isolated generated patch has a candidate result. Independent review and normal Chromium/Pages gates are still required.'
-                exit 0
+                # Build trusted dependencies from an empty context, not generated source.
+                if ! docker image inspect pokeca-quarantine-browser:local >/dev/null 2>&1; then
+                  context="$(mktemp -d "$RUNNER_TEMP/browser-build.XXXXXX")"
+                  cat > "$context/Dockerfile" <<'DOCKERFILE'
+          FROM node:22-bookworm
+          RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+          ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+          RUN python3 -m venv /opt/pw && /opt/pw/bin/pip install --no-cache-dir playwright==1.56.0 && /opt/pw/bin/python -m playwright install --with-deps chromium && chmod -R a+rX /opt/pw-browsers
+          DOCKERFILE
+                  docker build -t pokeca-quarantine-browser:local "$context"
+                  rm -rf "$context"
+                fi
+                # Generated JS stays offline and isolated; no token, home, or socket.
+                if timeout 45m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
+                  base="$(git rev-parse HEAD)"
+                  export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
+                  /opt/pw/bin/python -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
+                  server=$!
+                  trap "kill $server 2>/dev/null || true" EXIT
+                  for n in 1 2 3 4 5; do
+                    if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()"; then break; fi
+                    sleep 1
+                  done
+                  /opt/pw/bin/python tests/test_control_013_browser.py
+                ' > "$out/browser.log" 2>&1 && python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/browser.log" 2>&1; then
+                  persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
+                  echo 'Isolated exact-print Chromium passed. Independent review, full-deck AI, normal CI and published Pages checks remain mandatory.'
+                  exit 0
+                fi
+                printf '\nBROWSER_EXECUTION_FAILED\n' >> "$out/engine.log"
+                tail -c 1300 "$out/browser.log" >> "$out/engine.log"
               fi
             fi
             persist_history "$out" QUARANTINE_FAILED
             printf 'Attempt %s did not clear quarantine. Retry with failure feedback.\n' "$attempt"
           done
           echo 'No verified local-generation candidate. Retain unresolved source for later runs.'
-          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE' >> "$GITHUB_STEP_SUMMARY"
+          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE (adaptive repair enabled)' >> "$GITHUB_STEP_SUMMARY"
           exit 1
       - uses: actions/upload-artifact@v4
         if: always()
