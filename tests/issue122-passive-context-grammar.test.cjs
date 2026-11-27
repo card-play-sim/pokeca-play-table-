@@ -130,3 +130,13 @@ for(const [printed,count] of [['150',3],['170',1],['80',1]]){
  assert.equal(attackPlan.reveal,false);
 }
 console.log('ACTIVE_STATUS_AND_OPTIONAL_SEARCH_GRAMMAR_PASS');
+
+for(const [type,count,damage] of [['炎',1,'200'],['草',1,'40'],['雷',2,'160'],['闘',2,'100']]){
+ const text='このポケモンについている['+type+']エネルギーを'+count+'個選び、トラッシュする。';
+ const p=compile({records:[{officialCardId:'1',category:'pokemon',abilities:[],attacks:[{text,damage,cost:[type]}],facts:{}}]}).records[0].attacks[0].plan;
+ assert.equal(p.mechanic,'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY');
+ assert.equal(p.count,count);assert.equal(p.type,type);
+}
+const discardStatus=compile({records:[{officialCardId:'2',category:'pokemon',abilities:[],attacks:[{text:'このポケモンについているエネルギーをすべてトラッシュし、相手のバトルポケモンをマヒにする。',damage:'70',cost:['雷']}],facts:{}}]}).records[0].attacks[0].plan;
+assert.deepEqual(discardStatus.steps,[{op:'discardAttached'},{op:'status',side:'opponent',status:'PARALYZED'}]);
+console.log('TYPED_DISCARD_AND_STATUS_GRAMMAR_PASS');
