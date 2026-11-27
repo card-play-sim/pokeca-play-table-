@@ -308,5 +308,12 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  const rows=[steel,psychic,recovery].map((group,i)=>({group,records:[{officialCardId:String(i+1)}]}));
  assert(selectReviewedBatch(rows,{},fp).length>0);
  const history=recordHistory(null,[steel,psychic,recovery],'QUARANTINE_FAILED',1,fp,'failed');
- assert.equal(selectReviewedBatch(rows,history,fp).length,0);
+ assert.equal(selectReviewedBatch(rows,history,fp).length,3,'legacy model failure must not suppress reviewed composition');
+ const reviewedHistory=recordHistory(history,[steel,psychic,recovery],'QUARANTINE_FAILED',2,fp,'failed','REVIEWED_COMPOSITION');
+ assert.equal(selectReviewedBatch(rows,reviewedHistory,fp).length,0);
+ assert.equal(selectReviewedBatch(rows,reviewedHistory,fp2).length,3);
+ const laterModel=recordHistory(reviewedHistory,[steel],'QUARANTINE_FAILED',3,fp,'model failed','LOCAL_MODEL');
+ assert.equal(selectReviewedBatch(rows,laterModel,fp).length,0);
+ const modified={...steel,exampleOfficialText:steel.exampleOfficialText.replace('2枚まで','3枚まで')};
+ assert.equal(selectReviewedBatch([{...rows[0],group:modified}],laterModel,fp).length,1);
 }
