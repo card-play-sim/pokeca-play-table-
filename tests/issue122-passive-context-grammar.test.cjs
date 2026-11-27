@@ -152,3 +152,9 @@ for(const [cost,scope,count,amount,base] of [['すべて','相手のポケモン
  assert.notEqual(malformed?.mechanic,'ATTACK_SPREAD_DAMAGE');
 }
 console.log('COMPOUND_SPREAD_DISCARD_GRAMMAR_PASS');
+
+for(const [text,damage,expected] of [["ダメカンがのっている相手のベンチポケモン1匹にも、60ダメージ。［ベンチは弱点・抵抗力を計算しない。］","60",{"scope":"opponentBench","filter":"damaged","count":1,"amount":60}],["相手のベンチポケモン全員にも、それぞれ、相手がすでにとったサイドの枚数×10ダメージ。［ベンチは弱点・抵抗力を計算しない。］","130",{"scope":"opponentBench","metric":"opponentPrizesTaken","count":null,"amount":10}],["相手の「ポケモンex・V」全員に、それぞれ100ダメージ。このワザのダメージは弱点・抵抗力を計算しない。","0",{"scope":"opponent","filter":"exV","count":null,"amount":100,"skipWeakness":true,"skipResistance":true}],["おたがいのベンチポケモン全員にも、それぞれ20ダメージ。［ベンチは弱点・抵抗力を計算しない。］","20",{"scope":"bothBench","count":null,"amount":20}],["このポケモンについているエネルギーをすべてトラッシュし、相手のベンチの「ポケモンex」1匹に、210ダメージ。［ベンチは弱点・抵抗力を計算しない。］","0",{"scope":"opponentBench","filter":"ex","count":1,"amount":210,"discardAttached":"all"}]]){
+ const p=compile({records:[{officialCardId:'1',category:'pokemon',abilities:[],attacks:[{text,damage,cost:['無色']}],facts:{}}]}).records[0].attacks[0].plan;
+ assert.equal(p.mechanic,'ATTACK_SPREAD_DAMAGE');for(const [k,v] of Object.entries(expected))assert.equal(p[k],v,k);
+}
+console.log('FILTERED_SPREAD_GRAMMAR_PASS');
