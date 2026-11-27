@@ -20,6 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -33,6 +34,9 @@ jobs:
           set -euo pipefail
           # The committed bundle is the existing verified baseline. Do not
           # regenerate or adopt the concurrently pending new effect candidates.
+          git restore --source=8c9e1753cf475659071d5d462293db71bf637cb8 -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/fixtures/control-005-scenarios.js
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
           mkdir -p artifacts/engine-parity
           node <<'NODE'
           const fs=require('node:fs'),assert=require('node:assert/strict');
