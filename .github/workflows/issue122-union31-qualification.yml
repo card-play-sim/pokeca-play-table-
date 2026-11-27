@@ -28,9 +28,10 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git fetch origin battle/issue122-cost-qualified-45940265059
           test "$(git rev-parse FETCH_HEAD)" = 771b0ceff19aba8269d1d9f5f1038d2e018dc20b
-          git diff --binary 8c9e1753cf475659071d5d462293db71bf637cb8 FETCH_HEAD -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/fixtures/control-005-scenarios.js tests/test_control_013_browser.py tests/issue122-passive-context-grammar.test.cjs >/tmp/union-source.patch
+          git diff --binary 8c9e1753cf475659071d5d462293db71bf637cb8 FETCH_HEAD -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs tests/fixtures/control-005-scenarios.js tests/test_control_013_browser.py tests/issue122-passive-context-grammar.test.cjs >/tmp/union-source.patch
           git apply --3way /tmp/union-source.patch
           git diff --check
+          node --check scripts/lib/shared-effect-engine-worker.cjs
           node tests/issue122-passive-context-grammar.test.cjs
           python -m py_compile tests/test_control_013_browser.py
           node scripts/build-effect-extensions.cjs
