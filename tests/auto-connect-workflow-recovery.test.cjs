@@ -34,3 +34,17 @@ assert.match(workflow,/export POKECA_INTAKE_RELEASE_BASE="\$INTAKE_BASE"/,'verif
 assert.match(workflow,/INTAKE_BASE_MOVED=1/,'preserve rather than overwrite newer main');
 assert.match(workflow,/AUTO_CONNECT_RECONCILE_REQUIRED/,'stale base must hand off for reconciliation');
 console.log('PASS: J/I-first validated official IDs and safe PR-disabled candidate handoff');
+
+// Regression: normal Issue #122 reports are not authorized intake requests.
+// Their unique concurrency group prevents GitHub's pending-run replacement
+// from canceling a scheduled/push intake before the job-level guard executes.
+const concurrency=workflow.slice(workflow.indexOf('\nconcurrency:'),workflow.indexOf('\njobs:'));
+assert.match(concurrency,/github\.event_name == 'issue_comment'/);
+assert.match(concurrency,/github\.event\.issue\.number == 122/);
+assert.match(concurrency,/!github\.event\.issue\.pull_request/);
+assert.match(concurrency,/github\.event\.comment\.user\.login == github\.repository_owner/);
+assert.match(concurrency,/github\.event\.comment\.body == '\/card-auto-connect'/);
+assert.match(concurrency,/format\('incremental-official-effect-ignored-\{0\}', github\.run_id\)/);
+assert.match(concurrency,/\|\| 'incremental-official-effect-intake'/);
+assert.match(concurrency,/cancel-in-progress: false/);
+console.log('PASS: ignored comments cannot replace queued intake runs');
