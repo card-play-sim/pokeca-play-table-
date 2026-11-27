@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "registryHash": "f56a3cbc3ff5685df7acb59b81bc0bf368b2431680471a1bd1681a50cedb929f",
-  "classifiedRegistryHash": "f56a3cbc3ff5685df7acb59b81bc0bf368b2431680471a1bd1681a50cedb929f",
+  "registryHash": "d681a65a22be1581b3fd35ea2c5b50bd6e370cf753eb4408c7f8d74da797489a",
+  "classifiedRegistryHash": "d681a65a22be1581b3fd35ea2c5b50bd6e370cf753eb4408c7f8d74da797489a",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
   "officialPages": 5198,
   "collectedNewPages": 5017,
-  "explicitEffects": 5287,
+  "explicitEffects": 5285,
   "noExplicitText": 2411,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
@@ -42,10 +42,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2660,
-      "notImplemented": 995,
-      "blocked": 21,
-      "executionVerifiedPrints": 741
+      "compiled": 2672,
+      "notImplemented": 982,
+      "blocked": 22,
+      "executionVerifiedPrints": 742
     },
     "energy": {
       "prints": 681,
@@ -1484,11 +1484,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47057",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47059",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1736,7 +1731,7 @@
     {
       "officialCardId": "44432",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44433",
@@ -3289,11 +3284,6 @@
       }
     },
     {
-      "officialCardId": "45941",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45943",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3624,11 +3614,6 @@
       }
     },
     {
-      "officialCardId": "46151",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46167",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3954,11 +3939,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46424",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46432",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4130,11 +4110,6 @@
     },
     {
       "officialCardId": "46644",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46649",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5455,11 +5430,6 @@
     },
     {
       "officialCardId": "50373",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50376",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8003,11 +7973,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49089",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49106",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8793,11 +8758,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48736",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48766",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9119,11 +9079,6 @@
     },
     {
       "officialCardId": "49283",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49299",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9688,11 +9643,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50371",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50396",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9703,17 +9653,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50534",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50536",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50550",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -10082,7 +10022,7 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1028
+        "count": 1015
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
@@ -10090,7 +10030,7 @@
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
-        "count": 21
+        "count": 22
       },
       {
         "reason": "UNSUPPORTED_COMBINED_STADIUM_PLAY",
@@ -10101,25 +10041,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "4f9a5ef3597a433ab3270a54c36bde87009d97908510a5d09f481c4548b63922",
+    "executionFingerprint": "2cb3abb14b42d1022d9a941437d80080e22df610df47d5414d8827d693fa0a92",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 232593,
+    "seq": 234921,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 418,
+      "SUCCEEDED": 419,
       "FAILED": 0,
-      "BLOCKED": 358
+      "BLOCKED": 357
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 349,
+        "SUCCEEDED": 350,
         "FAILED": 0,
-        "BLOCKED": 322
+        "BLOCKED": 321
       },
       "supporter": {
         "PENDING": 0,
