@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1248,
-      "missing": 454
+      "connected": 1251,
+      "missing": 451
     },
     "J": {
       "total": 870,
-      "connected": 551,
-      "missing": 319
+      "connected": 555,
+      "missing": 315
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1242,
+      "CONNECTED_UNTESTED": 1245,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 397,
+      "ENGINE_CONNECTION_REQUIRED": 394,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 550,
+      "CONNECTED_UNTESTED": 554,
       "MECHANIC_REQUIRED": 43,
-      "ENGINE_CONNECTION_REQUIRED": 275,
+      "ENGINE_CONNECTION_REQUIRED": 271,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -5285,8 +5285,7 @@
       "name": "メガルチャブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48616.json"
     },
     {
@@ -7071,8 +7070,7 @@
       "name": "メガルチャブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49989.json"
     },
     {
@@ -7096,8 +7094,7 @@
       "name": "メガルチャブルex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49999.json"
     },
     {
@@ -16962,8 +16959,7 @@
       "name": "チラチーノex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50155.json"
     },
     {
@@ -17170,8 +17166,7 @@
       "name": "チラチーノex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50202.json"
     },
     {
@@ -17282,8 +17277,7 @@
       "name": "チラチーノex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50216.json"
     },
     {
@@ -17453,8 +17447,7 @@
       "name": "コノヨザル",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50258.json"
     },
     {
@@ -21356,21 +21349,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1296,
-        "MECHANIC_REQUIRED": 560,
+        "ENGINE_CONNECTED": 1302,
+        "MECHANIC_REQUIRED": 554,
         "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1248,
-        "MECHANIC_REQUIRED": 441,
+        "ENGINE_CONNECTED": 1251,
+        "MECHANIC_REQUIRED": 438,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 550,
-        "MECHANIC_REQUIRED": 312,
+        "ENGINE_CONNECTED": 554,
+        "MECHANIC_REQUIRED": 308,
         "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21380,7 +21373,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3732,
-    "unconnected": 1341
+    "engineConnected": 3745,
+    "unconnected": 1328
   }
 }
