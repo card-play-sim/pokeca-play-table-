@@ -43,7 +43,11 @@
  }
  async function checkForUpdate({userInitiated=false}={}){
   if(userInitiated){retries=0;userCheck=true;notice('最新版を確認しています。保存対戦は保持しています。');}
-  if(navigator.onLine===false){status.state='offline';userCheck=false;if(userInitiated)notice('オフラインです。保存対戦は再開できます。更新はオンラインでお試しください。');return {ok:false,state:status.state};}
+  // onLine is only a connectivity hint: a reachable origin (including a
+  // loopback server in an isolated browser) may still report offline.
+  // On first launch allow normal registration and byte verification; never
+  // pretend an existing offline worker has received a fresh release.
+  if(navigator.onLine===false&&navigator.serviceWorker.controller){status.state='offline';userCheck=false;if(userInitiated)notice('オフラインです。保存対戦は再開できます。更新はオンラインでお試しください。');return {ok:false,state:status.state};}
   if(inFlight)return inFlight;
   inFlight=(async()=>{
    try{const reg=await getRegistration();updateFailed=false;status.error=null;await reg.update();reg.waiting?.postMessage({type:'ACTIVATE_UPDATE'});controllerInfo();return {ok:true};}
