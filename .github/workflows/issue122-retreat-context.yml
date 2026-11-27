@@ -1,4 +1,4 @@
-name: Issue122 energy-context free retreat qualification
+name: Issue122 energy-context free retreat legal-deck replay
 on:
   push:
     branches: [battle/issue122-retreat-context-20261128]
@@ -94,19 +94,7 @@ jobs:
           export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
           export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
           test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
-          export POKECA_BROWSER_SHARD_COUNT=4
-          export POKECA_BROWSER_SLOTS_ONLY=1
-          pids=()
-          for shard in 0 1 2 3; do
-            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="retreat-context-$shard" python tests/test_control_013_browser.py >"artifacts/retreat-context-$shard.log" 2>&1 &
-            pids+=("$!")
-          done
-          rv=0
-          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
-          for f in artifacts/retreat-context-*.log; do tail -n 15 "$f"; done
-          test "$rv" = 0
-          unset POKECA_BROWSER_SLOTS_ONLY
-          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=retreat-context-full-ai python tests/test_control_013_browser.py >artifacts/retreat-context-full-ai.log 2>&1 || { tail -n 30 artifacts/retreat-context-full-ai.log; exit 1; }
+          bash scripts/run-intake-candidate-browser-shards.sh retreat-context
       - name: Save verified candidate without overwriting main
         run: |
           set -euo pipefail
