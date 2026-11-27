@@ -1,0 +1,99 @@
+name: Issue122 preserve nine and integrate twenty-two qualified prints
+on:
+  push:
+    branches: [battle/issue122-union31-20261127]
+    paths: ['.github/workflows/issue122-union31-qualification.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  union:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compose source changes without overwriting qualified nine
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin battle/issue122-cost-qualified-45940265059
+          test "$(git rev-parse FETCH_HEAD)" = 771b0ceff19aba8269d1d9f5f1038d2e018dc20b
+          git diff --binary 8c9e1753cf475659071d5d462293db71bf637cb8 FETCH_HEAD -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs tests/fixtures/control-005-scenarios.js tests/test_control_013_browser.py tests/issue122-passive-context-grammar.test.cjs >/tmp/union-source.patch
+          git apply --3way /tmp/union-source.patch
+          git diff --check
+          node tests/issue122-passive-context-grammar.test.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: All remaining exact prints and mandatory final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Preserve every compiled print from both checkpoints
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const path='data/effect-extensions/compiled.json';
+          const read=ref=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024})).records;
+          const rows=JSON.parse(fs.readFileSync(path)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r]));
+          assert.equal(rows.length,now.size);
+          for(const ref of ['51c7d38dd6a82156d6dbd4c3311f38604d5e841e','771b0ceff19aba8269d1d9f5f1038d2e018dc20b'])for(const r of read(ref))assert.deepEqual(now.get(String(r.officialCardId)),r,'QUALIFIED_PRINT_CHANGED:'+r.officialCardId);
+          const old=new Set(read('b456fc16ce70343a48cc0e0c194d706da1c40ea8').map(r=>String(r.officialCardId)));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          assert(added.length>=31,'UNION_MISSING_PRINTS');
+          fs.writeFileSync('artifacts/union31-exact-delta.json',JSON.stringify({base:'b456fc16ce70343a48cc0e0c194d706da1c40ea8',added,count:added.length},null,2));
+          console.log('UNION31_EXACT_DELTA',JSON.stringify(added));
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: Exact Chromium slots and complete imported-deck AI match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/union-browser
+          export POKECA_INTAKE_RELEASE_BASE=b456fc16ce70343a48cc0e0c194d706da1c40ea8
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="union31-$shard" python tests/test_control_013_browser.py >"artifacts/union31-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/union31-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=union31-full-ai python tests/test_control_013_browser.py >artifacts/union31-full-ai.log 2>&1 || { tail -n 30 artifacts/union31-full-ai.log; exit 1; }
+      - name: Save candidate without changing main
+        run: |
+          cp artifacts/union31-exact-delta.json reports/official-effect-continuation/
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: combined nine and twenty-two exact-print qualification'
+          git push origin "HEAD:refs/heads/battle/issue122-union31-qualified-$GITHUB_RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: union31-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
