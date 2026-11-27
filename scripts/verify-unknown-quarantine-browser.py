@@ -19,6 +19,15 @@ def expected_slots(records, old_ids):
         slots.update(own)
     return slots
 
+class BrowserSlotFailure(ValueError):
+    """Bounded exact selected-print diagnostics; never release approval."""
+    def __init__(self, reason, slots):
+        super().__init__(reason)
+        self.target_failures = [
+            {"id": key, "reason": reason, "effectKind": kind, "effectIndex": index}
+            for key, kind, index in sorted(set(slots))[:10]
+        ]
+
 def verify(expected, report):
     actual = set()
     if not expected or report.get("browserShard") != 0 or report.get("totalFixtures") != len(expected) or report.get("javascriptErrors") != []:
@@ -28,10 +37,10 @@ def verify(expected, report):
         if slot in actual or slot not in expected:
             raise ValueError("BROWSER_DUPLICATE_OR_UNEXPECTED_SLOT:" + repr(slot))
         if not all(case.get(k) is True for k in ("domExecuted", "aiParity", "offlineRestoreExact")):
-            raise ValueError("BROWSER_SLOT_NOT_PROVEN:" + repr(slot))
+            raise BrowserSlotFailure("BROWSER_SLOT_NOT_PROVEN", [slot])
         actual.add(slot)
     if actual != expected:
-        raise ValueError("BROWSER_MISSING_SLOTS:" + repr(sorted(expected-actual)[:10]))
+        raise BrowserSlotFailure("BROWSER_MISSING_SLOTS", expected-actual)
     return sorted({row[0] for row in actual})
 
 def main(out, scratch, workspace):
@@ -51,6 +60,8 @@ def main(out, scratch, workspace):
                   "slots":len(expected),"publicBattleVerified":[],"fullDeckAIMatchVerified":False}
     except (ValueError, KeyError, TypeError, OSError) as exc:
         result = {"state":"BROWSER_RECEIPT_REJECTED","reason":str(exc)[:400],"publicBattleVerified":[]}
+        if isinstance(exc, BrowserSlotFailure):
+            result["targetFailures"] = exc.target_failures
     (out/"browser-result.json").write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("QUARANTINE_BROWSER_FEEDBACK "+json.dumps(result,ensure_ascii=False))
     return 0 if result["state"]=="QUARANTINE_BROWSER_PASSED_REVIEW_REQUIRED" else 1
@@ -67,6 +78,19 @@ def self_test():
         except ValueError:
             continue
         raise AssertionError("BROWSER_FALSE_PASS")
+    try:
+        verify(expected, {**a, "cases":[case("attack")]})
+    except BrowserSlotFailure as exc:
+        assert exc.target_failures == [{"id":"2","reason":"BROWSER_MISSING_SLOTS","effectKind":"ability","effectIndex":0}]
+    else:
+        raise AssertionError("MISSING_SLOT_FALSE_PASS")
+    try:
+        verify(expected, {**a,"cases":[case("attack"),{**case("ability"),"aiParity":False}]})
+    except BrowserSlotFailure as exc:
+        assert exc.target_failures[0]["id"] == "2"
+        assert exc.target_failures[0]["reason"] == "BROWSER_SLOT_NOT_PROVEN"
+    else:
+        raise AssertionError("FAILED_SLOT_FALSE_PASS")
     print("UNKNOWN_QUARANTINE_BROWSER_RECEIPT_SELF_TEST PASS")
 if __name__=="__main__":
     if sys.argv[1:]==["--self-test"]:
