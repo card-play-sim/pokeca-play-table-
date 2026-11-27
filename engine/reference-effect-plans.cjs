@@ -292,6 +292,10 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'PHANTOM',commands:[...deal,'PLACE_DAMAGE_COUNTERS'],counterCount:Number(benchCounters[1]),sharedWording:true};
  if(text==='場にスタジアムが出ていないなら、このワザは失敗。'&&base>0)
   return {mechanic:'FULL_BENCH_REQUIRED_DAMAGE',commands:['DAMAGE'],requiresStadium:true,sharedWording:true};
+ // Exact compound attack: discard attached units, then damage selected targets.
+ const discardSpread=text.match(/^このポケモンについているエネルギーを(すべて|[1-9]個(?:選び、)?)(?:トラッシュし、)(相手のポケモン|相手のベンチポケモン)([1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(discardSpread&&/^\d+$/.test(printed)&&((discardSpread[4]==='にも')===(base>0))&&!(discardSpread[2]==='相手のポケモン'&&base>0))
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:[...new Set([...deal,'DISCARD','DAMAGE'])],scope:discardSpread[2]==='相手のポケモン'?'opponent':'opponentBench',count:Number.parseInt(discardSpread[3],10),amount:Number(discardSpread[5]),discardAttached:discardSpread[1]==='すべて'?'all':Number.parseInt(discardSpread[1],10),sharedWording:true};
  const spread=text.match(/^(相手のポケモン|相手のベンチポケモン|自分のベンチポケモン)(全員|[1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(spread&&((spread[3]==='にも')===(base>0))&&!(spread[1]==='相手のポケモン'&&(base||spread[2]==='1匹')))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:spread[1]==='相手のポケモン'?'opponent':spread[1].startsWith('自分')?'ownBench':'opponentBench',
