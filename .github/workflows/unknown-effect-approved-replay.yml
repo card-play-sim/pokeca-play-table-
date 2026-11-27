@@ -37,6 +37,8 @@ jobs:
          startsWith(github.event.comment.body, 'APPROVE_UNKNOWN_REPLAY ')))
     runs-on: ubuntu-24.04
     timeout-minutes: 120
+    env:
+      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1' && 'reviewed-composition-v1' || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -186,7 +188,7 @@ jobs:
           python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/prepare-unknown-replay-intake.py --verify-result "$out"
-          if [ "$GITHUB_EVENT_NAME" != workflow_run ]; then
+          if [ "$GITHUB_EVENT_NAME" != workflow_run ] || [ "$UNKNOWN_EFFECT_CANDIDATE_POLICY" = reviewed-composition-v1 ]; then
             python scripts/export-unknown-replay-candidate.py export "$GITHUB_WORKSPACE" "$scratch" "$out"
           fi
       - uses: actions/upload-artifact@v4
@@ -199,9 +201,11 @@ jobs:
 
   propose:
     needs: entry
-    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch')
+    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1'))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      UNKNOWN_EFFECT_CANDIDATE_POLICY: ${{ github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1' && 'reviewed-composition-v1' || '' }}
     permissions:
       contents: write
       pull-requests: write
@@ -214,7 +218,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          name: unknown-effect-approved-replay-entry
+          name: ${{ github.event_name == 'workflow_run' && 'unknown-effect-read-only-preview' || 'unknown-effect-approved-replay-entry' }}
           path: ${{ runner.temp }}/candidate
       - name: Validate and stage only approved paths without executing candidate code
         run: |
@@ -226,17 +230,25 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          kind=APPROVED_UNKNOWN_REPLAY
+          description="Explicitly approved exact patch"
           branch="automation/unknown-approved-candidate-$GITHUB_RUN_ID"
+          if [ "$GITHUB_EVENT_NAME" = workflow_run ]; then
+            test "$UNKNOWN_EFFECT_CANDIDATE_POLICY" = reviewed-composition-v1
+            kind=OWNER_POLICY_DRAFT_ONLY
+            description="Owner-policy deterministic draft only; NOT release-approved"
+            branch="automation/unknown-policy-candidate-$GITHUB_RUN_ID"
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m "Verified approved unknown-effect replay candidate $GITHUB_RUN_ID"
+          git commit -m "Verified unknown-effect replay draft $GITHUB_RUN_ID ($kind)"
           git push origin "HEAD:refs/heads/$branch"
-          if gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "Approved exact patch; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
+          if gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "$description; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
             echo "Draft PR opened. Use the permitted GitHub connection to review and trigger normal CI for this exact head." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "::warning::Actions token cannot create the PR; preserved verified branch for permitted GitHub connection."
           fi
           commit="$(git rev-parse HEAD)"
-          body=$(printf 'AUTO_CONNECT_CANDIDATE_READY\nKind: APPROVED_UNKNOWN_REPLAY\nBranch: %s\nHead: %s\nBase: %s\nWorkflow: %s/%s/actions/runs/%s\nUse the permitted GitHub connection to create or find the exact candidate PR, independently review, run all required CI, then merge and verify Pages bytes and published gameplay. Never count a branch or draft as published.\n' "$branch" "$commit" "$(git rev-parse HEAD^)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
+          body=$(printf 'AUTO_CONNECT_CANDIDATE_READY\nKind: %s\nBranch: %s\nHead: %s\nBase: %s\nWorkflow: %s/%s/actions/runs/%s\nUse the permitted GitHub connection to create or find the exact candidate PR, independently review, run all required CI, then merge and verify Pages bytes and published gameplay. Never count a branch or draft as published.\n' "$kind" "$branch" "$commit" "$(git rev-parse HEAD^)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
           gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="$body"
           printf '%s\n' "$body" >> "$GITHUB_STEP_SUMMARY"
