@@ -2,6 +2,7 @@
 """Export exact approved replay data; stage only explicit files, never run candidate code."""
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -61,9 +62,29 @@ def verified_intake_delta(before, after, compiled, checkpoint, added):
 def evidence_paths(added):
     return {"data/effect-extensions/evidence/"+key+".json" for key in ids(sorted(added))}
 
-def manifest_scope(repo, entry, files):
-    if entry.get("reviewOnly") or entry.get("state") != "LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED" or entry.get("publicBattleVerified") != [] or entry.get("fullDeckAIMatchVerified") is not True:
+AUTO_POLICY = "reviewed-composition-v1"
+
+def require_replay_authorization(entry, policy):
+    if entry.get("publicBattleVerified") != [] or entry.get("fullDeckAIMatchVerified") is not True:
         raise ValueError("UNVERIFIED_REPLAY")
+    if not entry.get("reviewOnly") and entry.get("state") == "LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED":
+        return "EXPLICIT_APPROVAL"
+    # Repository-owner opt-in permits only an independently reproduced,
+    # exact-scope, compiler-only preview to become a DRAFT candidate.
+    # It is not release approval and may not change the preview receipt.
+    if policy != AUTO_POLICY or entry.get("reviewOnly") is not True or entry.get("state") != "LATEST_MAIN_PREVIEW_VERIFIED_NOT_RELEASED":
+        raise ValueError("UNVERIFIED_REPLAY")
+    scope = entry.get("independentOfficialScope", {})
+    required = ids(entry["requiredQualifiedIds"])
+    if (scope.get("state") != "OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED"
+            or ids([p["id"] for p in scope["proofs"]]) != required
+            or ids(entry["sandboxBrowserQualified"]) != required
+            or entry.get("paths") != [handoff.ALLOWED[0]]):
+        raise ValueError("POLICY_CANDIDATE_SCOPE_MISMATCH")
+    return "OWNER_POLICY_DRAFT_ONLY"
+
+def manifest_scope(repo, entry, files):
+    require_replay_authorization(entry, os.environ.get("UNKNOWN_EFFECT_CANDIDATE_POLICY", ""))
     base = git(repo,"rev-parse","HEAD").decode().strip()
     if entry.get("latestMain") != base:
         raise ValueError("STALE_REPLAY_BASE")
@@ -190,6 +211,23 @@ def self_test():
         except ValueError:
             continue
         raise AssertionError("UNSAFE_DEFERRAL_ALLOWED")
+    preview = {"reviewOnly":True,"state":"LATEST_MAIN_PREVIEW_VERIFIED_NOT_RELEASED",
+               "publicBattleVerified":[],"fullDeckAIMatchVerified":True,
+               "requiredQualifiedIds":["2"],"sandboxBrowserQualified":["2"],
+               "paths":[handoff.ALLOWED[0]],
+               "independentOfficialScope":{"state":"OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED","proofs":[{"id":"2"}]}}
+    assert require_replay_authorization(preview,AUTO_POLICY) == "OWNER_POLICY_DRAFT_ONLY"
+    assert require_replay_authorization({**preview,"reviewOnly":False,"state":"LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED"},"") == "EXPLICIT_APPROVAL"
+    for row, policy in [(preview,""),(preview,"true"),
+                        ({**preview,"fullDeckAIMatchVerified":False},AUTO_POLICY),
+                        ({**preview,"sandboxBrowserQualified":["2","3"]},AUTO_POLICY),
+                        ({**preview,"paths":[handoff.ALLOWED[1]]},AUTO_POLICY),
+                        ({**preview,"independentOfficialScope":{"state":"OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED","proofs":[{"id":"3"}]}},AUTO_POLICY)]:
+        try:
+            require_replay_authorization(row,policy)
+        except ValueError:
+            continue
+        raise AssertionError("UNAUTHORIZED_POLICY_CANDIDATE")
     print("UNKNOWN_REPLAY_CANDIDATE_SELF_TEST PASS")
 
 if __name__=="__main__":
