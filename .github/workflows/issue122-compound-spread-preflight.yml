@@ -2,7 +2,7 @@ name: Issue122 compound spread exact engine preflight
 on:
   push:
     branches: [battle/issue122-spread-discard-family-20261127]
-    paths: ['.github/workflows/issue122-compound-spread-preflight.yml']
+    paths: ['.github/workflows/issue122-compound-spread-preflight.yml', 'scripts/lib/shared-effect-engine-worker.cjs', 'engine/pokeca_reference_effect_runtime.cjs', 'engine/reference-effect-plans.cjs']
   workflow_dispatch:
 permissions:
   contents: read
