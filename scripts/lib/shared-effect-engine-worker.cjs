@@ -261,6 +261,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserveEnergy(plan.type,2,1-deckIndex);
   reserve(r=>isBasicEnergy(r)&&typeOf(r)!==plan.type,'deck',1);
  }
+ if(m==='ATTACK_APPLY_STATUS'&&plan.defenderType){
+  const survives=r=>mon(r,null,0)&&!r.abilities.length&&r.facts.hp>Number(e.damage||0)*(r.facts.weakness?.types.some(t=>source.facts.types.includes(t))?2:1);
+  reserve(r=>survives(r)&&r.facts.types.includes(plan.defenderType),'active',1);
+  reserve(r=>survives(r)&&!r.facts.types.includes(plan.defenderType),'bench',1);
+ }
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
  if(m==='MASS_COUNT_COIN_DAMAGE'){
@@ -4199,6 +4204,21 @@ function verifyCase(t, e) {
       &&ev.details.status===e.plan.status
       &&ev.details.targetInstanceId===before.players[1].active.id));
     if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+    if(e.plan.defenderType){
+      const type=e.plan.defenderType, action=t.action||o.action;
+      assert(E.getReferenceEffectRecord(before.players[1].active).facts.types.includes(type),'TYPED_STATUS_POSITIVE_FIXTURE');
+      const negative=JSON.parse(JSON.stringify(before)),side=negative.players[1];
+      const i=side.bench.findIndex(c=>!E.getReferenceEffectRecord(c).facts.types.includes(type)&&!c.statusCondition);
+      assert(i>=0,'TYPED_STATUS_NEGATIVE_FIXTURE');
+      [side.active,side.bench[i]]=[side.bench[i],side.active];
+      const replay=port(negative);assert(replay.dispatch('you',action).ok);
+      const result=replay.getSnapshot();
+      assert(!result.history.slice(negative.history.length).some(ev=>ev.details?.command==='STATUS_CONDITION'&&ev.details.targetInstanceId===side.active.id));
+      if(Number(e.damage)>0)verifyPrintedAttack(negative,result,e,Number(e.damage));
+      assert.deepEqual(Array.from(S.identities(negative)),Array.from(S.identities(result)));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(result));
+    }
     assert(p.restoreSession(p.getResumeSnapshot()).ok);
     assert.deepEqual(p.getSnapshot(),after);
   }

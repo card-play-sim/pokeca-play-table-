@@ -1600,7 +1600,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='RECOIL_DAMAGE')command(g,actor,{command:'DAMAGE',amount:plan.amount},{targetIds:[id(card)]});
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
    if(m==='ATTACK_HEAL_TEAM')for(const own of field(p))heal(g,actor,own,plan.amount);
-   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon){
+   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon&&(!plan.defenderType||record(mon).facts.types.includes(plan.defenderType))){
     mon.statusCondition=plan.status;
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }

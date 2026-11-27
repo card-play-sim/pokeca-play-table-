@@ -901,6 +901,11 @@ function plan(entry,kind){
     &&String(entry.name||'')===namedLock[1])
   return {mechanic:'ATTACK_NAMED_NEXT_TURN_LOCK',commands:['DAMAGE','ADD_STATE'],attackName:namedLock[1]};
  // Match complete printed effect slots only; unknown official text still fails closed.
+ const typedStatus=generic.match(/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら、そのポケモンを(マヒ|やけど|どく|ねむり|こんらん)にする。$/);
+ if(kind==='ATTACK'&&printedAmount&&typedStatus){
+  const status={'マヒ':'PARALYZED','やけど':'BURNED','どく':'POISONED','ねむり':'ASLEEP','こんらん':'CONFUSED'}[typedStatus[2]];
+  return {mechanic:'ATTACK_APPLY_STATUS',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'STATUS_CONDITION'],status,defenderType:typedStatus[1],sharedWording:true};
+ }
  const directStatus=generic.match(/^相手のバトルポケモンを(やけど|どく|ねむり|こんらん)にする。$/);
  if(kind==='ATTACK'&&printedAmount&&directStatus){
   const status={'やけど':'BURNED','どく':'POISONED','ねむり':'ASLEEP','こんらん':'CONFUSED'}[directStatus[1]];
