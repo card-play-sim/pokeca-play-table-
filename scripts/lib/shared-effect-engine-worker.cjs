@@ -263,6 +263,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
+ if(m==='MASS_COUNT_COIN_DAMAGE'){
+  if(plan.metric==='ownTypedBoard')reserve(r=>mon(r,plan.type,0),'bench');
+  if(plan.metric==='ownTypedEnergy')reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
+  if(plan.metric==='bothActiveEnergy')reserveEnergy(null,2,1-deckIndex);
+  if(plan.metric==='opponentBench')reserve(r=>mon(r,null,0),'bench',1);
+ }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&plan.type)reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+plan.count));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
@@ -280,7 +286,17 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownDiscardSupporterContains')reserve(r=>r.category==='supporter'&&r.name.includes(plan.name),'discard');
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
-  if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(plan.metric==='ownBenchNamedCount'&&!reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench')){
+   outer:for(const target of legal.filter(r=>mon(r,null,'evolved')&&r.name===plan.name)){
+    for(const chain of evolutionLines(target,legal)){
+     if(!tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId))))continue;
+     requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+     for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+     requirements.namedBenchChain=chain.map(record=>record.officialCardId);
+     break outer;
+    }
+   }
+  }
   if(['ownBenchTeamCounters','ownNamedTeamEnergy'].includes(plan.metric))
    reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
   if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(plan.metric))
@@ -385,7 +401,7 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
    return r.category===plan.category&&(!plan.type||r.category==='energy'&&typeOf(r)===plan.type||r.facts.types?.includes(plan.type))&&
-    (plan.stage===null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+    (plan.stage==null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   };
   let target;
   if(plan.category==='categorySet'){
@@ -428,6 +444,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='MASS_ENERGY_ROUTE'&&plan.requiresTera)reserveTera('active');
+ if(m==='MASS_ENERGY_ROUTE'&&plan.origin==='activeEntry')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
@@ -1019,6 +1036,20 @@ function prepare(r, e, kind) {
     }
     frame.game=pp.getSnapshot();
   }
+  if(m==='MASS_COUNT_COIN_DAMAGE'){
+    const [own,other]=frame.game.players,plan=e.plan;
+    for(const mon of [own.active,other.active])for(const energy of [...mon.energyCards])if(energy.isSpecial){
+      const side=mon===own.active?own:other;
+      side.deck.push(mon.energyCards.splice(mon.energyCards.indexOf(energy),1)[0]);
+    }
+    const attach=(side,type)=>{const valid=c=>c.kind==='energy'&&!c.isSpecial&&(!type||c.energyType===type);
+      const zone=[side.deck,side.hand].find(z=>z.some(valid));if(!zone)return false;
+      side.active.energyCards.push(zone.splice(zone.findIndex(valid),1)[0]);return true;};
+    if(plan.metric==='ownTypedEnergy'&&!attach(own,plan.type))return {blocked:'NO_TYPED_COIN_ENERGY_FIXTURE'};
+    if(plan.metric==='bothActiveEnergy'&&!attach(other,null))return {blocked:'NO_OPPONENT_COIN_ENERGY_FIXTURE'};
+    if(plan.metric==='ownTypedBoard'&&![own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)))return {blocked:'NO_TYPED_COIN_BOARD_FIXTURE'};
+    if(plan.metric==='opponentBench'&&!other.bench.length)return {blocked:'NO_OPPONENT_COIN_BENCH_FIXTURE'};
+  }
   if(m==='ATTACK_ATTACHED_ENERGY_COINS'){
     const own=frame.game.players[0];
     for(const energy of [...own.active.energyCards])if(energy.isSpecial){
@@ -1341,7 +1372,7 @@ function prepare(r, e, kind) {
       g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
     }
     if(plan.predicate==='ownNamedEnergy'){
-      const eligible=c=>c.kind==='energy'&&c.name===plan.name;
+      const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;
       const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
       if(!zone)return {blocked:'NO_NAMED_ENERGY_PREDICATE_FIXTURE'};
       own.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
@@ -1354,9 +1385,10 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='allDamagedBench')for(const mon of own.bench)mon.damage=Math.min(10,mon.hp-10);
     if(plan.predicate==='ownStadium'||plan.predicate==='stadiumContains'){
-      const i=own.deck.findIndex(c=>c.kind==='stadium'&&(plan.predicate==='ownStadium'||E.getReferenceEffectRecord(c).name.includes(plan.name)));
-      if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
-      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+      const valid=c=>c.kind==='stadium'&&(plan.predicate==='ownStadium'||E.getReferenceEffectRecord(c)?.name.includes(plan.name));
+      const zone=[own.deck,own.hand,own.discard].find(z=>z.some(valid));
+      if(!zone)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
+      g.stadium=zone.splice(zone.findIndex(valid),1)[0];g.stadiumOwner=own.id;
     }
   }
   if(m==='MASS_CONTEXT_BONUS'){
@@ -1682,6 +1714,11 @@ function prepare(r, e, kind) {
     if(!(plan.scope==='both'?frame.game.players:[own]).some(side=>side.deck.slice(0,plan.limit).some(filter)))return {blocked:'NO_MILL_POSITIVE_FIXTURE'};
   }
   if (m === "SCALED_ATTACK_DAMAGE") {
+    if(fixtureRequirements.namedBenchChain){
+      const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.namedBenchChain,false);
+      if(evolved.blocked)return evolved;
+      frame.game=evolved.port.getSnapshot();
+    }
     const [own, opponent] = frame.game.players;
     if(e.plan.metric==='opponentHandTrainerCount'){
       const trainer=c=>['item','supporter','tool','stadium'].includes(E.getReferenceEffectRecord(c)?.category);
@@ -1923,6 +1960,21 @@ function prepare(r, e, kind) {
       if(E.getReferenceEffectRecord(now).officialCardId!==r.officialCardId)return {blocked:'EVOLUTION_FIXTURE_PRINT_MISMATCH'};
       return {port:pp,sourceId:now.id,kind};
     }
+  }
+  if(kind==='ability'&&e.plan.origin==='activeEntry'){
+    const own=frame.game.players[0];
+    if(own.active?.id!==frame.sourceId||!own.bench.length)return {blocked:'NO_ACTIVE_ENTRY_FIXTURE'};
+    const source=own.active;
+    [own.active,own.bench[0]]=[own.bench[0],source];
+    const swap=c=>c.cardType==='ITEM'&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='SWITCH';
+    if(!own.hand.some(swap)){
+      const i=own.deck.findIndex(swap);if(i<0)return {blocked:'NO_ACTIVE_ENTRY_SWITCH_ITEM'};
+      own.hand.push(own.deck.splice(i,1)[0]);
+    }
+    const item=own.hand.find(swap),replay=port(frame.game);
+    const moved=replay.dispatch('you',{type:'play_item',cardId:item.id,selections:{bench:[source.id]}});
+    if(!moved.ok)return {blocked:'ACTIVE_ENTRY_SWITCH_REJECTED'};
+    frame.game=replay.getSnapshot();
   }
   const p = port(frame.game);
   if(kind==='ability'&&e.plan.origin==='bench'){
@@ -2218,6 +2270,18 @@ function verifyCase(t, e) {
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
       const replay=port(closed);assert.equal(replay.dispatch('you',action).ok,false);
       assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(closed));
+    }
+    if(plan.origin==='activeEntry'){
+      assert.equal(own.active.id,t.sourceId);
+      assert.equal(own.active.referenceActiveEntryWindow,before.referenceActionSequence);
+      const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+      const denied=port(closed);assert.equal(denied.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(closed));
+      const noEntry=JSON.parse(JSON.stringify(before));delete noEntry.players[0].active.referenceActiveEntryWindow;
+      const initial=port(noEntry);assert.equal(initial.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(initial.getSnapshot()),JSON.stringify(noEntry));
+      const twice=port(after);assert.equal(twice.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(twice.getSnapshot()),JSON.stringify(after));
     }
     if(plan.oneEach){
       const selectedTargets=energy.map((_,i)=>action.selections['attachTo'+i][0]);
@@ -3288,6 +3352,34 @@ function verifyCase(t, e) {
     const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
     assert.equal(tosses.length, e.plan.flips);
     verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
+  if(e.plan.mechanic==='MASS_COUNT_COIN_DAMAGE'){
+    const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
+    assert([own.active,other.active].every(c=>c.energyCards.every(a=>!a.isSpecial)));
+    const count=plan.metric==='fixed'?3:plan.metric==='ownTypedBoard'?[own.active,...own.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)).length:
+      plan.metric==='ownTypedEnergy'?own.active.energyCards.filter(c=>c.energyType===plan.type).length:
+      plan.metric==='bothActiveEnergy'?own.active.energyCards.length+other.active.energyCards.length:other.bench.length;
+    assert(count>0);
+    const seeds=new Map();
+    for(let seed=0;seed<20000&&seeds.size<Math.min(count+1,4);seed++){
+      let state=seed,hits=0;
+      for(let i=0;i<count;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;if(plan.tails?state>=0x80000000:state<0x80000000)hits++;}
+      if(!seeds.has(hits))seeds.set(hits,seed);
+    }
+    assert(seeds.size>=2);
+    if(plan.metric==='fixed')assert.equal(seeds.size,4);
+    for(const [hits,seed] of seeds){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),flips=end.history.slice(start.history.length).map(x=>x.details).filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean');
+      assert.equal(flips.length,count);
+      let state=seed;
+      for(const toss of flips){state=(Math.imul(state,1664525)+1013904223)>>>0;assert.equal(toss.heads,state<0x80000000);}
+      verifyPrintedAttack(start,end,e,plan.base+(plan.bonuses?plan.bonuses[hits]:hits*plan.unit));
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(),end);
+    }
   }
   if(e.plan.mechanic==='ATTACK_ATTACHED_ENERGY_COINS'){
     const action=t.action||o.action;
