@@ -2021,7 +2021,7 @@ function onEndTurn(g,actor){
  }
  // Expiring attached energy changes continuous HP before the turn transition
  // and its knockout checks, not only at the next UI refresh.
- if(changed)refresh(g);
+ if(changed){refresh(g);functions().Core.resolveKnockouts(g,actor);}
 }
 // Produce complete effect-specific choices only; the existing inspector checks every candidate.
 function abilityActions(g,actor,card){return (record(card)?.abilities||[]).filter(a=>!passive.has(a.plan?.mechanic)).map(a=>({kind:'ability',label:a.name,action:{type:'use_ability',sourceInstanceId:id(card),abilityId:a.effectId},requests:requests(g,actor,card,a),referenceEffect:a}));}
