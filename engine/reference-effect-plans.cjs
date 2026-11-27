@@ -711,6 +711,8 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。')
   return {mechanic:'SUPPORTER_MEGA_HEAL_RETURN_ENERGY',commands:['HEAL','RETURN_TO_HAND'],sharedWording:true};
 
+ const specialHp=generic.match(/^このポケモンに特殊エネルギーがついているなら、このポケモンは最大HPが「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&specialHp)return {mechanic:'PASSIVE_SPECIAL_ENERGY_MAX_HP',commands:['MODIFY_MAX_HP'],amount:Number(specialHp[1]),sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
