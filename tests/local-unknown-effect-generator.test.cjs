@@ -231,3 +231,18 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert([...anchors.values()].some(x=>x.before===insertion));
  assert.equal(repairProfile('MODEL_COMPILER_ANCHOR_REMOVED').type,'INTEGRITY');
 }
+
+// Real run 45993305278 lost a RECON row while attempting a new ability.
+{
+ const compiler='engine/reference-effect-plans.cjs';
+ const original=" ['RECON','自分の番に1回使える。自分の山札を上から2枚見て、どちらか1枚を選び、手札に加える。残りのカードは、山札の下にもどす。',['SEARCH_DECK','ADD_TO_HAND','RETURN_TO_DECK']],";
+ const next=" ['FIXTURE_ONLY','new rule',['ADD_STATE']],";
+ const anchors=new Map([['F0_12',{path:compiler,before:original}]]);
+ for(const [op,expected] of [['insertBefore',next+'\n'+original],['insertAfter',original+'\n'+next]]){
+  const result=resolveAnchorProposal({edits:[{anchor:'F0_12',[op]:next}]},anchors);
+  assert.equal(applyEdits({[compiler]:original},result)[compiler],expected);
+ }
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_99',insertBefore:next}]},anchors),/NONUNIQUE_OR_STALE_ANCHOR:F0_99/);
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:next,after:original}]},anchors),/MODEL_EDIT_OPERATION_REQUIRED/);
+ assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'F0_12',insertBefore:original}]},anchors),/MODEL_DUPLICATE_INSERTION_ANCHOR/);
+}
