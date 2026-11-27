@@ -45,12 +45,49 @@ async def select_effect_targets(page, option):
    await page.locator(f'#selection-cards [data-selection-id="{ident}"]').tap(timeout=12000)
   await page.locator('#selection-confirm').tap()
 
+def candidate_fixture_fingerprint():
+ # Only an explicitly prepared local candidate may reuse a fixture set.
+ # Bind the receipt to the exact source, engine, deck data and generated
+ # files so stale fixtures cannot silently reduce release coverage.
+ assert os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1'
+ assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/'
+ base=os.environ['POKECA_INTAKE_RELEASE_BASE']
+ files=[
+  ROOT/'ui/engine.bundle.js',ROOT/'data/effect-extensions/compiled.json',
+  ROOT/'data/effect-extensions/intake.json',ROOT/'data/fixed-test-decks.json',
+  ROOT/'scripts/build-intake-verification-fixtures.cjs',
+  ROOT/'scripts/lib/shared-effect-engine-worker.cjs',
+  ROOT/'tests/fixtures/control-005-scenarios.js',
+  ROOT/'tests/fixtures/control-009-extension-manifest.cjs',
+  PREFIX/'browser-fixtures.json',PREFIX/'example-decks.json',
+ ]
+ return {'base':base,'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+         'patterns':os.environ.get('POKECA_INTAKE_PATTERNS',''),
+         'perPattern':os.environ.get('POKECA_INTAKE_PER_PATTERN',''),
+         'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
+
+def prepare_candidate_fixtures():
+ receipt=PREFIX/'browser-fixture-reuse-receipt.json'
+ mode=os.environ.get('POKECA_INTAKE_FIXTURE_MODE','')
+ if mode=='reuse':
+  assert json.loads(receipt.read_text())==candidate_fixture_fingerprint(),'CANDIDATE_FIXTURE_FINGERPRINT_MISMATCH'
+ else:
+  assert mode in ('','prepare'),'INVALID_CANDIDATE_FIXTURE_MODE'
+  subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT)
+  if mode=='prepare':
+   data=candidate_fixture_fingerprint()
+   temporary=receipt.with_suffix('.tmp')
+   temporary.write_text(json.dumps(data,sort_keys=True))
+   temporary.replace(receipt)
+ return mode
+
 async def main():
  release_base=os.environ.get("POKECA_INTAKE_RELEASE_BASE")
  if os.environ.get('POKECA_INTAKE_LOCAL_CANDIDATE')=='1':
   assert os.environ.get('POKECA_TEST_URL')=='http://127.0.0.1:8765/' and release_base
   release_base=None
- subprocess.check_call(['node','scripts/build-intake-verification-fixtures.cjs'],cwd=ROOT);fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
+ if prepare_candidate_fixtures()=='prepare':return
+ fixtures=json.loads((PREFIX/'browser-fixtures.json').read_text());cases=[];errors=[]
  shard_count=int(os.environ.get('POKECA_BROWSER_SHARD_COUNT','1'))
  shard_index=int(os.environ.get('POKECA_BROWSER_SHARD_INDEX','0'))
  assert 1<=shard_count<=16 and 0<=shard_index<shard_count,'INVALID_BROWSER_SHARD'
