@@ -1,0 +1,43 @@
+name: Diagnose production unknown effect failure
+on:
+  push:
+    branches: [automation/production-failure-diagnosis-20261128]
+    paths: ['.github/workflows/production-failure-diagnosis.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Inspect inert production failure evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json,subprocess,os,zipfile,io,hashlib,re
+          repo=os.environ["GITHUB_REPOSITORY"]
+          raw=subprocess.check_output(["gh","api","repos/"+repo+"/actions/artifacts/15233796842/zip"])
+          assert hashlib.sha256(raw).hexdigest()=="ad0753007c454d57585cd28822510a2ac3ea9eb1c23ee8ac987c0e6b4b431d27"
+          out={}
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              for n in z.namelist():
+                  if not re.fullmatch(r"attempt-[12]/(?:result\.json|selected\.json|quarantine-result\.json|browser-result\.json|engine\.log|repair-feedback\.txt)",n):continue
+                  assert z.getinfo(n).file_size<2000000
+                  s=z.read(n).decode("utf-8",errors="replace")
+                  if n.endswith(".json"):
+                      obj=json.loads(s)
+                      if n.endswith("selected.json"):
+                          obj={k:v for k,v in obj.items() if k in ("groups","fingerprint","intendedStrategy")}
+                      s=json.dumps(obj,ensure_ascii=False)
+                  else:
+                      s="\n".join(l[:1000] for l in s.splitlines() if re.search(r"Error|FAIL|BLOCK|REJECT|NO_|MISSING|DEADLINE|UNSUPPORTED|SUCCEEDED|QUALIFIED",l,re.I))
+                  out[n]=s[:10000]
+          print(json.dumps(out,ensure_ascii=False))
+          open("production-failure-diagnosis.json","w").write(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: production-failure-diagnosis
+          path: production-failure-diagnosis.json
+          if-no-files-found: error
