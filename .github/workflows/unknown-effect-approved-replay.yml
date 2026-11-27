@@ -1,5 +1,7 @@
 name: Unknown effect approved replay entry
 on:
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       origin_run:
@@ -20,7 +22,15 @@ permissions:
   actions: read
 jobs:
   entry:
-    if: github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'issue_comment' &&
+         github.event.issue.number == 122 &&
+         !github.event.issue.pull_request &&
+         github.event.comment.author_association == 'OWNER' &&
+         github.event.comment.user.login == github.repository_owner &&
+         startsWith(github.event.comment.body, 'APPROVE_UNKNOWN_REPLAY ')))
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -29,10 +39,20 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: false
+      - name: Resolve exact independently reviewed approval
+        id: approval
+        env:
+          APPROVAL_EVENT: ${{ github.event_name }}
+          OWNER: ${{ github.repository_owner }}
+          DISPATCH_RUN: ${{ inputs.origin_run }}
+          DISPATCH_ATTEMPT: ${{ inputs.attempt }}
+          DISPATCH_SHA: ${{ inputs.approved_patch_sha256 }}
+        run: |
+          python scripts/verify-unknown-approved-replay.py --resolve-event "$GITHUB_EVENT_PATH" "$GITHUB_OUTPUT"
       - name: Check origin workflow identity
         env:
           GH_TOKEN: ${{ github.token }}
-          ORIGIN_RUN: ${{ inputs.origin_run }}
+          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run }}
         run: |
           set -euo pipefail
           [[ "$ORIGIN_RUN" =~ ^[1-9][0-9]*$ ]]
@@ -44,14 +64,14 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: local-unknown-effect-quarantine
-          run-id: ${{ inputs.origin_run }}
+          run-id: ${{ steps.approval.outputs.origin_run }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/replay-input
       - name: Verify explicit approval and current source compatibility
         env:
-          ORIGIN_RUN: ${{ inputs.origin_run }}
-          ATTEMPT: ${{ inputs.attempt }}
-          APPROVED_SHA: ${{ inputs.approved_patch_sha256 }}
+          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run }}
+          ATTEMPT: ${{ steps.approval.outputs.attempt }}
+          APPROVED_SHA: ${{ steps.approval.outputs.approved_patch_sha256 }}
         run: |
           python scripts/verify-unknown-approved-replay.py --self-test
           python scripts/verify-unknown-approved-replay.py "$RUNNER_TEMP/replay-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$ATTEMPT" "$APPROVED_SHA" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/replay-entry"
