@@ -166,7 +166,8 @@ jobs:
               node tests/control-014-shared-effects.test.cjs
               node tests/control-011-engine-batch.test.cjs
               node tests/atomic-official-to-battle.test.cjs
-              POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser node scripts/build-intake-verification-fixtures.cjs
+              POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser node scripts/build-intake-verification-fixtures.cjs
+              test -s work/model-candidate/browser/example-decks.json
               node scripts/sync-reference-effects.cjs --check
               node scripts/build-pwa-release.cjs --check
             ' > "$out/engine.log" 2>&1; then
@@ -186,7 +187,7 @@ jobs:
                   rm -rf "$context"
                 fi
                 # Generated JS stays offline and isolated; no token, home, or socket.
-                if timeout 45m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
+                if timeout 65m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
                   base="$(git rev-parse HEAD)"
                   export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
                   /opt/pw/bin/python -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
@@ -197,9 +198,12 @@ jobs:
                     sleep 1
                   done
                   /opt/pw/bin/python tests/test_control_013_browser.py
+                  unset POKECA_BROWSER_SLOTS_ONLY
+                  export POKECA_INTAKE_ARTIFACT=unknown-quarantine-full-ai
+                  /opt/pw/bin/python tests/test_control_013_browser.py
                 ' > "$out/browser.log" 2>&1 && python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/browser.log" 2>&1; then
                   persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
-                  echo 'Isolated exact-print Chromium passed. Independent review, full-deck AI, normal CI and published Pages checks remain mandatory.'
+                  echo 'Isolated exact-print Chromium and completed imported-deck AI match passed. Independent review, normal CI and published Pages checks remain mandatory.'
                   exit 0
                 fi
                 printf '\nBROWSER_EXECUTION_FAILED\n' >> "$out/engine.log"
