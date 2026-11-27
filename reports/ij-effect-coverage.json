@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1233,
-      "missing": 469
+      "connected": 1236,
+      "missing": 466
     },
     "J": {
       "total": 870,
-      "connected": 542,
-      "missing": 328
+      "connected": 549,
+      "missing": 321
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1227,
+      "CONNECTED_UNTESTED": 1230,
       "MECHANIC_REQUIRED": 59,
-      "ENGINE_CONNECTION_REQUIRED": 406,
+      "ENGINE_CONNECTION_REQUIRED": 403,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 541,
+      "CONNECTED_UNTESTED": 548,
       "MECHANIC_REQUIRED": 43,
-      "ENGINE_CONNECTION_REQUIRED": 284,
+      "ENGINE_CONNECTION_REQUIRED": 277,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -8187,8 +8187,7 @@
       "name": "ボルトロス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50363.json"
     },
     {
@@ -8237,8 +8236,7 @@
       "name": "ラブトロス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50372.json"
     },
     {
@@ -8272,8 +8270,7 @@
       "name": "ランドロス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50378.json"
     },
     {
@@ -8365,8 +8362,7 @@
       "name": "トルネロス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50397.json"
     },
     {
@@ -8578,8 +8574,7 @@
       "name": "ラブトロス",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50524.json"
     },
     {
@@ -11380,8 +11375,7 @@
       "name": "キョジオーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47769.json"
     },
     {
@@ -13168,8 +13162,7 @@
       "name": "キョジオーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48427.json"
     },
     {
@@ -14983,8 +14976,7 @@
       "name": "キョジオーン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49134.json"
     },
     {
@@ -15824,8 +15816,7 @@
       "name": "ジュナイパーex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49645.json"
     },
     {
@@ -16568,8 +16559,7 @@
       "name": "ジュナイパーex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50060.json"
     },
     {
@@ -21380,22 +21370,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1287,
+        "ENGINE_CONNECTED": 1291,
         "MECHANIC_REQUIRED": 565,
-        "ENGINE_CONNECTION_REQUIRED": 12
+        "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1233,
+        "ENGINE_CONNECTED": 1236,
         "MECHANIC_REQUIRED": 453,
-        "ENGINE_CONNECTION_REQUIRED": 12,
+        "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 541,
+        "ENGINE_CONNECTED": 548,
         "MECHANIC_REQUIRED": 314,
-        "ENGINE_CONNECTION_REQUIRED": 10,
+        "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21404,7 +21394,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3699,
-    "unconnected": 1374
+    "engineConnected": 3713,
+    "unconnected": 1360
   }
 }
