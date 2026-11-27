@@ -1033,8 +1033,12 @@ function contextBonus(g,effect,own,other){
  }
 }
 function spreadTargets(plan,own,other){
- if(plan.scope==='ownBench')return own.bench;
- return plan.scope==='opponentBench'?other.bench:field(other);
+ const pool=plan.scope==='ownBench'?own.bench:plan.scope==='bothBench'?[...own.bench,...other.bench]:plan.scope==='opponentBench'?other.bench:field(other);
+ return pool.filter(mon=>{
+  if(plan.filter==='damaged')return mon.damage>0;
+  if(plan.filter==='ex'||plan.filter==='exV'){const name=record(mon)?.name||'';return name.endsWith('ex')||plan.filter==='exV'&&/V(?:MAX|STAR|-UNION)?$/.test(name);}
+  return true;
+ });
 }
 function resolveBlindHand(g,actor,opposing,slots,destination){
  const hidden=opposing.hand.map(id);
@@ -1243,8 +1247,8 @@ function applyPlan(g,actor,card,effect,action){
    }
    const targets=spreadTargets(plan,p,o);
    for(const mon of targets)
-    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.amount,
-      {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense,skipResistance:plan.ignoreDefense});
+    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.metric==='opponentPrizesTaken'?plan.amount*(6-o.prizes):plan.amount,
+      {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense||plan.skipWeakness,skipResistance:plan.ignoreDefense||plan.skipResistance});
    break;
   }
   case 'CONTEXT_ATTACK_BONUS':
