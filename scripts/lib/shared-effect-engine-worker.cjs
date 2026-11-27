@@ -331,6 +331,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
+ if(e.proofSpecialHp){reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','hand');}
  if(e.proofSuppression)reserve(r=>mon(r,null,0)&&r.abilities.some(a=>a.plan?.mechanic==='DASH'&&a.name!==e.proofSuppression),'active',1);
  function reserveTera(zone){
    // Prefer a real basic Tera. Otherwise reserve the complete physical
@@ -546,6 +547,39 @@ function evolveTeraFixture(pp,chain,requireTera=true,side=0,zone='bench',targetI
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='PASSIVE_SPECIAL_ENERGY_MAX_HP'){
+    const attackIndex=r.attacks.findIndex(a=>a.plan&&Number(a.damage)>0);
+    if(attackIndex<0)return {blocked:'NO_SPECIAL_HP_ATTACK_FIXTURE'};
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofSpecialHp:true};
+    const t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),own=game.players[0],source=own.active;
+    if(E.getReferenceEffectRecord(source)?.officialCardId!==r.officialCardId)return {blocked:'NO_EXACT_SPECIAL_HP_SOURCE'};
+    if(source.energyCards.some(c=>c.isSpecial))return {blocked:'SPECIAL_HP_BASELINE_HAS_SPECIAL'};
+    const energy=own.hand.find(c=>c.isSpecial&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='IGNITION');
+    if(!energy)return {blocked:'NO_SPECIAL_HP_PHYSICAL_ENERGY'};
+    assert.equal(source.hp,r.facts.hp);
+    const baseline=structuredClone(game);
+    const p=port(game),actions=E.getLegalActions(p.getSnapshot(),'you').actions;
+    const attach=actions.find(a=>a.type==='attach_energy'&&a.target==='active'&&own.hand[a.cardIndex]?.id===energy.id);
+    if(!attach)return {blocked:'NO_LEGAL_SPECIAL_HP_ATTACHMENT'};
+    assert(p.dispatch('you',attach).ok);
+    const attached=p.getSnapshot(),mon=attached.players[0].active;
+    assert.equal(mon.hp,r.facts.hp+e.plan.amount);
+    assert.equal(mon.damage,source.damage);
+    assert(mon.energyCards.some(c=>c.id===energy.id));
+    assert.deepEqual(S.identities(baseline),S.identities(attached));
+    assert(p.restoreSession(p.getResumeSnapshot()).ok);
+    assert.deepEqual(p.getSnapshot(),attached);
+    const expiry=port(attached),end=E.getLegalActions(attached,'you').actions.find(a=>a.type==='end_turn');
+    assert(end&&expiry.dispatch('you',end).ok);
+    const expired=expiry.getSnapshot();
+    assert.equal(expired.players[0].active.hp,r.facts.hp);
+    assert.equal(expired.players[0].active.damage,source.damage);
+    assert(expired.players[0].discard.some(c=>c.id===energy.id));
+    assert.deepEqual(S.identities(baseline),S.identities(expired));
+    return {...t,port:p,trigger};
+  }
   if(m==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'){
     const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     const chosen=index>=0?index:r.attacks.findIndex(a=>a.plan);
@@ -4068,6 +4102,15 @@ function verifyCase(t, e) {
       assert.deepEqual(replay.getSnapshot(), end);
     }
   }
+  if(e.plan.mechanic==='PASSIVE_SPECIAL_ENERGY_MAX_HP'){
+    const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);
+    assert(print.abilities.some(a=>a.effectId===e.effectId));
+    assert(mon.energyCards.some(c=>c.isSpecial));
+    assert.equal(mon.hp,print.facts.hp+e.plan.amount);
+    const invalid=port(before);
+    assert.equal(invalid.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
+    assert.deepEqual(invalid.getSnapshot(),before);
+  }
   if(e.plan.mechanic==='COIN_UNTIL_TAILS_MILL'){
     const action=t.action||o.action;
     assert(before.players[1].deck.length>=2);
@@ -4075,7 +4118,7 @@ function verifyCase(t, e) {
       const start={...before,referenceRngState:seed},replay=port(start);
       assert(replay.dispatch('you',action).ok);
       const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
-      assert.deepEqual(events.filter(x=>x?.command==='COIN_FLIP').map(x=>x.heads),[...Array(heads).fill(true),false]);
+      assert.deepEqual(events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean').map(x=>x.heads),[...Array(heads).fill(true),false]);
       const source=start.players[1], resolved=end.players[1];
       const expected=Array.from(source.deck.slice(0,heads),c=>c.id);
       const remaining=Array.from(source.deck.slice(heads),c=>c.id);
