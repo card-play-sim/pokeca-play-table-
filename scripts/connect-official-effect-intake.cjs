@@ -88,7 +88,11 @@ const repair =
   previous.registryHash === registryHash
     ? []
     : ["--retry-blocked", "--retry-failed", "--recheck"];
-const result = spawnSync(
+// In the atomic release path, classification precedes the exact-new-slot
+// gate; the full replay is still mandatory after the final bundle is built.
+// Do not spend a full catalog replay on the intermediate unqualified bundle.
+const classificationOnly=process.argv.includes("--classification-only");
+const result = classificationOnly ? null : spawnSync(
   process.execPath,
   [
     "scripts/process-shared-effect-batch.cjs",
@@ -103,8 +107,10 @@ const result = spawnSync(
   ],
   { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 },
 );
-if (result.status) throw Error(result.stderr || result.stdout);
-const queue = JSON.parse(result.stdout),
+if (result && result.status) throw Error(result.stderr || result.stdout);
+const queue = classificationOnly
+  ? {run:{state:"CLASSIFIED_ONLY_FULL_REPLAY_REQUIRED",processed:0,counts:null}}
+  : JSON.parse(result.stdout),
   categories = {};
 for (const r of [...input.records, ...base.records]) {
   const c = (categories[r.category] ||= {
@@ -122,7 +128,7 @@ for (const r of [...input.records, ...base.records]) {
         : "notImplemented"
   ]++;
 }
-const persisted = JSON.parse(
+const persisted = classificationOnly ? {jobs:{}} : JSON.parse(
   fs.readFileSync("reports/official-effect-continuation/queue/queue.json"),
 );
 const executed = new Set(
@@ -139,7 +145,9 @@ for (const r of [...input.records, ...base.records]) {
 }
 const report = {
   schemaVersion: 1,
-  registryHash,
+  registryHash: classificationOnly ? null : registryHash,
+  classifiedRegistryHash: registryHash,
+  fullReplayDeferred: classificationOnly,
   source: "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   referenceOnly: true,
   physicalAndroidVerified: false,
