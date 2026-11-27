@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1257,
-      "missing": 445
+      "connected": 1260,
+      "missing": 442
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1251,
-      "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 388,
+      "CONNECTED_UNTESTED": 1254,
+      "MECHANIC_REQUIRED": 52,
+      "ENGINE_CONNECTION_REQUIRED": 386,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -8862,8 +8862,7 @@
       "name": "マスカーニャ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47020.json"
     },
     {
@@ -14487,8 +14486,7 @@
       "name": "マスカーニャ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48783.json"
     },
     {
@@ -19575,8 +19573,7 @@
       "name": "マスカーニャ",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49591.json"
     },
     {
@@ -21353,8 +21350,8 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1257,
-        "MECHANIC_REQUIRED": 432,
+        "ENGINE_CONNECTED": 1260,
+        "MECHANIC_REQUIRED": 429,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21371,7 +21368,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3745,
-    "unconnected": 1328
+    "engineConnected": 3748,
+    "unconnected": 1325
   }
 }
