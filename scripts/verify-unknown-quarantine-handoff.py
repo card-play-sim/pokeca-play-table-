@@ -155,6 +155,36 @@ def self_test():
         except ValueError:
             continue
         raise AssertionError("FALSE_HANDOFF")
+    # Positive and tampered insert-only patches against the real trusted source.
+    import difflib
+    base = subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip()
+    source = subprocess.check_output(["git","show",base+":"+ALLOWED[0]]).decode()
+    anchor = next(line for line in source.splitlines() if line.startswith(" const p=byText.get(text);return p?") and "evolutionTransferFallback(entry,kind,generic)" in line)
+    wording = "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。"
+    rule = ' if(kind==="MAIN"&&generic==="'+wording+'"&&entry.category==="item")return {"mechanic":"MASS_ENERGY_ROUTE","commands":["ATTACH_ENERGY"],"zone":"discard","type":"超","limit":1,"target":"bench","holderType":"超","team":null,"multi":false,"heal":null,"activeOnly":false,"repeated":false,"sharedWording":true};'
+    group = {"sharedTaskId":"OFFICIAL_SHARED_MECHANIC_"+"A"*20,"category":"item","effectKind":"item","exampleOfficialText":wording,"officialCardIds":["2"]}
+    sample = {"groups":[group],"targetIds":["2"]}
+    with tempfile.TemporaryDirectory(prefix="reviewed-proof-test-") as directory:
+        patch = Path(directory)/"test.patch"
+        def write_patch(inserted):
+            modified = source.replace(anchor, inserted+"\n"+anchor,1)
+            patch.write_text("".join(difflib.unified_diff(source.splitlines(True),modified.splitlines(True),"a/"+ALLOWED[0],"b/"+ALLOWED[0])),encoding="utf-8")
+        write_patch(rule)
+        assert verify_reviewed_bytes(sample,patch,base)["state"] == "EXACT_REPRODUCTION_MATCH_REVIEW_REQUIRED"
+        for wrong in [rule.replace('"limit":1','"limit":2'),rule+"\n // unrelated insertion"]:
+            write_patch(wrong)
+            try:
+                verify_reviewed_bytes(sample,patch,base)
+            except (ValueError,subprocess.SubprocessError):
+                continue
+            raise AssertionError("TAMPERED_REVIEWED_PATCH_ACCEPTED")
+        write_patch(rule)
+        try:
+            verify_reviewed_bytes({**sample,"targetIds":["3"]},patch,base)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("UNRELATED_REVIEWED_TARGET_ACCEPTED")
     print("UNKNOWN_REVIEW_HANDOFF_SELF_TEST PASS")
 
 if __name__ == "__main__":
