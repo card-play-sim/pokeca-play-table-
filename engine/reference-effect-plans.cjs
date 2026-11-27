@@ -77,6 +77,21 @@ function additionalAttackPlan(entry,text){
  const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
  if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
   return coinPlan(Number(coinStatus[1]),0,{unit:Number(coinStatus[2]),status:statusMap[coinStatus[5]],when:coinStatus[3]==='すべてウラ'?'none':'threshold',threshold:Number(coinStatus[4]||1)});
+ const tierCoin=text.match(/^コインを3回投げる。オモテが1回なら、([1-9]\d{0,2})ダメージ追加。オモテが2回なら、([1-9]\d{0,2})ダメージ追加。すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
+ if(tierCoin&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'fixed',flips:3,base,bonuses:[0,...tierCoin.slice(1).map(Number)],sharedWording:true};
+ const typedBoardCoin=text.match(/^自分の場の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedBoardCoin&&printed===typedBoardCoin[2]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'ownTypedBoard',type:typedBoardCoin[1],unit:Number(typedBoardCoin[2]),base:0,sharedWording:true};
+ const typedEnergyCoin=text.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(typedEnergyCoin&&printed===typedEnergyCoin[2]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'ownTypedEnergy',type:typedEnergyCoin[1],unit:Number(typedEnergyCoin[2]),base:0,sharedWording:true};
+ const bothEnergyCoin=text.match(/^おたがいのバトルポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
+ if(bothEnergyCoin&&printed===bothEnergyCoin[1]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'bothActiveEnergy',unit:Number(bothEnergyCoin[1]),base:0,sharedWording:true};
+ const opponentTails=text.match(/^相手は相手自身のベンチポケモンの数ぶんコインを投げる。相手のバトルポケモンに、ウラの数×([1-9]\d{0,2})ダメージ。このワザのダメージは弱点・抵抗力を計算しない。$/);
+ if(opponentTails&&printed===opponentTails[1]+'×')
+  return {mechanic:'MASS_COUNT_COIN_DAMAGE',commands:['COIN_FLIP','DAMAGE'],metric:'opponentBench',unit:Number(opponentTails[1]),base:0,tails:true,skipWeakness:true,skipResistance:true,sharedWording:true};
  const energyCoin=text.match(/^このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×([1-9]\d{0,2})ダメージ。$/);
  if(energyCoin&&printed===energyCoin[1]+'×')
   return {mechanic:'ATTACK_ATTACHED_ENERGY_COINS',commands:['COIN_FLIP','DAMAGE'],unit:Number(energyCoin[1])};
@@ -837,6 +852,10 @@ function plan(entry,kind){
  const attachDrawAbility=generic.match(/^自分の番に1回使える。自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、このポケモンにつける。その後、自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&attachDrawAbility)
   return {mechanic:'ABILITY_ATTACH_SELF_DRAW',commands:['ATTACH_ENERGY','DRAW'],type:attachDrawAbility[1],amount:Number(attachDrawAbility[2]),sharedWording:true};
+ // A switch-triggered ability is a separate exact grammar, never an attack.
+ const activeEntryEnergy=generic.match(/^自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を([2-9])枚まで選び、このポケモンにつける。そして山札を切る。$/);
+ if(kind==='ABILITY'&&activeEntryEnergy)
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:activeEntryEnergy[1],limit:Number(activeEntryEnergy[2]),target:'self',holderType:null,team:null,multi:false,heal:null,activeOnly:true,origin:'activeEntry',repeated:true,sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
