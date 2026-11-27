@@ -19,6 +19,9 @@ async def select_effect_targets(page, option):
    prior=selections.get(dependency['key'],[])
    if dependency['kind']=='countWhenSelected':
     resolved['min']=resolved['max']=dependency['count'] if dependency['value'] in prior else 0
+   elif dependency['kind']=='requiresSelection' and dependency['value'] not in prior:
+    resolved['min']=resolved['max']=0
+    resolved.pop('inspection',None)
    elif dependency['kind']=='countFromSelection':
     resolved['min']=resolved['max']=dependency['count'] if len(prior)>=dependency['threshold'] else 0
   if resolved['min']==resolved['max']==0 and not (resolved.get('inspection') or {}).get('cards'):
@@ -220,6 +223,42 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='MASS_BOARD_BONUS' and f['e']['plan'].get('discardStadium'):
+    stadium_id=before['stadium']['id']
+    owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])
+    assert after['stadium'] is None and any(card['id']==stadium_id for card in owner['discard'])
+    assert any(event.get('details',{}).get('fromZone')=='stadium' and stadium_id in event['details'].get('cardIds',[]) for event in events)
+   if m=='ATTACK_OPTIONAL_RECOIL_BONUS':
+    assert option['action']['selections']['recoilBonus']==['accept-recoil']
+    assert any(event.get('details',{}).get('command')=='DAMAGE'
+               and event['details'].get('targetInstanceId')==before['players'][0]['active']['id']
+               and event['details'].get('amount')==f['e']['plan']['recoil'] for event in events)
+   if m=='ATTACK_SPREAD_DAMAGE' and (f['e']['plan'].get('requiresDamage') or f['e']['plan'].get('prizeUnit')):
+    plan=f['e']['plan'];other=before['players'][1]
+    expected={mon['id']:(6-other['prizes'])*plan['prizeUnit'] for mon in other['bench']} if plan.get('prizeUnit') else {
+     mon['id']:plan['amount'] for mon in other['bench'] if mon['id'] in option['action']['targetIds'] and mon['damage']>0}
+    actual={event['details']['targetInstanceId']:event['details']['amount'] for event in events
+            if event.get('details',{}).get('command')=='DAMAGE'
+            and event['details'].get('targetInstanceId') in {mon['id'] for mon in other['bench']}}
+    assert expected and expected==actual
+   if m=='ATTACK_RECYCLE_BASIC_ENERGY':
+    plan=f['e']['plan'];own=before['players'][0]
+    ids=[card['id'] for card in own['discard'] if card['kind']=='energy' and not card.get('isSpecial') and card['energyType']==plan['type']]
+    actual=[event.get('details',{}) for event in events]
+    reveal=next(i for i,event in enumerate(actual) if event.get('command')=='REVEAL' and event.get('cardIds')==ids)
+    returned=next(i for i,event in enumerate(actual) if event.get('command')=='RETURN_TO_DECK' and event.get('cardIds')==ids)
+    assert reveal<returned and any(event.get('command')=='SHUFFLE_DECK' and not event.get('reference') for event in actual[returned+1:])
+    assert set(ids)<={card['id'] for card in after['players'][0]['deck']}
+    if plan['counters']:
+     assert any(event.get('command')=='PLACE_DAMAGE_COUNTERS' and event.get('targetInstanceId')==option['action']['targetIds'][0]
+                and event.get('counterCount')==len(ids)*plan['unit'] for event in actual[reveal+1:returned])
+   if m=='ATTACK_DISCARD_OPPONENT_ATTACHMENTS':
+    plan=f['e']['plan'];other=before['players'][1]
+    expected={card['id'] for mon in [other['active'],*other['bench']] for card in
+              [*(card for card in mon['energyCards'] if card.get('isSpecial')),*(mon['tools'] if plan['tools'] else [])]}
+    actual={ident for event in events if event.get('details',{}).get('command')=='DISCARD' and event['details'].get('fromZone')=='attached'
+            for ident in event['details']['cardIds']}
+    assert expected and expected==actual and actual<={card['id'] for card in after['players'][1]['discard']}
    if m=='ATTACK_OPTIONAL_ENERGY_BONUS':
     plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];sel=option['action']['selections']
     picked=([c['id'] for c in own['active']['energyCards']] if sel['mode']==['bonus'] else []) if plan['all'] else sel['energy']
@@ -547,8 +586,15 @@ async def main():
      elif plan['target']=='ownActive':target=old['active']['id']
      else:target=selection['moveTo'+str(i if plan['multi'] else 0)][0]
      assert source['id']!=target
-     assert any(c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
-     assert any(ev.get('details',{}).get('command')=='MOVE_ENERGY' and ev['details'].get('energyId')==ident and ev['details'].get('targetInstanceId')==target for ev in events)
+     move=next(i for i,ev in enumerate(events) if ev.get('details',{}).get('command')=='MOVE_ENERGY'
+               and ev['details'].get('energyId')==ident and ev['details'].get('sourceInstanceId')==source['id']
+               and ev['details'].get('targetInstanceId')==target)
+     attached=any(c and c['id']==target and ident in {e['id'] for e in c['energyCards']} for c in [new['active'],*new['bench']])
+     if not attached:
+      energy=next(c for c in source['energyCards'] if c['id']==ident)
+      assert await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.mainPlan.mechanic",energy)=='IGNITION'
+      assert after['turnNumber']>before['turnNumber'] and any(c['id']==ident for c in new['discard'])
+      assert any(ev.get('details',{}).get('command')=='DISCARD' and ident in ev['details'].get('cardIds',[]) for ev in events[move+1:])
     assert old['normalEnergyAttached']==new['normalEnergyAttached']
    if m=='MASS_ENERGY_ROUTE':
     plan=f['e']['plan'];selection=option['action']['selections'];picked=selection['energy']

@@ -30,6 +30,12 @@ function resolve(request,requests,selections={}){
    if(count>out.candidates.length)throw Error('IMPOSSIBLE_SELECTION_COUNT');
    out.min=out.max=count;
   }
+  else if(rule.kind==='requiresSelection'){
+   if(typeof rule.value!=='string'||!prior.candidates.some(c=>id(c)===rule.value))throw Error('INVALID_SELECTION_VALUE_RULE');
+   if(!ids.includes(rule.value)){
+    out.min=out.max=0;out.candidates=[];delete out.inspection;
+   }
+  }
   else if(rule.kind==='countWhenSelected'){
    if(typeof rule.value!=='string'||!prior.candidates.some(c=>id(c)===rule.value)||!Number.isInteger(rule.count)||rule.count<0)throw Error('INVALID_SELECTION_VALUE_RULE');
    const count=ids.includes(rule.value)?rule.count:0;
