@@ -140,3 +140,15 @@ for(const [type,count,damage] of [['炎',1,'200'],['草',1,'40'],['雷',2,'160']
 const discardStatus=compile({records:[{officialCardId:'2',category:'pokemon',abilities:[],attacks:[{text:'このポケモンについているエネルギーをすべてトラッシュし、相手のバトルポケモンをマヒにする。',damage:'70',cost:['雷']}],facts:{}}]}).records[0].attacks[0].plan;
 assert.deepEqual(discardStatus.steps,[{op:'discardAttached'},{op:'status',side:'opponent',status:'PARALYZED'}]);
 console.log('TYPED_DISCARD_AND_STATUS_GRAMMAR_PASS');
+
+for(const [cost,scope,count,amount,base] of [['すべて','相手のポケモン',1,120,0],['すべて','相手のベンチポケモン',1,90,90],['2個','相手のポケモン',2,120,0],['3個','相手のポケモン',1,280,0],['すべて','相手のポケモン',3,110,0]]){
+ const text='このポケモンについているエネルギーを'+cost+'トラッシュし、'+scope+count+'匹'+(base?'にも':'に')+'、'+(count>1?'それぞれ':'')+amount+'ダメージ。［ベンチは弱点・抵抗力を計算しない。］';
+ const row={officialCardId:'1',category:'pokemon',abilities:[],attacks:[{text,damage:String(base),cost:['無色','無色','無色']}],facts:{}};
+ const p=compile({records:[row]}).records[0].attacks[0].plan;
+ assert.equal(p.mechanic,'ATTACK_SPREAD_DAMAGE');
+ assert.equal(p.scope,scope==='相手のポケモン'?'opponent':'opponentBench');
+ assert.equal(p.amount,amount);assert.equal(p.count,count);assert.equal(p.discardAttached,cost==='すべて'?'all':Number.parseInt(cost,10));
+ const malformed=compile({records:[{...row,attacks:[{...row.attacks[0],text:text+'追加条件。'}]}]}).records[0].attacks[0].plan;
+ assert.notEqual(malformed?.mechanic,'ATTACK_SPREAD_DAMAGE');
+}
+console.log('COMPOUND_SPREAD_DISCARD_GRAMMAR_PASS');
