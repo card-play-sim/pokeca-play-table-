@@ -129,6 +129,30 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'CONTEXT_ATTACK_BONUS',commands:['DAMAGE'],predicate,base,bonus:Number(bonus),
    ...(type?{type}:{threshold:Number(prizes||hand||stage||extraEnergy)})};
  }
+ if(base>0&&/^\d+$/.test(printed)){
+  const guard=text.match(/^(.+)、このワザは失敗。(?:(このワザのダメージは、?弱点・抵抗力を計算しない。))?$/);
+  if(guard){
+   const patterns=[
+    ['opponentEx',/^相手のバトルポケモンが「ポケモンex」でないなら$/],
+    ['ownBenchedNames',/^自分のベンチに((?:「[^「」]{1,40}」){1,5})がいないなら$/,'names'],
+    ['opponentDamaged',/^相手のバトルポケモンにダメカンがのっていないなら$/],
+    ['opponentStatus',/^相手のバトルポケモンが(やけど|こんらん|どく|ねむり|マヒ)でないなら$/,'status'],
+    ['opponentPrizeCounts',/^相手のサイドの残り枚数が((?:[1-6]枚・){0,5}[1-6]枚)でないなら$/,'prizes'],
+    ['handCountsEqual',/^自分の手札と相手の手札が同じ枚数でないなら$/],
+    ['ownHandCount',/^自分の手札が([1-9]\d?)枚でないなら$/,'threshold']
+   ];
+   for(const [predicate,pattern,key] of patterns){
+    const match=guard[1].match(pattern);
+    if(!match)continue;
+    const value=key==='names'?Array.from(match[1].matchAll(/「([^「」]+)」/g),name=>name[1]):
+      key==='prizes'?match[1].split('・').map(s=>Number(s[0])):key==='threshold'?Number(match[1]):key==='status'?statusMap[match[1]]:null;
+    return {mechanic:'ATTACK_GUARDED_DAMAGE',commands:['DAMAGE'],predicate,...(key?{[key]:value}:{}),
+     ...(guard[2]?{skipWeakness:true,skipResistance:true}:{}),sharedWording:true};
+   }
+  }
+  if(text==='場に出ているスタジアムをトラッシュする。トラッシュできないなら、このワザは失敗。')
+   return {mechanic:'ATTACK_GUARDED_DAMAGE',commands:['DISCARD','DAMAGE'],predicate:'stadium',discardStadium:true,sharedWording:true};
+ }
  const stadiumBonus=text.match(/^場にスタジアムが出ているなら、([1-9]\d{0,2})ダメージ追加。その後、そのスタジアムをトラッシュする。$/);
  if(stadiumBonus&&base!==null&&printed.endsWith('+'))
   return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE','DISCARD'],predicate:'stadiumPresent',discardStadium:true,base,bonus:Number(stadiumBonus[1]),sharedWording:true};
@@ -736,6 +760,9 @@ function plan(entry,kind){
  }
  const counterCost=generic.match(/^このポケモンがバトル場にいて、自分の番に、自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚トラッシュするなら、1回使える。相手のポケモン1匹に、ダメカンを([1-9]\d?)個のせる。$/);
  if(kind==='ABILITY'&&counterCost)return {mechanic:'ABILITY_TYPED_COST_COUNTER',commands:['DISCARD','PLACE_DAMAGE_COUNTERS'],type:counterCost[1],amount:Number(counterCost[2]),activeOnly:true,sharedWording:true};
+ const partnerDraw=generic.match(/^自分の場に「([^「」]{1,40})」がいて、自分の番に、自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚トラッシュするなら、1回使える。自分の山札を([1-9])枚引く。この特性は別の「([^「」]{1,40})」を使った番は使えない。$/);
+ if(kind==='ABILITY'&&partnerDraw&&entry.name===partnerDraw[4])
+  return {mechanic:'ABILITY_TYPED_COST_DRAW_LIMIT',commands:['DISCARD','DRAW'],zone:'hand',type:partnerDraw[2],amount:Number(partnerDraw[3]),partnerName:partnerDraw[1],sharedUseName:'typed-draw:'+partnerDraw[4],sharedWording:true};
  const filteredCost=generic.match(/^自分の番に、(このポケモンについている|自分の手札から)「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1(個|枚)トラッシュするなら、1回使える。自分の手札が([1-9])枚になるように、山札を引く。$/);
  if(kind==='ABILITY'&&filteredCost&&((filteredCost[1]==='このポケモンについている')===(filteredCost[3]==='個')))
   return {mechanic:'ABILITY_TYPED_COST_DRAW_LIMIT',commands:['DISCARD','DRAW'],zone:filteredCost[3]==='個'?'attached':'hand',type:filteredCost[2],limit:Number(filteredCost[4]),sharedWording:true};

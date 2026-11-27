@@ -253,7 +253,14 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   reserve(r=>mon(r,null,0)&&r.abilities.length===0,'bench',1);
  }
- if(m==='ABILITY_TYPED_COST_DRAW_LIMIT')reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
+ if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
+  const energy=reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
+  if(plan.partnerName){
+   reserve(r=>mon(r,null,0)&&r.name===plan.partnerName,'bench');
+   if(ensure(deckIndex,source,2))requirements.push({side:0,zone:'bench',printId:source.officialCardId});
+   if(energy&&ensure(deckIndex,energy,2))requirements.push({side:0,zone:'hand',printId:energy.officialCardId});
+  }
+ }
  if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')reserve(r=>r.category==='pokemon'&&!r.facts.rulePokemon,'hand');
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
@@ -316,6 +323,14 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
+ if(m==='ATTACK_GUARDED_DAMAGE'){
+  if(plan.predicate==='opponentEx'){
+   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
+   reserve(r=>mon(r,null,0)&&!r.name.endsWith('ex'),'bench',1);
+  }
+  if(plan.predicate==='ownBenchedNames')for(const name of plan.names)reserve(r=>mon(r,null,0)&&r.name===name,'bench');
+  if(plan.predicate==='stadium')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
+ }
  if(m==='MASS_BOARD_BONUS'){
   if(plan.predicate==='healedThisTurn')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='HEAL_DAMAGE','hand');
   if(plan.predicate==='becameActive')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
@@ -1032,6 +1047,28 @@ function prepare(r, e, kind) {
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
     if(!targets.length)return {blocked:'NO_MASS_HEAL_FIXTURE'};
     for(const mon of targets)mon.damage=Math.min(mon.hp-10,e.plan.amount==='all'?70:Math.max(10,e.plan.amount+10));
+  }
+  if(m==='ATTACK_GUARDED_DAMAGE'){
+    const g=frame.game,[own,other]=g.players,plan=e.plan;
+    for(const energy of own.active.energyCards.filter(c=>c.isSpecial))
+      own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(energy),1)[0]);
+    if(plan.predicate==='opponentDamaged')other.active.damage=10;
+    if(plan.predicate==='opponentStatus')other.active.statusCondition=plan.status;
+    const resizeHand=(side,amount)=>{
+      while(side.hand.length<amount&&side.deck.length)side.hand.push(side.deck.shift());
+      while(side.hand.length>amount)side.deck.unshift(side.hand.pop());
+      return side.hand.length===amount;
+    };
+    if(plan.predicate==='ownHandCount'&&!resizeHand(own,plan.threshold))return {blocked:'NO_EXACT_HAND_COUNT_FIXTURE'};
+    if(plan.predicate==='handCountsEqual'&&!resizeHand(own,other.hand.length))return {blocked:'NO_EQUAL_HAND_COUNTS_FIXTURE'};
+    if(plan.predicate==='opponentPrizeCounts'){
+      while(other.prizes>plan.prizes[0]){other.hand.push(other.prizeCards.pop());other.prizes--;}
+    }
+    if(plan.predicate==='stadium'){
+      const i=own.deck.findIndex(c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c).mainPlan?.mechanic==='JAMMING');
+      if(i<0)return {blocked:'NO_GUARD_STADIUM_FIXTURE'};
+      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+    }
   }
   if(m==='MASS_BOARD_BONUS'){
     if(fixtureRequirements.namedBenchChain){
@@ -2245,6 +2282,47 @@ function verifyCase(t, e) {
     assert.equal(invalid.dispatch('you',{...action,selections:{recoilBonus:['other']}}).ok,false);
     assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
   }
+
+  if(e.plan.mechanic==='ATTACK_GUARDED_DAMAGE'){
+    const plan=e.plan,action=t.action||o.action,missing=JSON.parse(JSON.stringify(before)),[own,other]=missing.players;
+    const removeFromHand=side=>{if(side.hand.length)side.deck.unshift(side.hand.pop());else side.hand.push(side.deck.shift());};
+    switch(plan.predicate){
+      case 'opponentEx':{
+        if(!E.getReferenceEffectRecord(other.active).name.endsWith('ex'))return {status:'BLOCKED',reason:'NO_OPPONENT_EX_GUARD_FIXTURE'};
+        const i=other.bench.findIndex(c=>!E.getReferenceEffectRecord(c).name.endsWith('ex'));
+        if(i<0)return {status:'BLOCKED',reason:'NO_OPPONENT_NON_EX_GUARD_FIXTURE'};
+        [other.active,other.bench[i]]=[other.bench[i],other.active];break;
+      }
+      case 'ownBenchedNames':{
+        const i=own.bench.findIndex(c=>E.getReferenceEffectRecord(c).name===plan.names[0]);
+        if(i<0||!plan.names.every(name=>own.bench.some(c=>E.getReferenceEffectRecord(c).name===name)))return {status:'BLOCKED',reason:'NO_NAMED_GUARD_BENCH_FIXTURE'};
+        own.deck.push(own.bench.splice(i,1)[0]);break;
+      }
+      case 'opponentDamaged':other.active.damage=0;break;
+      case 'opponentStatus':other.active.statusCondition=null;break;
+      case 'opponentPrizeCounts':
+        if(!plan.prizes.includes(other.prizes))return {status:'BLOCKED',reason:'NO_GUARD_PRIZE_COUNT_FIXTURE'};
+        while(plan.prizes.includes(other.prizes)&&other.prizes<6){other.prizeCards.push(other.hand.pop());other.prizes++;}
+        if(plan.prizes.includes(other.prizes))return {status:'BLOCKED',reason:'NO_NEGATIVE_PRIZE_COUNT_FIXTURE'};
+        break;
+      case 'ownHandCount':case 'handCountsEqual':removeFromHand(own);break;
+      case 'stadium':own.deck.push(missing.stadium);missing.stadium=null;missing.stadiumOwner=null;break;
+    }
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    assert(!effectEvents.some(step=>step?.command==='ATTACK_FAILED'));
+    if(plan.discardStadium){
+      assert.equal(after.stadium,null);
+      assert(after.players[0].discard.some(c=>c.id===before.stadium.id));
+      const discard=effectEvents.findIndex(step=>step?.command==='DISCARD'&&step.fromZone==='stadium');
+      assert(discard>=0&&effectEvents.slice(discard+1).some(step=>step?.command==='DAMAGE'&&step.amount>0));
+    }
+    const replay=port(missing);
+    assert(replay.dispatch('you',action).ok);
+    const failed=replay.getSnapshot().history.slice(missing.history.length);
+    assert(failed.some(step=>step.details?.command==='ATTACK_FAILED'&&step.details.effectId===e.effectId));
+    assert(!failed.some(step=>step.details?.command==='DAMAGE'&&Number(step.details.amount)>0));
+    assert.deepEqual(Array.from(S.identities(replay.getSnapshot())),Array.from(S.identities(missing)));
+  }
   if(e.plan.mechanic==='MASS_BOARD_BONUS'){
     const plan=e.plan,action=t.action||o.action;
     const rec=c=>E.getReferenceEffectRecord(c);
@@ -2435,14 +2513,35 @@ function verifyCase(t, e) {
     assert(chosen.length>0&&chosen.every(id=>pool.some(c=>c.id===id&&valid(c))));
     assert(chosen.every(id=>resolved.discard.some(c=>c.id===id)));
     const remaining=own.hand.length-(ability?(plan.zone==='hand'?1:0):chosen.length+1);
-    const amount=ability?Math.max(0,plan.limit-remaining):chosen.length*plan.unit;
+    const amount=ability?(plan.amount??Math.max(0,plan.limit-remaining)):chosen.length*plan.unit;
     const drawn=own.deck.slice(0,amount);
     assert.equal(resolved.hand.length,remaining+drawn.length);
     assert(drawn.every(c=>resolved.hand.some(x=>x.id===c.id)));
     assert.deepEqual(resolved.deck.map(c=>c.id),own.deck.slice(drawn.length).map(c=>c.id));
     const invalid=pool.find(c=>!valid(c));
     if(invalid){const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[invalid.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
-    const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    const replay=port(before);
+    assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discard:[]}}).ok,false);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    if(plan.partnerName){
+      const absent=JSON.parse(JSON.stringify(before)),side=absent.players[0];
+      const i=side.bench.findIndex(c=>E.getReferenceEffectRecord(c).name===plan.partnerName);
+      if(i<0)return {status:'BLOCKED',reason:'NO_TYPED_DRAW_PARTNER_FIXTURE'};
+      side.deck.push(side.bench.splice(i,1)[0]);
+      const missing=port(absent);
+      assert.equal(missing.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(missing.getSnapshot()),JSON.stringify(absent));
+      const other=resolved.bench.find(c=>c.id!==source.id&&E.getReferenceEffectRecord(c).officialCardId===E.getReferenceEffectRecord(source).officialCardId);
+      const payment=resolved.hand.find(valid);
+      if(!other||!payment)return {status:'BLOCKED',reason:'NO_SHARED_TYPED_DRAW_SECOND_COPY'};
+      const second={...action,sourceInstanceId:other.id,selections:{...action.selections,discard:[payment.id]}};
+      const repeated=port(after);
+      assert.equal(repeated.dispatch('you',second).ok,false);
+      assert.equal(JSON.stringify(repeated.getSnapshot()),JSON.stringify(after));
+      const cleared=JSON.parse(JSON.stringify(after));
+      delete cleared.players[0].turnLimits.abilityNames[plan.sharedUseName];
+      assert(port(cleared).dispatch('you',second).ok);
+    }
   }
   if(["ABILITY_DISCARD_DRAW","ABILITY_ATTACH_SELF_DRAW"].includes(e.plan.mechanic)){
     const action=t.action||o.action,own=before.players[0],resolved=after.players[0],plan=e.plan;

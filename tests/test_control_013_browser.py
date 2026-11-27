@@ -241,6 +241,14 @@ async def main():
             if event.get('details',{}).get('command')=='DAMAGE'
             and event['details'].get('targetInstanceId') in {mon['id'] for mon in other['bench']}}
     assert expected and expected==actual
+   if m=='ATTACK_GUARDED_DAMAGE':
+    assert f['printedDamageEvents'] and all(event in events for event in f['printedDamageEvents'])
+    assert not any(event.get('details',{}).get('command')=='ATTACK_FAILED' for event in events)
+    if f['e']['plan'].get('discardStadium'):
+     stadium_id=before['stadium']['id']
+     discard=next(i for i,event in enumerate(events) if event.get('details',{}).get('fromZone')=='stadium'
+                  and stadium_id in event['details'].get('cardIds',[]))
+     assert any(event in events[discard+1:] for event in f['printedDamageEvents'])
    if m=='ATTACK_MOVE_BENCH_COUNTERS':
     plan=f['e']['plan'];moves=option['action'];own=before['players'][0];other=before['players'][1]
     source=next(card for card in own['bench'] if card['id']==moves['selections']['counterSource'][0])
@@ -301,7 +309,7 @@ async def main():
     picked=set(option['action']['selections']['discard'])
     assert picked and picked<={c['id'] for c in resolved['discard']}
     remaining=len(own['hand'])-(len(picked)+1 if m=='SUPPORTER_NON_RULE_DISCARD_DRAW' else (1 if plan['zone']=='hand' else 0))
-    amount=len(picked)*plan['unit'] if m=='SUPPORTER_NON_RULE_DISCARD_DRAW' else max(0,plan['limit']-remaining)
+    amount=len(picked)*plan['unit'] if m=='SUPPORTER_NON_RULE_DISCARD_DRAW' else (plan.get('amount') or max(0,plan['limit']-remaining))
     assert len(resolved['hand'])==remaining+min(amount,len(own['deck']))
     assert [c['id'] for c in resolved['deck']]==[c['id'] for c in own['deck'][amount:]]
    if m=='ATTACK_RESET_HAND':
