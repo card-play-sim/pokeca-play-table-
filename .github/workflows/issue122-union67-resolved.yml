@@ -1,0 +1,147 @@
+name: Issue122 integrate 67 qualified prints preserving PR225 and PR226
+on:
+  push:
+    branches: [battle/issue122-union67-resolved-20261127]
+    paths: ['.github/workflows/issue122-union67-resolved.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-union67-resolved
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Three-way merge only source changes onto current published main
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          baseline=9576b43bf5804f0c8e16bd08ca2b2ecae21388bb
+          source=42787abd28325c1d1af35a8de9db49c7276eba21
+          paths=(engine/pokeca_reference_effect_runtime.cjs engine/reference-effect-plans.cjs scripts/lib/shared-effect-engine-worker.cjs tests/fixtures/control-005-scenarios.js tests/test_control_013_browser.py)
+          # Resolve the independently changed adjacent damage arguments, preserving both semantics.
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('engine/pokeca_reference_effect_runtime.cjs')
+          s=p.read_text()
+          current="    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.counterUnit?mon.damage/10*plan.counterUnit:amount,"
+          baseline="    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,amount,"
+          assert s.count(current)==1, 'COUNTER_DAMAGE_ANCHOR_CHANGED'
+          p.write_text(s.replace(current,baseline,1))
+          PY
+          failed=0
+          for path in "${paths[@]}"; do
+            git show "$baseline:$path" >/tmp/union-base
+            git show "$source:$path" >/tmp/union-incoming
+            if ! git merge-file -p "$path" /tmp/union-base /tmp/union-incoming >"/tmp/union-result"; then
+              cp /tmp/union-result "artifacts/conflict-$(basename "$path")"
+              failed=1
+            else
+              cp /tmp/union-result "$path"
+            fi
+          done
+          test "$failed" = 0
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('engine/pokeca_reference_effect_runtime.cjs')
+          s=p.read_text()
+          incoming="    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,amount,\n      {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense||plan.skipWeakness,skipResistance:plan.ignoreDefense||plan.skipResistance});"
+          combined="    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.counterUnit?mon.damage/10*plan.counterUnit:amount,\n      {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense||plan.skipWeakness,skipResistance:plan.ignoreDefense||plan.skipResistance});"
+          assert s.count(incoming)==1, 'INDEPENDENT_DEFENSE_FLAGS_ANCHOR_CHANGED'
+          p.write_text(s.replace(incoming,combined,1))
+          PY
+          git show "$source:tests/issue122-passive-context-grammar.test.cjs" >tests/issue122-passive-context-grammar.test.cjs
+          git diff --check
+      - name: Verify exact merged source and preserve latest compiled baseline
+        run: |
+          set -euo pipefail
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          node tests/issue122-passive-context-grammar.test.cjs
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base='610948f417412b01bd4ae8c96f48d076a33f763a';
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const ids=[...new Set([...read('468d7f4083059e8f95ba26d26f711256f173ae38','reports/official-effect-continuation/union31-exact-delta.json').added,...read('91ac33103eb03defe383514bd5d2c9da21965c0f','reports/official-effect-continuation/passive-cost-exact-delta.json').added].map(String))];
+          const required=[...new Set([...ids,'47539','47983','47991','48758'])].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/union67-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('UNION63_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PRIOR_QUALIFIED_PRINT_MISSING');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json"
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="union67-$shard" python tests/test_control_013_browser.py >"artifacts/union67-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/union67-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=union67-full-ai python tests/test_control_013_browser.py >artifacts/union67-full-ai.log 2>&1 || { tail -n 30 artifacts/union67-full-ai.log; exit 1; }
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/union67-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/union67-candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: exact union of previously qualified print families on latest main'
+          git push origin "HEAD:refs/heads/battle/issue122-union67-qualified-$GITHUB_RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: union67-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
