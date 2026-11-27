@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/verify-reviewed-official-scope.cjs'
+      - '.github/workflows/unknown-effect-review-handoff.yml'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
       - 'scripts/export-unknown-replay-candidate.py'
@@ -18,6 +20,8 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/verify-reviewed-official-scope.cjs'
+      - '.github/workflows/unknown-effect-review-handoff.yml'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
       - 'scripts/export-unknown-replay-candidate.py'
@@ -43,6 +47,7 @@ jobs:
       - run: |
           node --check scripts/local-unknown-effect-generator.cjs
           node tests/local-unknown-effect-generator.test.cjs
+          node scripts/verify-reviewed-official-scope.cjs --self-test
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
           python scripts/unknown-repair-feedback.py --self-test
