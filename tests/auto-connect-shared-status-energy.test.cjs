@@ -24,7 +24,14 @@ assert.deepEqual(attack('このポケモンについているエネルギーを1
 assert.equal(attack('このポケモンについているエネルギーを1個選び、トラッシュする。','20',[]),null);
 assert.deepEqual(attack('このポケモンについているエネルギーを2個選び、トラッシュする。'),{mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:['DAMAGE','DISCARD'],count:2});
 assert.equal(attack('このポケモンについているエネルギーを2個選び、トラッシュする。その後、山札を引く。'),null);
-assert.equal(attack('このポケモンについている[炎]エネルギーを1個選び、トラッシュする。'),null);
+// The exact typed-discard wording is now implemented and independently
+// battle-qualified. Retain strict rejection of unsupported variants.
+assert.deepEqual(attack('このポケモンについている[炎]エネルギーを1個選び、トラッシュする。'),
+  {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:['DAMAGE','DISCARD'],type:'炎',count:1,sharedWording:true});
+assert.deepEqual(attack('このポケモンについている[水]エネルギーを2個選び、トラッシュする。','20',['水']),
+  {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:['DAMAGE','DISCARD'],type:'水',count:2,sharedWording:true});
+assert.equal(attack('このポケモンについている[炎]エネルギーを1個選び、トラッシュする。その後、山札を引く。'),null);
+assert.equal(attack('このポケモンについている[炎]エネルギーを1個選び、トラッシュする。','20＋'),null);
 assert.equal(attack('このポケモンについているエネルギーを2個トラッシュする。'),null);
 assert.equal(attack('相手のバトルポケモンをマヒにする。'),null);
 assert.equal(attack('このポケモンについている基本エネルギーを1個トラッシュする。'),null);
