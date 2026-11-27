@@ -35,21 +35,39 @@ function exactGroup(group,rows,compiled,readProof,compile){
  }
  return records;
 }
-function excerpts(source,group,file){
+function excerpts(source,group,file,limit=4500){
  const lines=source.split('\n'),ranges=[];
+ // Reserve context for the relevant mechanic instead of truncating the earliest source lines.
  const keys=file.includes('plans')?['function plan(', 'function sequencePlan(', 'function massSharedPlan(', 'function compile(']:
  file.includes('runtime')?['function requests(', 'function abilityCheck(', 'function applyPlan(', 'function damage(', 'function attackMetric(', 'function moveChosen(']:
  ['function fixtureResources(', 'function prepare(', 'function verifyCase(', 'function verifyPrintedAttack('];
- for(const key of keys){const i=lines.findIndex(l=>l.includes(key));if(i>=0)ranges.push([Math.max(0,i-2),Math.min(lines.length,i+38)]);}
+ for(const key of keys){const i=lines.findIndex(l=>l.includes(key));if(i>=0)ranges.push([Math.max(0,i-1),Math.min(lines.length,i+8)]);}
  // Prefer literal substrings from the Japanese source and related common code.
  const words=['ダメカン','エネルギー','進化','山札','手札','ベンチ','トラッシュ','サイド','コイン','きぜつ','回復','入れ替え','特性','ワザ'];
  const mapped={'ダメカン':'counter','エネルギー':'energy','進化':'evol','山札':'deck','手札':'hand','ベンチ':'bench','トラッシュ':'discard','サイド':'prize','コイン':'coin','きぜつ':'knock','回復':'heal','入れ替え':'switch','特性':'ability','ワザ':'attack'};
  const selected=words.filter(w=>group.exampleOfficialText.includes(w));
- const ranked=lines.map((line,i)=>({i,score:selected.reduce((n,w)=>n+(line.includes(w)?5:line.toLowerCase().includes(mapped[w])?1:0),0)+(line.includes('case ')||line.includes('mechanic:')?1:0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i);
- for(const item of ranked.slice(0,5))ranges.push([Math.max(0,item.i-5),Math.min(lines.length,item.i+9)]);
- ranges.sort((a,b)=>a[0]-b[0]);const merged=[];
- for(const [a,b] of ranges){const last=merged.at(-1);if(last&&last[1]>=a)last[1]=Math.max(last[1],b);else merged.push([a,b]);}
- return merged.map(([a,b])=>'// source lines '+(a+1)+'-'+b+'\n'+lines.slice(a,b).join('\n')).join('\n\n').slice(0,4500);
+ const ranked=lines.map((line,i)=>({i,score:selected.reduce((n,w)=>n+(line.includes(w)?5:line.toLowerCase().includes(mapped[w])?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i);
+ // Rank actual matches before generic entry points. Keep complete source
+ // lines and deduplicate overlaps; never let unrelated early code use the budget.
+ const windows=[...ranked.slice(0,8).map(({i})=>[Math.max(0,i-3),Math.min(lines.length,i+5)]),...ranges];
+ const used=new Set(),chunks=[];let size=0;
+ for(const [start,end] of windows){
+  for(let i=start;i<end;i++){
+   if(used.has(i))continue;
+   const line=lines[i],extra=line.length+1;
+   if(size+extra>limit)continue;
+   used.add(i);size+=extra;
+  }
+ }
+ // Restore source order, preserving gaps as explicit non-code markers.
+ let previous=-2;
+ for(const i of [...used].sort((a,b)=>a-b)){
+  if(i!==previous+1)chunks.push('// source lines '+(i+1));
+  chunks.push(lines[i]);previous=i;
+ }
+ // The annotation overhead is deliberately not charged against source lines;
+ // callers use this same budget for anchors and the model context.
+ return chunks.join('\n');
 }
 // Related official-text groups are processed together; rotate the seed in
 // high-impact order, without conflating differing conditions or effect kinds.
@@ -157,6 +175,7 @@ function repairProfile(feedback='',attempt=1){
  /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
  /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
  /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
+ /NO_LEGAL_VERIFICATION_FIXTURE/i.test(reason)?'FIXTURE':
  /ENGINE_EXECUTION_FAILED|NO_EXECUTION_RECEIPT|NO_SELECTED_PRINT_QUALIFIED|EXECUTION_EVIDENCE_INCOMPLETE/i.test(reason)?'EXECUTION':
  reason?'ENGINE':'INITIAL';
  const compact=type==='TRANSPORT'||type==='TRUNCATED'||attempt>1;
@@ -169,6 +188,7 @@ function repairProfile(feedback='',attempt=1){
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
  INTEGRITY:'The candidate changed or lost a protected record or receipt. Preserve all prior compiled records and fix source semantics; never edit data, receipts or gates.',
  COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar, then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
+ FIXTURE:'The worker could not construct a legal verification action. Use the exact printed identity, evolution chain, turn/zone, resources and disabled reasons to repair fixture preparation. Do not weaken legality, fabricate resources or bypass positive and negative execution checks.',
  BROWSER:'The isolated browser gate failed. Repair actual legal actions, UI/AI parity and state transitions using the reported failure; never change browser tests or receipt gates.',
  EXECUTION:'Compilation alone did not yield a proven target. Use each reported failed slot and reason to repair the actual runtime action, target legality and worker fixture; retain positive and negative state checks.',
  ENGINE:'Repair the concrete failure using the provided diagnostics. Preserve all previously verified behavior.',
@@ -185,7 +205,7 @@ function modelAnchors(sources,group,limit=4500){
   if(typeof source!=='string')continue;
   const lines=source.split('\n'),counts=new Map();
   for(const line of lines)counts.set(line,(counts.get(line)||0)+1);
-  const excerpt=excerpts(source,group,file).slice(0,limit);
+  const excerpt=excerpts(source,group,file,limit);
   const chosen=excerpt.split('\n').filter(line=>line.length>=24&&line.length<=1200&&counts.get(line)===1&&source.split(line).length===2&&!/^\s*\/\//.test(line));
   for(const line of [...new Set(chosen)].slice(0,20)){
    const anchor='F'+i+'_'+(lines.indexOf(line)+1);
@@ -200,7 +220,7 @@ function annotatedModelContext(sources,group,limit,anchors){
  return allowed.filter(f=>typeof sources[f]==='string').map(file=>{
   const markers=new Map([...anchors].filter(([,e])=>e.path===file).map(([id,e])=>[e.before,id]));
   const seen=new Set();
-  const lines=excerpts(sources[file],group,file).slice(0,limit).split('\n').map(line=>{
+  const lines=excerpts(sources[file],group,file,limit).split('\n').map(line=>{
    const id=markers.get(line);
    if(!id||seen.has(id))return line;
    seen.add(id);return '['+id+'] '+line;
