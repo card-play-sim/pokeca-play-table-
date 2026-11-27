@@ -381,6 +381,14 @@ async def main():
     assert entered['validationReference']['officialCardId']==r['officialCardId']
     assert entered['stage']==before_source['stage']
     assert all(card['id']!=ident for card in after['players'][0]['hand'])
+   if m=='COIN_UNTIL_TAILS_MILL':
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)]
+    assert flips and flips[-1] is False and all(flips[:-1])
+    enemy=before['players'][1]
+    expected=[card['id'] for card in enemy['deck'][:len(flips)-1]]
+    discarded=[ident for ev in events if ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck' and ev['details'].get('owner')==enemy['id'] for ident in ev['details']['cardIds']]
+    assert discarded==expected
+    assert all(any(card['id']==ident for card in after['players'][1]['discard']) for ident in expected)
    if m=='COIN_UNTIL_TAILS_DAMAGE':
     flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
     assert flips and flips[-1] is False and all(flips[:-1])
