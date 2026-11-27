@@ -578,6 +578,22 @@ function prepare(r, e, kind) {
     assert.equal(expired.players[0].active.damage,source.damage);
     assert(expired.players[0].discard.some(c=>c.id===energy.id));
     assert.deepEqual(S.identities(baseline),S.identities(expired));
+    // The same physical card is alive at boosted HP, but must be knocked
+    // out when the last special energy expires at base-HP damage.
+    const lethal=structuredClone(attached);
+    lethal.players[0].active.damage=r.facts.hp;
+    const lethalPort=port(lethal),start=lethalPort.getSnapshot();
+    assert.equal(start.players[0].active.id,source.id);
+    assert(start.players[0].active.hp>start.players[0].active.damage);
+    const lethalEnd=E.getLegalActions(start,'you').actions.find(a=>a.type==='end_turn');
+    assert(lethalEnd&&lethalPort.dispatch('you',lethalEnd).ok);
+    const knocked=lethalPort.getSnapshot();
+    assert(![knocked.players[0].active,...knocked.players[0].bench].some(c=>c?.id===source.id),'EXPIRED_SPECIAL_HP_KNOCKOUT_MISSING');
+    assert(knocked.history.slice(start.history.length).some(ev=>ev.type==='knockout'&&ev.details?.targetPlayerId==='you'),'EXPIRED_SPECIAL_HP_KNOCKOUT_EVENT_MISSING');
+    assert(knocked.players[0].discard.some(c=>c.id===energy.id));
+    assert.deepEqual(S.identities(start),S.identities(knocked));
+    assert(lethalPort.restoreSession(lethalPort.getResumeSnapshot()).ok);
+    assert.deepEqual(lethalPort.getSnapshot(),knocked);
     return {...t,port:p,trigger};
   }
   if(m==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'){
