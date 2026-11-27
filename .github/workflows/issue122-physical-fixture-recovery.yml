@@ -69,7 +69,8 @@ jobs:
           server=$!
           trap 'kill "$server"' EXIT
           export POKECA_TEST_URL=http://127.0.0.1:8765/
-          export POKECA_INTAKE_PREFIX=work/card-auto-connect/union-browser
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json"
           export POKECA_INTAKE_RELEASE_BASE=6095418f61f4ccc1c82c061a20bfedf346d990c5
           export POKECA_BROWSER_SHARD_COUNT=4
           export POKECA_BROWSER_SLOTS_ONLY=1
