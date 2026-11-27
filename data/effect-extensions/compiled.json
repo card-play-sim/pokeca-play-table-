@@ -36532,6 +36532,71 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "47345",
+      "name": "シロナのミカルゲ",
+      "deckName": "シロナのミカルゲ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47345",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9a/047345_P_SHIRONANOMIKARUGE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "レイジングカース",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "自分のベンチの「シロナのポケモン」全員にのっているダメカンの数×10ダメージ。このワザのダメージは弱点を計算しない。",
+          "effectId": "reference-47345-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchTeamCounters",
+            "team": "シロナ",
+            "unit": 10,
+            "base": 0,
+            "skipWeakness": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47345.json",
+        "sha256": "40d065b6a46fa5dc9823fc321fcbe6b0dfc9bfee00b88f04df3f1cd6be9722f3",
+        "htmlSha256": "40d065b6a46fa5dc9823fc321fcbe6b0dfc9bfee00b88f04df3f1cd6be9722f3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "47346",
       "name": "ペパーのオラチフ",
       "deckName": "ペパーのオラチフ",
@@ -55865,6 +55930,72 @@
         "path": "data/effect-extensions/evidence/46793.json",
         "sha256": "dabc290dd89a48af8da0f9a87ce3a241f26b3540e7e38e550dadf106cce3497d",
         "htmlSha256": "dabc290dd89a48af8da0f9a87ce3a241f26b3540e7e38e550dadf106cce3497d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47034",
+      "name": "ナンジャモのビリリダマ",
+      "deckName": "ナンジャモのビリリダマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47034",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV9/047034_P_NANJIXYAMONOBIRIRIDAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "チェインボルト",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "自分の「ナンジャモのポケモン」全員についている[雷]エネルギーの数×20ダメージ追加。",
+          "effectId": "reference-47034-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownNamedTeamEnergy",
+            "team": "ナンジャモ",
+            "type": "雷",
+            "unit": 20,
+            "base": 20,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47034.json",
+        "sha256": "32fe40cd36fb3d7777df2c8833d07f3dc4566d30781765f48c15526b375d8ef4",
+        "htmlSha256": "32fe40cd36fb3d7777df2c8833d07f3dc4566d30781765f48c15526b375d8ef4",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -224570,6 +224701,330 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50230",
+      "name": "グレンアルマ",
+      "deckName": "グレンアルマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50230",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050230_P_GURENARUMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フレイムレギオン",
+          "cost": [
+            "炎"
+          ],
+          "damage": "40+",
+          "text": "[炎]エネルギーがついている自分のベンチポケモンの数×40ダメージ追加。",
+          "effectId": "reference-50230-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchWithTypedEnergy",
+            "type": "炎",
+            "unit": 40,
+            "base": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "カルボウ",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50230.json",
+        "sha256": "f205709db846b1c4d581733ad77ebea33fea20351cfab27c2badddd18b6e37d5",
+        "htmlSha256": "f205709db846b1c4d581733ad77ebea33fea20351cfab27c2badddd18b6e37d5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50303",
+      "name": "グレンアルマ",
+      "deckName": "グレンアルマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50303",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050303_P_GURENARUMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "フレイムレギオン",
+          "cost": [
+            "炎"
+          ],
+          "damage": "40+",
+          "text": "[炎]エネルギーがついている自分のベンチポケモンの数×40ダメージ追加。",
+          "effectId": "reference-50303-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchWithTypedEnergy",
+            "type": "炎",
+            "unit": 40,
+            "base": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "カルボウ",
+        "retreatCost": 2,
+        "types": [
+          "炎"
+        ],
+        "weakness": {
+          "types": [
+            "水"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50303.json",
+        "sha256": "b4f0983bc8161473dc56caf3ab362325d8e404a6096660c6948332aa5832cebe",
+        "htmlSha256": "b4f0983bc8161473dc56caf3ab362325d8e404a6096660c6948332aa5832cebe",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48630",
+      "name": "シロナのミカルゲ",
+      "deckName": "シロナのミカルゲ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48630",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048630_P_SHIRONANOMIKARUGE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "レイジングカース",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "自分のベンチの「シロナのポケモン」全員にのっているダメカンの数×10ダメージ。このワザのダメージは弱点を計算しない。",
+          "effectId": "reference-48630-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchTeamCounters",
+            "team": "シロナ",
+            "unit": 10,
+            "base": 0,
+            "skipWeakness": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48630.json",
+        "sha256": "3421a340697176bbf75ddaf5b5e86d6f8a7ffe995f6b390f7939844f88df7d6a",
+        "htmlSha256": "3421a340697176bbf75ddaf5b5e86d6f8a7ffe995f6b390f7939844f88df7d6a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48950",
+      "name": "ナンジャモのビリリダマ",
+      "deckName": "ナンジャモのビリリダマ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48950",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048950_P_NANJIXYAMONOBIRIRIDAMA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "チェインボルト",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "20+",
+          "text": "自分の「ナンジャモのポケモン」全員についている[雷]エネルギーの数×20ダメージ追加。",
+          "effectId": "reference-48950-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownNamedTeamEnergy",
+            "team": "ナンジャモ",
+            "type": "雷",
+            "unit": 20,
+            "base": 20,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "雷"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48950.json",
+        "sha256": "3fb600b3797cd64293c01268635c931a161d082f8fc215e9ed1fab610ab82890",
+        "htmlSha256": "3fb600b3797cd64293c01268635c931a161d082f8fc215e9ed1fab610ab82890",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49968",
+      "name": "シロナのミカルゲ",
+      "deckName": "シロナのミカルゲ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49968",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/049968_P_SHIRONANOMIKARUGE.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "レイジングカース",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10×",
+          "text": "自分のベンチの「シロナのポケモン」全員にのっているダメカンの数×10ダメージ。このワザのダメージは弱点を計算しない。",
+          "effectId": "reference-49968-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownBenchTeamCounters",
+            "team": "シロナ",
+            "unit": 10,
+            "base": 0,
+            "skipWeakness": true,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49968.json",
+        "sha256": "48729402aa97f64e9609cb5a9d8c91fcd7b5c801289b1f44ae357cfe50428655",
+        "htmlSha256": "48729402aa97f64e9609cb5a9d8c91fcd7b5c801289b1f44ae357cfe50428655",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -226049,11 +226504,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47345",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47372",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -226750,11 +227200,6 @@
     },
     {
       "officialCardId": "46787",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
