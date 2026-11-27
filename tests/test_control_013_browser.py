@@ -228,7 +228,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_SPECIAL_ENERGY_MAX_HP','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -381,6 +381,26 @@ async def main():
     assert entered['validationReference']['officialCardId']==r['officialCardId']
     assert entered['stage']==before_source['stage']
     assert all(card['id']!=ident for card in after['players'][0]['hand'])
+   if m=='PASSIVE_SPECIAL_ENERGY_MAX_HP':
+    source=before['players'][0]['active']
+    assert source['hp']==r['facts']['hp']+f['e']['plan']['amount']
+    special=[card['id'] for card in source['energyCards'] if card.get('isSpecial')]
+    assert special
+    own=after['players'][0]
+    current=next((card for card in [own['active'],*own['bench']] if card and card['id']==source['id']),None)
+    if current:
+     attached=any(card.get('isSpecial') for card in current['energyCards'])
+     assert current['hp']==r['facts']['hp']+(f['e']['plan']['amount'] if attached else 0)
+     if not attached:
+      assert all(any(card['id']==ident for card in own['discard']) for ident in special)
+   if m=='COIN_UNTIL_TAILS_MILL':
+    flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool)]
+    assert flips and flips[-1] is False and all(flips[:-1])
+    enemy=before['players'][1]
+    expected=[card['id'] for card in enemy['deck'][:len(flips)-1]]
+    discarded=[ident for ev in events if ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='deck' and ev['details'].get('owner')==enemy['id'] for ident in ev['details']['cardIds']]
+    assert discarded==expected
+    assert all(any(card['id']==ident for card in after['players'][1]['discard']) for ident in expected)
    if m=='COIN_UNTIL_TAILS_DAMAGE':
     flips=[ev['details']['heads'] for ev in events if ev.get('details',{}).get('command')=='COIN_FLIP' and 'heads' in ev['details']]
     assert flips and flips[-1] is False and all(flips[:-1])
