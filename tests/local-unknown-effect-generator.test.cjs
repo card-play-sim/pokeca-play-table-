@@ -217,3 +217,17 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert([...attack.values()].some(x=>x.before.includes('const wrong=')));
  assert.equal(gen.repairProfile('JSON.stringify(...) Error: EXTENSION_IMMUTABLE_SOURCE_CONFLICT:45496:compiled facts differ').type,'INTEGRITY');
 }
+
+// Unknown compiler rules must be additive, and the safe insertion anchor must
+// survive an excerpt dominated by unrelated keyword matches.
+{
+ const compiler='engine/reference-effect-plans.cjs';
+ const oldLine=' const previousEnergyRule = /山札からエネルギーを選ぶ/;';
+ assert.throws(()=>applyEdits({[compiler]:oldLine},{edits:[{path:compiler,before:oldLine,after:' const previousEnergyRule = /別の文法/;'}]}),/MODEL_COMPILER_ANCHOR_REMOVED/);
+ assert.equal(applyEdits({[compiler]:oldLine},{edits:[{path:compiler,before:oldLine,after:' const newRule = /新しい効果/;\n'+oldLine}]} )[compiler],' const newRule = /新しい効果/;\n'+oldLine);
+ const insertion=" const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;";
+ const src=Array.from({length:80},(_,i)=>' const energyRule'+i+' = /山札 エネルギー/;').join('\n')+'\n'+insertion;
+ const anchors=modelAnchors({[compiler]:src},{effectKind:'ability',exampleOfficialText:'山札からエネルギーを選ぶ'},1200);
+ assert([...anchors.values()].some(x=>x.before===insertion));
+ assert.equal(repairProfile('MODEL_COMPILER_ANCHOR_REMOVED').type,'INTEGRITY');
+}
