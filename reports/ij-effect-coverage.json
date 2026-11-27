@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1259,
-      "missing": 443
+      "connected": 1262,
+      "missing": 440
     },
     "J": {
       "total": 870,
-      "connected": 554,
-      "missing": 316
+      "connected": 555,
+      "missing": 315
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1253,
+      "CONNECTED_UNTESTED": 1256,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 386,
+      "ENGINE_CONNECTION_REQUIRED": 383,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 553,
+      "CONNECTED_UNTESTED": 554,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 273,
+      "ENGINE_CONNECTION_REQUIRED": 272,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -8049,8 +8049,7 @@
       "name": "アメタマ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50340.json"
     },
     {
@@ -9173,8 +9172,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47099.json"
     },
     {
@@ -14098,8 +14096,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48678.json"
     },
     {
@@ -15515,8 +15512,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49382.json"
     },
     {
@@ -21342,21 +21338,21 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1300,
-        "MECHANIC_REQUIRED": 557,
+        "ENGINE_CONNECTED": 1302,
+        "MECHANIC_REQUIRED": 555,
         "ENGINE_CONNECTION_REQUIRED": 7
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1259,
-        "MECHANIC_REQUIRED": 430,
+        "ENGINE_CONNECTED": 1262,
+        "MECHANIC_REQUIRED": 427,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 553,
-        "MECHANIC_REQUIRED": 308,
+        "ENGINE_CONNECTED": 554,
+        "MECHANIC_REQUIRED": 307,
         "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21366,7 +21362,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3750,
-    "unconnected": 1323
+    "engineConnected": 3756,
+    "unconnected": 1317
   }
 }
