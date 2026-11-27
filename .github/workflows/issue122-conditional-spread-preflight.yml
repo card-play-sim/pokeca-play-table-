@@ -1,0 +1,70 @@
+name: Issue122 conditional spread exact engine preflight
+on:
+  push:
+    branches: [battle/issue122-conditional-spread-20261127]
+    paths: ['.github/workflows/issue122-conditional-spread-preflight.yml', 'scripts/lib/shared-effect-engine-worker.cjs', 'engine/pokeca_reference_effect_runtime.cjs', 'engine/reference-effect-plans.cjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify-new-family:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      POKECA_ENGINE_SHARDS: '4'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact grammar and existing receipt contract
+        run: |
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          node tests/issue122-passive-context-grammar.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+      - name: Reuse saved official evidence for new compound family only
+        run: |
+          set -euo pipefail
+          mkdir -p work/compound-spread
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const ids=new Set(["47567","47984","47992","48919","47585","47987","47995","49103","46692","47126","48877","46256","46325","47335","48577","46450","48342","45733","50456"]);
+          const p='data/effect-extensions/intake.json',ext=JSON.parse(fs.readFileSync(p)),raw=require('./data/official-effect-intake/checkpoint.json').records;
+          const merged=new Map(ext.records.map(r=>[String(r.officialCardId),r]));
+          for(const r of raw)if(ids.has(String(r.officialCardId))&&!merged.has(String(r.officialCardId)))merged.set(String(r.officialCardId),r);
+          for(const id of ids)assert(merged.has(id),'MISSING_SAVED_OFFICIAL_EVIDENCE:'+id);
+          fs.writeFileSync(p,JSON.stringify({...ext,records:[...merged.values()]},null,2)+'\n');
+          fs.writeFileSync('work/compound-spread/ids.json',JSON.stringify([...ids]));
+          NODE
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+      - name: Execute every effect of newly compilable requested prints
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),B=require('./scripts/lib/shared-effect-batch.cjs');
+          const S=require('./scripts/stage-card-auto-connect.cjs');
+          const ids=require('./work/compound-spread/ids.json'),records=new Map(require('./data/effect-extensions/compiled.json').records.map(r=>[String(r.officialCardId),r]));
+          (async()=>{
+            const slots=ids.flatMap(id=>records.has(id)?S.requiredSlots(records.get(id)):[]);
+            const evidence=slots.filter(s=>s.effectText);
+            const results=evidence.length?await S.executeEvidenceShards(evidence,'work/compound-spread'):new Map();
+            const W=require('./scripts/lib/shared-effect-engine-worker.cjs');
+            for(const slot of slots.filter(s=>!s.effectText&&s.printedDamage!==undefined)){const row=W.verifyPrintedDamage(slot);results.set(row.slot,row);}
+            const prints=ids.map(id=>({id,compiled:records.has(id),slots:slots.filter(s=>String(s.officialCardId)===id).map(s=>({slot:B.slot(s),result:results.get(B.slot(s))||{status:'BLOCKED',reason:'MISSING_RECEIPT'}}))}));
+            const qualified=prints.filter(r=>r.compiled&&r.slots.length&&r.slots.every(s=>s.result.status==='SUCCEEDED')).map(r=>r.id);
+            const out={state:'ENGINE_PREFLIGHT_ONLY_NOT_PUBLIC_APPROVAL',qualified,prints};
+            fs.writeFileSync('work/compound-spread/result.json',JSON.stringify(out,null,2)+'\n');
+            console.log('COMPOUND_SPREAD_ENGINE_RESULT',JSON.stringify({qualified,blocked:prints.filter(r=>!qualified.includes(r.id)).map(r=>({id:r.id,compiled:r.compiled,failures:r.slots.filter(s=>s.result.status!=='SUCCEEDED').map(s=>({slot:s.slot,reason:s.result.reason}))}))}));
+          })().catch(e=>{console.error(e);process.exitCode=1});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compound-spread-engine-evidence
+          path: work/compound-spread/
+          if-no-files-found: warn
