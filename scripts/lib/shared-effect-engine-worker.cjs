@@ -87,6 +87,19 @@ function massTransferCandidate(c,plan){
  if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
  return true;
 }
+// Try every eligible physical print in deterministic priority order.
+// ensure() is transactional on failure; no fabricated cards or failed
+// reservations may enter a fixture. A failed preferred print is not proof
+// that the requested resource cannot be constructed.
+function firstReservable(candidates,predicate,ensure,excludedId){
+ const seen=new Set();
+ for(const record of candidates){
+  if(!record||record.officialCardId===excludedId||seen.has(record.officialCardId))continue;
+  seen.add(record.officialCardId);
+  if(predicate(record)&&ensure(record))return record;
+ }
+ return null;
+}
 // Test manifests use only real, exact registered official prints. Reserve
 // physical cards before the scenario allocates prizes, bench and attack costs.
 // This helper never changes a release manifest or marks a print as verified.
@@ -138,14 +151,18 @@ function fixtureResources(manifest,deckIndex,source,e){
   return existing.find(r=>r.officialCardId!==source.officialCardId&&predicate(r))||legal.find(predicate);
  }
  function reserve(predicate,zone,side=0){
-  const index=side===0?deckIndex:1-deckIndex,record=pick(predicate,index);
-  if(!ensure(index,record))return null;
+  const index=side===0?deckIndex:1-deckIndex;
+  const existing=manifest.decks[index].cards.map(lookup).filter(Boolean);
+  const record=firstReservable([...existing,...legal],predicate,r=>ensure(index,r),source.officialCardId);
+  if(!record)return null;
   requirements.push({side,zone,printId:record.officialCardId});return record;
  }
  const mon=(r,type,stage)=>r.category==='pokemon'&&(!type||r.facts.types.includes(type))&&(stage===null||stage===undefined||stage==='evolved'&&r.facts.stage>0||r.facts.stage===stage);
  const isBasicEnergy=r=>r.category==='energy'&&r.mainPlan?.mechanic==='BASIC_ENERGY';
  const vanilla=r=>r.category==='pokemon'&&r.facts.basic&&r.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
- const reserveEnergy=(type,count,index=deckIndex)=>ensure(index,pick(r=>isBasicEnergy(r)&&(!type||typeOf(r)===type),index),count);
+ const reserveEnergy=(type,count,index=deckIndex)=>!!firstReservable(
+  [...manifest.decks[index].cards.map(lookup).filter(Boolean),...legal],
+  r=>isBasicEnergy(r)&&(!type||typeOf(r)===type),r=>ensure(index,r,count),source.officialCardId);
  const ensureAttackCost=(record,index)=>{
   const attack=vanilla(record);if(!attack)return false;
   const needed=new Map();for(const type of attack.cost)needed.set(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type,(needed.get(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type)||0)+1);
@@ -3968,6 +3985,7 @@ function verifyPrintedDamage(evidence) {
   }
 }
 module.exports = {
+  firstReservable,
   prepare,
   effectOption,
   verifyCase,
