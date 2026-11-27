@@ -2825,8 +2825,8 @@ function verifyCase(t, e) {
     assert(resolved.bench.some(c=>c.id===other.active.id));
     assert.deepEqual(S.identities(before),S.identities(after));
     const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
-    const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.deepEqual(late.getSnapshot(),closed);
-    assert.equal(p.dispatch('you',action).ok,false);assert.deepEqual(p.getSnapshot(),after);
+    const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.equal(JSON.stringify(late.getSnapshot()),JSON.stringify(closed));
+    assert.equal(p.dispatch('you',action).ok,false);assert.equal(JSON.stringify(p.getSnapshot()),JSON.stringify(after));
   }
   if(e.plan.mechanic==="ABILITY_SWITCH_OWN"){
     const action=t.action||o.action,own=before.players[0],resolved=after.players[0];
