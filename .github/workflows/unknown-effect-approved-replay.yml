@@ -152,6 +152,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
       actions: read
     steps:
       - uses: actions/checkout@v4
@@ -177,4 +178,12 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "Verified approved unknown-effect replay candidate $GITHUB_RUN_ID"
           git push origin "HEAD:refs/heads/$branch"
-          gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "Approved exact patch; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "Approved exact patch; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
+            echo "Draft PR opened. Use the permitted GitHub connection to review and trigger normal CI for this exact head." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Actions token cannot create the PR; preserved verified branch for permitted GitHub connection."
+          fi
+          commit="$(git rev-parse HEAD)"
+          body=$(printf 'AUTO_CONNECT_CANDIDATE_READY\nKind: APPROVED_UNKNOWN_REPLAY\nBranch: %s\nHead: %s\nBase: %s\nWorkflow: %s/%s/actions/runs/%s\nUse the permitted GitHub connection to create or find the exact candidate PR, independently review, run all required CI, then merge and verify Pages bytes and published gameplay. Never count a branch or draft as published.\n' "$branch" "$commit" "$(git rev-parse HEAD^)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID")
+          gh api "repos/$GITHUB_REPOSITORY/issues/122/comments" --method POST -f body="$body"
+          printf '%s\n' "$body" >> "$GITHUB_STEP_SUMMARY"
