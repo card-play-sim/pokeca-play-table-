@@ -104,11 +104,14 @@ jobs:
           if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then
             exit 0
           fi
-          ready="$(node scripts/local-unknown-effect-generator.cjs --reviewed-probe "$RUNNER_TEMP/unknown-worklist.json")"
-          case "$ready" in
-            1) echo "MODEL_REVIEWED_ONLY=1" >> "$GITHUB_ENV"; echo "Using reviewed composition without model setup." ;;
-            0) echo "No untried reviewed composition. Use local inference." ;;
-            *) echo "Invalid reviewed probe output" >&2; exit 1 ;;
+          route="$(node scripts/local-unknown-effect-generator.cjs --route-probe "$RUNNER_TEMP/unknown-worklist.json" "$RUNNER_TEMP/model-artifacts/route.json")"
+          case "$route" in
+            REVIEWED) echo "MODEL_REVIEWED_ONLY=1" >> "$GITHUB_ENV"; echo "Using reviewed composition without model setup." ;;
+            MODEL) echo "Source-verified feasible model batch exists." ;;
+            NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP|NO_BATCH_WITHIN_LIMIT)
+              echo "$route: no executable group in this checkpoint; not a completion receipt." >> "$GITHUB_STEP_SUMMARY"
+              exit 1 ;;
+            *) echo "Invalid route probe output" >&2; exit 1 ;;
           esac
       - name: Build pinned local CPU inference and verify public model bytes
         if: env.MODEL_REVIEWED_ONLY != '1'
