@@ -1061,6 +1061,9 @@ function attackMetric(plan,own,other){
  if(plan.metric==='bothNameContainsCount')return [...field(own),...field(other)].filter(c=>[plan.name,plan.secondName].some(n=>record(c).name.includes(n))).length;
  if(plan.metric==='ownBenchNamedCount')return own.bench.filter(c=>record(c).name===plan.name).length;
  if(plan.metric==='ownBenchTypedCounters')return own.bench.filter(c=>record(c).facts.types.includes(plan.type)).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownBenchTeamCounters')return own.bench.filter(c=>record(c).name.startsWith(plan.team+'の')).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownNamedTeamEnergy')return field(own).filter(c=>record(c).name.startsWith(plan.team+'の')).flatMap(energyUnits).filter(unit=>unit.includes(plan.type)).length;
+ if(plan.metric==='ownBenchWithTypedEnergy')return own.bench.filter(c=>energyUnits(c).some(unit=>unit.includes(plan.type))).length;
  if(plan.metric==='ownBenchNamedCounters')return own.bench.filter(c=>record(c).name===plan.name).reduce((n,c)=>n+(c.damage||0)/10,0);
  if(plan.metric==='ownAttachedBasicCards')return own.active.energyCards.filter(basicEnergy).length;
  if(plan.metric==='ownAttachedSpecialCards')return own.active.energyCards.filter(c=>c.isSpecial).length;
@@ -1486,7 +1489,7 @@ function applyPlan(g,actor,card,effect,action){
   }
   case 'SCALED_ATTACK_DAMAGE':
    if(plan.metric==='opponentHandTrainerCount')event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
-   damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
+   damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)),{skipWeakness:plan.skipWeakness===true,skipResistance:plan.skipResistance===true});
    break;
   case 'ATTACK_RESET_HAND':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));

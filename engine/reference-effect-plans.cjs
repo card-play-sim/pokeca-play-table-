@@ -309,6 +309,16 @@ function additionalAttackPlan(entry,text){
  const benchTypedCounters=text.match(/^自分のベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモン全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。$/);
  if(benchTypedCounters&&printed===benchTypedCounters[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchTypedCounters',type:benchTypedCounters[1],unit:Number(benchTypedCounters[2]),base:0,sharedWording:true};
+ // Exact named-team and attached-energy board counts.
+ const teamCounters=text.match(/^自分のベンチの「(ロケット団|エリカ|ヒビキ|カスミ|シロナ|リーリエ|ホップ|N|ナンジャモ|ダイゴ|ペパー)のポケモン」全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。(このワザのダメージは弱点を計算しない。)?$/);
+ if(teamCounters&&printed===teamCounters[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchTeamCounters',team:teamCounters[1],unit:Number(teamCounters[2]),base:0,...(teamCounters[3]?{skipWeakness:true}:{}),sharedWording:true};
+ const teamEnergy=text.match(/^自分の「(ロケット団|エリカ|ヒビキ|カスミ|シロナ|リーリエ|ホップ|N|ナンジャモ|ダイゴ|ペパー)のポケモン」全員についている\[([草炎水雷超闘悪鋼])\]エネルギーの数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(teamEnergy&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownNamedTeamEnergy',team:teamEnergy[1],type:teamEnergy[2],unit:Number(teamEnergy[3]),base,sharedWording:true};
+ const benchEnergy=text.match(/^\[([草炎水雷超闘悪鋼])\]エネルギーがついている自分のベンチポケモンの数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(benchEnergy&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchWithTypedEnergy',type:benchEnergy[1],unit:Number(benchEnergy[2]),base,sharedWording:true};
  const benchNamedCounters=text.match(/^自分のベンチの「([^「」]{1,40})」全員にのっているダメカンの数×([1-9]\d{0,2})ダメージ。$/);
  if(benchNamedCounters&&printed===benchNamedCounters[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchNamedCounters',name:benchNamedCounters[1],unit:Number(benchNamedCounters[2]),base:0,sharedWording:true};
