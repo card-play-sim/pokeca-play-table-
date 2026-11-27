@@ -373,3 +373,18 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(omitRejectedPatch('ENGINE_EXECUTION_FAILED'),false);
  console.log('REJECTED_CONTEXT_COPY_NOT_REUSED PASS');
 }
+
+{
+ const {validateCompilerHelperUse,omitRejectedPatch}=require('../scripts/local-unknown-effect-generator.cjs');
+ const file='engine/reference-effect-plans.cjs';
+ const base={[file]:"function plan(entry,kind){\n return null;\n}"};
+ const helper="const sharedEffect = (entry, kind, text) => {\n return {mechanic:'IMMUNE_TO_OPPONENT_EFFECTS'};\n};";
+ const dead={[file]:base[file].replace(' return null;',helper+'\n return null;')};
+ const wired={[file]:base[file].replace(' return null;',helper+'\n return sharedEffect(entry,kind,entry.text);')};
+ assert.throws(()=>validateCompilerHelperUse(base,dead),/MODEL_UNCALLED_COMPILER_HELPER:sharedEffect/);
+ assert.doesNotThrow(()=>validateCompilerHelperUse(base,wired));
+ assert.doesNotThrow(()=>validateCompilerHelperUse(base,base));
+ assert.equal(repairProfile('MODEL_UNCALLED_COMPILER_HELPER:sharedEffect').type,'COMPILE');
+ assert.equal(omitRejectedPatch('MODEL_UNCALLED_COMPILER_HELPER:sharedEffect'),true);
+ console.log('PRODUCTION_DISCONNECTED_COMPILER_HELPER_REJECTED PASS');
+}
