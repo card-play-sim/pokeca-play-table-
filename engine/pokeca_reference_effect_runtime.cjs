@@ -2015,9 +2015,13 @@ function afterAction(g,before,actor,action){
 }
 function onEndTurn(g,actor){
  if(!g.referenceEffectValidation)return;
+ let changed=false;
  for(const c of field(player(g,actor)))for(const energy of [...c.energyCards])if(record(energy)?.mainPlan?.mechanic==='IGNITION'){
-  c.energyCards.splice(c.energyCards.indexOf(energy),1);player(g,actor).discard.push(energy);event(g,actor,'DISCARD',{cardIds:[id(energy)]});
+  c.energyCards.splice(c.energyCards.indexOf(energy),1);player(g,actor).discard.push(energy);event(g,actor,'DISCARD',{cardIds:[id(energy)]});changed=true;
  }
+ // Expiring attached energy changes continuous HP before the turn transition
+ // and its knockout checks, not only at the next UI refresh.
+ if(changed)refresh(g);
 }
 // Produce complete effect-specific choices only; the existing inspector checks every candidate.
 function abilityActions(g,actor,card){return (record(card)?.abilities||[]).filter(a=>!passive.has(a.plan?.mechanic)).map(a=>({kind:'ability',label:a.name,action:{type:'use_ability',sourceInstanceId:id(card),abilityId:a.effectId},requests:requests(g,actor,card,a),referenceEffect:a}));}
