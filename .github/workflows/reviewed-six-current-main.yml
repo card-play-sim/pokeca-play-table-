@@ -8,7 +8,7 @@ permissions:
   actions: read
 jobs:
   synthesize:
-    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public' && github.event.head_commit.message != 'Preserve verified six-print release in existing PR'
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
@@ -273,3 +273,67 @@ jobs:
           path: ${{ runner.temp }}/model-artifacts/
           if-no-files-found: warn
           retention-days: 7
+
+  preserve:
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.head_commit.message == 'Preserve verified six-print release in existing PR'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 6f6f9f841f25adbc0b63a2238c51b932c94fcf7a
+          fetch-depth: 0
+      - name: Preserve the already verified exact six-print candidate in existing PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "6f6f9f841f25adbc0b63a2238c51b932c94fcf7a"
+          test "$(git ls-remote origin refs/heads/automation/reviewed-bench-search-next-20261128 | cut -f1)" = "c64385f246c21de769d46f8c16463461eb1b162c"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46079045923" | jq -e --arg repo "$GITHUB_REPOSITORY" '.conclusion=="success" and .head_sha=="5b261c5ea459cf90eb60d80b2d6a123c6291edf9" and .head_repository.full_name==$repo and .path==".github/workflows/reviewed-six-current-main.yml"'
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15236400810/zip" > "$RUNNER_TEMP/six.zip"
+          printf '%s  %s\n' 'ac48bd9ebdcfb4f687386cd607f59840187044e4b58132feed9a18bc2f5c8c45' "$RUNNER_TEMP/six.zip" | sha256sum -c -
+          git fetch origin c64385f246c21de769d46f8c16463461eb1b162c 9c77aab1934ad3917cc680dfe0642474311a997d
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git merge --ours --no-commit --no-ff c64385f246c21de769d46f8c16463461eb1b162c
+          python - "$RUNNER_TEMP/six.zip" <<'PY'
+          import sys,zipfile,json,hashlib,subprocess,tempfile
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from importlib import import_module
+          e=import_module('export-unknown-replay-candidate')
+          base='9c77aab1934ad3917cc680dfe0642474311a997d'
+          target={'46220','47099','48678','49374','49382','50340'}
+          source={'engine/reference-effect-plans.cjs','engine/pokeca_reference_effect_runtime.cjs','scripts/lib/shared-effect-engine-worker.cjs','scripts/local-unknown-effect-generator.cjs','tests/local-unknown-effect-generator.test.cjs'}
+          expected=e.FIXED|e.evidence_paths(target)|source
+          def read(z,n):
+              info=z.getinfo(n); assert 0<info.file_size<64*1024*1024
+              return z.read(info)
+          with zipfile.ZipFile(sys.argv[1]) as z:
+              manifest=json.loads(read(z,'release-candidate/manifest.json'))
+              assert manifest['base']==base and set(manifest['ids'])==target and manifest['state']=='INDEPENDENTLY_REVIEWED_CANDIDATE_NOT_RELEASED' and manifest['publicBattleVerified']==[] and set(manifest['files'])==expected
+              engine=json.loads(read(z,'attempt-1/quarantine-result.json')); browser=json.loads(read(z,'attempt-1/browser-result.json'))
+              assert set(engine['sandboxQualified'])==set(browser['sandboxBrowserQualified'])==target and engine['changedPriorIds']==[] and engine['targetFailures']==[] and browser['fullDeckAIMatchVerified'] is True
+              files={p:read(z,'release-candidate/files/'+p) for p in expected}
+          assert all(hashlib.sha256(data).hexdigest()==manifest['files'][p] for p,data in files.items())
+          old=e.index(e.git('.','show','HEAD:data/effect-extensions/compiled.json')); new=e.index(files['data/effect-extensions/compiled.json']); assert e.unchanged_delta(old,new)==target
+          prior=e.index(e.git('.','show','HEAD:data/effect-extensions/intake.json')); current=e.index(files['data/effect-extensions/intake.json']); saved=e.index(e.git('.','show','HEAD:data/official-effect-intake/checkpoint.json')); assert not e.verified_intake_delta(prior,current,old,saved,target)
+          for p,data in files.items():
+              dest=Path(p); assert not dest.is_symlink() and dest.resolve().is_relative_to(Path.cwd())
+              if dest.exists():
+                  before=e.git('.','show',base+':'+p)
+                  if dest.read_bytes()!=before:
+                      assert p in {'scripts/local-unknown-effect-generator.cjs','tests/local-unknown-effect-generator.test.cjs'},p
+                      with tempfile.TemporaryDirectory() as tmp:
+                          t=Path(tmp); (t/'base').write_bytes(before); (t/'candidate').write_bytes(data)
+                          data=subprocess.check_output(['git','merge-file','-p',str(dest),str(t/'base'),str(t/'candidate')])
+              dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(data)
+          subprocess.run(['git','add','--',*sorted(expected)],check=True)
+          PY
+          git diff --cached --check
+          git commit -m 'Preserve six verified candidate prints on current main; normal CI required'
+          git push origin "HEAD:refs/heads/automation/reviewed-bench-search-next-20261128"
+          echo "Existing PR #259 candidate head $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
