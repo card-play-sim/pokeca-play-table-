@@ -1,7 +1,7 @@
 name: Unknown effect approved replay entry
 on:
   workflow_run:
-    workflows: ["Unknown effect verified review handoff"]
+    workflows: ["Unknown effect verified review handoff", "Incremental official effect intake"]
     types: [completed]
   schedule:
     - cron: '*/5 * * * *'
@@ -35,7 +35,7 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner && !inputs.release_only) ||
-        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) ||
+        (github.event_name == 'workflow_run' && github.event.workflow_run.path == '.github/workflows/unknown-effect-review-handoff.yml' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) ||
         (github.event_name == 'issue_comment' &&
          github.event.issue.number == 122 &&
          !github.event.issue.pull_request &&
@@ -299,7 +299,14 @@ jobs:
   release:
     # The approved main workflow enables only independently reproduced
     # compiler-only candidates. GitHub review and CI protection still apply.
-    if: (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.release_only && github.actor == github.repository_owner)) && github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
+    if: >-
+      (github.event_name == 'schedule' ||
+       (github.event_name == 'workflow_dispatch' && inputs.release_only && github.actor == github.repository_owner) ||
+       (github.event_name == 'workflow_run' && github.event.workflow_run.path == '.github/workflows/continue-official-effects.yml' &&
+        github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) &&
+      github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' &&
+      (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     concurrency:
