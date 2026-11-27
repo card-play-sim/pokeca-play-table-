@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),crypto=require('node:crypto');
-const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion}=require('../scripts/local-unknown-effect-generator.cjs');
+const {applyEdits,exactGroup,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal}=require('../scripts/local-unknown-effect-generator.cjs');
 const path='engine/reference-effect-plans.cjs',before='const reviewedUniqueAnchor = true;';
 const sources={[path]:before};
 assert.equal(applyEdits(sources,{edits:[{path,before,after:before+'\nconst newEffect = true;'}]})[path],before+'\nconst newEffect = true;');
@@ -77,3 +77,87 @@ async function transportTest(){
  console.log('LOCAL_UNKNOWN_GENERATOR_HTTP PASS');
 }
 transportTest().catch(e=>{console.error(e);process.exitCode=1;});
+
+// The model actually returned fenced JSON in run 45825665165.
+const modelProposal={edits:[{path,before,after:before+'\nconst newEffect = true;'}]};
+const json=JSON.stringify(modelProposal);
+const fence='```';
+assert.deepEqual(parseModelProposal(json,'stop'),modelProposal);
+assert.deepEqual(parseModelProposal(fence+'json\n'+json+'\n'+fence,'stop'),modelProposal);
+assert.deepEqual(parseModelProposal(fence+'\r\n'+json+'\r\n'+fence,'stop'),modelProposal);
+assert.throws(()=>parseModelProposal(json,'length'),/MODEL_OUTPUT_TRUNCATED/);
+assert.throws(()=>parseModelProposal('explanation\n'+fence+'json\n'+json+'\n'+fence,'stop'));
+assert.throws(()=>parseModelProposal(fence+'json\n'+json+'\n'+fence+'\n'+fence+'json\n'+json+'\n'+fence,'stop'));
+assert.throws(()=>parseModelProposal('[]','stop'),/MODEL_PROPOSAL_SCHEMA/);
+assert.throws(()=>applyEdits(sources,parseModelProposal('{"edits":[]}','stop')),/INVALID_EDIT_COUNT/);
+assert.throws(()=>applyEdits(sources,parseModelProposal(JSON.stringify({edits:[{path:'.github/workflows/unsafe.yml',before,after:'no'}]}),'stop')),/PROTECTED_PATH/);
+console.log('LOCAL_UNKNOWN_GENERATOR_RESPONSE_FORMAT PASS');
+
+// Use the exact errors observed in run 45825665165 and verify the next repair differs.
+const timeoutRepair=repairProfile('Error: LOCAL_MODEL_TRANSPORT:LOCAL_MODEL_DEADLINE',2);
+assert.equal(timeoutRepair.type,'TRANSPORT');assert.equal(timeoutRepair.groups,1);assert(timeoutRepair.maxTokens<repairProfile().maxTokens);
+assert.equal(repairProfile('SyntaxError: Unexpected token backtick',2).type,'FORMAT');
+assert.equal(repairProfile('MODEL_OUTPUT_TRUNCATED',2).type,'TRUNCATED');
+assert.equal(repairProfile('NONUNIQUE_OR_STALE_ANCHOR',2).type,'ANCHOR');
+assert.equal(repairProfile('PROTECTED_PATH',2).type,'PROTECTED');
+assert.equal(repairProfile('AssertionError: expected battle state',2).type,'ENGINE');
+assert.equal(repairProfile('').type,'INITIAL');
+console.log('LOCAL_UNKNOWN_ADAPTIVE_REPAIR PASS');
+
+// Synthetic excerpt labels were selected by all four model replies in run 45847577140.
+const realLine=' const deckEnergyCount = player.deck.length;';
+const fixtureSource={ [path]:['function plan(text){',realLine,' const repeatedEnergyCount = player.deck.length;',' const repeatedEnergyCount = player.deck.length;','}'].join('\n') };
+const anchorMap=modelAnchors(fixtureSource,{exampleOfficialText:'山札のエネルギー'},4500);
+const selectedAnchor=[...anchorMap].find(([,e])=>e.before===realLine);
+assert(selectedAnchor,'REAL_SOURCE_ANCHOR_REQUIRED');
+assert(![...anchorMap.values()].some(e=>e.before.includes('source lines')||e.before.includes('repeatedEnergyCount')));
+const resolved=resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],after:realLine+'\n const newVerifiedCount = deckEnergyCount;'}]},anchorMap);
+assert(applyEdits(fixtureSource,resolved)[path].includes('newVerifiedCount'));
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:'// source lines 216-231',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],path:'.github/workflows/unsafe.yml',after:'fake'}]},anchorMap),/PROTECTED_PATH/);
+assert.throws(()=>resolveAnchorProposal({edits:[{anchor:selectedAnchor[0],before:'different',after:'fake'}]},anchorMap),/NONUNIQUE_OR_STALE_ANCHOR/);
+console.log('LOCAL_UNKNOWN_EXACT_ANCHOR_IDS PASS');
+
+// Exact receipt failure selects the component requiring repair, not a generic retry.
+assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"reason":"TARGET_NOT_COMPILED"}]}',2).type,'COMPILE');
+assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"reason":"ENGINE_EXECUTION_FAILED"}]}',2).type,'EXECUTION');
+assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"PRIOR_RECORD_CHANGED"}',2).type,'INTEGRITY');
+console.log('LOCAL_UNKNOWN_RECEIPT_REPAIR_ROUTING PASS');
+
+// Compact repair may expose one group only: never adopt or count the other groups.
+const {retryBatch,attemptScope}=require('../scripts/local-unknown-effect-generator.cjs');
+const fullScope=attemptScope([aa,bb,cc],{groups:2});
+assert.deepEqual(fullScope.groups.map(x=>x.sharedTaskId),[mkId(1),mkId(2)]);
+assert.deepEqual(fullScope.records.map(x=>String(x.officialCardId)),['1','2','3','4']);
+const narrowScope=attemptScope([aa,bb,cc],{groups:1});
+assert.deepEqual(narrowScope.records.map(x=>String(x.officialCardId)),['1','2','3']);
+const prevScope={fingerprint:fp,groups:fullScope.groups,targetIds:fullScope.records.map(x=>String(x.officialCardId))};
+assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp).map(x=>x.group.sharedTaskId),[mkId(1),mkId(2)]);
+assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp2),[]);
+assert.deepEqual(retryBatch([cc],prevScope,fp),[]);
+assert.deepEqual(retryBatch([aa,bb],{...prevScope,targetIds:['1','2','3']},fp).map(x=>x.group.sharedTaskId),[mkId(1)]);
+console.log('LOCAL_UNKNOWN_EXACT_RETRY_SCOPE PASS');
+
+// Run the production repair loop against a controlled first-invalid, then
+// corrected proposal. Parsing is not execution; this proves orchestration only.
+const {focusFailedBatch,validateCandidateSyntax,generateWithRepair}=require('../scripts/local-unknown-effect-generator.cjs');
+assert.deepEqual(focusFailedBatch([aa,bb],{targetFailures:[{id:'4'}]}).map(x=>x.group.sharedTaskId),[mkId(2),mkId(1)]);
+assert.deepEqual(focusFailedBatch([aa,bb],{targetFailures:[{id:'999'}]}),[aa,bb]);
+assert.throws(()=>validateCandidateSyntax(sources,{[path]:before+'\nconst broken = ;'}),/CANDIDATE_JS_SYNTAX/);
+assert.equal(repairProfile('CANDIDATE_JS_SYNTAX:engine/example.cjs:Unexpected token',2).type,'SYNTAX');
+async function repairLoopTest(){
+ const calls=[],rejections=[];
+ const result=await generateWithRepair([aa,bb],sources,{
+  propose:async(groups,src,feedback,profile,previousPatch)=>{
+   calls.push({groups:groups.map(g=>g.sharedTaskId),type:profile.type,feedback,previousPatch});
+   return {edits:[{path,before,after:before+(calls.length===1?'\nconst broken = ;':'\nconst repaired = true;')}]};
+  },onReject:(n,reason)=>rejections.push([n,reason])});
+ assert.equal(calls.length,2);assert.equal(rejections.length,1);
+ assert.equal(calls[1].type,'SYNTAX');assert(calls[1].feedback.includes('CANDIDATE_JS_SYNTAX'));
+ assert(calls[1].previousPatch.includes('broken'));assert.deepEqual(calls[1].groups,[mkId(1)]);
+ assert.equal(result.changed[path],before+'\nconst repaired = true;');assert.equal(sources[path],before);
+ const failed=await generateWithRepair([aa],sources,{propose:async()=>({edits:[]})});
+ assert.equal(failed.changed,undefined);assert(failed.feedback.includes('INVALID_EDIT_COUNT'));
+ console.log('LOCAL_UNKNOWN_PRODUCTION_REPAIR_LOOP PASS');
+}
+repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
