@@ -53,14 +53,17 @@ function excerpts(source,group,file,limit=4500){
  const words=['ダメカン','エネルギー','進化','山札','手札','ベンチ','トラッシュ','サイド','コイン','きぜつ','回復','入れ替え','特性','ワザ'];
  const mapped={'ダメカン':'counter','エネルギー':'energy','進化':'evol','山札':'deck','手札':'hand','ベンチ':'bench','トラッシュ':'discard','サイド':'prize','コイン':'coin','きぜつ':'knock','回復':'heal','入れ替え':'switch','特性':'ability','ワザ':'attack'};
  const selected=words.filter(w=>group.exampleOfficialText.includes(w));
- const ranked=lines.map((line,i)=>({i,score:selected.reduce((n,w)=>n+(line.includes(w)?5:line.toLowerCase().includes(mapped[w])?1:0),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.i-b.i);
+ const attackOnlyStart=lines.findIndex(l=>/^function additionalAttackPlan\(/.test(l));
+ const attackOnlyEnd=attackOnlyStart<0?-1:lines.findIndex((l,i)=>i>attackOnlyStart&&/^function /.test(l));
+ const wrongKind=i=>file.includes('plans')&&group.effectKind!=='attack'&&attackOnlyStart>=0&&i>=attackOnlyStart&&(attackOnlyEnd<0||i<attackOnlyEnd);
+ const ranked=lines.map((line,i)=>({i,score:selected.reduce((n,w)=>n+(line.includes(w)?5:line.toLowerCase().includes(mapped[w])?1:0),0)})).filter(x=>x.score>0&&!wrongKind(x.i)).sort((a,b)=>b.score-a.score||a.i-b.i);
  // Rank actual matches before generic entry points. Keep complete source
  // lines and deduplicate overlaps; never let unrelated early code use the budget.
  const windows=[...ranked.slice(0,8).map(({i})=>[Math.max(0,i-3),Math.min(lines.length,i+5)]),...ranges];
  const used=new Set(),chunks=[];let size=0;
  for(const [start,end] of windows){
   for(let i=start;i<end;i++){
-   if(used.has(i))continue;
+   if(used.has(i)||wrongKind(i))continue;
    const line=lines[i],extra=line.length+1;
    if(size+extra>limit)continue;
    used.add(i);size+=extra;
@@ -183,14 +186,14 @@ function parseModelProposal(raw,finishReason){
 // Never accept malformed or partially generated code as a successful patch.
 function repairProfile(feedback='',attempt=1){
  const reason=String(feedback);
- const type=/DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
+ const type=/EXTENSION_IMMUTABLE_SOURCE_CONFLICT|PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
+ /DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
  /MODEL_OUTPUT_TRUNCATED|finish_reason.*length/i.test(reason)?'TRUNCATED':
  /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT/i.test(reason)?'FORMAT':
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT|MODEL_ANCHOR_LABEL_LEAK/i.test(reason)?'ANCHOR':
  /MODEL_ARRAY_SEPARATOR_LOST/i.test(reason)?'SYNTAX':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
- /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
  /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
  /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
  /NO_LEGAL_VERIFICATION_FIXTURE/i.test(reason)?'FIXTURE':
@@ -204,7 +207,7 @@ function repairProfile(feedback='',attempt=1){
  FORMAT:'Previous output was not valid JSON. Use JSON string escaping, no markdown, no trailing commas, one complete object.',
  ANCHOR:'Previous edit anchor was stale or ambiguous. Choose an existing anchor ID from the supplied table. Do not copy line-number comments.',
  PROTECTED:'Only the allowed source paths may be edited; do not change policy, validation gates or workflow.',
- INTEGRITY:'The candidate changed or lost a protected record or receipt. Preserve all prior compiled records and fix source semantics; never edit data, receipts or gates.',
+ INTEGRITY:'The candidate changed or lost a protected record or receipt. Undo changes to existing grammar and plans. Add a separate exact new rule guarded by the official effect kind and complete text. Preserve all prior compiled records; never edit data, receipts or gates.',
  COMPILE:'The selected exact official text still did not compile. First implement its complete anchored grammar, then wire its matching runtime and worker. Do not accept a partial match or change unrelated plans.',
  FIXTURE:'The worker could not construct a legal verification action. Use the exact printed identity, evolution chain, turn/zone, resources and disabled reasons to repair fixture preparation. Do not weaken legality, fabricate resources or bypass positive and negative execution checks.',
  BROWSER:'The isolated browser gate failed. Repair actual legal actions, UI/AI parity and state transitions using the reported failure; never change browser tests or receipt gates.',
