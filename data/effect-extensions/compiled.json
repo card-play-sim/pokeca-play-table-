@@ -53319,6 +53319,90 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46240",
+      "name": "ブラックキュレムex",
+      "deckName": "ブラックキュレムex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46240",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046240_P_BURAKKUKIXYUREMUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アイスエイジ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "相手のバトルポケモンが[竜]ポケモンなら、そのポケモンをマヒにする。",
+          "effectId": "reference-46240-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "PARALYZED",
+            "defenderType": "竜",
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ブラックフロスト",
+          "cost": [
+            "水",
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-46240-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46240.json",
+        "sha256": "817ff629f41309d0dd589c650484e430c47d231d896bfda8527f784d68e01a0a",
+        "htmlSha256": "817ff629f41309d0dd589c650484e430c47d231d896bfda8527f784d68e01a0a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46242",
       "name": "クワッス",
       "deckName": "クワッス",
@@ -53705,6 +53789,90 @@
         "path": "data/effect-extensions/evidence/46280.json",
         "sha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
         "htmlSha256": "5898ed6c56046e1db71dcf0826fe54fb8e41db6b57ee1f1c8f5e4103aa2d569d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46323",
+      "name": "ブラックキュレムex",
+      "deckName": "ブラックキュレムex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46323",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046323_P_BURAKKUKIXYUREMUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アイスエイジ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "相手のバトルポケモンが[竜]ポケモンなら、そのポケモンをマヒにする。",
+          "effectId": "reference-46323-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "PARALYZED",
+            "defenderType": "竜",
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ブラックフロスト",
+          "cost": [
+            "水",
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-46323-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46323.json",
+        "sha256": "ad9a84cd1162a501def5dba08c6ae647ee3991032563863eea5eb38d891f3f0d",
+        "htmlSha256": "ad9a84cd1162a501def5dba08c6ae647ee3991032563863eea5eb38d891f3f0d",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -228224,6 +228392,90 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48920",
+      "name": "ブラックキュレムex",
+      "deckName": "ブラックキュレムex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48920",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048920_P_BURAKKUKIXYUREMUEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "アイスエイジ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "90",
+          "text": "相手のバトルポケモンが[竜]ポケモンなら、そのポケモンをマヒにする。",
+          "effectId": "reference-48920-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_APPLY_STATUS",
+            "commands": [
+              "DAMAGE",
+              "STATUS_CONDITION"
+            ],
+            "status": "PARALYZED",
+            "defenderType": "竜",
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ブラックフロスト",
+          "cost": [
+            "水",
+            "水",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "このポケモンにも30ダメージ。",
+          "effectId": "reference-48920-attack-1",
+          "plan": {
+            "mechanic": "RECOIL_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 230,
+        "evolvesFrom": null,
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48920.json",
+        "sha256": "d814823b8704e9158010e87878f529aae78a0821e80d4b8d32aeef8e0c3abec8",
+        "htmlSha256": "d814823b8704e9158010e87878f529aae78a0821e80d4b8d32aeef8e0c3abec8",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -230274,16 +230526,6 @@
     },
     {
       "officialCardId": "46186",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46240",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46323",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
