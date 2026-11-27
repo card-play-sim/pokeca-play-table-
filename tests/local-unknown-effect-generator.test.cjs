@@ -410,3 +410,24 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(omitRejectedPatch('TARGET_NOT_COMPILED'),true);
  console.log('PRODUCTION_WRONG_COMPILER_KIND_REPAIR PASS');
 }
+
+ // Cross-run learning adapts the existing generator, without accepting any
+ // candidate or borrowing another group's untrusted diagnostic text.
+{
+ const {adaptiveProfile}=require('../scripts/local-unknown-effect-generator.cjs');
+ const a={sharedTaskId:mkId(901)},b={sharedTaskId:mkId(902)},c={sharedTaskId:mkId(903)};
+ const first=recordHistory(null,[a,b],'NO_VALID_MODEL_PATCH',1,fp,'MODEL_OUTPUT_TRUNCATED private unrelated text');
+ assert.equal(adaptiveProfile(first,2).learned,undefined,'same run is only one observation');
+ const history=recordHistory(first,[c],'NO_VALID_MODEL_PATCH',2,fp2,'MODEL_OUTPUT_TRUNCATED another unrelated string');
+ const adapted=adaptiveProfile(history,3);
+ assert.deepEqual(adapted.learned,['TRUNCATED']);
+ assert.equal(adapted.groups,1);
+ assert(!adapted.instruction.includes('unrelated'));
+ assert.equal(adaptiveProfile(history,3,'ENGINE_EXECUTION_FAILED').type,'EXECUTION');
+ assert.equal(adaptiveProfile(history,3,'ENGINE_EXECUTION_FAILED').learned,undefined);
+ assert.equal(adaptiveProfile(history,3,'',2).learned,undefined);
+ const recovered=recordHistory(history,[{sharedTaskId:mkId(904)}],'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED',3,fp2,'');
+ assert.equal(adaptiveProfile(recovered,4).learned,undefined);
+ assert.equal(adaptiveProfile(history,2).learned,undefined,'future/current run must not inform itself');
+ console.log('ADAPTIVE_CROSS_RUN_GENERATION_REPAIR PASS');
+}
