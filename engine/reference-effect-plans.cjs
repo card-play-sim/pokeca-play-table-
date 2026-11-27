@@ -105,6 +105,8 @@ function additionalAttackPlan(entry,text){
  if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
  const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
  if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
+ if(/^\d+$/.test(printed)&&text==='ウラが出るまでコインを投げ、オモテの数ぶん、相手の山札を上からトラッシュする。')
+  return {mechanic:'COIN_UNTIL_TAILS_MILL',commands:['COIN_FLIP','DAMAGE','DISCARD'],base,sharedWording:true};
  const mill=text.match(/^コインを([1-9])回投げ、オモテの数ぶん、相手の山札を上からトラッシュする。$/);
  if(mill&&/^\d+$/.test(printed))return coinPlan(Number(mill[1]),base,{mill:true,when:'threshold',threshold:1});
  const allBonus=text.match(/^コインを([2-9])回投げ、すべてオモテなら、([1-9]\d{0,2})ダメージ追加。$/);
@@ -724,6 +726,9 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。')
   return {mechanic:'SUPPORTER_MEGA_HEAL_RETURN_ENERGY',commands:['HEAL','RETURN_TO_HAND'],sharedWording:true};
 
+ const coinGuard=generic.match(/^(?:このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、)?このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。$/);
+ if(kind==='ABILITY'&&coinGuard)return {mechanic:'PASSIVE_COIN_DAMAGE_GUARD',commands:['COIN_FLIP','PREVENT_DAMAGE'],energyType:coinGuard[1]||null,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンが、ワザのダメージを受けてきぜつするとき、自分はコインを1回投げる。オモテなら、このポケモンはきぜつせず、残りHPが「10」の状態で場に残る。')return {mechanic:'PASSIVE_COIN_KO_SURVIVAL',commands:['COIN_FLIP','ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
@@ -779,6 +784,10 @@ function plan(entry,kind){
  const twoChoice=generic.replace(/\s+/g,'');
  if(kind==='MAIN'&&entry.category==='supporter'&&twoChoice==='このカードは、2つの効果から1つを選んで使う。◆自分のバトルポケモンをベンチポケモンと入れ替える。◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。')
   return {mechanic:'TRAINER_SWITCH_OR_EX_V_BOOST',commands:['SWITCH','MODIFY_DAMAGE'],amount:30,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンがベンチにいるなら、自分の番に1回使える。このポケモンをバトルポケモンと入れ替える。')
+  return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],selfBenchOnly:true,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')
+  return {mechanic:'ABILITY_EVOLVE_FORCE_SWITCH',commands:['FORCE_SWITCH'],origin:'evolve',sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],sharedWording:true};
  const typedEvolution=generic.match(/^自分の番に1回使える。自分の山札から\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
@@ -801,6 +810,9 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_BASIC_DAMAGE_PROTECTION',commands:['DAMAGE','PREVENT_DAMAGE'],exceptType:'無色',sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。')
   return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンにエネルギーがついていないなら、このポケモンのにげるためのエネルギーは、すべてなくなる。')return {mechanic:'PASSIVE_EMPTY_ENERGY_RETREAT',commands:['MODIFY_RETREAT_COST'],sharedWording:true};
+ const typedRetreat=generic.match(/^このポケモンがいるかぎり、\[([草炎水雷超闘悪鋼])\]エネルギーがついている自分のポケモン全員のにげるためのエネルギーは、すべてなくなる。$/);
+ if(kind==='ABILITY'&&typedRetreat)return {mechanic:'PASSIVE_TYPED_TEAM_RETREAT',commands:['MODIFY_RETREAT_COST'],energyType:typedRetreat[1],sharedWording:true};
  const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&lowRetreat)
   return {mechanic:'TOOL_LOW_HP_RETREAT_DISCOUNT',commands:['MODIFY_RETREAT_COST'],amount:Number(lowRetreat[1]),threshold:Number(lowRetreat[2]),sharedWording:true};
@@ -901,6 +913,11 @@ function plan(entry,kind){
     &&String(entry.name||'')===namedLock[1])
   return {mechanic:'ATTACK_NAMED_NEXT_TURN_LOCK',commands:['DAMAGE','ADD_STATE'],attackName:namedLock[1]};
  // Match complete printed effect slots only; unknown official text still fails closed.
+ const typedStatus=generic.match(/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら、そのポケモンを(マヒ|やけど|どく|ねむり|こんらん)にする。$/);
+ if(kind==='ATTACK'&&printedAmount&&typedStatus){
+  const status={'マヒ':'PARALYZED','やけど':'BURNED','どく':'POISONED','ねむり':'ASLEEP','こんらん':'CONFUSED'}[typedStatus[2]];
+  return {mechanic:'ATTACK_APPLY_STATUS',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'STATUS_CONDITION'],status,defenderType:typedStatus[1],sharedWording:true};
+ }
  const directStatus=generic.match(/^相手のバトルポケモンを(やけど|どく|ねむり|こんらん)にする。$/);
  if(kind==='ATTACK'&&printedAmount&&directStatus){
   const status={'やけど':'BURNED','どく':'POISONED','ねむり':'ASLEEP','こんらん':'CONFUSED'}[directStatus[1]];

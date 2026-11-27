@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST']);
+const passive=new Set(['PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL','PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -130,6 +130,11 @@ function refresh(g){
  }
  for(const p of g.players){
   if(field(p).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='SKYLINE')))for(const c of field(p))if(record(c).facts.basic)c.retreatCost=0;
+  const freeTypes=new Set(field(p).flatMap(c=>enabledAbilities(g,c).filter(a=>a.plan.mechanic==='PASSIVE_TYPED_TEAM_RETREAT').map(a=>a.plan.energyType)));
+  for(const c of field(p)){
+   if(!(c.energyCards||[]).length&&enabledAbilities(g,c).some(a=>a.plan.mechanic==='PASSIVE_EMPTY_ENERGY_RETREAT'))c.retreatCost=0;
+   if(energyUnits(c).some(unit=>unit.some(type=>freeTypes.has(type))))c.retreatCost=0;
+  }
   // Continuous retreat modifiers are recomputed after each action.
   if(toolEnabled(g))for(const c of field(p)){
    const discount=(c.tools||[]).reduce((total,tool)=>{
@@ -232,14 +237,28 @@ function damage(g,actor,mon,amount,options={}){
  // Do not bypass protection on the bench or on the attacker's own Pokémon.
  const bypass=defender?.player.id!==actor&&defender?.player.active===mon&&!options.bench&&enabledAbilities(g,attacker).some(a=>a.plan.mechanic==='PASSIVE_IGNORE_ACTIVE_DEFENSE');
  if(bypass)options={...options,ignore:true};
- const value=damages(g,actor,mon,amount,options);
- const survival=!options.ignore&&defender?.player.id!==actor&&mon.damage===0&&value>=mon.hp&&enabledAbilities(g,mon).find(a=>a.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL');
+ let value=damages(g,actor,mon,amount,options);
+ const mayDefend=!options.ignore&&defender?.player.id!==actor&&value>0;
+ const abilities=mayDefend?enabledAbilities(g,mon):[];
+ for(const a of abilities.filter(a=>a.plan.mechanic==='PASSIVE_COIN_DAMAGE_GUARD'&&(!a.plan.energyType||energyUnits(mon).some(u=>u.includes(a.plan.energyType))))){
+  const heads=coin(g,defender.player.id);
+  event(g,defender.player.id,'ADD_STATE',{mechanic:a.plan.mechanic,targetInstanceId:id(mon),effectId:a.effectId,heads});
+  if(heads){event(g,defender.player.id,'PREVENT_DAMAGE',{targetInstanceId:id(mon),amount:value,effectId:a.effectId});value=0;break;}
+ }
+ let survival=mayDefend&&mon.damage===0&&value>=mon.hp&&abilities.find(a=>a.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL');
+ if(!survival&&mayDefend&&value>0&&mon.damage+value>=mon.hp){
+  for(const a of abilities.filter(a=>a.plan.mechanic==='PASSIVE_COIN_KO_SURVIVAL')){
+   const heads=coin(g,defender.player.id);
+   event(g,defender.player.id,'ADD_STATE',{mechanic:a.plan.mechanic,targetInstanceId:id(mon),effectId:a.effectId,heads});
+   if(heads){survival=a;break;}
+  }
+ }
  command(g,actor,{command:'DAMAGE',amount:value},{targetIds:[id(mon)]});
  // Survival is not damage reduction: retain the actual attack DAMAGE event
  // and leave exactly 10 HP before the normal knockout/prize resolution.
  if(survival&&mon.damage>=mon.hp){
   mon.damage=mon.hp-survival.plan.remainingHp;
-  event(g,defender.player.id,'ADD_STATE',{mechanic:'PASSIVE_FULL_HP_SURVIVAL',targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
+  event(g,defender.player.id,'ADD_STATE',{mechanic:survival.plan.mechanic,targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
  }
  if(value>0&&defender?.player.id!==actor&&defender?.player.active===mon){
   for(const a of enabledAbilities(g,mon).filter(a=>a.plan.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION')){
@@ -668,7 +687,7 @@ function requests(g,actor,card,effect){
   cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
   if(p.bench.length)out.at(-1).dependencies=[{kind:'countWhenSelected',key:'mode',value:'switch',count:1}];
  }
- if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
+ if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',effect.plan.selfBenchOnly?p.bench.filter(c=>id(c)===id(card)):p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
   const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
   deckRequest('cards',pool,0,Math.min(effect.plan.limit,pool.length));
@@ -704,7 +723,7 @@ function requests(g,actor,card,effect){
  if(m==='RECOVER_TYPED_DISCARD'){const pool=p.discard.filter(c=>typedRecoveryCandidate(c,effect.plan));cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
  if(m==='RECOVER_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='STRETCHER')cardRequest('cards',p.discard.filter(c=>c.kind==='pokemon'||basicEnergy(c)),1,1);
- if(['SWITCH','BOSS'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);
+ if(['SWITCH','BOSS','ABILITY_EVOLVE_FORCE_SWITCH'].includes(m))cardRequest('bench',m==='SWITCH'?p.bench:o.bench,1,1);
  if(m==='ENERGY_SWITCH'){
   cardRequest('energy',own.flatMap(c=>(c.energyCards||[]).filter(basicEnergy).map(e=>({...e,containerId:id(c)}))),1,1);cardRequest('attachTo',own.map(c=>({id:id(c),name:c.name})),1,1);out.at(-1).dependencies=[{kind:'excludeSelectedField',key:'energy',field:'containerId'}];
  }
@@ -774,6 +793,7 @@ function verifyRequests(g,actor,card,effect,action){
 // Never infer executable effects from a card name or an uncompiled description.
 function abilityOrigin(a){
  const text=String(a.text||'').replace(/\s+/g,'');
+ if(a.plan?.selfBenchOnly)return {zones:['BENCH'],entry:false};
  if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
@@ -803,7 +823,8 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,opponent(g,actor),a.plan),'NO_HAND_FLOW_CHANGE');
  if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
- if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
+ if(m==='ABILITY_SWITCH_OWN'){assert(p.bench.length>0,'NO_OWN_BENCH');if(a.plan.selfBenchOnly)assert(zone==='BENCH'&&p.bench.some(c=>id(c)===id(card)),'BENCH_SOURCE_REQUIRED');}
+ if(m==='ABILITY_EVOLVE_FORCE_SWITCH')assert(opponent(g,actor).bench.length>0,'NO_OPPONENT_BENCH');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');
@@ -1465,6 +1486,15 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,heads*plan.unit);
    break;
   }
+  case 'COIN_UNTIL_TAILS_MILL':{
+   let heads=0;
+   while(coin(g,actor))assert(++heads<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');
+   damage(g,actor,o.active,plan.base);
+   const moved=o.deck.splice(0,heads);
+   o.discard.push(...moved);
+   if(moved.length)event(g,actor,'DISCARD',{cardIds:moved.map(id),fromZone:'deck',owner:o.id});
+   break;
+  }
   case 'MASS_COIN_OUTCOME':{
    let heads=0;
    for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
@@ -1600,7 +1630,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='RECOIL_DAMAGE')command(g,actor,{command:'DAMAGE',amount:plan.amount},{targetIds:[id(card)]});
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
    if(m==='ATTACK_HEAL_TEAM')for(const own of field(p))heal(g,actor,own,plan.amount);
-   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon){
+   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon&&(!plan.defenderType||record(mon).facts.types.includes(plan.defenderType))){
     mon.statusCondition=plan.status;
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }
@@ -1943,7 +1973,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_DAMAGE':{const mon=find(g,ids('cards')[0]);assert(mon?.player===p&&Number.isSafeInteger(plan.amount)&&plan.amount>0,'INVALID_HEAL_TARGET');heal(g,actor,mon.card,plan.amount);break;}
   case 'COIN_FORCE_SWITCH':if(coin(g,actor))chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'SWITCH':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
-  case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
+  case 'ABILITY_EVOLVE_FORCE_SWITCH':case 'BOSS':chooseBenchSwitch(g,actor,o,ids('bench')[0]);break;
   case 'REPELLENT':assert(o.bench.length>0,'NO_OPPONENT_BENCH');g.pendingReferenceChoice={kind:'SWITCH',playerId:o.id,options:o.bench.map(id)};break;
   case 'RED_CARD':resetHand(g,o,3,true);break;
   case 'LILLIE':resetHand(g,p,p.prizes===6?8:6);break;
