@@ -23,7 +23,7 @@ def node(*args):
  if r.returncode:raise RuntimeError(r.stderr[-3000:] or r.stdout[-3000:])
  return r.stdout
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--retry-transient',action='store_true',help='Retry only collector exceptions, at most twice per ID');p.add_argument('--max-tasks',type=int,default=10000);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids');p.add_argument('--limit',type=int,default=100);p.add_argument('--adopt',action='store_true');p.add_argument('--retry-blocked',action='store_true');p.add_argument('--retry-transient',action='store_true',help='Retry only collector exceptions, at most twice per ID');p.add_argument('--max-tasks',type=int,default=10000);p.add_argument('--classification-only',action='store_true',help='Intermediate atomic candidate classification; mandatory final full replay remains');a=p.parse_args()
  assert 1<=a.limit<=10000 and a.max_tasks>0
  folder=ROOT/'data/official-effect-intake';folder.mkdir(exist_ok=True)
  file=folder/'checkpoint.json';prior=json.loads(file.read_text()) if file.exists() else {'schemaVersion':1,'records':[],'blocked':[]}
@@ -87,7 +87,7 @@ def main():
   for ident,row in records.items():merged.setdefault(ident,row)
   C.save(ROOT/'data/effect-extensions/intake.json',{**ext,'records':list(merged.values())})
   node('scripts/build-effect-extensions.cjs');node('scripts/sync-reference-effects.cjs')
- output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks));print(output)
+ output=node('scripts/connect-official-effect-intake.cjs',str(a.max_tasks),*(['--classification-only'] if a.classification_only else []));print(output)
  print(json.dumps({'discoveredIds':len(ids),'newAttempts':len(pending),'newNetworkRequests':len(network),'savedPagesReused':len(saved),'automaticParserRechecks':automatic_parser_rechecks,'transientRetries':transient_retries,'remainingIds':sum(i not in adopted and i not in records and i not in blocked for i in ids),'checkpoint':str(file.relative_to(ROOT))}))
 if __name__=='__main__':
  import fcntl
