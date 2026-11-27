@@ -1,0 +1,125 @@
+name: 進化時の残りHP限定入替・全対戦検証
+on:
+  push:
+    branches: [battle/issue122-evolve-low-hp-20261128]
+    paths: ['.github/workflows/issue122-evolve-low-hp.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-evolve-low-hp
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate common source and preserve published baseline
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 56d3c99a612d49fb83ee23bd8adb3e61e774a195 HEAD
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          mkdir -p artifacts
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Print exact evolution target diagnostics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          def visit(x,p):
+              if isinstance(x,dict):
+                  slot=x.get('slot')
+                  if isinstance(slot,str) and any(slot.startswith(i+':') for i in ('45941','46151','48736')) and x.get('status') in ('FAILED','BLOCKED'):
+                      print(p,json.dumps(x,ensure_ascii=False)[:5000])
+                  for v in x.values(): visit(v,p)
+              elif isinstance(x,list):
+                  for v in x: visit(v,p)
+          for p in pathlib.Path('work/card-auto-connect').rglob('*.json'):
+              try: visit(json.loads(p.read_text()),str(p))
+              except (ValueError,OSError): pass
+          PY
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const required=["45941","46151","48736"].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/evolve-low-hp-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PREVIOUSLY_QUALIFIED_PRINT_MISSING');
+          console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
+          assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          bash scripts/install-ci-chromium.sh
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="evolve-low-hp-$shard" python tests/test_control_013_browser.py >"artifacts/evolve-low-hp-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/evolve-low-hp-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=evolve-low-hp-full-ai python tests/test_control_013_browser.py >artifacts/evolve-low-hp-full-ai.log 2>&1 || { tail -n 30 artifacts/evolve-low-hp-full-ai.log; exit 1; }
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/evolve-low-hp-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/evolve-low-hp-candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: verified low HP evolution switch'
+          git push origin "HEAD:refs/heads/battle/issue122-evolve-low-hp-qualified-$GITHUB_RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evolve-low-hp-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
