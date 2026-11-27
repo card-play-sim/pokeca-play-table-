@@ -2,7 +2,7 @@ name: Issue122 active-entry energy qualification
 on:
   push:
     branches: [battle/issue122-active-entry-qualify-20261127]
-    paths: ['.github/workflows/issue122-active-entry-qualify.yml']
+    paths: ['.github/workflows/issue122-active-entry-qualify.yml', 'scripts/build-intake-verification-fixtures.cjs', 'tests/fixtures/control-009-extension-manifest.cjs']
   workflow_dispatch:
 concurrency:
   group: issue122-active-entry-qualification
