@@ -318,6 +318,8 @@ function enteredActiveThisTurn(g,owner,card){
 function boardBonusApplies(g,p,o,plan){
  const facts=record(o.active).facts;
  switch(plan.predicate){
+  case 'healedThisTurn':return g.history.some(e=>e.turnNumber===g.turnNumber&&e.details?.command==='HEAL'&&e.details.targetInstanceId===id(p.active)&&e.details.amount>0);
+  case 'evolvedFromThisTurn':return p.active.evolvedTurn===g.turnNumber&&(p.active.evolutionCards?.at(-2)?.validationReference?.officialName||p.active.validationBase?.validationReference?.officialName)===plan.name;
   case 'becameActive':return enteredActiveThisTurn(g,p,p.active);
   case 'sharedFieldType':return field(p).some(own=>field(o).some(other=>record(own).facts.types.some(type=>record(other).facts.types.includes(type))));
   case 'ownNamedEnergy':return p.active.energyCards.some(c=>record(c)?.category==='energy'&&record(c).name===plan.name);
@@ -378,6 +380,8 @@ function requests(g,actor,card,effect){
  };
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
+ if(m==='MASS_BOARD_BONUS'&&effect.plan.optional)
+  add('stadiumBonus','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュして追加ダメージ'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_OPTIONAL_RECOIL_BONUS')add('recoilBonus','CARD',[{id:'accept-recoil',name:'追加ダメージを与え、自分にもダメージ'}],0,1);
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,p.bench.length),Math.min(1,p.bench.length));
  if(m==='ATTACK_SWITCH_THEN_DAMAGE'){
@@ -505,7 +509,15 @@ function requests(g,actor,card,effect){
  }
  if(m==='SEARCH_REVEAL_TO_HAND_ATTACK'){
   const candidates=p.deck.filter(c=>attackSearchCandidate(c,effect.plan));
+  if(effect.plan.optional&&candidates.length)
+   add('searchMode','CARD',[{id:'search',name:'山札から選ぶ'},{id:'skip',name:'選ばない'}],1,1);
   deckRequest('cards',candidates,0,Math.min(effect.plan.limit,candidates.length));
+  if(effect.plan.optional&&candidates.length)
+   out.at(-1).dependencies=[{kind:'requiresSelection',key:'searchMode',value:'search'}];
+ }
+ if(m==='ATTACK_RECYCLE_BASIC_ENERGY'&&effect.plan.counters){
+  const count=p.discard.some(c=>basicEnergy(c)&&c.energyType===effect.plan.type)?1:0;
+  add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),count,count);
  }
  if(m==='HUNT')deckRequest('cards',p.deck,0,2);
  if(m==='ADRENA_BRAIN'){
@@ -1034,7 +1046,8 @@ function contextBonus(g,effect,own,other){
 }
 function spreadTargets(plan,own,other){
  if(plan.scope==='ownBench')return own.bench;
- return plan.scope==='opponentBench'?other.bench:field(other);
+ const targets=plan.scope==='opponentBench'?other.bench:field(other);
+ return plan.requiresDamage?targets.filter(c=>c.damage>0):targets;
 }
 function resolveBlindHand(g,actor,opposing,slots,destination){
  const hidden=opposing.hand.map(id);
@@ -1238,8 +1251,9 @@ function applyPlan(g,actor,card,effect,action){
   case 'ATTACK_SPREAD_DAMAGE':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=spreadTargets(plan,p,o);
+   const amount=plan.prizeUnit===undefined?plan.amount:(6-o.prizes)*plan.prizeUnit;
    for(const mon of targets)
-    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.amount,
+    if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,amount,
       {bench:mon!==o.active,ignore:plan.ignoreDefense,skipWeakness:plan.ignoreDefense,skipResistance:plan.ignoreDefense});
    break;
   }
@@ -1361,14 +1375,16 @@ function applyPlan(g,actor,card,effect,action){
    break;
   }
   case 'MASS_BOARD_BONUS':{
-   const applies=boardBonusApplies(g,p,o,plan);
-   damage(g,actor,o.active,plan.base+(applies?plan.bonus:0));
-   if(applies&&plan.discardStadium){
+   const applies=boardBonusApplies(g,p,o,plan)&&(!plan.optional||ids('stadiumBonus').length>0);
+   const discard=()=>{
     const stadium=g.stadium;
     player(g,g.stadiumOwner).discard.push(stadium);
     g.stadium=null;g.stadiumOwner=null;
     event(g,actor,'DISCARD',{cardIds:[id(stadium)],fromZone:'stadium'});
-   }
+   };
+   if(applies&&plan.discardStadium&&plan.optional)discard();
+   damage(g,actor,o.active,plan.base+(applies?plan.bonus:0));
+   if(applies&&plan.discardStadium&&!plan.optional)discard();
    break;
   }
   case 'ATTACK_OPTIONAL_RECOIL_BONUS':{
@@ -1401,6 +1417,32 @@ function applyPlan(g,actor,card,effect,action){
    const cards=p.deck.splice(0,plan.amount);
    p.discard.push(...cards);
    event(g,actor,'DISCARD',{cardIds:cards.map(id),fromZone:'deck'});
+   break;
+  }
+  case 'ATTACK_RECYCLE_BASIC_ENERGY':{
+   const cards=p.discard.filter(c=>basicEnergy(c)&&c.energyType===plan.type),amount=cards.length*plan.unit;
+   if(cards.length)event(g,actor,'REVEAL',{cardIds:cards.map(id),fromZone:'discard',toPlayer:o.id});
+   if(plan.counters){
+    if(amount)counters(g,actor,target(),amount,{attack:true});
+   }else damage(g,actor,o.active,amount);
+   if(cards.length){
+    moveChosen(g,p,'discard',cards.map(id),'deck',false);
+    shuffle(g,p);
+   }
+   break;
+  }
+  case 'ATTACK_DISCARD_OPPONENT_ATTACHMENTS':{
+   const targets=field(o);
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   for(const mon of targets){
+    if(mon.referenceProtection?.opponentTurn===g.turnNumber)continue;
+    const energies=mon.energyCards.filter(c=>c.isSpecial);
+    const tools=plan.tools?mon.tools.splice(0):[];
+    mon.energyCards=mon.energyCards.filter(c=>!c.isSpecial);
+    const cards=[...energies,...tools];
+    o.discard.push(...cards);
+    if(cards.length)event(g,actor,'DISCARD',{cardIds:cards.map(id),sourceInstanceId:id(mon),fromZone:'attached'});
+   }
    break;
   }
   case 'ATTACK_WEAKEN_DEFENDER':
@@ -1498,7 +1540,8 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
-   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:plan.reveal!==false});
+   if(m==='SEARCH_REVEAL_TO_HAND_ATTACK'&&(!plan.optional||ids('searchMode')[0]==='search'))
+    searchSelectedDeck(g,actor,p,ids('cards'),{reveal:plan.reveal!==false});
    if(m==='HUNT')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:false});
    if(m==='PHANTOM')for(const [ident,count] of Object.entries(action.selections?.allocation||{}))counters(g,actor,find(g,ident).card,count,{attack:true});
    if(m==='COIN_PROTECT'&&coin(g,actor))card.referenceProtection={opponentTurn:g.turnNumber+1};

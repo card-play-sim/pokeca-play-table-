@@ -132,6 +132,9 @@ function additionalAttackPlan(entry,text){
  const stadiumBonus=text.match(/^場にスタジアムが出ているなら、([1-9]\d{0,2})ダメージ追加。その後、そのスタジアムをトラッシュする。$/);
  if(stadiumBonus&&base!==null&&printed.endsWith('+'))
   return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE','DISCARD'],predicate:'stadiumPresent',discardStadium:true,base,bonus:Number(stadiumBonus[1]),sharedWording:true};
+ const optionalStadium=text.match(/^のぞむなら、場に出ているスタジアムをトラッシュする。その場合、([1-9]\d{0,2})ダメージ追加。$/);
+ if(optionalStadium&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'MASS_BOARD_BONUS',commands:['DISCARD','DAMAGE'],predicate:'stadiumPresent',discardStadium:true,optional:true,base,bonus:Number(optionalStadium[1]),sharedWording:true};
  const recoilBonus=text.match(/^のぞむなら、([1-9]\d{0,2})ダメージ追加。その場合、このポケモンにも([1-9]\d{0,2})ダメージ。$/);
  if(recoilBonus&&base!==null&&printed.endsWith('+'))
   return {mechanic:'ATTACK_OPTIONAL_RECOIL_BONUS',commands:['DAMAGE'],base,bonus:Number(recoilBonus[1]),recoil:Number(recoilBonus[2])};
@@ -141,6 +144,8 @@ function additionalAttackPlan(entry,text){
   if(boardBonus){
    const clause=boardBonus[1],bonus=Number(boardBonus[2]);
    const patterns=[
+    ['healedThisTurn',/^この番に?、このポケモンのHPを回復していたなら$/],
+    ['evolvedFromThisTurn',/^この番に?、このポケモンが「([^「」]{1,40})」から進化していたなら$/,'name'],
     ['becameActive',/^この番に?、このポケモンがベンチからバトル場に出ていたなら$/],
     ['sharedFieldType',/^自分の場に、相手の場のポケモンと同じタイプのポケモンがいるなら$/],
     ['ownNamedEnergy',/^このポケモンに「([^「」]{1,40}エネルギー)」がついているなら$/,'name'],
@@ -199,6 +204,7 @@ function additionalAttackPlan(entry,text){
  const typedEnergySearch=text.match(/^自分の山札から「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
  const mixedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼)\]ポケモンと「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
  const stadiumSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンとスタジアムを合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
+ const optionalPrivateSearch=text.match(/^のぞむなら、自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
  const privateSearch=text.match(/^自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
  const typedBench=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]タイプのたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
  const basicBench=text.match(/^自分の山札からたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
@@ -209,6 +215,7 @@ function additionalAttackPlan(entry,text){
   if(typedEnergySearch)return hand('typedBasicEnergy',Number.parseInt(typedEnergySearch[2],10),{type:typedEnergySearch[1]});
   if(mixedSearch&&mixedSearch[1]===mixedSearch[2])return hand('typedPokemonOrBasicEnergy',Number(mixedSearch[3]),{type:mixedSearch[1]});
   if(stadiumSearch)return hand('typedPokemonOrStadium',Number(stadiumSearch[2]),{type:stadiumSearch[1]});
+  if(optionalPrivateSearch)return hand('any',Number.parseInt(optionalPrivateSearch[1],10),{reveal:false,optional:true});
   if(privateSearch)return hand('any',Number.parseInt(privateSearch[1],10),{reveal:false});
   if(typedBench||basicBench&&['4枚まで','5枚まで','好きなだけ'].includes(basicBench[1])){
    const count=typedBench?typedBench[2]:basicBench[1];
@@ -313,10 +320,25 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'PHANTOM',commands:[...deal,'PLACE_DAMAGE_COUNTERS'],counterCount:Number(benchCounters[1]),sharedWording:true};
  if(text==='場にスタジアムが出ていないなら、このワザは失敗。'&&base>0)
   return {mechanic:'FULL_BENCH_REQUIRED_DAMAGE',commands:['DAMAGE'],requiresStadium:true,sharedWording:true};
+ const benchPrizeSpread=text.match(/^相手のベンチポケモン全員にも、それぞれ、相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(benchPrizeSpread&&base>0&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponentBench',count:null,prizeUnit:Number(benchPrizeSpread[1]),sharedWording:true};
+ const damagedSpread=text.match(/^ダメカンがのっている相手のベンチポケモン([1-5])匹にも、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(damagedSpread&&base>0&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponentBench',count:Number(damagedSpread[1]),amount:Number(damagedSpread[2]),requiresDamage:true,sharedWording:true};
  const spread=text.match(/^(相手のポケモン|相手のベンチポケモン|自分のベンチポケモン)(全員|[1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(spread&&((spread[3]==='にも')===(base>0))&&!(spread[1]==='相手のポケモン'&&(base||spread[2]==='1匹')))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:spread[1]==='相手のポケモン'?'opponent':spread[1].startsWith('自分')?'ownBench':'opponentBench',
    amount:Number(spread[4]),count:spread[2]==='全員'?null:Number.parseInt(spread[2],10)};
+ const recycleEnergy=text.match(/^自分のトラッシュにある「基本\[([草炎水雷超闘悪鋼])\]エネルギー」をすべて相手に見せ(?:て|、)、?その枚数×([1-9]\d{0,2})ダメージ。その後、見せたエネルギーを山札にもどして切る。$/);
+ const recycleCounters=text.match(/^自分のトラッシュにある「基本\[([草炎水雷超闘悪鋼])\]エネルギー」をすべて相手に見せ、その枚数×([1-9]\d?)個ぶんのダメカンを、相手のポケモン1匹にのせる。その後、見せたエネルギーを山札にもどして切る。$/);
+ if(recycleEnergy&&printed===recycleEnergy[2]+'×'||recycleCounters&&printed==='0'){
+  const match=recycleEnergy||recycleCounters;
+  return {mechanic:'ATTACK_RECYCLE_BASIC_ENERGY',commands:['REVEAL',recycleEnergy?'DAMAGE':'PLACE_DAMAGE_COUNTERS','RETURN_TO_DECK','SHUFFLE_DECK'],type:match[1],unit:Number(match[2]),counters:Boolean(recycleCounters),sharedWording:true};
+ }
+ const discardOpponentAttachments=text.match(/^相手のポケモン全員についている(「ポケモンのどうぐ」と「特殊エネルギー」|特殊エネルギー)を、すべてトラッシュする。$/);
+ if(discardOpponentAttachments&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_DISCARD_OPPONENT_ATTACHMENTS',commands:[...deal,'DISCARD'],tools:discardOpponentAttachments[1].startsWith('「ポケモンのどうぐ」'),sharedWording:true};
  const optionalDraw=text.match(/^のぞむなら、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
  if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
  const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
@@ -793,6 +815,7 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_DISCARD_OPPONENT_DECK_TOP',commands:['DAMAGE','DISCARD'],amount:Number(mill[1])};
  const damageRules={
   'このワザのダメージは抵抗力を計算しない。':{skipResistance:true},
+  'このワザのダメージは弱点・抵抗力を計算しない。':{skipWeakness:true,skipResistance:true},
   'このワザのダメージは、弱点・抵抗力を計算しない。':{skipWeakness:true,skipResistance:true},
   'このワザのダメージは、弱点・抵抗力と、相手のバトルポケモンにかかっている効果を計算しない。':{skipWeakness:true,skipResistance:true,ignore:true},
  };
