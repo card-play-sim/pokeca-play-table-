@@ -314,7 +314,44 @@ function resolveAnchorProposal(proposal,anchors){
   return {...entry,after:value};
  })};
 }
+// Reviewed composition grammar: exact complete official text only. The host
+// constructs a declarative plan using existing runtime/worker primitives;
+// never evaluate model text or infer a condition from similarity.
+function reviewedPlan(group){
+ const text=group.exampleOfficialText;
+ if(typeof text!=='string')return null;
+ const generic=text.normalize('NFKC');
+ const kind=group.effectKind;
+ if(kind===group.category&&['item','supporter'].includes(kind)){
+  const m=generic.match(/^自分のトラッシュから「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を(1枚|[2-9]枚まで)選び、(自分の\[([草炎水雷超闘悪鋼竜無色])\]ポケモン1匹|ベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモン)につける。$/);
+  if(m&&(m[4]||m[2]==='1枚'))return {kind:'MAIN',category:kind,generic,plan:{mechanic:'MASS_ENERGY_ROUTE',commands:['ATTACH_ENERGY'],zone:'discard',type:m[1],limit:parseInt(m[2],10),target:m[5]?'bench':'own',holderType:m[4]||m[5],team:null,multi:false,heal:null,activeOnly:false,repeated:false,sharedWording:true}};
+ }
+ if(kind==='attack'&&group.category==='pokemon'&&/^\d+$/.test(String(group.printedDamage))){
+  const m=generic.match(/^自分のトラッシュからポケモンと基本エネルギーを合計([2-9])枚まで選び、相手に見せて、山札にもどして切る。$/);
+  if(m)return {kind:'ATTACK',damage:String(group.printedDamage),generic,plan:{mechanic:'MASS_ZONE_TRANSFER',commands:[...(Number(group.printedDamage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK','SHUFFLE_DECK'],zone:'discard',destination:'deck',category:'pokemonOrBasicEnergy',type:null,stage:null,team:null,energyType:null,limit:Number(m[1]),activeOnly:false,sharedWording:true}};
+ }
+ return null;
+}
+function reviewedProposal(groups,sources){
+ const rules=groups.map(reviewedPlan);
+ if(!rules.length||rules.some(x=>!x))return null;
+ const file=allowed[0],source=sources[file];
+ if(typeof source!=='string')return null;
+ const anchor=source.split('\n').find(line=>line.startsWith(' const p=byText.get(text);return p?')&&line.includes('evolutionTransferFallback(entry,kind,generic)'));
+ if(!anchor||source.split(anchor).length!==2)return null;
+ const additions=[...new Set(rules.map(r=>{
+  const condition=['kind==='+JSON.stringify(r.kind),'generic==='+JSON.stringify(r.generic),...(r.category?['entry.category==='+JSON.stringify(r.category)]:[]),...(r.damage!==undefined?['String(entry.damage??"0")==='+JSON.stringify(r.damage)]:[])].join('&&');
+  return ' if('+condition+')return '+JSON.stringify(r.plan)+';';
+ }))];
+ return {edits:[{path:file,before:anchor,after:additions.join('\n')+'\n'+anchor}],strategy:'REVIEWED_COMPOSITION'};
+}
+function selectReviewedBatch(candidates,history,fingerprint){
+ const prior=normalizeHistory(history).groups;
+ const ready=candidates.filter(x=>x.records.length&&reviewedPlan(x.group)&&prior[x.group.sharedTaskId]?.fingerprint!==fingerprint);
+ return ready.length?selectBatch(ready,1,{maxGroups:6,maxPrints:64,history,fingerprint}):[];
+}
 async function generate(groups,sources,feedback='',profile=repairProfile(feedback),previousPatch=''){
+ if(!feedback){const proposal=reviewedProposal(groups,sources);if(proposal)return proposal;}
  // attemptScope already enforces the budget and mandatory dependencies.
  const group={...groups[0],exampleOfficialText:groups.map(g=>g.exampleOfficialText).join('\n')};
  const anchors=modelAnchors(sources,group,profile.excerptChars);
@@ -409,14 +446,15 @@ async function main(){
  if(retry.length&&previousReceiptPath&&fs.existsSync(previousReceiptPath)&&fs.statSync(previousReceiptPath).size<=256*1024){
   try{previousReceipt=read(previousReceiptPath);}catch(e){console.warn('INVALID_PREVIOUS_RECEIPT',String(e).slice(0,300));}
  }
- const batch=retry.length?focusFailedBatch(retry,previousReceipt):selectBatch(candidates,runNumber,{history,fingerprint});
+ const reviewed=retry.length?[]:selectReviewedBatch(candidates,history,fingerprint);
+ const batch=retry.length?focusFailedBatch(retry,previousReceipt):reviewed.length?reviewed:selectBatch(candidates,runNumber,{history,fingerprint});
  if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
  let selectedGroups=[],records=[],targetIds=[];
  const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
  let proposal,changed,feedback=retry.length&&process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
  let previousPatch='';
  if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
- if(!feedback){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
+ if(!feedback&&!reviewed.length){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback||'Prior same-source attempt already tried; repair the actual failure.';}
  const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,
   onAttempt(attempt,scope,profile){
    selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
@@ -447,4 +485,4 @@ async function main(){
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={reviewedPlan,reviewedProposal,selectReviewedBatch,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
