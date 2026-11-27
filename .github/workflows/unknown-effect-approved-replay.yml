@@ -1,5 +1,8 @@
 name: Unknown effect approved replay entry
 on:
+  workflow_run:
+    workflows: ["Unknown effect verified review handoff"]
+    types: [completed]
   issue_comment:
     types: [created]
   workflow_dispatch:
@@ -25,6 +28,7 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) ||
         (github.event_name == 'issue_comment' &&
          github.event.issue.number == 122 &&
          !github.event.issue.pull_request &&
@@ -40,6 +44,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Resolve exact independently reviewed approval
+        if: github.event_name != 'workflow_run'
         id: approval
         env:
           APPROVAL_EVENT: ${{ github.event_name }}
@@ -49,10 +54,25 @@ jobs:
           DISPATCH_SHA: ${{ inputs.approved_patch_sha256 }}
         run: |
           python scripts/verify-unknown-approved-replay.py --resolve-event "$GITHUB_EVENT_PATH" "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        if: github.event_name == 'workflow_run'
+        with:
+          name: unknown-effect-review-handoff
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/preview-handoff
+      - name: Resolve read-only preview origin
+        if: github.event_name == 'workflow_run'
+        id: preview
+        run: |
+          set -euo pipefail
+          run="$(jq -er '.originRunId | tostring' "$RUNNER_TEMP/preview-handoff/review-handoff.json")"
+          [[ "$run" =~ ^[1-9][0-9]{0,19}$ ]]
+          echo "origin_run=$run" >> "$GITHUB_OUTPUT"
       - name: Check origin workflow identity
         env:
           GH_TOKEN: ${{ github.token }}
-          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run }}
+          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run || steps.preview.outputs.origin_run }}
         run: |
           set -euo pipefail
           [[ "$ORIGIN_RUN" =~ ^[1-9][0-9]*$ ]]
@@ -64,20 +84,31 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: local-unknown-effect-quarantine
-          run-id: ${{ steps.approval.outputs.origin_run }}
+          run-id: ${{ steps.approval.outputs.origin_run || steps.preview.outputs.origin_run }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/replay-input
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Verify explicit approval and current source compatibility
+        if: github.event_name != 'workflow_run'
         env:
-          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run }}
+          ORIGIN_RUN: ${{ steps.approval.outputs.origin_run || steps.preview.outputs.origin_run }}
           ATTEMPT: ${{ steps.approval.outputs.attempt }}
           APPROVED_SHA: ${{ steps.approval.outputs.approved_patch_sha256 }}
         run: |
           python scripts/verify-unknown-approved-replay.py --self-test
           python scripts/verify-unknown-approved-replay.py "$RUNNER_TEMP/replay-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$ATTEMPT" "$APPROVED_SHA" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/replay-entry"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+      - name: Independently verify preview without granting approval
+        if: github.event_name == 'workflow_run'
+        env:
+          ORIGIN_RUN: ${{ steps.preview.outputs.origin_run }}
+        run: |
+          set -euo pipefail
+          checkpoint="$(jq -er '[.candidates[] | select(.officialScope.state == "OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED") | .officialScope.checkpoint] | unique | if length==1 then .[0] else error("checkpoint scope") end' "$RUNNER_TEMP/preview-handoff/review-handoff.json")"
+          [[ "$checkpoint" =~ ^[a-f0-9]{40}$ ]]
+          git fetch origin "$checkpoint"
+          python scripts/verify-unknown-approved-replay.py --preview "$RUNNER_TEMP/replay-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/replay-entry" "$checkpoint"
       - name: Restore verified official source and prepare isolated replay tree
         run: |
           set -euo pipefail
@@ -155,18 +186,20 @@ jobs:
           python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/prepare-unknown-replay-intake.py --verify-result "$out"
-          python scripts/export-unknown-replay-candidate.py export "$GITHUB_WORKSPACE" "$scratch" "$out"
+          if [ "$GITHUB_EVENT_NAME" != workflow_run ]; then
+            python scripts/export-unknown-replay-candidate.py export "$GITHUB_WORKSPACE" "$scratch" "$out"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: unknown-effect-approved-replay-entry
+          name: ${{ github.event_name == 'workflow_run' && 'unknown-effect-read-only-preview' || 'unknown-effect-approved-replay-entry' }}
           path: ${{ runner.temp }}/replay-entry/
           if-no-files-found: error
           retention-days: 14
 
   propose:
     needs: entry
-    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success'
+    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
