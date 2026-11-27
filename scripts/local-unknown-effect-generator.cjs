@@ -190,7 +190,9 @@ function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},
  // A changing main must not reset the scheduler's fairness. Keep lifetime
  // attempt counts across source revisions; only source-specific feedback and
  // retry patch reuse are reset by a new fingerprint. Untried groups come first.
- const eligible=ordered;
+ // A dependency set that cannot fit this run must not starve independent
+ // effects with higher attempt counts. Preserve the entire dependency set.
+ const eligible=ordered.filter(x=>expandRequired([x],ordered,maxGroups,maxPrints).length>0);
  if(!eligible.length)return [];
  const min=Math.min(...eligible.map(attempts));
  const pool=eligible.filter(x=>attempts(x)===min);
