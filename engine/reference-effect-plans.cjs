@@ -709,6 +709,9 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の「メガシンカex」1匹のHPを、すべて回復する。その後、回復したポケモンについているエネルギーを、すべて手札にもどす。')
   return {mechanic:'SUPPORTER_MEGA_HEAL_RETURN_ENERGY',commands:['HEAL','RETURN_TO_HAND'],sharedWording:true};
 
+ const coinGuard=generic.match(/^(?:このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、)?このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。$/);
+ if(kind==='ABILITY'&&coinGuard)return {mechanic:'PASSIVE_COIN_DAMAGE_GUARD',commands:['COIN_FLIP','PREVENT_DAMAGE'],energyType:coinGuard[1]||null,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンが、ワザのダメージを受けてきぜつするとき、自分はコインを1回投げる。オモテなら、このポケモンはきぜつせず、残りHPが「10」の状態で場に残る。')return {mechanic:'PASSIVE_COIN_KO_SURVIVAL',commands:['COIN_FLIP','ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンのHPがまんたんの状態で、このポケモンがワザのダメージを受けてきぜつするとき、きぜつせず、残りHPが「10」の状態で場に残る。')
   return {mechanic:'PASSIVE_FULL_HP_SURVIVAL',commands:['ADD_STATE'],remainingHp:10,sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンが使うワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。')
