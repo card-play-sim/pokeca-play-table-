@@ -39,7 +39,33 @@ jobs:
             if test -s /tmp/qualified-source.patch; then
               if ! git apply --3way --index /tmp/qualified-source.patch; then
                 git diff --cc
-                exit 1
+                # Only the two inspected, independently verified retreat overlaps
+                # may be resolved here; every unexpected conflict remains fatal.
+                test "$head" = "1c6b5f1fda257ad05823f5196b850357df244b5c"
+                test "$(git diff --name-only --diff-filter=U | sort | paste -sd,)" = "engine/pokeca_reference_effect_runtime.cjs,tests/fixtures/control-009-extension-manifest.cjs"
+                test "$(git rev-parse :2:tests/fixtures/control-009-extension-manifest.cjs)" = "666b307f3520456e640710c5783c36880a7129b1"
+                test "$(git rev-parse :3:tests/fixtures/control-009-extension-manifest.cjs)" = "568d396c0c34dee6059cf5bab243e3ec24b15360"
+                git checkout --theirs -- tests/fixtures/control-009-extension-manifest.cjs
+                python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('engine/pokeca_reference_effect_runtime.cjs')
+          s=p.read_text()
+          pattern=r'(?m)^<<<<<<< ours\n(const passive=new Set\(\[[^\n]+\]\);)\n=======\n(const passive=new Set\(\[[^\n]+\]\);)\n>>>>>>> theirs\n'
+          matches=list(re.finditer(pattern,s))
+          assert len(matches)==1, 'UNEXPECTED_PASSIVE_CONFLICT'
+          m=matches[0]
+          a,b=[re.findall(r"'([A-Z0-9_]+)'",line) for line in m.groups()]
+          assert set(a)-set(b)=={'PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL'}
+          assert set(b)-set(a)=={'PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'}
+          merged=list(dict.fromkeys(a+b))
+          replacement="const passive=new Set(["+",".join("'"+x+"'" for x in merged)+"]);\n"
+          s=s[:m.start()]+replacement+s[m.end():]
+          assert not re.search(r'(?m)^(<<<<<<<|=======|>>>>>>>)',s)
+          p.write_text(s)
+          PY
+                git add engine/pokeca_reference_effect_runtime.cjs tests/fixtures/control-009-extension-manifest.cjs
+                test -z "$(git diff --name-only --diff-filter=U)"
               fi
             fi
           }
