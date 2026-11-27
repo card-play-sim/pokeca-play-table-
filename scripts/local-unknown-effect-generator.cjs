@@ -145,19 +145,21 @@ function parseModelProposal(raw,finishReason){
 // Never accept malformed or partially generated code as a successful patch.
 function repairProfile(feedback='',attempt=1){
  const reason=String(feedback);
- const type=/DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
+ const type=/REPEATED_FAILED_CANDIDATE/i.test(reason)?'REPEATED':
+ /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
+ /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
+ /DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
  /MODEL_OUTPUT_TRUNCATED|finish_reason.*length/i.test(reason)?'TRUNCATED':
  /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
  /SyntaxError|JSON|PROPOSAL_SCHEMA|INVALID_EDIT_COUNT/i.test(reason)?'FORMAT':
  /NONUNIQUE_OR_STALE_ANCHOR|INVALID_EDIT/i.test(reason)?'ANCHOR':
  /PROTECTED_PATH/i.test(reason)?'PROTECTED':
  /PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
- /TARGET_NOT_COMPILED/i.test(reason)?'COMPILE':
- /BROWSER_EXECUTION_FAILED|BROWSER_RECEIPT_REJECTED/i.test(reason)?'BROWSER':
  /ENGINE_EXECUTION_FAILED|NO_EXECUTION_RECEIPT|NO_SELECTED_PRINT_QUALIFIED|EXECUTION_EVIDENCE_INCOMPLETE/i.test(reason)?'EXECUTION':
  reason?'ENGINE':'INITIAL';
  const compact=type==='TRANSPORT'||type==='TRUNCATED'||attempt>1;
  const instructions={
+ REPEATED:'The exact same source changes already failed validation. Produce a materially different implementation for the selected official effect, using the reported reason. Do not repeat the rejected code or merely reformat it.',
  TRANSPORT:'Previous inference timed out. Produce the smallest complete patch; avoid duplicated source and long explanations.',
  TRUNCATED:'Previous output was incomplete. Return fewer, shorter exact edits; never omit closing JSON delimiters.',
  SYNTAX:'The patch produced invalid JavaScript. Repair the reported file and syntax; retain the exact source anchor and balanced syntax. Do not change the tests.',
@@ -240,7 +242,10 @@ function focusFailedBatch(batch,receipt){
 }
 // This is the real generator loop, also exercised without paid inference in
 // regression tests. Every failed proposal is rejected before scratch writes.
-async function generateWithRepair(batch,sources,{feedback='',previousPatch='',propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
+function candidateDigest(sources,changed){
+ return sha(JSON.stringify(allowed.filter(f=>Object.hasOwn(changed,f)&&changed[f]!==sources[f]).map(f=>[f,sha(changed[f])])));
+}
+async function generateWithRepair(batch,sources,{feedback='',previousPatch='',failedDigest='',propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
  let proposal,scope,changed;
  for(let attempt=1;attempt<=2;attempt++){
   proposal=undefined;
@@ -251,7 +256,9 @@ async function generateWithRepair(batch,sources,{feedback='',previousPatch='',pr
    proposal=await propose(scope.groups,sources,feedback,profile,previousPatch);
    changed=applyEdits(sources,proposal);
    validateCandidateSyntax(sources,changed);
-   return {proposal,changed,scope,feedback:''};
+   const digest=candidateDigest(sources,changed);
+   if(failedDigest&&digest===failedDigest)throw Error('REPEATED_FAILED_CANDIDATE:'+digest);
+   return {proposal,changed,scope,digest,feedback:''};
   }catch(e){
    feedback=String(e);
    if(proposal)previousPatch=JSON.stringify(proposal).slice(0,1800);
@@ -302,7 +309,12 @@ async function main(){
  let previousPatch='';
  if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
  if(!feedback){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback;}
- const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,
+ let failedDigest='';
+ const failedResultPath=process.env.MODEL_PREVIOUS_RESULT_PATH;
+ if(retry.length&&failedResultPath&&fs.existsSync(failedResultPath)&&fs.statSync(failedResultPath).size<=256*1024){
+  try{const result=read(failedResultPath);if(result.state==='GENERATED_NOT_TESTED'&&/^[a-f0-9]{64}$/.test(result.candidateDigest||''))failedDigest=result.candidateDigest;}catch(e){console.warn('INVALID_PREVIOUS_RESULT',String(e).slice(0,300));}
+ }
+ const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,failedDigest,
   onAttempt(attempt,scope,profile){
    selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
    const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
@@ -329,7 +341,7 @@ async function main(){
  for(const row of records)if(!adopted.has(String(row.officialCardId)))intake.records.push(row);
  write(path.join(scratch,'data/effect-extensions/intake.json'),intake);
  saveHistory('GENERATED_NOT_TESTED','');
- write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
+ write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',targetIds,candidateDigest:outcome.digest,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={applyEdits,exactGroup,excerpts,selectBatch,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair,candidateDigest};
