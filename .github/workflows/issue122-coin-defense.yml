@@ -1,4 +1,4 @@
-name: Issue122 defensive coin remaining fixture recovery
+name: コイン防御13枚・多段階進化の再検証
 on:
   push:
     branches: [battle/issue122-coin-defense-20261128]
@@ -75,7 +75,7 @@ jobs:
           const missing=required.filter(id=>!now.has(id));
           const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/coin-defense-exact-delta.json',JSON.stringify(out,null,2)+'\n');
           console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
-          assert(added.some(id=>required.includes(id)),'NO_COIN_DEFENSE_PRINT_QUALIFIED');
+          assert.equal(missing.length,0,'COIN_DEFENSE_PRINT_MISSING');
           console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
           assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
           NODE
