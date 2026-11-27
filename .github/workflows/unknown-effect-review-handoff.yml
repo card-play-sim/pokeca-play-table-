@@ -3,12 +3,23 @@ on:
   workflow_run:
     workflows: ["Local unknown effect code generation quarantine"]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      origin_run:
+        description: Previously successful main quarantine run to recheck (not release approval)
+        required: true
+        type: string
 permissions:
   contents: read
   actions: read
 jobs:
   handoff:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      ((github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner) ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -16,10 +27,23 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: Validate source workflow identity before any artifact read
+        id: origin
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGIN_RUN: ${{ inputs.origin_run || github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          [[ "$ORIGIN_RUN" =~ ^[1-9][0-9]{0,19}$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ORIGIN_RUN" > "$RUNNER_TEMP/origin.json"
+          jq -e --arg repo "$GITHUB_REPOSITORY" '.conclusion=="success" and .head_branch=="main" and .head_repository.full_name==$repo and .path==".github/workflows/local-unknown-effect-generator.yml"' "$RUNNER_TEMP/origin.json"
+          sha="$(jq -er '.head_sha' "$RUNNER_TEMP/origin.json")"
+          [[ "$sha" =~ ^[a-f0-9]{40}$ ]]
+          printf 'run=%s\nsha=%s\n' "$ORIGIN_RUN" "$sha" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           name: local-unknown-effect-quarantine
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.origin.outputs.run }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/review-input
       - uses: actions/setup-node@v4
@@ -27,8 +51,8 @@ jobs:
           node-version: '22'
       - name: Validate evidence as inert data only
         env:
-          ORIGIN_SHA: ${{ github.event.workflow_run.head_sha }}
-          ORIGIN_RUN: ${{ github.event.workflow_run.id }}
+          ORIGIN_SHA: ${{ steps.origin.outputs.sha }}
+          ORIGIN_RUN: ${{ steps.origin.outputs.run }}
         run: |
           python scripts/verify-unknown-quarantine-handoff.py --self-test
           python scripts/verify-unknown-quarantine-handoff.py "$RUNNER_TEMP/review-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$RUNNER_TEMP/review-handoff.json"
