@@ -141,6 +141,11 @@ assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp).map(x=>x.group.sharedTaskId
 assert.deepEqual(retryBatch([cc,bb,aa],prevScope,fp2),[]);
 assert.deepEqual(retryBatch([cc],prevScope,fp),[]);
 assert.deepEqual(retryBatch([aa,bb],{...prevScope,targetIds:['1','2','3']},fp).map(x=>x.group.sharedTaskId),[mkId(1)]);
+const largeScope=attemptScope(largeBatch,{groups:1});
+const largePrev={fingerprint:fp,groups:largeScope.groups,targetIds:largeScope.records.map(r=>String(r.officialCardId))};
+assert.equal(retryBatch([largeGroup],largePrev,fp)[0].records.length,64);
+assert.deepEqual(retryBatch([largeGroup],{...largePrev,targetIds:largePrev.targetIds.slice(1)},fp),[]);
+console.log('LOCAL_UNKNOWN_LARGE_GROUP_BOUNDARY PASS');
 console.log('LOCAL_UNKNOWN_EXACT_RETRY_SCOPE PASS');
 
 // Run the production repair loop against a controlled first-invalid, then

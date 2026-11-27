@@ -82,8 +82,18 @@ function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
  }
  return normalizeHistory(history);
 }
+// Large exact-text groups must not be permanently excluded by the per-run
+// print budget. Select only a bounded subset of independently verified rows.
+// Once that common mechanic is implemented, the existing atomic batch
+// reprocesses the remaining prints; no omitted print is counted as qualified.
+function boundedCandidate(candidate,maxPrints){
+ const records=[...new Map(candidate.records.map(r=>[String(r.officialCardId),r])).values()];
+ if(records.length<=maxPrints)return candidate;
+ return {...candidate,records:records.slice(0,maxPrints)};
+}
 function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},fingerprint=null}={}){
- const ordered=[...candidates].sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
+ assert(Number.isSafeInteger(maxPrints)&&maxPrints>=1,'INVALID_PRINT_BUDGET');
+ const ordered=candidates.filter(x=>x.records.length).map(x=>boundedCandidate(x,maxPrints)).sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
  if(!ordered.length)return [];
  const n=Number(runNumber);
  assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
@@ -92,7 +102,7 @@ function selectBatch(candidates,runNumber,{maxGroups=12,maxPrints=64,history={},
  // A changing main must not reset the scheduler's fairness. Keep lifetime
  // attempt counts across source revisions; only source-specific feedback and
  // retry patch reuse are reset by a new fingerprint. Untried groups come first.
- const eligible=ordered.filter(x=>new Set(x.records.map(r=>String(r.officialCardId))).size<=maxPrints);
+ const eligible=ordered;
  if(!eligible.length)return [];
  const min=Math.min(...eligible.map(attempts));
  const pool=eligible.filter(x=>attempts(x)===min);
@@ -218,7 +228,7 @@ async function generate(groups,sources,feedback='',profile=repairProfile(feedbac
 // attempt. Do not feed a different official effect an unrelated failure log.
 function retryBatch(candidates,previous,fingerprint){
  if(!previous||previous.fingerprint!==fingerprint||!Array.isArray(previous.groups)||!Array.isArray(previous.targetIds))return [];
- const ids=new Set(previous.targetIds.map(String)),byGroup=new Map(candidates.map(x=>[x.group.sharedTaskId,x]));
+ const ids=new Set(previous.targetIds.map(String)),byGroup=new Map(candidates.map(x=>[x.group.sharedTaskId,boundedCandidate(x,64)]));
  return [...new Set(previous.groups.map(g=>g?.sharedTaskId))].map(id=>byGroup.get(id)).filter(x=>x&&x.records.length&&x.records.every(r=>ids.has(String(r.officialCardId))));
 }
 function attemptScope(batch,profile){
