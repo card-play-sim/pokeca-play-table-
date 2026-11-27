@@ -420,6 +420,7 @@ function requests(g,actor,card,effect){
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='MASS_BOARD_BONUS'&&effect.plan.optional)
   add('stadiumBonus','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュして追加ダメージ'}]:[],0,g.stadium?1:0);
+ if(m==='ATTACK_DISCARD_STADIUM'&&effect.plan.optional)add('stadiumDiscard','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュする'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_OPTIONAL_RECOIL_BONUS')add('recoilBonus','CARD',[{id:'accept-recoil',name:'追加ダメージを与え、自分にもダメージ'}],0,1);
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,p.bench.length),Math.min(1,p.bench.length));
  if(m==='ATTACK_SWITCH_THEN_DAMAGE'){
@@ -463,7 +464,8 @@ function requests(g,actor,card,effect){
     Math.min((m==='ATTACK_SPREAD_DAMAGE'?effect.plan.discardAttached:effect.plan.count),eligible.length));
  }
  if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
-  const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
+  const plan=effect.plan;
+  const eligible=plan.defenderEx&&!record(o.active).name.endsWith('ex')?[]:(o.active.energyCards||[]).filter(energy=>(!plan.specialOnly||energy.isSpecial)&&(!plan.type||selectedAttachmentUnits(o.active,energy,plan)>0));
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
  }
@@ -1061,6 +1063,9 @@ function attackMetric(plan,own,other){
  if(plan.metric==='bothNameContainsCount')return [...field(own),...field(other)].filter(c=>[plan.name,plan.secondName].some(n=>record(c).name.includes(n))).length;
  if(plan.metric==='ownBenchNamedCount')return own.bench.filter(c=>record(c).name===plan.name).length;
  if(plan.metric==='ownBenchTypedCounters')return own.bench.filter(c=>record(c).facts.types.includes(plan.type)).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownBenchTeamCounters')return own.bench.filter(c=>record(c).name.startsWith(plan.team+'の')).reduce((n,c)=>n+(c.damage||0)/10,0);
+ if(plan.metric==='ownNamedTeamEnergy')return field(own).filter(c=>record(c).name.startsWith(plan.team+'の')).flatMap(energyUnits).filter(unit=>unit.includes(plan.type)).length;
+ if(plan.metric==='ownBenchWithTypedEnergy')return own.bench.filter(c=>energyUnits(c).some(unit=>unit.includes(plan.type))).length;
  if(plan.metric==='ownBenchNamedCounters')return own.bench.filter(c=>record(c).name===plan.name).reduce((n,c)=>n+(c.damage||0)/10,0);
  if(plan.metric==='ownAttachedBasicCards')return own.active.energyCards.filter(basicEnergy).length;
  if(plan.metric==='ownAttachedSpecialCards')return own.active.energyCards.filter(c=>c.isSpecial).length;
@@ -1486,7 +1491,7 @@ function applyPlan(g,actor,card,effect,action){
   }
   case 'SCALED_ATTACK_DAMAGE':
    if(plan.metric==='opponentHandTrainerCount')event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});
-   damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)));
+   damage(g,actor,o.active,Math.max(0,plan.base+(plan.subtract?-1:1)*plan.unit*attackMetric(plan,p,o)),{skipWeakness:plan.skipWeakness===true,skipResistance:plan.skipResistance===true});
    break;
   case 'ATTACK_RESET_HAND':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
@@ -1583,7 +1588,7 @@ function applyPlan(g,actor,card,effect,action){
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }
    if(m==='ATTACK_DRAW')draw(g,p,plan.draw);
-   if(m==='ATTACK_DISCARD_STADIUM'&&g.stadium){
+   if(m==='ATTACK_DISCARD_STADIUM'&&g.stadium&&(!plan.optional||ids('stadiumDiscard').length>0)){
     const stadiumCard=g.stadium;
     player(g,g.stadiumOwner).discard.push(stadiumCard);
     g.stadium=null;

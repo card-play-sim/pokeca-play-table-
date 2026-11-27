@@ -257,6 +257,12 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.facts.teraBenchProtection&&!r.abilities.length,'bench',1);
   reserve(r=>mon(r,null,0)&&!r.facts.rulePokemon&&!r.abilities.length,'bench',1);
  }
+ if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.type){
+  reserveEnergy(plan.type,2,1-deckIndex);
+  reserve(r=>isBasicEnergy(r)&&typeOf(r)!==plan.type,'deck',1);
+ }
+ if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
+  reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&plan.type)reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+plan.count));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
@@ -275,6 +281,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
   if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(['ownBenchTeamCounters','ownNamedTeamEnergy'].includes(plan.metric))
+   reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
+  if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(plan.metric))
+   reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
   if(plan.metric==='ownBenchNamedCounters')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
   if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(plan.metric))
    reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',plan.metric.startsWith('opponent')?1:0);
@@ -580,12 +590,12 @@ function prepare(r, e, kind) {
     };
     const holderChain=line(r);
     if(!holderChain)return {blocked:'NO_TEAM_BOOST_HOLDER_EVOLUTION_LINE'};
-    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&a.cost.length>0&&a.cost.every(t=>t==='無色'));
+    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=100&&a.cost.length>0&&a.cost.every(t=>['草','炎','水','雷','超','闘','悪','鋼','無色'].includes(t)));
     const matches=x=>x.category==='pokemon'&&x.officialCardId!==r.officialCardId&&x.name!==r.name&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&attackIndex(x)>=0&&(plan.evolvedSource?x.facts.stage>0:x.facts.basic)&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
     const attackerChain=all.filter(matches).map(line).find(chain=>chain&&!chain.some(x=>holderChain.some(h=>h.deckName===x.deckName)));
     if(!attackerChain)return {blocked:'NO_TEAM_BOOST_ATTACKER'};
     const attacker=attackerChain.at(-1),i=attackIndex(attacker),damage=Number(attacker.attacks[i].damage);
-    const defenders=all.filter(x=>x.category==='pokemon'&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>2*(damage+plan.amount)&&!x.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
+    const defenders=all.filter(x=>x.category==='pokemon'&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>damage+plan.amount&&!x.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
     const defenderChain=defenders.map(line).find(Boolean);
     if(!defenderChain)return {blocked:'NO_TEAM_BOOST_DEFENDER'};
     const ids=chain=>chain.map(x=>x.officialCardId);
@@ -600,7 +610,9 @@ function prepare(r, e, kind) {
   }
   if(m==='PASSIVE_CONTEXT_COST_DISCOUNT'){
     const plan=e.plan;
-    const attackIndex=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    const preferred=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
+    // A continuous cost modifier applies to every printed attack, not just fixed-damage attacks.
+    const attackIndex=preferred>=0?preferred:r.attacks.findIndex(a=>a.cost.includes('無色')&&a.plan);
     if(attackIndex<0)return {blocked:'NO_CONTEXT_COST_ATTACK_FIXTURE'};
     const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofContextCost:plan},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -1687,6 +1699,25 @@ function prepare(r, e, kind) {
     if (e.plan.metric === "opponentCounters") opponent.active.damage = 20;
     if (e.plan.metric === "ownCounters") own.active.damage = 20;
     if (e.plan.metric === "opponentTeamCounters") for (const mon of [opponent.active,...opponent.bench]) mon.damage=10;
+    if(e.plan.metric==='ownBenchTeamCounters'){
+      const targets=own.bench.filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の'));
+      if(!targets.length)return {blocked:'NO_TEAM_COUNTER_FIXTURE'};
+      for(const c of own.bench)c.damage=targets.includes(c)?20:10;
+    }
+    if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(e.plan.metric)){
+      const plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type;
+      const targets=own.bench.filter(c=>plan.metric==='ownBenchWithTypedEnergy'||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'));
+      if(!targets.length)return {blocked:'NO_TYPED_ENERGY_BENCH_FIXTURE'};
+      const zone=[own.deck,own.hand].find(z=>z.some(eligible));
+      if(zone)targets[0].energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      else {
+        const attached=own.active.energyCards;
+        const typed=attached.filter(eligible).length;
+        if(typed<=e.cost.filter(t=>t===plan.type).length||attached.filter(c=>!c.isSpecial).length<=e.cost.length)return {blocked:'NO_EXTRA_TYPED_ENERGY_FIXTURE'};
+        targets[0].energyCards.push(attached.splice(attached.findIndex(eligible),1)[0]);
+      }
+      if(!targets[0].energyCards.some(eligible))return {blocked:'NO_POSITIVE_TYPED_ENERGY_FIXTURE'};
+    }
     if(e.plan.metric==='ownBenchNamedCounters')for(const c of own.bench)if(E.getReferenceEffectRecord(c).name===e.plan.name)c.damage=20;
     if(['ownAttachedSpecialCards','opponentAttachedSpecialCards'].includes(e.plan.metric)){
       const side=e.plan.metric.startsWith('opponent')?opponent:own;
@@ -1765,11 +1796,18 @@ function prepare(r, e, kind) {
     }
     if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
     if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m)) {
-      const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly;
+      const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly&&(!e.plan.type||card.energyType===e.plan.type);
+      if(e.plan.defenderEx&&!E.getReferenceEffectRecord(other.active).name.endsWith('ex'))return {blocked:'NO_EX_DEFENDER_FIXTURE'};
       const zone = [other.deck, other.hand, other.prizeCards].find(cards => cards.some(eligible));
       if (!zone) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
       other.active.energyCards.push(zone.splice(zone.findIndex(eligible), 1)[0]);
       if (zone === other.prizeCards && other.deck.length) other.prizeCards.push(other.deck.shift());
+      if(e.plan.type){
+        const wrong=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType!==e.plan.type;
+        const otherZone=[other.deck,other.hand].find(z=>z.some(wrong));
+        if(!otherZone)return {blocked:'NO_WRONG_TYPE_DEFENDER_ENERGY_FIXTURE'};
+        other.active.energyCards.push(otherZone.splice(otherZone.findIndex(wrong),1)[0]);
+      }
     }
     if (m === "ATTACK_DISCARD_FIELD_BASIC" && own.bench.length) {
       const energies = own.active.energyCards.filter(card => !card.isSpecial);
@@ -2944,6 +2982,21 @@ function verifyCase(t, e) {
       assert(after.players[side].discard.some(card=>card.id===id));
       assert(effectEvents.some(step=>step?.command==="DISCARD"&&step.fromZone==="attached"&&step.cardIds?.includes(id)));
     }
+    if(!own&&e.plan.type){
+      const action=t.action||o.action,wrong=defendingSide.active.energyCards.find(c=>!c.isSpecial&&c.energyType!==e.plan.type);
+      assert(wrong&&energy.every(id=>defendingSide.active.energyCards.some(c=>c.id===id&&!c.isSpecial&&c.energyType===e.plan.type)));
+      assert(after.players[1].active.energyCards.some(c=>c.id===wrong.id));
+      const denied=port(before);
+      assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,energy:[wrong.id]}}).ok,false);
+      assert.deepEqual(denied.getSnapshot(),before);
+      const noMatch=JSON.parse(JSON.stringify(before)),other=noMatch.players[1];
+      const removed=other.active.energyCards.filter(c=>c.energyType===e.plan.type);
+      other.active.energyCards=other.active.energyCards.filter(c=>!removed.includes(c));other.deck.push(...removed);
+      const replay=port(noMatch);assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:[]}}).ok);
+      assert(replay.getSnapshot().players[1].active.energyCards.some(c=>c.id===wrong.id));
+      assert.deepEqual(S.identities(before),S.identities(replay.getSnapshot()));
+    }
+    if(!own&&e.plan.defenderEx)assert(E.getReferenceEffectRecord(defendingSide.active).name.endsWith('ex'));
     if(own)assert(effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===defendingSide.active.id));
   }
   if (e.plan.mechanic === "ATTACK_DISABLE_SELECTED_MOVE") {
@@ -3314,6 +3367,9 @@ function verifyCase(t, e) {
       ownNamedOrExCount:[attackingSide.active,...attackingSide.bench].filter(c=>[e.plan.name,e.plan.name+'ex'].includes(E.getReferenceEffectRecord(c).name)).length,
       bothNameContainsCount:[attackingSide.active,...attackingSide.bench,defendingSide.active,...defendingSide.bench].filter(c=>[e.plan.name,e.plan.secondName].some(n=>E.getReferenceEffectRecord(c).name.includes(n))).length,
       ownBenchNamedCount:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).length,
+      ownBenchTeamCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の')).reduce((n,c)=>n+c.damage/10,0),
+      ownNamedTeamEnergy:[attackingSide.active,...attackingSide.bench].filter(c=>E.getReferenceEffectRecord(c).name.startsWith(e.plan.team+'の')).flatMap(c=>c.energyCards).filter(c=>!c.isSpecial&&c.energyType===e.plan.type).length,
+      ownBenchWithTypedEnergy:attackingSide.bench.filter(c=>c.energyCards.some(a=>!a.isSpecial&&a.energyType===e.plan.type)).length,
       ownBenchNamedCounters:attackingSide.bench.filter(c=>E.getReferenceEffectRecord(c).name===e.plan.name).reduce((n,c)=>n+c.damage/10,0),
       ownAttachedBasicCards:attackingSide.active.energyCards.filter(c=>!c.isSpecial).length,
       ownAttachedSpecialCards:attackingSide.active.energyCards.filter(c=>c.isSpecial).length,
@@ -3341,6 +3397,25 @@ function verifyCase(t, e) {
       opponentEnergy: count([defendingSide.active]),
       opponentTeamEnergy: count([defendingSide.active, ...defendingSide.bench]),
     };
+    if(['ownBenchTeamCounters','ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(e.plan.metric)){
+      if(!metrics[e.plan.metric])return {status:'BLOCKED',reason:'NO_POSITIVE_TEAM_BOARD_COUNT_FIXTURE'};
+      const start=JSON.parse(JSON.stringify(before)),own=start.players[0],plan=e.plan;
+      let remaining=0;
+      if(plan.metric==='ownBenchTeamCounters'){
+        for(const c of own.bench)if(E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'))c.damage=0;
+      }else{
+        for(const c of own.bench){
+          if(plan.metric==='ownNamedTeamEnergy'&&!E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'))continue;
+          const removed=c.energyCards.filter(a=>!a.isSpecial&&a.energyType===plan.type);
+          c.energyCards=c.energyCards.filter(a=>!removed.includes(a));own.deck.push(...removed);
+        }
+        if(plan.metric==='ownNamedTeamEnergy'&&E.getReferenceEffectRecord(own.active).name.startsWith(plan.team+'の'))remaining=own.active.energyCards.filter(a=>!a.isSpecial&&a.energyType===plan.type).length;
+      }
+      assert(remaining<metrics[plan.metric],'TEAM_COUNT_NEGATIVE_FIXTURE_MUST_CHANGE_COUNT');
+      assert.deepEqual(S.identities(before),S.identities(start));
+      const replay=port(start);assert(replay.dispatch('you',t.action||o.action).ok);
+      verifyPrintedAttack(start,replay.getSnapshot(),e,plan.base+plan.unit*remaining);
+    }
     if (e.plan.metric === "ownTeamEnergy") assert(metrics.ownTeamEnergy>0);
     if(['ownBenchNamedCounters','ownAttachedBasicCards','ownAttachedSpecialCards','opponentAttachedSpecialCards','ownDistinctBasicTypes'].includes(e.plan.metric)){
       if(metrics[e.plan.metric]===0)return {status:'BLOCKED',reason:'NO_POSITIVE_PHYSICAL_COUNT_FIXTURE'};
@@ -3585,9 +3660,15 @@ function verifyCase(t, e) {
     }
     assert.deepEqual(S.identities(before),S.identities(baseline));
     const replay=port(baseline);
-    assert.equal(replay.dispatch('you',action).ok,false,'CONTEXT_DISCOUNT_MUST_REQUIRE_CONDITION');
+    const denied=replay.dispatch('you',action);
+    assert.equal(denied.ok,false,'CONTEXT_DISCOUNT_MUST_REQUIRE_CONDITION');
+    assert(JSON.stringify(denied).includes('INSUFFICIENT_VERIFIED_ENERGY'),'CONTEXT_DISCOUNT_NEGATIVE_MUST_FAIL_PAYMENT:'+JSON.stringify(denied));
     assert.deepEqual(B.canonical(JSON.parse(JSON.stringify(replay.getSnapshot()))),B.canonical(baseline));
-    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
+    // The attack's complete independent effect slot still has to pass its own verifier.
+    // Here verify the exact printed action was executed at the discounted payment.
+    assert(after.history.slice(before.history.length).some(ev=>ev.type==='attack'&&ev.details?.effectId===t.trigger.effectId&&ev.details.referenceOfficialCardId===E.getReferenceEffectRecord(before.players[0].active).officialCardId),'DISCOUNTED_PRINTED_ATTACK_MISSING');
+    if(['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(t.trigger.plan.mechanic)&&Number(t.trigger.damage)>0)
+      verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
   }
   if(e.plan.mechanic==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
     const baseline=JSON.parse(JSON.stringify(before)),other=baseline.players[1];
@@ -3823,8 +3904,31 @@ function verifyCase(t, e) {
       'OPPONENT_HAND_REVEAL_NOT_EXACT');
     verifyPrintedAttack(before,after,e,Number(e.damage)||0);
   }
-  if (e.plan.mechanic === "VANILLA_DAMAGE")
-    verifyPrintedAttack(before, after, e, Number(e.damage));
+  if (e.plan.mechanic === "VANILLA_DAMAGE"){
+    // Include the attacker's own continuous damage ability, and any other
+    // exact printed team bonuses present in this fixture. Do not infer a
+    // bonus from the observed DAMAGE event. Verify the amount independently.
+    const attacker=E.getReferenceEffectRecord(before.players[0].active),defender=E.getReferenceEffectRecord(before.players[1].active);
+    const stadium=before.stadium&&E.getReferenceEffectRecord(before.stadium)?.mainPlan?.mechanic;
+    const suppressed=record=>stadium==='WATCHTOWER'&&record.facts.types.includes('無色')||stadium==='SUPPRESS_RULE_ABILITIES'&&record.facts.rulePokemon;
+    const bonuses=[],unique=new Set();
+    for(const holder of [before.players[0].active,...before.players[0].bench]){
+      const printed=E.getReferenceEffectRecord(holder);
+      if(suppressed(printed))continue;
+      for(const ability of printed.abilities){
+        const plan=ability.plan;
+        if(plan?.mechanic!=='PASSIVE_TEAM_ATTACK_BOOST')continue;
+        if(holder===before.players[0].active&&!suppressed(defender)&&defender.abilities.some(a=>a.plan?.mechanic==='ACTIVE_OPPONENT_ABILITY_SUPPRESSION'&&a.plan.exceptAbilityName!==ability.name))continue;
+        if(plan.team&&!attacker.name.startsWith(plan.team+'の'))continue;
+        if(plan.types.length&&!plan.types.some(type=>attacker.facts.types.includes(type)))continue;
+        if(plan.evolvedSource&&attacker.facts.stage===0||plan.evolvedTarget&&defender.facts.stage===0)continue;
+        if(plan.nonStack&&unique.has(ability.name))continue;
+        if(plan.nonStack)unique.add(ability.name);
+        bonuses.push(plan.amount);
+      }
+    }
+    verifyPrintedAttack(before, after, e, Number(e.damage)+bonuses.reduce((sum,n)=>sum+n,0));
+  }
   if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
     const action = t.action || o.action;
     const { discard, cards } = action.selections;
@@ -4025,6 +4129,14 @@ function verifyCase(t, e) {
   }
   if (e.plan.mechanic === "ATTACK_DISCARD_STADIUM") {
     assert(before.stadium && before.stadiumOwner);
+    if(e.plan.optional){
+      const action=t.action||o.action;
+      const skip=port(before);assert(skip.dispatch('you',{...action,selections:{...action.selections,stadiumDiscard:[]}}).ok);
+      assert.equal(skip.getSnapshot().stadium?.id,before.stadium.id);
+      if(Number(e.damage)>0)verifyPrintedAttack(before,skip.getSnapshot(),e,Number(e.damage));
+      assert.deepEqual(S.identities(before),S.identities(skip.getSnapshot()));
+      if(!action.selections?.stadiumDiscard?.length)return {status:'BLOCKED',reason:'NO_POSITIVE_OPTIONAL_STADIUM_FIXTURE'};
+    }
     assert.equal(after.stadium, null);
     assert.equal(after.stadiumOwner, null);
     const discard = after.players.find(side => side.id === before.stadiumOwner).discard;
