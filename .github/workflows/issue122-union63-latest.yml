@@ -4,6 +4,9 @@ on:
     branches: [battle/issue122-union63-latest-20261127]
     paths: ['.github/workflows/issue122-union63-latest.yml']
   workflow_dispatch:
+concurrency:
+  group: issue122-union63-latest
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -67,7 +70,8 @@ jobs:
           server=$!
           trap 'kill "$server"' EXIT
           export POKECA_TEST_URL=http://127.0.0.1:8765/
-          export POKECA_INTAKE_PREFIX=work/card-auto-connect/union-browser
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json"
           export POKECA_INTAKE_RELEASE_BASE=9576b43bf5804f0c8e16bd08ca2b2ecae21388bb
           export POKECA_BROWSER_SHARD_COUNT=4
           export POKECA_BROWSER_SLOTS_ONLY=1
