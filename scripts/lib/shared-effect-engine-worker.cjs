@@ -1512,7 +1512,7 @@ function prepare(r, e, kind) {
     }
     if (!attached) return {blocked:"NO_ATTACHED_TOOL_FIXTURE_RESOURCE"};
   }
-  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
+  if (["RECOIL_DAMAGE", "HEAL_SELF_ATTACK", "COIN_UNTIL_TAILS_MILL", "COIN_UNTIL_TAILS_DAMAGE", "FIXED_COIN_HITS", "VANILLA_DAMAGE", "ATTACK_UNDAMAGED_BONUS", "ATTACK_ATTACHED_TOOL_COUNT", "BENCH_COUNT_DAMAGE", "FULL_BENCH_REQUIRED_DAMAGE", "SELF_COUNTER_DAMAGE", "COIN_BONUS_DAMAGE", "DISCARD_ONE_SELF_ENERGY_ATTACK", "ATTACK_SPLASH_DAMAGE", "ATTACK_DISCARD_OPPONENT_DECK_TOP", "ATTACK_DISCARD_HAND_DRAW", "ATTACK_IGNORE_DAMAGE_RULES", "ANY_DAMAGE"].includes(m)) {
     const p = frame.game.players[0];
     for (const energy of [...p.active.energyCards])
       if (energy.isSpecial) {
@@ -4158,6 +4158,35 @@ function verifyCase(t, e) {
       verifyPrintedAttack(start, end, e, base + damage / 10 * perCounter);
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
       assert.deepEqual(replay.getSnapshot(), end);
+    }
+  }
+  if(e.plan.mechanic==='COIN_UNTIL_TAILS_MILL'){
+    const action=t.action||o.action;
+    assert(before.players[1].deck.length>=2);
+    for(const [seed,heads] of [[682,0],[3,1],[0,2]]){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
+      assert.deepEqual(Array.from(events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean'),x=>x.heads),[...Array(heads).fill(true),false]);
+      const source=start.players[1], resolved=end.players[1];
+      const expected=Array.from(source.deck.slice(0,heads),c=>c.id);
+      const remaining=Array.from(source.deck.slice(heads),c=>c.id);
+      const millEvents=events.filter(x=>x?.command==='DISCARD'&&x.fromZone==='deck'&&x.owner===source.id);
+      assert.deepEqual(Array.from(millEvents.flatMap(x=>x.cardIds)),expected,'MILL_EVENT_EXACT_TOP_IDS');
+      assert.equal(millEvents.length,expected.length?1:0);
+      assert.deepEqual(Array.from(resolved.discard.slice(source.discard.length,source.discard.length+expected.length),c=>c.id),expected,'MILL_DISCARD_EXACT_TOP_IDS');
+      const deck=Array.from(resolved.deck,c=>c.id);
+      if(deck.length===remaining.length-1&&end.turnPlayer===source.id){
+        // Attack completion can draw the opponent's next-turn card. Prove that
+        // it is exactly the next un-milled physical card, not an extra discard.
+        assert(!source.hand.some(c=>c.id===remaining[0]));
+        assert(resolved.hand.some(c=>c.id===remaining[0]),'NEXT_TURN_DRAW_EXACT_ID');
+        assert.deepEqual(deck,remaining.slice(1),'MILL_THEN_TURN_DRAW_ORDER');
+      }else assert.deepEqual(deck,remaining,'MILL_REMAINING_DECK_ORDER');
+      verifyPrintedAttack(start,end,e,e.plan.base);
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(),end);
     }
   }
   if (e.plan.mechanic === "COIN_UNTIL_TAILS_DAMAGE") {
