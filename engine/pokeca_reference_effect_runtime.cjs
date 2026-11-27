@@ -418,12 +418,12 @@ function requests(g,actor,card,effect){
  }
  if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length){cardRequest('energy',card.energyCards||[],1,1);cardRequest('attachTo',p.bench,1,1);}
  if(m==='DISCARD_ONE_SELF_ENERGY_ATTACK')cardRequest('energy',card.energyCards||[],1,1);
- if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)||m==='ATTACK_SPREAD_DAMAGE'&&Number.isInteger(effect.plan.discardAttached)){
   // Printed Energy "個" can be supplied by one physical multi-unit Energy card.
   const eligible=(card.energyCards||[]).filter(energy=>
     selectedAttachmentUnits(card,energy,effect.plan)>0);
   cardRequest('energy',eligible,Math.min(1,eligible.length),
-    Math.min(effect.plan.count,eligible.length));
+    Math.min((m==='ATTACK_SPREAD_DAMAGE'?effect.plan.discardAttached:effect.plan.count),eligible.length));
  }
  if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
   const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
@@ -690,14 +690,14 @@ function verifyRequests(g,actor,card,effect,action){
    assert(chosen.every(e=>supplied-e.moveUnits<required),'REDUNDANT_MOVE_ENERGY');
   }
  }
- if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)||m==='ATTACK_SPREAD_DAMAGE'&&Number.isInteger(effect.plan.discardAttached)){
   // The selection specifies physical cards, but the printed quantity counts
   // their provided Energy units (including multi-unit special Energy).
   const contribution=energy=>selectedAttachmentUnits(card,energy,effect.plan);
   const available=(card.energyCards||[]).filter(energy=>contribution(energy)>0);
   const choice=selected(action,'energy').map(ident=>available.find(e=>id(e)===ident));
   assert(choice.every(Boolean),'INVALID_SELF_ENERGY_SELECTION');
-  const target=Math.min(effect.plan.count,available.reduce((n,e)=>n+contribution(e),0));
+  const target=Math.min((m==='ATTACK_SPREAD_DAMAGE'?effect.plan.discardAttached:effect.plan.count),available.reduce((n,e)=>n+contribution(e),0));
   const selectedUnits=choice.reduce((n,e)=>n+contribution(e),0);
   assert(selectedUnits>=target,'INSUFFICIENT_SELECTED_ENERGY_UNITS');
   assert(choice.every(e=>selectedUnits-contribution(e)<target),
@@ -1237,6 +1237,10 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'ATTACK_SPREAD_DAMAGE':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.discardAttached!==undefined){
+    const chosen=plan.discardAttached==='all'?(card.energyCards||[]).map(id):ids('energy');
+    discardSelectedAttachment(g,actor,p,[card],chosen);
+   }
    const targets=spreadTargets(plan,p,o);
    for(const mon of targets)
     if(plan.count===null||action.targetIds?.includes(id(mon)))damage(g,actor,mon,plan.amount,
@@ -1934,13 +1938,13 @@ function completeAction(g,actor,option){
   }
  }
  if(m==='TRAINER_SWITCH_OR_EX_V_BOOST'&&action.selections.mode[0]==='boost')action.selections.ownBench=[];
- if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)){
+ if(['ATTACK_DISCARD_MULTIPLE_SELF_ENERGY','ATTACK_RETURN_SELF_ENERGY'].includes(m)||m==='ATTACK_SPREAD_DAMAGE'&&Number.isInteger(effect.plan.discardAttached)){
   const entries=(card.energyCards||[]).map((energy,index)=>({
     energy,index,units:selectedAttachmentUnits(card,energy,effect.plan)
   })).filter(e=>e.units>0).sort((a,b)=>b.units-a.units||a.index-b.index);
   const chosen=[];let covered=0;
   for(const entry of entries){
-   if(covered>=effect.plan.count)break;
+   if(covered>=(m==='ATTACK_SPREAD_DAMAGE'?effect.plan.discardAttached:effect.plan.count))break;
    chosen.push(entry.energy);covered+=entry.units;
   }
   action.selections||={};
