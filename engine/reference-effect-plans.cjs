@@ -246,6 +246,13 @@ function additionalAttackPlan(entry,text){
    return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:count==='好きなだけ'?5:Number.parseInt(count,10),...(typedBench?{type:typedBench[1]}:{}),batchSearch:true,sharedWording:true};
   }
  }
+ // Exact team or named basic Pokemon search; physical basic-only entry.
+ const teamBench=text.match(/^自分の山札からたねポケモンの「(ロケット団|ヒビキ|ナンジャモ|シロナ|リーリエ|ホップ|N|ペパー|カスミ|ダイゴ)のポケモン」を(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
+ const namedBench=text.match(/^自分の山札から「(ケロマツ|アゴジムシ)」を(1枚|[2-5]枚まで)選び、ベンチに出す。そして山札を切る。$/);
+ if((teamBench||namedBench)&&/^\d+$/.test(printed)){
+  const found=teamBench||namedBench;
+  return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:found[2]==='好きなだけ'?5:parseInt(found[2],10),...(teamBench?{team:found[1]}:{nameExact:found[1]}),batchSearch:true,sharedWording:true};
+ }
  // Exact one-holder acceleration; multi-holder distribution is a separate mechanic.
  const acceleration=text.match(/^自分の(山札|トラッシュ)から(基本エネルギー|「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」)を(1枚|[2-9]枚まで)選び、(このポケモン|自分のポケモン1匹|ベンチポケモン1匹|自分のポケモン|ベンチポケモン|自分の\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモン)につける。(そして山札を切る。)?$/);
  if(acceleration&&/^\d+$/.test(printed)&&Boolean(acceleration[7])===(acceleration[1]==='山札')){
@@ -369,6 +376,8 @@ function additionalAttackPlan(entry,text){
  const discardOpponentAttachments=text.match(/^相手のポケモン全員についている(「ポケモンのどうぐ」と「特殊エネルギー」|特殊エネルギー)を、すべてトラッシュする。$/);
  if(discardOpponentAttachments&&/^\d+$/.test(printed))
   return {mechanic:'ATTACK_DISCARD_OPPONENT_ATTACHMENTS',commands:[...deal,'DISCARD'],tools:discardOpponentAttachments[1].startsWith('「ポケモンのどうぐ」'),sharedWording:true};
+ const optionalFixedDraw=text.match(/^のぞむなら、自分の山札を([1-9]\d?)枚引く。$/);
+ if(optionalFixedDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalFixedDraw[1]),fixedDraw:true,sharedWording:true};
  const optionalDraw=text.match(/^のぞむなら、自分の手札が([1-9]\d?)枚になるように、山札を引く。$/);
  if(optionalDraw)return {mechanic:'ATTACK_OPTIONAL_DRAW_TO_LIMIT',commands:[...deal,'DRAW'],limit:Number(optionalDraw[1])};
  const discardHand=text.match(/^自分の手札をすべてトラッシュし、(?:自分の)?山札を([1-9]\d?)枚引く。$/);
