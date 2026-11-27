@@ -1457,12 +1457,12 @@ function applyPlan(g,actor,card,effect,action){
    }
    if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'){
     const chosen=ids('energy'),attached=card.energyCards||[];
-    assert(Number.isInteger(plan.count)&&plan.count>=2&&plan.count<=9,
+    assert(Number.isInteger(plan.count)&&plan.count>=(plan.type?1:2)&&plan.count<=9,
       'INVALID_PRINTED_SELF_ENERGY_DISCARD_COUNT');
-    const contribution=energy=>energyUnits({...card,energyCards:[energy]}).length;
+    const contribution=energy=>selectedAttachmentUnits(card,energy,plan);
     const target=Math.min(plan.count,attached.reduce((sum,e)=>sum+contribution(e),0));
     const selectedEnergy=chosen.map(ident=>attached.find(e=>id(e)===ident));
-    assert(selectedEnergy.every(Boolean)&&
+    assert(selectedEnergy.every(e=>e&&contribution(e)>0)&&
       selectedEnergy.reduce((sum,e)=>sum+contribution(e),0)>=target,
       'PRINTED_SELF_ENERGY_DISCARD_COUNT_CHANGED');
     for(const ident of chosen){
