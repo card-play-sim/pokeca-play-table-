@@ -30,6 +30,15 @@ jobs:
           git merge-base --is-ancestor 6f6f9f841f25adbc0b63a2238c51b932c94fcf7a HEAD
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/lib/shared-effect-engine-worker.cjs')
+          s=p.read_text()
+          old="    const attacker=records.get(basicEx&&!e.proofNonEx?'49264':'45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);"
+          new="    const candidates=basicEx?[...records.values()].filter(c=>c.category==='pokemon'&&c.facts?.basic&&c.name.endsWith('ex')!==Boolean(e.proofNonEx)&&c.officialCardId!==r.officialCardId&&c.attacks?.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan)&&c.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2)):[];\n    const attacker=basicEx?candidates.sort((a,b)=>String(a.officialCardId).localeCompare(String(b.officialCardId)))[0]:records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(!basicEx||Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2));"
+          assert s.count(old)==1, 'EXACT_FIXTURE_ANCHOR_MISSING'
+          p.write_text(s.replace(old,new))
+          PY
           node --check scripts/lib/shared-effect-engine-worker.cjs
           mkdir -p artifacts
           node scripts/build-effect-extensions.cjs
