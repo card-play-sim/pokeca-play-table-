@@ -149,6 +149,16 @@ console.log('LOCAL_UNKNOWN_EXACT_ANCHOR_IDS PASS');
 assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"reason":"TARGET_NOT_COMPILED"}]}',2).type,'COMPILE');
 assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"reason":"ENGINE_EXECUTION_FAILED"}]}',2).type,'EXECUTION');
 assert.equal(repairProfile('QUARANTINE_RECEIPT_FEEDBACK {"state":"PRIOR_RECORD_CHANGED"}',2).type,'INTEGRITY');
+assert.equal(repairProfile('NO_SELECTED_PRINT_QUALIFIED NO_LEGAL_VERIFICATION_FIXTURE',2).type,'FIXTURE');
+assert.equal(repairProfile('TARGET_NOT_COMPILED NO_LEGAL_VERIFICATION_FIXTURE',2).type,'COMPILE');
+const {excerpts}=require('../scripts/local-unknown-effect-generator.cjs');
+const longSource=['function plan(text){',...Array.from({length:200},(_,i)=>' const unrelatedValue'+i+' = '+i+';'),' const targetEnergyCounter = deck.energy.length;','}'].join('\n');
+const relevant=excerpts(longSource,{exampleOfficialText:'山札のエネルギー'},path,250);
+assert(relevant.includes(' const targetEnergyCounter = deck.energy.length;'),'LATE_RELEVANT_SOURCE_MUST_SURVIVE');
+assert(!relevant.includes('unrelatedValue0')||relevant.includes('targetEnergyCounter'));
+const relevantAnchors=modelAnchors({[path]:longSource},{exampleOfficialText:'山札のエネルギー'},250);
+assert([...relevantAnchors.values()].some(x=>x.before===' const targetEnergyCounter = deck.energy.length;'));
+assert(annotatedModelContext({[path]:longSource},{exampleOfficialText:'山札のエネルギー'},250,relevantAnchors).includes('targetEnergyCounter'));
 console.log('LOCAL_UNKNOWN_RECEIPT_REPAIR_ROUTING PASS');
 
 // Compact repair may expose one group only: never adopt or count the other groups.
