@@ -246,7 +246,7 @@ function parseModelProposal(raw,finishReason){
 // Never accept malformed or partially generated code as a successful patch.
 function repairProfile(feedback='',attempt=1){
  const reason=String(feedback);
- const type=/MODEL_COMPILER_ANCHOR_REMOVED|EXTENSION_IMMUTABLE_SOURCE_CONFLICT|PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
+ const type=/MODEL_OFF_TARGET_DEFINITION|MODEL_COMPILER_ANCHOR_REMOVED|EXTENSION_IMMUTABLE_SOURCE_CONFLICT|PRIOR_RECORD_CHANGED|QUALIFIED_RECORD_MISSING|DUPLICATE_COMPILED_PRINT/i.test(reason)?'INTEGRITY':
  /DEADLINE|TIMEOUT|TRANSPORT|timed out/i.test(reason)?'TRANSPORT':
  /MODEL_OUTPUT_TRUNCATED|finish_reason.*length/i.test(reason)?'TRUNCATED':
  /CANDIDATE_JS_SYNTAX/i.test(reason)?'SYNTAX':
@@ -421,6 +421,19 @@ function focusFailedBatch(batch,receipt){
 }
 // This is the real generator loop, also exercised without paid inference in
 // regression tests. Every failed proposal is rejected before scratch writes.
+// Literal definition rows must describe an official effect selected in this attempt.
+// This rejects context-copying before any scratch write or costly engine rebuild.
+function validateDefinitionScope(groups,proposal){
+ const official=new Set(groups.map(g=>g.exampleOfficialText.normalize('NFKC')));
+ for(const edit of proposal?.edits||[]){
+  if(edit.path!==allowed[0]||typeof edit.before!=='string'||typeof edit.after!=='string'||!/^\s*\[['"]/.test(edit.before))continue;
+  for(const line of edit.after.split('\n')){
+   if(line===edit.before||!line.trim())continue;
+   const match=/^\s*\[\s*(['"])([^'"]+)\1\s*,\s*(['"])([^'"]+)\3\s*,/.exec(line);
+   assert(match&&official.has(match[4].normalize('NFKC')),'MODEL_OFF_TARGET_DEFINITION');
+  }
+ }
+}
 async function generateWithRepair(batch,sources,{feedback='',previousPatch='',propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
  let proposal,scope,changed;
  for(let attempt=1;attempt<=2;attempt++){
@@ -430,6 +443,7 @@ async function generateWithRepair(batch,sources,{feedback='',previousPatch='',pr
   onAttempt(attempt,scope,profile);
   try{
    proposal=await propose(scope.groups,sources,feedback,profile,previousPatch);
+   validateDefinitionScope(scope.groups,proposal);
    changed=applyEdits(sources,proposal);
    validateCandidateSyntax(sources,changed);
    return {proposal,changed,scope,feedback:''};
@@ -532,4 +546,4 @@ if(require.main===module){
   try{console.log(probeReviewed(read(process.argv[3]))?'1':'0');}catch(e){console.error(e);process.exitCode=1;}
  }else main().catch(e=>{console.error(e);process.exitCode=1;});
 }
-module.exports={reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
