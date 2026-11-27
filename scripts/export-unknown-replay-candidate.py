@@ -44,6 +44,20 @@ def unchanged_delta(before, after):
         raise ValueError("PRIOR_RECORD_CHANGED")
     return set(after)-set(before)
 
+def verified_intake_delta(before, after, compiled, checkpoint, added):
+    # The staging engine may defer a formerly uncompiled intake row. Accept
+    # that omission only if the exact row is already in the durable main
+    # checkpoint, so retry data cannot disappear when the candidate is merged.
+    if any(after[k] != v for k,v in before.items() if k in after):
+        raise ValueError("PRIOR_INTAKE_ROW_CHANGED")
+    removed = set(before)-set(after)
+    for key in removed:
+        if key in compiled or checkpoint.get(key) != before[key]:
+            raise ValueError("UNSAFE_INTAKE_DEFERRAL:"+key)
+    if not (set(after)-set(before)) <= added or not added <= set(after):
+        raise ValueError("INTAKE_DELTA_NOT_PROVEN")
+    return removed
+
 def evidence_paths(added):
     return {"data/effect-extensions/evidence/"+key+".json" for key in ids(sorted(added))}
 
@@ -60,9 +74,16 @@ def manifest_scope(repo, entry, files):
         raise ValueError("REPLAY_DELTA_NOT_PROVEN")
     old_intake = index(git(repo,"show",base+":data/effect-extensions/intake.json"))
     new_intake = index(files["data/effect-extensions/intake.json"])
-    intake_added = unchanged_delta(old_intake,new_intake)
-    if not intake_added <= added or not added <= set(new_intake):
-        raise ValueError("INTAKE_DELTA_NOT_PROVEN")
+    checkpoint = index(git(repo,"show",base+":data/official-effect-intake/checkpoint.json"))
+    removed = verified_intake_delta(old_intake,new_intake,old,checkpoint,added)
+    for key in removed:
+        row = old_intake[key]
+        path = "data/effect-extensions/evidence/"+key+".json"
+        proof = json.loads(git(repo,"show",base+":"+path))
+        url = "https://www.pokemon-card.com/card-search/details.php/card/"+key
+        hash_value = digest(proof["html"].encode())
+        if row["source"]["path"] != path or row["source"]["sha256"] != hash_value or proof["htmlSha256"] != hash_value or proof["url"] != url or row["officialPageUrl"] != url:
+            raise ValueError("DEFERRED_OFFICIAL_PROOF_MISMATCH:"+key)
     expected = FIXED | evidence_paths(added)
     if set(files) != expected:
         raise ValueError("UNEXPECTED_RELEASE_FILES")
@@ -154,6 +175,21 @@ def self_test():
         pass
     else:
         raise AssertionError("UNSAFE_EVIDENCE_ID")
+    before = {"1":{"x":1},"2":{"x":2}}
+    after = {"1":{"x":1},"3":{"x":3}}
+    assert verified_intake_delta(before,after,{"1":{}},{"2":{"x":2}},{"3"}) == {"2"}
+    for bad_after,bad_compiled,bad_checkpoint,bad_added in (
+        (after,{"1":{},"2":{}},{"2":{"x":2}},{"3"}),
+        (after,{"1":{}},{},{"3"}),
+        (after,{"1":{}},{"2":{"x":9}},{"3"}),
+        ({"1":{"x":9},"3":{}},{"1":{}},{"2":{"x":2}},{"3"}),
+        (after,{"1":{}},{"2":{"x":2}},set()),
+    ):
+        try:
+            verified_intake_delta(before,bad_after,bad_compiled,bad_checkpoint,bad_added)
+        except ValueError:
+            continue
+        raise AssertionError("UNSAFE_DEFERRAL_ALLOWED")
     print("UNKNOWN_REPLAY_CANDIDATE_SELF_TEST PASS")
 
 if __name__=="__main__":
