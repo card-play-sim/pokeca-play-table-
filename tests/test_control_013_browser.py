@@ -209,8 +209,23 @@ async def main():
     attack_print=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId",before['players'][0]['active'])
     assert any(event['type']=='attack' and event.get('details',{}).get('effectId')==(trigger or f['e'])['effectId']
                and event['details'].get('referenceOfficialCardId')==attack_print for event in events)
-    if not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE'):
+    if m=='PASSIVE_TEAM_ATTACK_BOOST':
+     proof=trigger['proofTeamBoost'];plan=f['e']['plan']
+     own=before['players'][0];other=before['players'][1]
+     assert attack_print==proof['attackerChain'][-1]
+     defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",other['active'])
+     assert defender_print==proof['defenderChain'][-1]
+     holders=await page.evaluate("cards=>cards.map(c=>Pokeca.getReferenceEffectRecord(c)?.officialCardId)",own['bench'])
+     assert holders.count(r['officialCardId'])==(2 if plan.get('nonStack') else 1)
+     assert proof['holderPrint']==r['officialCardId']
+     if plan.get('evolvedSource'):assert own['active']['evolutionCards']
+     if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
+     assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
+     assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
+    elif not trigger or m in ('PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
+     if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
+      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
     else:
      # An evolved in-play instance keeps its base identity; resolve the current print through the engine.
      defender_print=await page.evaluate("card=>Pokeca.getReferenceEffectRecord(card)?.officialCardId",before['players'][1]['active'])
@@ -719,6 +734,16 @@ async def main():
      assert {source['id'],*(c['id'] for c in source['evolutionCards'])}<={c['id'] for c in side['hand']}
      assert {c['id'] for c in source['energyCards']}<={c['id'] for c in side['discard']}
     else:assert side['active']['id']==source['id']
+   if m=='MASS_HAND_ACQUISITION':
+    plan=f['e']['plan'];own=before['players'][0];resolved=after['players'][0];selection=option['action'].get('selections',{})
+    count=min(plan['amount'],len(own['deck']))
+    picked=([x['id'] for x in own['deck'][-count:][::-1]] if plan['mode']=='bottom' else [x['id'] for x in own['deck'][:count]] if plan['mode']=='draw' else selection['cards'])
+    assert picked and set(picked)<={x['id'] for x in resolved['hand']}
+    assert len(resolved['hand'])==len(own['hand'])+len(picked)
+    if plan['mode']=='bottom':assert [x['id'] for x in resolved['deck']]==[x['id'] for x in own['deck'][:-count]]
+    if plan['mode']=='search':
+     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' and not ev['details'].get('reference') for ev in events)
+     assert not any(ev.get('details',{}).get('command')=='REVEAL' and not ev['details'].get('reference') for ev in events)
    if m=='MASS_COUNTER_GRAMMAR':
     plan=f['e']['plan'];other=before['players'][1];own=before['players'][0];sel=option['action'].get('selections',{})
     pool=[other['active'],*other['bench']]
@@ -794,40 +819,58 @@ async def main():
    print(json.dumps(report,ensure_ascii=False))
    await c.close();await b.close()
    return
-  # Run the imported-deck match independently of any pending fixture choices.
+  # Independent imported-deck games must finish AND execute a new print.
+  # One legal random opening can finish without ever drawing a candidate.
+  # Repeat deterministic openings; do not count a match without new effects.
   await c.close()
-  c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-  await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
-  await ready()
-  await page.locator('#menu-open').tap();await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap();await page.locator('#reference-deck-import').set_input_files(str(PREFIX/'example-decks.json'))
-  try:
-   await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
-  except Exception:
-   raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
-  await page.evaluate('Math.random=()=>2/4294967296');await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
-  await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
-  for _ in range(10):
-   pending=(await snap()).get('pendingReferenceChoice')
-   if not pending:break
-   if pending['playerId']=='you':await page.locator('#reference-choice button').first.tap()
-   else:await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
-  await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
-  if await toggle.count():await toggle.tap()
-  else:await page.locator('#sheet-close').tap()
-  for turn in range(120):
-   state=await snap()
-   if state['status']=='finished':break
-   actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
-   result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return r;}',actor)
-   if not result['ok']:
-    failure={'turn':turn,'actor':actor,'result':result,'before':state,'after':await snap()}
-    (ROOT/'artifacts').mkdir(exist_ok=True)
-    (ROOT/'artifacts/control-013-ai-policy-failure.json').write_text(json.dumps(failure,ensure_ascii=False,indent=2))
-    print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
-   assert result['ok'],result
-   await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',turn,actor,result,flush=True)
-  final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});assert used;match={'seed':2,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
-  await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
+  match=None
+  attempted_matches=[]
+  for seed in (2, 17, 101, 257, 1009, 8191, 65537, 104729):
+   c=await b.new_context(**device,service_workers='allow');page=await c.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+   await page.goto(os.environ.get('POKECA_TEST_URL','http://127.0.0.1:8765/')+'#battle',wait_until='domcontentloaded')
+   await ready()
+   await page.locator('#menu-open').tap()
+   await page.get_by_role('button',name='公式証跡つき参照デッキJSONを開く',exact=True).tap()
+   # The menu opens a second sheet; it does not open the OS file chooser.
+   file_input=page.locator('#reference-deck-import')
+   await file_input.wait_for(state='visible',timeout=15000)
+   async with page.expect_file_chooser(timeout=15000) as chooser:
+    await file_input.tap()
+   await (await chooser.value).set_files(str(PREFIX/'example-decks.json'))
+   try:
+    await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
+   except Exception:
+    raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
+   await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',seed);await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+   await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
+   for _ in range(10):
+    pending=(await snap()).get('pendingReferenceChoice')
+    if not pending:break
+    if pending['playerId']=='you':await page.locator('#reference-choice button').first.tap()
+    else:await page.wait_for_function('PokecaMobile.port.getSnapshot().pendingReferenceChoice?.playerId!=="ai"')
+   await page.locator('#menu-open').tap();toggle=page.get_by_role('button',name='AI自動応答：オン（タップでオフ）',exact=True)
+   if await toggle.count():await toggle.tap()
+   else:await page.locator('#sheet-close').tap()
+   for turn in range(120):
+    state=await snap()
+    if state['status']=='finished':break
+    actor=(state.get('pendingPrizeSelection') or state.get('pendingReferenceChoice') or {}).get('playerId',state['turnPlayer'])
+    result=await page.evaluate('async actor=>{const r=await Pokeca.runAITurn(PokecaMobile.port,actor,{maxActions:80});return r;}',actor)
+    if not result['ok']:
+     failure={'turn':turn,'actor':actor,'result':result,'before':state,'after':await snap()}
+     (ROOT/'artifacts').mkdir(exist_ok=True)
+     (ROOT/'artifacts/control-013-ai-policy-failure.json').write_text(json.dumps(failure,ensure_ascii=False,indent=2))
+     print('AI_POLICY_FAILURE',json.dumps({'turn':turn,'actor':actor,'result':result,'pending':state.get('pendingReferenceChoice'),'prize':state.get('pendingPrizeSelection')},ensure_ascii=False),flush=True)
+    assert result['ok'],result
+    await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"');print('EXPANDED MATCH',seed,turn,actor,{'ok':result['ok'],'actions':result.get('actions')},flush=True)
+   final=await snap();assert final['status']=='finished';new_ids=all_official_ids;used=sorted({e.get('details',{}).get('sourceOfficialCardId') for e in final.get('history',[]) if e.get('details',{}).get('sourceOfficialCardId') in new_ids});match={'seed':seed,'winner':final['winner'],'turn':final['turnNumber'],'finished':True,'executedNewPrints':used}
+   await c.set_offline(True);await page.reload();await ready();assert await snap()==final;await c.set_offline(False)
+   attempted_matches.append(match)
+   print('EXPANDED_MATCH_COVERAGE',json.dumps(match,ensure_ascii=False),flush=True)
+   if used:break
+   await c.close()
+  assert match and match['executedNewPrints'],f'NO_NEW_PRINT_EXECUTED_IN_COMPLETED_MATCHES:{attempted_matches}'
+  match={**match,'attemptedMatches':attempted_matches}
   assert not errors,errors
   report={'url':page.url,'expandedAIMatch':match,'newPrints':len({f['r']['officialCardId'] for f in fixtures}),'newPatterns':len(set(f['e']['plan']['mechanic'] for f in fixtures)),'cases':cases,'javascriptErrors':errors,'physicalAndroidVerified':False};(ROOT/'artifacts').mkdir(exist_ok=True);(ROOT/('artifacts/'+os.environ.get('POKECA_INTAKE_ARTIFACT','control-013')+'-browser.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False));await b.close()
 if __name__=='__main__':
