@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1248,
-      "missing": 454
+      "connected": 1252,
+      "missing": 450
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1242,
+      "CONNECTED_UNTESTED": 1246,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 397,
+      "ENGINE_CONNECTION_REQUIRED": 393,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10013,8 +10013,7 @@
       "name": "ロケット団のスリーパー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47431.json"
     },
     {
@@ -11077,8 +11076,7 @@
       "name": "ズルズキン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47677.json"
     },
     {
@@ -12411,8 +12409,7 @@
       "name": "ズルズキン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48049.json"
     },
     {
@@ -14774,8 +14771,7 @@
       "name": "ロケット団のスリーパー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49005.json"
     },
     {
@@ -21356,22 +21352,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1296,
-        "MECHANIC_REQUIRED": 560,
+        "ENGINE_CONNECTED": 1299,
+        "MECHANIC_REQUIRED": 557,
         "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1248,
-        "MECHANIC_REQUIRED": 441,
+        "ENGINE_CONNECTED": 1252,
+        "MECHANIC_REQUIRED": 437,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
         "ENGINE_CONNECTED": 550,
-        "MECHANIC_REQUIRED": 312,
-        "ENGINE_CONNECTION_REQUIRED": 3,
+        "MECHANIC_REQUIRED": 311,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21380,7 +21376,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3732,
-    "unconnected": 1341
+    "engineConnected": 3739,
+    "unconnected": 1334
   }
 }

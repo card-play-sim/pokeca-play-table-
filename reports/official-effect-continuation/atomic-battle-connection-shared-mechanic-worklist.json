@@ -5180,28 +5180,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_75DCFEF0B00ED4DFCC6A",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手は相手自身のベンチポケモンの数ぶんコインを投げる。相手のバトルポケモンに、ウラの数×80ダメージ。このワザのダメージは弱点・抵抗力を計算しない。",
-      "printedDamage": "80×",
-      "energyCost": [
-        "超",
-        "超",
-        "超"
-      ],
-      "officialCardIds": [
-        "47431",
-        "49005"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47431.json",
-        "data/effect-extensions/evidence/49005.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_76AF957E0D11E95E97DD",
       "category": "pokemon",
       "effectKind": "attack",
@@ -5440,26 +5418,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47014.json",
         "data/effect-extensions/evidence/47221.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_87DAD5031D39781584A5",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "コインを3回投げる。オモテが1回なら、20ダメージ追加。オモテが2回なら、50ダメージ追加。すべてオモテなら、80ダメージ追加。",
-      "printedDamage": "10+",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "46425",
-        "49303"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46425.json",
-        "data/effect-extensions/evidence/49303.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -7336,27 +7294,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_F795F74D8019470FEE19",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "自分の場の[悪]ポケモンの数ぶんコインを投げ、オモテの数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "悪",
-        "悪"
-      ],
-      "officialCardIds": [
-        "47677",
-        "48049"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47677.json",
-        "data/effect-extensions/evidence/48049.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_FA8E28C8C66F6E59F728",
       "category": "pokemon",
       "effectKind": "ability",
@@ -7562,26 +7499,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47447.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_04FBCCC412173BD45D5D",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "このポケモンについている[水]エネルギーの数ぶんコインを投げ、オモテの数×90ダメージ。",
-      "printedDamage": "90×",
-      "energyCost": [
-        "水",
-        "水",
-        "無色"
-      ],
-      "officialCardIds": [
-        "49657"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/49657.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -9143,24 +9060,6 @@
       ],
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50139.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3E3188482091B36C3E26",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "おたがいのバトルポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×60ダメージ。",
-      "printedDamage": "60×",
-      "energyCost": [
-        "草"
-      ],
-      "officialCardIds": [
-        "46342"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46342.json"
       ],
       "printCount": 1,
       "effectSlots": 1
@@ -13821,5 +13720,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1341
+  "unfinishedPrints": 1334
 }
