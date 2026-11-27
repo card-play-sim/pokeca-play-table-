@@ -747,6 +747,8 @@ function plan(entry,kind){
   return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:Number(evolveCounters[1]),amount:Number(evolveCounters[2]),sharedWording:true};
  if(kind==='ATTACK'&&generic==='のぞむなら、このポケモンを手札にもどす。(ポケモン以外のカードは、すべてトラッシュする。)'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_OPTIONAL_RETURN_POKEMON',commands:['DAMAGE','RETURN_TO_HAND','DISCARD'],sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンは、相手のたねポケモンの「ポケモンex」からワザのダメージを受けない。')
+  return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:'basicEx',sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};

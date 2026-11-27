@@ -579,7 +579,7 @@ function prepare(r, e, kind) {
     const trigger = { ...r.attacks[attackIndex], effectIndex: attackIndex };
     return { ...prepare(r, trigger, "attack"), trigger };
   }
-  if (m === "PASSIVE_TYPED_ATTACK_IMMUNITY") {
+  if (m === "PASSIVE_TYPED_ATTACK_IMMUNITY"&&e.plan.attacker!=='basicEx') {
     const attacker = records.get(e.plan.attacker==='ex'?'49264':'47301');
     if(!attacker)return {blocked:'NO_IMMUNITY_ATTACKER'};
     const attackIndex=attacker.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
@@ -696,8 +696,10 @@ function prepare(r, e, kind) {
     other.active.referenceProtection={opponentTurn:g.turnNumber};
     return {...t,port:port(g),trigger};
   }
-  if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'){
-    const attacker=records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+  if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'||m==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&e.plan.attacker==='basicEx'){
+    const basicEx=m==='PASSIVE_TYPED_ATTACK_IMMUNITY';
+    const attacker=records.get(basicEx&&!e.proofNonEx?'49264':'45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    if(basicEx&&(!attacker?.facts.basic||attacker.name.endsWith('ex')===Boolean(e.proofNonEx)))return {blocked:'NO_EXACT_BASIC_EX_ATTACKER'};
     if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
     const line=record=>{
@@ -707,7 +709,7 @@ function prepare(r, e, kind) {
     };
     const chain=line(r);
     if(!chain)return {blocked:'NO_RETALIATION_EVOLUTION_LINE'};
-    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,chain);
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,basicEx?[...chain,attacker]:chain,{catalog:[...records.values()]});
     const requirements=chain.length>1?[{side:1,zone:'active',printId:chain[0].officialCardId},...chain.slice(1).map(c=>({side:1,zone:'hand',printId:c.officialCardId}))]:[];
     const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:chain[0].officialCardId,fixtureRequirements:requirements});
     if(frame.blocked)return frame;
@@ -736,6 +738,9 @@ function prepare(r, e, kind) {
       assert.equal(game.turnPlayer,'you');
       assert.deepEqual(Array.from(S.identities(game)),identities);
       assert.equal(E.getReferenceEffectRecord(game.players[1].active).officialCardId,r.officialCardId);
+    }
+    if(basicEx){
+      for(const energy of [...game.players[0].active.energyCards])if(energy.isSpecial){game.players[0].active.energyCards.splice(game.players[0].active.energyCards.indexOf(energy),1);game.players[0].deck.push(energy);}
     }
     return {port:port(game),sourceId:frame.sourceId,kind:'attack',trigger};
   }
@@ -3704,9 +3709,21 @@ function verifyCase(t, e) {
     const defender=E.getReferenceEffectRecord(before.players[1].active);
     assert(defender.abilities.some(a=>a.effectId===e.effectId));
     const source=E.getReferenceEffectRecord(before.players[0].active);
-    assert(e.plan.attacker==='ex'?source.name.endsWith('ex'):source.abilities.length>0);
+    assert(e.plan.attacker==='basicEx'?source.facts.basic&&source.name.endsWith('ex'):e.plan.attacker==='ex'?source.name.endsWith('ex'):source.abilities.length>0);
     assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===before.players[1].active.id&&ev.amount===0));
     assert.equal(after.players[1].active.damage,before.players[1].active.damage);
+    if(e.plan.attacker==='basicEx'){
+      assert(before.players[1].active.evolutionCards?.length>0);
+      const negative=prepare(r,{...e,proofNonEx:true},'ability');
+      assert(!negative.blocked,negative.blocked);
+      const start=negative.port.getSnapshot(),option=effectOption(negative,e);
+      assert(!E.getReferenceEffectRecord(start.players[0].active).name.endsWith('ex'));
+      assert(negative.port.dispatch('you',option.action).ok);
+      const result=negative.port.getSnapshot();
+      verifyPrintedAttack(start,result,negative.trigger,Number(negative.trigger.damage));
+      assert(result.history.slice(start.history.length).some(ev=>ev.details?.command==='DAMAGE'&&ev.details.targetInstanceId===start.players[1].active.id&&ev.details.amount>0));
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(result)));
+    }
   }
   if(e.plan.mechanic==='PASSIVE_TEAM_ATTACK_BOOST'){
     const plan=e.plan,action=t.action||o.action,baseline=JSON.parse(JSON.stringify(before)),own=baseline.players[0];
