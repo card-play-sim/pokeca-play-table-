@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "registryHash": "c99e0a8cd8dd8b0693cf256efb19f0ca96d591d1812b74f6548ae6cdf2da5c4c",
-  "classifiedRegistryHash": "c99e0a8cd8dd8b0693cf256efb19f0ca96d591d1812b74f6548ae6cdf2da5c4c",
+  "registryHash": "f56a3cbc3ff5685df7acb59b81bc0bf368b2431680471a1bd1681a50cedb929f",
+  "classifiedRegistryHash": "f56a3cbc3ff5685df7acb59b81bc0bf368b2431680471a1bd1681a50cedb929f",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
   "officialPages": 5198,
   "collectedNewPages": 5017,
-  "explicitEffects": 5289,
+  "explicitEffects": 5287,
   "noExplicitText": 2411,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 261,
-      "notImplemented": 113,
+      "compiled": 263,
+      "notImplemented": 111,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
     "item": {
       "prints": 299,
-      "compiled": 211,
-      "notImplemented": 88,
+      "compiled": 213,
+      "notImplemented": 86,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
@@ -42,10 +42,10 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2628,
-      "notImplemented": 1028,
-      "blocked": 20,
-      "executionVerifiedPrints": 731
+      "compiled": 2660,
+      "notImplemented": 995,
+      "blocked": 21,
+      "executionVerifiedPrints": 741
     },
     "energy": {
       "prints": 681,
@@ -411,7 +411,7 @@
     {
       "officialCardId": "44429",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44430",
@@ -884,11 +884,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50779",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50783",
       "name": "ハルジオ",
       "category": "supporter",
@@ -1020,11 +1015,6 @@
     },
     {
       "officialCardId": "50691",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50694",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1229,11 +1219,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45747",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45755",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1245,11 +1230,6 @@
     },
     {
       "officialCardId": "45848",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45850",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1384,11 +1364,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46426",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46427",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1419,11 +1394,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46641",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46678",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1445,11 +1415,6 @@
     },
     {
       "officialCardId": "46728",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46737",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1934,11 +1899,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49591",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50564",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2180,16 +2140,6 @@
     },
     {
       "officialCardId": "46186",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46240",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46323",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3434,11 +3384,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46012",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46029",
       "name": "古びたねっこの化石",
       "category": "item",
@@ -3680,11 +3625,6 @@
     },
     {
       "officialCardId": "46151",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46161",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4314,11 +4254,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46774",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46798",
       "name": "鬼の仮面",
       "category": "item",
@@ -4884,11 +4819,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50155",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50157",
       "name": "大漁ネット",
       "category": "item",
@@ -4916,21 +4846,6 @@
         "sha256": "89fe3d6bbf2d8cc2d5184a693fb2b634cd0606df89ed4691fc16f4d03f745017",
         "htmlSha256": "89fe3d6bbf2d8cc2d5184a693fb2b634cd0606df89ed4691fc16f4d03f745017",
         "textSha256": "89d9df89e2fa9af786d2b34d1f6a8a6d33f15ac92d69635d9893bd20afb6ef48"
-      }
-    },
-    {
-      "officialCardId": "50160",
-      "name": "ジプソ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50160.json",
-        "sha256": "d6abce1b729d13c8228621fd1f918322c1d70008a2957afdcbc45eb5172db2a0",
-        "htmlSha256": "d6abce1b729d13c8228621fd1f918322c1d70008a2957afdcbc45eb5172db2a0",
-        "textSha256": "3ebd5755deaa680b817430c63e978cf7e4df2c94d3769c8266d0f8867066990e"
       }
     },
     {
@@ -5024,26 +4939,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50202",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50208",
-      "name": "ジプソ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50208.json",
-        "sha256": "3465c6e10bb6604fb16d41592c6d98a28cb5f30ffa5afdfc47856a35de7126c5",
-        "htmlSha256": "3465c6e10bb6604fb16d41592c6d98a28cb5f30ffa5afdfc47856a35de7126c5",
-        "textSha256": "3ebd5755deaa680b817430c63e978cf7e4df2c94d3769c8266d0f8867066990e"
-      }
-    },
-    {
       "officialCardId": "50209",
       "name": "ホミカの演奏",
       "category": "supporter",
@@ -5072,11 +4967,6 @@
         "htmlSha256": "8008d09b9002bb600691aa7be23991cea28b19d2ca7050139fe4da8b309be1c5",
         "textSha256": "790a424ab6aa20e2d13f99a9631105ab9750b7f2f9a6b2b9d60e27be1c9af238"
       }
-    },
-    {
-      "officialCardId": "50216",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50218",
@@ -5185,11 +5075,6 @@
     },
     {
       "officialCardId": "50256",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50258",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6163,11 +6048,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47020",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47022",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6219,11 +6099,6 @@
     },
     {
       "officialCardId": "47069",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47094",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6446,11 +6321,6 @@
         "htmlSha256": "851ea103b8345c4f95dcbbefe5c00cfd91074e811f3856216c5ce143b4df7e64",
         "textSha256": "51731da924f92307c849ad0a671026f2f9eede4aa2a32f5802c0afe760482e0a"
       }
-    },
-    {
-      "officialCardId": "47314",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47352",
@@ -6933,11 +6803,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47758",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47770",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7290,21 +7155,6 @@
         "sha256": "e96994496fd57ae85f515777808323a72934825b20cf58614841ecd3d5b3f3fc",
         "htmlSha256": "e96994496fd57ae85f515777808323a72934825b20cf58614841ecd3d5b3f3fc",
         "textSha256": "2bd23b967367e2951af8a01297308ae290da649155e9c2b00cb4964255a95cf9"
-      }
-    },
-    {
-      "officialCardId": "48299",
-      "name": "ワンダーパッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48299.json",
-        "sha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
-        "htmlSha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
-        "textSha256": "59400b4dc69e8d1d10364fe7777ce405c00799d2fb6cf613bda1682d0b0234c0"
       }
     },
     {
@@ -7703,11 +7553,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48541",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48554",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7773,11 +7618,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48604",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48605",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7824,11 +7664,6 @@
     },
     {
       "officialCardId": "48647",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48664",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8099,11 +7934,6 @@
     },
     {
       "officialCardId": "48761",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48783",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8498,11 +8328,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49957",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49959",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8591,21 +8416,6 @@
       "officialCardId": "50017",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50071",
-      "name": "ワンダーパッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50071.json",
-        "sha256": "067fd5b5b3ce4a55c7fa06d780c887bfe17d8e2bb2e60d92cdf413945e36a99d",
-        "htmlSha256": "067fd5b5b3ce4a55c7fa06d780c887bfe17d8e2bb2e60d92cdf413945e36a99d",
-        "textSha256": "59400b4dc69e8d1d10364fe7777ce405c00799d2fb6cf613bda1682d0b0234c0"
-      }
     },
     {
       "officialCardId": "50076",
@@ -9053,11 +8863,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48920",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48929",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9178,11 +8983,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49075",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49077",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9269,11 +9069,6 @@
     },
     {
       "officialCardId": "49213",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49241",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9973,11 +9768,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48616",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46501",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -10213,22 +10003,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49989",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49990",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "49995",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49999",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -10302,15 +10082,15 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1061
+        "count": 1028
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 313
+        "count": 309
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
-        "count": 20
+        "count": 21
       },
       {
         "reason": "UNSUPPORTED_COMBINED_STADIUM_PLAY",
@@ -10321,25 +10101,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "cb8d07d2b637f5408d53cfb3a07f1be09f259b0d2e4fbb6341dbfab586df9c9a",
+    "executionFingerprint": "4f9a5ef3597a433ab3270a54c36bde87009d97908510a5d09f481c4548b63922",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 230265,
+    "seq": 232593,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 408,
+      "SUCCEEDED": 418,
       "FAILED": 0,
-      "BLOCKED": 368
+      "BLOCKED": 358
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 339,
+        "SUCCEEDED": 349,
         "FAILED": 0,
-        "BLOCKED": 332
+        "BLOCKED": 322
       },
       "supporter": {
         "PENDING": 0,

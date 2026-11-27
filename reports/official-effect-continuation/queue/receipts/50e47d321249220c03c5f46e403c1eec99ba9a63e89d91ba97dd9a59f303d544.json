@@ -1,30 +1,62 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_31768BCEC09089AF:8cfaab359c45480da9c38b1d535402d41b234a5a85215e11f58411a49a09adaf",
   "taskFingerprint": "8cfaab359c45480da9c38b1d535402d41b234a5a85215e11f58411a49a09adaf",
-  "executionFingerprint": "cb8d07d2b637f5408d53cfb3a07f1be09f259b0d2e4fbb6341dbfab586df9c9a",
-  "attemptId": "6a32e944-89de-4446-9e64-4de9becdaa6e",
-  "status": "BLOCKED",
+  "executionFingerprint": "4f9a5ef3597a433ab3270a54c36bde87009d97908510a5d09f481c4548b63922",
+  "attemptId": "6d6dfed4-6ed4-48d7-89b5-9a390d0379e9",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45747:ability:アドレナフェロモン:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+        "commands": [
+          "COIN_FLIP",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45850:ability:アドレナフェロモン:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+        "commands": [
+          "COIN_FLIP",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46737:ability:アドレナフェロモン:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+        "commands": [
+          "COIN_FLIP",
+          "PREVENT_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "5418fb716411983a2ffb0d6ea7614d4aa8a96fe7fece4bc00af1ce2100116e64"
+  "checksum": "d34d302f844487d7ad71c68e55b8647974761d11e5767251328091affd607ddb"
 }
