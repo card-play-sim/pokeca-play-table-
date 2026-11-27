@@ -1,0 +1,118 @@
+name: Legacy exact public receipt proof
+on:
+  push:
+    branches: [automation/legacy-exact-receipt-proof-20261128]
+    paths: ['.github/workflows/legacy-exact-receipt-proof.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Independently collect actual successful main public receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch origin ffb92e6a492944ed1ad0c583d9953a97605a5280
+          python - <<'PY'
+          import importlib.util,json,os,re,subprocess,tempfile,zipfile,io
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location("audit","scripts/audit-exact-target-completion.py")
+          a=importlib.util.module_from_spec(spec);spec.loader.exec_module(a)
+          repo=os.environ["GITHUB_REPOSITORY"]
+          def api(path):
+              return json.loads(subprocess.check_output(["gh","api","repos/"+repo+path]))
+          def read(rev):
+              return a.index(json.loads(a.git("show",rev+":"+a.COMPILED)))
+          def slot(row):
+              return (str(row["print"]),row["effectKind"],row["effectIndex"])
+          target=a.validate_scope(json.loads(Path(a.SCOPE).read_text()),json.loads(a.git("show",a.ORIGIN+":"+a.ORIGIN_PATH)))
+          assert a.git("rev-parse",a.ORIGIN+":"+a.ORIGIN_PATH).decode().strip()==a.ORIGIN_BLOB
+          proven={};results=[]
+          # Keep the three independently proven anchors, and discover recent
+          # successful main runs rather than depending on a hand-edited list.
+          run_ids=[45331455381,45166865374,45164250534,44956715475,44956678835]
+          for run_id in run_ids:
+              try:
+                  run=api("/actions/runs/"+str(run_id))
+                  assert run["conclusion"]=="success" and run["head_branch"]=="main" and run["head_repository"]["full_name"]==repo and run["path"]==".github/workflows/published-mobile-browser.yml"
+                  head=run["head_sha"]
+                  assert re.fullmatch("[a-f0-9]{40}",head)
+                  subprocess.run(["git","merge-base","--is-ancestor",head,"HEAD"],check=True)
+                  artifacts=api("/actions/runs/"+str(run_id)+"/artifacts?per_page=100")["artifacts"]
+                  names=["published-mobile-browser-evidence"]+["published-mobile-browser-evidence-"+str(i) for i in range(1,4)]
+                  actual_names={x["name"] for x in artifacts if not x["expired"] and x["name"] in names}
+                  # Old workflows used one receipt. Accept only the complete
+                  # single or four-shard exact delta, never a partial set.
+                  assert actual_names in ({names[0]},set(names)), "INCOMPLETE_PUBLIC_SHARD_SET"
+                  names=[name for name in names if name in actual_names]
+                  receipts=[]
+                  for name in names:
+                      matches=[x for x in artifacts if x["name"]==name and not x["expired"] and x["size_in_bytes"]<50*1024*1024]
+                      assert len(matches)==1
+                      item=matches[0]
+                      raw=subprocess.check_output(["gh","api","repos/"+repo+"/actions/artifacts/"+str(item["id"])+"/zip"])
+                      import hashlib
+                      if item.get("digest"):
+                          assert item["digest"]=="sha256:"+hashlib.sha256(raw).hexdigest()
+                      with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                          member=z.getinfo("artifacts/published-intake-battles.json")
+                          assert member.file_size<10*1024*1024
+                          receipts.append(json.loads(z.read(member)))
+                  base=receipts[0]["baseCommit"];release=receipts[0]["release"]
+                  assert re.fullmatch("[a-f0-9]{40}",base) and isinstance(release,str) and release
+                  subprocess.run(["git","merge-base","--is-ancestor",base,head],check=True)
+                  before,after=read(base),read(head)
+                  delta={k for k,v in after.items() if before.get(k)!=v}
+                  want=set()
+                  for k in delta:
+                      row=after[k]
+                      if row["category"]=="pokemon":
+                          want.update((k,kind,i) for kind,field in [("attack","attacks"),("ability","abilities")] for i,_ in enumerate(row[field]))
+                      else: want.add((k,row["category"],0))
+                  seen=set()
+                  for rec in receipts:
+                      assert rec["success"] is True and rec["commit"]==head and rec["baseCommit"]==base and rec["release"]==release and rec["publicUrl"]==a.URL
+                      expected=[slot(x) for x in rec["expectedSlots"]];actual=[slot(x) for x in rec["results"]]
+                      assert len(expected)==len(set(expected)) and len(actual)==len(set(actual)) and set(expected)==set(actual) and not seen.intersection(actual)
+                      assert all(x["domExecuted"] is True and x["aiParity"] is True and x["offlineRestoreExact"] is True for x in rec["results"])
+                      seen.update(actual)
+                  assert seen==want, "INCOMPLETE_EXACT_DELTA"
+                  receipt={"state":"PUBLIC_DELTA_VERIFIED","publicUrl":a.URL,"verifiedPrintIds":sorted({x[0] for x in seen}),"verifiedSlots":len(seen),"automaticStopAuthorized":False,"allCardsComplete":False}
+                  for k,row in a.verify_delta_receipt(receipt,before,after).items():proven.setdefault(k,[]).append(row)
+                  results.append({"run":run_id,"state":"PUBLIC_RECEIPTS_VERIFIED","head":head,"base":base,"printIds":receipt["verifiedPrintIds"],"slots":len(seen)})
+              except (AssertionError,KeyError,ValueError,OSError,subprocess.CalledProcessError,zipfile.BadZipFile) as e:
+                  results.append({"run":run_id,"state":"BLOCKED_RECEIPT_RECHECK","reason":str(e)[:500]})
+          report=a.audit(target,read("HEAD"),proven)
+          report["receiptCollection"]="LEGACY_SINGLE_SHARD_PROOF_ONLY"
+          report["currentCommit"]=a.git("rev-parse","HEAD").decode().strip()
+          report["runs"]=results
+          # Stop requires all 2775 exact rows, plus a successful public run of
+          # the identical current main commit. Recheck delivery bytes separately.
+          head=report["currentCommit"]
+          report["automaticStopAuthorized"]=False
+          if False and report["allTargetEvidencePresent"]:
+              current=api("/git/ref/heads/main")["object"]["sha"]
+              current_runs=[x for x in results if x["state"]=="PUBLIC_RECEIPTS_VERIFIED" and x["head"]==head]
+              if head==current and current_runs:
+                  delivery=subprocess.run(["node","scripts/verify-published-pwa.cjs"],check=False).returncode==0
+                  current=api("/git/ref/heads/main")["object"]["sha"]
+                  report["automaticStopAuthorized"]=a.authorize_stop(report,head,current,{"commit":head,"success":True},delivery)
+          Path("historical-public-receipt-audit.json").write_text(json.dumps(report,indent=2)+"\n")
+          print(json.dumps({"verifiedByThisAudit":report["verifiedByThisAudit"],"targetCount":len(target),"runs":[{k:v for k,v in x.items() if k!="printIds"} for x in results],"automaticStopAuthorized":report["automaticStopAuthorized"]}))
+          assert any(x["state"]=="PUBLIC_RECEIPTS_VERIFIED" for x in results),"NO_VERIFIED_HISTORICAL_RECEIPTS"
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legacy-exact-receipt-proof
+          path: historical-public-receipt-audit.json
+          if-no-files-found: error
+          retention-days: 90
