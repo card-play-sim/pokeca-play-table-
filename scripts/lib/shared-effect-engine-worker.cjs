@@ -59,7 +59,7 @@ function port(game) {
 }
 function batchSearchCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c),pokemon=c.kind==='pokemon',typed=pokemon&&r?.facts.types?.includes(plan.type),basic=c.kind==='energy'&&!c.isSpecial&&['草','炎','水','雷','超','闘','悪','鋼'].includes(c.energyType);
- if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return pokemon&&r?.facts.basic&&(!plan.type||typed);
+ if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return pokemon&&r?.facts.basic&&(!plan.type||typed)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact);
  if(plan.filter==='any')return true;
  if(plan.filter==='basicEnergy')return basic;
  if(plan.filter==='typedBasicEnergy')return basic&&c.energyType===plan.type;
@@ -397,7 +397,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(e.plan.batchSearch){
-  const filter=r=>m==='SEARCH_BASIC_TO_BENCH_ATTACK'?mon(r,plan.type,0):
+  const filter=r=>m==='SEARCH_BASIC_TO_BENCH_ATTACK'?mon(r,plan.type,0)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact):
    plan.filter==='any'?r.category==='item':
    plan.filter==='basicEnergy'?isBasicEnergy(r):
    plan.filter==='typedBasicEnergy'?isBasicEnergy(r)&&typeOf(r)===plan.type:
@@ -1761,7 +1761,7 @@ function prepare(r, e, kind) {
     "ATTACK_DISCARD_FIELD_BASIC","ATTACK_COIN_DISCARD_DEFENDER_ENERGY","CONTEXT_ATTACK_BONUS","ATTACK_PRIZE_BONUS_RECOIL"].includes(m)) {
     const [own, other] = frame.game.players;
     if (m === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
-      own.deck.push(...own.hand.splice(Math.max(0,e.plan.limit-1)));
+      if(!e.plan.fixedDraw)own.deck.push(...own.hand.splice(Math.max(0,e.plan.limit-1)));
     }
     if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
     if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m)) {
@@ -2926,7 +2926,7 @@ function verifyCase(t, e) {
   if (e.plan.mechanic === "ATTACK_OPTIONAL_DRAW_TO_LIMIT") {
     const chosen=o.action.selections.drawChoice;
     assert.deepEqual(Array.from(chosen),["draw"]);
-    const amount=Math.min(attackingSide.deck.length,e.plan.limit-attackingSide.hand.length);
+    const amount=Math.min(attackingSide.deck.length,e.plan.fixedDraw?e.plan.limit:e.plan.limit-attackingSide.hand.length);
     assert.equal(after.players[0].hand.length,attackingSide.hand.length+amount);
     const replay=port(before);
     assert(replay.dispatch("you",{...o.action,selections:{drawChoice:["skip"]}}).ok);
