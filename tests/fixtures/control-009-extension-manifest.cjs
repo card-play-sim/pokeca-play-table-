@@ -37,7 +37,11 @@ module.exports=function(fixed,records,{catalog=null}={}){
       add(parent,wantsEntry?4:2);child=parent;
      }
      const types=new Set([...row.attacks.flatMap(a=>a.cost||[]),...row.abilities.map(a=>a.plan?.type)].filter(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t)));
-     for(const type of types)add({name:'基本'+type+'エネルギー',category:'energy'},wantsEntry?10:4);
+     for(const type of types){
+      const energy=catalog.find(r=>r.category==='energy'&&r.name==='基本'+type+'エネルギー'&&r.mainPlan?.mechanic==='BASIC_ENERGY');
+      assert(energy?.officialCardId,'MATCH_BASIC_ENERGY_PRINT_MISSING:'+type);
+      add(energy,wantsEntry?10:4);
+     }
      if(wantsEntry){
       const swap=catalog.find(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH');
       assert(swap,'MATCH_SWITCH_ITEM_MISSING');
