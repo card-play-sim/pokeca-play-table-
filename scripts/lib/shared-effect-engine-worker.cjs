@@ -698,7 +698,8 @@ function prepare(r, e, kind) {
   }
   if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'||m==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&e.plan.attacker==='basicEx'){
     const basicEx=m==='PASSIVE_TYPED_ATTACK_IMMUNITY';
-    const attacker=records.get(basicEx&&!e.proofNonEx?'49264':'45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    const candidates=basicEx?[...records.values()].filter(c=>c.category==='pokemon'&&c.facts?.basic&&c.name.endsWith('ex')!==Boolean(e.proofNonEx)&&c.officialCardId!==r.officialCardId&&c.attacks?.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan)&&c.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2)):[];
+    const attacker=basicEx?candidates.sort((a,b)=>String(a.officialCardId).localeCompare(String(b.officialCardId)))[0]:records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(!basicEx||Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2));
     if(basicEx&&(!attacker?.facts.basic||attacker.name.endsWith('ex')===Boolean(e.proofNonEx)))return {blocked:'NO_EXACT_BASIC_EX_ATTACKER'};
     if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
@@ -3714,7 +3715,7 @@ function verifyCase(t, e) {
     assert.equal(after.players[1].active.damage,before.players[1].active.damage);
     if(e.plan.attacker==='basicEx'){
       assert(before.players[1].active.evolutionCards?.length>0);
-      const negative=prepare(r,{...e,proofNonEx:true},'ability');
+      const negative=prepare(defender,{...e,proofNonEx:true},'ability');
       assert(!negative.blocked,negative.blocked);
       const start=negative.port.getSnapshot(),option=effectOption(negative,e);
       assert(!E.getReferenceEffectRecord(start.players[0].active).name.endsWith('ex'));

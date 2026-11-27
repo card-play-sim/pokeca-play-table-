@@ -228493,6 +228493,234 @@
         "repeated": false,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "45259",
+      "name": "リキキリンex",
+      "deckName": "リキキリンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45259",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045259_P_RIKIKIRINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダーティビーム",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-45259-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "テイルアーマー",
+          "text": "このポケモンは、相手のたねポケモンの「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-45259-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "basicEx",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "キリンリキ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45259.json",
+        "sha256": "5fcfad73998976866e3a64fbc3bc23d635fd7e51f340300e386a74410acf24e9",
+        "htmlSha256": "5fcfad73998976866e3a64fbc3bc23d635fd7e51f340300e386a74410acf24e9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45560",
+      "name": "リキキリンex",
+      "deckName": "リキキリンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45560",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045560_P_RIKIKIRINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダーティビーム",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-45560-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "テイルアーマー",
+          "text": "このポケモンは、相手のたねポケモンの「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-45560-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "basicEx",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "キリンリキ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45560.json",
+        "sha256": "c3311632f294eb2aacba06bc113e395d5e5c4adf932a7e45b5a22325d0dd81e5",
+        "htmlSha256": "c3311632f294eb2aacba06bc113e395d5e5c4adf932a7e45b5a22325d0dd81e5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49202",
+      "name": "リキキリンex",
+      "deckName": "リキキリンex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49202",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049202_P_RIKIKIRINEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ダーティビーム",
+          "cost": [
+            "超",
+            "無色",
+            "無色"
+          ],
+          "damage": "160",
+          "text": "相手のベンチポケモン1匹にも、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-49202-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_SPLASH_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "benchDamage": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "テイルアーマー",
+          "text": "このポケモンは、相手のたねポケモンの「ポケモンex」からワザのダメージを受けない。",
+          "effectId": "reference-49202-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_TYPED_ATTACK_IMMUNITY",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "attacker": "basicEx",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "キリンリキ",
+        "retreatCost": 2,
+        "types": [
+          "悪"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49202.json",
+        "sha256": "fa5d19ee1f1553678b2723ed8eacb92a291b2b470c05f5952b51a12c4790c483",
+        "htmlSha256": "fa5d19ee1f1553678b2723ed8eacb92a291b2b470c05f5952b51a12c4790c483",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
