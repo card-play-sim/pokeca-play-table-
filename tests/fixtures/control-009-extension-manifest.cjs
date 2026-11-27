@@ -28,19 +28,20 @@ module.exports=function(fixed,records,{catalog=null}={}){
    for(const row of records)protectedNames.add(row.name);
    for(const row of records){
     const pokemon=row.category==='pokemon',wantsEntry=row.abilities?.some(a=>a.plan?.origin==='activeEntry');
-    add(row,wantsEntry?3:1);
+    const wantsMill=row.attacks?.some(a=>a.plan?.mechanic==='COIN_UNTIL_TAILS_MILL');
+    add(row,wantsEntry||wantsMill?3:1);
     if(pokemon){
      let child=row;
      while(child.facts?.stage>0){
       const parent=(byName.get(child.facts.evolvesFrom)||[]).find(r=>r.facts?.stage===child.facts.stage-1);
       assert(parent,'MATCH_EVOLUTION_PARENT_MISSING:'+child.name);
-      add(parent,wantsEntry?4:2);child=parent;
+      add(parent,wantsEntry||wantsMill?4:2);child=parent;
      }
      const types=new Set([...row.attacks.flatMap(a=>a.cost||[]),...row.abilities.map(a=>a.plan?.type)].filter(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t)));
      for(const type of types){
       const energy=catalog.find(r=>r.category==='energy'&&r.name==='基本'+type+'エネルギー'&&r.mainPlan?.mechanic==='BASIC_ENERGY');
       assert(energy?.officialCardId,'MATCH_BASIC_ENERGY_PRINT_MISSING:'+type);
-      add(energy,wantsEntry?10:4);
+      add(energy,wantsEntry||wantsMill?10:4);
      }
      if(wantsEntry){
       const swap=catalog.find(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH');
