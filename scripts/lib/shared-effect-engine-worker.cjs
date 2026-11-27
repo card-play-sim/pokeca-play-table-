@@ -1422,6 +1422,17 @@ function prepare(r, e, kind) {
   }
   if (m === "ATTACK_SPREAD_DAMAGE" && e.plan.ignoreDefense)
     frame.game.players[1].active.referenceProtection={opponentTurn:frame.game.turnNumber};
+  if(m==='ATTACK_SPREAD_DAMAGE'&&e.plan.discardAttached!==undefined){
+    const own=frame.game.players[0],other=frame.game.players[1],attached=own.active.energyCards;
+    const required=Number.isInteger(e.plan.discardAttached)?e.plan.discardAttached:1;
+    // Use real physical basic energy and ensure a nonempty discard fixture.
+    while(attached.filter(c=>!c.isSpecial).length<required){
+      const i=own.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial);
+      if(i<0)return {blocked:'NO_COMPOUND_SPREAD_ENERGY_FIXTURE'};
+      attached.push(own.deck.splice(i,1)[0]);
+    }
+    if(other.bench.length<Math.min(e.plan.count,e.plan.scope==='opponent'?e.plan.count-1:e.plan.count))return {blocked:'NO_COMPOUND_SPREAD_TARGETS'};
+  }
   if(m==='MASS_COIN_OUTCOME'){
     const [own,other]=frame.game.players;
     if(e.plan.heal)own.active.damage=Math.min(e.plan.heal,own.active.hp-10);
@@ -2596,6 +2607,28 @@ function verifyCase(t, e) {
     assert(chosen.length>0);
     assert(chosen.every(id=>effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===id
       &&(!e.plan.ignoreDefense||step.amount===e.plan.amount))));
+
+    if(e.plan.discardAttached!==undefined){
+      const plan=e.plan,action=t.action||o.action,attached=attackingSide.active.energyCards;
+      const picked=plan.discardAttached==='all'?attached.map(c=>c.id):action.selections.energy;
+      assert(picked.length>0&&new Set(picked).size===picked.length);
+      assert(picked.every(id=>attached.some(c=>c.id===id)));
+      assert(picked.every(id=>after.players[0].discard.some(c=>c.id===id)));
+      const discardEvents=effectEvents.filter(ev=>ev?.command==='DISCARD'&&ev.sourceInstanceId===attackingSide.active.id);
+      assert.deepEqual(discardEvents.flatMap(ev=>ev.cardIds).sort(),[...picked].sort());
+      // Discard must precede the selected-target damage; printed Active
+      // damage (the primary attack) is applied first when present.
+      const lastDiscard=effectEvents.lastIndexOf(discardEvents.at(-1));
+      assert(chosen.every(id=>effectEvents.some((ev,i)=>i>lastDiscard&&ev?.command==='DAMAGE'&&ev.targetInstanceId===id)));
+      if(Number.isInteger(plan.discardAttached)){
+        const invalid=port(before);
+        assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,energy:[]}}).ok,false);
+        assert.deepEqual(B.canonical(invalid.getSnapshot()),B.canonical(before));
+      }
+      const selectedActive=chosen.includes(defendingSide.active.id);
+      if(Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
+      else if(selectedActive)verifyPrintedAttack(before,after,e,plan.amount);
+    }
   }
   if(e.plan.mechanic==="PHANTOM"&&e.plan.counterCount) {
     const allocation=o.action.selections.allocation;
