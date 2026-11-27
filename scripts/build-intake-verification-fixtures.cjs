@@ -110,17 +110,21 @@ B.atomic(prefix + "/browser-fixtures.json", fixtures);
 const localCandidate = process.env.POKECA_INTAKE_LOCAL_CANDIDATE === "1";
 if (!previous || (localCandidate && fixtures.length)) {
   const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json"));
-  const selectedPrints = [...new Map(fixtures.map(f => [String(f.r.officialCardId), f.r])).values()].slice(0, 8);
-  const manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
-    fixed, previous ? selectedPrints : fixtures.slice(0, 8).map(f => f.r),
-  );
+  const uniquePrints = [...new Map(fixtures.map(f => [String(f.r.officialCardId), f.r])).values()];
+  const selectedPrints = previous ? [...new Map(uniquePrints.map(r=>[r.name,r])).values()].slice(0,8) : fixtures.slice(0,8).map(f=>f.r);
+  const makeManifest = require("../tests/fixtures/control-009-extension-manifest.cjs");
+  const catalog = JSON.parse(fs.readFileSync("data/reference-effects/catalog.json")).records.concat(records);
+  const manifest = makeManifest(fixed,selectedPrints,previous?{catalog}:undefined);
   if (previous) {
     const assert = require("node:assert/strict");
     assert(selectedPrints.length > 0);
     for (const deck of manifest.decks) {
       assert.equal(deck.cards.reduce((n, c) => n + c.count, 0), 60);
       for (const row of selectedPrints) assert(deck.cards.some(c =>
-        String(c.referenceOfficialCardId) === String(row.officialCardId) && c.count === 1));
+        String(c.referenceOfficialCardId) === String(row.officialCardId) && c.count>=1));
+      const counts=new Map();
+      for(const c of deck.cards)counts.set(c.name,(counts.get(c.name)||0)+c.count);
+      for(const [name,n] of counts)assert(/^基本.エネルギー$/.test(name)||n<=4,"SAME_NAME_LIMIT:"+name);
     }
   }
   B.atomic(prefix + "/example-decks.json", manifest);
