@@ -1,0 +1,112 @@
+name: Issue122 union 12 and residual verified print qualification
+on:
+  push:
+    branches: [battle/issue122-union12-residual-20261128]
+    paths: ['.github/workflows/issue122-union12-residual.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-union12-residual
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact merged source and preserve latest compiled baseline
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Merge ONLY the independently qualified source changes, never stale generated records.
+          git cherry-pick --no-commit 97fcd0c2bc737a24273e81355ee026538f47ce80 8501cbb81ee5d47e119996a2c1ea0b2d414c5467 de182ecd67dec2abea86520e89ef8a2787963af8 1193393fd398885e3530ab04c814d227af55f71b 659eed36b55ce6b8be1f83823bde1a7447a8347e
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          python -m py_compile tests/test_control_013_browser.py
+          mkdir -p artifacts
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base='35e0a13680b611f7c08aea72fca5abb033554729';
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const required=['47298','47377','47386','48525','48738','46342','46425','47431','47677','48049','49005','49303','45245'].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/union12-residual-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PREVIOUSLY_QUALIFIED_PRINT_MISSING');
+          console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
+          assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          bash scripts/install-ci-chromium.sh
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
+          export POKECA_BROWSER_SHARD_COUNT=4
+          export POKECA_BROWSER_SLOTS_ONLY=1
+          pids=()
+          for shard in 0 1 2 3; do
+            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="union12-residual-$shard" python tests/test_control_013_browser.py >"artifacts/union12-residual-$shard.log" 2>&1 &
+            pids+=("$!")
+          done
+          rv=0
+          for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
+          for f in artifacts/union12-residual-*.log; do tail -n 15 "$f"; done
+          test "$rv" = 0
+          unset POKECA_BROWSER_SLOTS_ONLY
+          POKECA_BROWSER_SHARD_INDEX=0 POKECA_INTAKE_ARTIFACT=union12-residual-full-ai python tests/test_control_013_browser.py >artifacts/union12-residual-full-ai.log 2>&1 || { tail -n 30 artifacts/union12-residual-full-ai.log; exit 1; }
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/union12-residual-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/union12-residual-candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: verified 12 independently qualified prints and residual recovery'
+          git push origin "HEAD:refs/heads/battle/issue122-union12-residual-qualified-$GITHUB_RUN_ID"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: union12-residual-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
