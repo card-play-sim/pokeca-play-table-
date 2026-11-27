@@ -22,7 +22,7 @@ jobs:
   entry:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,7 +55,87 @@ jobs:
         run: |
           python scripts/verify-unknown-approved-replay.py --self-test
           python scripts/verify-unknown-approved-replay.py "$RUNNER_TEMP/replay-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$ATTEMPT" "$APPROVED_SHA" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/replay-entry"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Restore verified official source and prepare isolated replay tree
+        run: |
+          set -euo pipefail
+          node_version=$(node --version)
+          echo "$node_version"
+          found=0
+          for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
+            if ! git fetch origin "$checkpoint"; then continue; fi
+            if ! git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null; then continue; fi
+            python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+            found=1
+            break
+          done
+          test "$found" = 1
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+          scratch="$RUNNER_TEMP/approved-scratch"
+          git clone --local --no-hardlinks "$GITHUB_WORKSPACE" "$scratch"
+          git -C "$scratch" checkout --detach "$(git rev-parse HEAD)"
+          git -C "$scratch" remote remove origin
+          rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
+          python scripts/prepare-unknown-replay-intake.py "$scratch" "$RUNNER_TEMP/replay-entry"
+          git -C "$scratch" apply "$RUNNER_TEMP/replay-entry/approved.patch"
+      - name: Build trusted isolated browser dependencies
+        run: |
+          set -euo pipefail
+          context="$(mktemp -d "$RUNNER_TEMP/replay-build.XXXXXX")"
+          cat > "$context/Dockerfile" <<'DOCKERFILE'
+          FROM node:22-bookworm
+          RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+          ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+          RUN python3 -m venv /opt/pw && /opt/pw/bin/pip install --no-cache-dir playwright==1.56.0 && /opt/pw/bin/python -m playwright install --with-deps chromium && chmod -R a+rX /opt/pw-browsers
+          DOCKERFILE
+          docker build -t pokeca-approved-replay:local "$context"
+          rm -rf "$context"
+      - name: Replay approved source offline with exact print and full AI checks
+        run: |
+          set -euo pipefail
+          scratch="$RUNNER_TEMP/approved-scratch"
+          out="$RUNNER_TEMP/replay-entry"
+          timeout 90m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-approved-replay:local bash -euc '
+            base="$(git rev-parse HEAD)"
+            node --check engine/reference-effect-plans.cjs
+            node --check engine/pokeca_reference_effect_runtime.cjs
+            node --check scripts/lib/shared-effect-engine-worker.cjs
+            node scripts/build-effect-extensions.cjs
+            node scripts/sync-reference-effects.cjs
+            node scripts/stage-card-auto-connect.cjs "$base" work/model-candidate
+            git restore --source=HEAD -- data/effect-extensions/compiled.json
+            node scripts/build-effect-extensions.cjs
+            node scripts/sync-reference-effects.cjs
+            node scripts/build-pwa-release.cjs
+            node tests/control-014-shared-effects.test.cjs
+            node tests/control-011-engine-batch.test.cjs
+            node tests/atomic-official-to-battle.test.cjs
+            node tests/fixture-reservation-fallback.test.cjs
+            export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1
+            node scripts/build-intake-verification-fixtures.cjs
+            test -s "$POKECA_INTAKE_PREFIX/example-decks.json"
+            node scripts/sync-reference-effects.cjs --check
+            node scripts/build-pwa-release.cjs --check
+            export POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
+            /opt/pw/bin/python -m http.server 8765 --bind 127.0.0.1 >/tmp/replay-http.log 2>&1 &
+            server=$!
+            trap "kill $server 2>/dev/null || true" EXIT
+            for n in 1 2 3 4 5; do
+              if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()"; then break; fi
+              sleep 1
+            done
+            /opt/pw/bin/python tests/test_control_013_browser.py
+            unset POKECA_BROWSER_SLOTS_ONLY
+            export POKECA_INTAKE_ARTIFACT=unknown-quarantine-full-ai
+            /opt/pw/bin/python tests/test_control_013_browser.py
+          ' > "$out/replay.log" 2>&1
+          python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE"
+          python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE"
+          python scripts/prepare-unknown-replay-intake.py --verify-result "$out"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: unknown-effect-approved-replay-entry
           path: ${{ runner.temp }}/replay-entry/

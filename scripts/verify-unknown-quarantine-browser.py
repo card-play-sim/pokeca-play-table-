@@ -43,6 +43,16 @@ def verify(expected, report):
         raise BrowserSlotFailure("BROWSER_MISSING_SLOTS", expected-actual)
     return sorted({row[0] for row in actual})
 
+def verify_full_match(expected, report):
+    ids = verify(expected, {**report, "browserShard": 0, "totalFixtures": len(expected)})
+    match = report.get("expandedAIMatch")
+    if not isinstance(match, dict) or match.get("finished") is not True:
+        raise ValueError("FULL_AI_MATCH_NOT_FINISHED")
+    used = match.get("executedNewPrints")
+    if not isinstance(used, list) or not used or len(set(map(str, used))) != len(used) or not set(map(str, used)).issubset(ids):
+        raise ValueError("FULL_AI_NEW_PRINT_USE_NOT_PROVEN")
+    return sorted(map(str, used))
+
 def main(out, scratch, workspace):
     out, scratch, workspace = map(Path, (out, scratch, workspace))
     try:
@@ -56,8 +66,11 @@ def main(out, scratch, workspace):
         ids = verify(expected, report)
         if not set(engine["sandboxQualified"]).issubset(ids):
             raise ValueError("BROWSER_SELECTED_TARGET_NOT_PROVEN")
+        full_report = read_json(scratch/"artifacts/unknown-quarantine-full-ai-browser.json", scratch)
+        used = verify_full_match(expected, full_report)
         result = {"state":"QUARANTINE_BROWSER_PASSED_REVIEW_REQUIRED","sandboxBrowserQualified":ids,
-                  "slots":len(expected),"publicBattleVerified":[],"fullDeckAIMatchVerified":False}
+                  "slots":len(expected),"publicBattleVerified":[],"fullDeckAIMatchVerified":True,
+                  "sandboxFullMatchUsedPrints":used}
     except (ValueError, KeyError, TypeError, OSError) as exc:
         result = {"state":"BROWSER_RECEIPT_REJECTED","reason":str(exc)[:400],"publicBattleVerified":[]}
         if isinstance(exc, BrowserSlotFailure):
@@ -91,6 +104,17 @@ def self_test():
         assert exc.target_failures[0]["reason"] == "BROWSER_SLOT_NOT_PROVEN"
     else:
         raise AssertionError("FAILED_SLOT_FALSE_PASS")
+    full = {**a, "expandedAIMatch":{"finished":True,"executedNewPrints":["2"]}}
+    assert verify_full_match(expected, full) == ["2"]
+    for bad_match in [{"finished":False,"executedNewPrints":["2"]},
+                      {"finished":True,"executedNewPrints":[]},
+                      {"finished":True,"executedNewPrints":["999"]},
+                      {"finished":True,"executedNewPrints":["2","2"]}]:
+        try:
+            verify_full_match(expected, {**full,"expandedAIMatch":bad_match})
+        except ValueError:
+            continue
+        raise AssertionError("FULL_AI_FALSE_PASS")
     print("UNKNOWN_QUARANTINE_BROWSER_RECEIPT_SELF_TEST PASS")
 if __name__=="__main__":
     if sys.argv[1:]==["--self-test"]:
