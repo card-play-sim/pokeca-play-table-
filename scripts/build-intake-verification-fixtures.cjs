@@ -110,17 +110,37 @@ B.atomic(prefix + "/browser-fixtures.json", fixtures);
 const localCandidate = process.env.POKECA_INTAKE_LOCAL_CANDIDATE === "1";
 if (!previous || (localCandidate && fixtures.length)) {
   const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json"));
-  const selectedPrints = [...new Map(fixtures.map(f => [String(f.r.officialCardId), f.r])).values()].slice(0, 8);
-  const manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
-    fixed, previous ? selectedPrints : fixtures.slice(0, 8).map(f => f.r),
-  );
+  const uniquePrints = [...new Map(fixtures.map(f => [String(f.r.officialCardId), f.r])).values()];
+  let selectedPrints = previous ? [...new Map(uniquePrints.map(r=>[r.name,r])).values()].slice(0,8) : fixtures.slice(0,8).map(f=>f.r);
+  const makeManifest = require("../tests/fixtures/control-009-extension-manifest.cjs");
+  const catalog = JSON.parse(fs.readFileSync("data/reference-effects/catalog.json")).records.concat(records);
+  let manifest;
+if(previous){
+  const accepted=[];
+  for(const row of selectedPrints){
+    try {
+      makeManifest(fixed,[...accepted,row],{catalog});
+      accepted.push(row);
+    } catch(error) {
+      if(!String(error.message).includes('MATCH_DECK_DONOR_UNAVAILABLE:'))throw error;
+      console.log('FULL_MATCH_DECK_CAPACITY_SKIP',row.officialCardId,error.message);
+    }
+  }
+  if(!accepted.length)throw Error('NO_LEGAL_IMPORTED_MATCH_DECK');
+  selectedPrints=accepted;
+  manifest=makeManifest(fixed,selectedPrints,{catalog});
+  console.log('FULL_MATCH_DECK_EXACT_PRINTS',selectedPrints.map(r=>r.officialCardId));
+}else manifest=makeManifest(fixed,selectedPrints);
   if (previous) {
     const assert = require("node:assert/strict");
     assert(selectedPrints.length > 0);
     for (const deck of manifest.decks) {
       assert.equal(deck.cards.reduce((n, c) => n + c.count, 0), 60);
       for (const row of selectedPrints) assert(deck.cards.some(c =>
-        String(c.referenceOfficialCardId) === String(row.officialCardId) && c.count === 1));
+        String(c.referenceOfficialCardId) === String(row.officialCardId) && c.count>=1));
+      const counts=new Map();
+      for(const c of deck.cards)counts.set(c.name,(counts.get(c.name)||0)+c.count);
+      for(const [name,n] of counts)assert(/^基本.エネルギー$/.test(name)||n<=4,"SAME_NAME_LIMIT:"+name);
     }
   }
   B.atomic(prefix + "/example-decks.json", manifest);
