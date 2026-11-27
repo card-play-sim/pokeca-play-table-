@@ -1,4 +1,4 @@
-name: Issue122 until tails deck discard qualification
+name: Issue122 until tails deck discard qualification (turn draw proof)
 on:
   push:
     branches: [battle/issue122-coin-mill-20261128]
@@ -41,6 +41,23 @@ jobs:
           git restore --source=HEAD -- data/effect-extensions/compiled.json
       - name: Execute all remaining prints with final regression
         run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Print exact failed target diagnostics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          def visit(x,p):
+              if isinstance(x,dict):
+                  slot=x.get('slot')
+                  if isinstance(slot,str) and any(i in slot for i in ('49677','48604')) and x.get('status') in ('FAILED','BLOCKED'):
+                      print(p,json.dumps(x,ensure_ascii=False)[:5000])
+                  for v in x.values(): visit(v,p)
+              elif isinstance(x,list):
+                  for v in x: visit(v,p)
+          for p in pathlib.Path('work/card-auto-connect').rglob('*.json'):
+              try: visit(json.loads(p.read_text()),str(p))
+              except (ValueError,OSError): pass
+          PY
       - name: Preserve every published record and recover exact previously qualified IDs
         run: |
           mkdir -p artifacts
