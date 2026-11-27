@@ -4076,9 +4076,20 @@ function verifyCase(t, e) {
       assert(replay.dispatch('you',action).ok);
       const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
       assert.deepEqual(events.filter(x=>x?.command==='COIN_FLIP').map(x=>x.heads),[...Array(heads).fill(true),false]);
-      const expected=start.players[1].deck.slice(0,heads).map(c=>c.id);
-      assert.deepEqual(end.players[1].deck.map(c=>c.id),start.players[1].deck.slice(heads).map(c=>c.id));
-      assert.deepEqual(end.players[1].discard.slice(start.players[1].discard.length,start.players[1].discard.length+heads).map(c=>c.id),expected);
+      const source=start.players[1], resolved=end.players[1];
+      const expected=Array.from(source.deck.slice(0,heads),c=>c.id);
+      const remaining=Array.from(source.deck.slice(heads),c=>c.id);
+      const millEvents=events.filter(x=>x?.command==='DISCARD'&&x.fromZone==='deck'&&x.owner===source.id);
+      assert.deepEqual(Array.from(millEvents.flatMap(x=>x.cardIds)),expected,'MILL_EVENT_EXACT_TOP_IDS');
+      assert.deepEqual(Array.from(resolved.discard.slice(source.discard.length,source.discard.length+expected.length),c=>c.id),expected,'MILL_DISCARD_EXACT_TOP_IDS');
+      const deck=Array.from(resolved.deck,c=>c.id);
+      if(deck.length===remaining.length-1&&end.turnPlayer===source.id){
+        // Attack completion can draw the opponent's next-turn card. Prove that
+        // it is exactly the next un-milled physical card, not an extra discard.
+        assert(!source.hand.some(c=>c.id===remaining[0]));
+        assert(resolved.hand.some(c=>c.id===remaining[0]),'NEXT_TURN_DRAW_EXACT_ID');
+        assert.deepEqual(deck,remaining.slice(1),'MILL_THEN_TURN_DRAW_ORDER');
+      }else assert.deepEqual(deck,remaining,'MILL_REMAINING_DECK_ORDER');
       verifyPrintedAttack(start,end,e,e.plan.base);
       assert.deepEqual(S.identities(start),S.identities(end));
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
