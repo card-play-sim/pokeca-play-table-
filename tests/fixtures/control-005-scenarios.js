@@ -56,6 +56,11 @@
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(let i=0;i<row.plan.maxDiscard;i++)if(!p.bench.length||!attach(0,p.bench[i%p.bench.length],basic))return {blocked:'FIXTURE_BENCH_ENERGY_MISSING'};
+   }else if(m==='COIN_UNTIL_TAILS_MILL'){
+    // Start from exact printed basic-energy payment. Continuous special
+    // energy HP bonuses must be established through the legal attach action.
+    for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
+    for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
    }else if(m==='ATTACK_ATTACH_BASIC_FROM_HAND'){
     for(const type of needs)if(!attach(0,p.active,c=>basic(c)&&c.energyType===type))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
     for(const type of row.cost.filter(type=>type==='無色'))if(!attach(0,p.active,basic))return {blocked:'FIXTURE_ATTACK_ENERGY_MISSING'};
