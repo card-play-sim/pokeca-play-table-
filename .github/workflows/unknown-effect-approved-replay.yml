@@ -109,6 +109,7 @@ jobs:
             node scripts/build-effect-extensions.cjs
             node scripts/sync-reference-effects.cjs
             node scripts/build-pwa-release.cjs
+            node scripts/report-ij-effect-coverage.cjs reports/ij-effect-coverage.json reports/ij-effect-executions.json
             node tests/control-014-shared-effects.test.cjs
             node tests/control-011-engine-batch.test.cjs
             node tests/atomic-official-to-battle.test.cjs
@@ -134,6 +135,7 @@ jobs:
           python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE"
           python scripts/prepare-unknown-replay-intake.py --verify-result "$out"
+          python scripts/export-unknown-replay-candidate.py export "$GITHUB_WORKSPACE" "$scratch" "$out"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -141,3 +143,38 @@ jobs:
           path: ${{ runner.temp }}/replay-entry/
           if-no-files-found: error
           retention-days: 14
+
+  propose:
+    needs: entry
+    if: github.ref == 'refs/heads/main' && needs.entry.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: unknown-effect-approved-replay-entry
+          path: ${{ runner.temp }}/candidate
+      - name: Validate and stage only approved paths without executing candidate code
+        run: |
+          set -euo pipefail
+          python scripts/export-unknown-replay-candidate.py stage "$GITHUB_WORKSPACE" "$RUNNER_TEMP/candidate"
+          git diff --cached --check
+      - name: Create draft candidate pull request without merging
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="automation/unknown-approved-candidate-$GITHUB_RUN_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Verified approved unknown-effect replay candidate $GITHUB_RUN_ID"
+          git push origin "HEAD:refs/heads/$branch"
+          gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "Approved exact patch; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
