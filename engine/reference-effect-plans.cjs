@@ -296,6 +296,17 @@ function additionalAttackPlan(entry,text){
  const discardSpread=text.match(/^このポケモンについているエネルギーを(すべて|[1-9]個(?:選び、)?)(?:トラッシュし、)(相手のポケモン|相手のベンチポケモン)([1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(discardSpread&&/^\d+$/.test(printed)&&((discardSpread[4]==='にも')===(base>0))&&!(discardSpread[2]==='相手のポケモン'&&base>0))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:[...new Set([...deal,'DISCARD','DAMAGE'])],scope:discardSpread[2]==='相手のポケモン'?'opponent':'opponentBench',count:Number.parseInt(discardSpread[3],10),amount:Number(discardSpread[5]),discardAttached:discardSpread[1]==='すべて'?'all':Number.parseInt(discardSpread[1],10),sharedWording:true};
+ // Exact scoped spread effects; do not treat damage counters as damage.
+ const damagedSpread=text.match(/^ダメカンがのっている(相手の|おたがいの)ベンチポケモン(全員|[1-5]匹)にも、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(damagedSpread&&base>0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:damagedSpread[1]==='相手の'?'opponentBench':'bothBench',filter:'damaged',count:damagedSpread[2]==='全員'?null:Number.parseInt(damagedSpread[2],10),amount:Number(damagedSpread[3]),sharedWording:true};
+ const bothSpread=text.match(/^おたがいのベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(bothSpread&&base>0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'bothBench',count:null,amount:Number(bothSpread[1]),sharedWording:true};
+ const prizeSpread=text.match(/^相手のベンチポケモン全員にも、それぞれ、相手がすでにとったサイドの枚数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(prizeSpread&&base>0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponentBench',count:null,amount:Number(prizeSpread[1]),metric:'opponentPrizesTaken',sharedWording:true};
+ const ruleSpread=text.match(/^相手の「ポケモン(ex|ex・V)」全員に、それぞれ([1-9]\d{0,2})ダメージ。このワザのダメージは弱点・抵抗力を計算しない。$/);
+ if(ruleSpread&&base===0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponent',count:null,amount:Number(ruleSpread[2]),filter:ruleSpread[1]==='ex'?'ex':'exV',skipWeakness:true,skipResistance:true,sharedWording:true};
+ const benchExSpread=text.match(/^このポケモンについているエネルギーをすべてトラッシュし、相手のベンチの「ポケモンex」1匹に、([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(benchExSpread&&base===0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DISCARD','DAMAGE'],scope:'opponentBench',count:1,amount:Number(benchExSpread[1]),filter:'ex',discardAttached:'all',sharedWording:true};
  const spread=text.match(/^(相手のポケモン|相手のベンチポケモン|自分のベンチポケモン)(全員|[1-5]匹)(に|にも)、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(spread&&((spread[3]==='にも')===(base>0))&&!(spread[1]==='相手のポケモン'&&(base||spread[2]==='1匹')))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:spread[1]==='相手のポケモン'?'opponent':spread[1].startsWith('自分')?'ownBench':'opponentBench',
