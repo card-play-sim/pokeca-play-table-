@@ -323,7 +323,9 @@ function fixtureResources(manifest,deckIndex,source,e){
    reserve(r=>mon(r,null,0)&&r.facts.types.some(type=>source.facts.types.includes(type)),'active',1);
    reserve(r=>mon(r,null,0)&&r.facts.types.every(type=>!source.facts.types.includes(type)),'bench',1);
   }
-  if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
+  if(plan.predicate==='stadiumPresent'){
+   if(!reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck'))reserve(r=>r.category==='stadium'&&!!r.mainPlan,'deck');
+  }
   if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
   if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
    const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
@@ -1074,16 +1076,21 @@ function prepare(r, e, kind) {
         return {blocked:'SELF_HEAL_ITEM_REJECTED'};
       frame.game=replay.getSnapshot();
     }
-    if(plan.predicate==='stadiumPresent'){
-      const i=own.deck.findIndex(c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c).mainPlan?.mechanic==='JAMMING');
-      if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
-      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+    if(plan.predicate==='stadiumPresent'&&!g.stadium){
+      const zones=[own.deck,own.hand,own.discard];
+      const stadium=c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c)?.category==='stadium';
+      const jamming=c=>stadium(c)&&E.getReferenceEffectRecord(c)?.mainPlan?.mechanic==='JAMMING';
+      const match=[jamming,stadium].map(predicate=>({predicate,zone:zones.find(cards=>cards.some(predicate))})).find(x=>x.zone);
+      if(!match)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
+      g.stadium=match.zone.splice(match.zone.findIndex(match.predicate),1)[0];g.stadiumOwner=own.id;
     }
     if(plan.predicate==='ownNamedEnergy'){
       const eligible=c=>c.kind==='energy'&&c.name===plan.name;
-      const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
-      if(!zone)return {blocked:'NO_NAMED_ENERGY_PREDICATE_FIXTURE'};
-      own.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      if(!own.active.energyCards.some(eligible)){
+        const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
+        if(!zone)return {blocked:'NO_NAMED_ENERGY_PREDICATE_FIXTURE'};
+        own.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      }
     }
     if(plan.predicate==='ownHandEmpty')own.deck.push(...own.hand.splice(0));
     if(plan.predicate==='ownDeckAtMost')own.discard.push(...own.deck.splice(plan.threshold));
