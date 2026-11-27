@@ -257,6 +257,12 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.facts.teraBenchProtection&&!r.abilities.length,'bench',1);
   reserve(r=>mon(r,null,0)&&!r.facts.rulePokemon&&!r.abilities.length,'bench',1);
  }
+ if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.type){
+  reserveEnergy(plan.type,2,1-deckIndex);
+  reserve(r=>isBasicEnergy(r)&&typeOf(r)!==plan.type,'deck',1);
+ }
+ if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
+  reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&plan.type)reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+plan.count));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
@@ -1765,11 +1771,18 @@ function prepare(r, e, kind) {
     }
     if (m === "ATTACK_HEAL_OWN_TARGET") own.active.damage = 20;
     if (["ATTACK_DISCARD_DEFENDER_ENERGY","ATTACK_COIN_DISCARD_DEFENDER_ENERGY"].includes(m)) {
-      const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly;
+      const eligible = card => card.kind === "energy" && !!card.isSpecial === e.plan.specialOnly&&(!e.plan.type||card.energyType===e.plan.type);
+      if(e.plan.defenderEx&&!E.getReferenceEffectRecord(other.active).name.endsWith('ex'))return {blocked:'NO_EX_DEFENDER_FIXTURE'};
       const zone = [other.deck, other.hand, other.prizeCards].find(cards => cards.some(eligible));
       if (!zone) return {blocked:"NO_DEFENDER_ENERGY_FIXTURE_RESOURCE"};
       other.active.energyCards.push(zone.splice(zone.findIndex(eligible), 1)[0]);
       if (zone === other.prizeCards && other.deck.length) other.prizeCards.push(other.deck.shift());
+      if(e.plan.type){
+        const wrong=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType!==e.plan.type;
+        const otherZone=[other.deck,other.hand].find(z=>z.some(wrong));
+        if(!otherZone)return {blocked:'NO_WRONG_TYPE_DEFENDER_ENERGY_FIXTURE'};
+        other.active.energyCards.push(otherZone.splice(otherZone.findIndex(wrong),1)[0]);
+      }
     }
     if (m === "ATTACK_DISCARD_FIELD_BASIC" && own.bench.length) {
       const energies = own.active.energyCards.filter(card => !card.isSpecial);
@@ -2944,6 +2957,21 @@ function verifyCase(t, e) {
       assert(after.players[side].discard.some(card=>card.id===id));
       assert(effectEvents.some(step=>step?.command==="DISCARD"&&step.fromZone==="attached"&&step.cardIds?.includes(id)));
     }
+    if(!own&&e.plan.type){
+      const action=t.action||o.action,wrong=defendingSide.active.energyCards.find(c=>!c.isSpecial&&c.energyType!==e.plan.type);
+      assert(wrong&&energy.every(id=>defendingSide.active.energyCards.some(c=>c.id===id&&!c.isSpecial&&c.energyType===e.plan.type)));
+      assert(after.players[1].active.energyCards.some(c=>c.id===wrong.id));
+      const denied=port(before);
+      assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,energy:[wrong.id]}}).ok,false);
+      assert.deepEqual(denied.getSnapshot(),before);
+      const noMatch=JSON.parse(JSON.stringify(before)),other=noMatch.players[1];
+      const removed=other.active.energyCards.filter(c=>c.energyType===e.plan.type);
+      other.active.energyCards=other.active.energyCards.filter(c=>!removed.includes(c));other.deck.push(...removed);
+      const replay=port(noMatch);assert(replay.dispatch('you',{...action,selections:{...action.selections,energy:[]}}).ok);
+      assert(replay.getSnapshot().players[1].active.energyCards.some(c=>c.id===wrong.id));
+      assert.deepEqual(S.identities(before),S.identities(replay.getSnapshot()));
+    }
+    if(!own&&e.plan.defenderEx)assert(E.getReferenceEffectRecord(defendingSide.active).name.endsWith('ex'));
     if(own)assert(effectEvents.some(step=>step?.command==="DAMAGE"&&step.targetInstanceId===defendingSide.active.id));
   }
   if (e.plan.mechanic === "ATTACK_DISABLE_SELECTED_MOVE") {
@@ -4025,6 +4053,14 @@ function verifyCase(t, e) {
   }
   if (e.plan.mechanic === "ATTACK_DISCARD_STADIUM") {
     assert(before.stadium && before.stadiumOwner);
+    if(e.plan.optional){
+      const action=t.action||o.action;
+      const skip=port(before);assert(skip.dispatch('you',{...action,selections:{...action.selections,stadiumDiscard:[]}}).ok);
+      assert.equal(skip.getSnapshot().stadium?.id,before.stadium.id);
+      if(Number(e.damage)>0)verifyPrintedAttack(before,skip.getSnapshot(),e,Number(e.damage));
+      assert.deepEqual(S.identities(before),S.identities(skip.getSnapshot()));
+      if(!action.selections?.stadiumDiscard?.length)return {status:'BLOCKED',reason:'NO_POSITIVE_OPTIONAL_STADIUM_FIXTURE'};
+    }
     assert.equal(after.stadium, null);
     assert.equal(after.stadiumOwner, null);
     const discard = after.players.find(side => side.id === before.stadiumOwner).discard;
