@@ -27,7 +27,7 @@ jobs:
   entry:
     if: >-
       github.ref == 'refs/heads/main' &&
-      (github.event_name == 'workflow_dispatch' ||
+      ((github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner) ||
         (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) ||
         (github.event_name == 'issue_comment' &&
          github.event.issue.number == 122 &&
@@ -201,6 +201,9 @@ jobs:
 
   propose:
     needs: entry
+    concurrency:
+      group: unknown-effect-candidate-propose
+      cancel-in-progress: false
     if: github.ref == 'refs/heads/main' && needs.entry.result == 'success' && (github.event_name == 'issue_comment' || github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1'))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -239,10 +242,43 @@ jobs:
             description="Owner-policy deterministic draft only; NOT release-approved"
             branch="automation/unknown-policy-candidate-$GITHUB_RUN_ID"
           fi
+          # The exact same origin, patch and replay base must not create new
+          # branches on workflow retries. A changed base requires fresh replay.
+          if [ "$kind" = OWNER_POLICY_DRAFT_ONLY ]; then
+            receipt="$RUNNER_TEMP/candidate/verified-replay.json"
+            origin="$(jq -er '.originRunId | tostring' "$receipt")"
+            digest="$(jq -er '.approvedPatchSha256' "$receipt")"
+            base="$(jq -er '.latestMain' "$receipt")"
+            [[ "$origin" =~ ^[1-9][0-9]{0,19}$ && "$digest" =~ ^[a-f0-9]{64}$ && "$base" =~ ^[a-f0-9]{40}$ ]]
+            test "$base" = "$(git rev-parse HEAD)"
+            branch="automation/unknown-policy-candidate-$origin-$digest-$base"
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "Verified unknown-effect replay draft $GITHUB_RUN_ID ($kind)"
-          git push origin "HEAD:refs/heads/$branch"
+          if [ "$kind" = OWNER_POLICY_DRAFT_ONLY ]; then
+            existing="$(git ls-remote --heads origin "refs/heads/$branch")"
+            if [ -n "$existing" ]; then
+              git fetch --no-tags origin "refs/heads/$branch"
+              test "$(git rev-parse FETCH_HEAD^{tree})" = "$(git rev-parse HEAD^{tree})"
+              test "$(git rev-parse FETCH_HEAD^)" = "$(git rev-parse HEAD^)"
+              git reset --hard FETCH_HEAD
+            else
+              git push origin "HEAD:refs/heads/$branch"
+            fi
+            # Never reopen a candidate closed by a reviewer, and never create
+            # a duplicate for an open or merged candidate with this identity.
+            prior="$(gh pr list --state all --head "$branch" --limit 10 --json number,url,state)"
+            if [ "$(jq 'length' <<< "$prior")" -gt 0 ]; then
+              jq -r '.[] | "Existing candidate: \(.url) (\(.state))"' <<< "$prior"
+              # Reuse the durable PR reference, but never treat a closed or
+              # merged PR as an instruction to publish again.
+              jq -r '.[] | "Existing candidate: \(.url) (\(.state))"' <<< "$prior" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          else
+            git push origin "HEAD:refs/heads/$branch"
+          fi
           if gh pr create --draft --base main --head "$branch" --title "Verified unknown-effect candidate $GITHUB_RUN_ID" --body "$description; latest-main isolated engine and Chromium replay passed. Normal CI, independent final review, Pages byte equality and published gameplay remain mandatory. Refs #122. Evidence: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; then
             echo "Draft PR opened. Use the permitted GitHub connection to review and trigger normal CI for this exact head." >> "$GITHUB_STEP_SUMMARY"
           else
