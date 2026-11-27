@@ -65,7 +65,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.56.0
-      - run: python -m playwright install --with-deps chromium
+      - run: bash scripts/install-ci-chromium.sh
       - name: Verify published release files first
         env:
           RELEASE_VERIFY_ATTEMPTS: '12'

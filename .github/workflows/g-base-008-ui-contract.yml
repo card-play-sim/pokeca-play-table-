@@ -42,6 +42,7 @@ on:
       - 'tests/fixtures/g-base-008-browser.js'
       - 'sw.js'
       - '.github/workflows/g-base-008-ui-contract.yml'
+      - 'scripts/install-ci-chromium.sh'
   workflow_dispatch:
 jobs:
   ui-effect-contract:
@@ -100,7 +101,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.56.0
-      - run: python -m playwright install --with-deps chromium
+      - run: bash scripts/install-ci-chromium.sh
       - name: Exercise assigned, disjoint gameplay suite in Chromium
         run: |
           set -euo pipefail
@@ -179,7 +180,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.56.0
-      - run: python -m playwright install --with-deps chromium
+      - run: bash scripts/install-ci-chromium.sh
       - name: Upgrade actual v246 cache with persistent storage and cold restarts
         run: python tests/test_control_003_update_browser.py
       - name: Preserve installed PWA upgrade evidence
