@@ -41,6 +41,11 @@ on:
       - 'tests/fixtures/g-base-008-browser.js'
       - 'tests/test_published_pwa_browser.py'
       - '.github/workflows/published-mobile-browser.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/verify-public-intake-union.py'
+      - '.github/workflows/published-mobile-browser.yml'
   workflow_dispatch:
     inputs:
       intake_base:
@@ -50,7 +55,13 @@ on:
 permissions:
   contents: read
 jobs:
+  receipt-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python scripts/verify-public-intake-union.py --self-test
   published-mobile-browser:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     strategy:
@@ -142,3 +153,30 @@ jobs:
             test-results/published-pwa-verification.json
           if-no-files-found: warn
           retention-days: 30
+
+  public-intake-union:
+    if: github.event_name != 'pull_request'
+    needs: [receipt-contract, published-mobile-browser]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: published-mobile-browser-evidence*
+          path: ${{ runner.temp }}/public-receipts
+      - name: Bind all four public shards to the exact compiled delta
+        env:
+          REQUESTED_BASE: ${{ inputs.intake_base || github.event.before }}
+        run: |
+          set -euo pipefail
+          base=${REQUESTED_BASE:-$(git rev-parse HEAD^1)}
+          python scripts/verify-public-intake-union.py "$RUNNER_TEMP/public-receipts" "$base" "$(git rev-parse HEAD)" "$RUNNER_TEMP/public-intake-union.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-intake-exact-union
+          path: ${{ runner.temp }}/public-intake-union.json
+          if-no-files-found: error
+          retention-days: 90
