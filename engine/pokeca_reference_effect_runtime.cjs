@@ -315,6 +315,25 @@ function massHealTargets(p,plan){
 function enteredActiveThisTurn(g,owner,card){
  return g.history.some(e=>e.turnNumber===g.turnNumber&&e.player===owner.id&&e.details?.command==='SWITCH'&&e.details.activeInstanceId===id(card));
 }
+function attackGuardApplies(g,p,o,plan){
+ switch(plan.predicate){
+  case 'opponentEx':return record(o.active).name.endsWith('ex');
+  case 'ownBenchedNames':return plan.names.every(name=>p.bench.some(c=>record(c).name===name));
+  case 'opponentDamaged':return o.active.damage>0;
+  case 'opponentStatus':return o.active.statusCondition===plan.status;
+  case 'opponentPrizeCounts':return plan.prizes.includes(o.prizes);
+  case 'handCountsEqual':return p.hand.length===o.hand.length;
+  case 'ownHandCount':return p.hand.length===plan.threshold;
+  case 'stadium':return Boolean(g.stadium);
+  default:throw Error('UNRECOGNIZED_ATTACK_GUARD');
+ }
+}
+function discardCurrentStadium(g,actor){
+ const stadium=g.stadium;
+ player(g,g.stadiumOwner).discard.push(stadium);
+ g.stadium=null;g.stadiumOwner=null;
+ event(g,actor,'DISCARD',{cardIds:[id(stadium)],fromZone:'stadium'});
+}
 function boardBonusApplies(g,p,o,plan){
  const facts=record(o.active).facts;
  switch(plan.predicate){
@@ -760,7 +779,9 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='ABILITY_TYPED_COST_DRAW_LIMIT'){
   const plan=a.plan;
   assert((plan.zone==='attached'?card.energyCards:p.hand).some(c=>basicEnergy(c)&&c.energyType===plan.type),'TYPED_DRAW_COST_MISSING');
-  assert(p.deck.length>0&&p.hand.length-(plan.zone==='hand'?1:0)<plan.limit,'TYPED_DRAW_NOT_AVAILABLE');
+  assert(!plan.partnerName||field(p).some(c=>record(c).name===plan.partnerName),'TYPED_DRAW_PARTNER_REQUIRED');
+  assert(!plan.sharedUseName||!p.turnLimits?.abilityNames?.[plan.sharedUseName],'SHARED_TYPED_DRAW_ALREADY_USED');
+  assert(p.deck.length>0&&(plan.amount||p.hand.length-(plan.zone==='hand'?1:0)<plan.limit),'TYPED_DRAW_NOT_AVAILABLE');
  }
  if(m==='ABILITY_DISCARD_DRAW')assert(p.hand.length>=a.plan.cost&&p.deck.length>0,'ABILITY_DISCARD_DRAW_UNAVAILABLE');
  if(m==='ABILITY_ATTACH_SELF_DRAW')assert(p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'ABILITY_TYPED_ENERGY_REQUIRED');
@@ -1394,17 +1415,20 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
+  case 'ATTACK_GUARDED_DAMAGE':{
+   if(!attackGuardApplies(g,p,o,plan)){
+    event(g,actor,'ATTACK_FAILED',{effectId:effect.effectId,predicate:plan.predicate});
+    break;
+   }
+   if(plan.discardStadium)discardCurrentStadium(g,actor);
+   damage(g,actor,o.active,Number(effect.damage),{skipWeakness:plan.skipWeakness,skipResistance:plan.skipResistance});
+   break;
+  }
   case 'MASS_BOARD_BONUS':{
    const applies=boardBonusApplies(g,p,o,plan)&&(!plan.optional||ids('stadiumBonus').length>0);
-   const discard=()=>{
-    const stadium=g.stadium;
-    player(g,g.stadiumOwner).discard.push(stadium);
-    g.stadium=null;g.stadiumOwner=null;
-    event(g,actor,'DISCARD',{cardIds:[id(stadium)],fromZone:'stadium'});
-   };
-   if(applies&&plan.discardStadium&&plan.optional)discard();
+   if(applies&&plan.discardStadium&&plan.optional)discardCurrentStadium(g,actor);
    damage(g,actor,o.active,plan.base+(applies?plan.bonus:0));
-   if(applies&&plan.discardStadium&&!plan.optional)discard();
+   if(applies&&plan.discardStadium&&!plan.optional)discardCurrentStadium(g,actor);
    break;
   }
   case 'ATTACK_OPTIONAL_RECOIL_BONUS':{
@@ -1701,7 +1725,9 @@ function applyPlan(g,actor,card,effect,action){
    assert(index>=0,'TYPED_DRAW_COST_CHANGED');
    p.discard.push(pool.splice(index,1)[0]);
    event(g,actor,'DISCARD',{cardIds:[ident],fromZone:plan.zone,sourceInstanceId:id(card)});
-   draw(g,p,Math.max(0,plan.limit-p.hand.length));break;
+   draw(g,p,plan.amount??Math.max(0,plan.limit-p.hand.length));
+   if(plan.sharedUseName){p.turnLimits.abilityNames||={};p.turnLimits.abilityNames[plan.sharedUseName]=true;}
+   break;
   }
   case 'SUPPORTER_NON_RULE_DISCARD_DRAW':{
    const chosen=ids('discard');
