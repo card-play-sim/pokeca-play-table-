@@ -1,0 +1,33 @@
+{
+  "jobId": "OFFICIAL_SHARED_EFFECT_5024BE06148BD019:0f5009ae355ace5c40a93ea1c0cd5074dd078dd796191e0af0b208c7162fe79c",
+  "taskFingerprint": "0f5009ae355ace5c40a93ea1c0cd5074dd078dd796191e0af0b208c7162fe79c",
+  "executionFingerprint": "c85eda9a7f90662c223e5708fba920ff5672ad48b4e4fb0cfc19014abb4ef2aa",
+  "attemptId": "ac110960-1658-4537-ab29-eb36e7df2729",
+  "status": "FAILED",
+  "result": {
+    "status": "FAILED",
+    "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
+    "reason": "REVIEW_CASE_RESULTS",
+    "cases": [
+      {
+        "slot": "46235:attack:サニーアシスト:1",
+        "status": "FAILED",
+        "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+        "details": {
+          "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        }
+      },
+      {
+        "slot": "46313:attack:サニーアシスト:1",
+        "status": "FAILED",
+        "reason": "The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n",
+        "details": {
+          "mechanic": "MASS_ATTACHED_ENERGY_MOVE",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(target!==source.id&&next.find(c=>c?.id===target)?.energyCards.some(e=>e.id===id))\n\n    at verifyCase (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:1725:7)\n    at Object.run (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-engine-worker.cjs:3655:14)\n    at process.<anonymous> (/home/runner/work/pokeca-play-table-/pokeca-play-table-/scripts/lib/shared-effect-worker-entry.cjs:20:35)\n    at process.emit (node:events:519:28)\n    at emit (node:internal/child_process:949:14)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)"
+        }
+      }
+    ]
+  },
+  "checksum": "4a4024c90a89f4edebc23bfbe43d768971725dd1232b6cfcd6c8e549a45e4f13"
+}
