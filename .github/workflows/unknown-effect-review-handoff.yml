@@ -32,6 +32,18 @@ jobs:
         run: |
           python scripts/verify-unknown-quarantine-handoff.py --self-test
           python scripts/verify-unknown-quarantine-handoff.py "$RUNNER_TEMP/review-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$RUNNER_TEMP/review-handoff.json"
+      - name: Independently bind reviewed wording to saved official checkpoint
+        run: |
+          set -euo pipefail
+          node scripts/verify-reviewed-official-scope.cjs --self-test
+          for branch in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
+            if ! git fetch origin "$branch"; then continue; fi
+            if ! git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json; then continue; fi
+            checkpoint="$(git rev-parse FETCH_HEAD)"
+            break
+          done
+          test -n "${checkpoint:-}"
+          node scripts/verify-reviewed-official-scope.cjs "$RUNNER_TEMP/review-input" "$RUNNER_TEMP/review-handoff.json" "$checkpoint"
       - uses: actions/upload-artifact@v4
         with:
           name: unknown-effect-review-handoff
