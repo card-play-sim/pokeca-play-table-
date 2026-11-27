@@ -37,6 +37,10 @@ jobs:
           old="    const attacker=records.get(basicEx&&!e.proofNonEx?'49264':'45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);"
           new="    const candidates=basicEx?[...records.values()].filter(c=>c.category==='pokemon'&&c.facts?.basic&&c.name.endsWith('ex')!==Boolean(e.proofNonEx)&&c.officialCardId!==r.officialCardId&&c.attacks?.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan)&&c.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2)):[];\n    const attacker=basicEx?candidates.sort((a,b)=>String(a.officialCardId).localeCompare(String(b.officialCardId)))[0]:records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(!basicEx||Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2));"
           assert s.count(old)==1, 'EXACT_FIXTURE_ANCHOR_MISSING'
+          s=s.replace(old,new)
+          old="const negative=prepare(r,{...e,proofNonEx:true},'ability');"
+          new="const negative=prepare(defender,{...e,proofNonEx:true},'ability');"
+          assert s.count(old)==1, 'NEGATIVE_FIXTURE_ANCHOR_MISSING'
           p.write_text(s.replace(old,new))
           PY
           node --check scripts/lib/shared-effect-engine-worker.cjs
