@@ -83,6 +83,14 @@ jobs:
           checkpoint="$(git rev-parse FETCH_HEAD)"
           python scripts/verify-unknown-quarantine-handoff.py "$RUNNER_TEMP/archived-review" 35e0a13680b611f7c08aea72fca5abb033554729 46028204781 "$RUNNER_TEMP/archived-handoff.json"
           node scripts/verify-reviewed-official-scope.cjs "$RUNNER_TEMP/archived-review" "$RUNNER_TEMP/archived-handoff.json" "$checkpoint"
+          python scripts/verify-unknown-approved-replay.py --preview "$RUNNER_TEMP/archived-review" 35e0a13680b611f7c08aea72fca5abb033554729 46028204781 "$GITHUB_WORKSPACE" "$RUNNER_TEMP/archived-preview" "$checkpoint"
+          python - "$RUNNER_TEMP/archived-preview/replay-entry.json" <<'PY'
+          import json,sys
+          p=json.load(open(sys.argv[1]))
+          assert p["reviewOnly"] is True and p["state"]=="PREVIEW_PATCH_APPLIES_REPLAY_REQUIRED"
+          assert set(p["requiredQualifiedIds"])=={"48299","50071","50160","50208","50694"} and p["publicBattleVerified"]==[]
+          print("ARCHIVED_FIVE_READ_ONLY_PREVIEW_READY")
+          PY
           python - "$RUNNER_TEMP/archived-handoff.json" <<'PY'
           import json,sys
           m=json.load(open(sys.argv[1]))
