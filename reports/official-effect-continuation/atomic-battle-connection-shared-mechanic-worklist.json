@@ -1560,26 +1560,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_158AA5FE1E0343B7C4BE",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の手札が10枚以上のときにしか、このポケモンはワザが使えない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50371",
-        "50534",
-        "50550"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50371.json",
-        "data/effect-extensions/evidence/50534.json",
-        "data/effect-extensions/evidence/50550.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1753C21473FEE9483833",
       "category": "pokemon",
       "effectKind": "attack",
@@ -1768,26 +1748,6 @@
         "data/effect-extensions/evidence/45971.json",
         "data/effect-extensions/evidence/46156.json",
         "data/effect-extensions/evidence/48970.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2EB64156751A33EED72D",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチの残りHPが「90」以下のポケモンを1匹選び、バトルポケモンと入れ替える。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45941",
-        "46151",
-        "48736"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45941.json",
-        "data/effect-extensions/evidence/46151.json",
-        "data/effect-extensions/evidence/48736.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -2498,26 +2458,6 @@
         "data/effect-extensions/evidence/45724.json",
         "data/effect-extensions/evidence/45846.json",
         "data/effect-extensions/evidence/46699.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AF53BB19C24EA50E5D00",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "相手の場に「ポケモンex・V」がいないなら、このポケモンはワザが使えない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46424",
-        "46649",
-        "49299"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46424.json",
-        "data/effect-extensions/evidence/46649.json",
-        "data/effect-extensions/evidence/49299.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -3625,24 +3565,6 @@
       "effectSlots": 2
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_19F7FA4EB6BB41443288",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンにエネルギーがついているなら、このポケモンが受けるワザのダメージは「-30」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47057",
-        "49089"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47057.json",
-        "data/effect-extensions/evidence/49089.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_1A5B307B2CE77B81979B",
       "category": "stadium",
       "effectKind": "stadium",
@@ -3891,24 +3813,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/50087.json",
         "data/effect-extensions/evidence/50195.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_2AA5B29C03132B664E12",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンのHPがまんたんの状態なら、このポケモンが相手のポケモンから受けるワザのダメージは「-60」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50376",
-        "50781"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50376.json",
-        "data/effect-extensions/evidence/50781.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -13429,5 +13333,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1291
+  "unfinishedPrints": 1279
 }
