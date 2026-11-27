@@ -414,7 +414,15 @@ function fixtureResources(manifest,deckIndex,source,e){
    plan.filter==='typedPokemon'?mon(r,plan.type):
    plan.filter==='typedPokemonOrBasicEnergy'?mon(r,plan.type):
    plan.filter==='typedPokemonOrStadium'?mon(r,plan.type):r.category===plan.filter;
-  const target=reserve(filter,'deck');
+  let target=reserve(filter,'deck');
+  // A named basic search can legally find another physical copy of the
+  // attacking print itself. Reserve that copy before prize allocation;
+  // the ordinary source copy is additional and must remain in the field.
+  if(!target&&m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&plan.nameExact&&filter(source)&&
+     ensure(deckIndex,source,requiredCopies(requirements,0,source.officialCardId)+1)){
+   requirements.push({side:0,zone:'deck',printId:source.officialCardId});
+   target=source;
+  }
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
  if(m==='MASS_ENERGY_ROUTE'&&plan.target!=='self'&&(plan.holderType||plan.team)){
