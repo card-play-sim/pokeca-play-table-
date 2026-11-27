@@ -668,7 +668,7 @@ function requests(g,actor,card,effect){
   cardRequest('ownBench',p.bench,0,Math.min(1,p.bench.length));
   if(p.bench.length)out.at(-1).dependencies=[{kind:'countWhenSelected',key:'mode',value:'switch',count:1}];
  }
- if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',p.bench,1,1);
+ if(m==='ABILITY_SWITCH_OWN')cardRequest('ownBench',effect.plan.selfBenchOnly?p.bench.filter(c=>id(c)===id(card)):p.bench,1,1);
  if(['ABILITY_SEARCH_TYPED_EVOLUTION','TRAINER_SEARCH_TERA'].includes(m)){
   const pool=p.deck.filter(c=>typedEvolutionOrTera(c,effect.plan));
   deckRequest('cards',pool,0,Math.min(effect.plan.limit,pool.length));
@@ -774,6 +774,7 @@ function verifyRequests(g,actor,card,effect,action){
 // Never infer executable effects from a card name or an uncompiled description.
 function abilityOrigin(a){
  const text=String(a.text||'').replace(/\s+/g,'');
+ if(a.plan?.selfBenchOnly)return {zones:['BENCH'],entry:false};
  if(text.startsWith('このポケモンは、ベンチにいるかぎり'))return {zones:['BENCH'],entry:false};
  if(text.includes('このカードが手札にあり'))return {zones:['HAND'],entry:false};
  if(text.includes('このカードを手札からベンチに出したとき'))return {zones:['BENCH'],entry:true};
@@ -803,7 +804,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,opponent(g,actor),a.plan),'NO_HAND_FLOW_CHANGE');
  if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
- if(m==='ABILITY_SWITCH_OWN')assert(p.bench.length>0,'NO_OWN_BENCH');
+ if(m==='ABILITY_SWITCH_OWN'){assert(p.bench.length>0,'NO_OWN_BENCH');if(a.plan.selfBenchOnly)assert(zone==='BENCH'&&p.bench.some(c=>id(c)===id(card)),'BENCH_SOURCE_REQUIRED');}
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');

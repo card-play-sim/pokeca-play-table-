@@ -1961,6 +1961,14 @@ function prepare(r, e, kind) {
       return {port:pp,sourceId:now.id,kind};
     }
   }
+  if(kind==='ability'&&e.plan.selfBenchOnly){
+    const own=frame.game.players[0];
+    if(own.active?.id===frame.sourceId){
+      if(!own.bench.length)return {blocked:'NO_SELF_SWITCH_BENCH_FIXTURE'};
+      [own.active,own.bench[0]]=[own.bench[0],own.active];
+    }
+    if(!own.bench.some(c=>c.id===frame.sourceId))return {blocked:'NO_SELF_SWITCH_SOURCE'};
+  }
   if(kind==='ability'&&e.plan.origin==='activeEntry'){
     const own=frame.game.players[0];
     if(own.active?.id!==frame.sourceId||!own.bench.length)return {blocked:'NO_ACTIVE_ENTRY_FIXTURE'};
@@ -2820,6 +2828,14 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==="ABILITY_SWITCH_OWN"){
     const action=t.action||o.action,own=before.players[0],resolved=after.players[0];
     assert.equal(resolved.active.id,action.selections.ownBench[0]);
+    if(e.plan.selfBenchOnly){
+      assert.equal(resolved.active.id,t.sourceId);
+      assert(own.bench.some(c=>c.id===t.sourceId));
+      const active=JSON.parse(JSON.stringify(before)),side=active.players[0],i=side.bench.findIndex(c=>c.id===t.sourceId);
+      [side.active,side.bench[i]]=[side.bench[i],side.active];
+      const denied=port(active);assert.equal(denied.dispatch('you',action).ok,false,'SELF_SWITCH_ACTIVE_DENIED');
+      assert.deepEqual(denied.getSnapshot(),active);
+    }
     assert(resolved.bench.some(c=>c.id===own.active.id));
     assert.equal(p.dispatch("you",action).ok,false);
     assert.deepEqual(p.getSnapshot(),after);
