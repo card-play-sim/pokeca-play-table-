@@ -116,12 +116,12 @@ function normalizeHistory(raw){
   const status=['GENERATED_NOT_TESTED','NO_VALID_MODEL_PATCH','QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED','QUARANTINE_FAILED'].includes(row.status)?row.status:'QUARANTINE_FAILED';
   const fingerprint=/^[a-f0-9]{64}$/.test(row.fingerprint||'')?row.fingerprint:null;
   const lifetime=Number.isSafeInteger(row.totalAttempts)&&row.totalAttempts>=attempts&&row.totalAttempts<=100000?row.totalAttempts:attempts;
-  result.groups[id]={attempts,totalAttempts:lifetime,lastRun,status,fingerprint,feedback:typeof row.feedback==='string'?row.feedback.slice(-1800):''};
+  result.groups[id]={attempts,totalAttempts:lifetime,lastRun,status,fingerprint,feedback:typeof row.feedback==='string'?row.feedback.slice(-1800):'',reviewedKey:/^[a-f0-9]{64}$/.test(row.reviewedKey||'')?row.reviewedKey:null};
  }
  return result;
 }
 function sourceFingerprint(sources){return sha(JSON.stringify(allowed.map(f=>[f,sha(sources[f])])));}
-function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
+function recordHistory(raw,selected,result,runNumber,fingerprint,feedback='',strategy=''){
  const history=normalizeHistory(raw),n=Number(runNumber);
  assert(Number.isSafeInteger(n)&&n>=1,'INVALID_RUN_NUMBER');
  for(const group of selected){
@@ -129,7 +129,7 @@ function recordHistory(raw,selected,result,runNumber,fingerprint,feedback=''){
   const old=history.groups[id],same=old?.fingerprint===fingerprint;
   const attempts=(same?old.attempts:0)+(same&&old.lastRun===n?0:1);
   const totalAttempts=Math.min(100000,(old?.totalAttempts||0)+(old?.lastRun===n?0:1));
-  history.groups[id]={attempts,totalAttempts:Math.max(attempts,totalAttempts),lastRun:n,status:result,fingerprint,feedback:String(feedback).slice(-1800)};
+  history.groups[id]={attempts,totalAttempts:Math.max(attempts,totalAttempts),lastRun:n,status:result,fingerprint,feedback:String(feedback).slice(-1800),reviewedKey:strategy==='REVIEWED_COMPOSITION'?reviewedKey(group,fingerprint):old?.reviewedKey||null};
  }
  return normalizeHistory(history);
 }
@@ -363,9 +363,13 @@ function reviewedProposal(groups,sources){
  }))];
  return {edits:[{path:file,before:anchor,after:additions.join('\n')+'\n'+anchor}],strategy:'REVIEWED_COMPOSITION'};
 }
+function reviewedKey(group,fingerprint){
+ const plan=reviewedPlan(group);
+ return plan?sha(JSON.stringify([fingerprint,plan])):null;
+}
 function selectReviewedBatch(candidates,history,fingerprint){
  const prior=normalizeHistory(history).groups;
- const ready=candidates.filter(x=>x.records.length&&reviewedPlan(x.group)&&prior[x.group.sharedTaskId]?.fingerprint!==fingerprint);
+ const ready=candidates.filter(x=>x.records.length&&reviewedPlan(x.group)&&prior[x.group.sharedTaskId]?.reviewedKey!==reviewedKey(x.group,fingerprint));
  const ordered=linkExplicitDependencies(ready.map(x=>boundedCandidate(x,64))).sort((a,b)=>b.records.length-a.records.length||a.group.sharedTaskId.localeCompare(b.group.sharedTaskId));
  let selected=[];
  for(const row of ordered){
@@ -437,9 +441,7 @@ async function generateWithRepair(batch,sources,{feedback='',previousPatch='',pr
  }
  return {scope,feedback};
 }
-async function main(){
- const worklist=read(process.argv[2]),out=process.argv[3],scratch=process.argv[4];
- assert(out&&scratch&&path.resolve(scratch)!==process.cwd(),'ISOLATED_TREE_REQUIRED');
+function loadVerifiedInputs(worklist){
  const checkpoint=read('data/official-effect-intake/checkpoint.json');
  const rows=new Map(checkpoint.records.map(r=>[String(r.officialCardId),r]));
  const compiled=new Set(read('data/effect-extensions/compiled.json').records.map(r=>String(r.officialCardId)));
@@ -450,8 +452,7 @@ async function main(){
   try{const records=exactGroup(group,rows,compiled,read,compile);if(records.length)candidates.push({group,records});}
   catch(e){evidenceFailures.push({sharedTaskId:group.sharedTaskId,reason:String(e).slice(0,500)});}
  }
- write(path.join(out,'evidence-blockers.json'),{state:'EVIDENCE_BLOCKED_NOT_ADOPTED',groups:evidenceFailures});
- if(!candidates.length){write(path.join(out,'result.json'),{state:'NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP'});return;}
+
  const sources=Object.fromEntries(allowed.map(f=>[f,fs.readFileSync(f,'utf8')]));
  const fingerprint=sourceFingerprint(sources);
  const historyPath=process.env.MODEL_HISTORY_PATH;
@@ -459,6 +460,22 @@ async function main(){
  if(historyPath&&fs.existsSync(historyPath)&&fs.statSync(historyPath).size<=8*1024*1024){
   try{history=normalizeHistory(read(historyPath));}catch(e){console.warn('INVALID_PREVIOUS_HISTORY',String(e).slice(0,300));}
  }
+
+ return {candidates,evidenceFailures,sources,fingerprint,history};
+}
+function probeReviewed(worklist){
+ const {candidates,sources,fingerprint,history}=loadVerifiedInputs(worklist);
+ const batch=selectReviewedBatch(candidates,history,fingerprint);
+ const proposal=reviewedProposal(batch.map(x=>x.group),sources);
+ if(!proposal)return false;
+ validateCandidateSyntax(sources,applyEdits(sources,proposal));
+ return true;
+}
+async function main(){
+ const worklist=read(process.argv[2]),out=process.argv[3],scratch=process.argv[4];
+ assert(out&&scratch&&path.resolve(scratch)!==process.cwd(),'ISOLATED_TREE_REQUIRED');
+ const {candidates,evidenceFailures,sources,fingerprint,history}=loadVerifiedInputs(worklist); write(path.join(out,'evidence-blockers.json'),{state:'EVIDENCE_BLOCKED_NOT_ADOPTED',groups:evidenceFailures});
+ if(!candidates.length){write(path.join(out,'result.json'),{state:'NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP'});return;}
  const runNumber=process.env.GITHUB_RUN_NUMBER||1;
  let previousSelection=null;
  const previousSelectionPath=process.env.MODEL_PREVIOUS_SELECTION_PATH;
@@ -474,8 +491,9 @@ async function main(){
  const reviewed=retry.length?[]:selectReviewedBatch(candidates,history,fingerprint);
  const batch=retry.length?focusFailedBatch(retry,previousReceipt):reviewed.length?reviewed:process.env.MODEL_REVIEWED_ONLY==='1'?[]:selectBatch(candidates,runNumber,{history,fingerprint});
  if(!batch.length){write(path.join(out,'result.json'),{state:'NO_BATCH_WITHIN_LIMIT'});return;}
+ const intendedStrategy=reviewed.length?'REVIEWED_COMPOSITION':'LOCAL_MODEL';
  let selectedGroups=[],records=[],targetIds=[];
- const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback));
+ const saveHistory=(status,feedback)=>write(path.join(out,'history.json'),recordHistory(history,selectedGroups,status,runNumber,fingerprint,feedback,intendedStrategy));
  let proposal,changed,feedback=retry.length&&process.env.MODEL_FEEDBACK_PATH&&fs.existsSync(process.env.MODEL_FEEDBACK_PATH)?fs.readFileSync(process.env.MODEL_FEEDBACK_PATH,'utf8').slice(-1800):'';
  let previousPatch='';
  if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
@@ -483,7 +501,7 @@ async function main(){
  const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,
   onAttempt(attempt,scope,profile){
    selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
-   const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,requiredTogether:scope.requiredTogether,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
+   const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,requiredTogether:scope.requiredTogether,intendedStrategy,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
    write(path.join(out,'selected-'+attempt+'.json'),selected);
    write(path.join(out,'selected.json'),selected);
    write(path.join(out,'repair-profile-'+attempt+'.json'),profile);
@@ -509,5 +527,9 @@ async function main(){
  saveHistory('GENERATED_NOT_TESTED','');
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',strategy:proposal.strategy||'LOCAL_MODEL',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
-if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1;});
-module.exports={reviewedPlan,reviewedProposal,selectReviewedBatch,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+if(require.main===module){
+ if(process.argv[2]==='--reviewed-probe'){
+  try{console.log(probeReviewed(read(process.argv[3]))?'1':'0');}catch(e){console.error(e);process.exitCode=1;}
+ }else main().catch(e=>{console.error(e);process.exitCode=1;});
+}
+module.exports={reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};

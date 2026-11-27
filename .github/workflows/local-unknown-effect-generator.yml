@@ -94,6 +94,18 @@ jobs:
           done
           echo "MODEL_HISTORY_PATH=$history" >> "$GITHUB_ENV"
           cp "$history" "$RUNNER_TEMP/model-artifacts/history.json"
+      - name: Choose evidence-verified reviewed route before model setup
+        run: |
+          set -euo pipefail
+          if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then
+            exit 0
+          fi
+          ready="$(node scripts/local-unknown-effect-generator.cjs --reviewed-probe "$RUNNER_TEMP/unknown-worklist.json")"
+          case "$ready" in
+            1) echo "MODEL_REVIEWED_ONLY=1" >> "$GITHUB_ENV"; echo "Using reviewed composition without model setup." ;;
+            0) echo "No untried reviewed composition. Use local inference." ;;
+            *) echo "Invalid reviewed probe output" >&2; exit 1 ;;
+          esac
       - name: Build pinned local CPU inference and verify public model bytes
         if: env.MODEL_REVIEWED_ONLY != '1'
         run: |
@@ -129,7 +141,7 @@ jobs:
             if [ ! -f "$out/selected.json" ]; then return; fi
             local feedback=""
             if [ -f "$out/engine.log" ]; then feedback="$(python scripts/unknown-repair-feedback.py "$out/engine.log")"; fi
-            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback);fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
+            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback,row.intendedStrategy||'');fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
           }
           for attempt in 1 2; do
             scratch="$RUNNER_TEMP/model-scratch-$attempt"
