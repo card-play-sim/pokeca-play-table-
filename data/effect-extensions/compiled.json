@@ -11057,6 +11057,99 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "50694",
+      "name": "ディアルガ",
+      "deckName": "ディアルガ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50694",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M6a/050694_P_DEIARUGA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "リバースクロック",
+          "cost": [
+            "無色"
+          ],
+          "damage": "0",
+          "text": "自分のトラッシュからポケモンと基本エネルギーを合計3枚まで選び、相手に見せて、山札にもどして切る。",
+          "effectId": "reference-50694-attack-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "REVEAL",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "discard",
+            "destination": "deck",
+            "category": "pokemonOrBasicEnergy",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "energyType": null,
+            "limit": 3,
+            "activeOnly": false,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ヘビーインパクト",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "",
+          "effectId": "reference-50694-attack-1",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50694.json",
+        "sha256": "36382cce28c347b605ad65452c3a9e27a9eee14bf9a2680c937892b3d7c1548e",
+        "htmlSha256": "36382cce28c347b605ad65452c3a9e27a9eee14bf9a2680c937892b3d7c1548e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "50704",
       "name": "ニャース",
       "deckName": "ニャース",
@@ -228224,6 +228317,182 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50160",
+      "name": "ジプソ",
+      "deckName": "ジプソ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50160",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050160_T_JIPUSO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50160.json",
+        "sha256": "d6abce1b729d13c8228621fd1f918322c1d70008a2957afdcbc45eb5172db2a0",
+        "htmlSha256": "d6abce1b729d13c8228621fd1f918322c1d70008a2957afdcbc45eb5172db2a0",
+        "textSha256": "3ebd5755deaa680b817430c63e978cf7e4df2c94d3769c8266d0f8867066990e"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": "鋼",
+        "limit": 2,
+        "target": "own",
+        "holderType": "鋼",
+        "team": null,
+        "multi": false,
+        "heal": null,
+        "activeOnly": false,
+        "repeated": false,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50208",
+      "name": "ジプソ",
+      "deckName": "ジプソ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50208",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M4/050208_T_JIPUSO.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50208.json",
+        "sha256": "3465c6e10bb6604fb16d41592c6d98a28cb5f30ffa5afdfc47856a35de7126c5",
+        "htmlSha256": "3465c6e10bb6604fb16d41592c6d98a28cb5f30ffa5afdfc47856a35de7126c5",
+        "textSha256": "3ebd5755deaa680b817430c63e978cf7e4df2c94d3769c8266d0f8867066990e"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": "鋼",
+        "limit": 2,
+        "target": "own",
+        "holderType": "鋼",
+        "team": null,
+        "multi": false,
+        "heal": null,
+        "activeOnly": false,
+        "repeated": false,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "48299",
+      "name": "ワンダーパッチ",
+      "deckName": "ワンダーパッチ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48299",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MBD/048299_T_WANDAPATCHI.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48299.json",
+        "sha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
+        "htmlSha256": "46062bedab6a20d7637ae7a77470583ab63bd4558dec4221f2ea77f64975f8c8",
+        "textSha256": "59400b4dc69e8d1d10364fe7777ce405c00799d2fb6cf613bda1682d0b0234c0"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": "超",
+        "limit": 1,
+        "target": "bench",
+        "holderType": "超",
+        "team": null,
+        "multi": false,
+        "heal": null,
+        "activeOnly": false,
+        "repeated": false,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50071",
+      "name": "ワンダーパッチ",
+      "deckName": "ワンダーパッチ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50071",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M3/050071_T_WANDAPATCHI.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50071.json",
+        "sha256": "067fd5b5b3ce4a55c7fa06d780c887bfe17d8e2bb2e60d92cdf413945e36a99d",
+        "htmlSha256": "067fd5b5b3ce4a55c7fa06d780c887bfe17d8e2bb2e60d92cdf413945e36a99d",
+        "textSha256": "59400b4dc69e8d1d10364fe7777ce405c00799d2fb6cf613bda1682d0b0234c0"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ENERGY_ROUTE",
+        "commands": [
+          "ATTACH_ENERGY"
+        ],
+        "zone": "discard",
+        "type": "超",
+        "limit": 1,
+        "target": "bench",
+        "holderType": "超",
+        "team": null,
+        "multi": false,
+        "heal": null,
+        "activeOnly": false,
+        "repeated": false,
+        "sharedWording": true
+      }
     }
   ],
   "blocked": [
@@ -229114,11 +229383,6 @@
     },
     {
       "officialCardId": "50691",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50694",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },

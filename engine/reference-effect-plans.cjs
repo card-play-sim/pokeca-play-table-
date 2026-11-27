@@ -1055,6 +1055,9 @@ function plan(entry,kind){
   return {mechanic:'SUPPORTER_SEARCH_BY_STAGE',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
  const ij=kind==='MAIN'&&ijMainPlans.get(entry.category+':'+text);
  if(ij)return {...ij,commands:[...ij.commands]};
+ if(kind==="MAIN"&&generic==="自分のトラッシュから「基本[鋼]エネルギー」を2枚まで選び、自分の[鋼]ポケモン1匹につける。"&&entry.category==="supporter")return {"mechanic":"MASS_ENERGY_ROUTE","commands":["ATTACH_ENERGY"],"zone":"discard","type":"鋼","limit":2,"target":"own","holderType":"鋼","team":null,"multi":false,"heal":null,"activeOnly":false,"repeated":false,"sharedWording":true};
+ if(kind==="MAIN"&&generic==="自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。"&&entry.category==="item")return {"mechanic":"MASS_ENERGY_ROUTE","commands":["ATTACH_ENERGY"],"zone":"discard","type":"超","limit":1,"target":"bench","holderType":"超","team":null,"multi":false,"heal":null,"activeOnly":false,"repeated":false,"sharedWording":true};
+ if(kind==="ATTACK"&&generic==="自分のトラッシュからポケモンと基本エネルギーを合計3枚まで選び、相手に見せて、山札にもどして切る。"&&String(entry.damage??"0")==="0")return {"mechanic":"MASS_ZONE_TRANSFER","commands":["REVEAL","RETURN_TO_DECK","SHUFFLE_DECK"],"zone":"discard","destination":"deck","category":"pokemonOrBasicEnergy","type":null,"stage":null,"team":null,"energyType":null,"limit":3,"activeOnly":false,"sharedWording":true};
  const p=byText.get(text);return p?{...p,commands:[...p.commands]}:additional||massSharedPlan(entry,kind,generic)||sequencePlan(entry,kind,generic)||handAndHealPlan(entry,kind,generic)||energyCountFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,true)||evolutionTransferFallback(entry,kind,generic)||sequencePlan(entry,kind,generic,'attack');
 }
 // Compose an already verified, exact transfer grammar with the canonical
