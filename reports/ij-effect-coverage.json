@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1248,
-      "missing": 454
+      "connected": 1249,
+      "missing": 453
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1242,
+      "CONNECTED_UNTESTED": 1243,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 397,
+      "ENGINE_CONNECTION_REQUIRED": 396,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -5228,8 +5228,7 @@
       "name": "ロケット団のディグダ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48604.json"
     },
     {
@@ -21362,16 +21361,16 @@
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1248,
-        "MECHANIC_REQUIRED": 441,
+        "ENGINE_CONNECTED": 1249,
+        "MECHANIC_REQUIRED": 440,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
         "ENGINE_CONNECTED": 550,
-        "MECHANIC_REQUIRED": 312,
-        "ENGINE_CONNECTION_REQUIRED": 3,
+        "MECHANIC_REQUIRED": 311,
+        "ENGINE_CONNECTION_REQUIRED": 4,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21380,7 +21379,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3732,
-    "unconnected": 1341
+    "engineConnected": 3733,
+    "unconnected": 1340
   }
 }

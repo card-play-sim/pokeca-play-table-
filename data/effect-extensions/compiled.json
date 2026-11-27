@@ -227115,6 +227115,69 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "48604",
+      "name": "ロケット団のディグダ",
+      "deckName": "ロケット団のディグダ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48604",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M2a/048604_P_ROKETTODANNODEIGUDA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "もぐりまくる",
+          "cost": [
+            "闘"
+          ],
+          "damage": "0",
+          "text": "ウラが出るまでコインを投げ、オモテの数ぶん、相手の山札を上からトラッシュする。",
+          "effectId": "reference-48604-attack-0",
+          "plan": {
+            "mechanic": "COIN_UNTIL_TAILS_MILL",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "base": 0,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 60,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "草"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48604.json",
+        "sha256": "021b34ad7007a1aaee60b244e7645e23497d937df77f8c70a457728603d0cfc6",
+        "htmlSha256": "021b34ad7007a1aaee60b244e7645e23497d937df77f8c70a457728603d0cfc6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
