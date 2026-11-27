@@ -210,6 +210,20 @@ def release_checks(payload, head, repository):
         raise ValueError("RELEASE_CHECK_NOT_SUCCESS")
     return True
 
+def public_receipt(path, base, head, repo):
+    if not all(re.fullmatch(r"[a-f0-9]{40}", x) for x in (base, head)):
+        raise ValueError("INVALID_PUBLIC_SCOPE")
+    subprocess.run(["git","-C",str(repo),"merge-base","--is-ancestor",base,head],check=True)
+    audit = import_module("audit-exact-target-completion")
+    before = index(git(repo,"show",base+":data/effect-extensions/compiled.json"))
+    after = index(git(repo,"show",head+":data/effect-extensions/compiled.json"))
+    receipt = json.loads(Path(path).read_text())
+    if (receipt.get("commit") != head or receipt.get("baseCommit") != base
+            or not isinstance(receipt.get("release"), str) or not receipt["release"]):
+        raise ValueError("PUBLIC_RECEIPT_HEAD_OR_BASE_MISMATCH")
+    audit.verify_delta_receipt(receipt,before,after)
+    return True
+
 def self_test():
     head, repo = "a"*40, "owner/repo"
     runs = [{"name":name,"id":i+1,"run_attempt":1,"head_sha":head,"event":"pull_request",
@@ -280,6 +294,9 @@ if __name__=="__main__":
         export(*sys.argv[2:])
     elif sys.argv[1]=="stage":
         stage(*sys.argv[2:])
+    elif sys.argv[1]=="public-receipt":
+        public_receipt(*sys.argv[2:])
+        print("EXACT_PUBLIC_RECEIPT_PASS")
     elif sys.argv[1]=="release-checks":
         release_checks(json.loads(Path(sys.argv[2]).read_text()),sys.argv[3],sys.argv[4])
         print("EXACT_HEAD_RELEASE_CHECKS_PASS")

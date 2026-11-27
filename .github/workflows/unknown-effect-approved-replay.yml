@@ -9,18 +9,23 @@ on:
     types: [created]
   workflow_dispatch:
     inputs:
+      release_only:
+        description: Resume the verified automatic release queue (no replay approval)
+        required: false
+        default: false
+        type: boolean
       origin_run:
         description: Successful quarantine workflow run ID
-        required: true
+        required: false
         type: string
       attempt:
         description: Independently reviewed attempt
-        required: true
+        required: false
         type: choice
         options: [attempt-1, attempt-2]
       approved_patch_sha256:
         description: Independently reviewed exact patch SHA256
-        required: true
+        required: false
         type: string
 permissions:
   contents: read
@@ -29,7 +34,7 @@ jobs:
   entry:
     if: >-
       github.ref == 'refs/heads/main' &&
-      ((github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner) ||
+      ((github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner && !inputs.release_only) ||
         (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) ||
         (github.event_name == 'issue_comment' &&
          github.event.issue.number == 122 &&
@@ -294,7 +299,7 @@ jobs:
   release:
     # The approved main workflow enables only independently reproduced
     # compiler-only candidates. GitHub review and CI protection still apply.
-    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
+    if: (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.release_only && github.actor == github.repository_owner)) && github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' && (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     concurrency:
@@ -321,12 +326,24 @@ jobs:
           live_main() { gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha; }
           test "$(live_main)" = "$base"
           ensure_public() {
-            local sha="$1" previous="$2" file rows state waiting=0
+            local sha="$1" previous="$2" file rows state waiting=0 id attempt
             for file in deploy-play-table-pages.yml verify-published-pwa.yml published-mobile-browser.yml; do
-              rows="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$file/runs?head_sha=$sha&per_page=30" --jq '.workflow_runs | sort_by(.id) | last // {}')"
+              rows="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$file/runs?head_sha=$sha&branch=main&per_page=100" --jq '.workflow_runs | map(select(.event=="push" or .event=="workflow_dispatch")) | sort_by(.id) | last // {}')" || return 1
               state="$(jq -r '.conclusion // .status // "missing"' <<< "$rows")"
               case "$state" in
-                success) ;;
+                success)
+                  if [ "$file" = published-mobile-browser.yml ]; then
+                    id="$(jq -er .id <<< "$rows")" || return 1
+                    receipt="$(mktemp -d "$RUNNER_TEMP/public.XXXXXX")"
+                    if ! gh run download "$id" --name public-intake-exact-union --dir "$receipt" || ! python scripts/export-unknown-replay-candidate.py public-receipt "$receipt/public-intake-union.json" "$previous" "$sha" "$GITHUB_WORKSPACE"; then
+                      # A successful but differently scoped run is not proof.
+                      # Re-dispatch only on current main, with the exact base.
+                      if [ "$(live_main)" = "$sha" ]; then
+                        gh workflow run "$file" --ref main -f "intake_base=$previous" || return 1
+                      fi
+                      waiting=1
+                    fi
+                  fi ;;
                 missing)
                   test "$(live_main)" = "$sha" || return 1
                   if [ "$file" = published-mobile-browser.yml ]; then
@@ -335,15 +352,29 @@ jobs:
                     gh workflow run "$file" --ref main || return 1
                   fi
                   waiting=1 ;;
-                *) echo "$file: $state; existing release not yet verified"; waiting=1 ;;
+                failure|cancelled|timed_out|startup_failure)
+                  # Reuse the existing failed workflow, at most two retries.
+                  id="$(jq -er .id <<< "$rows")" || return 1
+                  attempt="$(jq -er .run_attempt <<< "$rows")" || return 1
+                  if [ "$(live_main)" = "$sha" ] && [ "$attempt" -lt 3 ]; then
+                    gh run rerun "$id" --failed || return 1
+                  fi
+                  waiting=1 ;;
+                *) echo "$file: $state; release not yet verified"; waiting=1 ;;
               esac
             done
             return "$waiting"
           }
-          if ! git diff --quiet HEAD^1 HEAD -- data/effect-extensions/compiled.json; then
-            if ! ensure_public "$base" "$(git rev-parse HEAD^1)"; then
-              echo 'Previous release is not yet publicly verified.' >> "$GITHUB_STEP_SUMMARY"
-              exit 0
+          # Source-only merges must not hide a preceding unpublished delta.
+          last_release="$(git log --first-parent -1 --format=%H -- data/effect-extensions/compiled.json)"
+          if [ -n "$last_release" ] && git rev-parse "$last_release^1" >/dev/null 2>&1; then
+            previous="$(git rev-parse "$last_release^1")"
+            if ! ensure_public "$last_release" "$previous"; then
+              if [ "$last_release" != "$base" ]; then
+                ensure_public "$base" "$previous" || exit 0
+              else
+                exit 0
+              fi
             fi
           fi
           python scripts/export-unknown-replay-candidate.py --self-test
