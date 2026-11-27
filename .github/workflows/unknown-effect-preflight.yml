@@ -38,3 +38,4 @@ jobs:
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
           python scripts/unknown-repair-feedback.py --self-test
+          python scripts/verify-unknown-quarantine-handoff.py --self-test
