@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1233,
-      "missing": 469
+      "connected": 1237,
+      "missing": 465
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1227,
-      "MECHANIC_REQUIRED": 59,
-      "ENGINE_CONNECTION_REQUIRED": 406,
+      "CONNECTED_UNTESTED": 1231,
+      "MECHANIC_REQUIRED": 56,
+      "ENGINE_CONNECTION_REQUIRED": 405,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -1202,8 +1202,7 @@
       "name": "リーリエのキュワワー",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47051.json"
     },
     {
@@ -1521,8 +1520,7 @@
       "name": "ダイゴのヤジロン",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47272.json"
     },
     {
@@ -6048,8 +6046,7 @@
       "name": "リーリエのキュワワー",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49056.json"
     },
     {
@@ -19296,8 +19293,7 @@
       "name": "リーリエのキュワワー",
       "mark": "I",
       "category": "pokemon",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47164.json"
     },
     {
@@ -21380,14 +21376,14 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1287,
-        "MECHANIC_REQUIRED": 565,
+        "ENGINE_CONNECTED": 1289,
+        "MECHANIC_REQUIRED": 563,
         "ENGINE_CONNECTION_REQUIRED": 12
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1233,
-        "MECHANIC_REQUIRED": 453,
+        "ENGINE_CONNECTED": 1237,
+        "MECHANIC_REQUIRED": 449,
         "ENGINE_CONNECTION_REQUIRED": 12,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21404,7 +21400,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3699,
-    "unconnected": 1374
+    "engineConnected": 3705,
+    "unconnected": 1368
   }
 }
