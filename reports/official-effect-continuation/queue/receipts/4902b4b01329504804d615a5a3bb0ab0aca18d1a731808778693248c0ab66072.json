@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_F9AECB7E04011B53:641c8b45b6af478dd6d00abd4ce2a9a4b8e10a6ae9fc50ebe83347346fb67987",
   "taskFingerprint": "641c8b45b6af478dd6d00abd4ce2a9a4b8e10a6ae9fc50ebe83347346fb67987",
-  "executionFingerprint": "c2df04b9d888799fd741e9aa11b76462ff4bb1b8e9f4b944858692b8747be316",
-  "attemptId": "1ff831ee-ec9d-414a-a81d-2c8aa4d63847",
-  "status": "BLOCKED",
+  "executionFingerprint": "bd5105b4d3688a788b29dafae47fead67c540913dcd490bbc3477178b1a41441",
+  "attemptId": "deaf29a9-ee1e-4811-afbf-8dadc43449fe",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "46352:ability:ビクトリーエール:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "PASSIVE_TEAM_ATTACK_BOOST",
+        "commands": [
+          "MODIFY_DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "365ce275ef1d49dc8a75dfa9422a709b3e0e1f70dab859cca5a8c131df295583"
+  "checksum": "31d5a7a902677cd07fe11a87682b625842fbf10c50c11b9381ee4e91824c02f2"
 }

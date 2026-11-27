@@ -191,6 +191,7 @@ function additionalAttackPlan(entry,text){
  const mixedSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼)\]ポケモンと「基本\[(草|炎|水|雷|超|闘|悪|鋼)\]エネルギー」を合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
  const stadiumSearch=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]ポケモンとスタジアムを合計([2-9])枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/);
  const privateSearch=text.match(/^自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
+ const optionalPrivateSearch=text.match(/^のぞむなら、自分の山札から好きなカードを(1枚|[2-9]枚まで)選び、手札に加える。そして山札を切る。$/);
  const typedBench=text.match(/^自分の山札から\[(草|炎|水|雷|超|闘|悪|鋼|竜|無色)\]タイプのたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
  const basicBench=text.match(/^自分の山札からたねポケモンを(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
  if(/^\d+$/.test(printed)){
@@ -201,6 +202,7 @@ function additionalAttackPlan(entry,text){
   if(mixedSearch&&mixedSearch[1]===mixedSearch[2])return hand('typedPokemonOrBasicEnergy',Number(mixedSearch[3]),{type:mixedSearch[1]});
   if(stadiumSearch)return hand('typedPokemonOrStadium',Number(stadiumSearch[2]),{type:stadiumSearch[1]});
   if(privateSearch)return hand('any',Number.parseInt(privateSearch[1],10),{reveal:false});
+  if(optionalPrivateSearch)return hand('any',Number.parseInt(optionalPrivateSearch[1],10),{reveal:false,optional:true});
   if(typedBench||basicBench&&['4枚まで','5枚まで','好きなだけ'].includes(basicBench[1])){
    const count=typedBench?typedBench[2]:basicBench[1];
    return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:[...(base?['DAMAGE']:[]),'SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:count==='好きなだけ'?5:Number.parseInt(count,10),...(typedBench?{type:typedBench[1]}:{}),batchSearch:true,sharedWording:true};
@@ -301,6 +303,8 @@ function additionalAttackPlan(entry,text){
  // Official printings select an exact number of physical attached Energy cards.
  // All energy choices must be resolved by the common engine picker rather than
  // inventing card-specific actions; a zero-attachment case discards zero.
+ const typedSelfEnergyDiscard=text.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギーを([1-9])個選び、トラッシュする。$/);
+ if(typedSelfEnergyDiscard&&/^\d+$/.test(printed))return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],type:typedSelfEnergyDiscard[1],count:Number(typedSelfEnergyDiscard[2]),sharedWording:true};
  const selfEnergyDiscard=text.match(/^このポケモンについているエネルギーを([2-9])個選び、トラッシュする。$/);
  if(selfEnergyDiscard&&base!==null&&!printed.endsWith('+'))
   return {mechanic:'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY',commands:[...deal,'DISCARD'],count:Number(selfEnergyDiscard[1])};
@@ -486,6 +490,9 @@ function sequencePlan(entry,kind,text,extended=false){
   const found=prefixes.find(([prefix])=>body.startsWith(prefix));if(!found)return null;
   body=body.slice(found[0].length);origin=found[1];activeOnly=origin==='active';
  }
+ // Exact two-clause printed effect; preserve the attachment operation before status.
+ if(attack){const combo=body.match(/^このポケモンについているエネルギーをすべてトラッシュし、相手のバトルポケモンを(マヒ|ねむり|こんらん|どく|やけど)にする。$/);
+  if(combo)return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...(Number(printed)>0?['DAMAGE']:[]),'DISCARD','STATUS_CONDITION'],steps:[{op:'discardAttached'},{op:'status',side:'opponent',status:({'マヒ':'PARALYZED','ねむり':'ASLEEP','こんらん':'CONFUSED','どく':'POISONED','やけど':'BURNED'})[combo[1]]}],origin:null,activeOnly:false,sharedWording:true};}
  const raw=body.match(/[^。]+。/g);
  const generatedAttack=extended==='attack';
  if(!raw||raw.join('')!==body||raw.length>(generatedAttack?8:3))return null;
@@ -506,6 +513,7 @@ function sequencePlan(entry,kind,text,extended=false){
   else if((attack||ability)&&(m=clause.match(/^このポケモンのHPを「([1-9]\d{0,2})」回復する。$/)))steps.push({op:'healSelf',amount:Number(m[1])});
   else if(attack&&clause==='相手のバトルポケモンに与えたダメージぶん、このポケモンのHPを回復する。'&&Number(printed)>0)steps.push({op:'drain'});
   else if(attack&&(m=clause.match(/^(このポケモン|相手のバトルポケモン)を(どく|やけど|ねむり|こんらん|マヒ)にする。$/)))steps.push({op:'status',side:m[1]==='このポケモン'?'own':'opponent',status:({'どく':'POISONED','やけど':'BURNED','ねむり':'ASLEEP','こんらん':'CONFUSED','マヒ':'PARALYZED'})[m[2]]});
+  else if(ability&&origin==='active'&&(m=clause.match(/^相手のバトルポケモンを(やけど|ねむり)にする。$/)))steps.push({op:'status',side:'opponent',status:({'やけど':'BURNED','ねむり':'ASLEEP'})[m[1]]});
   else if(attack&&clause==='次の相手の番、このワザを受けたポケモンは、にげられない。')steps.push({op:'retreatLock',side:'opponent',offset:1});
   else if(attack&&clause==='次の自分の番、このポケモンはにげられない。')steps.push({op:'retreatLock',side:'own',offset:2});
   else if(attack&&clause==='次の自分の番、このポケモンはワザが使えない。')steps.push({op:'attackLock',offset:2});
@@ -518,7 +526,7 @@ function sequencePlan(entry,kind,text,extended=false){
  // No combining attack-only effects with unrelated ability/Trainer semantics.
  // A complete sequence or a distinct entry-origin/single-effect pattern only.
  if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
- if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op)))return null;
+ if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op))&&!(origin==='active'&&steps.length===1&&steps[0].op==='status'&&steps[0].side==='opponent'))return null;
  if(trainer&&steps.some(s=>!(extended?['draw','mill','drawIfHand','revealHand','peekTop']:['draw','mill']).includes(s.op)))return null;
  if(generatedAttack){
   // Synthesize a new program only when every clause is recognized and the
@@ -628,6 +636,20 @@ function plan(entry,kind){
  const prizeDiscount=generic.match(/^自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、\[無色\]エネルギー([1-9])個ぶん少なくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&prizeDiscount)
   return {mechanic:'TOOL_PRIZE_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(prizeDiscount[1]),sharedWording:true};
+ // Continuous active-target attack bonuses: exact printed predicates only.
+ if(kind==='ABILITY'){
+  const aura=generic.match(/^このポケモンがいるかぎり、自分の(ポケモン|「([^「」]+)のポケモン」|\[([草炎水雷超闘悪鋼竜無色])\]ポケモン|\[([草炎水雷超闘悪鋼竜無色])\]または\[([草炎水雷超闘悪鋼竜無色])\]ポケモン|\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモン)が使うワザの、相手のバトル(ポケモン|場の進化ポケモン)へのダメージは「\+([1-9]\d{0,2})」される。(この効果は、この特性を持つポケモンが何匹いても、重ならない。)?$/);
+  if(aura)return {mechanic:'PASSIVE_TEAM_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],amount:Number(aura[8]),team:aura[2]||null,types:[aura[3],aura[4],aura[5],aura[6]].filter(Boolean),evolvedSource:!!aura[6],evolvedTarget:aura[7]==='場の進化ポケモン',nonStack:!!aura[9],sharedWording:true};
+ }
+ // Exact continuous Colorless cost reductions; typed requirements are never waived.
+ if(kind==='ABILITY'){
+  const discardCost=generic.match(/^自分のトラッシュにある「([^「」]+)」の枚数ぶん、このポケモンがワザを使うための\[無色\]エネルギーは少なくなる。$/);
+  if(discardCost)return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'discardName',name:discardCost[1],sharedWording:true};
+  if(generic==='相手のベンチポケモンの数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。')return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'opponentBench',sharedWording:true};
+  const handCost=generic.match(/^相手の手札が([1-9])枚なら、このポケモンはワザを使うための\[無色\]エネルギーが、すべてなくなる。$/);
+  if(handCost)return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'opponentHandExact',count:Number(handCost[1]),sharedWording:true};
+  if(generic==='自分の場に「トルネロス」「ボルトロス」「ランドロス」「ラブトロス」がいるなら、このポケモンはワザを使うための[無色]エネルギーが、すべてなくなる。')return {mechanic:'PASSIVE_CONTEXT_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],mode:'ownAllNames',names:['トルネロス','ボルトロス','ランドロス','ラブトロス'],sharedWording:true};
+ }
  const namedDiscount=generic.match(/^相手がすでにとったサイドの枚数ぶん、このポケモンが「([^「」]+)」を使うための\[無色\]エネルギーは少なくなる。$/);
  if(kind==='ABILITY'&&namedDiscount)
   return {mechanic:'PASSIVE_NAMED_PRIZE_DISCOUNT',commands:['MODIFY_ATTACK_COST'],attackName:namedDiscount[1],sharedWording:true};
