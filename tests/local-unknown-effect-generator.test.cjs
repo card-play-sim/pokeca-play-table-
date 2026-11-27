@@ -263,6 +263,11 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(retryBatch([a,b],prev,fp).length,2);
  assert.deepEqual(retryBatch([a,b],{...prev,targetIds:['45727']},fp),[]);
  assert.deepEqual(selectBatch([a,b],1,{maxPrints:1}),[]);
+ // A blocked mandatory pair must not prevent independent groups progressing.
+ const independent=candidate(mkId(303),'相手の山札を1枚トラッシュする。',['45728'],'ability');
+ const prior=recordHistory(null,[independent.group],'QUARANTINE_FAILED',1,fp,'retry');
+ assert.deepEqual(selectBatch([a,b,independent],2,{maxPrints:1,history:prior,fingerprint:fp}).map(x=>x.group.sharedTaskId),[independent.group.sharedTaskId]);
+ assert.deepEqual(selectBatch([a,b,independent],2,{maxGroups:1,history:prior,fingerprint:fp}).map(x=>x.group.sharedTaskId),[independent.group.sharedTaskId]);
 }
 
 // Actual run 46002169346: a duplicate RECON row without a trailing comma

@@ -59,7 +59,7 @@ def verify_result(out):
         raise ValueError("APPROVED_ENGINE_REPLAY_INCOMPLETE")
     if browser["state"] != "QUARANTINE_BROWSER_PASSED_REVIEW_REQUIRED" or browser["fullDeckAIMatchVerified"] is not True or browser["publicBattleVerified"] != [] or not required <= ids(browser["sandboxBrowserQualified"]) or not ids(browser["sandboxFullMatchUsedPrints"]) <= ids(browser["sandboxBrowserQualified"]):
         raise ValueError("APPROVED_BROWSER_REPLAY_INCOMPLETE")
-    result = {**entry,"state":"LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED","requiredQualifiedIds":sorted(required),
+    result = {**entry,"state":"LATEST_MAIN_PREVIEW_VERIFIED_NOT_RELEASED" if entry.get("reviewOnly") is True else "LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED","requiredQualifiedIds":sorted(required),
               "sandboxBrowserQualified":browser["sandboxBrowserQualified"],"fullDeckAIMatchVerified":True,
               "publicBattleVerified":[]}
     (out/"verified-replay.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")

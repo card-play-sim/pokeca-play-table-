@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/verify-reviewed-official-scope.cjs'
+      - '.github/workflows/unknown-effect-review-handoff.yml'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
       - 'scripts/export-unknown-replay-candidate.py'
@@ -18,6 +20,8 @@ on:
     paths:
       - 'scripts/local-unknown-effect-generator.cjs'
       - 'scripts/verify-unknown-quarantine-*.py'
+      - 'scripts/verify-reviewed-official-scope.cjs'
+      - '.github/workflows/unknown-effect-review-handoff.yml'
       - 'scripts/verify-unknown-approved-replay.py'
       - 'scripts/prepare-unknown-replay-intake.py'
       - 'scripts/export-unknown-replay-candidate.py'
@@ -29,6 +33,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   preflight:
     runs-on: ubuntu-24.04
@@ -43,6 +48,7 @@ jobs:
       - run: |
           node --check scripts/local-unknown-effect-generator.cjs
           node tests/local-unknown-effect-generator.test.cjs
+          node scripts/verify-reviewed-official-scope.cjs --self-test
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
           python scripts/unknown-repair-feedback.py --self-test
@@ -50,3 +56,51 @@ jobs:
           python scripts/verify-unknown-approved-replay.py --self-test
           python scripts/prepare-unknown-replay-intake.py --self-test
           python scripts/export-unknown-replay-candidate.py --self-test
+
+  archived-review:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'automation/verified-review-official-binding-20261128'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: local-unknown-effect-quarantine
+          run-id: 46028204781
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/archived-review
+      - name: Prove original five-print candidate against its actual official checkpoint
+        run: |
+          set -euo pipefail
+          git fetch origin automation/control-013-intake-46026966626
+          checkpoint="$(git rev-parse FETCH_HEAD)"
+          python scripts/verify-unknown-quarantine-handoff.py "$RUNNER_TEMP/archived-review" 35e0a13680b611f7c08aea72fca5abb033554729 46028204781 "$RUNNER_TEMP/archived-handoff.json"
+          node scripts/verify-reviewed-official-scope.cjs "$RUNNER_TEMP/archived-review" "$RUNNER_TEMP/archived-handoff.json" "$checkpoint"
+          python scripts/verify-unknown-approved-replay.py --preview "$RUNNER_TEMP/archived-review" 35e0a13680b611f7c08aea72fca5abb033554729 46028204781 "$GITHUB_WORKSPACE" "$RUNNER_TEMP/archived-preview" "$checkpoint"
+          python - "$RUNNER_TEMP/archived-preview/replay-entry.json" <<'PY'
+          import json,sys
+          p=json.load(open(sys.argv[1]))
+          assert p["reviewOnly"] is True and p["state"]=="PREVIEW_PATCH_APPLIES_REPLAY_REQUIRED"
+          assert set(p["requiredQualifiedIds"])=={"48299","50071","50160","50208","50694"} and p["publicBattleVerified"]==[]
+          print("ARCHIVED_FIVE_READ_ONLY_PREVIEW_READY")
+          PY
+          python - "$RUNNER_TEMP/archived-handoff.json" <<'PY'
+          import json,sys
+          m=json.load(open(sys.argv[1]))
+          assert m["publicBattleVerified"] == []
+          expected={"48299","50071","50160","50208","50694"}
+          assert any(set(c["sandboxQualified"])==expected and c.get("officialScope",{}).get("state")=="OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED" and {p["id"] for p in c["officialScope"]["proofs"]}==expected for c in m["candidates"])
+          print("ARCHIVED_FIVE_OFFICIAL_SCOPE_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archived-five-official-review-proof
+          path: ${{ runner.temp }}/archived-handoff.json
+          if-no-files-found: error

@@ -25,6 +25,26 @@ def select(manifest, attempt, approved):
         raise ValueError("APPROVED_PATCH_MISMATCH")
     return candidates[0]
 
+def select_preview(manifest):
+    """Only deterministic, full-scope, independently bound candidates qualify."""
+    matches=[]
+    for row in manifest["candidates"]:
+        if row.get("reviewedReproduction",{}).get("state") != "EXACT_REPRODUCTION_MATCH_REVIEW_REQUIRED":
+            continue
+        scope=row.get("officialScope",{})
+        if scope.get("state") != "OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED":
+            continue
+        selected=handoff.ids(row["selected"])
+        if selected != handoff.ids(row["sandboxQualified"]) or selected != handoff.ids(row["sandboxBrowserQualified"]):
+            continue
+        if {p["id"] for p in scope["proofs"]} != selected:
+            continue
+        matches.append(row)
+    if not matches:
+        raise ValueError("NO_INDEPENDENTLY_BOUND_FULL_SCOPE_PREVIEW")
+    row=sorted(matches,key=lambda x:(-len(x["selected"]),x["attempt"]))[0]
+    return select(manifest,row["attempt"],row["patchSha256"])
+
 def check_paths(raw):
     entries = raw.split(b"\0")
     if entries[-1] != b"":
@@ -39,13 +59,19 @@ def check_paths(raw):
         raise ValueError("PATCH_PATH_NOT_ALLOWED")
     return sorted(names)
 
-def main(root, origin, run_id, attempt, approved, repo, out):
+def main(root, origin, run_id, attempt, approved, repo, out, *, preview_checkpoint=None):
     root, repo, out = Path(root).resolve(), Path(repo).resolve(), Path(out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     manifest_path = out / "review-handoff.json"
     handoff.main(root, origin, run_id, manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    row = select(manifest, attempt, approved)
+    if preview_checkpoint is not None:
+        subprocess.run(["node","scripts/verify-reviewed-official-scope.cjs",str(root),str(manifest_path),preview_checkpoint],check=True)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        row = select_preview(manifest)
+        attempt, approved = row["attempt"], row["patchSha256"]
+    else:
+        row = select(manifest, attempt, approved)
     patch = (root / attempt / "proposal.patch").resolve()
     if not patch.is_relative_to(root) or hashlib.sha256(patch.read_bytes()).hexdigest() != approved:
         raise ValueError("APPROVED_BYTES_MISMATCH")
@@ -60,12 +86,15 @@ def main(root, origin, run_id, attempt, approved, repo, out):
         raise ValueError("PATCH_MODE_OR_FILE_OPERATION")
     git(repo, "apply", "--check", str(patch))
     (out / "approved.patch").write_bytes(patch.read_bytes())
-    result = {"schemaVersion":1,"state":"APPROVED_PATCH_APPLIES_REPLAY_REQUIRED",
+    result = {"schemaVersion":1,"state":"APPROVED_PATCH_APPLIES_REPLAY_REQUIRED" if preview_checkpoint is None else "PREVIEW_PATCH_APPLIES_REPLAY_REQUIRED",
               "originRunId":run_id,"originCommit":origin,"latestMain":current,
               "approvedPatchSha256":approved,"attempt":attempt,"paths":changed,
               "requiredQualifiedIds":row["sandboxQualified"],"publicBattleVerified":[]}
+    if preview_checkpoint is not None:
+        result["reviewOnly"] = True
+        result["independentOfficialScope"] = row["officialScope"]
     (out / "replay-entry.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
-    print("APPROVED_PATCH_APPLIES_REPLAY_REQUIRED", len(changed))
+    print(result["state"], len(changed))
 
 def resolve_event(event, event_name, owner, dispatch):
     if event_name == "workflow_dispatch":
@@ -100,6 +129,17 @@ def self_test():
     manifest = {"state":"REVIEW_REQUIRED_NOT_RELEASED","publicBattleVerified":[],
                 "candidates":[{"attempt":"attempt-1","patchSha256":digest}]}
     assert select(manifest,"attempt-1",digest)["patchSha256"] == digest
+    candidate={**manifest["candidates"][0],"selected":["2"],"sandboxQualified":["2"],"sandboxBrowserQualified":["2"],
+               "reviewedReproduction":{"state":"EXACT_REPRODUCTION_MATCH_REVIEW_REQUIRED"},
+               "officialScope":{"state":"OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED","proofs":[{"id":"2"}]}}
+    assert select_preview({**manifest,"candidates":[candidate]}) == candidate
+    for bad in [manifest,{**manifest,"candidates":[{**candidate,"sandboxQualified":["3"]}]},
+                {**manifest,"candidates":[{**candidate,"officialScope":{"state":"OFFICIAL_SOURCE_BOUND_REVIEW_REQUIRED","proofs":[{"id":"3"}]}}]}]:
+        try:
+            select_preview(bad)
+        except ValueError:
+            continue
+        raise AssertionError("UNBOUND_PREVIEW_ACCEPTED")
     good = b"1\t2\tengine/reference-effect-plans.cjs\0"
     assert check_paths(good) == ["engine/reference-effect-plans.cjs"]
     for bad in (b"1\t2\t.github/workflows/x.yml\0", b"-\t-\tengine/reference-effect-plans.cjs\0",
@@ -141,5 +181,8 @@ if __name__ == "__main__":
         self_test()
     elif len(sys.argv)==4 and sys.argv[1]=="--resolve-event":
         emit_approval(*sys.argv[2:])
+    elif len(sys.argv)==8 and sys.argv[1]=="--preview":
+        _,_,root,origin,run_id,repo,out,checkpoint=sys.argv
+        main(root,origin,run_id,None,None,repo,out,preview_checkpoint=checkpoint)
     else:
         main(*sys.argv[1:])
