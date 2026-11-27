@@ -263,6 +263,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='ATTACK_DISCARD_DEFENDER_ENERGY'&&plan.defenderEx)
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'active',1);
+ if(m==='MASS_COUNT_COIN_DAMAGE'){
+  if(plan.metric==='ownTypedBoard')reserve(r=>mon(r,plan.type,0),'bench');
+  if(plan.metric==='ownTypedEnergy')reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
+  if(plan.metric==='bothActiveEnergy')reserveEnergy(null,2,1-deckIndex);
+  if(plan.metric==='opponentBench')reserve(r=>mon(r,null,0),'bench',1);
+ }
  if(m==='ATTACK_OPTIONAL_ENERGY_BONUS'&&plan.type)reserveEnergy(plan.type,Math.max(1,kindAttackCost(e,plan.type)+1));
  if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&plan.type)reserveEnergy(plan.type,Math.min(12,kindAttackCost(e,plan.type)+plan.count));
  if(m==='MASS_ENERGY_COUNT_DISCARD'&&plan.type)
@@ -1018,6 +1024,20 @@ function prepare(r, e, kind) {
       if(evolved.blocked)return evolved;pp=evolved.port;
     }
     frame.game=pp.getSnapshot();
+  }
+  if(m==='MASS_COUNT_COIN_DAMAGE'){
+    const [own,other]=frame.game.players,plan=e.plan;
+    for(const mon of [own.active,other.active])for(const energy of [...mon.energyCards])if(energy.isSpecial){
+      const side=mon===own.active?own:other;
+      side.deck.push(mon.energyCards.splice(mon.energyCards.indexOf(energy),1)[0]);
+    }
+    const attach=(side,type)=>{const valid=c=>c.kind==='energy'&&!c.isSpecial&&(!type||c.energyType===type);
+      const zone=[side.deck,side.hand].find(z=>z.some(valid));if(!zone)return false;
+      side.active.energyCards.push(zone.splice(zone.findIndex(valid),1)[0]);return true;};
+    if(plan.metric==='ownTypedEnergy'&&!attach(own,plan.type))return {blocked:'NO_TYPED_COIN_ENERGY_FIXTURE'};
+    if(plan.metric==='bothActiveEnergy'&&!attach(other,null))return {blocked:'NO_OPPONENT_COIN_ENERGY_FIXTURE'};
+    if(plan.metric==='ownTypedBoard'&&![own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)))return {blocked:'NO_TYPED_COIN_BOARD_FIXTURE'};
+    if(plan.metric==='opponentBench'&&!other.bench.length)return {blocked:'NO_OPPONENT_COIN_BENCH_FIXTURE'};
   }
   if(m==='ATTACK_ATTACHED_ENERGY_COINS'){
     const own=frame.game.players[0];
@@ -3287,6 +3307,34 @@ function verifyCase(t, e) {
     const tosses = effectEvents.filter(event => event?.command === "COIN_FLIP" && typeof event.heads === "boolean");
     assert.equal(tosses.length, e.plan.flips);
     verifyPrintedAttack(before, after, e, e.plan.base + tosses.filter(toss => toss.heads).length * e.plan.unit);
+  }
+  if(e.plan.mechanic==='MASS_COUNT_COIN_DAMAGE'){
+    const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
+    assert([own.active,other.active].every(c=>c.energyCards.every(a=>!a.isSpecial)));
+    const count=plan.metric==='fixed'?3:plan.metric==='ownTypedBoard'?[own.active,...own.bench].filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)).length:
+      plan.metric==='ownTypedEnergy'?own.active.energyCards.filter(c=>c.energyType===plan.type).length:
+      plan.metric==='bothActiveEnergy'?own.active.energyCards.length+other.active.energyCards.length:other.bench.length;
+    assert(count>0);
+    const seeds=new Map();
+    for(let seed=0;seed<20000&&seeds.size<Math.min(count+1,4);seed++){
+      let state=seed,hits=0;
+      for(let i=0;i<count;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;if(plan.tails?state>=0x80000000:state<0x80000000)hits++;}
+      if(!seeds.has(hits))seeds.set(hits,seed);
+    }
+    assert(seeds.size>=2);
+    if(plan.metric==='fixed')assert.equal(seeds.size,4);
+    for(const [hits,seed] of seeds){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),flips=end.history.slice(start.history.length).map(x=>x.details).filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean');
+      assert.equal(flips.length,count);
+      let state=seed;
+      for(const toss of flips){state=(Math.imul(state,1664525)+1013904223)>>>0;assert.equal(toss.heads,state<0x80000000);}
+      verifyPrintedAttack(start,end,e,plan.base+(plan.bonuses?plan.bonuses[hits]:hits*plan.unit));
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.deepEqual(replay.getSnapshot(),end);
+    }
   }
   if(e.plan.mechanic==='ATTACK_ATTACHED_ENERGY_COINS'){
     const action=t.action||o.action;
