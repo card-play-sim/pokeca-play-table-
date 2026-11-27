@@ -9,6 +9,10 @@ on:
       - 'scripts/verify-unknown-quarantine-receipt.py'
       - 'scripts/verify-unknown-quarantine-browser.py'
       - 'scripts/unknown-repair-feedback.py'
+      - 'scripts/lib/shared-effect-engine-worker.cjs'
+      - 'engine/reference-effect-plans.cjs'
+      - 'engine/pokeca_reference_effect_runtime.cjs'
+      - 'tests/fixture-reservation-fallback.test.cjs'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -37,6 +41,7 @@ jobs:
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
           python scripts/unknown-repair-feedback.py --self-test
+          node tests/fixture-reservation-fallback.test.cjs
           found=0
           for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
             if ! git fetch origin "$checkpoint"; then continue; fi
@@ -130,7 +135,10 @@ jobs:
             if [ "$attempt" -gt 1 ]; then
               export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
               export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/quarantine-result.json"
-              export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
+              export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/repair-feedback.txt"
+              if [ -f "$RUNNER_TEMP/model-artifacts/attempt-1/engine.log" ]; then
+                python scripts/unknown-repair-feedback.py "$RUNNER_TEMP/model-artifacts/attempt-1/engine.log" > "$MODEL_FEEDBACK_PATH"
+              fi
               export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
             fi
             node scripts/local-unknown-effect-generator.cjs "$RUNNER_TEMP/unknown-worklist.json" "$out" "$scratch"

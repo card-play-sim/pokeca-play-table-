@@ -24,6 +24,8 @@ jobs:
         run: node tests/control-011-batch-queue.test.cjs
       - name: Verify registered effects through real engine, AI and save restore
         run: node tests/control-011-engine-batch.test.cjs
+      - name: Verify legal fixture reservation fallback and physical copy limits
+        run: node tests/fixture-reservation-fallback.test.cjs
       - name: Verify real incremental official intake and protected data
         run: |
           node tests/intake-checkpoint-recovery-contract.test.cjs
