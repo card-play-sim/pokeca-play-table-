@@ -80,6 +80,56 @@ def authorize_stop(report, head, latest_main, full_public_run, delivery_verified
         and delivery_verified is True
     )
 
+def scheduled_stop(report, head, latest_main, run):
+    """A trusted audit for the exact current main may pause scheduled fixed-target work."""
+    return bool(
+        report.get("automaticStopAuthorized") is True
+        and run.get("conclusion") == "success"
+        and run.get("head_branch") == "main"
+        and run.get("head_sha") == head
+        and run.get("path") == ".github/workflows/historical-public-receipt-audit.yml"
+        and authorize_stop(report, head, latest_main, {"commit": head, "success": True}, True)
+    )
+
+def check_scheduled_stop():
+    # A missing, stale, malformed, or inaccessible receipt must never stop work.
+    import hashlib
+    import io
+    import os
+    import zipfile
+    repo = os.environ["GITHUB_REPOSITORY"]
+    def api(path):
+        return json.loads(subprocess.check_output(["gh", "api", "repos/"+repo+path]))
+    try:
+        head = git("rev-parse", "HEAD").decode().strip()
+        main = api("/git/ref/heads/main")["object"]["sha"]
+        if head != main:
+            return False
+        runs = api("/actions/workflows/historical-public-receipt-audit.yml/runs?branch=main&status=success&per_page=20")["workflow_runs"]
+        for run in runs:
+            if run.get("head_sha") != head or (run.get("head_repository") or {}).get("full_name") != repo:
+                continue
+            if run.get("path") != ".github/workflows/historical-public-receipt-audit.yml":
+                continue
+            artifacts = api("/actions/runs/"+str(run["id"])+"/artifacts")["artifacts"]
+            matches = [x for x in artifacts if x["name"] == "historical-public-receipt-audit" and not x["expired"] and 0 < x["size_in_bytes"] < 10*1024*1024]
+            if len(matches) != 1:
+                continue
+            item = matches[0]
+            raw = subprocess.check_output(["gh", "api", "repos/"+repo+"/actions/artifacts/"+str(item["id"])+"/zip"])
+            if item.get("digest") and item["digest"] != "sha256:"+hashlib.sha256(raw).hexdigest():
+                continue
+            with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                member = z.getinfo("historical-public-receipt-audit.json")
+                if member.file_size > 10*1024*1024:
+                    continue
+                report = json.loads(z.read(member))
+            if scheduled_stop(report, head, api("/git/ref/heads/main")["object"]["sha"], run):
+                return True
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError, zipfile.BadZipFile):
+        return False
+    return False
+
 def verify_delta_receipt(receipt, before, after):
     require(receipt.get("state") == "PUBLIC_DELTA_VERIFIED" and receipt.get("publicUrl") == URL,
             "NOT_PUBLIC_DELTA_RECEIPT")
@@ -118,6 +168,22 @@ def self_test():
     assert not authorize_stop(done,h,h,{"commit":"b"*40,"success":True},True)
     assert not authorize_stop(done,h,h,public,False)
     assert not authorize_stop({**done,"verifiedByThisAudit":2774},h,h,public,True)
+    run = {"conclusion":"success","head_branch":"main","head_sha":h,"path":".github/workflows/historical-public-receipt-audit.yml"}
+    receipt = {**done,"automaticStopAuthorized":True}
+    assert scheduled_stop(receipt,h,h,run)
+    assert not scheduled_stop({**receipt,"automaticStopAuthorized":False},h,h,run)
+    assert not scheduled_stop({**receipt,"verifiedByThisAudit":2774},h,h,run)
+    assert not scheduled_stop(receipt,h,"b"*40,run)
+    assert not scheduled_stop(receipt,h,h,{**run,"head_branch":"other"})
+    assert not scheduled_stop(receipt,h,h,{**run,"conclusion":"failure"})
+    assert not scheduled_stop(receipt,h,h,{**run,"path":"other.yml"})
+    # The job condition must override implicit success() so a failed receipt
+    # lookup or runner failure does not silently halt unfinished intake.
+    for filename in ("local-unknown-effect-generator.yml","continue-official-effects.yml"):
+        workflow = (Path(".github/workflows") / filename).read_text()
+        assert "needs: scheduled-completion" in workflow
+        assert "always() && !cancelled() && needs.scheduled-completion.outputs.stop != 'true'" in workflow
+        assert 'stop="$(python scripts/audit-exact-target-completion.py --scheduled-stop)" || stop=false' in workflow
     print("EXACT_TARGET_COMPLETION_SELF_TEST PASS")
 
 def main():
@@ -134,4 +200,5 @@ def main():
 
 if __name__=="__main__":
     if sys.argv[1:]==["--self-test"]: self_test()
+    elif sys.argv[1:]==["--scheduled-stop"]: print("true" if check_scheduled_stop() else "false")
     else: main()
