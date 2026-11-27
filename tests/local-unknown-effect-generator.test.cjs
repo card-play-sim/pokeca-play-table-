@@ -317,3 +317,25 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  const modified={...steel,exampleOfficialText:steel.exampleOfficialText.replace('2枚まで','3枚まで')};
  assert.equal(selectReviewedBatch([{...rows[0],group:modified}],laterModel,fp).length,1);
 }
+
+ // Exercise the workflow's actual shell-quoted persistence command, not a
+ // separately retyped approximation. A passing browser must save its history.
+ {
+  const fs=require('node:fs'),os=require('node:os'),p=require('node:path'),{spawnSync}=require('node:child_process');
+  const workflow=fs.readFileSync('.github/workflows/local-unknown-effect-generator.yml','utf8');
+  const line=workflow.split('\n').find(l=>l.includes('const history=recordHistory(old,row.groups'));
+  assert(line,'history command missing');
+  const dir=fs.mkdtempSync(p.join(os.tmpdir(),'reviewed-history-'));
+  try{
+   const base=p.join(dir,'base.json'),out=p.join(dir,'attempt-1'),artifacts=p.join(dir,'model-artifacts');
+   fs.mkdirSync(out);fs.mkdirSync(artifacts);
+   fs.writeFileSync(base,JSON.stringify({schemaVersion:1,groups:{}}));
+   const group={sharedTaskId:'OFFICIAL_SHARED_MECHANIC_'+ 'A'.repeat(20),category:'item',effectKind:'item',exampleOfficialText:'自分のトラッシュから「基本[超]エネルギー」を1枚選び、ベンチの[超]ポケモンにつける。'};
+   fs.writeFileSync(p.join(out,'selected.json'),JSON.stringify({groups:[group],fingerprint:'b'.repeat(64),intendedStrategy:'REVIEWED_COMPOSITION'}));
+   const result=spawnSync('bash',['-euc',line.trim()],{encoding:'utf8',env:{...process.env,MODEL_HISTORY_PATH:base,RUNNER_TEMP:dir,GITHUB_RUN_NUMBER:'1',out,state:'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED',feedback:''}});
+   assert.equal(result.status,0,result.stderr);
+   const entry=JSON.parse(fs.readFileSync(p.join(artifacts,'history.json'),'utf8')).groups[group.sharedTaskId];
+   assert.equal(entry.status,'QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED');
+   assert.match(entry.reviewedKey,/^[a-f0-9]{64}$/);
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+ }
