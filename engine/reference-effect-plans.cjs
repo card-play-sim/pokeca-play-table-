@@ -816,6 +816,10 @@ function plan(entry,kind){
  const attachDrawAbility=generic.match(/^自分の番に1回使える。自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚選び、このポケモンにつける。その後、自分の山札を([1-9])枚引く。$/);
  if(kind==='ABILITY'&&attachDrawAbility)
   return {mechanic:'ABILITY_ATTACH_SELF_DRAW',commands:['ATTACH_ENERGY','DRAW'],type:attachDrawAbility[1],amount:Number(attachDrawAbility[2]),sharedWording:true};
+ // A switch-triggered ability is a separate exact grammar, never an attack.
+ const activeEntryEnergy=generic.match(/^自分の番に、このポケモンがベンチからバトル場に出たとき、1回使える。自分の山札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を([2-9])枚まで選び、このポケモンにつける。そして山札を切る。$/);
+ if(kind==='ABILITY'&&activeEntryEnergy)
+  return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:activeEntryEnergy[1],limit:Number(activeEntryEnergy[2]),target:'self',holderType:null,team:null,multi:false,heal:null,activeOnly:true,origin:'activeEntry',repeated:true,sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
  if(kind==='MAIN'&&entry.category==='item'&&/^コインを1回投げ、?オモテなら、自分の山札からポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))
   return {mechanic:'COIN_SEARCH_POKEMON',commands:['COIN_FLIP','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']};
