@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1248,
-      "missing": 454
+      "connected": 1251,
+      "missing": 451
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1242,
+      "CONNECTED_UNTESTED": 1245,
       "MECHANIC_REQUIRED": 53,
-      "ENGINE_CONNECTION_REQUIRED": 397,
+      "ENGINE_CONNECTION_REQUIRED": 394,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -9579,8 +9579,7 @@
       "name": "ヒビキのマグカルゴ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47314.json"
     },
     {
@@ -13715,8 +13714,7 @@
       "name": "ヒビキのマグカルゴ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48541.json"
     },
     {
@@ -16154,8 +16152,7 @@
       "name": "ヒビキのマグカルゴ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49957.json"
     },
     {
@@ -21356,14 +21353,14 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1296,
-        "MECHANIC_REQUIRED": 560,
+        "ENGINE_CONNECTED": 1300,
+        "MECHANIC_REQUIRED": 556,
         "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1248,
-        "MECHANIC_REQUIRED": 441,
+        "ENGINE_CONNECTED": 1251,
+        "MECHANIC_REQUIRED": 438,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21380,7 +21377,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3732,
-    "unconnected": 1341
+    "engineConnected": 3739,
+    "unconnected": 1334
   }
 }

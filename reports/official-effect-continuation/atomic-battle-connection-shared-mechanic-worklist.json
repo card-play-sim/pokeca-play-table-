@@ -1334,28 +1334,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B5EBD9D498DDAE292730",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがいるかぎり、[鋼]エネルギーがついている自分のポケモン全員のにげるためのエネルギーは、すべてなくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46012",
-        "46161",
-        "46774",
-        "49241"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46012.json",
-        "data/effect-extensions/evidence/46161.json",
-        "data/effect-extensions/evidence/46774.json",
-        "data/effect-extensions/evidence/49241.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B631C3A3FC8E7987225E",
       "category": "item",
       "effectKind": "item",
@@ -2174,26 +2152,6 @@
         "data/effect-extensions/evidence/47772.json",
         "data/effect-extensions/evidence/48428.json",
         "data/effect-extensions/evidence/49171.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5112EBD4F683A4C05EA2",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンにエネルギーがついていないなら、このポケモンのにげるためのエネルギーは、すべてなくなる。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47314",
-        "48541",
-        "49957"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47314.json",
-        "data/effect-extensions/evidence/48541.json",
-        "data/effect-extensions/evidence/49957.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -13821,5 +13779,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1341
+  "unfinishedPrints": 1334
 }

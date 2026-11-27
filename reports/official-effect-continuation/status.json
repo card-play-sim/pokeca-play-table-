@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "registryHash": "1dc7f00f30669d54cf8f64f83978042e48436e299bfc88896c4599d25f266271",
-  "classifiedRegistryHash": "1dc7f00f30669d54cf8f64f83978042e48436e299bfc88896c4599d25f266271",
+  "registryHash": "bdc124071a8687ff1c77116c5e4ae11b5d14ffbd418301d08735c79ea9c4143d",
+  "classifiedRegistryHash": "bdc124071a8687ff1c77116c5e4ae11b5d14ffbd418301d08735c79ea9c4143d",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
   "officialPages": 5198,
   "collectedNewPages": 5017,
-  "explicitEffects": 5289,
+  "explicitEffects": 5287,
   "noExplicitText": 2411,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
@@ -42,9 +42,9 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2615,
-      "notImplemented": 1041,
-      "blocked": 20,
+      "compiled": 2622,
+      "notImplemented": 1033,
+      "blocked": 21,
       "executionVerifiedPrints": 730
     },
     "energy": {
@@ -411,7 +411,7 @@
     {
       "officialCardId": "44429",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44430",
@@ -3439,11 +3439,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46012",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46029",
       "name": "古びたねっこの化石",
       "category": "item",
@@ -3685,11 +3680,6 @@
     },
     {
       "officialCardId": "46151",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46161",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4320,11 +4310,6 @@
     },
     {
       "officialCardId": "46768",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46774",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6463,11 +6448,6 @@
       }
     },
     {
-      "officialCardId": "47314",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47352",
       "name": "ペパーのサンドウィッチ",
       "category": "item",
@@ -7733,11 +7713,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48541",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48554",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8533,11 +8508,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49957",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49959",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9304,11 +9274,6 @@
     },
     {
       "officialCardId": "49213",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49241",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -10367,7 +10332,7 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1074
+        "count": 1066
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
@@ -10375,7 +10340,7 @@
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
-        "count": 20
+        "count": 21
       },
       {
         "reason": "UNSUPPORTED_COMBINED_STADIUM_PLAY",
@@ -10386,10 +10351,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "164ff887af86f4629e5e125e465db1111db941051e222e8c848901dc3bc13363",
+    "executionFingerprint": "ba15647de3707a021566b6fc2297dc78a0a432dab0950c370209d329bd03c8a4",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 227937,
+    "seq": 230265,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
