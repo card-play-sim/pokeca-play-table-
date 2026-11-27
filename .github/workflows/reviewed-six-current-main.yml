@@ -1,0 +1,237 @@
+name: Current main six-print bench search reviewed replay
+on:
+  push:
+    branches: [automation/reviewed-six-current-main-20261128]
+    paths: ['.github/workflows/reviewed-six-current-main.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  synthesize:
+    if: github.repository == 'card-play-sim/pokeca-play-table-' && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      MODEL_REVIEWED_ONLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify generator boundaries and restore exact source checkpoint
+        run: |
+          node tests/local-unknown-effect-generator.test.cjs
+          node scripts/build-pwa-release.cjs
+          node tests/pwa-release.test.cjs
+          python scripts/verify-unknown-quarantine-receipt.py --self-test
+          python scripts/verify-unknown-quarantine-browser.py --self-test
+          python scripts/unknown-repair-feedback.py --self-test
+          node tests/fixture-reservation-fallback.test.cjs
+          found=0
+          for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
+            if ! git fetch origin "$checkpoint"; then continue; fi
+            if ! git cat-file -e FETCH_HEAD:data/official-effect-intake/checkpoint.json 2>/dev/null ||
+               ! git cat-file -e FETCH_HEAD:reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json 2>/dev/null; then
+              continue
+            fi
+            git show FETCH_HEAD:reports/official-effect-continuation/atomic-battle-connection-shared-mechanic-worklist.json > "$RUNNER_TEMP/unknown-worklist.json"
+            python scripts/restore-official-intake-evidence.py FETCH_HEAD --merge
+            echo "Resumed source-verified checkpoint $checkpoint"
+            found=1
+            break
+          done
+          test "$found" = 1
+          node scripts/refresh-uncompiled-official-facts.cjs --apply
+      - name: Requalify the existing six reviewed print IDs on current source
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/model-artifacts"
+          history="$RUNNER_TEMP/replay-history.json"
+          printf '{"schemaVersion":1,"groups":{}}\n' > "$history"
+          echo "MODEL_HISTORY_PATH=$history" >> "$GITHUB_ENV"
+          cp "$history" "$RUNNER_TEMP/model-artifacts/history.json"
+          node - "$RUNNER_TEMP/unknown-worklist.json" <<'JS'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const p=process.argv[2],w=JSON.parse(fs.readFileSync(p,'utf8'));
+          const target=new Set(['47099','48678','49382','46220','49374','50340']);
+          const groups=w.groups.map(g=>({...g,officialCardIds:g.officialCardIds.map(String).filter(x=>target.has(x))})).filter(g=>g.officialCardIds.length);
+          assert.deepEqual([...new Set(groups.flatMap(g=>g.officialCardIds))].sort(),[...target].sort());
+          const {reviewedPlan}=require('./scripts/local-unknown-effect-generator.cjs');
+          const reviewed=groups.filter(g=>reviewedPlan(g));
+          assert.deepEqual([...new Set(reviewed.flatMap(g=>g.officialCardIds))].sort(),[...target].sort());
+          fs.writeFileSync(p,JSON.stringify({...w,groups:reviewed}));
+          JS
+      - name: Choose evidence-verified reviewed route before model setup
+        run: |
+          set -euo pipefail
+          if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then
+            exit 0
+          fi
+          route="$(node scripts/local-unknown-effect-generator.cjs --route-probe "$RUNNER_TEMP/unknown-worklist.json" "$RUNNER_TEMP/model-artifacts/route.json")"
+          case "$route" in
+            REVIEWED) echo "MODEL_REVIEWED_ONLY=1" >> "$GITHUB_ENV"; echo "Using reviewed composition without model setup." ;;
+            MODEL) echo "Source-verified feasible model batch exists." ;;
+            NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP|NO_BATCH_WITHIN_LIMIT)
+              echo "$route: no executable group in this checkpoint; not a completion receipt." >> "$GITHUB_STEP_SUMMARY"
+              exit 1 ;;
+            *) echo "Invalid route probe output" >&2; exit 1 ;;
+          esac
+      - name: Build pinned local CPU inference and verify public model bytes
+        if: env.MODEL_REVIEWED_ONLY != '1'
+        run: |
+          git clone --depth 1 --branch b10488 https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/llama"
+          cmake -S "$RUNNER_TEMP/llama" -B "$RUNNER_TEMP/llama-build" -DCMAKE_BUILD_TYPE=Release -DGGML_NATIVE=OFF -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF
+          cmake --build "$RUNNER_TEMP/llama-build" --config Release --target llama-server -j 4
+          curl --fail --location --retry 3 --max-time 1800 -o "$RUNNER_TEMP/model.gguf" 'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/13fb94b/qwen2.5-coder-7b-instruct-q4_k_m.gguf'
+          printf '%s  %s\n' '509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c' "$RUNNER_TEMP/model.gguf" | sha256sum -c -
+          docker pull node:22-bookworm
+      - name: Generate candidate source and retry failed engine checks in isolated offline tree
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/model-artifacts"
+          if [ "$MODEL_REVIEWED_ONLY" != 1 ]; then
+            "$RUNNER_TEMP/llama-build/bin/llama-server" --model "$RUNNER_TEMP/model.gguf" --alias local-coder --ctx-size 24576 --threads 4 --parallel 1 --n-gpu-layers 0 --host 127.0.0.1 --port 8093 > "$RUNNER_TEMP/model-artifacts/local-model.log" 2>&1 &
+            model_pid=$!
+            trap 'kill "$model_pid" 2>/dev/null || true' EXIT
+            ready=0
+            for n in $(seq 1 180); do
+              if curl --silent --fail http://127.0.0.1:8093/health >/dev/null; then ready=1; break; fi
+              kill -0 "$model_pid"
+              sleep 2
+            done
+            test "$ready" = 1
+          else
+            docker pull node:22-bookworm
+          fi
+          # Record outcomes on the trusted host, not in generated source.
+          # The same workflow's two attempts count as one scheduled attempt.
+          # Response-format regression is checked before CPU inference; retain exact failure feedback.
+          persist_history() {
+            local out="$1" state="$2"
+            if [ ! -f "$out/selected.json" ]; then return; fi
+            local feedback=""
+            if [ -f "$out/engine.log" ]; then feedback="$(python scripts/unknown-repair-feedback.py "$out/engine.log")"; fi
+            node -e 'const fs=require("node:fs"),{recordHistory}=require("./scripts/local-unknown-effect-generator.cjs"),[base,selected,dest,state,feedback]=process.argv.slice(1),row=JSON.parse(fs.readFileSync(selected,"utf8")),old=JSON.parse(fs.readFileSync(fs.existsSync(dest)?dest:base,"utf8"));const history=recordHistory(old,row.groups,state,process.env.GITHUB_RUN_NUMBER,row.fingerprint,feedback,row.intendedStrategy||"");fs.writeFileSync(dest,JSON.stringify(history,null,2)+"\n");' "$MODEL_HISTORY_PATH" "$out/selected.json" "$RUNNER_TEMP/model-artifacts/history.json" "$state" "$feedback"
+          }
+          for attempt in 1 2; do
+            scratch="$RUNNER_TEMP/model-scratch-$attempt"
+            out="$RUNNER_TEMP/model-artifacts/attempt-$attempt"
+            mkdir -p "$out"
+            git clone --local --no-hardlinks "$GITHUB_WORKSPACE" "$scratch"
+            git -C "$scratch" checkout --detach "$(git rev-parse HEAD)"
+            git -C "$scratch" remote remove origin
+            rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$scratch/"
+            if [ "$attempt" -gt 1 ]; then
+              export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
+              export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/quarantine-result.json"
+              if [ -f "$RUNNER_TEMP/model-artifacts/attempt-1/browser-result.json" ]; then
+                export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/browser-result.json"
+              fi
+              export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/repair-feedback.txt"
+              if [ -f "$RUNNER_TEMP/model-artifacts/attempt-1/engine.log" ]; then
+                python scripts/unknown-repair-feedback.py "$RUNNER_TEMP/model-artifacts/attempt-1/engine.log" > "$MODEL_FEEDBACK_PATH"
+              fi
+              export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
+            fi
+            node scripts/local-unknown-effect-generator.cjs "$RUNNER_TEMP/unknown-worklist.json" "$out" "$scratch"
+            if [ "$(node -p "require('$out/result.json').state")" != GENERATED_NOT_TESTED ]; then
+              printf 'No validated patch in attempt %s\n' "$attempt"
+              node -e 'const fs=require("fs"),p=process.argv[1];for(const f of fs.readdirSync(p).filter(x=>x.startsWith("rejected-"))){console.log(fs.readFileSync(p+"/"+f,"utf8"));} console.log(fs.readFileSync(p+"/result.json","utf8"));' "$out" > "$out/engine.log"
+              persist_history "$out" NO_VALID_MODEL_PATCH
+              if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then break; fi
+              continue
+            fi
+            node -e 'const a=require(process.argv[1]);if(JSON.stringify(a.targetIds.map(String).sort())!==JSON.stringify(["46220","47099","48678","49374","49382","50340"]))throw Error("EXACT_SIX_SCOPE_MISMATCH")' "$out/selected.json"
+            git -C "$scratch" diff -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs > "$out/proposal.patch"
+            test -s "$out/proposal.patch"
+            # No network, no credentials, no runner home, no Docker socket.
+            if timeout 40m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 5g --cpus 3 --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --mount "type=bind,source=$scratch,target=/repo" --workdir /repo node:22-bookworm bash -euc '
+              node --check engine/reference-effect-plans.cjs
+              node --check engine/pokeca_reference_effect_runtime.cjs
+              node --check scripts/lib/shared-effect-engine-worker.cjs
+              base="$(git rev-parse HEAD)"
+              node scripts/build-effect-extensions.cjs
+              node scripts/sync-reference-effects.cjs
+              node scripts/stage-card-auto-connect.cjs "$base" work/model-candidate
+              # A zero-qualification attempt cannot produce legal new-print fixtures.
+              # Fail early; the trusted host will extract the exact target failures.
+              node -e "const r=require(\"./work/model-candidate/candidate.json\");if(!Array.isArray(r.qualified)||!r.qualified.length)throw Error(\"NO_SELECTED_PRINT_QUALIFIED\")"
+              git restore --source=HEAD -- data/effect-extensions/compiled.json
+              node scripts/build-effect-extensions.cjs
+              node scripts/sync-reference-effects.cjs
+              node scripts/build-pwa-release.cjs
+              node tests/control-014-shared-effects.test.cjs
+              node tests/control-011-engine-batch.test.cjs
+              node tests/atomic-official-to-battle.test.cjs
+              POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser node scripts/build-intake-verification-fixtures.cjs
+              test -s work/model-candidate/browser/example-decks.json
+              node scripts/sync-reference-effects.cjs --check
+              node scripts/build-pwa-release.cjs --check
+            ' > "$out/engine.log" 2>&1; then
+              # No generated modules run on the host. A candidate is not a release.
+              if python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1
+              then
+                # Build trusted dependencies from an empty context, not generated source.
+                if ! docker image inspect pokeca-quarantine-browser:local >/dev/null 2>&1; then
+                  context="$(mktemp -d "$RUNNER_TEMP/browser-build.XXXXXX")"
+                  cat > "$context/Dockerfile" <<'DOCKERFILE'
+          FROM node:22-bookworm
+          RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+          ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+          RUN python3 -m venv /opt/pw && /opt/pw/bin/pip install --no-cache-dir playwright==1.56.0 && /opt/pw/bin/python -m playwright install --with-deps chromium && chmod -R a+rX /opt/pw-browsers
+          DOCKERFILE
+                  docker build -t pokeca-quarantine-browser:local "$context"
+                  rm -rf "$context"
+                fi
+                # Generated JS stays offline and isolated; no token, home, or socket.
+                if timeout 65m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 512 --memory 5g --cpus 3 --read-only --shm-size 1g --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 --mount "type=bind,source=$scratch,target=/repo" --workdir /repo pokeca-quarantine-browser:local bash -euc '
+                  base="$(git rev-parse HEAD)"
+                  export POKECA_INTAKE_RELEASE_BASE="$base" POKECA_INTAKE_PREFIX=work/model-candidate/browser POKECA_INTAKE_LOCAL_CANDIDATE=1 POKECA_TEST_URL=http://127.0.0.1:8765/ POKECA_BROWSER_SHARD_COUNT=1 POKECA_BROWSER_SHARD_INDEX=0 POKECA_BROWSER_SLOTS_ONLY=1 POKECA_INTAKE_ARTIFACT=unknown-quarantine
+                  /opt/pw/bin/python -u -m http.server 8765 --bind 127.0.0.1 >/tmp/browser-http.log 2>&1 &
+                  server=$!
+                  trap "cat /tmp/browser-http.log >&2; kill $server 2>/dev/null || true" EXIT
+                  ready=0
+                  for n in $(seq 1 15); do
+                    if /opt/pw/bin/python -c "import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8765/\",timeout=2).close()" 2>/dev/null; then ready=1; break; fi
+                    kill -0 "$server"
+                    sleep 1
+                  done
+                  test "$ready" = 1
+                  node scripts/build-pwa-release.cjs --check
+                  /opt/pw/bin/python tests/test_control_013_browser.py
+                  unset POKECA_BROWSER_SLOTS_ONLY
+                  export POKECA_INTAKE_ARTIFACT=unknown-quarantine-full-ai
+                  /opt/pw/bin/python tests/test_control_013_browser.py
+                ' > "$out/browser.log" 2>&1 && python scripts/verify-unknown-quarantine-browser.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/browser.log" 2>&1; then
+                  persist_history "$out" QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED
+                  echo 'Isolated exact-print Chromium and completed imported-deck AI match passed. Independent review, normal CI and published Pages checks remain mandatory.'
+                  exit 0
+                fi
+                printf '\nBROWSER_EXECUTION_FAILED\n' >> "$out/engine.log"
+                python scripts/unknown-repair-feedback.py "$out/browser.log" >> "$out/engine.log"
+              fi
+            else
+              # Even if the sandbox fails before fixture generation, preserve
+              # its bounded, inert target receipt for the next repair attempt.
+              # This diagnostic never converts an unsuccessful engine run to PASS.
+              if [ -f "$scratch/work/model-candidate/candidate.json" ]; then
+                python scripts/verify-unknown-quarantine-receipt.py "$out" "$scratch" "$GITHUB_WORKSPACE" >> "$out/engine.log" 2>&1 || true
+              fi
+            fi
+            persist_history "$out" QUARANTINE_FAILED
+            if [ "$MODEL_REVIEWED_ONLY" = 1 ]; then break; fi
+            printf 'Attempt %s did not clear quarantine. Retry with failure feedback.\n' "$attempt"
+          done
+          echo 'No verified local-generation candidate. Retain unresolved source for later runs.'
+          echo 'UNKNOWN_EFFECT_GENERATION_NO_QUALIFIED_CANDIDATE (adaptive repair enabled)' >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: current-main-six-print-reviewed-replay
+          path: ${{ runner.temp }}/model-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
