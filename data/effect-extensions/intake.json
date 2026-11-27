@@ -197437,6 +197437,62 @@
         "htmlSha256": "540afd7e7950aa7e0da3cb2783e098213db6da3dba764a7598bbd4f9f4784d1f",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "49075",
+      "name": "キチキギス",
+      "deckName": "キチキギス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49075",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049075_P_KICHIKIGISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーフェザー",
+          "cost": [
+            "超"
+          ],
+          "damage": "30×",
+          "text": "このポケモンについているエネルギーの数×30ダメージ。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "アドレナフェロモン",
+          "text": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49075.json",
+        "sha256": "9f549c90692f6ca8ff117332405870e7d4e5b44cfb9bc623caba164156f15a79",
+        "htmlSha256": "9f549c90692f6ca8ff117332405870e7d4e5b44cfb9bc623caba164156f15a79",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
     }
   ],
   "blocked": []

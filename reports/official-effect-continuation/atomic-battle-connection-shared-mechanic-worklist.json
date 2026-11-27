@@ -441,30 +441,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_AAB1E9ACCC6EBDD1C0BE",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "46426",
-        "46641",
-        "50155",
-        "50202",
-        "50216"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/46426.json",
-        "data/effect-extensions/evidence/46641.json",
-        "data/effect-extensions/evidence/50155.json",
-        "data/effect-extensions/evidence/50202.json",
-        "data/effect-extensions/evidence/50216.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CB499D687ACBA009485E",
       "category": "supporter",
       "effectKind": "supporter",
@@ -955,28 +931,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_5A76DD77F99AD6A4D8A8",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンが、ワザのダメージを受けてきぜつするとき、自分はコインを1回投げる。オモテなら、このポケモンはきぜつせず、残りHPが「10」の状態で場に残る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50258",
-        "48616",
-        "49989",
-        "49999"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50258.json",
-        "data/effect-extensions/evidence/48616.json",
-        "data/effect-extensions/evidence/49989.json",
-        "data/effect-extensions/evidence/49999.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6507CA5716C580AEA428",
       "category": "supporter",
       "effectKind": "supporter",
@@ -1148,28 +1102,6 @@
         "data/effect-extensions/evidence/47524.json",
         "data/effect-extensions/evidence/48699.json",
         "data/effect-extensions/evidence/49448.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_865F7E58BAA8C755B802",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45747",
-        "45850",
-        "46737",
-        "49075"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45747.json",
-        "data/effect-extensions/evidence/45850.json",
-        "data/effect-extensions/evidence/46737.json",
-        "data/effect-extensions/evidence/49075.json"
       ],
       "printCount": 4,
       "effectSlots": 4
@@ -13821,5 +13753,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1341
+  "unfinishedPrints": 1335
 }

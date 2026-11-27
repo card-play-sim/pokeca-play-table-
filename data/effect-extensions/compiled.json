@@ -18821,6 +18821,84 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "45747",
+      "name": "キチキギス",
+      "deckName": "キチキギス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45747",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045747_P_KICHIKIGISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーフェザー",
+          "cost": [
+            "超"
+          ],
+          "damage": "30×",
+          "text": "このポケモンについているエネルギーの数×30ダメージ。",
+          "effectId": "reference-45747-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownEnergy",
+            "type": null,
+            "unit": 30,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "アドレナフェロモン",
+          "text": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-45747-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": "悪",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45747.json",
+        "sha256": "b37e703d56e8399fea0bd2e17d0ee91626385fc4a81f689aadc5011d73a4c117",
+        "htmlSha256": "b37e703d56e8399fea0bd2e17d0ee91626385fc4a81f689aadc5011d73a4c117",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "45748",
       "name": "サンド",
       "deckName": "サンド",
@@ -19610,6 +19688,84 @@
         "path": "data/effect-extensions/evidence/45847.json",
         "sha256": "63143cf1a26d43ed372f171d81000be36e2797feb492af33742881642ea3492b",
         "htmlSha256": "63143cf1a26d43ed372f171d81000be36e2797feb492af33742881642ea3492b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45850",
+      "name": "キチキギス",
+      "deckName": "キチキギス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45850",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6/045850_P_KICHIKIGISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーフェザー",
+          "cost": [
+            "超"
+          ],
+          "damage": "30×",
+          "text": "このポケモンについているエネルギーの数×30ダメージ。",
+          "effectId": "reference-45850-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownEnergy",
+            "type": null,
+            "unit": 30,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "アドレナフェロモン",
+          "text": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-45850-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": "悪",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45850.json",
+        "sha256": "63e592c04e19715f6e47f996515d1b8ea091852996fbbd848b6bc223251e9f05",
+        "htmlSha256": "63e592c04e19715f6e47f996515d1b8ea091852996fbbd848b6bc223251e9f05",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -28050,6 +28206,82 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46426",
+      "name": "カクレオン",
+      "deckName": "カクレオン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46426",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046426_P_KAKUREON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ベロウィップ",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手のポケモン1匹に、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46426-attack-0",
+          "plan": {
+            "mechanic": "ANY_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "かくれじょうず",
+          "text": "このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-46426-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46426.json",
+        "sha256": "6edf2926c51570644778f8863a0723527ef4b58b896a41ca046c07674fd845ea",
+        "htmlSha256": "6edf2926c51570644778f8863a0723527ef4b58b896a41ca046c07674fd845ea",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46428",
       "name": "エリキテル",
       "deckName": "エリキテル",
@@ -32171,6 +32403,82 @@
       "mainPlan": null
     },
     {
+      "officialCardId": "46641",
+      "name": "カクレオン",
+      "deckName": "カクレオン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46641",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046641_P_KAKUREON.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ベロウィップ",
+          "cost": [
+            "無色",
+            "無色"
+          ],
+          "damage": "0",
+          "text": "相手のポケモン1匹に、30ダメージ。［ベンチは弱点・抵抗力を計算しない。］",
+          "effectId": "reference-46641-attack-0",
+          "plan": {
+            "mechanic": "ANY_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "amount": 30
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "かくれじょうず",
+          "text": "このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-46641-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": null,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 70,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46641.json",
+        "sha256": "b8e2e72558589bb37957ba5362d5a93cea42507f10ab9209bd88af553f35f604",
+        "htmlSha256": "b8e2e72558589bb37957ba5362d5a93cea42507f10ab9209bd88af553f35f604",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
       "officialCardId": "46665",
       "name": "モンメン",
       "deckName": "モンメン",
@@ -32892,6 +33200,84 @@
         "path": "data/effect-extensions/evidence/46725.json",
         "sha256": "fad351c8ce131f9ac37b310a9592acfd2c7460703f6ad62cbae6ed4897bab04d",
         "htmlSha256": "fad351c8ce131f9ac37b310a9592acfd2c7460703f6ad62cbae6ed4897bab04d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46737",
+      "name": "キチキギス",
+      "deckName": "キチキギス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46737",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046737_P_KICHIKIGISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーフェザー",
+          "cost": [
+            "超"
+          ],
+          "damage": "30×",
+          "text": "このポケモンについているエネルギーの数×30ダメージ。",
+          "effectId": "reference-46737-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownEnergy",
+            "type": null,
+            "unit": 30,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "アドレナフェロモン",
+          "text": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-46737-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": "悪",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46737.json",
+        "sha256": "127cfc6c1aac80d3daef078a4aea56b01ca4e5410043de64db2fb35b659411cb",
+        "htmlSha256": "127cfc6c1aac80d3daef078a4aea56b01ca4e5410043de64db2fb35b659411cb",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
@@ -227115,6 +227501,84 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "49075",
+      "name": "キチキギス",
+      "deckName": "キチキギス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49075",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049075_P_KICHIKIGISU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エナジーフェザー",
+          "cost": [
+            "超"
+          ],
+          "damage": "30×",
+          "text": "このポケモンについているエネルギーの数×30ダメージ。",
+          "effectId": "reference-49075-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownEnergy",
+            "type": null,
+            "unit": 30,
+            "base": 0
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "アドレナフェロモン",
+          "text": "このポケモンに[悪]エネルギーがついているなら、このポケモンがワザのダメージを受けるとき、自分はコインを1回投げる。オモテなら、このポケモンはそのダメージを受けない。",
+          "effectId": "reference-49075-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_COIN_DAMAGE_GUARD",
+            "commands": [
+              "COIN_FLIP",
+              "PREVENT_DAMAGE"
+            ],
+            "energyType": "悪",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 120,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49075.json",
+        "sha256": "9f549c90692f6ca8ff117332405870e7d4e5b44cfb9bc623caba164156f15a79",
+        "htmlSha256": "9f549c90692f6ca8ff117332405870e7d4e5b44cfb9bc623caba164156f15a79",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -228214,11 +228678,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45747",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45755",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -228230,11 +228689,6 @@
     },
     {
       "officialCardId": "45848",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45850",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -228369,11 +228823,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46426",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46427",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -228404,11 +228853,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46641",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46678",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -228430,11 +228874,6 @@
     },
     {
       "officialCardId": "46728",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46737",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
