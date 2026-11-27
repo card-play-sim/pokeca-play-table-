@@ -275,6 +275,16 @@ function additionalAttackPlan(entry,text){
  const namedAttackCount=text.match(/^自分の場の、ワザ「([^「」]{1,40})」を持つポケモンの数×([1-9]\d{0,2})ダメージ。$/);
  if(namedAttackCount&&printed===namedAttackCount[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownNamedAttackCount',name:namedAttackCount[1],unit:Number(namedAttackCount[2]),base:0};
+ // Count only exact official board predicates; do not infer family from names.
+ const benchContains=text.match(/^名前に「([^「」]{1,40})」とつく自分のベンチポケモンの数×([1-9]\d{0,2})ダメージ追加。$/);
+ if(benchContains&&base!==null&&printed.endsWith('+'))
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchNameContains',name:benchContains[1],unit:Number(benchContains[2]),base,sharedWording:true};
+ const damagedContains=text.match(/^自分の場の、ダメカンがのっている名前に「([^「」]{1,40})」とつくポケモンの数×([1-9]\d{0,2})ダメージ。$/);
+ if(damagedContains&&printed===damagedContains[2]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDamagedNameContains',name:damagedContains[1],unit:Number(damagedContains[2]),base:0,sharedWording:true};
+ const megaBench=text.match(/^自分のベンチの「メガシンカex」の数×([1-9]\d{0,2})ダメージ。$/);
+ if(megaBench&&printed===megaBench[1]+'×')
+  return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownBenchMegaCount',unit:Number(megaBench[1]),base:0,sharedWording:true};
  const namedTeamCount=text.match(/^自分の場の「(ロケット団|エリカ|ヒビキ|カスミ|シロナ|リーリエ|ホップ|N|ナンジャモ|ダイゴ|ペパー)のポケモン」の数×([1-9]\d{0,2})ダメージ。$/);
  if(namedTeamCount&&printed===namedTeamCount[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownTeamNameCount',name:namedTeamCount[1],unit:Number(namedTeamCount[2]),base:0};
