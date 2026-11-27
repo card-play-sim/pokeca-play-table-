@@ -8,6 +8,7 @@ on:
       - 'tests/local-unknown-effect-generator.test.cjs'
       - 'scripts/verify-unknown-quarantine-receipt.py'
       - 'scripts/verify-unknown-quarantine-browser.py'
+      - 'scripts/verify-unknown-target-precheck.cjs'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -35,6 +36,7 @@ jobs:
           node tests/local-unknown-effect-generator.test.cjs
           python scripts/verify-unknown-quarantine-receipt.py --self-test
           python scripts/verify-unknown-quarantine-browser.py --self-test
+          node scripts/verify-unknown-target-precheck.cjs --self-test
           found=0
           for checkpoint in $(git ls-remote --heads origin 'refs/heads/automation/control-013-intake-*' | sed -n 's|.*refs/heads/\(automation/control-013-intake-[0-9]*\)$|\1|p' | sort -Vr); do
             if ! git fetch origin "$checkpoint"; then continue; fi
@@ -128,6 +130,7 @@ jobs:
             if [ "$attempt" -gt 1 ]; then
               export MODEL_PREVIOUS_SELECTION_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/selected.json"
               export MODEL_PREVIOUS_RECEIPT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/quarantine-result.json"
+              export MODEL_PREVIOUS_RESULT_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/result.json"
               export MODEL_FEEDBACK_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/engine.log"
               export MODEL_PREVIOUS_PATCH_PATH="$RUNNER_TEMP/model-artifacts/attempt-1/proposal.patch"
             fi
@@ -140,12 +143,14 @@ jobs:
             fi
             git -C "$scratch" diff -- engine/reference-effect-plans.cjs engine/pokeca_reference_effect_runtime.cjs scripts/lib/shared-effect-engine-worker.cjs > "$out/proposal.patch"
             test -s "$out/proposal.patch"
+            cp "$out/selected.json" "$scratch/.unknown-target-selection.json"
             # No network, no credentials, no runner home, no Docker socket.
             if timeout 40m docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 5g --cpus 3 --read-only --tmpfs /tmp:rw,nosuid,nodev,size=1g --user "$(id -u):$(id -g)" --env HOME=/tmp --mount "type=bind,source=$scratch,target=/repo" --workdir /repo node:22-bookworm bash -euc '
               node --check engine/reference-effect-plans.cjs
               node --check engine/pokeca_reference_effect_runtime.cjs
               node --check scripts/lib/shared-effect-engine-worker.cjs
               base="$(git rev-parse HEAD)"
+              node scripts/verify-unknown-target-precheck.cjs .unknown-target-selection.json
               node scripts/build-effect-extensions.cjs
               node scripts/sync-reference-effects.cjs
               node scripts/stage-card-auto-connect.cjs "$base" work/model-candidate

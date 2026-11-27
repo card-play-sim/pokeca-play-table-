@@ -161,3 +161,20 @@ async function repairLoopTest(){
  console.log('LOCAL_UNKNOWN_PRODUCTION_REPAIR_LOOP PASS');
 }
 repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
+
+const {candidateDigest}=require('../scripts/local-unknown-effect-generator.cjs');
+assert.equal(repairProfile('SyntaxError: old JSON log\nUNKNOWN_TARGET_PRECHECK {"state":"TARGET_NOT_COMPILED"}',2).type,'COMPILE');
+assert.equal(repairProfile('SyntaxError: old JSON log\nBROWSER_EXECUTION_FAILED',2).type,'BROWSER');
+async function repeatedFailureTest(){
+ const bad={edits:[{path,before,after:before+'\nconst unrelated = true;'}]};
+ const digest=candidateDigest(sources,applyEdits(sources,bad));
+ const attempts=[];
+ const result=await generateWithRepair([aa],sources,{failedDigest:digest,propose:async(groups,src,feedback,profile)=>{
+  attempts.push(profile.type);return attempts.length===1?bad:{edits:[{path,before,after:before+'\nconst corrected = true;'}]};
+ }});
+ assert.deepEqual(attempts,['INITIAL','REPEATED']);assert.notEqual(result.digest,digest);
+ const repeated=await generateWithRepair([aa],sources,{failedDigest:digest,propose:async()=>bad});
+ assert.equal(repeated.changed,undefined);assert(repeated.feedback.includes('REPEATED_FAILED_CANDIDATE'));
+ console.log('UNKNOWN_REPEAT_FAILED_CANDIDATE_REPAIR PASS');
+}
+repeatedFailureTest().catch(e=>{console.error(e);process.exitCode=1;});
