@@ -420,6 +420,7 @@ function requests(g,actor,card,effect){
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='MASS_BOARD_BONUS'&&effect.plan.optional)
   add('stadiumBonus','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュして追加ダメージ'}]:[],0,g.stadium?1:0);
+ if(m==='ATTACK_DISCARD_STADIUM'&&effect.plan.optional)add('stadiumDiscard','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュする'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_OPTIONAL_RECOIL_BONUS')add('recoilBonus','CARD',[{id:'accept-recoil',name:'追加ダメージを与え、自分にもダメージ'}],0,1);
  if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,p.bench.length),Math.min(1,p.bench.length));
  if(m==='ATTACK_SWITCH_THEN_DAMAGE'){
@@ -463,7 +464,8 @@ function requests(g,actor,card,effect){
     Math.min((m==='ATTACK_SPREAD_DAMAGE'?effect.plan.discardAttached:effect.plan.count),eligible.length));
  }
  if(['ATTACK_DISCARD_DEFENDER_ENERGY','ATTACK_COIN_DISCARD_DEFENDER_ENERGY'].includes(m)){
-  const eligible=(o.active.energyCards||[]).filter(energy=>!effect.plan.specialOnly||energy.isSpecial);
+  const plan=effect.plan;
+  const eligible=plan.defenderEx&&!record(o.active).name.endsWith('ex')?[]:(o.active.energyCards||[]).filter(energy=>(!plan.specialOnly||energy.isSpecial)&&(!plan.type||selectedAttachmentUnits(o.active,energy,plan)>0));
   const count=Math.min(1,eligible.length);
   cardRequest('energy',eligible,count,count);
  }
@@ -1583,7 +1585,7 @@ function applyPlan(g,actor,card,effect,action){
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }
    if(m==='ATTACK_DRAW')draw(g,p,plan.draw);
-   if(m==='ATTACK_DISCARD_STADIUM'&&g.stadium){
+   if(m==='ATTACK_DISCARD_STADIUM'&&g.stadium&&(!plan.optional||ids('stadiumDiscard').length>0)){
     const stadiumCard=g.stadium;
     player(g,g.stadiumOwner).discard.push(stadiumCard);
     g.stadium=null;
