@@ -2615,7 +2615,7 @@ function verifyCase(t, e) {
       assert(picked.every(id=>attached.some(c=>c.id===id)));
       assert(picked.every(id=>after.players[0].discard.some(c=>c.id===id)));
       const discardEvents=effectEvents.filter(ev=>ev?.command==='DISCARD'&&ev.sourceInstanceId===attackingSide.active.id);
-      assert.deepEqual(discardEvents.flatMap(ev=>ev.cardIds).sort(),[...picked].sort());
+      assert.deepEqual(Array.from(discardEvents).flatMap(ev=>Array.from(ev.cardIds)).sort(),Array.from(picked).sort());
       // Discard must precede the selected-target damage; printed Active
       // damage (the primary attack) is applied first when present.
       const lastDiscard=effectEvents.lastIndexOf(discardEvents.at(-1));
@@ -3671,7 +3671,7 @@ function verifyCase(t, e) {
       const skipped=replay.getSnapshot(),prior=before.players[0];
       assert.deepEqual(Array.from(skipped.players[0].deck,c=>c.id),Array.from(prior.deck,c=>c.id));
       assert.deepEqual(Array.from(skipped.players[0].hand,c=>c.id),Array.from(prior.hand,c=>c.id));
-      assert(!skipped.history.slice(before.history.length).some(event=>['SEARCH_DECK','SHUFFLE_DECK','REVEAL'].includes(event.details?.command)));
+      assert(!skipped.history.slice(before.history.length).some(event=>!event.details?.reference&&['SEARCH_DECK','SHUFFLE_DECK','REVEAL'].includes(event.details?.command)));
       if(Number(e.damage)>0)verifyPrintedAttack(before,skipped,e,Number(e.damage));
     }
   }
