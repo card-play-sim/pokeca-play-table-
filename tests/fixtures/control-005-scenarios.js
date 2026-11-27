@@ -41,7 +41,7 @@
   if(!o.active)o.active=pokemon(1);
   const teammate=c=>record(c).facts.basic&&record(c).name.startsWith('ロケット団の');
   for(let i=0;i<Math.max(2,(row.rocketTeamCount||0)-1);i++){
-   const a=pokemon(0,row.rocketTeamCount?teammate:undefined);if(a)p.bench.push(a);
+   const a=p.bench.length<5?pokemon(0,row.rocketTeamCount?teammate:undefined):null;if(a)p.bench.push(a);
    if(i<2){const b=pokemon(1,c=>!record(c).facts.teraBenchProtection);if(b)o.bench.push(b);}
   }
   if(row.rocketTeamCount&&p.bench.length!==row.rocketTeamCount-1)return {blocked:'FIXTURE_ROCKET_TEAM_MISSING'};

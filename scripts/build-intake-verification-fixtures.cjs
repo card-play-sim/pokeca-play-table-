@@ -105,12 +105,24 @@ if (previous && missing.length)
 if (!previous && fixtures.length < (requested.size ? requested.size * perPattern : 5))
   throw Error("INSUFFICIENT_INTAKE_VERIFICATION_CASES");
 B.atomic(prefix + "/browser-fixtures.json", fixtures);
-if (!previous) {
-  const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json")),
-    manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
-      fixed,
-      fixtures.slice(0, 8).map((f) => f.r),
-    );
+// The local exact-release candidate needs the imported-deck match in addition
+// to all changed slots. Public verification remains receipt-only and unchanged.
+const localCandidate = process.env.POKECA_INTAKE_LOCAL_CANDIDATE === "1";
+if (!previous || (localCandidate && fixtures.length)) {
+  const fixed = JSON.parse(fs.readFileSync("data/fixed-test-decks.json"));
+  const selectedPrints = [...new Map(fixtures.map(f => [String(f.r.officialCardId), f.r])).values()].slice(0, 8);
+  const manifest = require("../tests/fixtures/control-009-extension-manifest.cjs")(
+    fixed, previous ? selectedPrints : fixtures.slice(0, 8).map(f => f.r),
+  );
+  if (previous) {
+    const assert = require("node:assert/strict");
+    assert(selectedPrints.length > 0);
+    for (const deck of manifest.decks) {
+      assert.equal(deck.cards.reduce((n, c) => n + c.count, 0), 60);
+      for (const row of selectedPrints) assert(deck.cards.some(c =>
+        String(c.referenceOfficialCardId) === String(row.officialCardId) && c.count === 1));
+    }
+  }
   B.atomic(prefix + "/example-decks.json", manifest);
 }
 console.log(
