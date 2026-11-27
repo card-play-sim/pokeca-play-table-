@@ -4134,12 +4134,13 @@ function verifyCase(t, e) {
       const start={...before,referenceRngState:seed},replay=port(start);
       assert(replay.dispatch('you',action).ok);
       const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
-      assert.deepEqual(events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean').map(x=>x.heads),[...Array(heads).fill(true),false]);
+      assert.deepEqual(Array.from(events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean'),x=>x.heads),[...Array(heads).fill(true),false]);
       const source=start.players[1], resolved=end.players[1];
       const expected=Array.from(source.deck.slice(0,heads),c=>c.id);
       const remaining=Array.from(source.deck.slice(heads),c=>c.id);
       const millEvents=events.filter(x=>x?.command==='DISCARD'&&x.fromZone==='deck'&&x.owner===source.id);
       assert.deepEqual(Array.from(millEvents.flatMap(x=>x.cardIds)),expected,'MILL_EVENT_EXACT_TOP_IDS');
+      assert.equal(millEvents.length,expected.length?1:0);
       assert.deepEqual(Array.from(resolved.discard.slice(source.discard.length,source.discard.length+expected.length),c=>c.id),expected,'MILL_DISCARD_EXACT_TOP_IDS');
       const deck=Array.from(resolved.deck,c=>c.id);
       if(deck.length===remaining.length-1&&end.turnPlayer===source.id){
