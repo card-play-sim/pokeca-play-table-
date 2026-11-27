@@ -1,4 +1,4 @@
-name: Issue122 coin mill legal-deck replay and knockout resolution
+name: ロケット団のディグダ独立対戦検証・化石依存保留
 on:
   push:
     branches: [battle/issue122-coin-mill-20261128]
@@ -17,6 +17,7 @@ jobs:
       INTAKE_LIMIT: '10000'
       POKECA_ENGINE_SHARDS: '4'
       POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+      POKECA_INTAKE_EXACT_TARGETS: '48604'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -67,7 +68,7 @@ jobs:
           const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
           const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
           assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
-          const required=['49677','48604'].filter(id=>!old.has(id));
+          const required=['48604'].filter(id=>!old.has(id));
           const added=[...now.keys()].filter(id=>!old.has(id)).sort();
           const candidate=require('./work/card-auto-connect/candidate.json');
           const verified=new Set(candidate.qualified.map(String));
@@ -75,7 +76,7 @@ jobs:
           const missing=required.filter(id=>!now.has(id));
           const out={base,required,added,missing,count:added.length};fs.writeFileSync('artifacts/coin-mill-exact-delta.json',JSON.stringify(out,null,2)+'\n');
           console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
-          assert(added.some(id=>required.includes(id)),'NO_COIN_MILL_PRINT_QUALIFIED');
+          assert.deepEqual(added,required.sort(),'EXACT_INDEPENDENT_TARGET_REQUIRED');
           console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
           assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
           NODE
