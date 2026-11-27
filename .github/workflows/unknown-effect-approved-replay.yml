@@ -271,6 +271,9 @@ jobs:
             prior="$(gh pr list --state all --head "$branch" --limit 10 --json number,url,state)"
             if [ "$(jq 'length' <<< "$prior")" -gt 0 ]; then
               jq -r '.[] | "Existing candidate: \(.url) (\(.state))"' <<< "$prior"
+              # Reuse the durable PR reference, but never treat a closed or
+              # merged PR as an instruction to publish again.
+              jq -r '.[] | "Existing candidate: \(.url) (\(.state))"' <<< "$prior" >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
           else
