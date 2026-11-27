@@ -87,6 +87,47 @@ function massTransferCandidate(c,plan){
  if(plan.team&&!r.name.startsWith(plan.team+'の'))return false;
  return true;
 }
+// Try every eligible physical print in deterministic priority order.
+// ensure() is transactional on failure; no fabricated cards or failed
+// reservations may enter a fixture. A failed preferred print is not proof
+// that the requested resource cannot be constructed.
+function firstReservable(candidates,predicate,ensure,excludedId){
+ const seen=new Set();
+ for(const record of candidates){
+  if(!record||record.officialCardId===excludedId||seen.has(record.officialCardId))continue;
+  seen.add(record.officialCardId);
+  if(predicate(record)&&ensure(record))return record;
+ }
+ return null;
+}
+// Each requirement consumes a distinct physical card, even when two
+// requirements refer to the same registered print in different zones.
+function requiredCopies(requirements,side,printId){
+ return 1+requirements.filter(r=>r.side===side&&r.printId===printId).length;
+}
+// A complete evolution line is a single reservation transaction. Restore
+// the deck and its protected IDs if any physical parent cannot be reserved.
+// Enumerate exact registered parent alternatives. Stage decreases strictly,
+// so no cyclic evolution or fabricated print can enter a fixture.
+function* evolutionLines(record,candidates){
+ if(record.facts.basic){yield [record];return;}
+ for(const parent of candidates){
+  if(parent.category!=='pokemon'||parent.name!==record.facts.evolvesFrom||parent.facts.stage!==record.facts.stage-1)continue;
+  for(const prefix of evolutionLines(parent,candidates))yield [...prefix,record];
+ }
+}
+function tryReserveChain(deck,reservedPrints,index,chain,ensure){
+ const original=deck.cards.map(c=>({...c}));
+ const had=reservedPrints.has(index),reserved=new Set(reservedPrints.get(index)||[]);
+ let ok=false;
+ try{ok=chain.every(record=>ensure(index,record));return ok;}
+ finally{
+  if(!ok){
+   deck.cards=original;
+   if(had)reservedPrints.set(index,reserved);else reservedPrints.delete(index);
+  }
+ }
+}
 // Test manifests use only real, exact registered official prints. Reserve
 // physical cards before the scenario allocates prizes, bench and attack costs.
 // This helper never changes a release manifest or marks a print as verified.
@@ -138,14 +179,18 @@ function fixtureResources(manifest,deckIndex,source,e){
   return existing.find(r=>r.officialCardId!==source.officialCardId&&predicate(r))||legal.find(predicate);
  }
  function reserve(predicate,zone,side=0){
-  const index=side===0?deckIndex:1-deckIndex,record=pick(predicate,index);
-  if(!ensure(index,record))return null;
+  const index=side===0?deckIndex:1-deckIndex;
+  const existing=manifest.decks[index].cards.map(lookup).filter(Boolean);
+  const record=firstReservable([...existing,...legal],predicate,r=>ensure(index,r,requiredCopies(requirements,side,r.officialCardId)),source.officialCardId);
+  if(!record)return null;
   requirements.push({side,zone,printId:record.officialCardId});return record;
  }
  const mon=(r,type,stage)=>r.category==='pokemon'&&(!type||r.facts.types.includes(type))&&(stage===null||stage===undefined||stage==='evolved'&&r.facts.stage>0||r.facts.stage===stage);
  const isBasicEnergy=r=>r.category==='energy'&&r.mainPlan?.mechanic==='BASIC_ENERGY';
  const vanilla=r=>r.category==='pokemon'&&r.facts.basic&&r.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
- const reserveEnergy=(type,count,index=deckIndex)=>ensure(index,pick(r=>isBasicEnergy(r)&&(!type||typeOf(r)===type),index),count);
+ const reserveEnergy=(type,count,index=deckIndex)=>!!firstReservable(
+  [...manifest.decks[index].cards.map(lookup).filter(Boolean),...legal],
+  r=>isBasicEnergy(r)&&(!type||typeOf(r)===type),r=>ensure(index,r,count),source.officialCardId);
  const ensureAttackCost=(record,index)=>{
   const attack=vanilla(record);if(!attack)return false;
   const needed=new Map();for(const type of attack.cost)needed.set(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type,(needed.get(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type)||0)+1);
@@ -268,15 +313,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)||m==='MASS_BOARD_BONUS'&&plan.predicate==='evolvedFromThisTurn')&&!source.facts.basic){
-  const chain=record=>{
-   if(record.facts.basic)return [record];
-   const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
-   const before=parent&&chain(parent);return before?[...before,record]:null;
-  };
-  const line=chain(source);
-  if(line&&line.slice(0,-1).every(x=>ensure(deckIndex,x))){
+  for(const line of evolutionLines(source,legal)){
+   if(!tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,line.slice(0,-1),(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId))))continue;
    requirements.evolvedSourceChain=line.map(x=>x.officialCardId);
    for(const parent of line.slice(0,-1))requirements.push({side:0,zone:'hand',printId:parent.officialCardId});
+   break;
   }
  }
  if(e.proofDefenseBypass)reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='SUPPRESS_RULE_ABILITIES','deck');
@@ -286,18 +327,16 @@ function fixtureResources(manifest,deckIndex,source,e){
    // evolution line, not an evolved card inserted into the field.
    const basic=reserve(r=>mon(r,null,0)&&r.facts.teraBenchProtection===true,zone);
    if(!basic){
-    const line=r=>{
-     if(r.facts.basic)return [r];
-     const parent=legal.find(x=>x.category==='pokemon'&&x.name===r.facts.evolvesFrom&&x.facts.stage===r.facts.stage-1);
-     const previous=parent&&line(parent);return previous?[...previous,r]:null;
-    };
     const occupied=new Set(requirements.filter(x=>x.side===0).map(x=>x.printId));
-    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true).map(line).filter(x=>x&&x.length>1&&x.every(record=>!occupied.has(record.officialCardId))).sort((x,y)=>x.length-y.length);
-    for(const chain of options){
-     if(chain.every(record=>ensure(deckIndex,record))){
-      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
-      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
-      requirements.teraChain=chain.map(record=>record.officialCardId);break;
+    const options=legal.filter(r=>r.category==='pokemon'&&r.facts.teraBenchProtection===true&&!r.facts.basic).sort((x,y)=>x.facts.stage-y.facts.stage);
+    outer:for(const target of options){
+     for(const chain of evolutionLines(target,legal)){
+      if(chain.some(record=>occupied.has(record.officialCardId)))continue;
+      if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,ensure)){
+       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+       requirements.teraChain=chain.map(record=>record.officialCardId);break outer;
+      }
      }
     }
    }
@@ -403,21 +442,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
    const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
    if(!reserve(r=>named(r)&&r.facts.basic,'bench')){
-    const line=record=>{
-     if(record.facts.basic)return [record];
-     const parent=legal.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1);
-     const previous=parent&&line(parent);return previous?[...previous,record]:null;
-    };
-    for(const chain of legal.filter(named).map(line).filter(x=>x&&x.length>1).sort((a,b)=>a.length-b.length)){
-     const original=manifest.decks[deckIndex].cards.map(c=>({...c}));
-     const reserved=new Set(reservedPrints.get(deckIndex)||[]);
-     if(chain.every(record=>ensure(deckIndex,record))){
-      requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
-      for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
-      requirements.namedBenchChain=chain.map(record=>record.officialCardId);
-      break;
+    outer:for(const target of legal.filter(r=>named(r)&&!r.facts.basic).sort((a,b)=>a.facts.stage-b.facts.stage)){
+     for(const chain of evolutionLines(target,legal)){
+      if(tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId)))){
+       requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+       for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+       requirements.namedBenchChain=chain.map(record=>record.officialCardId);
+       break outer;
+      }
      }
-     manifest.decks[deckIndex].cards=original;reservedPrints.set(deckIndex,reserved);
     }
    }
   }
@@ -4316,6 +4349,10 @@ function verifyPrintedDamage(evidence) {
   }
 }
 module.exports = {
+  firstReservable,
+  evolutionLines,
+  requiredCopies,
+  tryReserveChain,
   prepare,
   effectOption,
   verifyCase,
