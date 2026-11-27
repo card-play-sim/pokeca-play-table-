@@ -365,3 +365,11 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(routeForInputs({...inputs,candidates:[aa]},1),'MODEL');
  console.log('AUTONOMOUS_ROUTE_PREFLIGHT PASS');
 }
+
+{
+ const {omitRejectedPatch}=require('../scripts/local-unknown-effect-generator.cjs');
+ assert.equal(omitRejectedPatch('AssertionError [ERR_ASSERTION]: MODEL_OFF_TARGET_DEFINITION'),true);
+ assert.equal(omitRejectedPatch('NONUNIQUE_OR_STALE_ANCHOR:F0_123'),true);
+ assert.equal(omitRejectedPatch('ENGINE_EXECUTION_FAILED'),false);
+ console.log('REJECTED_CONTEXT_COPY_NOT_REUSED PASS');
+}
