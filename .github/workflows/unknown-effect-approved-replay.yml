@@ -1,0 +1,63 @@
+name: Unknown effect approved replay entry
+on:
+  workflow_dispatch:
+    inputs:
+      origin_run:
+        description: Successful quarantine workflow run ID
+        required: true
+        type: string
+      attempt:
+        description: Independently reviewed attempt
+        required: true
+        type: choice
+        options: [attempt-1, attempt-2]
+      approved_patch_sha256:
+        description: Independently reviewed exact patch SHA256
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  entry:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check origin workflow identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGIN_RUN: ${{ inputs.origin_run }}
+        run: |
+          set -euo pipefail
+          [[ "$ORIGIN_RUN" =~ ^[1-9][0-9]*$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$ORIGIN_RUN" > "$RUNNER_TEMP/origin.json"
+          jq -e --arg repo "$GITHUB_REPOSITORY" '.conclusion=="success" and .head_branch=="main" and .head_repository.full_name==$repo and .path==".github/workflows/local-unknown-effect-generator.yml"' "$RUNNER_TEMP/origin.json"
+          sha=$(jq -r '.head_sha' "$RUNNER_TEMP/origin.json")
+          [[ "$sha" =~ ^[a-f0-9]{40}$ ]]
+          echo "ORIGIN_SHA=$sha" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: local-unknown-effect-quarantine
+          run-id: ${{ inputs.origin_run }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/replay-input
+      - name: Verify explicit approval and current source compatibility
+        env:
+          ORIGIN_RUN: ${{ inputs.origin_run }}
+          ATTEMPT: ${{ inputs.attempt }}
+          APPROVED_SHA: ${{ inputs.approved_patch_sha256 }}
+        run: |
+          python scripts/verify-unknown-approved-replay.py --self-test
+          python scripts/verify-unknown-approved-replay.py "$RUNNER_TEMP/replay-input" "$ORIGIN_SHA" "$ORIGIN_RUN" "$ATTEMPT" "$APPROVED_SHA" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/replay-entry"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unknown-effect-approved-replay-entry
+          path: ${{ runner.temp }}/replay-entry/
+          if-no-files-found: error
+          retention-days: 14
