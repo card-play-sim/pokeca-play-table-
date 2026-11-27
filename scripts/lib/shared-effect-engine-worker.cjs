@@ -280,7 +280,17 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='ownDiscardSupporterContains')reserve(r=>r.category==='supporter'&&r.name.includes(plan.name),'discard');
   if(plan.metric==='ownNamedOrExCount'&&![plan.name,plan.name+'ex'].includes(source.name))reserve(r=>mon(r,null,0)&&[plan.name,plan.name+'ex'].includes(r.name),'bench');
   if(plan.metric==='bothNameContainsCount'&&![plan.name,plan.secondName].some(n=>source.name.includes(n)))reserve(r=>mon(r,null,0)&&[plan.name,plan.secondName].some(n=>r.name.includes(n)),'bench');
-  if(plan.metric==='ownBenchNamedCount')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(plan.metric==='ownBenchNamedCount'&&!reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench')){
+   outer:for(const target of legal.filter(r=>mon(r,null,'evolved')&&r.name===plan.name)){
+    for(const chain of evolutionLines(target,legal)){
+     if(!tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId))))continue;
+     requirements.push({side:0,zone:'bench',printId:chain[0].officialCardId});
+     for(const record of chain.slice(1))requirements.push({side:0,zone:'hand',printId:record.officialCardId});
+     requirements.namedBenchChain=chain.map(record=>record.officialCardId);
+     break outer;
+    }
+   }
+  }
   if(['ownBenchTeamCounters','ownNamedTeamEnergy'].includes(plan.metric))
    reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
   if(['ownNamedTeamEnergy','ownBenchWithTypedEnergy'].includes(plan.metric))
@@ -385,7 +395,7 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(plan.category==='basicEnergy')return isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
    if(plan.category==='trainer')return ['item','supporter','tool','stadium'].includes(r.category);
    return r.category===plan.category&&(!plan.type||r.category==='energy'&&typeOf(r)===plan.type||r.facts.types?.includes(plan.type))&&
-    (plan.stage===null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
+    (plan.stage==null||plan.stage==='evolved'&&r.facts.stage>0||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   };
   let target;
   if(plan.category==='categorySet'){
@@ -1341,7 +1351,7 @@ function prepare(r, e, kind) {
       g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
     }
     if(plan.predicate==='ownNamedEnergy'){
-      const eligible=c=>c.kind==='energy'&&c.name===plan.name;
+      const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;
       const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
       if(!zone)return {blocked:'NO_NAMED_ENERGY_PREDICATE_FIXTURE'};
       own.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
@@ -1354,9 +1364,10 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='allDamagedBench')for(const mon of own.bench)mon.damage=Math.min(10,mon.hp-10);
     if(plan.predicate==='ownStadium'||plan.predicate==='stadiumContains'){
-      const i=own.deck.findIndex(c=>c.kind==='stadium'&&(plan.predicate==='ownStadium'||E.getReferenceEffectRecord(c).name.includes(plan.name)));
-      if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
-      g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+      const valid=c=>c.kind==='stadium'&&(plan.predicate==='ownStadium'||E.getReferenceEffectRecord(c)?.name.includes(plan.name));
+      const zone=[own.deck,own.hand,own.discard].find(z=>z.some(valid));
+      if(!zone)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
+      g.stadium=zone.splice(zone.findIndex(valid),1)[0];g.stadiumOwner=own.id;
     }
   }
   if(m==='MASS_CONTEXT_BONUS'){
@@ -1682,6 +1693,11 @@ function prepare(r, e, kind) {
     if(!(plan.scope==='both'?frame.game.players:[own]).some(side=>side.deck.slice(0,plan.limit).some(filter)))return {blocked:'NO_MILL_POSITIVE_FIXTURE'};
   }
   if (m === "SCALED_ATTACK_DAMAGE") {
+    if(fixtureRequirements.namedBenchChain){
+      const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.namedBenchChain,false);
+      if(evolved.blocked)return evolved;
+      frame.game=evolved.port.getSnapshot();
+    }
     const [own, opponent] = frame.game.players;
     if(e.plan.metric==='opponentHandTrainerCount'){
       const trainer=c=>['item','supporter','tool','stadium'].includes(E.getReferenceEffectRecord(c)?.category);
