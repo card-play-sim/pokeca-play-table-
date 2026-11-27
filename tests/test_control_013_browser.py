@@ -565,6 +565,16 @@ async def main():
     else:
      assert reactions[0]['counterCount']==plan['counterCount']
      assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==plan['counterCount'] for ev in events)
+   if m in ('PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL'):
+    defender=before['players'][1]['active']
+    survivor=after['players'][1]['active']
+    assert survivor and survivor['id']==defender['id']
+    assert any(ev.get('details',{}).get('mechanic')==m and ev['details'].get('effectId')==f['e']['effectId'] and ev['details'].get('heads') is True for ev in events)
+    hits=[ev['details']['amount'] for ev in events if ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==defender['id']]
+    assert hits
+    if m=='PASSIVE_COIN_DAMAGE_GUARD':assert hits[0]==0 and survivor['damage']==defender['damage']
+    else:assert survivor['hp']-survivor['damage']==10
+    assert before['players'][0]['prizes']==after['players'][0]['prizes']
    if m=='PASSIVE_FULL_HP_SURVIVAL':
     defender=before['players'][1]['active'];survivor=after['players'][1]['active']
     assert defender['damage']==0 and survivor['id']==defender['id']
