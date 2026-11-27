@@ -388,3 +388,25 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(omitRejectedPatch('MODEL_UNCALLED_COMPILER_HELPER:sharedEffect'),true);
  console.log('PRODUCTION_DISCONNECTED_COMPILER_HELPER_REJECTED PASS');
 }
+
+
+// Actual production failure class: a trainer main effect was assigned an
+// unrelated ABILITY compiler guard, then the same bad patch was proposed again.
+{
+ const {compilerKind,validateCompilerKindScope,omitRejectedPatch}=require('../scripts/local-unknown-effect-generator.cjs');
+ const file='engine/reference-effect-plans.cjs',anchor=' const p=byText.get(text);return p?{...p}:null;';
+ const prop=code=>({edits:[{path:file,before:anchor,after:code+'\n'+anchor}]});
+ const groups=[{effectKind:'supporter',exampleOfficialText:'公式のサポート効果'}];
+ assert.equal(compilerKind('attack'),'ATTACK');
+ assert.equal(compilerKind('ability'),'ABILITY');
+ for(const kind of ['item','supporter','tool','stadium','energy','specialEnergy'])assert.equal(compilerKind(kind),'MAIN');
+ assert.throws(()=>validateCompilerKindScope(groups,prop(" if(kind==='ABILITY'&&unrelated) return {mechanic:'OTHER'};")),/MODEL_OFF_TARGET_COMPILER_KIND:expected=MAIN:got=ABILITY/);
+ assert.throws(()=>validateCompilerKindScope(groups,prop(' if("ATTACK" === kind && unrelated) return {mechanic:"OTHER"};')),/MODEL_OFF_TARGET_COMPILER_KIND/);
+ assert.doesNotThrow(()=>validateCompilerKindScope(groups,prop(" if(kind==='MAIN'&&matched) return {mechanic:'SHARED'};")));
+ assert.doesNotThrow(()=>validateCompilerKindScope([{effectKind:'attack'},{effectKind:'ability'}],prop(" if(kind==='ATTACK'||kind==='ABILITY') return plan;")));
+ assert.doesNotThrow(()=>validateCompilerKindScope(groups,prop(' return sharedPlan;')));
+ assert.equal(repairProfile('MODEL_OFF_TARGET_COMPILER_KIND:expected=MAIN:got=ABILITY').type,'COMPILE');
+ assert.equal(omitRejectedPatch('MODEL_OFF_TARGET_COMPILER_KIND'),true);
+ assert.equal(omitRejectedPatch('TARGET_NOT_COMPILED'),true);
+ console.log('PRODUCTION_WRONG_COMPILER_KIND_REPAIR PASS');
+}

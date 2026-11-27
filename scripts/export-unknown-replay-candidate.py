@@ -181,7 +181,64 @@ def stage(repo,out):
         target.write_bytes(data)
     git(repo,"add","--",*sorted(set(entry["paths"])|expected))
 
+RELEASE_CHECKS = {
+    "Shared effect batch processing", "Complete offline regression",
+    "G-BASE-008 UI effect contract", "Reference effect provenance gate",
+    "Consolidated release print preservation gate",
+    "DECK-WORK-002 classification and mobile deck checks",
+    "Deck code import regression", "Card reflection runtime checks",
+    "Refresh verified PWA release manifest", "Cross-category effect regression",
+}
+
+def release_checks(payload, head, repository):
+    if not re.fullmatch(r"[a-f0-9]{40}", head):
+        raise ValueError("INVALID_RELEASE_HEAD")
+    latest = {}
+    for run in payload["workflow_runs"]:
+        if (run.get("head_sha") != head or run.get("event") != "pull_request"
+                or (run.get("head_repository") or {}).get("full_name") != repository):
+            continue
+        if not isinstance(run.get("id"), int) or not isinstance(run.get("run_attempt"), int):
+            raise ValueError("INVALID_RELEASE_RUN")
+        name = run["name"]
+        old = latest.get(name)
+        if old is None or (run["id"], run["run_attempt"]) > (old["id"], old["run_attempt"]):
+            latest[name] = run
+    if not RELEASE_CHECKS <= set(latest):
+        raise ValueError("REQUIRED_RELEASE_CHECK_MISSING")
+    if any(run.get("status") != "completed" or run.get("conclusion") != "success" for run in latest.values()):
+        raise ValueError("RELEASE_CHECK_NOT_SUCCESS")
+    return True
+
+def public_receipt(path, base, head, repo):
+    if not all(re.fullmatch(r"[a-f0-9]{40}", x) for x in (base, head)):
+        raise ValueError("INVALID_PUBLIC_SCOPE")
+    subprocess.run(["git","-C",str(repo),"merge-base","--is-ancestor",base,head],check=True)
+    audit = import_module("audit-exact-target-completion")
+    before = index(git(repo,"show",base+":data/effect-extensions/compiled.json"))
+    after = index(git(repo,"show",head+":data/effect-extensions/compiled.json"))
+    receipt = json.loads(Path(path).read_text())
+    if (receipt.get("commit") != head or receipt.get("baseCommit") != base
+            or not isinstance(receipt.get("release"), str) or not receipt["release"]):
+        raise ValueError("PUBLIC_RECEIPT_HEAD_OR_BASE_MISMATCH")
+    audit.verify_delta_receipt(receipt,before,after)
+    return True
+
 def self_test():
+    head, repo = "a"*40, "owner/repo"
+    runs = [{"name":name,"id":i+1,"run_attempt":1,"head_sha":head,"event":"pull_request",
+             "head_repository":{"full_name":repo},"status":"completed","conclusion":"success"}
+            for i,name in enumerate(sorted(RELEASE_CHECKS))]
+    assert release_checks({"workflow_runs":runs},head,repo)
+    for bad in [runs[:-1], runs[:-1]+[{**runs[-1],"conclusion":"failure"}],
+                runs[:-1]+[{**runs[-1],"head_sha":"b"*40}],
+                runs[:-1]+[{**runs[-1],"head_repository":{"full_name":"other/repo"}}],
+                runs+[{**runs[0],"id":1000,"status":"queued","conclusion":None}]]:
+        try:
+            release_checks({"workflow_runs":bad},head,repo)
+        except ValueError:
+            continue
+        raise AssertionError("UNVERIFIED_RELEASE_ALLOWED")
     assert unchanged_delta({"1":{"x":1}},{"1":{"x":1},"2":{}})=={"2"}
     for after in ({},{"1":{"x":2}}):
         try:
@@ -237,5 +294,11 @@ if __name__=="__main__":
         export(*sys.argv[2:])
     elif sys.argv[1]=="stage":
         stage(*sys.argv[2:])
+    elif sys.argv[1]=="public-receipt":
+        public_receipt(*sys.argv[2:])
+        print("EXACT_PUBLIC_RECEIPT_PASS")
+    elif sys.argv[1]=="release-checks":
+        release_checks(json.loads(Path(sys.argv[2]).read_text()),sys.argv[3],sys.argv[4])
+        print("EXACT_HEAD_RELEASE_CHECKS_PASS")
     else:
         raise ValueError("UNKNOWN_MODE")
