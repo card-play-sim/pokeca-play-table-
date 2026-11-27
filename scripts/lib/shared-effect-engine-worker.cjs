@@ -2817,6 +2817,17 @@ function verifyCase(t, e) {
     assert(replay.dispatch("you",action).ok);
     verifyPrintedAttack(start,replay.getSnapshot(),e,plan.base);
   }
+  if(e.plan.mechanic==='ABILITY_EVOLVE_FORCE_SWITCH'){
+    const action=t.action||o.action,own=before.players[0],other=before.players[1],resolved=after.players[1];
+    const source=[own.active,...own.bench].find(c=>c.id===t.sourceId);
+    assert(source?.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
+    assert.equal(resolved.active.id,action.selections.bench[0]);
+    assert(resolved.bench.some(c=>c.id===other.active.id));
+    assert.deepEqual(S.identities(before),S.identities(after));
+    const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
+    const late=port(closed);assert.equal(late.dispatch('you',action).ok,false);assert.deepEqual(late.getSnapshot(),closed);
+    assert.equal(p.dispatch('you',action).ok,false);assert.deepEqual(p.getSnapshot(),after);
+  }
   if(e.plan.mechanic==="ABILITY_SWITCH_OWN"){
     const action=t.action||o.action,own=before.players[0],resolved=after.players[0];
     assert.equal(resolved.active.id,action.selections.ownBench[0]);

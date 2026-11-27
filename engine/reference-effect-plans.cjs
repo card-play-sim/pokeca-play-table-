@@ -779,6 +779,8 @@ function plan(entry,kind){
  const twoChoice=generic.replace(/\s+/g,'');
  if(kind==='MAIN'&&entry.category==='supporter'&&twoChoice==='このカードは、2つの効果から1つを選んで使う。◆自分のバトルポケモンをベンチポケモンと入れ替える。◆この番、自分のポケモンが使うワザの、相手のバトル場の「ポケモンex・V」へのダメージは「+30」される。')
   return {mechanic:'TRAINER_SWITCH_OR_EX_V_BOOST',commands:['SWITCH','MODIFY_DAMAGE'],amount:30,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='自分の番に、このカードを手札から出して進化させたとき、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。')
+  return {mechanic:'ABILITY_EVOLVE_FORCE_SWITCH',commands:['FORCE_SWITCH'],origin:'evolve',sharedWording:true};
  if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分のバトルポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'ABILITY_SWITCH_OWN',commands:['SWITCH'],sharedWording:true};
  const typedEvolution=generic.match(/^自分の番に1回使える。自分の山札から\[([草炎水雷超闘悪鋼竜無色])\]タイプの進化ポケモンを(1枚|[2-9]枚まで)選び、相手に見せて、手札に加える。そして山札を切る。$/);
