@@ -62,7 +62,7 @@ def evidence_paths(added):
     return {"data/effect-extensions/evidence/"+key+".json" for key in ids(sorted(added))}
 
 def manifest_scope(repo, entry, files):
-    if entry.get("state") != "LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED" or entry.get("publicBattleVerified") != [] or entry.get("fullDeckAIMatchVerified") is not True:
+    if entry.get("reviewOnly") or entry.get("state") != "LATEST_MAIN_REPLAY_VERIFIED_NOT_RELEASED" or entry.get("publicBattleVerified") != [] or entry.get("fullDeckAIMatchVerified") is not True:
         raise ValueError("UNVERIFIED_REPLAY")
     base = git(repo,"rev-parse","HEAD").decode().strip()
     if entry.get("latestMain") != base:
