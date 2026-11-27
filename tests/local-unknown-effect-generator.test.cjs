@@ -357,3 +357,11 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.doesNotThrow(()=>validateDefinitionScope(group,prop(row)));
  assert.equal(repairProfile('MODEL_OFF_TARGET_DEFINITION').type,'INTEGRITY');
 }
+
+{
+ const {routeForInputs}=require('../scripts/local-unknown-effect-generator.cjs');
+ const inputs={candidates:[],sources:{},fingerprint:fp,history:{}};
+ assert.equal(routeForInputs(inputs,1),'NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP');
+ assert.equal(routeForInputs({...inputs,candidates:[aa]},1),'MODEL');
+ console.log('AUTONOMOUS_ROUTE_PREFLIGHT PASS');
+}

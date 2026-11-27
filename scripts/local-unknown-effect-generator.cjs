@@ -479,13 +479,15 @@ function loadVerifiedInputs(worklist){
 
  return {candidates,evidenceFailures,sources,fingerprint,history};
 }
-function probeReviewed(worklist){
- const {candidates,sources,fingerprint,history}=loadVerifiedInputs(worklist);
+function routeForInputs({candidates,sources,fingerprint,history},runNumber){
+ if(!candidates.length)return 'NO_SOURCE_VERIFIED_UNSUPPORTED_GROUP';
  const batch=selectReviewedBatch(candidates,history,fingerprint);
  const proposal=reviewedProposal(batch.map(x=>x.group),sources);
- if(!proposal)return false;
- validateCandidateSyntax(sources,applyEdits(sources,proposal));
- return true;
+ if(proposal){validateCandidateSyntax(sources,applyEdits(sources,proposal));return 'REVIEWED';}
+ return selectBatch(candidates,runNumber,{history,fingerprint}).length?'MODEL':'NO_BATCH_WITHIN_LIMIT';
+}
+function probeReviewed(worklist){
+ return routeForInputs(loadVerifiedInputs(worklist),process.env.GITHUB_RUN_NUMBER||1)==='REVIEWED';
 }
 async function main(){
  const worklist=read(process.argv[2]),out=process.argv[3],scratch=process.argv[4];
@@ -544,8 +546,10 @@ async function main(){
  write(path.join(out,'result.json'),{state:'GENERATED_NOT_TESTED',strategy:proposal.strategy||'LOCAL_MODEL',targetIds,changedFiles:allowed.filter(f=>changed[f]!==sources[f])});
 }
 if(require.main===module){
- if(process.argv[2]==='--reviewed-probe'){
+ if(process.argv[2]==='--route-probe'){
+  try{const inputs=loadVerifiedInputs(read(process.argv[3]));const state=routeForInputs(inputs,process.env.GITHUB_RUN_NUMBER||1);write(process.argv[4],{state,sourceVerifiedGroups:inputs.candidates.length,evidenceBlockedGroups:inputs.evidenceFailures.length,publicBattleVerified:[]});console.log(state);}catch(e){console.error(e);process.exitCode=1;}
+ }else if(process.argv[2]==='--reviewed-probe'){
   try{console.log(probeReviewed(read(process.argv[3]))?'1':'0');}catch(e){console.error(e);process.exitCode=1;}
  }else main().catch(e=>{console.error(e);process.exitCode=1;});
 }
-module.exports={validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={routeForInputs,validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
