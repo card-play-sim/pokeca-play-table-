@@ -1,0 +1,77 @@
+name: Issue122 parallel engine qualification parity
+on:
+  push:
+    branches: [automation/issue122-parallel-engine-qualification-20261127]
+    paths:
+      - '.github/workflows/issue122-parallel-engine-preflight.yml'
+      - 'scripts/stage-card-auto-connect.cjs'
+      - 'tests/atomic-official-to-battle.test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: issue122-parallel-engine-preflight
+  cancel-in-progress: false
+jobs:
+  parity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify partition and strict receipt merge
+        run: |
+          node --check scripts/stage-card-auto-connect.cjs
+          node tests/issue122-passive-context-grammar.test.cjs
+          node tests/atomic-official-to-battle.test.cjs
+      - name: Measure single versus four independent workers on identical exact prints
+        run: |
+          set -euo pipefail
+          # The committed bundle is the existing verified baseline. Do not
+          # regenerate or adopt the concurrently pending new effect candidates.
+          mkdir -p artifacts/engine-parity
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const {requiredSlots,executeEvidenceShards}=require('./scripts/stage-card-auto-connect.cjs');
+          const B=require('./scripts/lib/shared-effect-batch.cjs');
+          const records=require('./data/effect-extensions/compiled.json').records;
+          const byMechanic=new Map();
+          for(const row of records){
+            if(row.category!=='pokemon')continue;
+            const slots=requiredSlots(row).filter(s=>s.effectText);
+            if(!slots.length)continue;
+            const key=row.attacks[0]?.plan?.mechanic||row.abilities[0]?.plan?.mechanic;
+            if(!byMechanic.has(key))byMechanic.set(key,[]);
+            if(byMechanic.get(key).length<2)byMechanic.get(key).push(slots);
+          }
+          const selected=[...byMechanic.values()].flat().slice(0,24).flat();
+          assert(selected.length>=24,'INSUFFICIENT_PARITY_SAMPLE');
+          const normalize=map=>[...map].sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>[k,v.status,v.reason||null,v.mechanic||null,v.checks||null]);
+          (async()=>{
+            const timings=[],reports=[];
+            for(const n of [1,4]){
+              process.env.POKECA_ENGINE_SHARDS=String(n);
+              const dir='artifacts/engine-parity/workers-'+n;fs.mkdirSync(dir,{recursive:true});
+              const start=Date.now(),result=await executeEvidenceShards(selected,dir);
+              timings.push({workers:n,elapsedMs:Date.now()-start});
+              reports.push(normalize(result));
+            }
+            assert.deepEqual(reports[0],reports[1],'PARALLEL_RESULT_CHANGED');
+            assert.equal(reports[1].length,selected.length);
+            const passed=reports[1].filter(r=>r[1]==='SUCCEEDED').length;
+            assert(passed>0,'NO_PHYSICAL_EFFECT_EXECUTED');
+            const out={slots:selected.length,prints:new Set(selected.map(s=>s.officialCardId)).size,passed,timings,speedup:timings[0].elapsedMs/timings[1].elapsedMs};
+            fs.writeFileSync('artifacts/engine-parity/result.json',JSON.stringify(out,null,2)+'\n');
+            console.log('ENGINE_PARALLEL_PARITY_PASS',JSON.stringify(out));
+          })().catch(e=>{console.error(e);process.exitCode=1});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: engine-parallel-parity
+          path: artifacts/engine-parity/
+          if-no-files-found: warn
