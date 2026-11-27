@@ -279,6 +279,39 @@ function repairProfile(feedback='',attempt=1){
  };
  return {type,groups:compact?1:6,excerptChars:compact?2200:4000,maxTokens:compact?1200:1800,timeoutMs:compact?1500000:1800000,instruction:instructions[type]};
 }
+// Learn transferable generation failures from existing inert history, not
+// from another effect's source or patch. Count runs, not print/group duplicates.
+// A successful full quarantine run clears older lessons; exact retries keep
+// their own diagnostic priority. No generated code can edit this policy.
+function adaptiveProfile(history,runNumber,feedback='',attempt=1){
+ const profile=repairProfile(feedback,attempt);
+ if(feedback||attempt!==1)return profile;
+ const rows=Object.values(normalizeHistory(history).groups).filter(r=>r.lastRun<Number(runNumber));
+ const latestSuccess=Math.max(0,...rows.filter(r=>r.status==='QUARANTINE_ENGINE_CHECK_PASSED_REVIEW_REQUIRED').map(r=>r.lastRun));
+ const runs=[...new Set(rows.map(r=>r.lastRun))].sort((a,b)=>b-a).slice(0,8);
+ const lessons={
+  TRANSPORT:'Keep inference requests bounded; produce the smallest complete patch.',
+  TRUNCATED:'Return a short complete JSON object; avoid duplicated code and preserve all delimiters.',
+  FORMAT:'Use exactly one JSON object, with escaped strings and no prose or markdown.',
+  ANCHOR:'Use a supplied exact anchor ID; never copy source line labels or the original anchor into an insertion.',
+  SYNTAX:'Preserve balanced JavaScript and separators; never duplicate existing definitions.',
+  COMPILE:'Use the selected official effect kind and complete wording; connect the rule to the actual compiler return path.',
+  INTEGRITY:'Keep existing grammar and all previously verified records unchanged; insert only a separate exact rule.'
+ };
+ const votes=new Map();
+ for(const row of rows){
+  if(row.lastRun<=latestSuccess||!runs.includes(row.lastRun)||!['NO_VALID_MODEL_PATCH','QUARANTINE_FAILED'].includes(row.status)||!row.feedback)continue;
+  const kind=repairProfile(row.feedback).type;
+  if(!Object.hasOwn(lessons,kind))continue;
+  if(!votes.has(kind))votes.set(kind,new Set());
+  votes.get(kind).add(row.lastRun);
+ }
+ const learned=[...votes].filter(([,ids])=>ids.size>=2).sort((a,b)=>b[1].size-a[1].size||a[0].localeCompare(b[0])).slice(0,2).map(([kind])=>kind);
+ if(!learned.length)return profile;
+ const compact=learned.some(k=>k==='TRANSPORT'||k==='TRUNCATED');
+ return {...profile,...(compact?{groups:1,excerptChars:2200,maxTokens:1200,timeoutMs:1500000}:{}),
+  learned,instruction:profile.instruction+' Prevent recurring generation failures: '+learned.map(k=>lessons[k]).join(' ')};
+}
 // The model chooses an ID, never copies a synthetic excerpt marker as code.
 // Each supplied anchor is a real, unique whole source line from its file.
 function modelAnchors(sources,group,limit=4500){
@@ -470,11 +503,11 @@ function validateDefinitionScope(groups,proposal){
   }
  }
 }
-async function generateWithRepair(batch,sources,{feedback='',previousPatch='',propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
+async function generateWithRepair(batch,sources,{feedback='',previousPatch='',history=null,runNumber=1,propose=generate,onAttempt=()=>{},onReject=()=>{}}={}){
  let proposal,scope,changed;
  for(let attempt=1;attempt<=2;attempt++){
   proposal=undefined;
-  const profile=repairProfile(feedback,attempt);
+  const profile=adaptiveProfile(history,runNumber,feedback,attempt);
   scope=attemptScope(batch,profile);
   onAttempt(attempt,scope,profile);
   try{
@@ -552,7 +585,7 @@ async function main(){
  let previousPatch='';
  if(retry.length&&process.env.MODEL_PREVIOUS_PATCH_PATH&&fs.existsSync(process.env.MODEL_PREVIOUS_PATCH_PATH)&&fs.statSync(process.env.MODEL_PREVIOUS_PATCH_PATH).size<=256*1024)previousPatch=fs.readFileSync(process.env.MODEL_PREVIOUS_PATCH_PATH,'utf8').slice(0,1800);
  if(!feedback&&!reviewed.length){const previous=history.groups[batch[0].group.sharedTaskId];if(previous?.fingerprint===fingerprint)feedback=previous.feedback||'Prior same-source attempt already tried; repair the actual failure.';}
- const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,
+ const outcome=await generateWithRepair(batch,sources,{feedback,previousPatch,history:intendedStrategy==='LOCAL_MODEL'?history:null,runNumber,
   onAttempt(attempt,scope,profile){
    selectedGroups=scope.groups;records=scope.records;targetIds=records.map(r=>String(r.officialCardId));
    const selected={group:selectedGroups[0],groups:selectedGroups,targetIds,requiredTogether:scope.requiredTogether,intendedStrategy,fingerprint,sourceHashes:Object.fromEntries(allowed.map(f=>[f,sha(sources[f])])),state:'UNVERIFIED'};
@@ -588,4 +621,4 @@ if(require.main===module){
   try{console.log(probeReviewed(read(process.argv[3]))?'1':'0');}catch(e){console.error(e);process.exitCode=1;}
  }else main().catch(e=>{console.error(e);process.exitCode=1;});
 }
-module.exports={compilerKind,validateCompilerKindScope,validateCompilerHelperUse,omitRejectedPatch,routeForInputs,validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
+module.exports={adaptiveProfile,compilerKind,validateCompilerKindScope,validateCompilerHelperUse,omitRejectedPatch,routeForInputs,validateDefinitionScope,reviewedPlan,reviewedProposal,reviewedKey,selectReviewedBatch,probeReviewed,applyEdits,exactGroup,excerpts,selectBatch,linkExplicitDependencies,normalizeHistory,recordHistory,sourceFingerprint,localCompletion,parseModelProposal,repairProfile,modelAnchors,annotatedModelContext,resolveAnchorProposal,retryBatch,attemptScope,focusFailedBatch,validateCandidateSyntax,generateWithRepair};
