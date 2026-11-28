@@ -376,7 +376,7 @@ function additionalAttackPlan(entry,text){
  const supporterContains=text.match(/^自分のトラッシュにある、名前に「([^「」]{1,40})」とつくサポートの枚数×([1-9]\d{0,2})ダメージ。$/);
  if(supporterContains&&printed===supporterContains[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownDiscardSupporterContains',name:supporterContains[1],unit:Number(supporterContains[2]),base:0,sharedWording:true};
- const exactField=text.match(/^自分の場の「([^「」（）]{1,40})（『ポケモンex』をふくむ）」の数×([1-9]\d{0,2})ダメージ。$/);
+ const exactField=text.match(/^自分の場の「([^「」()]{1,40})\(『ポケモンex』をふくむ\)」の数×([1-9]\d{0,2})ダメージ。$/);
  if(exactField&&printed===exactField[2]+'×')
   return {mechanic:'SCALED_ATTACK_DAMAGE',commands:['DAMAGE'],metric:'ownNamedOrExCount',name:exactField[1],unit:Number(exactField[2]),base:0,sharedWording:true};
  const bothNames=text.match(/^おたがいの場の、名前に「([^「」]{1,40})」または「([^「」]{1,40})」とつくポケモンの数×([1-9]\d{0,2})ダメージ。$/);
@@ -1131,7 +1131,7 @@ function plan(entry,kind){
  match=generic.match(/^コインを1回投げオモテなら、([1-9][0-9]*)ダメージ追加。$/);
  const printed=String(entry.damage).normalize('NFKC');
  if(kind==='ATTACK'&&match&&/^\d+\+$/.test(printed)&&Number.isSafeInteger(Number.parseInt(printed,10)+Number(match[1])))return {mechanic:'COIN_BONUS_DAMAGE',commands:['COIN_FLIP','DAMAGE'],base:Number.parseInt(printed,10),bonus:Number(match[1])};
- const repeatCoin=generic.match(/^ウラが出るまでコインを投げ、オモテの数×([1-9][0-9]?)ダメージ(追加)?。$/);
+ const repeatCoin=generic.match(/^ウラが出るまでコインを投げ、オモテの数×([1-9][0-9]{0,2})ダメージ(追加)?。$/);
  if(kind==='ATTACK'&&repeatCoin){
   const unit=Number(repeatCoin[1]),additional=Boolean(repeatCoin[2]);
   if(additional?/^\d{1,3}\+$/.test(printed):printed===unit+'×')

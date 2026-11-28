@@ -211,3 +211,101 @@ for(const row of cases){
  assert.equal(plan(row.text+'自分の山札を1枚選び、トラッシュする。'),null);
 }
 console.log('MASS_BOARD_BONUS thresholds: '+cases.length+' exact official slots');
+
+// Official name/ex grammar uses NFKC parentheses and repeated coins can be three-digit.
+for(const row of [
+  {
+    "id": "50087",
+    "name": "ビーランブル",
+    "text": "自分の場の「スピアー（『ポケモンex』をふくむ）」の数×110ダメージ。",
+    "damage": "110×",
+    "plan": {
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "commands": [
+        "DAMAGE"
+      ],
+      "metric": "ownNamedOrExCount",
+      "name": "スピアー",
+      "unit": 110,
+      "base": 0,
+      "sharedWording": true
+    },
+    "full": true
+  },
+  {
+    "id": "50195",
+    "name": "ビーランブル",
+    "text": "自分の場の「スピアー（『ポケモンex』をふくむ）」の数×110ダメージ。",
+    "damage": "110×",
+    "plan": {
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "commands": [
+        "DAMAGE"
+      ],
+      "metric": "ownNamedOrExCount",
+      "name": "スピアー",
+      "unit": 110,
+      "base": 0,
+      "sharedWording": true
+    },
+    "full": true
+  },
+  {
+    "id": "50640",
+    "name": "ピカれんさ",
+    "text": "自分の場の「ピカチュウ（『ポケモンex』をふくむ）」の数×40ダメージ。",
+    "damage": "40×",
+    "plan": {
+      "mechanic": "SCALED_ATTACK_DAMAGE",
+      "commands": [
+        "DAMAGE"
+      ],
+      "metric": "ownNamedOrExCount",
+      "name": "ピカチュウ",
+      "unit": 40,
+      "base": 0,
+      "sharedWording": true
+    },
+    "full": true
+  },
+  {
+    "id": "48949",
+    "name": "ひゃくれつボール",
+    "text": "ウラが出るまでコインを投げ、オモテの数×100ダメージ追加。",
+    "damage": "100+",
+    "plan": {
+      "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+      "commands": [
+        "COIN_FLIP",
+        "DAMAGE"
+      ],
+      "base": 100,
+      "unit": 100
+    },
+    "full": true
+  },
+  {
+    "id": "45769",
+    "name": "つっぱしる",
+    "text": "ウラが出るまでコインを投げ、オモテの数×100ダメージ。",
+    "damage": "100×",
+    "plan": {
+      "mechanic": "COIN_UNTIL_TAILS_DAMAGE",
+      "commands": [
+        "COIN_FLIP",
+        "DAMAGE"
+      ],
+      "base": 0,
+      "unit": 100
+    },
+    "full": false
+  }
+]){
+ const proof=JSON.parse(fs.readFileSync('data/effect-extensions/evidence/'+row.id+'.json','utf8'));
+ assert.equal(crypto.createHash('sha256').update(proof.html).digest('hex'),proof.htmlSha256);
+ const parsed=parse(proof.html),record=compile({records:[{...parsed,officialCardId:row.id}]}).records[0];
+ const attack=record.attacks.find(a=>a.name===row.name);
+ assert.equal(attack.text,row.text);assert.equal(attack.damage,row.damage);assert.deepEqual(attack.plan,row.plan);
+ if(row.full)assert(record.attacks.every(a=>a.plan)&&record.abilities.every(a=>a.plan));
+ assert.equal(compile({records:[{...parsed,officialCardId:row.id,attacks:[{...attack,text:attack.text+'自分の山札を1枚引く。'}]}]}).records[0].attacks[0].plan,null);
+}
