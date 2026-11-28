@@ -1,4 +1,4 @@
-name: 合格35枚維持・残る24印刷版共通修復再検証
+name: 合格40枚維持・残る19印刷版一括再検証
 on:
   push:
     branches: [battle/issue122-next33-20261128]
@@ -18,7 +18,7 @@ jobs:
       POKECA_ENGINE_SHARDS: '4'
       POKECA_INTAKE_PARALLEL_REGRESSION: '1'
       POKECA_INTAKE_LOCAL_CANDIDATE: '1'
-      POKECA_INTAKE_REQUESTED_TARGETS: '45230,46673,48789,47588,47957,49106,50134,50190,47661,48034,49040,45936,46062,46068,50287,50313,47583,47986,47994,48637,50262,50318,50394,50528'
+      POKECA_INTAKE_REQUESTED_TARGETS: '45230,46673,48789,47588,47957,49106,50134,50190,47661,48034,49040,47583,47986,47994,48637,50262,50318,50394,50528'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,20 +30,20 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main
-          git fetch origin battle/issue122-next33-qualified-46089707222
-          git checkout --detach fd5ebe80e37f8f3373cebcd381bf323e03a485cc
+          git fetch origin battle/issue122-next33-qualified-46090365833
+          git checkout --detach d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' merge --no-edit origin/main
-          git merge-base --is-ancestor fd5ebe80e37f8f3373cebcd381bf323e03a485cc HEAD
+          git merge-base --is-ancestor d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a HEAD
           grep -q 'POKECA_INTAKE_REQUESTED_TARGETS' scripts/run-atomic-official-battle-intake.cjs
           grep -q 'parallelRegression' scripts/run-atomic-official-battle-intake.cjs
           python - <<'PY'
+          import json
           from pathlib import Path
-          p=Path('scripts/lib/shared-effect-engine-worker.cjs')
-          s=p.read_text()
-          old="const retry=port(denied);assert.equal(retry.dispatch('you',action).ok,false);assert.deepEqual(retry.getSnapshot(),denied);"
-          new="const retry=port(denied),beforeRejected=retry.getSnapshot();assert.equal(retry.dispatch('you',action).ok,false);assert.equal(JSON.stringify(B.canonical(retry.getSnapshot())),JSON.stringify(B.canonical(beforeRejected)));"
-          assert s.count(old)==1
-          p.write_text(s.replace(old,new))
+          changes=json.loads("[{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"    const original=before.players[i].deck.map(c=>c.id),result=after.players[i].deck.map(c=>c.id),count=Math.min(plan.count,original.length);\\n    assert(count>0);assert.equal(chosen.length,count);assert.deepEqual(Array.from(result.slice(0,count)),Array.from(chosen));\\n    assert.deepEqual([...result].sort(),[...original].sort());\\n    if(!plan.search)assert.deepEqual(Array.from(result.slice(count)),Array.from(original.slice(count)));\\n    const events=after.history.slice(before.history.length);\\n    assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);\\n    assert(events.some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'));\\n    if(count>1){\\n     const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);\\n     assert.deepEqual(Array.from(reverse.getSnapshot().players[i].deck.slice(0,count),c=>c.id),[...chosen].reverse());\\n    }\",\"to\":\"    const owner=before.players[i],original=Array.from(owner.deck,c=>c.id),count=Math.min(plan.count,original.length);\\n    assert(count>0);assert.equal(chosen.length,count);\\n    const assertOrder=(state,picks)=>{\\n      const resolved=state.players[i],result=Array.from(resolved.deck,c=>c.id),expected=[...picks,...original.slice(count)];\\n      let drawn=[];\\n      if(!plan.search&&i===1&&action.type==='attack_turn'&&state.turnPlayer===owner.id&&result.length===original.length-1){\\n        drawn=[picks[0]];\\n        assert(!owner.hand.some(c=>c.id===drawn[0])&&resolved.hand.some(c=>c.id===drawn[0]),'DECK_ORDER_NEXT_TURN_DRAW_EXACT_ID');\\n      }\\n      assert.deepEqual([...result,...drawn].sort(),[...original].sort());\\n      if(plan.search)assert.deepEqual(result.slice(0,count),Array.from(picks));\\n      else assert.deepEqual(result,expected.slice(drawn.length),'DECK_ORDER_REMAINING_EXACT_IDS');\\n      const events=state.history.slice(before.history.length);\\n      assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);\\n      const receipt=events.find(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'&&ev.details.playerId===owner.id);\\n      assert(receipt);assert.deepEqual(Array.from(receipt.details.cardIds),Array.from(picks));\\n    };\\n    assertOrder(after,chosen);\\n    if(count>1){\\n     const reverse=port(before),picks=[...chosen].reverse();assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:picks}}).ok);\\n     assertOrder(reverse.getSnapshot(),picks);\\n    }\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)\\n    if not plan['search']:assert result[count:]==original[count:]\\n    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']\",\"to\":\"    assert len(chosen)==count\\n    owner=before['players'][i];resolved=after['players'][i];drawn=[]\\n    if not plan['search'] and i==1 and option['action']['type']=='attack_turn' and after['turnPlayer']==owner['id'] and len(result)==len(original)-1:\\n     drawn=[chosen[0]]\\n     assert drawn[0] not in [card['id'] for card in owner['hand']]\\n     assert drawn[0] in [card['id'] for card in resolved['hand']]\\n    assert sorted(result+drawn)==sorted(original)\\n    if plan['search']:assert result[:count]==chosen\\n    else:assert result==(chosen+original[count:])[len(drawn):]\\n    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']\\n    assert any(ev.get('details',{}).get('command')=='RETURN_TO_DECK' and ev['details'].get('position')=='top' and ev['details'].get('playerId')==owner['id'] and ev['details'].get('cardIds')==chosen for ev in events)\"}]")
+          for change in changes:
+              p=Path(change['path']); s=p.read_text()
+              assert s.count(change['from'])==1,change['path']
+              p.write_text(s.replace(change['from'],change['to']))
           PY
           git add engine scripts tests
           node --check engine/reference-effect-plans.cjs
@@ -83,7 +83,7 @@ jobs:
           const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
           assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
           const required=[].filter(id=>!old.has(id));
-          const targets=["45230","46673","48789","47588","47957","49106","50134","50190","47661","48034","49040","45936","46062","46068","50287","50313","47583","47986","47994","48637","50262","50318","50394","50528"].filter(id=>!old.has(id));
+          const targets=["45230","46673","48789","47588","47957","49106","50134","50190","47661","48034","49040","47583","47986","47994","48637","50262","50318","50394","50528"].filter(id=>!old.has(id));
           const added=[...now.keys()].filter(id=>!old.has(id)).sort();
           const candidate=require('./work/card-auto-connect/candidate.json');
           const verified=new Set(candidate.qualified.map(String));
