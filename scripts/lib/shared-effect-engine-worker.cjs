@@ -1840,6 +1840,12 @@ function prepare(r, e, kind) {
     }
     assert(player.bench.length >= e.plan.minimum);
   }
+  if (m === "ACTIVE_TOP_ENERGY_SEARCH") {
+    const deck=frame.game.players[0].deck;
+    const energy=deck.filter(card=>card.kind==="energy");
+    if(energy.length<2||deck.length<7)return {blocked:"NO_TOP_ENERGY_FIXTURE"};
+    for(const [card,position] of [[energy[0],0],[energy[1],6]]){deck.splice(deck.indexOf(card),1);deck.splice(position,0,card);}
+  }
   if (m === "ACTIVE_TOP_SUPPORTER_SEARCH") {
     const deck=frame.game.players[0].deck;
     const supporters=deck.filter(card=>card.cardType==="SUPPORTER");
@@ -4546,6 +4552,26 @@ function verifyCase(t, e) {
     const replay = port(protectedStart);
     assert(replay.dispatch("you", t.action || o.action).ok);
     verifyPrintedAttack(protectedStart, replay.getSnapshot(), e, e.plan.ignore ? Number(e.damage) || 0 : 0);
+  }
+  if(e.plan.mechanic==="ACTIVE_TOP_ENERGY_SEARCH"){
+    const action=t.action||o.action,[chosen]=action.selections.cards;
+    const own=before.players[0],end=after.players[0],window=own.deck.slice(0,6);
+    assert(window.some(c=>c.id===chosen&&c.kind==="energy"));
+    assert.equal(o.requests[0].inspection.cards.length,6);
+    assert(end.hand.some(c=>c.id===chosen));
+    const untouched=own.deck.slice(6).map(c=>c.id);
+    assert.deepEqual(end.deck.slice(0,untouched.length).map(c=>c.id),untouched);
+    assert.deepEqual(end.deck.slice(untouched.length).map(c=>c.id).sort(),window.filter(c=>c.id!==chosen).map(c=>c.id).sort());
+    const events=after.history.slice(before.history.length).map(x=>x.details);
+    assert(events.some(x=>x?.command==="REVEAL"&&x.cardIds?.includes(chosen)));
+    assert(events.some(x=>x?.command==="SHUFFLE_DECK"&&x.scope==="inspectedRemainder"));
+    const replay=port(before);
+    assert.equal(replay.dispatch("you",{...action,selections:{cards:[own.deck[6].id]}}).ok,false);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    const swapped=JSON.parse(JSON.stringify(before)),player=swapped.players[0];
+    [player.active,player.bench[0]]=[player.bench[0],player.active];
+    assert.equal(port(swapped).dispatch("you",action).ok,false);
+    assert.equal(p.dispatch("you",action).ok,false);
   }
   if (e.plan.mechanic === "ACTIVE_TOP_SUPPORTER_SEARCH") {
     const action=t.action||o.action;

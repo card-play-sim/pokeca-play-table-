@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "fc833ff9f2faa855d0d20a27bfc285095775d469f1c0567d365089ab13daa5e7",
-  "classifiedRegistryHash": "fc833ff9f2faa855d0d20a27bfc285095775d469f1c0567d365089ab13daa5e7",
+  "registryHash": "cea83d8d2985753300a08d909316e6802afef2b01b05573f6d6a3c0e17f5d4c8",
+  "classifiedRegistryHash": "cea83d8d2985753300a08d909316e6802afef2b01b05573f6d6a3c0e17f5d4c8",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,22 +14,22 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 278,
-      "notImplemented": 96,
+      "compiled": 281,
+      "notImplemented": 93,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
     "item": {
       "prints": 299,
-      "compiled": 218,
-      "notImplemented": 81,
+      "compiled": 219,
+      "notImplemented": 80,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
     "tool": {
       "prints": 100,
-      "compiled": 49,
-      "notImplemented": 51,
+      "compiled": 61,
+      "notImplemented": 39,
       "blocked": 0,
       "executionVerifiedPrints": 8
     },
@@ -42,8 +42,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2699,
-      "notImplemented": 954,
+      "compiled": 2704,
+      "notImplemented": 949,
       "blocked": 23,
       "executionVerifiedPrints": 743
     },
@@ -797,21 +797,6 @@
       "officialCardId": "50037",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50040",
-      "name": "ジェット",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場の「メガシンカex」の数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50040.json",
-        "sha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
-        "htmlSha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
-        "textSha256": "b05fbaa509fe797d39d49aaaa74747d761a8b96644ca7927e972b6eed6c81d0d"
-      }
     },
     {
       "officialCardId": "50470",
@@ -3299,36 +3284,6 @@
       }
     },
     {
-      "officialCardId": "46031",
-      "name": "ウタンのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[超]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46031.json",
-        "sha256": "8a868722573b9bd8eda133e945f965abaccac0374e438dff3b339e5d32360bfe",
-        "htmlSha256": "8a868722573b9bd8eda133e945f965abaccac0374e438dff3b339e5d32360bfe",
-        "textSha256": "fa3f3a4589e412987d66dfd518e3ccb2eaa2f336de56f293af30dc595ecedf67"
-      }
-    },
-    {
-      "officialCardId": "46032",
-      "name": "オッカのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[炎]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46032.json",
-        "sha256": "8d4fc2f2da1fadfefc9580d347545d6a878cd6f5de8c027afac576f35562dcc2",
-        "htmlSha256": "8d4fc2f2da1fadfefc9580d347545d6a878cd6f5de8c027afac576f35562dcc2",
-        "textSha256": "92d72b76b5161a880426a5e07a7ba21b3358f99e9f6f1edd890b2944b4212e60"
-      }
-    },
-    {
       "officialCardId": "46033",
       "name": "きらめく結晶",
       "category": "tool",
@@ -3624,21 +3579,6 @@
       }
     },
     {
-      "officialCardId": "46284",
-      "name": "ぼうがいレター",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手は相手自身の手札を数えたあと、すべてウラにして切り、山札の下にもどす。その後、相手はもどした枚数ぶん、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46284.json",
-        "sha256": "f8a21da49c274b13fcd0e3a666b2518bd6081bb743e1299f6ab13465bcabd48a",
-        "htmlSha256": "f8a21da49c274b13fcd0e3a666b2518bd6081bb743e1299f6ab13465bcabd48a",
-        "textSha256": "773f91cf9c55a704ae1b53f811e0b25d624b80f6070abae12a260623c85ccb80"
-      }
-    },
-    {
       "officialCardId": "46285",
       "name": "メガトンブロアー",
       "category": "item",
@@ -3651,21 +3591,6 @@
         "sha256": "53b2b10ff0cacbbcd41c1010d8df6b7fa401a8bf5af2750c76cc085d6931f2e1",
         "htmlSha256": "53b2b10ff0cacbbcd41c1010d8df6b7fa401a8bf5af2750c76cc085d6931f2e1",
         "textSha256": "3ffecb769ccf8242166df89d6cf7fe37184598a2c774bf6930f1b6b5fe9954e3"
-      }
-    },
-    {
-      "officialCardId": "46287",
-      "name": "イトケのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[水]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46287.json",
-        "sha256": "91a7b9106b871473f9dd78d51f5118f5c8534d54371d92716d19cf1bc72bf831",
-        "htmlSha256": "91a7b9106b871473f9dd78d51f5118f5c8534d54371d92716d19cf1bc72bf831",
-        "textSha256": "52655cc0f6c75fe0acc5a582032fc719e010ef0355eeceac1484820dfa2595fe"
       }
     },
     {
@@ -3821,36 +3746,6 @@
         "sha256": "6de750a1f72c6ed29a3e689693eda5f5f91cda5f9513b2557a78657f3a6fabac",
         "htmlSha256": "6de750a1f72c6ed29a3e689693eda5f5f91cda5f9513b2557a78657f3a6fabac",
         "textSha256": "e0898b0dfee3b1159d2a3b70b702e97955c8f56d32b37267fd52715f1587d228"
-      }
-    },
-    {
-      "officialCardId": "46439",
-      "name": "ナモのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[悪]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46439.json",
-        "sha256": "b97d8c006479fbe6989c99910c2cf559199618ef352ba0b1cf90c9adfcd9a46e",
-        "htmlSha256": "b97d8c006479fbe6989c99910c2cf559199618ef352ba0b1cf90c9adfcd9a46e",
-        "textSha256": "0fd90eb3e5a319cdb6f63898686aed54940ea98a3acf4ebb492b4107f1e1d3cb"
-      }
-    },
-    {
-      "officialCardId": "46440",
-      "name": "リリバのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[鋼]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46440.json",
-        "sha256": "5922559f878179dcc0debb490028be2c6eedbd52d80885d38890f215cb939fc4",
-        "htmlSha256": "5922559f878179dcc0debb490028be2c6eedbd52d80885d38890f215cb939fc4",
-        "textSha256": "881f157eeb63b2583dd4864e98e18285d6f1f994ad7462b53cac4f6f099f152b"
       }
     },
     {
@@ -4036,21 +3931,6 @@
         "sha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "htmlSha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "46817",
-      "name": "ハバンのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[竜]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46817.json",
-        "sha256": "ce368bf87aafcc96efff95215161a6d0b8501631f4118e9457666b7801ef6d6a",
-        "htmlSha256": "ce368bf87aafcc96efff95215161a6d0b8501631f4118e9457666b7801ef6d6a",
-        "textSha256": "a09bc9fcf659182cb7e6117ea4351ee6bf21a09d1c65a91608e1f6c35e864111"
       }
     },
     {
@@ -5313,22 +5193,7 @@
       }
     },
     {
-      "officialCardId": "50421",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50441",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50459",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50460",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6378,21 +6243,6 @@
       }
     },
     {
-      "officialCardId": "47705",
-      "name": "クラウン",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、自分はコインを1回投げ、オモテなら自分は5枚、相手は3枚、山札を引く。ウラなら自分は3枚、相手は5枚、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47705.json",
-        "sha256": "a0b7567ef0d405d3cab5670875908c5beafbaa7dc1027859c1fc19f8ea92a9ab",
-        "htmlSha256": "a0b7567ef0d405d3cab5670875908c5beafbaa7dc1027859c1fc19f8ea92a9ab",
-        "textSha256": "b678f114f1bee11b01e10d5e6ef84fcf4d91f5ee470d95432ac0ad2221b8634f"
-      }
-    },
-    {
       "officialCardId": "47742",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6686,21 +6536,6 @@
       "officialCardId": "48074",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48077",
-      "name": "クラウン",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、自分はコインを1回投げ、オモテなら自分は5枚、相手は3枚、山札を引く。ウラなら自分は3枚、相手は5枚、山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48077.json",
-        "sha256": "dc72ace9b0ffefb2dc5d1bed0f3d6e97eaab5e6713e8b6f301d38df0b613630d",
-        "htmlSha256": "dc72ace9b0ffefb2dc5d1bed0f3d6e97eaab5e6713e8b6f301d38df0b613630d",
-        "textSha256": "b678f114f1bee11b01e10d5e6ef84fcf4d91f5ee470d95432ac0ad2221b8634f"
-      }
     },
     {
       "officialCardId": "48082",
@@ -8723,51 +8558,6 @@
       }
     },
     {
-      "officialCardId": "49392",
-      "name": "イトケのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[水]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49392.json",
-        "sha256": "9d57e155eac37f9ac01d83700ae316a5e7725276e8c3ff17d288fbdb8c81d1d9",
-        "htmlSha256": "9d57e155eac37f9ac01d83700ae316a5e7725276e8c3ff17d288fbdb8c81d1d9",
-        "textSha256": "52655cc0f6c75fe0acc5a582032fc719e010ef0355eeceac1484820dfa2595fe"
-      }
-    },
-    {
-      "officialCardId": "49393",
-      "name": "ウタンのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[超]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49393.json",
-        "sha256": "15168dd9d376424ef722e154d29db00a2184203b3c5822679085ce9e5fbb06c3",
-        "htmlSha256": "15168dd9d376424ef722e154d29db00a2184203b3c5822679085ce9e5fbb06c3",
-        "textSha256": "fa3f3a4589e412987d66dfd518e3ccb2eaa2f336de56f293af30dc595ecedf67"
-      }
-    },
-    {
-      "officialCardId": "49394",
-      "name": "オッカのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[炎]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49394.json",
-        "sha256": "3f8e82bbf295dedd2c4d2a822252cb8e5050160ececf008494f239a9ff506fe9",
-        "htmlSha256": "3f8e82bbf295dedd2c4d2a822252cb8e5050160ececf008494f239a9ff506fe9",
-        "textSha256": "92d72b76b5161a880426a5e07a7ba21b3358f99e9f6f1edd890b2944b4212e60"
-      }
-    },
-    {
       "officialCardId": "49396",
       "name": "きらめく結晶",
       "category": "tool",
@@ -8810,51 +8600,6 @@
         "sha256": "9ce48280eec947af29cc7dc852a726a2de94ffdfb6df4821c248ce8fdab23e68",
         "htmlSha256": "9ce48280eec947af29cc7dc852a726a2de94ffdfb6df4821c248ce8fdab23e68",
         "textSha256": "e41191fe9fa15d731ab9f61ecc70377f17b139f68731efa6f9087cb06202729a"
-      }
-    },
-    {
-      "officialCardId": "49401",
-      "name": "ナモのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[悪]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49401.json",
-        "sha256": "e533387b9ad9c43d5ee472b71392392d0c6b727a31213e674f1e9143ce696375",
-        "htmlSha256": "e533387b9ad9c43d5ee472b71392392d0c6b727a31213e674f1e9143ce696375",
-        "textSha256": "0fd90eb3e5a319cdb6f63898686aed54940ea98a3acf4ebb492b4107f1e1d3cb"
-      }
-    },
-    {
-      "officialCardId": "49402",
-      "name": "ハバンのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[竜]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49402.json",
-        "sha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
-        "htmlSha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
-        "textSha256": "a09bc9fcf659182cb7e6117ea4351ee6bf21a09d1c65a91608e1f6c35e864111"
-      }
-    },
-    {
-      "officialCardId": "49409",
-      "name": "リリバのみ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の[鋼]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49409.json",
-        "sha256": "5ea6b8de258da413526a41a530787b8726fab373f58a5fb8bb152a18c78c79bc",
-        "htmlSha256": "5ea6b8de258da413526a41a530787b8726fab373f58a5fb8bb152a18c78c79bc",
-        "textSha256": "881f157eeb63b2583dd4864e98e18285d6f1f994ad7462b53cac4f6f099f152b"
       }
     },
     {
@@ -9083,11 +8828,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47779",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48075",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9308,11 +9048,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48437",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48446",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9422,11 +9157,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 987
+        "count": 982
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 278
+        "count": 262
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9441,10 +9176,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "6ffba6034fe01807bab7cc91742ae1d8e13c06656f424ef8aa8416f9c5fc4860",
+    "executionFingerprint": "ea349c690daf2fd6f5f86d748a56cb845b7a8976ecc2fcef86c3ad1c7a3a13f0",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 246561,
+    "seq": 248889,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,

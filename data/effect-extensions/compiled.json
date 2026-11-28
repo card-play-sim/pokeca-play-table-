@@ -235160,6 +235160,995 @@
         "amount": 40,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "46031",
+      "name": "ウタンのみ",
+      "deckName": "ウタンのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46031",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046031_T_UTANNOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[超]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46031.json",
+        "sha256": "8a868722573b9bd8eda133e945f965abaccac0374e438dff3b339e5d32360bfe",
+        "htmlSha256": "8a868722573b9bd8eda133e945f965abaccac0374e438dff3b339e5d32360bfe",
+        "textSha256": "fa3f3a4589e412987d66dfd518e3ccb2eaa2f336de56f293af30dc595ecedf67"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "超",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46032",
+      "name": "オッカのみ",
+      "deckName": "オッカのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46032",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046032_T_OKKANOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[炎]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46032.json",
+        "sha256": "8d4fc2f2da1fadfefc9580d347545d6a878cd6f5de8c027afac576f35562dcc2",
+        "htmlSha256": "8d4fc2f2da1fadfefc9580d347545d6a878cd6f5de8c027afac576f35562dcc2",
+        "textSha256": "92d72b76b5161a880426a5e07a7ba21b3358f99e9f6f1edd890b2944b4212e60"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "炎",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46284",
+      "name": "ぼうがいレター",
+      "deckName": "ぼうがいレター",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46284",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046284_T_BOUGAIRETA.jpg",
+      "category": "item",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "相手は相手自身の手札を数えたあと、すべてウラにして切り、山札の下にもどす。その後、相手はもどした枚数ぶん、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46284.json",
+        "sha256": "f8a21da49c274b13fcd0e3a666b2518bd6081bb743e1299f6ab13465bcabd48a",
+        "htmlSha256": "f8a21da49c274b13fcd0e3a666b2518bd6081bb743e1299f6ab13465bcabd48a",
+        "textSha256": "773f91cf9c55a704ae1b53f811e0b25d624b80f6070abae12a260623c85ccb80"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_HAND_FLOW",
+        "mode": "resetOpponentCount",
+        "amount": 0,
+        "commands": [
+          "RETURN_TO_DECK",
+          "DRAW"
+        ],
+        "bottom": true,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46287",
+      "name": "イトケのみ",
+      "deckName": "イトケのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46287",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7a/046287_T_ITOKENOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[水]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46287.json",
+        "sha256": "91a7b9106b871473f9dd78d51f5118f5c8534d54371d92716d19cf1bc72bf831",
+        "htmlSha256": "91a7b9106b871473f9dd78d51f5118f5c8534d54371d92716d19cf1bc72bf831",
+        "textSha256": "52655cc0f6c75fe0acc5a582032fc719e010ef0355eeceac1484820dfa2595fe"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "水",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46439",
+      "name": "ナモのみ",
+      "deckName": "ナモのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46439",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046439_T_NAMONOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[悪]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46439.json",
+        "sha256": "b97d8c006479fbe6989c99910c2cf559199618ef352ba0b1cf90c9adfcd9a46e",
+        "htmlSha256": "b97d8c006479fbe6989c99910c2cf559199618ef352ba0b1cf90c9adfcd9a46e",
+        "textSha256": "0fd90eb3e5a319cdb6f63898686aed54940ea98a3acf4ebb492b4107f1e1d3cb"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "悪",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46440",
+      "name": "リリバのみ",
+      "deckName": "リリバのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46440",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8/046440_T_RIRIBANOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[鋼]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46440.json",
+        "sha256": "5922559f878179dcc0debb490028be2c6eedbd52d80885d38890f215cb939fc4",
+        "htmlSha256": "5922559f878179dcc0debb490028be2c6eedbd52d80885d38890f215cb939fc4",
+        "textSha256": "881f157eeb63b2583dd4864e98e18285d6f1f994ad7462b53cac4f6f099f152b"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "鋼",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "46817",
+      "name": "ハバンのみ",
+      "deckName": "ハバンのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46817",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046817_T_HABANNOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[竜]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46817.json",
+        "sha256": "ce368bf87aafcc96efff95215161a6d0b8501631f4118e9457666b7801ef6d6a",
+        "htmlSha256": "ce368bf87aafcc96efff95215161a6d0b8501631f4118e9457666b7801ef6d6a",
+        "textSha256": "a09bc9fcf659182cb7e6117ea4351ee6bf21a09d1c65a91608e1f6c35e864111"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "竜",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "50421",
+      "name": "デリバード",
+      "deckName": "デリバード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50421",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEE/050421_P_DERIBADO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたく",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-50421-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "エナジープレゼント",
+          "text": "このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を上から6枚見て、その中からエネルギーを1枚選び、相手に見せて、手札に加える。残りのカードはウラにして切り、山札の下にもどす。",
+          "effectId": "reference-50421-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_TOP_ENERGY_SEARCH",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50421.json",
+        "sha256": "57f2c5c63ea7f0842e0e38c7b87ab0a645d57de74a84f40e4e2d20086a42cf76",
+        "htmlSha256": "57f2c5c63ea7f0842e0e38c7b87ab0a645d57de74a84f40e4e2d20086a42cf76",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50441",
+      "name": "デリバード",
+      "deckName": "デリバード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50441",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEZ/050441_P_DERIBADO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたく",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-50441-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "エナジープレゼント",
+          "text": "このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を上から6枚見て、その中からエネルギーを1枚選び、相手に見せて、手札に加える。残りのカードはウラにして切り、山札の下にもどす。",
+          "effectId": "reference-50441-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_TOP_ENERGY_SEARCH",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50441.json",
+        "sha256": "503dfa665631e0057fa07be4b43e67b694303469fd93457deb5bf1846fe2ceb0",
+        "htmlSha256": "503dfa665631e0057fa07be4b43e67b694303469fd93457deb5bf1846fe2ceb0",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50460",
+      "name": "デリバード",
+      "deckName": "デリバード",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50460",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MEM/050460_P_DERIBADO.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "たたく",
+          "cost": [
+            "無色"
+          ],
+          "damage": "10",
+          "text": "",
+          "effectId": "reference-50460-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "エナジープレゼント",
+          "text": "このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札を上から6枚見て、その中からエネルギーを1枚選び、相手に見せて、手札に加える。残りのカードはウラにして切り、山札の下にもどす。",
+          "effectId": "reference-50460-ability-0",
+          "plan": {
+            "mechanic": "ACTIVE_TOP_ENERGY_SEARCH",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "RETURN_TO_DECK",
+              "SHUFFLE_DECK"
+            ],
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 90,
+        "evolvesFrom": null,
+        "retreatCost": 1,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50460.json",
+        "sha256": "1b76996e9d4a593523f0393ea9cb2f9cac4c48ad96cca2be81953056c197ca81",
+        "htmlSha256": "1b76996e9d4a593523f0393ea9cb2f9cac4c48ad96cca2be81953056c197ca81",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47705",
+      "name": "クラウン",
+      "deckName": "クラウン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47705",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/047705_T_KURAUN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、自分はコインを1回投げ、オモテなら自分は5枚、相手は3枚、山札を引く。ウラなら自分は3枚、相手は5枚、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47705.json",
+        "sha256": "a0b7567ef0d405d3cab5670875908c5beafbaa7dc1027859c1fc19f8ea92a9ab",
+        "htmlSha256": "a0b7567ef0d405d3cab5670875908c5beafbaa7dc1027859c1fc19f8ea92a9ab",
+        "textSha256": "b678f114f1bee11b01e10d5e6ef84fcf4d91f5ee470d95432ac0ad2221b8634f"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_HAND_FLOW",
+        "mode": "resetBothSingleCoin",
+        "amount": 5,
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "opponentHeads": 3,
+        "tails": 3,
+        "opponentTails": 5,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "48077",
+      "name": "クラウン",
+      "deckName": "クラウン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48077",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11W/048077_T_KURAUN.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、自分はコインを1回投げ、オモテなら自分は5枚、相手は3枚、山札を引く。ウラなら自分は3枚、相手は5枚、山札を引く。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48077.json",
+        "sha256": "dc72ace9b0ffefb2dc5d1bed0f3d6e97eaab5e6713e8b6f301d38df0b613630d",
+        "htmlSha256": "dc72ace9b0ffefb2dc5d1bed0f3d6e97eaab5e6713e8b6f301d38df0b613630d",
+        "textSha256": "b678f114f1bee11b01e10d5e6ef84fcf4d91f5ee470d95432ac0ad2221b8634f"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_HAND_FLOW",
+        "mode": "resetBothSingleCoin",
+        "amount": 5,
+        "commands": [
+          "RETURN_TO_DECK",
+          "SHUFFLE_DECK",
+          "COIN_FLIP",
+          "DRAW"
+        ],
+        "opponentHeads": 3,
+        "tails": 3,
+        "opponentTails": 5,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49392",
+      "name": "イトケのみ",
+      "deckName": "イトケのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49392",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049392_T_ITOKENOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[水]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49392.json",
+        "sha256": "9d57e155eac37f9ac01d83700ae316a5e7725276e8c3ff17d288fbdb8c81d1d9",
+        "htmlSha256": "9d57e155eac37f9ac01d83700ae316a5e7725276e8c3ff17d288fbdb8c81d1d9",
+        "textSha256": "52655cc0f6c75fe0acc5a582032fc719e010ef0355eeceac1484820dfa2595fe"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "水",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49393",
+      "name": "ウタンのみ",
+      "deckName": "ウタンのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49393",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049393_T_UTANNOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[超]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49393.json",
+        "sha256": "15168dd9d376424ef722e154d29db00a2184203b3c5822679085ce9e5fbb06c3",
+        "htmlSha256": "15168dd9d376424ef722e154d29db00a2184203b3c5822679085ce9e5fbb06c3",
+        "textSha256": "fa3f3a4589e412987d66dfd518e3ccb2eaa2f336de56f293af30dc595ecedf67"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "超",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49394",
+      "name": "オッカのみ",
+      "deckName": "オッカのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49394",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049394_T_OKKANOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[炎]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49394.json",
+        "sha256": "3f8e82bbf295dedd2c4d2a822252cb8e5050160ececf008494f239a9ff506fe9",
+        "htmlSha256": "3f8e82bbf295dedd2c4d2a822252cb8e5050160ececf008494f239a9ff506fe9",
+        "textSha256": "92d72b76b5161a880426a5e07a7ba21b3358f99e9f6f1edd890b2944b4212e60"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "炎",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49401",
+      "name": "ナモのみ",
+      "deckName": "ナモのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49401",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049401_T_NAMONOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[悪]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49401.json",
+        "sha256": "e533387b9ad9c43d5ee472b71392392d0c6b727a31213e674f1e9143ce696375",
+        "htmlSha256": "e533387b9ad9c43d5ee472b71392392d0c6b727a31213e674f1e9143ce696375",
+        "textSha256": "0fd90eb3e5a319cdb6f63898686aed54940ea98a3acf4ebb492b4107f1e1d3cb"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "悪",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49402",
+      "name": "ハバンのみ",
+      "deckName": "ハバンのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49402",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049402_T_HABANNOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[竜]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49402.json",
+        "sha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
+        "htmlSha256": "4242fd19aa0ce715900cf6978c9ff2ad8825e94789e6acb88807c947e9e135e5",
+        "textSha256": "a09bc9fcf659182cb7e6117ea4351ee6bf21a09d1c65a91608e1f6c35e864111"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "竜",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "49409",
+      "name": "リリバのみ",
+      "deckName": "リリバのみ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49409",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049409_T_RIRIBANOMI.jpg",
+      "category": "tool",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードをつけているポケモンが、相手の[鋼]ポケモンからワザのダメージを受けるとき、そのダメージは「-60」され、このカードをトラッシュする。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49409.json",
+        "sha256": "5ea6b8de258da413526a41a530787b8726fab373f58a5fb8bb152a18c78c79bc",
+        "htmlSha256": "5ea6b8de258da413526a41a530787b8726fab373f58a5fb8bb152a18c78c79bc",
+        "textSha256": "881f157eeb63b2583dd4864e98e18285d6f1f994ad7462b53cac4f6f099f152b"
+      },
+      "mainPlan": {
+        "mechanic": "TOOL_TYPED_DAMAGE_REDUCTION_DISCARD",
+        "commands": [
+          "MODIFY_DAMAGE",
+          "DISCARD"
+        ],
+        "attackerType": "鋼",
+        "amount": 60,
+        "sharedWording": true
+      }
+    },
+    {
+      "officialCardId": "47779",
+      "name": "メガクチートex",
+      "deckName": "メガクチートex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47779",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/047779_P_MKUCHITOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "がっつく",
+          "cost": [
+            "鋼",
+            "鋼"
+          ],
+          "damage": "80×",
+          "text": "自分がすでにとったサイドの枚数×80ダメージ。",
+          "effectId": "reference-47779-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownPrizesTaken",
+            "type": null,
+            "unit": 80,
+            "base": 0
+          }
+        },
+        {
+          "name": "ビッグバイト",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "相手のバトルポケモンにダメカンがのっているなら、このワザのダメージは「30」になる。",
+          "effectId": "reference-47779-attack-1",
+          "plan": {
+            "mechanic": "CONDITIONAL_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "opponentDamaged",
+            "base": 260,
+            "bonus": -230,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47779.json",
+        "sha256": "4ee8bd0fb67a1e70cfce83f3af9092424a9dbc1df44a595c20e59a8106758fdf",
+        "htmlSha256": "4ee8bd0fb67a1e70cfce83f3af9092424a9dbc1df44a595c20e59a8106758fdf",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48437",
+      "name": "メガクチートex",
+      "deckName": "メガクチートex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48437",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M1L/048437_P_MKUCHITOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "がっつく",
+          "cost": [
+            "鋼",
+            "鋼"
+          ],
+          "damage": "80×",
+          "text": "自分がすでにとったサイドの枚数×80ダメージ。",
+          "effectId": "reference-48437-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "ownPrizesTaken",
+            "type": null,
+            "unit": 80,
+            "base": 0
+          }
+        },
+        {
+          "name": "ビッグバイト",
+          "cost": [
+            "鋼",
+            "鋼",
+            "無色"
+          ],
+          "damage": "260",
+          "text": "相手のバトルポケモンにダメカンがのっているなら、このワザのダメージは「30」になる。",
+          "effectId": "reference-48437-attack-1",
+          "plan": {
+            "mechanic": "CONDITIONAL_ATTACK_BONUS",
+            "commands": [
+              "DAMAGE"
+            ],
+            "predicate": "opponentDamaged",
+            "base": 260,
+            "bonus": -230,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 270,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48437.json",
+        "sha256": "e427473895db507558859011bc6c6b975b5198a748f15c1e363b82c5d7954369",
+        "htmlSha256": "e427473895db507558859011bc6c6b975b5198a748f15c1e363b82c5d7954369",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -235827,21 +236816,6 @@
       "officialCardId": "50037",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50040",
-      "name": "ジェット",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手の場の「メガシンカex」の数ぶん、自分の山札を引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50040.json",
-        "sha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
-        "htmlSha256": "4de00bce9c52e0b669dd43818d496ebc048be2972c51a6c1e13e891b901ece87",
-        "textSha256": "b05fbaa509fe797d39d49aaaa74747d761a8b96644ca7927e972b6eed6c81d0d"
-      }
     },
     {
       "officialCardId": "50470",

@@ -43,6 +43,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   scheduled-completion:
+    # Ordinary coordination comments (including Issue #291) do not need a runner.
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.number == 122 && !github.event.issue.pull_request &&
+       github.event.comment.user.login == github.repository_owner &&
+       github.event.comment.body == '/card-auto-connect')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:

@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1289,
-      "missing": 413
+      "connected": 1293,
+      "missing": 409
     },
     "J": {
       "total": 870,
-      "connected": 570,
-      "missing": 300
+      "connected": 573,
+      "missing": 297
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1283,
+      "CONNECTED_UNTESTED": 1287,
       "MECHANIC_REQUIRED": 50,
-      "ENGINE_CONNECTION_REQUIRED": 359,
+      "ENGINE_CONNECTION_REQUIRED": 355,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 569,
-      "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 257,
+      "CONNECTED_UNTESTED": 572,
+      "MECHANIC_REQUIRED": 41,
+      "ENGINE_CONNECTION_REQUIRED": 255,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -3237,8 +3237,7 @@
       "name": "メガクチートex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47779.json"
     },
     {
@@ -4758,8 +4757,7 @@
       "name": "メガクチートex",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48437.json"
     },
     {
@@ -8407,8 +8405,7 @@
       "name": "デリバード",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50421.json"
     },
     {
@@ -8472,8 +8469,7 @@
       "name": "デリバード",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50441.json"
     },
     {
@@ -8513,8 +8509,7 @@
       "name": "デリバード",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50460.json"
     },
     {
@@ -11192,8 +11187,7 @@
       "name": "クラウン",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47705.json"
     },
     {
@@ -12506,8 +12500,7 @@
       "name": "クラウン",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48077.json"
     },
     {
@@ -19779,8 +19772,8 @@
       "name": "ジェット",
       "mark": "J",
       "category": "support",
-      "status": "MECHANIC_REQUIRED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
+      "status": "ENGINE_CONNECTION_REQUIRED",
+      "reason": "NO_EFFECT_PLAN",
       "proof": "data/effect-extensions/evidence/50040.json"
     },
     {
@@ -21296,22 +21289,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1353,
-        "MECHANIC_REQUIRED": 506,
+        "ENGINE_CONNECTED": 1366,
+        "MECHANIC_REQUIRED": 493,
         "ENGINE_CONNECTION_REQUIRED": 5
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1289,
-        "MECHANIC_REQUIRED": 397,
+        "ENGINE_CONNECTED": 1293,
+        "MECHANIC_REQUIRED": 393,
         "ENGINE_CONNECTION_REQUIRED": 12,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 569,
-        "MECHANIC_REQUIRED": 291,
-        "ENGINE_CONNECTION_REQUIRED": 5,
+        "ENGINE_CONNECTED": 572,
+        "MECHANIC_REQUIRED": 287,
+        "ENGINE_CONNECTION_REQUIRED": 6,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21320,7 +21313,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3849,
-    "unconnected": 1224
+    "engineConnected": 3869,
+    "unconnected": 1204
   }
 }
