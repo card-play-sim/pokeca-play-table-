@@ -2507,6 +2507,21 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='TRAINER_FOSSIL_BASIC'){
+    const [own,other]=before.players,side=after.players[0],mon=side.bench.find(c=>c.id===t.sourceId);
+    assert(mon&&mon.kind==='pokemon'&&mon.basic&&mon.stage===0&&mon.hp===60&&mon.prizeCount===1&&mon.enteredTurn===before.turnNumber);
+    assert.equal(mon.referenceFossilBase.kind,'trainer');assert.equal(mon.referenceFossilBase.cardType,'ITEM');
+    assert(!side.discard.some(c=>c.id===mon.id));assert.deepEqual(S.identities(before),S.identities(after));
+    const discard={type:'discard_fossil',sourceInstanceId:mon.id},replay=port(after);
+    assert(replay.dispatch('you',discard).ok);const end=replay.getSnapshot();
+    const restored=end.players[0].discard.find(c=>c.id===mon.id);assert(restored?.kind==='trainer'&&restored.cardType==='ITEM'&&!restored.referenceFossilBase);
+    assert.equal(end.players[1].prizes,other.prizes);assert.deepEqual(S.identities(before),S.identities(end));
+    assert(!replay.dispatch('you',discard).ok);
+    const promoted=structuredClone(after),p=promoted.players[0],index=p.bench.findIndex(c=>c.id===mon.id);[p.active,p.bench[index]]=[p.bench[index],p.active];
+    const active=port(promoted);assert(!E.getLegalActions(active.getSnapshot(),'you').actions.some(a=>a.type==='retreat'));
+    assert(!active.dispatch('you',{type:'retreat',benchInstanceId:p.bench[index].id,energyIds:[]}).ok);
+    assert(active.dispatch('you',discard).ok);assert.equal(active.getSnapshot().players[1].prizes,other.prizes);
+  }
   if(e.plan.mechanic==='TRAINER_OPPONENT_NAME_SEARCH'){
     const [own,other]=before.players,action=t.action||o.action,names=new Set([other.active,...other.bench].map(c=>E.getReferenceEffectRecord(c).name));
     const pool=own.deck.filter(c=>c.kind==='pokemon'&&names.has(E.getReferenceEffectRecord(c).name));
