@@ -1,11 +1,11 @@
-name: 合格40枚維持・19枚と重複しない全残件一括検証
+name: 動的HP共通修復・6印刷版再検証
 on:
   push:
     branches: [battle/issue122-next33-20261128]
     paths: ['.github/workflows/issue122-next33.yml']
   workflow_dispatch:
 concurrency:
-  group: issue122-next33-broad
+  group: issue122-next33-dynamic-hp
   cancel-in-progress: false
 permissions:
   contents: write
@@ -18,7 +18,7 @@ jobs:
       POKECA_ENGINE_SHARDS: '4'
       POKECA_INTAKE_PARALLEL_REGRESSION: '1'
       POKECA_INTAKE_LOCAL_CANDIDATE: '1'
-      POKECA_PARALLEL_RESERVED: '45230,46673,48789,47588,47957,49106,50134,50190,47661,48034,49040,47583,47986,47994,48637,50262,50318,50394,50528'
+      POKECA_INTAKE_REQUESTED_TARGETS: '45230,46673,48789,47588,47957,49106'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,18 +34,16 @@ jobs:
           git checkout --detach d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' merge --no-edit origin/main
           git merge-base --is-ancestor d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a HEAD
-          grep -q 'POKECA_INTAKE_REQUESTED_TARGETS' scripts/run-atomic-official-battle-intake.cjs
-          grep -q 'parallelRegression' scripts/run-atomic-official-battle-intake.cjs
-          node scripts/list-card-auto-connect-ids.cjs /tmp/broad-targets.json
-          node <<'NODE'
-          const fs=require('node:fs'),assert=require('node:assert/strict');
-          const reserved=new Set(process.env.POKECA_PARALLEL_RESERVED.split(','));
-          const targets=JSON.parse(fs.readFileSync('/tmp/broad-targets.json')).map(String).filter(id=>!reserved.has(id));
-          assert(targets.length>0&&new Set(targets).size===targets.length);
-          assert(targets.every(id=>/^[1-9][0-9]{0,7}$/.test(id)&&!reserved.has(id)));
-          fs.appendFileSync(process.env.GITHUB_ENV,'POKECA_INTAKE_REQUESTED_TARGETS='+targets.join(',')+'\n');
-          console.log('BROAD_UNRESOLVED_SCOPE',targets.length,'reserved concurrent',reserved.size);
-          NODE
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          changes=json.loads("[{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\",\"to\":\"const mon=c=>Object.assign(c,{hp:record(c).facts.hp,cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\"},{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\",\"to\":\"  // Recalculate fixture-only dynamic HP after physically reassigning zones.\\n  // The actual gateway still validates the derived HP; it is not bypassed.\\n  for(const side of g.players)for(const c of [side.active,...side.bench].filter(Boolean)){\\n   for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_DYNAMIC_MAX_HP')){\\n    const plan=a.plan,opponent=g.players.find(p=>p.id!==side.id);\\n    const n=plan.mode==='opponentPrizes'?6-opponent.prizeCards.length:c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length;\\n    c.hp+=plan.amount*n;\\n   }\\n  }\\n  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\\n    const n=plan.mode==='opponentPrizes'?2:mon.energyCards.filter(c=>c.energyType===plan.type).length;\",\"to\":\"    const n=plan.mode==='opponentPrizes'?6-other.prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;\\n    zown.active.hp=r.facts.hp;\\n    if(plan.mode!=='opponentPrizes')zown.active.energies=[];\\n    mon.hp=r.facts.hp+n*plan.amount;\\n    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\"}]")
+          for change in changes:
+              p=Path(change['path']); s=p.read_text()
+              assert s.count(change['from'])==1,change['path']
+              p.write_text(s.replace(change['from'],change['to']))
+          PY
+          node --check tests/fixtures/control-005-scenarios.js
           git add engine scripts tests
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
