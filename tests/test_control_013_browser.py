@@ -354,6 +354,34 @@ async def main():
             'CONDITIONAL_ATTACK_BONUS','SCALED_ATTACK_DAMAGE','ANY_DAMAGE','FIXED_COIN_HITS'):
     assert f['printedDamageEvents']
     assert all(event in events for event in f['printedDamageEvents'])
+   if m=='MASS_BOARD_BONUS' and f['e']['plan'].get('predicate')=='discardAbilityThreshold':
+    proof=await page.evaluate("""({game,action,plan,positiveEvents,effectId,printId})=>{
+ const g=structuredClone(game),[own,enemy]=g.players,rec=c=>Pokeca.getReferenceEffectRecord(c);
+ const eligible=c=>c.kind==='pokemon'&&rec(c)?.abilities.some(a=>a.name===plan.name);
+ const count=own.discard.filter(eligible).length;
+ if(count<plan.threshold||new Set(own.discard.map(c=>c.id)).size!==own.discard.length)return false;
+ const source=rec(own.active),defender=rec(enemy.active);
+ if(source.officialCardId!==printId)return false;
+ const expected=amount=>{
+  const has=rule=>rule?.types.some(type=>source.facts.types.includes(type));
+  if(!plan.skipWeakness&&has(defender.facts.weakness))amount*=2;
+  if(!plan.skipResistance&&has(defender.facts.resistance))amount=Math.max(0,amount+Number(defender.facts.resistance.value.replace('－','-')));
+  return Math.max(0,amount);
+ };
+ const damageProof=(events,amount)=>events.some(ev=>ev.type==='attack'&&ev.details?.effectId===effectId&&ev.details?.referenceOfficialCardId===printId)&&events.some(ev=>ev.details?.command==='DAMAGE'&&ev.details?.targetInstanceId===enemy.active.id&&ev.details?.amount===expected(amount));
+ if(!damageProof(positiveEvents,plan.base+plan.bonus))return false;
+ const ids=()=>[...own.deck,...own.discard].map(c=>c.id).sort();
+ const original=JSON.stringify(ids());
+ while(own.discard.filter(eligible).length>=plan.threshold)own.deck.push(own.discard.splice(own.discard.findIndex(eligible),1)[0]);
+ if(own.discard.filter(eligible).length!==plan.threshold-1||JSON.stringify(ids())!==original)return false;
+ let current=g;
+ const port=Pokeca.createUIPort({getGame:()=>current,setGame:x=>current=x});
+ if(!port.loadGame(g).ok)return false;
+ const start=port.getSnapshot();
+ if(!port.dispatch('you',action).ok)return false;
+ return damageProof(port.getSnapshot().history.slice(start.history.length),plan.base);
+}""",{'game':before,'action':option['action'],'plan':f['e']['plan'],'positiveEvents':events,'effectId':f['e']['effectId'],'printId':r['officialCardId']})
+    assert proof,'DISCARD_ABILITY_THRESHOLD_BROWSER_POSITIVE_NEGATIVE_PROOF'
    if m=='MASS_BOARD_BONUS' and f['e']['plan'].get('discardStadium'):
     stadium_id=before['stadium']['id']
     owner=next(side for side in after['players'] if side['id']==before['stadiumOwner'])
