@@ -689,6 +689,8 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&entry.name==='フローライト'&&generic==='このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。')return {mechanic:'TOOL_ATTACK_TERA_HEAL',commands:['DISCARD','HEAL'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='stadium'){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+  if(generic==='自分の場に「テラスタル」のポケモンがいるプレイヤーが、ベンチに出せるポケモンの数は8匹になる。(このカードがトラッシュされたときか、自分の場に「テラスタル」のポケモンがいなくなったとき、ベンチが5匹になるまでトラッシュする。おたがいにトラッシュするなら、このカードの持ち主から行う。)')return {mechanic:'STADIUM_ZERO_AREA',commands:['ADD_STATE'],sharedWording:true};
+  if(generic==='おたがいのどくのポケモン([悪]ポケモンをのぞく)全員は、どくでのせるダメカンの数がそれぞれ2個多くなる。')return {mechanic:'STADIUM_POISON_BOOST',commands:['ADD_STATE'],amount:2,exceptType:'悪',sharedWording:true};
   if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の場のたねポケモン1匹から進化する1進化ポケモンを、自分の山札から1枚選び、そのポケモンにのせて進化させてよい。進化したなら、続けて2進化ポケモンを1枚選び、進化させてよい。そして山札を切る。(最初の自分の番や、出したばかりのたねポケモンは進化させられない。)")return {mechanic:'STADIUM_ACTIVE',mode:'greatTree',commands:['SEARCH_DECK','ADD_STATE','SHUFFLE_DECK'],sharedWording:true};
   if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"psychicDraw","commands":["DISCARD","DRAW"],"sharedWording":true};
   if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。")return {"mechanic":"STADIUM_ACTIVE","mode":"healEnd","commands":["HEAL"],"amount":10,"endTurn":true,"sharedWording":true};
