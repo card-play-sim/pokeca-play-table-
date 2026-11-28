@@ -131,6 +131,7 @@ function tryReserveChain(deck,reservedPrints,index,chain,ensure){
 // Test manifests use only real, exact registered official prints. Reserve
 // physical cards before the scenario allocates prizes, bench and attack costs.
 // This helper never changes a release manifest or marks a print as verified.
+function verifiedMegaRecord(r){return !!r&&r.category==='pokemon'&&r.facts.rulePokemon&&r.facts.prizeCount===3&&r.name.startsWith('メガ')&&r.name.endsWith('ex');}
 function fixtureResources(manifest,deckIndex,source,e){
  const plan=e.plan,m=plan.mechanic,requirements=[];
  const defaults=E.getReferenceEffectCatalog({includeExtensions:true}).defaultValidationReferences;
@@ -471,7 +472,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_ENERGY_ROUTE'&&plan.requiresTera)reserveTera('active');
  if(m==='MASS_ENERGY_ROUTE'&&plan.origin==='activeEntry')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
- if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
+ if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&verifiedMegaRecord(r),'active');
  if(m==='HEAL_ACTIVE_DAMAGE'&&plan.team)reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'active');
  if(m==='HEAL_ACTIVE_DAMAGE'&&plan.minimumEnergy)for(let i=0;i<plan.minimumEnergy;i++)reserve(isBasicEnergy,'deck');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
@@ -527,7 +528,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck');reserveEnergy(null,2);
  }
  if(m==='TRAINER_SCOPED_ATTACK_BOOST'){
-  const attacker=reserve(r=>vanilla(r)&&!r.abilities.length&&(plan.scope==='nonRule'?!r.facts.rulePokemon:String(r.rulesText).includes('メガシンカexがきぜつしたとき')),'active');
+  const attacker=reserve(r=>vanilla(r)&&!r.abilities.length&&(plan.scope==='nonRule'?!r.facts.rulePokemon:verifiedMegaRecord(r)),'active');
   if(attacker)ensureAttackCost(attacker,deckIndex);
   reserve(r=>mon(r,null,0)&&Boolean(r.facts.rulePokemon)!==(plan.scope==='mega'),'bench');
  }
@@ -537,10 +538,10 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ENERGY_ROUTE'&&plan.windowCount)reserve(isBasicEnergy,'deck');
  if(m==='HEAL_ACTIVE_DAMAGE'&&plan.discardName)ensure(deckIndex,source,3);
  if(m==='MASS_HAND_FLOW'&&plan.mode==='opponentMegaCount'){
-  const mega=r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき');
+  const mega=r=>mon(r,null,0)&&verifiedMegaRecord(r);
   const first=reserve(mega,'active',1);
   if(first&&!reserve(r=>mega(r)&&r.officialCardId!==first.officialCardId,'bench',1))reserve(r=>r.officialCardId===first.officialCardId,'bench',1);
-  reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench',1);
+  reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!verifiedMegaRecord(r),'bench',1);
  }
  if(m==='MASS_HAND_FLOW'&&plan.mode==='rocketLimit'){
   const valid=r=>mon(r,null,0)&&r.name.startsWith('ロケット団の');
@@ -1401,7 +1402,7 @@ function prepare(r, e, kind) {
   }
   if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY'){
     const own=frame.game.players[0],target=own.active;
-    if(!String(E.getReferenceEffectRecord(target).rulesText).includes('メガシンカexがきぜつしたとき'))return {blocked:'NO_EXACT_MEGA_HEAL_FIXTURE'};
+    if(!verifiedMegaRecord(E.getReferenceEffectRecord(target)))return {blocked:'NO_EXACT_MEGA_HEAL_FIXTURE'};
     target.damage=Math.min(target.hp-10,100);
     for(const c of own.deck.filter(c=>c.kind==='energy').slice(0,2)){own.deck.splice(own.deck.indexOf(c),1);target.energyCards.push(c);}
     if(!target.energyCards.length)return {blocked:'NO_MEGA_HEAL_ENERGY_FIXTURE'};
@@ -1550,7 +1551,7 @@ function prepare(r, e, kind) {
   if(m==='MASS_HAND_FLOW'){
     const [own,other]=frame.game.players,plan=e.plan;
     if(plan.mode==='opponentMegaCount'){
-      const mega=c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき');
+      const mega=c=>verifiedMegaRecord(E.getReferenceEffectRecord(c));
       const mons=[other.active,...other.bench];
       if(mons.filter(mega).length<2||!mons.some(c=>!mega(c)&&E.getReferenceEffectRecord(c).name.endsWith('ex')))return {blocked:'NO_EXACT_MEGA_COUNT_FIXTURE'};
       if(own.deck.length<2)return {blocked:'NO_MEGA_DRAW_DECK_FIXTURE'};
@@ -1775,7 +1776,7 @@ function prepare(r, e, kind) {
   }
   if(m==='TRAINER_SCOPED_ATTACK_BOOST'){
     const g=frame.game,[own,other]=g.players,q=e.plan,r=E.getReferenceEffectRecord(own.active);
-    if(q.scope==='nonRule'&&r.facts.rulePokemon||q.scope==='mega'&&!String(r.rulesText).includes('メガシンカexがきぜつしたとき'))return {blocked:'NO_SCOPED_BOOST_ATTACKER'};
+    if(q.scope==='nonRule'&&r.facts.rulePokemon||q.scope==='mega'&&!verifiedMegaRecord(r))return {blocked:'NO_SCOPED_BOOST_ATTACKER'};
     if(q.onlyHandCard){const extras=own.hand.filter(c=>c.id!==frame.sourceId);own.hand=own.hand.filter(c=>c.id===frame.sourceId);own.deck.push(...extras);}
     if(q.unit){while(other.prizes>4&&other.prizeCards.length){other.hand.push(other.prizeCards.pop());other.prizes--;}}
   }
@@ -2718,12 +2719,12 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY'){
     const action=t.action||o.action,target=[...([before.players[0].active]),...before.players[0].bench].find(c=>c.id===action.selections.cards[0]);
-    assert(target?.damage>0&&String(E.getReferenceEffectRecord(target).rulesText).includes('メガシンカexがきぜつしたとき'));
+    assert(target?.damage>0&&verifiedMegaRecord(E.getReferenceEffectRecord(target)));
     const next=[after.players[0].active,...after.players[0].bench].find(c=>c.id===target.id);
     assert.equal(next.damage,0);assert.equal(next.energyCards.length,0);
     assert(target.energyCards.length>0&&target.energyCards.every(c=>after.players[0].hand.some(h=>h.id===c.id)));
     assert(effectEvents.some(ev=>ev?.command==='RETURN_TO_HAND'&&ev.targetInstanceId===target.id&&target.energyCards.every(c=>ev.cardIds.includes(c.id))));
-    const other=before.players[0].bench.find(c=>!String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき'));
+    const other=before.players[0].bench.find(c=>!verifiedMegaRecord(E.getReferenceEffectRecord(c)));
     if(other){const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{cards:[other.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
   }
   if(e.plan.mechanic==='MASS_ZONE_TRANSFER'){
@@ -2923,7 +2924,7 @@ function verifyCase(t, e) {
       checkReset(other,flips[0].details.heads?q.opponentHeads:q.opponentTails);
     }
     if(q.mode==='opponentMegaCount'){
-      const mega=c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき'),mons=[other.active,...other.bench],n=mons.filter(mega).length;
+      const mega=c=>verifiedMegaRecord(E.getReferenceEffectRecord(c)),mons=[other.active,...other.bench],n=mons.filter(mega).length;
       assert(n>=2&&mons.some(c=>!mega(c)&&E.getReferenceEffectRecord(c).name.endsWith('ex')));
       checkDraw(own,n);assert.equal(after.players[0].hand.length,own.hand.length-1+Math.min(n,own.deck.length));
       const absent=structuredClone(before),side=absent.players[1],keep=[side.active,...side.bench].filter(c=>!mega(c)),removed=[side.active,...side.bench].filter(mega);
