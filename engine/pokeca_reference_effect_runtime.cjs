@@ -789,6 +789,11 @@ function requests(g,actor,card,effect){
  }
  if(m==='HEAL_DAMAGE')cardRequest('cards',own.filter(c=>(c.damage||0)>0),1,1);
  if(m==='COIN_FORCE_SWITCH')cardRequest('bench',o.bench,1,1);
+ if(m==='TRAINER_SWITCH_MOVE_ENERGY'){
+  const pool=p.active?.energyCards||[],max=effect.plan.optional?pool.length:Math.min(1,pool.length);
+  cardRequest('bench',p.bench,1,1);cardRequest('energy',pool,effect.plan.optional?0:max,max);
+ }
+ if(m==='TRAINER_DECK_DISCARD')deckRequest('cards',p.deck,0,Math.min(effect.plan.limit,p.deck.length));
  if(m==='TRAINER_DISCARD_FIELD_CARDS'){
   const plan=effect.plan,pool=fieldDiscardPool(g,p,o,plan);
   if(plan.costType)cardRequest('discardCost',fieldDiscardCost(p,card,plan),1,1);
@@ -1015,6 +1020,8 @@ function preflight(g,actor,action){
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&r.mainPlan.trainer)assert(p.deck.length>0&&p.bench.length<5,'NO_BASIC_BENCH_SEARCH_POSSIBLE');
    if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='TRAINER_SWITCH_MOVE_ENERGY')assert(p.active&&p.bench.length>0,'NO_OWN_BENCH');
+   if(['TRAINER_DRAW_RETURN_SELF','TRAINER_DECK_DISCARD'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_FIELD_CARDS'){
     assert(fieldDiscardPool(g,p,o,r.mainPlan).length>0,'NO_FIELD_DISCARD_TARGET');
     if(r.mainPlan.costType)assert(fieldDiscardCost(p,card,r.mainPlan).length>0,'FIELD_DISCARD_COST_REQUIRED');
@@ -2147,6 +2154,30 @@ function applyPlan(g,actor,card,effect,action){
    const hand=ids('toHand');moveChosen(g,p,'deck',hand,'hand');for(const ident of ids('cards').filter(i=>!hand.includes(i))){const index=p.deck.findIndex(c=>id(c)===ident);event(g,p.id,'REVEAL',{cardIds:[ident],toPlayer:o.id});find(g,ids('attachTo')[0]).card.energyCards.push(p.deck.splice(index,1)[0]);}shuffle(g,p);break;
   }
   case 'ROSA':for(const ident of ids('cards')){const i=p.discard.findIndex(c=>id(c)===ident);find(g,ids('attachTo')[0]).card.energyCards.push(p.discard.splice(i,1)[0]);}break;
+  case 'TRAINER_SWITCH_MOVE_ENERGY':{
+   const source=p.active,bench=ids('bench'),energy=ids('energy'),pool=source?.energyCards||[],max=plan.optional?pool.length:Math.min(1,pool.length);
+   assert(source&&bench.length===1&&p.bench.some(c=>id(c)===bench[0]),'SWITCH_BENCH_TARGET_INVALID');
+   assert(energy.length>=(plan.optional?0:max)&&energy.length<=max&&new Set(energy).size===energy.length&&energy.every(ident=>pool.some(c=>id(c)===ident)),'SWITCH_ENERGY_SELECTION_INVALID');
+   chooseBenchSwitch(g,actor,p,bench[0]);for(const ident of energy)moveAttachedEnergy(g,actor,source,p.active,ident);
+   break;
+  }
+  case 'TRAINER_DRAW_RETURN_SELF':{
+   const name=record(g.stadium)?.name,matched=!!name&&(plan.stadiumName?name===plan.stadiumName:name.includes(plan.stadiumContains));
+   draw(g,p,plan.amount);
+   if(matched){
+    const i=p.discard.findIndex(c=>id(c)===id(card));assert(i>=0,'TRAINER_RETURN_SOURCE_MISSING');
+    p[plan.destination].push(p.discard.splice(i,1)[0]);
+    event(g,actor,plan.destination==='hand'?'RETURN_TO_HAND':'RETURN_TO_DECK',{cardIds:[id(card)],fromZone:'discard'});
+    if(plan.destination==='deck')shuffle(g,p);
+   }
+   break;
+  }
+  case 'TRAINER_DECK_DISCARD':{
+   const chosen=ids('cards');assert(chosen.length<=plan.limit&&new Set(chosen).size===chosen.length&&chosen.every(ident=>p.deck.some(c=>id(c)===ident)),'DECK_DISCARD_SELECTION_INVALID');
+   event(g,actor,'SEARCH_DECK',{selectedCount:chosen.length,destination:'discard',privateTo:actor});
+   for(const ident of chosen)p.discard.push(p.deck.splice(p.deck.findIndex(c=>id(c)===ident),1)[0]);
+   event(g,actor,'DISCARD',{cardIds:chosen,fromZone:'deck'});shuffle(g,p);break;
+  }
   case 'TRAINER_DISCARD_FIELD_CARDS':{
    const chosen=fieldDiscardSelection(g,p,o,card,plan,action);
    if(plan.costType){
