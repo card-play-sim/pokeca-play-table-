@@ -47,6 +47,14 @@ function abilityEnabled(g,card,ability=null){
  }
  return true;
 }
+// Shared target-level protection for opponent Pokemon effects. Do not use
+// this predicate for attack damage, Trainer/Stadium effects, or player effects.
+// The exact printed plan is not compiled until all interaction paths are verified.
+function opponentPokemonEffectBlocked(g,actor,mon,sourceType='POKEMON'){
+ if(sourceType!=='POKEMON'||!mon)return false;
+ const owner=find(g,id(mon))?.player;
+ return Boolean(owner&&owner.id!==actor&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='PASSIVE_OPPONENT_EFFECT_IMMUNITY'));
+}
 function conditionalDamageBonus(g,own,source,target){
  return enabledAbilities(g,source).filter(a=>a.plan.mechanic==='PASSIVE_CONDITIONAL_DAMAGE').reduce((sum,a)=>{
   const p=a.plan,ok=p.mode==='attachedEnergy'?energyUnits(source).some(u=>u.includes(p.type)):p.mode==='megaType'?field(own).some(c=>isMegaEvolutionEx(c)&&record(c).facts.types.includes(p.type)):p.mode==='opponentAbility'?record(target).abilities.some(x=>abilityEnabled(g,target,x)):p.mode==='handCountsEqual'?own.hand.length===opponent(g,own.id).hand.length:false;
@@ -326,7 +334,7 @@ function damage(g,actor,mon,amount,options={}){
  }
  return value;
 }
-function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
+function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(opponentPokemonEffectBlocked(g,actor,mon,sourceType)||attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
 function coin(g,actor){if(g.referenceEffectPreview)return false;const n=referenceRandom(g);assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
 function requirePlan(card,effect){if(!connected(effect?.plan))stop(card,effect);return effect.plan;}
 function activeTrainerLocked(g,actor){const holder=opponent(g,actor).active;return !!holder&&enabledAbilities(g,holder).some(a=>a.plan.mechanic==='PASSIVE_ACTIVE_TRAINER_LOCK');}
@@ -1136,7 +1144,7 @@ function finishAttack(g,actor){
   const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);if(!attacker)continue;
   if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
    if(reaction.status){
-    if(attacker.player.active!==attacker.card)continue;
+    if(attacker.player.active!==attacker.card||opponentPokemonEffectBlocked(g,reaction.playerId,attacker.card))continue;
     attacker.card.statusCondition=reaction.status;
     event(g,reaction.playerId,'STATUS_CONDITION',{status:reaction.status,targetInstanceId:id(attacker.card),effectId:reaction.effectId,mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION'});
    }else{
@@ -1164,6 +1172,9 @@ function moveDamageCounters(g,actor,source,target,count,{attack=false,max=3}={})
  assert(Number.isInteger(count)&&count>=1&&count<=max,'COUNTER_MOVE_COUNT_INVALID');
  assert((source.damage||0)>=count*10,'COUNTER_MOVE_SOURCE_INSUFFICIENT');
  if(attack&&target.referenceProtection?.opponentTurn===g.turnNumber)return;
+ if(opponentPokemonEffectBlocked(g,actor,source))return;
+ // Official Adrena Brain ruling: remove the chosen counters even if the
+ // intended recipient is protected. counters() prevents their placement.
  source.damage-=count*10;
  counters(g,actor,target,count,{attack});
  event(g,actor,'MOVE_DAMAGE_COUNTERS',{sourceInstanceId:id(source),targetInstanceId:id(target),counterCount:count});
@@ -1278,11 +1289,12 @@ function resolveBlindHand(g,actor,opposing,slots,destination){
   shuffle(g,opposing);
  }else moveChosen(g,opposing,'hand',chosen,'discard',false);
 }
-function discardSelectedAttachment(g,actor,owner,eligible,selection){
+function discardSelectedAttachment(g,actor,owner,eligible,selection,{pokemonEffect=false}={}){
  for(const ident of selection){
   const mon=eligible.find(card=>card.energyCards.some(energy=>id(energy)===ident));
   const index=mon?.energyCards.findIndex(energy=>id(energy)===ident)??-1;
   assert(index>=0,'SELECTED_ATTACHMENT_CHANGED');
+  if(pokemonEffect&&opponentPokemonEffectBlocked(g,actor,mon))continue;
   owner.discard.push(mon.energyCards.splice(index,1)[0]);
   event(g,actor,'DISCARD',{cardIds:[ident],sourceInstanceId:id(mon),fromZone:'attached'});
  }
@@ -1356,8 +1368,8 @@ function applyPlan(g,actor,card,effect,action){
      case 'mill':{const side=step.side==='opponent'?o:p,discarded=side.deck.splice(0,step.amount);side.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});break;}
      case 'healSelf':if(card.damage>0)heal(g,actor,card,step.amount);break;
      case 'drain':if(amount>0&&card.damage>0)heal(g,actor,card,amount);break;
-     case 'status':if(!protectedTarget){target.statusCondition=step.status;event(g,actor,'STATUS_CONDITION',{status:step.status,targetInstanceId:id(target)});}break;
-     case 'retreatLock':if(!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+step.offset;break;
+     case 'status':if(!protectedTarget&&!opponentPokemonEffectBlocked(g,actor,target)){target.statusCondition=step.status;event(g,actor,'STATUS_CONDITION',{status:step.status,targetInstanceId:id(target)});}break;
+     case 'retreatLock':if(!protectedTarget&&!opponentPokemonEffectBlocked(g,actor,target))target.referenceCannotRetreatTurn=g.turnNumber+step.offset;break;
      case 'attackLock':card.referenceCannotAttackTurn=g.turnNumber+step.offset;break;
      case 'reduce':card.referenceDamageReduction={turn:g.turnNumber+1,amount:step.amount};break;
      case 'discardAttached':discardSelectedAttachment(g,actor,p,[card],card.energyCards.map(id));break;
@@ -1470,8 +1482,11 @@ function applyPlan(g,actor,card,effect,action){
   case 'ABILITY_HAND_COST_EFFECT':{
    const index=p.hand.findIndex(c=>id(c)===ids('discard')[0]&&handCostMatches(c,plan));assert(index>=0,'HAND_ABILITY_COST_CHANGED');
    const paid=p.hand.splice(index,1)[0];p.discard.push(paid);event(g,actor,'DISCARD',{cardIds:[id(paid)],fromZone:'hand',sourceInstanceId:id(card)});
-   if(plan.mode==='switch')switchMon(g,o,ids('target')[0]);
-   else{o.active.statusCondition='BURNED';event(g,actor,'STATUS_CONDITION',{status:'BURNED',targetInstanceId:id(o.active)});}
+   if(plan.mode==='switch'){
+    const chosen=o.bench.find(c=>id(c)===ids('target')[0]);
+    if(!opponentPokemonEffectBlocked(g,actor,chosen))switchMon(g,o,ids('target')[0]);
+   }
+   else if(!opponentPokemonEffectBlocked(g,actor,o.active)){o.active.statusCondition='BURNED';event(g,actor,'STATUS_CONDITION',{status:'BURNED',targetInstanceId:id(o.active)});}
    break;
   }
   case 'ABILITY_TYPED_COST_COUNTER':{
@@ -1566,7 +1581,7 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'ATTACK_DISCARD_TOOL_BEFORE_DAMAGE':{
    const defender=o.active;
-   if(defender.referenceProtection?.opponentTurn!==g.turnNumber){
+   if(defender.referenceProtection?.opponentTurn!==g.turnNumber&&!opponentPokemonEffectBlocked(g,actor,defender)){
     const tools=(defender.tools||[]).splice(0);
     o.discard.push(...tools);
     if(tools.length)event(g,actor,'DISCARD',{cardIds:tools.map(id),sourceInstanceId:id(defender),fromZone:'attached'});
@@ -1590,7 +1605,7 @@ function applyPlan(g,actor,card,effect,action){
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if((m!=='ATTACK_COIN_DISCARD_DEFENDER_ENERGY'||coin(g,actor))&&
       o.active.referenceProtection?.opponentTurn!==g.turnNumber)
-    discardSelectedAttachment(g,actor,o,[o.active],ids('energy'));
+    discardSelectedAttachment(g,actor,o,[o.active],ids('energy'),{pokemonEffect:true});
    break;
   case 'ATTACK_HEAL_OWN_TARGET':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
@@ -1603,7 +1618,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'ATTACK_DISABLE_SELECTED_MOVE': {
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const move=record(o.active).attacks.find(attack=>attack.effectId===ids('attackChoice')[0]);
-   if(move&&o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+   if(move&&o.active.referenceProtection?.opponentTurn!==g.turnNumber&&!opponentPokemonEffectBlocked(g,actor,o.active))
     o.active.referenceNamedAttackLock={turn:g.turnNumber+1,attackName:move.name};
    break;
   }
@@ -1660,7 +1675,7 @@ function applyPlan(g,actor,card,effect,action){
    let heads=0;
    for(let i=0;i<plan.flips;i++)if(coin(g,actor))heads++;
    const met=plan.when==='all'?heads===plan.flips:plan.when==='none'?heads===0:heads>=plan.threshold;
-   const target=o.active,protectedTarget=target.referenceProtection?.opponentTurn===g.turnNumber;
+   const target=o.active,protectedTarget=target.referenceProtection?.opponentTurn===g.turnNumber||opponentPokemonEffectBlocked(g,actor,target);
    const amount=plan.failOnTails&&!met?0:plan.base+(plan.unit||0)*heads+(met?(plan.bonus||0):0);
    damage(g,actor,target,amount);
    if(met){
@@ -1739,7 +1754,7 @@ function applyPlan(g,actor,card,effect,action){
    const targets=field(o);
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    for(const mon of targets){
-    if(mon.referenceProtection?.opponentTurn===g.turnNumber)continue;
+    if(mon.referenceProtection?.opponentTurn===g.turnNumber||opponentPokemonEffectBlocked(g,actor,mon))continue;
     const energies=mon.energyCards.filter(c=>c.isSpecial);
     const tools=plan.tools?mon.tools.splice(0):[];
     mon.energyCards=mon.energyCards.filter(c=>!c.isSpecial);
@@ -1751,12 +1766,12 @@ function applyPlan(g,actor,card,effect,action){
   }
   case 'ATTACK_WEAKEN_DEFENDER':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber&&!opponentPokemonEffectBlocked(g,actor,o.active))
     o.active.referenceOutgoingDamagePenalty={turn:g.turnNumber+1,amount:plan.amount};
    break;
   case 'ATTACK_DISABLE_DEFENDER':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber)
+   if(o.active.referenceProtection?.opponentTurn!==g.turnNumber&&!opponentPokemonEffectBlocked(g,actor,o.active))
     o.active.referenceCannotAttackTurn=g.turnNumber+1;
    break;
   case 'RECOIL_DAMAGE':case 'HEAL_SELF_ATTACK':case 'COIN_UNTIL_TAILS_DAMAGE':case 'FIXED_COIN_HITS':case 'VANILLA_DAMAGE':case 'ATTACK_APPLY_STATUS':case 'ATTACK_HEAL_TEAM':case 'ATTACK_TAKEN_PRIZES_DAMAGE':case 'ATTACK_NAMED_NEXT_TURN_LOCK':case 'ATTACK_NAMED_NEXT_DAMAGE_BOOST':case 'ATTACK_STATUS_BONUS_DAMAGE':case 'ATTACK_UNDAMAGED_BONUS':case 'ATTACK_ATTACHED_TOOL_COUNT':case 'ATTACK_DISCARD_STADIUM':case 'FULL_BENCH_REQUIRED_DAMAGE':case 'BENCH_COUNT_DAMAGE':case 'SELF_COUNTER_DAMAGE':case 'COIN_FAILURE_DAMAGE':case 'COIN_BONUS_DAMAGE':case 'COIN_PARALYZE_ATTACK':case 'DISCARD_ALL_SELF_ENERGY_ATTACK':case 'DISCARD_ONE_SELF_ENERGY_ATTACK':case 'ATTACK_DISCARD_MULTIPLE_SELF_ENERGY':case 'ATTACK_DRAW':case 'COMBO':case 'NO_NEXT_ATTACK':case 'RETREAT_LOCK_ATTACK':case 'ATTACK_DAMAGE_REDUCTION':case 'ATTACK_REVEAL_OPPONENT_HAND':case 'MOON_RONDO':case 'CONFUSION':case 'BENCH_COUNTER_DAMAGE':case 'BENCH_EX_DAMAGE':case 'RETURN_SELF_HAND':case 'SEARCH_REVEAL_TO_HAND_ATTACK':case 'SEARCH_BASIC_TO_BENCH_ATTACK':case 'HUNT':case 'PHANTOM':case 'ITEM_LOCK':case 'ANY_DAMAGE':case 'EX_COUNT_DAMAGE':case 'COIN_PROTECT':case 'IGNORE_DEFENDER_EFFECTS':{
@@ -1792,7 +1807,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='RECOIL_DAMAGE')command(g,actor,{command:'DAMAGE',amount:plan.amount},{targetIds:[id(card)]});
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
    if(m==='ATTACK_HEAL_TEAM')for(const own of field(p))heal(g,actor,own,plan.amount);
-   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon&&(!plan.defenderType||record(mon).facts.types.includes(plan.defenderType))){
+   if(m==='ATTACK_APPLY_STATUS'&&o.active===mon&&!opponentPokemonEffectBlocked(g,actor,mon)&&(!plan.defenderType||record(mon).facts.types.includes(plan.defenderType))){
     mon.statusCondition=plan.status;
     event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
    }
@@ -1809,9 +1824,9 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='NO_NEXT_ATTACK')card.referenceCannotAttackTurn=g.turnNumber+2;
    if(m==='ATTACK_NAMED_NEXT_TURN_LOCK')card.referenceNamedAttackLock={turn:g.turnNumber+2,attackName:plan.attackName};
    if(m==='ATTACK_NAMED_NEXT_DAMAGE_BOOST')card.referenceNamedNextDamageBoost={turn:g.turnNumber+2,attackName:plan.attackName,amount:plan.amount};
-   if(m==='RETREAT_LOCK_ATTACK')mon.referenceCannotRetreatTurn=g.turnNumber+1;
+   if(m==='RETREAT_LOCK_ATTACK'&&!opponentPokemonEffectBlocked(g,actor,mon))mon.referenceCannotRetreatTurn=g.turnNumber+1;
    if(m==='ATTACK_DAMAGE_REDUCTION')card.referenceDamageReduction={turn:g.turnNumber+1,amount:plan.amount};
-   if(m==='COIN_PARALYZE_ATTACK'&&coin(g,actor)){o.active.statusCondition='PARALYZED';event(g,actor,'STATUS_CONDITION',{status:'PARALYZED',targetInstanceId:id(o.active)});}
+   if(m==='COIN_PARALYZE_ATTACK'&&coin(g,actor)&&!opponentPokemonEffectBlocked(g,actor,o.active)){o.active.statusCondition='PARALYZED';event(g,actor,'STATUS_CONDITION',{status:'PARALYZED',targetInstanceId:id(o.active)});}
    if(m==='DISCARD_ALL_SELF_ENERGY_ATTACK'){
     const discarded=(card.energyCards||[]).splice(0);
     p.discard.push(...discarded);
@@ -1842,7 +1857,7 @@ function applyPlan(g,actor,card,effect,action){
     p.discard.push(discarded);
     event(g,actor,'DISCARD',{cardIds:[id(discarded)],sourceInstanceId:id(card)});
    }
-   if(m==='CONFUSION'){o.active.statusCondition='CONFUSED';event(g,actor,'STATUS_CONDITION',{status:'CONFUSED',targetInstanceId:id(o.active)});}
+   if(m==='CONFUSION'&&!opponentPokemonEffectBlocked(g,actor,o.active)){o.active.statusCondition='CONFUSED';event(g,actor,'STATUS_CONDITION',{status:'CONFUSED',targetInstanceId:id(o.active)});}
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
@@ -1929,6 +1944,9 @@ function applyPlan(g,actor,card,effect,action){
     const entry=pool.find(c=>id(c)===ident),source=find(g,entry?.containerId)?.card;
     const target=plan.target==='self'?card:plan.target==='ownActive'?p.active:targets.find(c=>id(c)===ids('moveTo'+(plan.multi?i:0))[0]);
     assert(source&&target&&source!==target,'ATTACHED_ENERGY_MOVE_CHANGED');
+    if(action.type==='attack_turn'||action.type==='use_ability'){
+     if(opponentPokemonEffectBlocked(g,actor,source)||opponentPokemonEffectBlocked(g,actor,target))continue;
+    }
     moveAttachedEnergy(g,actor,source,target,ident);
    }
    break;
