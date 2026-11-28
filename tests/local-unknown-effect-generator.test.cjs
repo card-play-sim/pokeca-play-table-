@@ -448,3 +448,25 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
   assert.equal(compilerModelGuide(new Map()),'');
   console.log('COMPILER_GENERATION_PRECISION_REPAIR PASS');
  }
+
+ // Reproduce the exact 4-print quarantine failure from run 46117932041.
+ {
+  const {disconnectedMechanics,validateDisconnectedRepair}=require('../scripts/local-unknown-effect-generator.cjs');
+  const compiler='engine/reference-effect-plans.cjs',runtime='engine/pokeca_reference_effect_runtime.cjs',worker='scripts/lib/shared-effect-engine-worker.cjs';
+  const receipt='QUARANTINE_RECEIPT_FEEDBACK {"state":"NO_SELECTED_PRINT_QUALIFIED","targetFailures":[{"id":"46359","reason":"EXECUTION_EVIDENCE_INCOMPLETE","gaps":[{"kind":"ability","index":0,"status":"BLOCKED","reason":"NO_LEGAL_VERIFICATION_FIXTURE","details":["UNCONNECTED_EFFECT:PREVENT_EFFECT"]}]}]}';
+  const profile=repairProfile(receipt);
+  assert.equal(profile.type,'CONNECTION');
+  assert.deepEqual(disconnectedMechanics(receipt),['PREVENT_EFFECT']);
+  assert.equal(profile.groups,1);
+  assert(profile.maxTokens>repairProfile('',2).maxTokens);
+  assert.equal(repairProfile('NO_LEGAL_VERIFICATION_FIXTURE').type,'FIXTURE');
+  const base={[compiler]:'function plan(){return null;}',[runtime]:"function applyPlan(){return 'KNOWN';}",[worker]:"function prepare(){return 'KNOWN';}"};
+  const repeated={...base,[compiler]:"function plan(){return {mechanic:'PREVENT_EFFECT'};}"};
+  assert.throws(()=>validateDisconnectedRepair(base,repeated,receipt),/MODEL_UNCONNECTED_MECHANIC:PREVENT_EFFECT/);
+  assert.throws(()=>validateDisconnectedRepair(base,{...repeated,[runtime]:"function applyPlan(){return 'PREVENT_EFFECT';}"},receipt),/MODEL_UNCONNECTED_MECHANIC/);
+  assert.doesNotThrow(()=>validateDisconnectedRepair(base,{...repeated,[runtime]:"function applyPlan(){return 'PREVENT_EFFECT';}",[worker]:"function prepare(){return 'PREVENT_EFFECT';}"},receipt));
+  assert.doesNotThrow(()=>validateDisconnectedRepair(base,{...base,[compiler]:"function plan(){return {mechanic:'KNOWN'};}"},receipt));
+  assert.equal(repairProfile('MODEL_UNCONNECTED_MECHANIC:PREVENT_EFFECT').type,'CONNECTION');
+  assert.equal(require('../scripts/local-unknown-effect-generator.cjs').omitRejectedPatch(receipt),true);
+  console.log('EXACT_UNCONNECTED_MECHANIC_REPAIR PASS');
+ }
