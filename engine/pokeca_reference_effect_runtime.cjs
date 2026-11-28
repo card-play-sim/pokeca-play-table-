@@ -1083,6 +1083,7 @@ function searchSelectedDeck(g,actor,owner,selectedIds,{destination='hand',reveal
  const selected=selectedIds.map(ident=>owner.deck.find(c=>id(c)===ident));
  assert(selected.every(Boolean),'DECK_SEARCH_SELECTION_CHANGED');
  if(destination==='hand')moveChosen(g,owner,'deck',selectedIds,'hand',reveal);
+ else if(destination==='discard')moveChosen(g,owner,'deck',selectedIds,'discard',true);
  else if(destination==='bench')for(const card of selected)bench(g,owner,card,false);
  else throw Error('DECK_SEARCH_DESTINATION_INVALID');
  event(g,actor,'SEARCH_DECK',{selectedCount:selectedIds.length,destination,privateTo:owner.id});
@@ -1409,7 +1410,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_CONTEXT_BONUS':damage(g,actor,o.active,plan.base+(massContext(plan,p,o)?plan.bonus:0));break;
   case 'MASS_ZONE_TRANSFER':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
-   if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:!plan.privateSearch});
+   if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'),{destination:plan.destination==='discard'?'discard':'hand',reveal:!plan.privateSearch});
    else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
    if(plan.sharedSearchName){p.turnLimits.abilityNames||={};p.turnLimits.abilityNames[plan.sharedSearchName]=true;}
    break;

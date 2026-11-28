@@ -2852,6 +2852,26 @@ function verifyCase(t, e) {
       }
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
+    if(plan.destination==='discard'&&plan.zone==='deck'){
+      assert.deepEqual(resolved.hand.map(c=>c.id),own.hand.map(c=>c.id));
+      assert.deepEqual(resolved.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...ids].sort());
+      assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ids.every(id=>ev.cardIds?.includes(id))));
+      assert(effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));
+      const pool=own.deck.filter(c=>massTransferCandidate(c,plan));
+      for(let count=0;count<=Math.min(plan.limit,pool.length);count++){
+        const chosen=pool.slice(0,count).map(c=>c.id),replay=port(before);
+        assert(replay.dispatch('you',{...action,selections:{cards:chosen}}).ok);
+        const end=replay.getSnapshot(),side=end.players[0];
+        assert.deepEqual(side.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...chosen].sort());
+        assert.deepEqual(side.hand.map(c=>c.id),own.hand.map(c=>c.id));
+        assert.deepEqual(S.identities(before),S.identities(end));
+      }
+      if(pool.length>plan.limit){
+        const denied=port(before);
+        assert.equal(denied.dispatch('you',{...action,selections:{cards:pool.slice(0,plan.limit+1).map(c=>c.id)}}).ok,false);
+        assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));
+      }
+    }
     if(plan.privateSearch)assert(!effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.cardIds?.some(id=>ids.includes(id))));
     else assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
     if(plan.onlyHandCard||plan.emptyHand){
