@@ -1728,9 +1728,9 @@ function preflight(g,actor,action){
   }else if(action.type==='attach_energy'){
    const card=p.hand[action.cardIndex],mon=action.target==='active'?p.active:p.bench[action.target],r=record(card);assert(card?.kind==='energy'&&mon&&!p.normalEnergyAttached,'ENERGY_ATTACHMENT_NOT_ALLOWED');
    if(!connected(r?.mainPlan))stop(card,{name:r?.name||card.name},'SPECIAL_ENERGY_EFFECT_NOT_CONNECTED');if(r.mainPlan.mechanic==='ROCKET_ENERGY')assert(record(mon).name.startsWith('ロケット団の'),'ROCKET_POKEMON_ONLY');
+   verifyHandAttachBench(g,actor,card,mon,action);
   }else if(action.type==='discard_fossil'){
    assert(field(p).some(c=>id(c)===action.sourceInstanceId&&fossilInPlay(c)),'FOSSIL_DISCARD_TARGET');
-   verifyHandAttachBench(g,actor,card,mon,action);
   }else if(action.type==='retreat'){
    assert(!fossilInPlay(p.active),'FOSSIL_CANNOT_RETREAT');
    assert(p.active&&p.bench.some(c=>id(c)===action.benchInstanceId)&&!g.retreatUsed,'RETREAT_NOT_ALLOWED');

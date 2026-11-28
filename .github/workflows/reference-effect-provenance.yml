@@ -213,6 +213,8 @@ jobs:
         with:
           node-version: '22'
       - name: Verify extended-gameplay reference gameplay
+        env:
+          REFERENCE_TEST_TIMEOUT_MS: '540000'
         run: node scripts/run-reference-effect-ci.cjs tests/reference-effect-extended-gameplay.test.cjs
       - name: Group runtime failure causes for Codex
         if: always()

@@ -20,7 +20,9 @@ const contract=[
  "'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'",
 
  "if(bench&&!record(mon).facts.rulePokemon&&field(other).some",
- "if(m==='SWITCH_SELF_ATTACK')add('targetIds'",
+ "if(m==='SWITCH_SELF_ATTACK'){",
+ "const bench=p.bench.filter(c=>!effect.plan.type||record(c).facts.types.includes(effect.plan.type));",
+ "add('targetIds','POKEMON',bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,bench.length),Math.min(1,bench.length));",
  "if(['ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE'].includes(m))add('targetIds'",
  "if(m==='ATTACK_DAMAGE_MOVE_ENERGY'&&p.bench.length)",
  "if(m==='DECK_ENERGY_TO_GRASS_BENCH'){",

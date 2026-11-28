@@ -6,7 +6,10 @@ const checkpoint = require('../reports/official-effect-continuation/candidate.js
 const {verifiedBasicException} = require('../scripts/list-card-auto-connect-ids.cjs');
 const printable = new Map(deck.records.map(r => [String(r.officialCardId),r]));
 const connected = new Map(extension.records.map(r => [String(r.officialCardId),r]));
-const ids = checkpoint.qualified.map(String);
+const next = require('../reports/official-effect-continuation/next-full-batch-candidate.json');
+const laterIds = new Set(next.qualified.map(String));
+assert.equal(laterIds.size,next.qualified.length,'Duplicate later candidate IDs');
+const ids = [...new Set([...checkpoint.qualified.map(String),...laterIds])];
 assert(ids.length > 0, 'Candidate batch must contain verified scoped prints');
 assert.equal(new Set(ids).size, ids.length, 'Duplicate candidate official print IDs');
 const withheld = new Set(checkpoint.blockers.map(row => String(row.id)));
@@ -19,10 +22,17 @@ const blockedReasons = new Set([
 ]);
 for (const row of checkpoint.blockers) {
   assert(blockedReasons.has(row.reason), 'Unknown blocker reason: '+row.reason);
-  assert(!connected.has(String(row.id)), 'Withheld candidate must stay out of the release: '+row.id);
+  if(laterIds.has(String(row.id))) {
+    assert(row.reason==='EXECUTION_EVIDENCE_INCOMPLETE'||row.reason==='DEFERRED_EXACT_TARGET_SCOPE','Earlier hard blocker cannot be superseded: '+row.id);
+    assert(!next.blockers.some(b=>String(b.id)===String(row.id)),'Later candidate is still blocked: '+row.id);
+  } else assert(!connected.has(String(row.id)), 'Withheld candidate must stay out of the release: '+row.id);
 }
-for (const id of checkpoint.qualified.map(String)) {
-  assert(!withheld.has(id), 'Qualified print cannot also be withheld: '+id);
+for (const row of next.blockers) {
+  assert(!laterIds.has(String(row.id)),'Later candidate cannot also be withheld: '+row.id);
+  assert(!connected.has(String(row.id)),'Later withheld candidate must stay out of release: '+row.id);
+}
+for (const id of ids) {
+  assert(!withheld.has(id)||laterIds.has(id), 'Qualified print cannot also be withheld: '+id);
   const print = printable.get(id);
   assert(print, 'Not in official searchable catalog: '+id);
   // Current regulation prints and *officially catalogued basic Energy
