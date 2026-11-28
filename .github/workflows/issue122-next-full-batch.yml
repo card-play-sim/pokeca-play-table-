@@ -1,7 +1,7 @@
 name: Issue122 next full battle batch with cumulative new common mechanics
 on:
   push:
-    branches: [battle/issue122-next-full-batch-20261125, parallel/05-integration]
+    branches: [battle/issue122-next-full-batch-20261125]
     paths:
       - '.github/workflows/issue122-next-full-batch.yml'
   workflow_dispatch:
@@ -16,8 +16,6 @@ jobs:
     timeout-minutes: 180
     env:
       INTAKE_LIMIT: '10000'
-      POKECA_INTAKE_REQUESTED_TARGETS: ${{ github.ref_name == 'parallel/05-integration' && '47779,48437,50421,50441,50460,47705,48077,46284,50040,46287,49392,46032,49394,46031,49393,46817,49402,46440,49409,46439,49401,45181,45182,48399,46270,47016,50234,50315,46002,47802,48450,48739,50557,50614,47352,49375,48413,50204,50783,47622,47902,48714,49455,45217,49711,50545,50167,50299,50300,50470,50346,46525,50583,48347,48487,45744,45745,47754,50101,46262,49129,47770,45752,45789,45866,49437,45799,46283,48692,49979,50008,50296,50330,47105,48703,46228,48261,47107,48708,45287,47289,47100,48689,49406,50403,50540,48415,48509,48686,48685,50265,50319,50334,50338,47771,48436,48446,47608,47976,45921,49259,46402,47702,47876,48673,50206,47103,47242,48414,48507,46285,45755,45852,46751,49142' || '' }}
-      POKECA_INTAKE_PARALLEL_REGRESSION: '1'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,19 +41,6 @@ jobs:
           node tests/issue122-counter-picker-ui.test.cjs
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
-          if [ "$GITHUB_REF_NAME" = parallel/05-integration ]; then
-            node tests/issue291-attack-conditional-damage-replacement.test.cjs
-            node tests/issue291-active-top-energy-ability.test.cjs
-            node tests/parallel04-typed-berry.test.cjs
-            node tests/issue291-attack-self-status-coin-protection.test.cjs
-            node tests/issue291-energy-conditional-ability.test.cjs
-            node tests/parallel04-special-energy.test.cjs
-            node tests/issue291-retreat-mega-ability.test.cjs
-            node tests/issue291-next-coin-gate-cost.test.cjs
-            node tests/parallel04-continuous-trainer.test.cjs
-            node tests/issue291-direct-knockout.test.cjs
-            node tests/issue291-conditional-damage-ability.test.cjs
-          fi
           node scripts/run-atomic-official-battle-intake.cjs
       - name: Verify candidate exact-print browser gameplay
         run: |
@@ -69,7 +54,7 @@ jobs:
           export POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA"
           export POKECA_INTAKE_LOCAL_CANDIDATE=1
           export POKECA_BROWSER_SHARD_COUNT=4
-          if [ "$GITHUB_REF_NAME" != parallel/05-integration ]; then export POKECA_BROWSER_SLOTS_ONLY=1; fi
+          export POKECA_BROWSER_SLOTS_ONLY=1
           pids=()
           mkdir -p artifacts
           for shard in 0 1 2 3; do
@@ -88,14 +73,10 @@ jobs:
           cp work/card-auto-connect/candidate.json reports/official-effect-continuation/next-full-batch-candidate.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/reference-effects/plans.json data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: cumulative new mechanics with complete candidate Chromium verification'
-            case "$GITHUB_REF_NAME" in
-              parallel/05-integration) git push origin HEAD:parallel/05-integration ;;
-              battle/issue122-next-full-batch-20261125) git push origin HEAD:battle/issue122-next-full-batch-20261125 ;;
-              *) exit 1 ;;
-            esac
+            git push origin HEAD:battle/issue122-next-full-batch-20261125
           fi
       - uses: actions/upload-artifact@v4
         if: always()
