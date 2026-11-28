@@ -1,7 +1,7 @@
 name: Issue122 next full battle batch with cumulative new common mechanics
 on:
   push:
-    branches: [battle/issue122-next-full-batch-20261125]
+    branches: [battle/issue122-next-full-batch-20261125, parallel/05-integration]
     paths:
       - '.github/workflows/issue122-next-full-batch.yml'
   workflow_dispatch:
@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 180
     env:
       INTAKE_LIMIT: '10000'
+      POKECA_INTAKE_REQUESTED_TARGETS: ${{ github.ref_name == 'parallel/05-integration' && '47779,48437,50421,50441,50460,47705,48077,46284,50040,46287,49392,46032,49394,46031,49393,46817,49402,46440,49409,46439,49401' || '' }}
+      POKECA_INTAKE_PARALLEL_REGRESSION: '1'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,6 +43,11 @@ jobs:
           node tests/issue122-counter-picker-ui.test.cjs
       - name: Execute all remaining IDs through existing atomic official-to-battle pipeline
         run: |
+          if [ "$GITHUB_REF_NAME" = parallel/05-integration ]; then
+            node tests/issue291-attack-conditional-damage-replacement.test.cjs
+            node tests/issue291-active-top-energy-ability.test.cjs
+            node tests/parallel04-typed-berry.test.cjs
+          fi
           node scripts/run-atomic-official-battle-intake.cjs
       - name: Verify candidate exact-print browser gameplay
         run: |
@@ -54,7 +61,7 @@ jobs:
           export POKECA_INTAKE_RELEASE_BASE="$GITHUB_SHA"
           export POKECA_INTAKE_LOCAL_CANDIDATE=1
           export POKECA_BROWSER_SHARD_COUNT=4
-          export POKECA_BROWSER_SLOTS_ONLY=1
+          if [ "$GITHUB_REF_NAME" != parallel/05-integration ]; then export POKECA_BROWSER_SLOTS_ONLY=1; fi
           pids=()
           mkdir -p artifacts
           for shard in 0 1 2 3; do
@@ -73,10 +80,14 @@ jobs:
           cp work/card-auto-connect/candidate.json reports/official-effect-continuation/next-full-batch-candidate.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git add data/reference-effects/plans.json data/effect-extensions/intake.json data/effect-extensions/compiled.json data/effect-extensions/evidence data/official-effect-intake ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
           if ! git diff --cached --quiet; then
             git commit -m 'checkpoint: cumulative new mechanics with complete candidate Chromium verification'
-            git push origin HEAD:battle/issue122-next-full-batch-20261125
+            case "$GITHUB_REF_NAME" in
+              parallel/05-integration) git push origin HEAD:parallel/05-integration ;;
+              battle/issue122-next-full-batch-20261125) git push origin HEAD:battle/issue122-next-full-batch-20261125 ;;
+              *) exit 1 ;;
+            esac
           fi
       - uses: actions/upload-artifact@v4
         if: always()
