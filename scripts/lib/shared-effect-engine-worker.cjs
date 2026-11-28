@@ -827,6 +827,46 @@ function prepare(r, e, kind) {
     if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
     return {...t,port:changed,option,trigger};
   }
+  if(m==='SKYLINE'&&!r.facts.basic){
+    // An evolved continuous ability must be present via a legal evolution,
+    // never the legacy hand-to-bench action for a basic Skyline holder.
+    const all=[...records.values()],legal=all.filter(c=>c.category==='pokemon'&&c.attacks?.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan));
+    const chain=[...evolutionLines(r,legal)][0];
+    if(!chain||chain.length<2)return {blocked:'NO_EVOLVED_SKYLINE_LINE'};
+    const suitable=c=>c.category==='pokemon'&&c.facts.basic&&c.facts.retreatCost>0&&!c.abilities.length&&c.attacks.every(a=>a.plan)&&!chain.some(h=>h.name===c.name);
+    const attacker=legal.find(c=>suitable(c)&&c.attacks.some(a=>a.plan.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=40&&a.cost.length&&a.cost.every(t=>t==='無色')));
+    const defender=attacker&&legal.find(c=>suitable(c)&&c.name!==attacker.name&&c.facts.hp>80&&!c.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!c.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
+    if(!attacker||!defender)return {blocked:'NO_EVOLVED_SKYLINE_ATTACK_PAIR'};
+    const index=attacker.attacks.findIndex(a=>a.plan.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=40&&a.cost.length&&a.cost.every(t=>t==='無色'));
+    const trigger={...attacker.attacks[index],effectIndex:index};
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,[...chain,attacker,defender],{catalog:all});
+    const requirements=[{side:0,zone:'bench',printId:chain[0].officialCardId},...chain.slice(1).map(c=>({side:0,zone:'hand',printId:c.officialCardId})),{side:1,zone:'active',printId:defender.officialCardId}];
+    const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:defender.officialCardId,fixtureRequirements:requirements});
+    if(frame.blocked)return frame;
+    const initial=port(frame.game).getSnapshot(),base=initial.players[0].bench.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===chain[0].officialCardId);
+    if(!base||initial.players[0].active.retreatCost!==attacker.facts.retreatCost)return {blocked:'SKYLINE_BASELINE_CONFOUNDED'};
+    const evolved=evolveTeraFixture(port(initial),chain.map(c=>c.officialCardId),false,0,'bench',base.id);
+    if(evolved.blocked)return evolved;
+    const state=evolved.port.getSnapshot(),own=state.players[0],other=state.players[1],holder=own.bench.find(c=>c.id===base.id);
+    assert.equal(E.getReferenceEffectRecord(holder).officialCardId,r.officialCardId);
+    assert.equal(own.active.retreatCost,0);
+    assert.equal(other.active.retreatCost,defender.facts.retreatCost);
+    assert.equal(holder.retreatCost,r.facts.retreatCost);
+    assert.deepEqual(Array.from(S.identities(initial)),Array.from(S.identities(state)));
+    const free=port(state),action=E.getLegalActions(state,'you').actions.find(a=>a.type==='retreat'&&a.benchInstanceId===holder.id&&!(a.energyIds||[]).length);
+    if(!action)return {blocked:'NO_EVOLVED_SKYLINE_FREE_RETREAT'};
+    assert(free.dispatch('you',action).ok);
+    const moved=free.getSnapshot(),original=moved.players[0].bench.find(c=>c.id===own.active.id);
+    assert.equal(moved.players[0].active.id,holder.id);
+    assert.deepEqual(Array.from(original.energyCards,c=>c.id),Array.from(own.active.energyCards,c=>c.id));
+    assert.deepEqual(Array.from(S.identities(state)),Array.from(S.identities(moved)));
+    assert(free.restoreSession(free.getResumeSnapshot()).ok);
+    assert.equal(JSON.stringify(free.getSnapshot()),JSON.stringify(moved));
+    const denied=port(initial);
+    assert.equal(denied.dispatch('you',action).ok,false);
+    assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(initial));
+    return {port:evolved.port,sourceId:own.active.id,kind:'attack',trigger,skylineHolderId:holder.id};
+  }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){
     const attackIndex=r.attacks.findIndex(a=>a.plan);
     if(attackIndex<0)return {blocked:'NO_RETREAT_CONTEXT_TRIGGER'};
@@ -4487,6 +4527,17 @@ function verifyCase(t, e) {
     assert(n>0);assert.equal(mon.hp,print.facts.hp+plan.amount*(plan.mode==='energyThreshold'?Number(n>=plan.threshold):n));
     const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
     assert.deepEqual(bad.getSnapshot(),before);
+  }
+  if(e.plan.mechanic==='SKYLINE'&&t.skylineHolderId){
+    const own=before.players[0],other=before.players[1],holder=own.bench.find(c=>c.id===t.skylineHolderId);
+    assert(E.getReferenceEffectRecord(holder).abilities.some(a=>a.effectId===e.effectId));
+    assert(holder.evolutionCards?.length>0);
+    assert.equal(own.active.retreatCost,0);
+    assert.equal(holder.retreatCost,E.getReferenceEffectRecord(holder).facts.retreatCost);
+    assert.equal(other.active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost);
+    assert(p.getCardInfo('you',holder.id).entries.some(a=>a.id===e.effectId&&a.active===true));
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
   }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(e.plan.mechanic)){
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);
