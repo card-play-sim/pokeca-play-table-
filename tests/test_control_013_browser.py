@@ -559,8 +559,24 @@ async def main():
    if m=='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES':
     own=after['players'][0]
     selections=option['action']['selections']
-    assert len(selections['discard'])==f['e']['plan']['cost']
-    assert {ident,*selections['discard']}<={card['id'] for card in own['discard']}
+    plan=f['e']['plan']
+    if plan.get('discardAll'):
+     assert 'discard' not in selections and not any(req['key']=='discard' for req in option['requests'])
+     original={c['id'] for c in before['players'][0]['hand']}
+     assert ident in original
+     assert original<={c['id'] for c in own['discard']}
+     assert {c['id'] for c in own['hand']}==set(selections['cards'])
+     assert original.isdisjoint(c['id'] for c in own['hand'])
+     assert any(ev.get('details',{}).get('command')=='DISCARD' and ev['details'].get('fromZone')=='hand' and set(ev['details'].get('cardIds',[]))==original-{ident} for ev in events)
+     request=next(req for req in option['requests'] if req['key']=='cards')
+     categories={c['id']:c['searchCategory'] for c in request['candidates']}
+     chosen=selections['cards']
+     assert len(chosen)==len(set(chosen)) and set(chosen)<={c['id'] for c in before['players'][0]['deck']}
+     selected_categories=[categories[c] for c in chosen]
+     assert len(selected_categories)==len(set(selected_categories)) and set(selected_categories)<=set(plan['categories'])
+    else:
+     assert len(selections['discard'])==plan['cost']
+     assert {ident,*selections['discard']}<={card['id'] for card in own['discard']}
     assert set(selections['cards'])<={card['id'] for card in own['hand']}
     assert any(ev.get('details',{}).get('command')=='REVEAL' and ev['details'].get('cardIds')==selections['cards'] for ev in events)
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)
