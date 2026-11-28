@@ -2181,11 +2181,12 @@ function applyPlan(g,actor,card,effect,action){
   case 'RETURN_HAND_COIN_DRAW':resetHand(g,p,()=>coin(g,actor)?plan.heads:plan.tails);break;
   case 'COIN_DRAW_CARDS':draw(g,p,coin(g,actor)?plan.heads:plan.tails);break;
   case 'COIN_SEARCH_POKEMON':{
-   if(!coin(g,actor))return;
-   // Official FAQ 7589 and 9139: shuffle after a search with no pick.
-   const options=p.deck.filter(candidate=>candidate.kind==='pokemon').map(id);
-   if(options.length)g.pendingReferenceChoice={kind:'DECK_POKEMON_SEARCH',playerId:actor,options:[...options,null]};
-   else finishCoinPokemonSearch(g,p,null);
+   const heads=coin(g,actor);
+   if(!heads&&!plan.rocketCoin)return;
+   const filter=plan.rocketCoin?{rocketCoin:true,heads}:null;
+   const options=p.deck.filter(candidate=>coinPokemonCandidate(candidate,filter)).map(id);
+   if(options.length)g.pendingReferenceChoice={kind:'DECK_POKEMON_SEARCH',playerId:actor,options:[...options,null],...(filter?{...filter,sourceId:id(card)}:{})};
+   else finishCoinPokemonSearch(g,p,null,filter);
    return;
   }
   case 'HEAL_ACTIVE_DAMAGE':{
@@ -2359,9 +2360,14 @@ function applyPlan(g,actor,card,effect,action){
  }
  emit(g,actor,plan,{sourceOfficialCardId:record(card).officialCardId,effectId:effect.effectId||record(card).officialCardId});
 }
-function finishCoinPokemonSearch(g,p,cardId){
+function coinPokemonCandidate(c,filter){
+ if(c.kind!=='pokemon')return false;
+ if(!filter?.rocketCoin)return true;
+ const r=record(c);return !!r&&r.name.startsWith('ロケット団の')&&(filter.heads?r.facts.stage>0:r.facts.basic===true);
+}
+function finishCoinPokemonSearch(g,p,cardId,filter=null){
  if(cardId!==null){
-  assert(p.deck.some(c=>id(c)===cardId&&c.kind==='pokemon'),'DECK_POKEMON_SEARCH_TARGET_CHANGED');
+  assert(p.deck.some(c=>id(c)===cardId&&coinPokemonCandidate(c,filter)),'DECK_POKEMON_SEARCH_TARGET_CHANGED');
   searchSelectedDeck(g,p.id,p,[cardId]);
  }else{
   event(g,p.id,'SEARCH_DECK',{selectedCount:0,destination:'hand',privateTo:p.id});
@@ -2387,7 +2393,7 @@ function execute(g,actor,action){
   else if(g.pendingReferenceChoice.kind==='PROMOTE'){
    promoteReferenceBench(g,p,p.bench.findIndex(c=>id(c)===action.benchInstanceId));
   }
-  else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId);
+  else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId,choice);
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
@@ -2581,7 +2587,12 @@ function validateGame(g){
  const choice=g.pendingReferenceChoice;
  if(choice?.kind==='DECK_POKEMON_SEARCH'){
   const owner=player(g,choice.playerId);
-  const options=owner.deck.filter(card=>card.kind==='pokemon').map(id);
+  if(choice.rocketCoin){
+   const source=owner.discard.find(c=>id(c)===choice.sourceId);
+   const flip=g.history.findLast(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.command==='COIN_FLIP'&&typeof e.details.heads==='boolean'&&!e.details.reference);
+   assert(record(source)?.mainPlan?.rocketCoin===true&&typeof choice.heads==='boolean'&&flip?.details.heads===choice.heads,'INVALID_ROCKET_COIN_SEARCH_STATE');
+  }
+  const options=owner.deck.filter(card=>coinPokemonCandidate(card,choice)).map(id);
   assert(choice.playerId===g.turnPlayer&&options.length>0&&JSON.stringify(choice.options)===JSON.stringify([...options,null]),
    'INVALID_DECK_POKEMON_SEARCH_STATE');
  }

@@ -567,6 +567,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(first&&!reserve(r=>mega(r)&&r.officialCardId!==first.officialCardId,'bench',1))reserve(r=>r.officialCardId===first.officialCardId,'bench',1);
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!verifiedMegaRecord(r),'bench',1);
  }
+ if(m==='COIN_SEARCH_POKEMON'&&plan.rocketCoin){
+  const rocket=r=>r.category==='pokemon'&&r.name.startsWith('ロケット団の');
+  if(!reserve(r=>rocket(r)&&r.facts.stage>0,'deck')||!reserve(r=>rocket(r)&&r.facts.basic,'deck')||!reserve(r=>mon(r,null,0)&&!rocket(r),'deck'))return Object.assign(requirements,{teamBoostBlocked:'NO_ROCKET_COIN_SEARCH_RESOURCES'});
+ }
  if(m==='MASS_HAND_FLOW'&&plan.mode==='rocketLimit'){
   const valid=r=>mon(r,null,0)&&r.name.startsWith('ロケット団の');
   const active=reserve(valid,'active');
@@ -4328,7 +4332,28 @@ function verifyCase(t, e) {
         event.details.targetInstanceId === bench.id && event.details.amount === e.plan.amount));
     }
   }
-  if (e.plan.mechanic === "COIN_SEARCH_POKEMON") {
+  if(e.plan.mechanic==='COIN_SEARCH_POKEMON'&&e.plan.rocketCoin){
+    const action=t.action||o.action,own=before.players[0];
+    const eligible=(c,heads)=>{const r=E.getReferenceEffectRecord(c);return c.kind==='pokemon'&&r?.name.startsWith('ロケット団の')&&(heads?r.facts.stage>0:r.facts.basic===true);};
+    const observed=new Set();
+    for(const seed of [0,682]){
+      const initial={...before,referenceRngState:seed},replay=port(initial);assert(replay.dispatch('you',action).ok);
+      const state=replay.getSnapshot(),flips=state.history.slice(before.history.length).filter(ev=>ev.details?.command==='COIN_FLIP'&&typeof ev.details.heads==='boolean'&&!ev.details.reference);
+      assert.equal(flips.length,1);const heads=flips[0].details.heads;observed.add(heads);
+      const pool=own.deck.filter(c=>eligible(c,heads)),choice=state.pendingReferenceChoice;assert(pool.length>0&&choice?.rocketCoin===true&&choice.heads===heads);
+      assert.deepEqual(Array.from(choice.options),[...Array.from(pool,c=>c.id),null]);assert.equal(replay.getView('ai').pendingReferenceChoice.options,undefined);
+      const saved=replay.getResumeSnapshot();assert(replay.restoreSession(saved).ok);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+      const invalid=own.deck.find(c=>c.kind==='pokemon'&&!eligible(c,heads));assert(invalid);
+      assert.equal(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:invalid.id}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+      const selected=pool[0].id;assert(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:selected}).ok);const resolved=replay.getSnapshot();
+      assert(resolved.players[0].hand.some(c=>c.id===selected));assert(!resolved.players[0].deck.some(c=>c.id===selected));assert(!resolved.pendingReferenceChoice);
+      const events=resolved.history.slice(state.history.length).map(ev=>ev.details);assert(events.some(ev=>ev?.command==='REVEAL'&&ev.cardIds?.includes(selected)));assert.equal(events.filter(ev=>ev?.command==='SHUFFLE_DECK').length,1);
+      assert.deepEqual(Array.from(S.identities(initial)),Array.from(S.identities(resolved)));
+      const skip=port(state);assert(skip.dispatch('you',{type:'resolve_reference_choice',deckCardId:null}).ok);const skipped=skip.getSnapshot();assert.deepEqual(Array.from(skipped.players[0].hand,c=>c.id),Array.from(state.players[0].hand,c=>c.id));assert.equal(skipped.history.slice(state.history.length).filter(ev=>ev.details?.command==='SHUFFLE_DECK').length,1);
+    }
+    assert.equal(observed.size,2);
+  }
+  if (e.plan.mechanic === "COIN_SEARCH_POKEMON"&&!e.plan.rocketCoin) {
     const action = o.action;
     const choice = after.pendingReferenceChoice;
     assert.equal(choice?.kind, "DECK_POKEMON_SEARCH");
