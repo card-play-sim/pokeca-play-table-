@@ -1009,10 +1009,12 @@ function prepare(r, e, kind) {
     other.active.referenceProtection={opponentTurn:g.turnNumber};
     return {...t,port:port(g),trigger};
   }
-  if(m==='PASSIVE_ENERGY_TEAM_REDUCTION'||m==='PASSIVE_ACTIVE_HIT_RETALIATION'||m==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&e.plan.condition||m==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&e.plan.attacker==='basicEx'){
+  if(m==='PASSIVE_OPPONENT_EFFECT_IMMUNITY'||m==='PASSIVE_ENERGY_TEAM_REDUCTION'||m==='PASSIVE_ACTIVE_HIT_RETALIATION'||m==='PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION'&&e.plan.condition||m==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&e.plan.attacker==='basicEx'){
+    const effectImmunity=m==='PASSIVE_OPPONENT_EFFECT_IMMUNITY';
     const basicEx=m==='PASSIVE_TYPED_ATTACK_IMMUNITY';
     const candidates=basicEx?[...records.values()].filter(c=>c.category==='pokemon'&&c.facts?.basic&&c.name.endsWith('ex')!==Boolean(e.proofNonEx)&&c.officialCardId!==r.officialCardId&&c.attacks?.length&&c.attacks.every(a=>a.plan)&&c.abilities.every(a=>a.plan)&&c.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2)):[];
-    const attacker=basicEx?candidates.sort((a,b)=>String(a.officialCardId).localeCompare(String(b.officialCardId)))[0]:records.get('45152'),attackIndex=attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(!basicEx||Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2));
+    const immunityAttacks=effectImmunity?[...records.values()].filter(c=>c.category==='pokemon'&&c.facts?.basic&&c.officialCardId!==r.officialCardId&&!c.abilities.length&&c.attacks.length&&c.attacks.every(a=>a.plan)&&!r.facts.weakness?.types.some(t=>c.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>c.facts.types.includes(t))).flatMap(c=>c.attacks.map((a,i)=>({c,a,i}))).filter(({a})=>a.plan.mechanic==='ATTACK_APPLY_STATUS'&&a.plan.status==='CONFUSED'&&Number(a.damage)>0&&Number(a.damage)<r.facts.hp&&a.cost.length>0&&a.cost.every(t=>t==='無色')):[];
+    const attacker=effectImmunity?immunityAttacks[0]?.c:basicEx?candidates.sort((a,b)=>String(a.officialCardId).localeCompare(String(b.officialCardId)))[0]:records.get('45152'),attackIndex=effectImmunity?immunityAttacks[0]?.i:attacker?.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&(!basicEx||Number(a.damage)<=60&&Array.isArray(a.cost)&&a.cost.length<=2));
     if(basicEx&&(!attacker?.facts.basic||attacker.name.endsWith('ex')===Boolean(e.proofNonEx)))return {blocked:'NO_EXACT_BASIC_EX_ATTACKER'};
     if(!(attackIndex>=0))return {blocked:'NO_RETALIATION_ATTACK_FIXTURE'};
     const trigger={...attacker.attacks[attackIndex],effectIndex:attackIndex};
@@ -1023,7 +1025,7 @@ function prepare(r, e, kind) {
     };
     const chain=line(r);
     if(!chain)return {blocked:'NO_RETALIATION_EVOLUTION_LINE'};
-    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,basicEx?[...chain,attacker]:chain,{catalog:[...records.values()]});
+    const manifest=require("../../tests/fixtures/control-009-extension-manifest.cjs")(fixed,basicEx||effectImmunity?[...chain,attacker]:chain,{catalog:[...records.values()]});
     const requirements=chain.length>1?[{side:1,zone:'active',printId:chain[0].officialCardId},...chain.slice(1).map(c=>({side:1,zone:'hand',printId:c.officialCardId}))]:[];
     const frame=S.create(E,manifest,{cardName:attacker.deckName,category:'pokemon',officialCardId:attacker.officialCardId,kind:'attack',index:attackIndex,plan:trigger.plan,cost:trigger.cost,locations:[{deck:0}],defenderOfficialCardId:chain[0].officialCardId,fixtureRequirements:requirements});
     if(frame.blocked)return frame;
@@ -1081,6 +1083,12 @@ function prepare(r, e, kind) {
         mon.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type),1)[0]);
       }
       if(mon.energyCards.some(c=>c.isSpecial))return {blocked:'TEAM_REDUCTION_SPECIAL_ENERGY_CONFOUND'};
+    }
+    if(effectImmunity){
+      const side=game.players[0],mon=side.active;
+      for(const energy of [...mon.energyCards])if(energy.isSpecial)side.deck.push(mon.energyCards.splice(mon.energyCards.indexOf(energy),1)[0]);
+      while(mon.energyCards.length<trigger.cost.length){const zone=[side.deck,side.hand].find(z=>z.some(c=>c.kind==='energy'&&!c.isSpecial));if(!zone)return {blocked:'NO_EFFECT_IMMUNITY_ATTACK_ENERGY'};mon.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial),1)[0]);}
+      mon.energies=mon.energyCards.map(c=>c.energyType);
     }
     if(basicEx){
       for(const energy of [...game.players[0].active.energyCards])if(energy.isSpecial){game.players[0].active.energyCards.splice(game.players[0].active.energyCards.indexOf(energy),1);game.players[0].deck.push(energy);}
@@ -4318,6 +4326,17 @@ function verifyCase(t, e) {
     const allowed=port(g),legal=E.getLegalActions(allowed.getSnapshot(),'ai').actions.find(a=>a.type===action.type&&a.abilityId===action.abilityId&&a.sourceInstanceId===action.sourceInstanceId);
     assert(legal,'SUPPRESSION_MUST_END_ON_BENCH');assert(allowed.dispatch('ai',legal).ok);
     assert.deepEqual(S.identities(g),S.identities(allowed.getSnapshot()));
+  }
+  if(e.plan.mechanic==='PASSIVE_OPPONENT_EFFECT_IMMUNITY'){
+    const mon=before.players[1].active,defender=E.getReferenceEffectRecord(mon);
+    assert(defender.abilities.some(a=>a.effectId===e.effectId));
+    assert(t.trigger.plan.mechanic==='ATTACK_APPLY_STATUS'&&t.trigger.plan.status==='CONFUSED');
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage));
+    assert.equal(after.players[1].active.id,mon.id);
+    assert.equal(after.players[1].active.damage,mon.damage+Number(t.trigger.damage));
+    assert(!after.players[1].active.statusCondition);
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+    const negative=port(before);assert(negative.getCardInfo('ai',mon.id).entries.some(x=>x.id===e.effectId&&x.active===true));
   }
   if(e.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'){
     const defender=E.getReferenceEffectRecord(before.players[1].active);
