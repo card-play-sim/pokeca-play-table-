@@ -93,7 +93,7 @@ function energyUnits(mon){
    const match=record(mon)?.facts.stage===r.mainPlan.stage;
    for(let i=0;i<(match?r.mainPlan.units:1);i++)out.push(match?[...basicTypes,'無色']:['無色']);
   }
-  else if(m==='ENERGY_TYPED_PASSIVE')out.push([r.mainPlan.energyType]);
+  else if(m==='ENERGY_TYPED_PASSIVE'||m==='ENERGY_SELF_ATTACK_RECYCLE')out.push([r.mainPlan.energyType]);
   else if(m==='ATTACHED_ACTIVE_HIT'||m==='ENERGY_HAND_ATTACH_DRAW')out.push(['無色']);
   else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
   else if(m==='IGNITION')for(let i=0;i<(record(mon)?.facts.stage>0?3:1);i++)out.push(['無色']);
@@ -2174,6 +2174,27 @@ function finishCoinPokemonSearch(g,p,cardId){
   shuffle(g,p);
  }
 }
+function selfAttackRecycleCandidates(card){
+ return (card.energyCards||[]).filter(e=>{const p=record(e)?.mainPlan;return p?.mechanic==='ENERGY_SELF_ATTACK_RECYCLE'&&matchesNamedType(card,p);}).map(e=>({energyId:id(e),holderId:id(card),destination:record(e).mainPlan.destination,sourceOfficialCardId:record(e).officialCardId}));
+}
+function resolveSelfAttackRecycle(g,actor,candidates,historyStart){
+ const owner=player(g,actor),discarded=new Set();
+ for(const e of g.history.slice(historyStart)){
+  if(e.player!==actor||e.details?.command!=='DISCARD')continue;
+  for(const c of candidates)if(e.details.sourceInstanceId===c.holderId&&e.details.cardIds?.includes(c.energyId))discarded.add(c.energyId);
+ }
+ for(const c of candidates){
+  if(!discarded.has(c.energyId))continue;
+  const i=owner.discard.findIndex(e=>id(e)===c.energyId);
+  if(i<0)continue;
+  const holder=find(g,c.holderId);
+  if(c.destination==='attached'&&holder?.player.id!==actor)continue;
+  const [energy]=owner.discard.splice(i,1);
+  if(c.destination==='hand')owner.hand.push(energy);
+  else holder.card.energyCards.push(energy);
+  event(g,actor,c.destination==='hand'?'RETURN_TO_HAND':'ATTACH_ENERGY',{cardIds:[c.energyId],cardId:c.energyId,sourceOfficialCardId:c.sourceOfficialCardId,fromZone:'discard',targetInstanceId:c.holderId});
+ }
+}
 function execute(g,actor,action){
  const check=preflight(g,actor,action);assert(check?.handled&&!check.errors.length,check?.errors.join(';')||'NOT_REFERENCE_ACTION');
  const p=player(g,actor);p.turnLimits||={supporterUsed:false,abilityUses:{}};
@@ -2197,7 +2218,7 @@ function execute(g,actor,action){
  }else if(action.type==='retreat'){
   for(const ident of action.energyIds||[]){const i=p.active.energyCards.findIndex(c=>id(c)===ident);p.discard.push(p.active.energyCards.splice(i,1)[0]);}switchMon(g,p,action.benchInstanceId);g.retreatUsed=true;
  }else if(action.type==='attack_turn'){
-  const card=p.active,effect=record(card).attacks[action.attackIndex];applyPlan(g,actor,card,effect,action);g.history.push({turnNumber:g.turnNumber,player:actor,type:'attack',details:{effectId:effect.effectId,referenceOfficialCardId:record(card).officialCardId}});refresh(g);finishAttack(g,actor);
+  const card=p.active,effect=record(card).attacks[action.attackIndex],recycle=selfAttackRecycleCandidates(card),historyStart=g.history.length;applyPlan(g,actor,card,effect,action);resolveSelfAttackRecycle(g,actor,recycle,historyStart);g.history.push({turnNumber:g.turnNumber,player:actor,type:'attack',details:{effectId:effect.effectId,referenceOfficialCardId:record(card).officialCardId}});refresh(g);finishAttack(g,actor);
  }else if(action.type==='use_ability'){
   const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);if(!effect.plan.repeated)mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
  }else{

@@ -728,6 +728,10 @@ function plan(entry,kind){
   const tera=generic.match(/^このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、([1-9])個ぶん少なくなる。\(少なくなるのは、どのタイプのエネルギーでもよい。\)$/);
   if(tera)return {mechanic:'TOOL_TERA_ANY_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(tera[1]),sharedWording:true};
  }
+ if(kind==='MAIN'&&entry.category==='energy'){
+  const recycle=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼]|無色)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(?:\[([草炎水雷超闘悪鋼])\])?ポケモンが使うワザの効果で、このカードがトラッシュされたなら、ワザのダメージや効果のあとに、(手札にもどす|もとのポケモンにつけなおす)。$/);
+  if(recycle&&(!recycle[2]||recycle[1]===recycle[2]))return {mechanic:'ENERGY_SELF_ATTACK_RECYCLE',commands:['ATTACH_ENERGY',recycle[3]==='手札にもどす'?'RETURN_TO_HAND':'ATTACH_ENERGY'],energyType:recycle[1],holderType:recycle[2]||null,destination:recycle[3]==='手札にもどす'?'hand':'attached',sharedWording:true};
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
