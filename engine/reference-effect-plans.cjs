@@ -427,6 +427,10 @@ function additionalAttackPlan(entry,text){
  if(sonic&&printed==='0')return {mechanic:'ATTACK_RETURN_ENERGY_SPREAD',commands:['RETURN_TO_DECK','SHUFFLE_DECK','DAMAGE'],scope:'opponent',count:null,amount:Number(sonic[1]),optional:false,sharedWording:true};
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
+ if(/^\d+$/.test(printed)&&text==='このポケモンの特殊状態を、すべて回復する。')
+  return {mechanic:'ATTACK_SELF_STATUS_CLEAR',commands:[...deal,'STATUS_CONDITION'],sharedWording:true};
+ if(/^\d+$/.test(printed)&&text==='このポケモンと、ついているすべてのカードを、トラッシュする。')
+  return {mechanic:'ATTACK_SELF_STACK_DISCARD',commands:[...deal,'DISCARD'],sharedWording:true};
  // Physical basic Energy moves from the player's hand, not the once-per-turn
  // manual attachment slot. Other text variants remain unconnected.
  const handEnergy=text.match(/^自分の手札から基本エネルギーを1枚選び、(このポケモン|自分のポケモン)につける。$/);

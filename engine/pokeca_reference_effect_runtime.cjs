@@ -162,11 +162,11 @@ function refresh(g){
   }
  }
 }
-function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceNextCoinGate','referenceNextHitRetaliation','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceActiveEntryWindow','referenceActiveEntryTurn','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
+function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','statusConditionInfo','referenceProtection','referenceBasicDamageProtection','referenceNextCoinGate','referenceNextHitRetaliation','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceActiveEntryWindow','referenceActiveEntryTurn','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
 function returnStack(g,p,mon,zone){
  const stack=[reduced(mon),...(mon.evolutionCards||[]).map(reduced),...(mon.energyCards||[]),...(mon.tools||[])];
  if(p.active===mon)p.active=null;else p.bench.splice(p.bench.indexOf(mon),1);
- p[zone].push(...stack);event(g,p.id,zone==='hand'?'RETURN_TO_HAND':'RETURN_TO_DECK',{cardIds:stack.map(id)});
+ p[zone].push(...stack);event(g,p.id,zone==='hand'?'RETURN_TO_HAND':zone==='discard'?'DISCARD':'RETURN_TO_DECK',{cardIds:stack.map(id),...(zone==='discard'?{fromZone:'field',sourceInstanceId:id(mon)}:{})});
  if(!p.active&&p.bench.length===1)promoteReferenceBench(g,p,0);
  if(!p.active&&!p.bench.length){g.status='finished';g.winner=opponent(g,p.id).id;}
  if(!p.active&&p.bench.length>1)g.pendingReferenceChoice={kind:'PROMOTE',playerId:p.id,options:p.bench.map(id)};
@@ -1973,6 +1973,19 @@ function applyPlan(g,actor,card,effect,action){
   case 'SWITCH_SELF_ATTACK':
    if((plan.optional||plan.type)&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);
+   break;
+  case 'ATTACK_SELF_STATUS_CLEAR':{
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(card.statusCondition||card.statusConditionInfo){
+    const previous=card.statusCondition;
+    card.statusCondition=null;delete card.statusConditionInfo;
+    event(g,actor,'STATUS_CONDITION',{targetInstanceId:id(card),status:null,previous});
+   }
+   break;
+  }
+  case 'ATTACK_SELF_STACK_DISCARD':
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   returnStack(g,p,card,'discard');
    break;
   case 'ATTACK_RETURN_SELF_DECK':
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
