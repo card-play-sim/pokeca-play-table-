@@ -672,6 +672,17 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
+ if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
+ if(kind==='ABILITY'&&generic==='自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。')return guardedSearch('supporter',1,{emptyHand:true});
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:2,search:true,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
+ const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
+ if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const hpPrizes=generic.match(/^相手がすでにとったサイド1枚につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
+ const hpEnergy=generic.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギー1個につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&(hpPrizes||hpEnergy))return {mechanic:'PASSIVE_DYNAMIC_MAX_HP',commands:['MODIFY_MAX_HP'],mode:hpPrizes?'opponentPrizes':'energy',type:hpEnergy?.[1]||null,amount:Number(hpPrizes?.[1]||hpEnergy[2]),sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'){
   const bench=generic.match(/^自分の山札からたねポケモン(?:の「(ホップ)のポケモン」)?を(1枚|[2-5]枚まで|好きなだけ)選び、ベンチに出す。そして山札を切る。$/);
   if(bench)return {mechanic:'SEARCH_BASIC_TO_BENCH_ATTACK',commands:['SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],limit:bench[2]==='好きなだけ'?5:parseInt(bench[2],10),...(bench[1]?{team:bench[1]}:{}),trainer:true,batchSearch:true,sharedWording:true};

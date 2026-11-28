@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1281,
-      "missing": 421
+      "connected": 1285,
+      "missing": 417
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1275,
+      "CONNECTED_UNTESTED": 1279,
       "MECHANIC_REQUIRED": 50,
-      "ENGINE_CONNECTION_REQUIRED": 367,
+      "ENGINE_CONNECTION_REQUIRED": 363,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10271,8 +10271,7 @@
       "name": "ロケット団のランス",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47488.json"
     },
     {
@@ -10432,8 +10431,7 @@
       "name": "ロケット団のランス",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47527.json"
     },
     {
@@ -14250,8 +14248,7 @@
       "name": "ロケット団のランス",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48702.json"
     },
     {
@@ -15697,8 +15694,7 @@
       "name": "ロケット団のランス",
       "mark": "I",
       "category": "support",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49451.json"
     },
     {
@@ -21306,22 +21302,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1342,
-        "MECHANIC_REQUIRED": 520,
-        "ENGINE_CONNECTION_REQUIRED": 2
+        "ENGINE_CONNECTED": 1347,
+        "MECHANIC_REQUIRED": 509,
+        "ENGINE_CONNECTION_REQUIRED": 8
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1281,
-        "MECHANIC_REQUIRED": 408,
-        "ENGINE_CONNECTION_REQUIRED": 9,
+        "ENGINE_CONNECTED": 1285,
+        "MECHANIC_REQUIRED": 397,
+        "ENGINE_CONNECTION_REQUIRED": 16,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
         "ENGINE_CONNECTED": 567,
-        "MECHANIC_REQUIRED": 293,
-        "ENGINE_CONNECTION_REQUIRED": 5,
+        "MECHANIC_REQUIRED": 291,
+        "ENGINE_CONNECTION_REQUIRED": 7,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21330,7 +21326,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3828,
-    "unconnected": 1245
+    "engineConnected": 3837,
+    "unconnected": 1236
   }
 }

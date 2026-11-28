@@ -290,7 +290,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_DYNAMIC_MAX_HP','PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -452,6 +452,11 @@ async def main():
     printed=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c).facts.retreatCost",other)
     assert other['retreatCost']==printed+f['e']['plan']['amount']
     assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
+   if m=='PASSIVE_DYNAMIC_MAX_HP':
+    source=before['players'][0]['active'];plan=f['e']['plan']
+    count=6-len(before['players'][1]['prizeCards']) if plan['mode']=='opponentPrizes' else sum(1 for energy in source['energyCards'] if not energy.get('isSpecial') and energy.get('energyType')==plan['type'])
+    assert count>0
+    assert source['hp']==r['facts']['hp']+count*plan['amount']
    if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):
     source=before['players'][0]['active']
     assert source['energyCards']
@@ -631,6 +636,13 @@ async def main():
     assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
    if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
     assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='DECK_ORDER_SELECT':
+    plan=f['e']['plan'];i=0 if plan['side']=='own' else 1
+    chosen=option['action']['selections']['cards'];original=[card['id'] for card in before['players'][i]['deck']];result=[card['id'] for card in after['players'][i]['deck']]
+    count=min(plan['count'],len(original))
+    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)
+    if not plan['search']:assert result[count:]==original[count:]
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']
    if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':
     action=option['action'];chosen=action['selections']['cards'];plan=f['e']['plan']
     own=before['players'][0];resolved=after['players'][0]
@@ -804,6 +816,12 @@ async def main():
     assert {c['id'] for c in old['energyCards']}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
+    if plan.get('onlyHandCard') or plan.get('emptyHand'):
+     assert len(before['players'][0]['hand'])==(1 if plan.get('onlyHandCard') else 0)
+    if plan.get('privateSearch'):
+     assert not any(ev.get('details',{}).get('command')=='REVEAL' and picked.intersection(ev['details'].get('cardIds',[])) for ev in events)
+    if plan.get('firstTurnAllowed'):
+     assert await page.evaluate("cs=>cs.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.facts.basic&&r.name.startsWith('ロケット団の')})",[c for c in before['players'][0]['deck'] if c['id'] in picked])
     if plan.get('requiresTera'):
      assert before['players'][0]['active']['referenceEvolutionWindow']==before['referenceActionSequence']
      own=before['players'][0]
