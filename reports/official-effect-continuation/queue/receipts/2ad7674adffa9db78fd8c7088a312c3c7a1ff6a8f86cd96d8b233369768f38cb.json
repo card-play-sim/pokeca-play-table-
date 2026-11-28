@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B28E0A65CD9F9347:a9ea0296bf3caf50167ad5979911f5c79a8b4d52978347aef8010455b637b4f7",
   "taskFingerprint": "a9ea0296bf3caf50167ad5979911f5c79a8b4d52978347aef8010455b637b4f7",
-  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
-  "attemptId": "1e769d94-bf13-4f99-bb6f-e9dc6db5ff63",
-  "status": "BLOCKED",
+  "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
+  "attemptId": "019b94aa-09fa-4ce4-b274-af87b0b4df81",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47826:attack:エレキフォール:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_BOARD_BONUS",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "50317e1ef5fed5549a01673779756be356670bc028b68f6a2335100d4e83c85a"
+  "checksum": "a35760a097ff3da8af9d5b5f622689de6f400003b99c87877c26541ea089e688"
 }
