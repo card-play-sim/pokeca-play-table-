@@ -780,6 +780,9 @@ function plan(entry,kind){
  const toolAttackBoost=generic.match(/^このカードをつけているポケモン(\(「ルールを持つポケモン」をのぞく\))?が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&toolAttackBoost)
   return {mechanic:'TOOL_EX_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],nonRuleOnly:Boolean(toolAttackBoost[1]),amount:Number(toolAttackBoost[2]),sharedWording:true};
+ const poisonedTool=generic.match(/^このカードをつけているどくのポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&poisonedTool)
+  return {mechanic:'TOOL_STATUS_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],holderStatus:'POISONED',amount:Number(poisonedTool[1]),sharedWording:true};
  const prizeDiscount=generic.match(/^自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら、このカードをつけているポケモンがワザを使うためのエネルギーは、\[無色\]エネルギー([1-9])個ぶん少なくなる。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&prizeDiscount)
   return {mechanic:'TOOL_PRIZE_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(prizeDiscount[1]),sharedWording:true};

@@ -14,7 +14,7 @@
   let g=result.game;delete g.pendingReferenceChoice;delete g.pendingPrizeSelection;g.turnNumber=40;g.turnPlayer='you';g.history=[];g.effectStates=[];g.referenceRngState=variant==='tails'?682:0;
   const record=c=>E.getReferenceEffectRecord(c),pools=g.players.map(p=>[p.active,...p.bench,...p.hand,...p.deck,...p.prizeCards,...p.discard].filter(Boolean));
   const take=(i,pred,required=true)=>{const index=pools[i].findIndex(typeof pred==='string'?c=>c.name===pred:pred);if(index<0){if(required)throw Error('FIXTURE_RESOURCE_MISSING');return null;}return pools[i].splice(index,1)[0];};
-  const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});
+  const mon=c=>Object.assign(c,{hp:record(c).facts.hp,cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});
   const pokemon=(i,pred=()=>true)=>{const choices=pools[i].filter(c=>c.kind==='pokemon'&&pred(c)).sort((a,b)=>record(b).facts.hp-record(a).facts.hp);return choices[0]?mon(take(i,choices[0].name)):null;};
   const source=take(0,c=>c.name===row.cardName&&record(c).officialCardId===row.officialCardId),handActivation=['EXCITE_DIVE','MEOWTH_ENTRY','SKYLINE','FAIRY_ZONE'].includes(m)||row.kind==='ability'&&row.plan.origin==='bench',fieldSource=row.kind==='attack'||row.kind==='ability'&&!handActivation;
   g.players.forEach(p=>{p.active=null;p.bench=[];p.hand=[];p.deck=[];p.discard=[];p.prizeCards=[];p.prizes=6;p.turnLimits={supporterUsed:false,abilityUses:{}};p.normalEnergyAttached=false;});
@@ -104,6 +104,15 @@
   g.players.forEach((p,i)=>{p.prizeCards=pools[i].splice(0,p.prizes);p.deck=pools[i];});
   if(reservedAcceleration.length)p[row.plan.zone].push(...reservedAcceleration);
   for(const r of reserved.filter(r=>['deck','hand','discard'].includes(r.zone)))g.players[r.side][r.zone].push(r.card);
+  // Recalculate fixture-only dynamic HP after physically reassigning zones.
+  // The actual gateway still validates the derived HP; it is not bypassed.
+  for(const side of g.players)for(const c of [side.active,...side.bench].filter(Boolean)){
+   for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_DYNAMIC_MAX_HP')){
+    const plan=a.plan,opponent=g.players.find(p=>p.id!==side.id);
+    const n=plan.mode==='opponentPrizes'?6-opponent.prizeCards.length:c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length;
+    c.hp+=plan.amount*n;
+   }
+  }
   const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);if(!loaded.ok)throw Error(JSON.stringify(loaded));
   return {game:port.getSnapshot(),sourceId:source.id,activeId:p.active.id,opponentId:o.active.id,firstDeck,variant,extras:Object.fromEntries(Object.entries(extras).map(([k,v])=>[k,v?.id])),row};
  }

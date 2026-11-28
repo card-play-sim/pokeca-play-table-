@@ -186,9 +186,10 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  if(!bench&&find(g,id(mon))?.player.id===other.id&&record(mon)?.name.endsWith('ex')&&own.referenceExDamageBoost?.turn===g.turnNumber)amount+=own.referenceExDamageBoost.amount;
  if(!bench&&find(g,id(mon))?.player.id===other.id){
   const isEx=record(mon).name.endsWith('ex');
-  if(isEx&&toolEnabled(g))for(const t of source.tools||[]){
+  if(other.active===mon&&toolEnabled(g))for(const t of source.tools||[]){
    const plan=record(t)?.mainPlan;
-   if(plan?.mechanic==='TOOL_EX_ATTACK_BOOST'&&(!plan.nonRuleOnly||!record(source).facts.rulePokemon))amount+=plan.amount;
+   if(isEx&&plan?.mechanic==='TOOL_EX_ATTACK_BOOST'&&(!plan.nonRuleOnly||!record(source).facts.rulePokemon))amount+=plan.amount;
+   if(plan?.mechanic==='TOOL_STATUS_ATTACK_BOOST'&&source.statusCondition===plan.holderStatus)amount+=plan.amount;
   }
   if(own.referenceExVDamageBoost?.turn===g.turnNumber&&(isEx||/V(?:MAX|STAR|-UNION)?$/.test(record(mon).name)))amount+=own.referenceExVDamageBoost.amount;
  }

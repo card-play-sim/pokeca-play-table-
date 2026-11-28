@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "3ba9b8dcea011ae0ec5c5f449de1de8d796a9797198a54040a5a92672d539012",
-  "classifiedRegistryHash": "3ba9b8dcea011ae0ec5c5f449de1de8d796a9797198a54040a5a92672d539012",
+  "registryHash": "fc833ff9f2faa855d0d20a27bfc285095775d469f1c0567d365089ab13daa5e7",
+  "classifiedRegistryHash": "fc833ff9f2faa855d0d20a27bfc285095775d469f1c0567d365089ab13daa5e7",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -28,8 +28,8 @@
     },
     "tool": {
       "prints": 100,
-      "compiled": 46,
-      "notImplemented": 54,
+      "compiled": 49,
+      "notImplemented": 51,
       "blocked": 0,
       "executionVerifiedPrints": 8
     },
@@ -3119,21 +3119,6 @@
       }
     },
     {
-      "officialCardId": "45932",
-      "name": "くさりもち",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているどくのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45932.json",
-        "sha256": "fd54443bc62bcfcd592531a2fc0ebdb7bbc8f58f723d43bcc2ac9f3c71b93a9b",
-        "htmlSha256": "fd54443bc62bcfcd592531a2fc0ebdb7bbc8f58f723d43bcc2ac9f3c71b93a9b",
-        "textSha256": "aca5526df3567b2d1d3554d38326578c40373955b73a45a50041c44edc2d8c15"
-      }
-    },
-    {
       "officialCardId": "45933",
       "name": "力の砂時計",
       "category": "tool",
@@ -4051,21 +4036,6 @@
         "sha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "htmlSha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
         "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "46815",
-      "name": "くさりもち",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているどくのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46815.json",
-        "sha256": "62d5fd2ecb681a5e62bc6cfa2cabe1b3ae9bd8a3f7b135b4f2af1faa82eb9856",
-        "htmlSha256": "62d5fd2ecb681a5e62bc6cfa2cabe1b3ae9bd8a3f7b135b4f2af1faa82eb9856",
-        "textSha256": "aca5526df3567b2d1d3554d38326578c40373955b73a45a50041c44edc2d8c15"
       }
     },
     {
@@ -8813,21 +8783,6 @@
       }
     },
     {
-      "officialCardId": "49397",
-      "name": "くさりもち",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているどくのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+40」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49397.json",
-        "sha256": "101b38f034e78e52b757897e6953a62c547d57499160789eab260b5bb4138bde",
-        "htmlSha256": "101b38f034e78e52b757897e6953a62c547d57499160789eab260b5bb4138bde",
-        "textSha256": "aca5526df3567b2d1d3554d38326578c40373955b73a45a50041c44edc2d8c15"
-      }
-    },
-    {
       "officialCardId": "49399",
       "name": "力の砂時計",
       "category": "tool",
@@ -9471,7 +9426,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 281
+        "count": 278
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9486,10 +9441,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "ee550e26e8df503aa5734d235cef18fc089845b777031a5ebc8539778fc76391",
+    "executionFingerprint": "6ffba6034fe01807bab7cc91742ae1d8e13c06656f424ef8aa8416f9c5fc4860",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 244233,
+    "seq": 246561,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,

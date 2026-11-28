@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1285,
-      "missing": 417
+      "connected": 1289,
+      "missing": 413
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1279,
+      "CONNECTED_UNTESTED": 1283,
       "MECHANIC_REQUIRED": 50,
-      "ENGINE_CONNECTION_REQUIRED": 363,
+      "ENGINE_CONNECTION_REQUIRED": 359,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10005,8 +10005,7 @@
       "name": "ロケット団のレドームシ",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47436.json"
     },
     {
@@ -10983,8 +10982,7 @@
       "name": "ゴチミル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47661.json"
     },
     {
@@ -12324,8 +12322,7 @@
       "name": "ゴチミル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48034.json"
     },
     {
@@ -14784,8 +14781,7 @@
       "name": "ゴチミル",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49040.json"
     },
     {
@@ -21300,15 +21296,15 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1350,
-        "MECHANIC_REQUIRED": 509,
+        "ENGINE_CONNECTED": 1353,
+        "MECHANIC_REQUIRED": 506,
         "ENGINE_CONNECTION_REQUIRED": 5
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1285,
+        "ENGINE_CONNECTED": 1289,
         "MECHANIC_REQUIRED": 397,
-        "ENGINE_CONNECTION_REQUIRED": 16,
+        "ENGINE_CONNECTION_REQUIRED": 12,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21324,7 +21320,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3842,
-    "unconnected": 1231
+    "engineConnected": 3849,
+    "unconnected": 1224
   }
 }

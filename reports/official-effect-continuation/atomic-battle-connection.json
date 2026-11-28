@@ -4,20 +4,20 @@
   "source": "EXACT_OFFICIAL_HTML_ID_IMAGE_EFFECT_AND_ENGINE_RECEIPTS",
   "publicBattleVerified": false,
   "finalization": "ONLY_AFTER_REQUIRED_CI_MAIN_PAGES_AND_PUBLISHED_BATTLE",
-  "totalSelected": 1236,
-  "qualifiedForPublication": 5,
-  "workRemaining": 1231,
+  "totalSelected": 1231,
+  "qualifiedForPublication": 7,
+  "workRemaining": 1224,
   "counts": {
-    "QUALIFIED_PREPUBLICATION": 5,
-    "NEEDS_ENGINE_EXECUTION": 26,
-    "NEEDS_SHARED_MECHANIC": 1197,
+    "QUALIFIED_PREPUBLICATION": 7,
+    "NEEDS_ENGINE_EXECUTION": 22,
+    "NEEDS_SHARED_MECHANIC": 1194,
     "NEEDS_OFFICIAL_PARSER": 8,
     "EVIDENCE_BLOCKED": 0,
     "EFFECT_UNRESOLVED": 0,
     "PENDING_OFFICIAL_FETCH": 0
   },
   "allCardEffectsConnectedAndExecuted": false,
-  "sharedMechanicGroups": 672,
+  "sharedMechanicGroups": 671,
   "sharedMechanicWorklist": [
     {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_B8FA6D9A3F7BBA6DAF8F",
@@ -1867,26 +1867,6 @@
         "data/effect-extensions/evidence/47772.json",
         "data/effect-extensions/evidence/48428.json",
         "data/effect-extensions/evidence/49171.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_598F1D6873356514531D",
-      "category": "tool",
-      "effectKind": "tool",
-      "exampleOfficialText": "このカードをつけているどくのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+40」される。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45932",
-        "46815",
-        "49397"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45932.json",
-        "data/effect-extensions/evidence/46815.json",
-        "data/effect-extensions/evidence/49397.json"
       ],
       "printCount": 3,
       "effectSlots": 3
@@ -13205,7 +13185,7 @@
     {
       "officialCardId": "50127",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50131",
@@ -13508,10 +13488,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50287",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "50288",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -13600,10 +13576,6 @@
       "officialCardId": "50311",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50313",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "50315",
@@ -13718,7 +13690,7 @@
     {
       "officialCardId": "50377",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50381",
@@ -13868,7 +13840,7 @@
     {
       "officialCardId": "50525",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "50527",
@@ -14573,7 +14545,7 @@
     {
       "officialCardId": "47300",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47302",
@@ -14603,7 +14575,7 @@
     {
       "officialCardId": "47350",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47352",
@@ -14613,7 +14585,7 @@
     {
       "officialCardId": "47366",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47369",
@@ -14628,7 +14600,7 @@
     {
       "officialCardId": "47376",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47393",
@@ -14688,7 +14660,7 @@
     {
       "officialCardId": "47426",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47429",
@@ -14702,8 +14674,7 @@
     },
     {
       "officialCardId": "47436",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47437",
@@ -14748,7 +14719,7 @@
     {
       "officialCardId": "47453",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47456",
@@ -14948,7 +14919,7 @@
     {
       "officialCardId": "47588",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47596",
@@ -15007,8 +14978,7 @@
     },
     {
       "officialCardId": "47661",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "47664",
@@ -15323,7 +15293,7 @@
     {
       "officialCardId": "47957",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "47965",
@@ -15382,8 +15352,7 @@
     },
     {
       "officialCardId": "48034",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "48037",
@@ -15838,7 +15807,7 @@
     {
       "officialCardId": "48532",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48535",
@@ -16053,7 +16022,7 @@
     {
       "officialCardId": "48749",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48761",
@@ -16107,8 +16076,7 @@
     },
     {
       "officialCardId": "49040",
-      "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49055",
@@ -16128,7 +16096,7 @@
     {
       "officialCardId": "49106",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49109",
@@ -16153,7 +16121,7 @@
     {
       "officialCardId": "49150",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "49153",
@@ -16553,7 +16521,7 @@
     {
       "officialCardId": "45230",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "45232",
@@ -17317,17 +17285,12 @@
     },
     {
       "officialCardId": "45932",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45933",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45936",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "45937",
@@ -17372,7 +17335,7 @@
     {
       "officialCardId": "45962",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "45965",
@@ -17585,10 +17548,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46062",
-      "state": "QUALIFIED_PREPUBLICATION"
-    },
-    {
       "officialCardId": "46063",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_EFFECT_PATTERN"
@@ -17602,10 +17561,6 @@
       "officialCardId": "46067",
       "state": "NEEDS_SHARED_MECHANIC",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46068",
-      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46069",
@@ -17990,7 +17945,7 @@
     {
       "officialCardId": "46452",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "46473",
@@ -18085,7 +18040,7 @@
     {
       "officialCardId": "46673",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "46675",
@@ -18314,8 +18269,7 @@
     },
     {
       "officialCardId": "46815",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "46817",
@@ -18515,7 +18469,7 @@
     {
       "officialCardId": "48789",
       "state": "NEEDS_ENGINE_EXECUTION",
-      "reason": "ENGINE_EXECUTION_FAILED"
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
       "officialCardId": "48793",
@@ -18909,8 +18863,7 @@
     },
     {
       "officialCardId": "49397",
-      "state": "NEEDS_SHARED_MECHANIC",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN"
+      "state": "QUALIFIED_PREPUBLICATION"
     },
     {
       "officialCardId": "49399",
