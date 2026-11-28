@@ -718,6 +718,7 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='tool'){
   if(generic==='このカードをつけている「メガシンカex」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:true,min:1,limit:1,sharedWording:true};
   if(generic==='このカードをつけているポケモンが、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:false,min:0,limit:3,sharedWording:true};
+  if(generic==='このカードをつけているにげるためのエネルギーが4個のポケモンが、バトル場で相手のポケモンからワザのダメージを受けてきぜつしたとき、そのポケモンについている基本エネルギーを3枚まで選び、自分のベンチポケモンに好きなようにつけ替える。')return {mechanic:'TOOL_HEAVY_BATON',commands:['MOVE_ENERGY'],retreat:4,limit:3,sharedWording:true};
   const teamBoost=generic.match(/^このカードをつけている「([^「」]+)のポケモン」は、ワザを使うためのエネルギーが\[無色\]エネルギー([1-9])個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
   if(teamBoost)return {mechanic:'TOOL_TEAM_COST_BOOST',commands:['MODIFY_ATTACK_COST','MODIFY_DAMAGE'],team:teamBoost[1],discount:Number(teamBoost[2]),amount:Number(teamBoost[3]),sharedWording:true};
   const namedBoost=generic.match(/^このカードをつけている「([^「」]+)」が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);

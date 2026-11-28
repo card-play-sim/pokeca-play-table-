@@ -329,6 +329,38 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  return amount;
 }
 function typesConflictForIgnore(g,own,mon,source){return record(source).facts.types.includes('超')&&record(mon).facts.types.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE'));}
+function noteHeavyBaton(g,actor,mon,defender,actualDamage,previousDamage){
+ if(!defender||defender.player.id===actor||defender.player.active!==mon||actualDamage<=0||previousDamage>=mon.hp||mon.damage<mon.hp||!toolEnabled(g))return;
+ for(const t of mon.tools||[]){
+  const r=record(t),p=r?.mainPlan;
+  if(p?.mechanic!=='TOOL_HEAVY_BATON'||mon.retreatCost!==p.retreat)continue;
+  g.referenceReactions||=[];
+  if(g.referenceReactions.some(x=>x.kind==='TOOL_HEAVY_BATON'&&x.attachmentId===id(t)))continue;
+  g.referenceReactions.push({kind:'TOOL_HEAVY_BATON',playerId:defender.player.id,holderId:id(mon),attachmentId:id(t),sourceOfficialCardId:r.officialCardId,limit:p.limit});
+ }
+}
+function heavyBatonContext(g,choice){
+ const holder=find(g,choice.holderId);
+ if(!holder||holder.player.id!==choice.playerId||holder.player.active!==holder.card||holder.card.damage<holder.card.hp||!toolEnabled(g))return null;
+ const t=(holder.card.tools||[]).find(x=>id(x)===choice.attachmentId),r=record(t),p=r?.mainPlan;
+ if(p?.mechanic!=='TOOL_HEAVY_BATON'||r.officialCardId!==choice.sourceOfficialCardId||p.limit!==choice.limit||holder.card.retreatCost!==p.retreat)return null;
+ return {holder:holder.card,owner:holder.player};
+}
+function heavyBatonOptions(g,choice){
+ const ctx=heavyBatonContext(g,choice);if(!ctx)return [];
+ return ctx.holder.energyCards.filter(basicEnergy).flatMap(e=>ctx.owner.bench.filter(c=>c.damage<c.hp).map(c=>({energyId:id(e),benchInstanceId:id(c)})));
+}
+function finishHeavyBaton(g,choice,action){
+ const ctx=heavyBatonContext(g,choice);
+ assert(ctx&&heavyBatonOptions(g,choice).some(x=>x.energyId===action.energyId&&x.benchInstanceId===action.benchInstanceId),'HEAVY_BATON_SELECTION_CHANGED');
+ const e=ctx.holder.energyCards.findIndex(x=>id(x)===action.energyId),target=ctx.owner.bench.find(c=>id(c)===action.benchInstanceId);
+ target.energyCards.push(ctx.holder.energyCards.splice(e,1)[0]);
+ event(g,ctx.owner.id,'MOVE_ENERGY',{energyId:action.energyId,sourceInstanceId:id(ctx.holder),targetInstanceId:id(target),sourceOfficialCardId:choice.sourceOfficialCardId});
+ choice.moved++;
+ if(choice.moved>=choice.limit)return true;
+ choice.options=heavyBatonOptions(g,choice);
+ return !choice.options.length;
+}
 function noteToolKoSearch(g,actor,mon,defender,actualDamage,previousDamage){
  if(!defender||defender.player.id===actor||actualDamage<=0||previousDamage>=mon.hp||mon.damage<mon.hp||!toolEnabled(g))return;
  for(const t of mon.tools||[]){
@@ -460,6 +492,7 @@ function damage(g,actor,mon,amount,options={}){
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
  }
+ noteHeavyBaton(g,actor,mon,defender,value,previousDamage);
  noteToolKoSearch(g,actor,mon,defender,value,previousDamage);
  noteAttackPrizeReduction(g,actor,mon,defender,value,previousDamage);
  return value;
@@ -1075,7 +1108,7 @@ function handles(action){return ['evolve','use_stadium','attack_turn','effect_at
 function referenceChoiceAction(choice,value){
  const action={type:'resolve_reference_choice'};
  if(choice.kind==='MULLIGAN')return {...action,drawCount:value};
- if(choice.kind==='CIRCULATOR')return {...action,...value};
+ if(choice.kind==='CIRCULATOR'||choice.kind==='TOOL_HEAVY_BATON')return {...action,...value};
  if(choice.kind==='DECK_POKEMON_SEARCH'||choice.kind==='TOOL_KO_SEARCH')return {...action,deckCardId:value};
  return {...action,benchInstanceId:value};
 }
@@ -1422,6 +1455,11 @@ function finishAttack(g,actor){
  delete g.referenceAttackAwaitingPromotion;
  while(g.referenceReactions?.length){
   const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);
+  if(reaction.kind==='TOOL_HEAVY_BATON'){
+   const choice={...reaction,moved:0};choice.options=heavyBatonOptions(g,choice);
+   if(choice.options.length){g.pendingReferenceChoice=choice;return;}
+   continue;
+  }
   if(reaction.kind==='TOOL_KO_SEARCH'){
    const plan=toolKoSearchPlan(g,reaction);
    if(!plan)continue;
@@ -2511,9 +2549,10 @@ function execute(g,actor,action){
   }
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId);
   else if(choice.kind==='TOOL_KO_SEARCH'){if(!finishToolKoSearch(g,p,choice,action.deckCardId))return {referenceEffect:true,adoptedPrint:false};}
+  else if(choice.kind==='TOOL_HEAVY_BATON'){if(!finishHeavyBaton(g,choice,action))return {referenceEffect:true,adoptedPrint:false};}
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
-  if(choice.kind==='CIRCULATOR'||choice.kind==='TOOL_KO_SEARCH'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
+  if(choice.kind==='CIRCULATOR'||choice.kind==='TOOL_KO_SEARCH'||choice.kind==='TOOL_HEAVY_BATON'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
  }else if(action.type==='use_stadium'){
   executeStadiumAction(g,actor,action);
  }else if(action.type==='evolve'){
@@ -2530,7 +2569,7 @@ function execute(g,actor,action){
   const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);if(!effect.plan.repeated)mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
  }else{
   const i=p.hand.findIndex(c=>id(c)===action.cardId),card=p.hand.splice(i,1)[0],r=record(card);
-  if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];if(r.mainPlan.mechanic==='TOOL_KO_SEARCH')event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,toolAttached:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
+  if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];if(['TOOL_KO_SEARCH','TOOL_HEAVY_BATON'].includes(r.mainPlan.mechanic))event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,toolAttached:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
   else if(action.type==='play_stadium'){
    if(g.stadium)player(g,g.stadiumOwner).discard.push(g.stadium);g.stadium=card;g.stadiumOwner=actor;g.stadiumPlayedTurn=g.turnNumber;g.stadiumPlayedBy=actor;if(r.mainPlan.mechanic==='STADIUM_ACTIVE')event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,stadiumPlaced:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_played',details:{cardId:id(card),cardName:card.name}});
   }else {p.discard.push(card);if(action.type==='play_supporter'){p.turnLimits||={};p.turnLimits.supporterUsed=true;}applyPlan(g,actor,card,{plan:r.mainPlan},action);if(action.type==='play_supporter')g.history.push({turnNumber:g.turnNumber,player:actor,type:'supporter_used',details:{cardId:id(card),cardName:r.name,referenceOfficialCardId:r.officialCardId}});}
@@ -2695,6 +2734,10 @@ function validateGame(g){
  if(!g.referenceEffectValidation){assert(!nested.some(c=>c.validationReference),'REFERENCE_MODE_REQUIRED');return;}
  assert(g.referenceEffectValidation.adoptedPrints===0,'REFERENCE_ADOPTION_FORBIDDEN');
  const choice=g.pendingReferenceChoice;
+ if(choice?.kind==='TOOL_HEAVY_BATON'){
+  const options=heavyBatonOptions(g,choice);
+  assert(g.referenceAttackTurnPending===g.turnPlayer&&choice.playerId!==g.turnPlayer&&Number.isInteger(choice.moved)&&choice.moved>=0&&choice.moved<choice.limit&&options.length>0&&JSON.stringify(choice.options)===JSON.stringify(options),'INVALID_HEAVY_BATON_STATE');
+ }
  if(choice?.kind==='TOOL_KO_SEARCH'){
   const owner=player(g,choice.playerId),plan=toolKoSearchPlan(g,choice),selected=choice.selectedIds;
   assert(plan&&g.referenceAttackTurnPending===g.turnPlayer&&choice.playerId!==g.turnPlayer&&choice.min===plan.min&&choice.limit===plan.limit&&Array.isArray(selected)&&selected.length<choice.limit&&selected.length<owner.deck.length&&new Set(selected).size===selected.length&&selected.every(x=>owner.deck.some(c=>id(c)===x))&&JSON.stringify(choice.options)===JSON.stringify(toolKoSearchOptions(owner,choice)),'INVALID_TOOL_KO_SEARCH_STATE');
@@ -2729,7 +2772,7 @@ function plannedCommands(g,actor,action){
  const r=record(card);if(!r)return [];
  const effect=action.type==='attack_turn'?r.attacks[action.attackIndex]:action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
  if(!connected(effect?.plan))return [];
- return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&effect.plan.mechanic==='TOOL_KO_SEARCH')?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
+ return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&['TOOL_KO_SEARCH','TOOL_HEAVY_BATON'].includes(effect.plan.mechanic))?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
 }
 function statuses(g){
  if(!g.referenceEffectValidation)return [];
