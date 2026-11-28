@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "d681a65a22be1581b3fd35ea2c5b50bd6e370cf753eb4408c7f8d74da797489a",
-  "classifiedRegistryHash": "d681a65a22be1581b3fd35ea2c5b50bd6e370cf753eb4408c7f8d74da797489a",
+  "registryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
+  "classifiedRegistryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,8 +14,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 263,
-      "notImplemented": 111,
+      "compiled": 266,
+      "notImplemented": 108,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
@@ -45,7 +45,7 @@
       "compiled": 2672,
       "notImplemented": 982,
       "blocked": 22,
-      "executionVerifiedPrints": 742
+      "executionVerifiedPrints": 743
     },
     "energy": {
       "prints": 681,
@@ -3479,21 +3479,6 @@
       }
     },
     {
-      "officialCardId": "46038",
-      "name": "ハイダイ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46038.json",
-        "sha256": "8471db619128ca525c829d42039b140f4af7f2b1e3658678e7b107a87739e6bb",
-        "htmlSha256": "8471db619128ca525c829d42039b140f4af7f2b1e3658678e7b107a87739e6bb",
-        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
-      }
-    },
-    {
       "officialCardId": "46039",
       "name": "ブライア",
       "category": "supporter",
@@ -3617,21 +3602,6 @@
       "officialCardId": "46167",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46173",
-      "name": "ハイダイ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46173.json",
-        "sha256": "1d8e1dd2bfc57e9bd7a7908db872db6c42cc44d15080b750630edd90debc5e92",
-        "htmlSha256": "1d8e1dd2bfc57e9bd7a7908db872db6c42cc44d15080b750630edd90debc5e92",
-        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
-      }
     },
     {
       "officialCardId": "46174",
@@ -9483,21 +9453,6 @@
       }
     },
     {
-      "officialCardId": "49436",
-      "name": "ハイダイ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49436.json",
-        "sha256": "08894509ac271af2759f806bfd510383f79c4f991c085e23765527ad73bd6c3c",
-        "htmlSha256": "08894509ac271af2759f806bfd510383f79c4f991c085e23765527ad73bd6c3c",
-        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
-      }
-    },
-    {
       "officialCardId": "49437",
       "name": "ハッサク",
       "category": "supporter",
@@ -10026,7 +9981,7 @@
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 309
+        "count": 306
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -10041,25 +9996,25 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "2cb3abb14b42d1022d9a941437d80080e22df610df47d5414d8827d693fa0a92",
+    "executionFingerprint": "a33f7b19ded14f74b48e15d49797323d33bd8da2d54be2b6d085a1687c8702fd",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 234921,
+    "seq": 237249,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 419,
+      "SUCCEEDED": 420,
       "FAILED": 0,
-      "BLOCKED": 357
+      "BLOCKED": 356
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 350,
+        "SUCCEEDED": 351,
         "FAILED": 0,
-        "BLOCKED": 321
+        "BLOCKED": 320
       },
       "supporter": {
         "PENDING": 0,

@@ -200259,6 +200259,385 @@
         "htmlSha256": "171b40e1d395c5fd2991eb45b19b725be7974877b06eaaffdfc9f4ee48de6120",
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
+    },
+    {
+      "officialCardId": "45966",
+      "name": "ミガルーサ",
+      "deckName": "ミガルーサ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45966",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/045966_P_MIGARUSA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ソニックエッジ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "したごしらえ",
+          "text": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45966.json",
+        "sha256": "ef437dd9c6c7f263754fdc7265faf7bafa9adf57a45a268b7977f9b1046a6a12",
+        "htmlSha256": "ef437dd9c6c7f263754fdc7265faf7bafa9adf57a45a268b7977f9b1046a6a12",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "45963",
+      "name": "ケケンカニ",
+      "deckName": "ケケンカニ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45963",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/045963_P_KEKENKANI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おおぶりパンチ",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "次の自分の番、このポケモンは「おおぶりパンチ」が使えない。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "したごしらえ",
+          "text": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "マケンカニ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45963.json",
+        "sha256": "b2d68ddf7bef5e068ba278e381412893ba8b1b8df18d72218b795b3733650961",
+        "htmlSha256": "b2d68ddf7bef5e068ba278e381412893ba8b1b8df18d72218b795b3733650961",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "46038",
+      "name": "ハイダイ",
+      "deckName": "ハイダイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46038",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046038_T_HAIDAI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46038.json",
+        "sha256": "8471db619128ca525c829d42039b140f4af7f2b1e3658678e7b107a87739e6bb",
+        "htmlSha256": "8471db619128ca525c829d42039b140f4af7f2b1e3658678e7b107a87739e6bb",
+        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
+      }
+    },
+    {
+      "officialCardId": "46155",
+      "name": "ケケンカニ",
+      "deckName": "ケケンカニ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46155",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046155_P_KEKENKANI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おおぶりパンチ",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "次の自分の番、このポケモンは「おおぶりパンチ」が使えない。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "したごしらえ",
+          "text": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "マケンカニ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46155.json",
+        "sha256": "98bc93aebe1392f36503e6f0dc12582233b6297c4250000d36779e307cb4b22a",
+        "htmlSha256": "98bc93aebe1392f36503e6f0dc12582233b6297c4250000d36779e307cb4b22a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "46173",
+      "name": "ハイダイ",
+      "deckName": "ハイダイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46173",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV7/046173_T_HAIDAI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46173.json",
+        "sha256": "1d8e1dd2bfc57e9bd7a7908db872db6c42cc44d15080b750630edd90debc5e92",
+        "htmlSha256": "1d8e1dd2bfc57e9bd7a7908db872db6c42cc44d15080b750630edd90debc5e92",
+        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
+      }
+    },
+    {
+      "officialCardId": "48925",
+      "name": "ケケンカニ",
+      "deckName": "ケケンカニ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48925",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048925_P_KEKENKANI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "おおぶりパンチ",
+          "cost": [
+            "水",
+            "無色",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "250",
+          "text": "次の自分の番、このポケモンは「おおぶりパンチ」が使えない。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "したごしらえ",
+          "text": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 160,
+        "evolvesFrom": "マケンカニ",
+        "retreatCost": 3,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "鋼"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48925.json",
+        "sha256": "9c3feafc268282289eac401400e43c2a9d43ea0f906378a11bff10fec9fa7f6f",
+        "htmlSha256": "9c3feafc268282289eac401400e43c2a9d43ea0f906378a11bff10fec9fa7f6f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "48935",
+      "name": "ミガルーサ",
+      "deckName": "ミガルーサ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48935",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048935_P_MIGARUSA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ソニックエッジ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "110",
+          "text": "このワザのダメージは、相手のバトルポケモンにかかっている効果を計算しない。"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "したごしらえ",
+          "text": "自分のトラッシュにある「ハイダイ」の枚数ぶん、このポケモンがワザを使うための[無色]エネルギーは少なくなる。"
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 130,
+        "evolvesFrom": null,
+        "retreatCost": 2,
+        "types": [
+          "水"
+        ],
+        "weakness": {
+          "types": [
+            "雷"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48935.json",
+        "sha256": "9ac1983868b106a801c75d318c86ea10f6acbd3ebee5c2a53dc9dc71a5eca09c",
+        "htmlSha256": "9ac1983868b106a801c75d318c86ea10f6acbd3ebee5c2a53dc9dc71a5eca09c",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "officialCardId": "49436",
+      "name": "ハイダイ",
+      "deckName": "ハイダイ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49436",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049436_T_HAIDAI.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "自分の手札を2枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を4枚引く。（自分の手札を2枚もどせないなら、このカードは使えない。）",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49436.json",
+        "sha256": "08894509ac271af2759f806bfd510383f79c4f991c085e23765527ad73bd6c3c",
+        "htmlSha256": "08894509ac271af2759f806bfd510383f79c4f991c085e23765527ad73bd6c3c",
+        "textSha256": "38ac29ca6ec5dd8a834c1ab5ae95be6f5de25d51834c7a7b675bb479427e245e"
+      }
     }
   ],
   "blocked": []
