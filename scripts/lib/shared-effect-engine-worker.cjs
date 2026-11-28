@@ -478,17 +478,33 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresMegaType)reserve(r=>mon(r,plan.requiresMegaType,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
  if(e.proofTrainerLock){reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand',1);reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','hand',1);}
- if(e.proofAbilityEnergy)reserveEnergy(e.proofAbilityEnergy,4);
+ if(e.proofAbilityEnergy){
+  const energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===e.proofAbilityEnergy);
+  if(!ensure(deckIndex,energy,1))return Object.assign(requirements,{teamBoostBlocked:'NO_ABILITY_ENERGY_DECK_RESOURCE'});
+  requirements.push({side:0,zone:'deck',printId:energy.officialCardId});
+ }
  if(e.proofConditionalDamage?.mode==='megaType')reserve(r=>mon(r,e.proofConditionalDamage.type,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
  if(e.proofConditionalDamage?.mode==='opponentAbility'){
   const safe=r=>mon(r,null,0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>source.facts.types.includes(t))&&r.facts.hp>Number.parseInt(e.damage,10)+(e.plan.bonus||0)+e.proofConditionalDamage.amount;
   reserve(r=>safe(r)&&r.abilities.length&&r.abilities.every(a=>a.plan?.mechanic==='DASH'),'active',1);
   reserve(r=>safe(r)&&!r.abilities.length,'bench',1);
  }
- if(e.proofConditionalRetreat==='opponentEx')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'bench',1);
+ if(e.proofConditionalRetreat==='opponentEx'){
+  const ex=reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'bench',1);
+  if(!ex)return Object.assign(requirements,{teamBoostBlocked:'NO_RETREAT_EX_DECK_RESOURCE'});
+  const plain=reserve(r=>mon(r,null,0)&&!r.name.endsWith('ex')&&!r.abilities.length,'active',1);
+  if(!plain)return Object.assign(requirements,{teamBoostBlocked:'NO_RETREAT_NON_EX_ACTIVE_RESOURCE'});
+ }
  if(e.proofConditionalRetreat==='benchAura')reserve(r=>mon(r,null,0)&&r.facts.retreatCost>0&&!r.abilities.length,'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresAttachedType)reserveEnergy(plan.requiresAttachedType,5);
- if(e.proofHpThreshold)reserveEnergy(e.proofHpThreshold.type,Math.min(16,e.proofHpThreshold.threshold+7));
+ if(e.proofHpThreshold){
+  const plan=e.proofHpThreshold,energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===plan.type);
+  // Reserve only the physically needed cards, not thirteen copies in a deck
+  // whose basic-Energy donor pool may contain fewer than thirteen.
+  const count=Math.max(plan.threshold,kindAttackCost(e,plan.type));
+  if(!ensure(deckIndex,energy,count))return Object.assign(requirements,{teamBoostBlocked:'NO_HP_THRESHOLD_DECK_RESOURCES'});
+  for(let i=0;i<Math.max(0,count-kindAttackCost(e,plan.type));i++)requirements.push({side:0,zone:'deck',printId:energy.officialCardId});
+ }
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='ATTACK_GUARDED_DAMAGE'){
@@ -508,6 +524,9 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
   if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
   if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
+  if(['ownFieldTypedThreshold','ownActiveTypedThreshold','discardBasicThreshold'].includes(plan.predicate))reserveEnergy(plan.type,plan.threshold+kindAttackCost(e,plan.type));
+  if(plan.predicate==='discardAbilityThreshold')for(let i=0;i<plan.threshold;i++)reserve(r=>r.category==='pokemon'&&r.abilities.some(a=>a.name===plan.name),'discard');
+  if(plan.predicate==='discardNamed')reserve(r=>r.name===plan.name,'discard');
   if(plan.predicate==='ownBenchNamedDamaged')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
   if(plan.predicate==='opponentFieldType'){
    reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type),'active',1);
@@ -671,9 +690,15 @@ function prepare(r, e, kind) {
     if(t.blocked)return t;
     const game=t.port.getSnapshot(),side=game.players[0],mon=side.active;
     const zone=[side.deck,side.hand].find(cards=>cards.some(c=>!c.isSpecial&&c.energyType===e.plan.type));
-    if(!zone||mon.energyCards.some(c=>c.isSpecial||c.energyType===e.plan.type))return {blocked:'NO_CONDITIONAL_DAMAGE_ENERGY_FIXTURE'};
-    mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.energyType===e.plan.type),1)[0]);
-    return {...t,port:port(game),trigger};
+    for(const c of mon.energyCards.filter(c=>c.isSpecial))side.deck.push(mon.energyCards.splice(mon.energyCards.indexOf(c),1)[0]);
+    if(!mon.energyCards.some(c=>!c.isSpecial&&c.energyType===e.plan.type)){
+      if(!zone)return {blocked:'NO_CONDITIONAL_DAMAGE_ENERGY_FIXTURE'};
+      mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.energyType===e.plan.type),1)[0]);
+    }
+    mon.hp=r.facts.hp+e.plan.hpBonus;mon.energies=mon.energyCards.map(c=>c.energyType);
+    const changed=port(game),option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    if(!option)return {blocked:'NO_CONDITIONAL_DAMAGE_LEGAL_ATTACK'};
+    return {...t,port:changed,option,trigger};
   }
   if(m==='PASSIVE_CONDITIONAL_DAMAGE'){
     const plan=e.plan,index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'||a.plan?.mechanic==='CONTEXT_ATTACK_BONUS'&&a.plan.predicate==='ownEnergyType');
@@ -1777,6 +1802,19 @@ function prepare(r, e, kind) {
       const side=plan.predicate==='ownPrizesExact'?own:other;
       while(side.prizes>plan.threshold){side.prizes--;side.hand.push(side.prizeCards.pop());}
     }
+    if(['ownFieldTypedThreshold','ownActiveTypedThreshold','discardBasicThreshold'].includes(plan.predicate)){
+      const eligible=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type;
+      const holders=plan.predicate==='ownFieldTypedThreshold'?[own.active,...own.bench]:[own.active];
+      const count=()=>plan.predicate==='discardBasicThreshold'?own.discard.filter(eligible).length:holders.reduce((n,c)=>n+c.energyCards.filter(eligible).length,0);
+      const target=plan.predicate==='discardBasicThreshold'?own.discard:(plan.predicate==='ownFieldTypedThreshold'&&own.bench.length?own.bench[0]:own.active).energyCards;
+      while(count()<plan.threshold){
+        const zone=[own.deck,own.hand].find(z=>z.some(eligible));
+        if(!zone)return {blocked:'NO_TYPED_THRESHOLD_RESOURCE'};
+        target.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      }
+    }
+    if(plan.predicate==='discardAbilityThreshold'&&own.discard.filter(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.abilities.some(a=>a.name===plan.name)).length<plan.threshold)return {blocked:'NO_DISCARD_ABILITY_THRESHOLD_RESOURCE'};
+    if(plan.predicate==='discardNamed'&&!own.discard.some(c=>E.getReferenceEffectRecord(c)?.name===plan.name))return {blocked:'NO_NAMED_DISCARD_RESOURCE'};
     if(plan.predicate==='ownBenchNamedDamaged'){
       const matches=own.bench.filter(c=>E.getReferenceEffectRecord(c).name===plan.name);
       if(!matches.length||matches.every(c=>c.hp<=10))return {blocked:'NO_NAMED_DAMAGED_BENCH'};
@@ -3350,6 +3388,11 @@ function verifyCase(t, e) {
         case 'ownDeckAtMost':return own.deck.length<=plan.threshold;
         case 'ownPrizesExact':return own.prizes===plan.threshold;
         case 'opponentPrizesExact':return other.prizes===plan.threshold;
+        case 'ownFieldTypedThreshold':return [own.active,...own.bench].reduce((n,c)=>n+c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length,0)>=plan.threshold;
+        case 'ownActiveTypedThreshold':return own.active.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length>=plan.threshold;
+        case 'discardBasicThreshold':return own.discard.filter(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type).length>=plan.threshold;
+        case 'discardAbilityThreshold':return own.discard.filter(c=>c.kind==='pokemon'&&rec(c)?.abilities.some(a=>a.name===plan.name)).length>=plan.threshold;
+        case 'discardNamed':return own.discard.some(c=>rec(c)?.name===plan.name);
         case 'ownBenchNamedDamaged':return own.bench.some(c=>rec(c).name===plan.name&&c.damage>0);
         case 'opponentFieldType':return [other.active,...other.bench].some(c=>rec(c).facts.types.includes(plan.type));
         case 'ownRemainingHp':return own.active.hp-own.active.damage<=plan.threshold;
@@ -3389,6 +3432,23 @@ function verifyCase(t, e) {
         if(side.prizes>1){side.prizes--;side.hand.push(side.prizeCards.pop());}
         else if(side.hand.length){side.prizes++;side.prizeCards.push(side.hand.pop());}
         break;
+      }
+      case 'ownFieldTypedThreshold':case 'ownActiveTypedThreshold':{
+        const holders=plan.predicate==='ownFieldTypedThreshold'?[...own.bench,own.active]:[own.active];
+        if(holders.some(c=>c.energyCards.some(e=>e.isSpecial)))return {status:'BLOCKED',reason:'SPECIAL_ENERGY_THRESHOLD_FIXTURE_REQUIRED'};
+        for(const c of holders)while(positive(start)){
+          const i=c.energyCards.findIndex(e=>e.energyType===plan.type);
+          if(i<0)break;
+          own.deck.push(c.energyCards.splice(i,1)[0]);
+        }break;
+      }
+      case 'discardBasicThreshold':case 'discardAbilityThreshold':case 'discardNamed':{
+        const eligible=c=>plan.predicate==='discardBasicThreshold'?c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type:plan.predicate==='discardAbilityThreshold'?c.kind==='pokemon'&&rec(c)?.abilities.some(a=>a.name===plan.name):rec(c)?.name===plan.name;
+        while(positive(start)){
+          const i=own.discard.findIndex(eligible);
+          if(i<0)break;
+          own.deck.push(own.discard.splice(i,1)[0]);
+        }break;
       }
       case 'ownBenchNamedDamaged':for(const c of own.bench)if(rec(c).name===plan.name)c.damage=0;break;
       case 'opponentFieldType':{
