@@ -539,7 +539,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_HAND_FLOW'&&plan.mode==='opponentMegaCount'){
   const mega=r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき');
   const first=reserve(mega,'active',1);
-  if(first)reserve(r=>mega(r)&&r.officialCardId!==first.officialCardId,'bench',1);
+  if(first&&!reserve(r=>mega(r)&&r.officialCardId!==first.officialCardId,'bench',1))reserve(r=>r.officialCardId===first.officialCardId,'bench',1);
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench',1);
  }
  if(m==='MASS_HAND_FLOW'&&plan.mode==='rocketLimit'){
@@ -582,13 +582,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='TRAINER_DISCARD_FIELD_CARDS'){
-  reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',0);
-  reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
-  if(plan.mode!=='bothTools'){
-   reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',1);
-   if(plan.mode!=='opponentHolder')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck',0);
+  const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
+  for(const side of [0,1]){
+   if(!reserve(plain,'active',side)||!reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',side))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_FIELD_DISCARD_FIXTURE'});
   }
-  if(plan.costType)reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.costType,'hand');
+  if(plan.mode!=='bothTools'){
+   if(!reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',1)||!reserve(isBasicEnergy,'deck',1))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_FIELD_DISCARD_ENERGY_FIXTURE'});
+   if(plan.mode!=='opponentHolder'&&!reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck',0))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_FIELD_DISCARD_STADIUM_FIXTURE'});
+  }
+  if(plan.costType&&!reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.costType,'hand'))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_FIELD_DISCARD_COST_FIXTURE'});
  }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
@@ -1795,13 +1797,20 @@ function prepare(r, e, kind) {
   if(m==='TRAINER_DISCARD_FIELD_CARDS'){
     const g=frame.game,[own,other]=g.players,q=e.plan;
     const take=(side,predicate)=>{for(const zone of [side.deck,side.hand]){const i=zone.findIndex(predicate);if(i>=0)return zone.splice(i,1)[0];}return null;};
+    const mechanic=c=>E.getReferenceEffectRecord(c)?.mainPlan?.mechanic;
     for(const side of [own,other]){
-      if(!side.active.tools.length){const c=take(side,c=>c.kind==='tool');if(!c)return {blocked:'NO_FIELD_DISCARD_TOOL_FIXTURE'};side.active.tools.push(c);}
+      if(!E.getReferenceEffectRecord(side.active).facts.basic||E.getReferenceEffectRecord(side.active).abilities.length)return {blocked:'NO_PLAIN_FIELD_DISCARD_HOLDER'};
+      if(side.active.tools.length)return {blocked:'UNEXPECTED_FIELD_DISCARD_TOOL_STACK'};
+      const c=take(side,c=>c.kind==='tool'&&mechanic(c)==='CIRCULATOR');if(!c)return {blocked:'NO_FIELD_DISCARD_TOOL_FIXTURE'};side.active.tools.push(c);
     }
     if(q.mode!=='bothTools'){
-      const special=take(other,c=>c.kind==='energy'&&c.isSpecial);if(!special)return {blocked:'NO_FIELD_DISCARD_SPECIAL_FIXTURE'};other.active.energyCards.push(special);
-      if(!other.active.energyCards.some(c=>!c.isSpecial)){const basic=take(other,c=>c.kind==='energy'&&!c.isSpecial);if(!basic)return {blocked:'NO_FIELD_DISCARD_BASIC_FIXTURE'};other.active.energyCards.push(basic);}
-      if(q.mode!=='opponentHolder'&&!g.stadium){const stadium=take(own,c=>c.kind==='stadium');if(!stadium)return {blocked:'NO_FIELD_DISCARD_STADIUM_FIXTURE'};g.stadium=stadium;g.stadiumOwner=own.id;}
+      const special=take(other,c=>c.kind==='energy'&&c.isSpecial&&mechanic(c)==='IGNITION');if(!special)return {blocked:'NO_FIELD_DISCARD_SPECIAL_FIXTURE'};
+      other.active.energyCards.push(special);
+      if(!other.active.energyCards.some(c=>!c.isSpecial)){const basic=take(other,c=>c.kind==='energy'&&!c.isSpecial&&mechanic(c)==='BASIC_ENERGY');if(!basic)return {blocked:'NO_FIELD_DISCARD_BASIC_FIXTURE'};other.active.energyCards.push(basic);}
+      // S.create produces a validated snapshot. Preserve the derived energy
+      // representation when adding exact physical cards to this fixture.
+      other.active.energies=other.active.energyCards.flatMap(c=>mechanic(c)==='IGNITION'?['無色']:c.isSpecial?[]:[c.energyType]);
+      if(q.mode!=='opponentHolder'&&!g.stadium){const stadium=take(own,c=>c.kind==='stadium'&&mechanic(c)==='JAMMING');if(!stadium)return {blocked:'NO_FIELD_DISCARD_STADIUM_FIXTURE'};g.stadium=stadium;g.stadiumOwner=own.id;g.stadiumPlayedTurn=g.turnNumber-1;g.stadiumPlayedBy=own.id;}
     }
     if(q.costType&&!own.hand.some(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===q.costType)){const cost=take(own,c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===q.costType);if(!cost)return {blocked:'NO_FIELD_DISCARD_COST_FIXTURE'};own.hand.push(cost);}
   }
@@ -4612,7 +4621,8 @@ function verifyCase(t, e) {
       }
       assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(end)));
     };
-    const selected=q.mode==='opponentAll'?candidates.map(x=>x.c.id):q.mode==='opponentHolder'?Object.entries(action.selections).filter(([k])=>/^(tools|energyCards)\d+$/.test(k)).flatMap(([,v])=>v):action.selections.cards;
+    const selections=action.selections||{};
+    const selected=q.mode==='opponentAll'?candidates.map(x=>x.c.id):q.mode==='opponentHolder'?Object.entries(selections).filter(([k])=>/^(tools|energyCards)\d+$/.test(k)).flatMap(([,v])=>v):(selections.cards||[]);
     assert(selected.length>0);check(before,after,selected);
     if(q.mode==='opponentOne'){
       for(const entry of candidates){const replay=port(before),nextAction={...action,selections:{...action.selections,cards:[entry.c.id]}};assert(replay.dispatch('you',nextAction).ok);const end=replay.getSnapshot();check(before,end,[entry.c.id]);assert(end.players[0].discard.some(c=>c.id===action.selections.discardCost[0]));}
@@ -4623,7 +4633,12 @@ function verifyCase(t, e) {
     }
     if(q.mode==='opponentHolder'){
       const holder=other.active,chosen=candidates.filter(x=>x.holder===holder);
-      assert(chosen.some(x=>x.c.kind==='tool')&&chosen.some(x=>x.c.kind==='energy'));
+      const tool=chosen.find(x=>x.c.kind==='tool'),energy=chosen.find(x=>x.c.kind==='energy');
+      assert(tool&&energy);
+      const holders=[...new Set(candidates.map(x=>x.holder).filter(Boolean))],index=holders.indexOf(holder);
+      const both={holder:[holder.id],['tools'+index]:[tool.c.id],['energyCards'+index]:[energy.c.id]};
+      const replay=port(before);assert(replay.dispatch('you',{...action,selections:both}).ok);check(before,replay.getSnapshot(),[tool.c.id,energy.c.id]);
+      const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{...both,['energyCards'+index]:[]}}).ok,false);assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
     }
   }
   if(e.plan.mechanic==="TRAINER_DISCARD_SPECIAL_ENERGY"){
