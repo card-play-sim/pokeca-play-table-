@@ -290,7 +290,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -443,6 +443,11 @@ async def main():
     assert entered['validationReference']['officialCardId']==r['officialCardId']
     assert entered['stage']==before_source['stage']
     assert all(card['id']!=ident for card in after['players'][0]['hand'])
+   if m=='PASSIVE_OPPONENT_RETREAT_INCREASE':
+    other=before['players'][1]['active']
+    printed=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c).facts.retreatCost",other)
+    assert other['retreatCost']==printed+f['e']['plan']['amount']
+    assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
    if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):
     source=before['players'][0]['active']
     assert source['energyCards']

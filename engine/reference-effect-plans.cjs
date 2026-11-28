@@ -814,6 +814,8 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='item'&&generic==='相手の場のポケモンについている特殊エネルギーを1個選び、トラッシュする。')
   return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],sharedWording:true};
  if(kind==='ABILITY'&&generic==='このポケモンにエネルギーがついていないなら、このポケモンのにげるためのエネルギーは、すべてなくなる。')return {mechanic:'PASSIVE_EMPTY_ENERGY_RETREAT',commands:['MODIFY_RETREAT_COST'],sharedWording:true};
+ const opponentRetreat=generic.match(/^このポケモンがいるかぎり、相手のバトルポケモンは、にげるためのエネルギーが([1-9])個ぶん多くなる。$/);
+ if(kind==='ABILITY'&&opponentRetreat)return {mechanic:'PASSIVE_OPPONENT_RETREAT_INCREASE',commands:['MODIFY_RETREAT_COST'],amount:Number(opponentRetreat[1]),sharedWording:true};
  const typedRetreat=generic.match(/^このポケモンがいるかぎり、\[([草炎水雷超闘悪鋼])\]エネルギーがついている自分のポケモン全員のにげるためのエネルギーは、すべてなくなる。$/);
  if(kind==='ABILITY'&&typedRetreat)return {mechanic:'PASSIVE_TYPED_TEAM_RETREAT',commands:['MODIFY_RETREAT_COST'],energyType:typedRetreat[1],sharedWording:true};
  const lowRetreat=generic.match(/^このカードをつけているポケモンは、にげるためのエネルギーが([1-9])個ぶん少なくなる。そのポケモンの残りHPが「([1-9]\d{0,2})」以下なら、にげるためのエネルギーは、すべてなくなる。$/);

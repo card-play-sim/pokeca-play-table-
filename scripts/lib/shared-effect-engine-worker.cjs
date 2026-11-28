@@ -582,6 +582,32 @@ function evolveTeraFixture(pp,chain,requireTera=true,side=0,zone='bench',targetI
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='PASSIVE_OPPONENT_RETREAT_INCREASE'){
+    const attackIndex=r.attacks.findIndex(a=>a.plan?.mechanic==='SCALED_ATTACK_DAMAGE'&&a.plan.metric==='opponentRetreat');
+    if(attackIndex<0)return {blocked:'NO_RETREAT_INCREASE_TRIGGER'};
+    const trigger={...r.attacks[attackIndex],effectIndex:attackIndex},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const start=t.port.getSnapshot(),[own,other]=start.players,holder=own.active;
+    if(!holder||E.getReferenceEffectRecord(holder).officialCardId!==r.officialCardId||!other.active||!other.bench.length||!own.bench.length)return {blocked:'NO_RETREAT_INCREASE_FIXTURE'};
+    if(other.active.tools?.length)return {blocked:'RETREAT_INCREASE_CONFOUNDED'};
+    // Other printed abilities are allowed only if the exact cost and removal checks below pass.
+    if(other.active.retreatCost!==E.getReferenceEffectRecord(other.active).facts.retreatCost+e.plan.amount)return {blocked:'RETREAT_INCREASE_CONFOUNDED'};
+    assert.equal(other.active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost+e.plan.amount);
+    // The opposing side may also contain the same aura. Check the other active cost independently rather than assuming an unmodified mirror fixture.
+    const opposingAuras=[other.active,...other.bench].filter(Boolean).flatMap(c=>E.getReferenceEffectRecord(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE'));
+    const opposingIncrease=opposingAuras.reduce((sum,a)=>sum+a.plan.amount,0);
+    assert.equal(holder.retreatCost,r.facts.retreatCost+opposingIncrease);
+    for(const c of other.bench)assert.equal(c.retreatCost,E.getReferenceEffectRecord(c).facts.retreatCost);
+    const removed=JSON.parse(JSON.stringify(start)),ours=removed.players[0],mon=ours.active;
+    ours.active=ours.bench.shift();ours.deck.push(...(mon.energyCards||[]),...(mon.tools||[]),...(mon.evolutionCards||[]));
+    const bare={...(mon.evolutionCards?.length?mon.validationBase:mon),id:mon.id};
+    for(const k of ['energyCards','tools','evolutionCards','energies','damage','cardId','enteredTurn','evolvedTurn','statusCondition','validationBase'])delete bare[k];
+    ours.hand.push(bare);
+    const baseline=port(removed).getSnapshot();
+    assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(baseline)));
+    assert.equal(baseline.players[1].active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost);
+    return {...t,trigger};
+  }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){
     const attackIndex=r.attacks.findIndex(a=>a.plan);
     if(attackIndex<0)return {blocked:'NO_RETREAT_CONTEXT_TRIGGER'};
@@ -3898,6 +3924,14 @@ function verifyCase(t, e) {
     verifyPrintedAttack(baseline,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
     verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);
     assert.deepEqual(S.identities(before),S.identities(after));
+  }
+  if(e.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE'){
+    const [own,other]=before.players;
+    assert(E.getReferenceEffectRecord(own.active).abilities.some(a=>a.effectId===e.effectId));
+    assert.equal(other.active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost+e.plan.amount);
+    verifyPrintedAttack(before,after,t.trigger,t.trigger.plan.base+t.trigger.plan.unit*other.active.retreatCost);
+    const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:own.active.id,abilityId:e.effectId}).ok,false);
+    assert.equal(JSON.stringify(B.canonical(bad.getSnapshot())),JSON.stringify(B.canonical(before)));
   }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(e.plan.mechanic)){
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);

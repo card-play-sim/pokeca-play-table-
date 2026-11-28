@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 563,
-      "missing": 307
+      "connected": 566,
+      "missing": 304
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 562,
+      "CONNECTED_UNTESTED": 565,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 264,
+      "ENGINE_CONNECTION_REQUIRED": 261,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -17412,8 +17412,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50255.json"
     },
     {
@@ -17741,8 +17740,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50317.json"
     },
     {
@@ -17844,8 +17842,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50333.json"
     },
     {
@@ -21330,8 +21327,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 562,
-        "MECHANIC_REQUIRED": 300,
+        "ENGINE_CONNECTED": 565,
+        "MECHANIC_REQUIRED": 297,
         "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21341,7 +21338,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3794,
-    "unconnected": 1279
+    "engineConnected": 3797,
+    "unconnected": 1276
   }
 }

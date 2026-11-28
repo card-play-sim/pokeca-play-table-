@@ -231960,6 +231960,255 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "50255",
+      "name": "メガシャンデラex",
+      "deckName": "メガシャンデラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50255",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050255_P_MSHIXYANDERAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ファントムメイズ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "130+",
+          "text": "相手のバトルポケモンのにげるためのエネルギーの数×50ダメージ追加。",
+          "effectId": "reference-50255-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentRetreat",
+            "type": null,
+            "unit": 50,
+            "base": 130
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅばくのほのお",
+          "text": "このポケモンがいるかぎり、相手のバトルポケモンは、にげるためのエネルギーが1個ぶん多くなる。",
+          "effectId": "reference-50255-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_OPPONENT_RETREAT_INCREASE",
+            "commands": [
+              "MODIFY_RETREAT_COST"
+            ],
+            "amount": 1,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ランプラー",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50255.json",
+        "sha256": "14cfa6de4557aa5ef66a4a0f590d7fc86c624dfa1d8ce8930d66915ac9172f2b",
+        "htmlSha256": "14cfa6de4557aa5ef66a4a0f590d7fc86c624dfa1d8ce8930d66915ac9172f2b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50317",
+      "name": "メガシャンデラex",
+      "deckName": "メガシャンデラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50317",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050317_P_MSHIXYANDERAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ファントムメイズ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "130+",
+          "text": "相手のバトルポケモンのにげるためのエネルギーの数×50ダメージ追加。",
+          "effectId": "reference-50317-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentRetreat",
+            "type": null,
+            "unit": 50,
+            "base": 130
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅばくのほのお",
+          "text": "このポケモンがいるかぎり、相手のバトルポケモンは、にげるためのエネルギーが1個ぶん多くなる。",
+          "effectId": "reference-50317-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_OPPONENT_RETREAT_INCREASE",
+            "commands": [
+              "MODIFY_RETREAT_COST"
+            ],
+            "amount": 1,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ランプラー",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50317.json",
+        "sha256": "e8cf3fbeeda4728c3b087f979577fe00f60eb196f7757656a1113ea3ed62057e",
+        "htmlSha256": "e8cf3fbeeda4728c3b087f979577fe00f60eb196f7757656a1113ea3ed62057e",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50333",
+      "name": "メガシャンデラex",
+      "deckName": "メガシャンデラex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50333",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050333_P_MSHIXYANDERAEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ファントムメイズ",
+          "cost": [
+            "超",
+            "超"
+          ],
+          "damage": "130+",
+          "text": "相手のバトルポケモンのにげるためのエネルギーの数×50ダメージ追加。",
+          "effectId": "reference-50333-attack-0",
+          "plan": {
+            "mechanic": "SCALED_ATTACK_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ],
+            "metric": "opponentRetreat",
+            "type": null,
+            "unit": 50,
+            "base": 130
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "じゅばくのほのお",
+          "text": "このポケモンがいるかぎり、相手のバトルポケモンは、にげるためのエネルギーが1個ぶん多くなる。",
+          "effectId": "reference-50333-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_OPPONENT_RETREAT_INCREASE",
+            "commands": [
+              "MODIFY_RETREAT_COST"
+            ],
+            "amount": 1,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 350,
+        "evolvesFrom": "ランプラー",
+        "retreatCost": 2,
+        "types": [
+          "超"
+        ],
+        "weakness": {
+          "types": [
+            "悪"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "闘"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50333.json",
+        "sha256": "966e240cdb06b42f8f34d0760802796c0ad0c25bd5cc63443904eecde9e9d8f4",
+        "htmlSha256": "966e240cdb06b42f8f34d0760802796c0ad0c25bd5cc63443904eecde9e9d8f4",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
