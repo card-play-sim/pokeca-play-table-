@@ -339,6 +339,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
  if(m==='ATTACK_MOVE_BENCH_COUNTERS'&&plan.team)reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
+ if(m==='ATTACK_RETURN_ENERGY_SPREAD'&&plan.optional)reserve(r=>mon(r,null,0),'bench',1);
  if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
   reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'discard');
   reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
@@ -2065,6 +2066,11 @@ function prepare(r, e, kind) {
       if(g.stadium)return {blocked:'EXISTING_STADIUM_FIXTURE'};
       g.stadium=zone.splice(zone.findIndex(eligible),1)[0];g.stadiumOwner=own.id;
     }
+  }
+  if(m==='ATTACK_RETURN_ENERGY_SPREAD'){
+    const own=frame.game.players[0],other=frame.game.players[1],plan=e.plan;
+    if(plan.optional&&(!other.bench.length||own.active.energyCards.length<plan.count))return {blocked:'NO_RETURN_ENERGY_SPREAD_FIXTURE'};
+    if(!own.active.energyCards.length)return {blocked:'NO_RETURN_ENERGY_FIXTURE'};
   }
   if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const own=frame.game.players[0],energy=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
@@ -3793,6 +3799,31 @@ function verifyCase(t, e) {
     assert(replay.dispatch('you',action).ok);
     assert.equal(replay.getSnapshot().players[0].bench.find(c=>c.id===source.id).damage,source.damage);
     assert(!replay.getSnapshot().history.slice(before.history.length).some(step=>step.details?.command==='MOVE_DAMAGE_COUNTERS'&&!step.details.reference));
+  }
+  if(e.plan.mechanic==='ATTACK_RETURN_ENERGY_SPREAD'){
+    const plan=e.plan,action=t.action||o.action;
+    const chosen=plan.optional?action.selections.energy:attackingSide.active.energyCards.map(c=>c.id);
+    const selectedId=action.selections.returnTarget[0];
+    assert(chosen.length>0&&selectedId);
+    const returned=effectEvents.find(ev=>ev?.command==='RETURN_TO_DECK'&&ev.fromZone==='attached');
+    assert(returned);assert.deepEqual(Array.from(returned.cardIds).sort(),Array.from(chosen).sort());
+    assert(chosen.every(id=>after.players[0].deck.some(c=>c.id===id)));
+    assert(effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'&&!ev.reference));
+    if(plan.optional){
+      verifyPrintedAttack(before,after,e,Number(e.damage));
+      assert(defendingSide.bench.some(c=>c.id===selectedId));
+      assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===selectedId&&ev.amount===plan.amount));
+      const decline=port(before),bad={...action,selections:{...action.selections,energy:[],returnTarget:[]}};
+      assert(decline.dispatch('you',bad).ok);
+      assert(!decline.getSnapshot().history.slice(before.history.length).some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.fromZone==='attached'));
+    }else{
+      assert.equal(chosen.length,attackingSide.active.energyCards.length);
+      if(selectedId===defendingSide.active.id)verifyPrintedAttack(before,after,e,plan.amount);
+      else assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===selectedId&&ev.amount===plan.amount));
+    }
+    const invalid=port(before);
+    assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,returnTarget:[attackingSide.active.id]}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
   }
   if(e.plan.mechanic==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const plan=e.plan,action=t.action||o.action;

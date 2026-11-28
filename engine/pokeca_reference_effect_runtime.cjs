@@ -632,6 +632,14 @@ function requests(g,actor,card,effect){
   if(effect.plan.optional&&candidates.length)
    out.at(-1).dependencies=[{kind:'requiresSelection',key:'searchMode',value:'search'}];
  }
+ if(m==='ATTACK_RETURN_ENERGY_SPREAD'){
+  const plan=effect.plan,eligible=(card.energyCards||[]).filter(c=>selectedAttachmentUnits(card,c,plan)>0);
+  if(plan.optional){
+   const possible=eligible.reduce((n,c)=>n+selectedAttachmentUnits(card,c,plan),0)>=plan.count;
+   cardRequest('energy',possible?eligible:[],0,possible?Math.min(plan.count,eligible.length):0);
+   cardRequest('returnTarget',o.bench,0,Math.min(1,o.bench.length));
+  }else cardRequest('returnTarget',opp,1,1);
+ }
  if(m==='ATTACK_RECYCLE_BASIC_ENERGY'&&effect.plan.counters){
   const count=p.discard.some(c=>basicEnergy(c)&&c.energyType===effect.plan.type)?1:0;
   add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),count,count);
@@ -813,6 +821,18 @@ function verifyRequests(g,actor,card,effect,action){
   assert(bench.length===(mode==='switch'?1:0),'SUPPORTER_MODE_TARGET_MISMATCH');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='ATTACK_RETURN_ENERGY_SPREAD'){
+  const plan=effect.plan,other=opponent(g,actor),picked=selected(action,'energy'),targets=selected(action,'returnTarget');
+  if(plan.optional){
+   const chosen=picked.map(i=>(card.energyCards||[]).find(c=>id(c)===i));
+   assert(chosen.every(Boolean),'RETURN_ENERGY_NOT_ATTACHED');
+   if(chosen.length){
+    const supplied=chosen.reduce((n,c)=>n+selectedAttachmentUnits(card,c,plan),0);
+    assert(supplied>=plan.count&&chosen.every(c=>supplied-selectedAttachmentUnits(card,c,plan)<plan.count),'RETURN_ENERGY_EXACT_UNITS');
+   }
+   assert(targets.length===(chosen.length&&other.bench.length?1:0),'RETURN_ENERGY_TARGET_MISMATCH');
+  }
+ }
  if(m==='MASS_ATTACHED_ENERGY_MOVE'){
   const plan=effect.plan,{pool}=attachedMovePool(p,opponent(g,actor),card,plan),chosen=selected(action,'energy').map(i=>pool.find(e=>id(e)===i));
   assert(chosen.every(Boolean),'INVALID_MOVE_ENERGY');
@@ -1709,6 +1729,22 @@ function applyPlan(g,actor,card,effect,action){
    event(g,actor,'DISCARD',{cardIds:cards.map(id),fromZone:'deck'});
    break;
   }
+  case 'ATTACK_RETURN_ENERGY_SPREAD':{
+   const chosen=plan.optional?ids('energy'):(card.energyCards||[]).map(id);
+   if(plan.optional)damage(g,actor,o.active,Number(effect.damage));
+   if(chosen.length){
+    for(const ident of chosen){
+     const index=card.energyCards.findIndex(c=>id(c)===ident);
+     assert(index>=0,'RETURN_ENERGY_NOT_ATTACHED');
+     p.deck.push(card.energyCards.splice(index,1)[0]);
+    }
+    event(g,actor,'RETURN_TO_DECK',{cardIds:chosen,sourceInstanceId:id(card),fromZone:'attached'});
+    shuffle(g,p);
+   }
+   const mon=(plan.optional?o.bench:field(o)).find(c=>id(c)===ids('returnTarget')[0]);
+   if(mon&&(!plan.optional||chosen.length))damage(g,actor,mon,plan.amount,{bench:mon!==o.active});
+   break;
+  }
   case 'ATTACK_RECYCLE_BASIC_ENERGY':{
    const cards=p.discard.filter(c=>basicEnergy(c)&&c.energyType===plan.type),amount=cards.length*plan.unit;
    if(cards.length)event(g,actor,'REVEAL',{cardIds:cards.map(id),fromZone:'discard',toPlayer:o.id});
@@ -2362,6 +2398,19 @@ function completeAction(g,actor,option){
   }
   action.selections||={};
   action.selections.energy=chosen.map(id);
+ }
+ if(m==='ATTACK_RETURN_ENERGY_SPREAD'){
+  const plan=effect.plan,other=opponent(g,actor);
+  action.selections||={};
+  if(plan.optional){
+   const chosen=[];let supplied=0;
+   for(const energy of [...(card.energyCards||[])].sort((a,b)=>selectedAttachmentUnits(card,b,plan)-selectedAttachmentUnits(card,a,plan))){
+    if(supplied>=plan.count)break;
+    const units=selectedAttachmentUnits(card,energy,plan);if(units>0){chosen.push(id(energy));supplied+=units;}
+   }
+   action.selections.energy=supplied>=plan.count&&other.bench.length?chosen:[];
+   action.selections.returnTarget=action.selections.energy.length?[id(other.bench[0])]:[];
+  }else action.selections.returnTarget=[id(other.active)];
  }
  if(m==='AKAMATSU'){
   const candidates=requests(g,actor,card,effect).find(r=>r.key==='cards').candidates,types=new Set(),chosen=candidates.filter(c=>{if(types.has(c.energyType))return false;types.add(c.energyType);return true;}).slice(0,2);
