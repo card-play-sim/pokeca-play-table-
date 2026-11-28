@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 568,
-      "missing": 302
+      "connected": 570,
+      "missing": 300
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 567,
+      "CONNECTED_UNTESTED": 569,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 259,
+      "ENGINE_CONNECTION_REQUIRED": 257,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -17527,8 +17527,7 @@
       "name": "シルヴァディ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50287.json"
     },
     {
@@ -17703,8 +17702,7 @@
       "name": "シルヴァディ",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50313.json"
     },
     {
@@ -21302,9 +21300,9 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1347,
+        "ENGINE_CONNECTED": 1350,
         "MECHANIC_REQUIRED": 509,
-        "ENGINE_CONNECTION_REQUIRED": 8
+        "ENGINE_CONNECTION_REQUIRED": 5
       },
       "I": {
         "total": 1702,
@@ -21315,9 +21313,9 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 567,
+        "ENGINE_CONNECTED": 569,
         "MECHANIC_REQUIRED": 291,
-        "ENGINE_CONNECTION_REQUIRED": 7,
+        "ENGINE_CONNECTION_REQUIRED": 5,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21326,7 +21324,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3837,
-    "unconnected": 1236
+    "engineConnected": 3842,
+    "unconnected": 1231
   }
 }

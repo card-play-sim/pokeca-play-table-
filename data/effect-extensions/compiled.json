@@ -234400,6 +234400,318 @@
         "search": true,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "45936",
+      "name": "カシオペア",
+      "deckName": "カシオペア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45936",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/045936_T_KASHIOPEA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45936.json",
+        "sha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
+        "htmlSha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
+        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "any",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "onlyHandCard": true,
+        "privateSearch": true
+      }
+    },
+    {
+      "officialCardId": "46062",
+      "name": "カシオペア",
+      "deckName": "カシオペア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46062",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/046062_T_KASHIOPEA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46062.json",
+        "sha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
+        "htmlSha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
+        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "any",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "onlyHandCard": true,
+        "privateSearch": true
+      }
+    },
+    {
+      "officialCardId": "46068",
+      "name": "カシオペア",
+      "deckName": "カシオペア",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46068",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV6a/046068_T_KASHIOPEA.jpg",
+      "category": "supporter",
+      "deckPrintAdopted": false,
+      "attacks": [],
+      "abilities": [],
+      "rulesText": [],
+      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
+      "facts": {
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46068.json",
+        "sha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
+        "htmlSha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
+        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
+      },
+      "mainPlan": {
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "ADD_TO_HAND",
+          "SHUFFLE_DECK"
+        ],
+        "zone": "deck",
+        "destination": "hand",
+        "category": "any",
+        "type": null,
+        "stage": null,
+        "team": null,
+        "limit": 2,
+        "activeOnly": false,
+        "sharedWording": true,
+        "onlyHandCard": true,
+        "privateSearch": true
+      }
+    },
+    {
+      "officialCardId": "50287",
+      "name": "シルヴァディ",
+      "deckName": "シルヴァディ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50287",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050287_P_SHIRUVUADEI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エアスラッシュ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "このポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-50287-attack-0",
+          "plan": {
+            "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バディコール",
+          "text": "自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-50287-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "supporter",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 1,
+            "activeOnly": false,
+            "sharedWording": true,
+            "emptyHand": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "タイプ：ヌル",
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50287.json",
+        "sha256": "71b53b63b79ca08ca6763ef5f79f61d9ffd0e43701df5539b95773fbe36261fd",
+        "htmlSha256": "71b53b63b79ca08ca6763ef5f79f61d9ffd0e43701df5539b95773fbe36261fd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50313",
+      "name": "シルヴァディ",
+      "deckName": "シルヴァディ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50313",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M5/050313_P_SHIRUVUADEI.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "エアスラッシュ",
+          "cost": [
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "130",
+          "text": "このポケモンについているエネルギーを1個選び、トラッシュする。",
+          "effectId": "reference-50313-attack-0",
+          "plan": {
+            "mechanic": "DISCARD_ONE_SELF_ENERGY_ATTACK",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ]
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "バディコール",
+          "text": "自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
+          "effectId": "reference-50313-ability-0",
+          "plan": {
+            "mechanic": "MASS_ZONE_TRANSFER",
+            "commands": [
+              "SEARCH_DECK",
+              "REVEAL",
+              "ADD_TO_HAND",
+              "SHUFFLE_DECK"
+            ],
+            "zone": "deck",
+            "destination": "hand",
+            "category": "supporter",
+            "type": null,
+            "stage": null,
+            "team": null,
+            "limit": 1,
+            "activeOnly": false,
+            "sharedWording": true,
+            "emptyHand": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "タイプ：ヌル",
+        "retreatCost": 2,
+        "types": [
+          "無色"
+        ],
+        "weakness": {
+          "types": [
+            "闘"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50313.json",
+        "sha256": "d73849b78b235702b2c5d90e58e9e3f8d3b7ca41d3d41ee58d9cf64e074a2b9f",
+        "htmlSha256": "d73849b78b235702b2c5d90e58e9e3f8d3b7ca41d3d41ee58d9cf64e074a2b9f",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

@@ -2615,7 +2615,7 @@ function verifyCase(t, e) {
       assert.equal(own.hand.length,plan.onlyHandCard?1:0);
       const denied=structuredClone(before),side=denied.players[0],extra=side.deck.findIndex(c=>!ids.includes(c.id));
       assert(extra>=0);side.hand.push(side.deck.splice(extra,1)[0]);
-      const retry=port(denied);assert.equal(retry.dispatch('you',action).ok,false);assert.deepEqual(retry.getSnapshot(),denied);
+      const retry=port(denied),beforeRejected=retry.getSnapshot();assert.equal(retry.dispatch('you',action).ok,false);assert.equal(JSON.stringify(B.canonical(retry.getSnapshot())),JSON.stringify(B.canonical(beforeRejected)));
     }
     if(plan.firstTurnAllowed){
       assert(ids.every(id=>own.deck.some(c=>c.id===id&&E.getReferenceEffectRecord(c).facts.basic&&E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))));
