@@ -1127,6 +1127,52 @@ function stadiumSupporterUsed(g,actor,rocketOnly=false){
   return proof?.category==='supporter'&&proof.name.startsWith('ロケット団');
  });
 }
+function greatTreeEvolutionMatches(source,next,stage){
+ return next?.kind==='pokemon'&&next.basic===false&&next.stage===stage&&record(next)?.facts.stage===stage&&next.evolvesFrom===(source.species||source.name)&&Number.isFinite(next.hp)&&next.hp>0&&!record(next).abilities.some(a=>a.name==='マイティソウル');
+}
+function greatTreeTargets(g,p){
+ return field(p).filter(c=>c.kind==='pokemon'&&c.basic===true&&record(c)?.facts.stage===0&&Number.isInteger(c.enteredTurn)&&c.enteredTurn<g.turnNumber&&c.evolvedTurn!==g.turnNumber);
+}
+function greatTreeRequests(g,actor){
+ const p=player(g,actor),targets=greatTreeTargets(g,p);
+ const out=[{key:'treeTarget',kind:'CARD',min:0,max:1,candidates:copy(targets)}];
+ for(const [i,target] of targets.entries()){
+  const first=p.deck.filter(c=>greatTreeEvolutionMatches(target,c,1)),key='treeFirst'+i;
+  out.push({key,kind:'CARD',min:0,max:Math.min(1,first.length),candidates:copy(first),dependencies:[{kind:'requiresSelection',key:'treeTarget',value:id(target)}],...(actor==='you'?{inspection:{privateTo:actor,cards:copy(p.deck)}}:{})});
+  for(const [j,one] of first.entries()){
+   const second=p.deck.filter(c=>greatTreeEvolutionMatches(one,c,2));
+   if(second.length)out.push({key:'treeSecond'+i+'_'+j,kind:'CARD',min:0,max:1,candidates:copy(second),dependencies:[{kind:'requiresSelection',key,value:id(one)}]});
+  }
+ }
+ return out;
+}
+function greatTreeEvolve(g,actor,p,target,next,second){
+ const base=target.validationBase||reduced(current(target));
+ const i=p.deck.indexOf(next);assert(i>=0,'GREAT_TREE_CARD_MISSING');
+ const action={type:'evolve',targetInstanceId:id(target),cardId:id(next)};
+ // The ordinary evolution path enforces species, stage and physical identity.
+ // Only the second step waives the same-turn evolution restriction.
+ const old=target.evolvedTurn;
+ if(second)delete target.evolvedTurn;
+ p.hand.push(p.deck.splice(i,1)[0]);
+ try{require('./pokeca_mobile_rules').execute(g,actor,action);}
+ catch(e){const j=p.hand.findIndex(c=>id(c)===id(next));if(j>=0)p.deck.splice(i,0,p.hand.splice(j,1)[0]);if(old!==undefined)target.evolvedTurn=old;throw e;}
+ target.validationBase=base;
+ for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn','referenceEvolutionWindow'])delete target[k];
+ event(g,actor,'ADD_STATE',{mechanic:'GREAT_TREE_EVOLVE',targetInstanceId:id(target),cardId:id(next),sourceOfficialCardId:record(g.stadium).officialCardId});
+}
+function executeGreatTree(g,actor,action){
+ const p=player(g,actor),targets=greatTreeTargets(g,p),i=targets.findIndex(c=>id(c)===selected(action,'treeTarget')[0]);
+ if(i>=0){
+  const target=targets[i],first=p.deck.filter(c=>greatTreeEvolutionMatches(target,c,1)),j=first.findIndex(c=>id(c)===selected(action,'treeFirst'+i)[0]);
+  if(j>=0){
+   const one=first[j],two=p.deck.find(c=>id(c)===selected(action,'treeSecond'+i+'_'+j)[0]);
+   greatTreeEvolve(g,actor,p,target,one,false);
+   if(two)greatTreeEvolve(g,actor,p,target,two,true);
+  }
+ }
+ event(g,actor,'SEARCH_DECK',{privateTo:actor,destination:'evolve'});shuffle(g,p);
+}
 function stadiumCanUse(g,actor){
  const plan=stadiumActivePlan(g),p=player(g,actor);
  if(!plan||g.status!=='active'||g.phase!=='main'||g.turnPlayer!==actor||g.attackUsed||g.pendingPrizeSelection||g.pendingReferenceChoice||p.turnLimits?.abilityUses?.[stadiumUseKey(g)])return false;
@@ -1135,6 +1181,7 @@ function stadiumCanUse(g,actor){
   case 'healEnd':case 'nonRuleHeal':return stadiumHealTargets(p,plan).length>0;
   case 'lightningRecover':return p.discard.some(c=>basicEnergy(c)&&c.energyType==='雷');
   case 'basicBench':return p.deck.length>0&&p.bench.length<5;
+  case 'greatTree':return g.turnNumber>2&&p.deck.length>0&&greatTreeTargets(g,p).length>0;
   case 'rocketDraw':return p.deck.length>0&&stadiumSupporterUsed(g,actor,true);
   case 'discardDraw':return p.deck.length>0&&p.hand.length>=plan.cost;
   case 'waterSwitch':return !!p.active&&record(p.active).facts.types.includes('水')&&p.bench.some(c=>record(c).facts.types.includes('水'));
@@ -1152,6 +1199,7 @@ function stadiumActiveRequests(g,actor){
   case 'psychicDraw':return request('discard',p.hand.filter(c=>c.kind==='energy'),1,1);
   case 'discardDraw':return request('discard',p.hand,plan.cost,plan.cost);
   case 'lightningRecover':{const pool=p.discard.filter(c=>basicEnergy(c)&&c.energyType==='雷');return request('cards',pool,1,Math.min(plan.amount,pool.length));}
+  case 'greatTree':return greatTreeRequests(g,actor);
   case 'basicBench':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic);return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
   case 'marnieSearch':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).name.startsWith('マリィの'));return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
   case 'waterSwitch':return request('bench',p.bench.filter(c=>record(c).facts.types.includes('水')),1,1);
@@ -1164,7 +1212,7 @@ function checkStadiumAction(g,actor,action){
  const req=stadiumActiveRequests(g,actor);
  assert(Object.keys(action.selections||{}).every(key=>req.some(r=>r.key===key)),'UNEXPECTED_STADIUM_SELECTION');
  assert(!action.targetIds?.length,'UNEXPECTED_STADIUM_TARGET');
- for(const r of req){const chosen=selected(action,r.key);assert(chosen.length>=r.min&&chosen.length<=r.max&&new Set(chosen).size===chosen.length&&chosen.every(i=>r.candidates.some(c=>id(c)===i)),'INVALID_STADIUM_SELECTION:'+r.key);}
+ for(const original of req){const r=stadiumActivePlan(g).mode==='greatTree'?Selection.resolve(original,req,action.selections||{}):original;const chosen=selected(action,r.key);assert(chosen.length>=r.min&&chosen.length<=r.max&&new Set(chosen).size===chosen.length&&chosen.every(i=>r.candidates.some(c=>id(c)===i)),'INVALID_STADIUM_SELECTION:'+r.key);}
 }
 function executeStadiumAction(g,actor,action){
  checkStadiumAction(g,actor,action);
@@ -1177,6 +1225,7 @@ function executeStadiumAction(g,actor,action){
   case 'rocketDraw':draw(g,p,plan.amount);break;
   case 'healEnd':case 'nonRuleHeal':case 'supporterHeal':for(const mon of stadiumHealTargets(p,plan))heal(g,actor,mon,plan.amount);break;
   case 'lightningRecover':moveChosen(g,p,'discard',ids('cards'),'hand');break;
+  case 'greatTree':executeGreatTree(g,actor,action);break;
   case 'basicBench':searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});break;
   case 'marnieSearch':searchSelectedDeck(g,actor,p,ids('cards'));break;
   case 'waterSwitch':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
