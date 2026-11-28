@@ -105,6 +105,21 @@ function firstReservable(candidates,predicate,ensure,excludedId){
 function requiredCopies(requirements,side,printId){
  return 1+requirements.filter(r=>r.side===side&&r.printId===printId).length;
 }
+// Use only fully compiled registered physical Pokemon for discard proofs.
+function registeredDiscardAbility(record,name){
+ return record?.category==='pokemon'&&record.attacks.length>0&&record.attacks.every(a=>a.plan)&&record.abilities.every(a=>a.plan)&&record.abilities.some(a=>a.name===name);
+}
+// Select exactly the printed cost from real attached basic Energy; no
+// special-energy unit assumptions or manufactured cards in this fixture.
+function exactBasicAttackPayment(cards,cost){
+ const pool=cards.filter(c=>c.kind==='energy'&&!c.isSpecial),paid=[];
+ for(const type of [...cost.filter(t=>t!=='無色'),...cost.filter(t=>t==='無色')]){
+  const i=pool.findIndex(c=>type==='無色'||c.energyType===type);
+  if(i<0)return null;
+  paid.push(pool.splice(i,1)[0]);
+ }
+ return paid;
+}
 // A complete evolution line is a single reservation transaction. Restore
 // the deck and its protected IDs if any physical parent cannot be reserved.
 // Enumerate exact registered parent alternatives. Stage decreases strictly,
@@ -515,9 +530,13 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
   if(plan.predicate==='ownBenchTera')reserveTera('bench');
   if(['ownFieldTypedThreshold','ownActiveTypedThreshold','discardBasicThreshold'].includes(plan.predicate))reserveEnergy(plan.type,plan.threshold+kindAttackCost(e,plan.type));
-  if(plan.predicate==='discardAbilityThreshold')for(let i=0;i<plan.threshold;i++){
-   if(!reserve(r=>r.category==='pokemon'&&r.abilities.some(a=>a.name===plan.name),'discard'))
-    return Object.assign(requirements,{boardBonusBlocked:'NO_REGISTERED_DISCARD_ABILITY_THRESHOLD_RESOURCE'});
+  if(plan.predicate==='discardAbilityThreshold'){
+   for(let i=0;i<plan.threshold;i++){
+    if(!reserve(r=>registeredDiscardAbility(r,plan.name),'discard'))
+     return Object.assign(requirements,{boardBonusBlocked:'NO_REGISTERED_DISCARD_ABILITY_THRESHOLD_RESOURCE'});
+   }
+   if(!reserve(r=>mon(r,null,0)&&r.attacks.length&&r.attacks.every(a=>a.plan)&&r.abilities.every(a=>a.plan)&&!r.abilities.some(a=>a.name===plan.name),'discard'))
+    return Object.assign(requirements,{boardBonusBlocked:'NO_DISCARD_ABILITY_NEGATIVE_CONTROL'});
   }
   if(plan.predicate==='discardNamed')reserve(r=>r.name===plan.name,'discard');
   if(plan.predicate==='ownBenchNamedDamaged')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
@@ -525,7 +544,12 @@ function fixtureResources(manifest,deckIndex,source,e){
    reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type),'active',1);
    reserve(r=>mon(r,null,0)&&r.facts.types.includes(plan.type),'bench',1);
   }
-  if(['equalActiveEnergy','moreActiveEnergy'].includes(plan.predicate)){
+  if(plan.predicate==='equalActiveEnergy'){
+   // Reserve one physical basic Energy beyond equality before prizes are dealt.
+   const needed=(e.cost||[]).length+1;
+   for(let i=0;i<needed;i++)if(!reserve(isBasicEnergy,'deck',1))
+    return Object.assign(requirements,{boardBonusBlocked:'NO_EQUAL_ENERGY_BOUNDARY_RESOURCE'});
+  }else if(plan.predicate==='moreActiveEnergy'){
    const needed=Math.max(1,(e.cost||[]).length);
    reserveEnergy(null,needed+1,1-deckIndex);
   }
@@ -1711,7 +1735,11 @@ function prepare(r, e, kind) {
         target.push(zone.splice(zone.findIndex(eligible),1)[0]);
       }
     }
-    if(plan.predicate==='discardAbilityThreshold'&&own.discard.filter(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.abilities.some(a=>a.name===plan.name)).length<plan.threshold)return {blocked:'NO_DISCARD_ABILITY_THRESHOLD_RESOURCE'};
+    if(plan.predicate==='discardAbilityThreshold'){
+      const eligible=c=>c.kind==='pokemon'&&registeredDiscardAbility(E.getReferenceEffectRecord(c),plan.name);
+      if(own.discard.filter(eligible).length!==plan.threshold)return {blocked:'NO_EXACT_DISCARD_ABILITY_THRESHOLD_RESOURCE'};
+      if(!own.discard.some(c=>c.kind==='pokemon'&&!eligible(c)))return {blocked:'NO_DISCARD_ABILITY_NEGATIVE_CONTROL'};
+    }
     if(plan.predicate==='discardNamed'&&!own.discard.some(c=>E.getReferenceEffectRecord(c)?.name===plan.name))return {blocked:'NO_NAMED_DISCARD_RESOURCE'};
     if(plan.predicate==='ownBenchNamedDamaged'){
       const matches=own.bench.filter(c=>E.getReferenceEffectRecord(c).name===plan.name);
@@ -1724,6 +1752,13 @@ function prepare(r, e, kind) {
       own.active.damage=own.active.hp-plan.threshold;
     }
     if(['equalActiveEnergy','moreActiveEnergy'].includes(plan.predicate)){
+      if(plan.predicate==='equalActiveEnergy'){
+        const paid=exactBasicAttackPayment(own.active.energyCards,e.cost||[]);
+        if(!paid)return {blocked:'NO_EQUAL_ENERGY_EXACT_PAYMENT'};
+        const ids=new Set(paid.map(c=>c.id));
+        for(const c of [...own.active.energyCards])if(!ids.has(c.id))own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(c),1)[0]);
+        own.active.energies=own.active.energyCards.map(c=>c.energyType);
+      }
       for(const c of other.active.energyCards.splice(0))other.deck.push(c);
       const target=own.active.energyCards.length-(plan.predicate==='moreActiveEnergy'?1:0);
       if(target<0)return {blocked:'NO_OWN_ENERGY_FIXTURE'};
@@ -3248,6 +3283,33 @@ function verifyCase(t, e) {
       }
     };
     if(!positive(before))return {status:'BLOCKED',reason:'NO_POSITIVE_BOARD_PREDICATE_FIXTURE'};
+    if(plan.predicate==='discardAbilityThreshold'){
+      const discard=before.players[0].discard,matching=discard.filter(c=>c.kind==='pokemon'&&registeredDiscardAbility(rec(c),plan.name));
+      assert.equal(matching.length,plan.threshold);
+      assert.equal(new Set(matching.map(c=>c.id)).size,plan.threshold);
+      assert(discard.some(c=>c.kind==='pokemon'&&!registeredDiscardAbility(rec(c),plan.name)));
+    }
+    if(plan.predicate==='equalActiveEnergy'){
+      const [a,b]=before.players;
+      if([...a.active.energyCards,...b.active.energyCards].some(c=>c.isSpecial))return {status:'BLOCKED',reason:'NO_BASIC_EQUAL_ENERGY_PROOF'};
+      assert.equal(a.active.energyCards.length,(e.cost||[]).length);
+      assert.equal(b.active.energyCards.length,a.active.energyCards.length);
+      // Test the opposite unequal boundary too (opponent +1) using a
+      // reserved physical card and the same printed attack.
+      const upper=JSON.parse(JSON.stringify(before)),opp=upper.players[1];
+      const zone=[opp.deck,opp.hand].find(z=>z.some(c=>c.kind==='energy'&&!c.isSpecial));
+      if(!zone)return {status:'BLOCKED',reason:'NO_UPPER_EQUAL_ENERGY_BOUNDARY'};
+      opp.active.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial),1)[0]);
+      opp.active.energies=opp.active.energyCards.map(c=>c.energyType);
+      assert(!positive(upper));
+      assert.deepEqual(S.identities(before),S.identities(upper));
+      const replayUpper=port(upper);
+      assert(replayUpper.dispatch('you',action).ok);
+      const upperResult=replayUpper.getSnapshot();
+      verifyPrintedAttack(upper,upperResult,e,plan.base);
+      assert(replayUpper.restoreSession(replayUpper.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(replayUpper.getSnapshot()),JSON.stringify(upperResult));
+    }
     const start=JSON.parse(JSON.stringify(before)),[own,other]=start.players;
     switch(plan.predicate){
       case 'healedThisTurn':start.history.find(h=>h.details?.command==='HEAL'&&h.details.targetInstanceId===own.active.id).turnNumber--;break;
@@ -3347,6 +3409,10 @@ function verifyCase(t, e) {
       case 'ownSpecialEnergy':for(const c of [...own.active.energyCards])if(c.isSpecial){own.active.energyCards.splice(own.active.energyCards.indexOf(c),1);own.deck.push(c);}break;
     }
     if(positive(start))return {status:'BLOCKED',reason:'NO_NEGATIVE_BOARD_PREDICATE_FIXTURE'};
+    if(plan.predicate==='discardAbilityThreshold'){
+      assert.equal(own.discard.filter(c=>c.kind==='pokemon'&&registeredDiscardAbility(rec(c),plan.name)).length,plan.threshold-1);
+      assert(own.discard.some(c=>c.kind==='pokemon'&&!registeredDiscardAbility(rec(c),plan.name)));
+    }
     assert.deepEqual(S.identities(before),S.identities(start));
     const replay=port(start);
     if(!replay.dispatch('you',plan.optional?{...action,selections:{...action.selections,stadiumBonus:[]}}:action).ok)return {status:'BLOCKED',reason:'NEGATIVE_PREDICATE_ATTACK_UNPAYABLE'};
