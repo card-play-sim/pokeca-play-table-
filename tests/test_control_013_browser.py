@@ -782,8 +782,14 @@ async def main():
     if plan.get('status'):
      assert reactions[0]['status']==plan['status']
     else:
-     assert reactions[0]['counterCount']==plan['counterCount']
-     assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==plan['counterCount'] for ev in events)
+     expected=plan['counterCount']
+     if plan.get('mode')=='energy':
+      assert not any(c.get('isSpecial') for c in defender['energyCards']), 'RETALIATION_SPECIAL_ENERGY_CONFOUND'
+      units=sum(c['kind']=='energy' and c.get('energyType')==plan['type'] for c in defender['energyCards'])
+      assert units>0
+      expected*=units
+     assert reactions[0]['counterCount']==expected
+     assert any(ev.get('details',{}).get('command')=='PLACE_DAMAGE_COUNTERS' and ev['details'].get('targetInstanceId')==attacker['id'] and ev['details'].get('counterCount')==expected for ev in events)
    if m in ('PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL'):
     defender=before['players'][1]['active']
     survivor=after['players'][1]['active']
