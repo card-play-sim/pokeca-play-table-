@@ -414,6 +414,17 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')reserve(r=>r.category==='pokemon'&&!r.facts.rulePokemon,'hand');
+ if(m==='TRAINER_OPPONENT_NAME_SEARCH'){
+  const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
+  const active=reserve(plain,'active',1);
+  if(!active||!reserve(r=>plain(r)&&r.name===active.name,'deck')||!reserve(r=>plain(r)&&r.name!==active.name,'deck'))return Object.assign(requirements,{teamBoostBlocked:'NO_OPPONENT_NAME_SEARCH_FIXTURE'});
+ }
+ if(m==='TRAINER_TYPED_SPLIT_RECOVER'){
+  for(let i=0;i<plan.limit;i++){
+   if(!reserve(r=>mon(r,plan.type,0),'discard')||!reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'discard'))return Object.assign(requirements,{teamBoostBlocked:'NO_SPLIT_RECOVERY_FIXTURE'});
+  }
+  if(!reserve(r=>isBasicEnergy(r)&&typeOf(r)!==plan.type,'discard'))return Object.assign(requirements,{teamBoostBlocked:'NO_SPLIT_RECOVERY_NEGATIVE'});
+ }
  if(m==='TRAINER_POISON_RETREAT_LOCK'){
   const free=r=>mon(r,null,0)&&!r.abilities.length&&r.facts.retreatCost===0&&r.attacks.every(a=>a.plan);
   if(!reserve(free,'active',1)||!reserve(free,'bench',1))return Object.assign(requirements,{teamBoostBlocked:'NO_FREE_RETREAT_POISON_LOCK_FIXTURE'});
@@ -2478,6 +2489,35 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='TRAINER_OPPONENT_NAME_SEARCH'){
+    const [own,other]=before.players,action=t.action||o.action,names=new Set([other.active,...other.bench].map(c=>E.getReferenceEffectRecord(c).name));
+    const pool=own.deck.filter(c=>c.kind==='pokemon'&&names.has(E.getReferenceEffectRecord(c).name));
+    const chosen=action.selections.cards;
+    assert(chosen.length===1&&pool.some(c=>c.id===chosen[0]));
+    assert(after.players[0].hand.some(c=>c.id===chosen[0]));
+    const wrong=own.deck.find(c=>c.kind==='pokemon'&&!names.has(E.getReferenceEffectRecord(c).name));
+    assert(wrong,'NO_WRONG_NAME_FIXTURE');
+    const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{cards:[wrong.id]}}).ok,false);assert.deepEqual(denied.getSnapshot(),before);
+    const skip=port(before);assert(skip.dispatch('you',{...action,selections:{cards:[]}}).ok);assert.deepEqual(S.identities(before),S.identities(skip.getSnapshot()));
+  }
+  if(e.plan.mechanic==='TRAINER_TYPED_SPLIT_RECOVER'){
+    const own=before.players[0],action=t.action||o.action,plan=e.plan;
+    const pokemon=own.discard.filter(c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c).facts.types.includes(plan.type));
+    const energy=own.discard.filter(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type);
+    assert(pokemon.length>=plan.limit&&energy.length>=plan.limit);
+    for(const keys of [['pokemon'],['energy'],['pokemon','energy']]){
+      const selections={pokemon:keys.includes('pokemon')?pokemon.slice(0,plan.limit).map(c=>c.id):[],energy:keys.includes('energy')?energy.slice(0,plan.limit).map(c=>c.id):[]};
+      const replay=port(before);assert(replay.dispatch('you',{...action,selections}).ok);
+      const end=replay.getSnapshot(),p=end.players[0],chosen=[...selections.pokemon,...selections.energy];
+      assert(chosen.every(id=>p.deck.some(c=>c.id===id)&&!p.discard.some(c=>c.id===id)));
+      assert.deepEqual(S.identities(before),S.identities(end));
+      assert(end.history.slice(before.history.length).some(ev=>ev.details?.command==='REVEAL'&&chosen.every(id=>ev.details.cardIds.includes(id))));
+    }
+    const wrong=own.discard.find(c=>c.kind==='energy'&&c.energyType!==plan.type);assert(wrong);
+    for(const selections of [{pokemon:[],energy:[]},{pokemon:[],energy:[wrong.id]},{pokemon:[energy[0].id],energy:[]},{pokemon:[pokemon[0].id,pokemon[0].id],energy:[]}]){
+      const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections}).ok,false);assert.deepEqual(denied.getSnapshot(),before);
+    }
+  }
   if(e.plan.mechanic==='TRAINER_POISON_RETREAT_LOCK'){
     const plan=e.plan,other=after.players[1];
     assert.equal(other.referencePoisonRetreatLock?.turn,before.turnNumber+1);

@@ -336,6 +336,13 @@ function massRouteTargets(p,card,plan){
 function massRouteEnergy(p,plan){
  return (plan.windowCount?p[plan.zone].slice(0,plan.windowCount):p[plan.zone]).filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
 }
+function opponentNameCandidates(p,o){
+ const names=new Set(field(o).map(c=>record(c).name));
+ return p.deck.filter(c=>c.kind==='pokemon'&&names.has(record(c).name));
+}
+function typedSplitRecovery(p,plan){
+ return {pokemon:p.discard.filter(c=>c.kind==='pokemon'&&record(c).facts.types.includes(plan.type)),energy:p.discard.filter(c=>basicEnergy(c)&&c.energyType===plan.type)};
+}
 function massTransferCandidate(c,plan){
  const r=record(c);
  if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
@@ -707,6 +714,11 @@ function requests(g,actor,card,effect){
    }
   }
  }
+ if(m==='TRAINER_OPPONENT_NAME_SEARCH')deckRequest('cards',opponentNameCandidates(p,o),0,Math.min(1,opponentNameCandidates(p,o).length));
+ if(m==='TRAINER_TYPED_SPLIT_RECOVER'){
+  const pools=typedSplitRecovery(p,effect.plan);
+  for(const key of ['pokemon','energy'])cardRequest(key,pools[key],0,Math.min(effect.plan.limit,pools[key].length));
+ }
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')cardRequest('cards',own.filter(c=>isMegaEvolutionEx(c)&&c.damage>0),1,1);
  if(m==='MASS_ZONE_TRANSFER'){
   const plan=effect.plan,pool=transferWindow(p,plan).filter(c=>massTransferCandidate(c,plan));
@@ -868,6 +880,7 @@ function verifyRequests(g,actor,card,effect,action){
   assert(bench.length===(mode==='switch'?1:0),'SUPPORTER_MODE_TARGET_MISMATCH');
  }
  const m=effect.plan.mechanic,p=player(g,actor),cards=selected(action,'cards').map(i=>p.deck.find(c=>id(c)===i));
+ if(m==='TRAINER_TYPED_SPLIT_RECOVER')assert(selected(action,'pokemon').length+selected(action,'energy').length>0,'RECOVERY_SELECTION_REQUIRED');
  if(m==='MASS_ATTACHED_ENERGY_MOVE'){
   const plan=effect.plan,{pool}=attachedMovePool(p,opponent(g,actor),card,plan),chosen=selected(action,'energy').map(i=>pool.find(e=>id(e)===i));
   assert(chosen.every(Boolean),'INVALID_MOVE_ENERGY');
@@ -1053,6 +1066,8 @@ function preflight(g,actor,action){
    if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,o,r.mainPlan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
    if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
    if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+   if(m==='TRAINER_OPPONENT_NAME_SEARCH')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='TRAINER_TYPED_SPLIT_RECOVER'){const pools=typedSplitRecovery(p,r.mainPlan);assert(pools.pokemon.length+pools.energy.length>0,'NO_TYPED_RECOVERY_SOURCE');}
    if(m==='TRAINER_DRAW_END_DISCARD')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&r.mainPlan.trainer)assert(p.deck.length>0&&p.bench.length<5,'NO_BASIC_BENCH_SEARCH_POSSIBLE');
@@ -2148,6 +2163,16 @@ function applyPlan(g,actor,card,effect,action){
    assert(!plan.minimumEnergy||energyUnits(p.active).length>=plan.minimumEnergy,'ACTIVE_ENERGY_MINIMUM_REQUIRED');
    const amount=plan.tailsAmount!==undefined?(coin(g,actor)?plan.amount:plan.tailsAmount):plan.team&&record(p.active).name.startsWith(plan.team+'の')?plan.teamAmount:plan.amount;
    heal(g,actor,p.active,amount+(plan.discardName?p.discard.filter(c=>id(c)!==id(card)&&record(c)?.name===plan.discardName).length*plan.discardUnit:0));break;
+  }
+  case 'TRAINER_OPPONENT_NAME_SEARCH':{
+   const chosen=ids('cards'),pool=opponentNameCandidates(p,o);
+   assert(chosen.length<=plan.limit&&chosen.every(ident=>pool.some(c=>id(c)===ident)),'OPPONENT_NAME_SEARCH_CHANGED');
+   searchSelectedDeck(g,actor,p,chosen);break;
+  }
+  case 'TRAINER_TYPED_SPLIT_RECOVER':{
+   const pools=typedSplitRecovery(p,plan),chosen=[...ids('pokemon'),...ids('energy')];
+   assert(chosen.length>0&&new Set(chosen).size===chosen.length&&['pokemon','energy'].every(key=>ids(key).length<=plan.limit&&ids(key).every(ident=>pools[key].some(c=>id(c)===ident))),'INVALID_SPLIT_RECOVERY');
+   moveChosen(g,p,'discard',chosen,'deck');shuffle(g,p);break;
   }
   case 'TRAINER_POISON_RETREAT_LOCK':
    o.referencePoisonRetreatLock={turn:g.turnNumber+1,sourceOfficialCardId:record(card).officialCardId};
