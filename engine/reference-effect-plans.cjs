@@ -128,6 +128,10 @@ function additionalAttackPlan(entry,text){
   };
   return {mechanic:'CONDITIONAL_ATTACK_BONUS',commands:['DAMAGE'],predicate:predicates[conditional[1]],base,bonus:Number(conditional[2])};
  }
+ // A fixed replacement is base damage, not additional damage.
+ const replacement=text.match(/^相手のバトルポケモンにダメカンがのっているなら、このワザのダメージは「([1-9]\d{0,2})」になる。$/);
+ if(replacement&&base!==null&&/^\d+$/.test(printed))
+  return {mechanic:'CONDITIONAL_ATTACK_BONUS',commands:['DAMAGE'],predicate:'opponentDamaged',base,bonus:Number(replacement[1])-base,sharedWording:true};
  const specific=text.match(/^(相手のバトルポケモンがどくなら|このポケモンがどくなら|このポケモンにダメカンがのっているなら|このポケモンに「ポケモンのどうぐ」がついているなら|相手のバトルポケモンに「ポケモンのどうぐ」がついているなら|自分のサイドの残り枚数が、相手のサイドの残り枚数より多いなら)、([1-9]\d{0,2})ダメージ追加。$/);
  if(specific&&base!==null&&printed.endsWith('+')){
   const predicates={
