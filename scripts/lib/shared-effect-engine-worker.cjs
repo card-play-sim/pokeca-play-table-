@@ -2516,6 +2516,15 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='DRAW_CARDS'&&e.plan.socialIntroduction){
+    const own=before.players[0],next=after.players[0],count=Math.min(3,own.deck.length),drawn=Array.from(own.deck.slice(0,count),c=>c.id);
+    assert(count===3,'NO_SOCIAL_DRAW_THREE_FIXTURE');
+    assert.deepEqual(Array.from(next.hand,c=>c.id).sort(),[...Array.from(own.hand.filter(c=>c.id!==t.sourceId),c=>c.id),...drawn].sort());
+    assert.deepEqual(Array.from(next.deck,c=>c.id),Array.from(own.deck.slice(count),c=>c.id));
+    assert(next.discard.some(c=>c.id===t.sourceId)&&next.turnLimits.supporterUsed);
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+    const save=p.getResumeSnapshot();assert(p.restoreSession(save).ok);assert.equal(JSON.stringify(p.getSnapshot()),JSON.stringify(after));
+  }
   if(e.plan.mechanic==='TRAINER_FOSSIL_BASIC'){
     const [own,other]=before.players,side=after.players[0],mon=side.bench.find(c=>c.id===t.sourceId);
     assert(mon&&mon.kind==='pokemon'&&mon.basic&&mon.stage===0&&mon.hp===60&&mon.prizeCount===1&&mon.enteredTurn===before.turnNumber);

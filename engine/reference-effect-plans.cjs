@@ -1053,6 +1053,7 @@ function plan(entry,kind){
   return {mechanic:'ATTACK_DISCARD_HAND_DRAW',commands:['DAMAGE','DISCARD','DRAW'],amount:Number(discardDraw[1])};
  const reduction=generic.match(/^次の相手の番、このポケモンが受けるワザのダメージは「-([1-9][0-9]*)」される。$/);
  if(kind==='ATTACK'&&reduction&&/^\d+$/.test(String(entry.damage||'0'))&&Number.isSafeInteger(Number(reduction[1])))return {mechanic:'ATTACK_DAMAGE_REDUCTION',commands:['DAMAGE','ADD_STATE'],amount:Number(reduction[1])};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==="好きなポケモンを相手に紹介しながら、自分の山札を3枚引く。相手は、好きな気持ちが伝わったなら、「いいね!」と言ってもよい。")return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:3,socialIntroduction:true,sharedWording:true};
  let match=generic.match(/^自分の山札を([1-9][0-9]*)枚引く。$/);
  if(kind==='MAIN'&&['item','supporter'].includes(entry.category)&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'DRAW_CARDS',commands:['DRAW'],amount:Number(match[1])};
  match=generic.match(/^自分のポケモン1匹のHPを「([1-9][0-9]*)」回復する。$/);
