@@ -261,7 +261,12 @@ function additionalAttackPlan(entry,text){
    ];
    for(const [predicate,regex,key] of patterns){
     const match=clause.match(regex);
-    if(match)return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate,base,bonus,...(key?{[key]:key==='threshold'?Number(match[1]):match[1]}:{}),sharedWording:true};
+    if(match){
+     // Official attack HTML renders the type glyph as [悪], but print 50300
+     // has the exact card name シャドー悪エネルギー. Preserve all other names.
+     const value=key==='threshold'?Number(match[1]):predicate==='ownBenchNamedEnergy'&&match[1]==='シャドー[悪]エネルギー'?'シャドー悪エネルギー':match[1];
+     return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate,base,bonus,...(key?{[key]:value}:{}),sharedWording:true};
+    }
    }
   }
  }

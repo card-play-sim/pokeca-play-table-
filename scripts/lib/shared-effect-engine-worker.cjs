@@ -493,8 +493,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
   if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
   if(plan.predicate==='ownBenchNamedEnergy'){
-   reserve(r=>r.category==='energy'&&r.name===plan.name&&r.mainPlan,'deck');
-   reserve(r=>mon(r,null,0)&&r.facts.types.includes('悪')&&!r.abilities.length,'bench');
+   const energy=reserve(r=>r.category==='energy'&&r.name===plan.name&&r.mainPlan,'deck');
+   if(!energy)return Object.assign(requirements,{boardBonusBlocked:'NO_REGISTERED_NAMED_BENCH_ENERGY'});
+   const type=energy.mainPlan.energyType;
+   if(!reserve(r=>mon(r,type||null,0)&&!r.abilities.length,'bench'))
+    return Object.assign(requirements,{boardBonusBlocked:'NO_REGISTERED_NAMED_BENCH_ENERGY_HOLDER'});
   }
   if(['opponentRetreatZero','opponentRetreatAtLeast'].includes(plan.predicate)){
    const match=r=>plan.predicate==='opponentRetreatZero'?r.facts.retreatCost===0:r.facts.retreatCost>=plan.threshold;
@@ -1669,11 +1672,13 @@ function prepare(r, e, kind) {
     }
     if(plan.predicate==='ownBenchNamedEnergy'){
       const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;
-      const holder=own.bench.find(c=>E.getReferenceEffectRecord(c).facts.types.includes('悪')&&!c.energyCards.length);
-      if(!holder)return {blocked:'NO_BENCH_NAMED_ENERGY_HOLDER'};
       const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
       if(!zone)return {blocked:'NO_BENCH_NAMED_ENERGY_FIXTURE'};
-      holder.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      const energy=zone.find(eligible),type=E.getReferenceEffectRecord(energy).mainPlan?.energyType;
+      const holder=own.bench.find(c=>(!type||E.getReferenceEffectRecord(c).facts.types.includes(type))&&!c.energyCards.length);
+      if(!holder)return {blocked:'NO_BENCH_NAMED_ENERGY_HOLDER'};
+      holder.energyCards.push(zone.splice(zone.indexOf(energy),1)[0]);
+      if(type)holder.energies=[type];
     }
     if(plan.predicate==='ownNamedEnergy'){
       const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;

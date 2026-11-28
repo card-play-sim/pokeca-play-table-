@@ -23,7 +23,7 @@ const rows=[
         "predicate": "ownBenchNamedEnergy",
         "base": 100,
         "bonus": 70,
-        "name": "シャドー[悪]エネルギー",
+        "name": "シャドー悪エネルギー",
         "sharedWording": true
       }
     }
@@ -48,7 +48,7 @@ const rows=[
         "predicate": "ownBenchNamedEnergy",
         "base": 100,
         "bonus": 70,
-        "name": "シャドー[悪]エネルギー",
+        "name": "シャドー悪エネルギー",
         "sharedWording": true
       }
     }
@@ -127,4 +127,7 @@ const rows=[
   }
 ];
 for(const {id,attack} of rows){const proof=JSON.parse(fs.readFileSync('data/effect-extensions/evidence/'+id+'.json','utf8'));assert.equal(crypto.createHash('sha256').update(proof.html).digest('hex'),proof.htmlSha256);const row={...parse(proof.html),officialCardId:id};const rec=compile({records:[row]}).records[0];assert(rec.attacks.every(a=>a.plan)&&rec.abilities.every(a=>a.plan));assert.deepEqual(rec.attacks.find(a=>a.name===attack.name),attack);assert.equal(compile({records:[{...row,attacks:[{...attack,text:attack.text+'自分の山札を1枚引く。'}]}]}).records[0].attacks[0].plan,null);}
-console.log('5 exact official board bonus prints');
+const shadow=JSON.parse(fs.readFileSync('data/effect-extensions/evidence/50300.json','utf8'));
+assert.equal(crypto.createHash('sha256').update(shadow.html).digest('hex'),shadow.htmlSha256);
+assert(shadow.html.includes('<title>シャドー悪エネルギー |'));
+console.log('5 exact official board bonus prints and named energy identity');
