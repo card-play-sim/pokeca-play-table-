@@ -518,6 +518,12 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
+ if(m==='MASS_HAND_FLOW'&&plan.mode==='opponentMegaCount'){
+  const mega=r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき');
+  const first=reserve(mega,'active',1);
+  if(first)reserve(r=>mega(r)&&r.officialCardId!==first.officialCardId,'bench',1);
+  reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench',1);
+ }
  if(m==='MASS_HAND_FLOW'&&plan.mode==='rocketLimit'){
   const valid=r=>mon(r,null,0)&&r.name.startsWith('ロケット団の');
   const active=reserve(valid,'active');
@@ -1516,6 +1522,12 @@ function prepare(r, e, kind) {
   }
   if(m==='MASS_HAND_FLOW'){
     const [own,other]=frame.game.players,plan=e.plan;
+    if(plan.mode==='opponentMegaCount'){
+      const mega=c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき');
+      const mons=[other.active,...other.bench];
+      if(mons.filter(mega).length<2||!mons.some(c=>!mega(c)&&E.getReferenceEffectRecord(c).name.endsWith('ex')))return {blocked:'NO_EXACT_MEGA_COUNT_FIXTURE'};
+      if(own.deck.length<2)return {blocked:'NO_MEGA_DRAW_DECK_FIXTURE'};
+    }
     if(plan.mode==='revealCount'&&!other.hand.some(c=>c.kind==='pokemon')){
      const i=other.deck.findIndex(c=>c.kind==='pokemon');if(i<0)return {blocked:'NO_REVEAL_POKEMON_FIXTURE'};other.hand.push(other.deck.splice(i,1)[0]);
     }
@@ -2829,6 +2841,21 @@ function verifyCase(t, e) {
       assert.equal(flips.length,1);assert.equal(flips[0].player,own.id);
       checkReset({...own,hand:own.hand.filter(c=>c.id!==t.sourceId)},flips[0].details.heads?q.amount:q.tails);
       checkReset(other,flips[0].details.heads?q.opponentHeads:q.opponentTails);
+    }
+    if(q.mode==='opponentMegaCount'){
+      const mega=c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき'),mons=[other.active,...other.bench],n=mons.filter(mega).length;
+      assert(n>=2&&mons.some(c=>!mega(c)&&E.getReferenceEffectRecord(c).name.endsWith('ex')));
+      checkDraw(own,n);assert.equal(after.players[0].hand.length,own.hand.length-1+Math.min(n,own.deck.length));
+      const absent=structuredClone(before),side=absent.players[1],keep=[side.active,...side.bench].filter(c=>!mega(c)),removed=[side.active,...side.bench].filter(mega);
+      for(const c of removed){
+        if(c.evolutionCards?.length)return {status:'BLOCKED',reason:'MEGA_COUNT_NEGATIVE_FIXTURE_EVOLVED'};
+        const raw=structuredClone(c);
+        side.deck.push(...(raw.energyCards||[]),...(raw.tools||[]));
+        for(const k of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'])delete raw[k];side.deck.push(raw);
+      }
+      side.active=keep[0];side.bench=keep.slice(1);
+      assert.deepEqual(Array.from(S.identities(absent)),Array.from(S.identities(before)));
+      const replay=port(absent);assert.equal(replay.dispatch('you',t.action||o.action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(absent));
     }
     if(q.mode==='bothDraw'){checkDraw(own,q.amount);checkDraw(other,q.amount);}
     if(q.mode==='resetOwnMatch')checkReset(own,other.hand.length);
