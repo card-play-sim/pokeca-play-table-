@@ -1,0 +1,134 @@
+name: 山札順序操作10印刷版・並列高速検証
+on:
+  push:
+    branches: [battle/issue122-deck-order-20261128]
+    paths: ['.github/workflows/issue122-deck-order.yml']
+  workflow_dispatch:
+concurrency:
+  group: issue122-deck-order
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      INTAKE_LIMIT: '10000'
+      POKECA_ENGINE_SHARDS: '4'
+      POKECA_INTAKE_PARALLEL_REGRESSION: '1'
+      POKECA_INTAKE_LOCAL_CANDIDATE: '1'
+      POKECA_INTAKE_REQUESTED_TARGETS: '45284,45562,46826,47206,49414,50134,50190,47661,48034,49040'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate common source and preserve published baseline
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 58e9c7d89ee6e9ece08abc64fa5cecc5baf5af7c HEAD
+          git fetch origin main
+          git checkout --detach origin/main
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          changes=json.loads("[{\"path\":\"engine/reference-effect-plans.cjs\",\"from\":\" const generic=text.normalize('NFKC');\",\"to\":\" const generic=text.normalize('NFKC');\\n if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:2,search:true,sharedWording:true};\\n if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};\\n const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);\\n if(kind==='ATTACK'&&opponentOrder&&/^\\\\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\" if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')cardRequest('cards',p.hand.filter(c=>id(c)!==id(card)),effect.plan.count,effect.plan.count);\",\"to\":\" if(m==='DECK_ORDER_SELECT'){\\n  const plan=effect.plan,deck=(plan.side==='own'?p:o).deck,count=Math.min(plan.count,deck.length),pool=plan.search?deck:deck.slice(0,count);\\n  if(plan.search)deckRequest('cards',pool,count,count);\\n  else {cardRequest('cards',pool,count,count);if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(pool)};}\\n }\\n if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')cardRequest('cards',p.hand.filter(c=>id(c)!==id(card)),effect.plan.count,effect.plan.count);\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\" if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');\",\"to\":\" if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');\\n if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\"   if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');\",\"to\":\"   if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');\\n   if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');\"},{\"path\":\"engine/pokeca_reference_effect_runtime.cjs\",\"from\":\"  case 'SUPPORTER_ORDERED_BOTTOM_DRAW':{\",\"to\":\"  case 'DECK_ORDER_SELECT':{\\n   const owner=plan.side==='own'?p:o,chosen=ids('cards'),count=Math.min(plan.count,owner.deck.length),window=owner.deck.slice(0,count);\\n   assert(chosen.length===count&&new Set(chosen).size===count,'DECK_ORDER_COUNT');\\n   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));\\n   if(plan.search){\\n    const moved=chosen.map(ident=>{const index=owner.deck.findIndex(c=>id(c)===ident);assert(index>=0,'DECK_ORDER_CARD_MISSING');return owner.deck.splice(index,1)[0];});\\n    event(g,actor,'SEARCH_DECK',{selectedCount:count,privateTo:actor});shuffle(g,owner);owner.deck.unshift(...moved);\\n   }else{\\n    const moved=chosen.map(ident=>window.find(c=>id(c)===ident));assert(moved.every(Boolean),'DECK_ORDER_WINDOW');\\n    event(g,actor,'REVEAL',{cardIds:window.map(id),fromZone:'deck',privateTo:actor});\\n    owner.deck.splice(0,count,...moved);\\n   }\\n   event(g,actor,'RETURN_TO_DECK',{cardIds:chosen,position:'top',playerId:owner.id,privateTo:actor});\\n   break;\\n  }\\n  case 'SUPPORTER_ORDERED_BOTTOM_DRAW':{\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"  if(e.plan.mechanic==='SUPPORTER_ORDERED_BOTTOM_DRAW'){\",\"to\":\"  if(e.plan.mechanic==='DECK_ORDER_SELECT'){\\n    const action=t.action||o.action,chosen=action.selections.cards,plan=e.plan,i=plan.side==='own'?0:1;\\n    const original=before.players[i].deck.map(c=>c.id),result=after.players[i].deck.map(c=>c.id),count=Math.min(plan.count,original.length);\\n    assert(count>0);assert.equal(chosen.length,count);assert.deepEqual(Array.from(result.slice(0,count)),Array.from(chosen));\\n    assert.deepEqual([...result].sort(),[...original].sort());\\n    if(!plan.search)assert.deepEqual(Array.from(result.slice(count)),Array.from(original.slice(count)));\\n    const events=after.history.slice(before.history.length);\\n    assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);\\n    assert(events.some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'));\\n    if(count>1){\\n     const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);\\n     assert.deepEqual(Array.from(reverse.getSnapshot().players[i].deck.slice(0,count),c=>c.id),[...chosen].reverse());\\n    }\\n    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,cards:chosen.slice(1)}}).ok,false);\\n    assert.equal(JSON.stringify(B.canonical(invalid.getSnapshot())),JSON.stringify(B.canonical(before)));\\n    assert.deepEqual(S.identities(before),S.identities(after));\\n  }\\n  if(e.plan.mechanic==='SUPPORTER_ORDERED_BOTTOM_DRAW'){\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"   if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':\",\"to\":\"   if m=='DECK_ORDER_SELECT':\\n    plan=f['e']['plan'];i=0 if plan['side']=='own' else 1\\n    chosen=option['action']['selections']['cards'];original=[card['id'] for card in before['players'][i]['deck']];result=[card['id'] for card in after['players'][i]['deck']]\\n    count=min(plan['count'],len(original))\\n    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)\\n    if not plan['search']:assert result[count:]==original[count:]\\n    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']\\n   if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':\"},{\"path\":\"scripts/run-atomic-official-battle-intake.cjs\",\"from\":\"    run(command,args,env);\\n    console.log('ATOMIC_BATTLE_STEP_PASS '+name);\",\"to\":\"    if(name==='EXECUTE_ALL_CARD_EFFECTS_IN_REAL_ENGINE'&&env.POKECA_INTAKE_REQUESTED_TARGETS){\\n      const fs=require('node:fs');\\n      const requested=env.POKECA_INTAKE_REQUESTED_TARGETS.split(',');\\n      if(new Set(requested).size!==requested.length||requested.some(id=>!/^[1-9][0-9]{0,7}$/.test(id)))throw Error('INVALID_REQUESTED_TARGETS');\\n      const compiled='data/effect-extensions/compiled.json';\\n      const prior=spawnSync('git',['show',base+':'+compiled],{encoding:'utf8',maxBuffer:64*1024*1024});\\n      if(prior.status!==0)throw Error('BASE_COMPILED_UNAVAILABLE');\\n      const old=new Set(JSON.parse(prior.stdout).records.map(r=>String(r.officialCardId)));\\n      const available=new Set(JSON.parse(fs.readFileSync(compiled,'utf8')).records.map(r=>String(r.officialCardId)).filter(id=>!old.has(id)));\\n      const selected=requested.filter(id=>available.has(id));\\n      const unresolved=requested.filter(id=>!old.has(id)&&!available.has(id));\\n      fs.mkdirSync(work,{recursive:true});\\n      fs.writeFileSync(work+'/requested-scope.json',JSON.stringify({base,requested,selected,unresolved,alreadyPublished:requested.filter(id=>old.has(id))},null,2));\\n      console.log('EXACT_SCOPE_CLASSIFICATION '+JSON.stringify({selected,unresolved}));\\n      if(!selected.length)throw Error('NO_REQUESTED_TARGET_COMPILED');\\n      env.POKECA_INTAKE_EXACT_TARGETS=selected.join(',');\\n    }\\n    run(command,args,env);\\n    console.log('ATOMIC_BATTLE_STEP_PASS '+name);\"}]")
+          for change in changes:
+              p=Path(change['path']); s=p.read_text()
+              assert s.count(change['from'])==1,change['path']
+              p.write_text(s.replace(change['from'],change['to']))
+          PY
+          git add engine scripts tests
+          node --check engine/reference-effect-plans.cjs
+          node --check engine/pokeca_reference_effect_runtime.cjs
+          node --check scripts/lib/shared-effect-engine-worker.cjs
+          mkdir -p artifacts
+          node scripts/build-effect-extensions.cjs
+          node scripts/sync-reference-effects.cjs
+          node scripts/build-pwa-release.cjs
+          git restore --source=HEAD -- data/effect-extensions/compiled.json
+      - name: Execute all remaining prints with final regression
+        run: node scripts/run-atomic-official-battle-intake.cjs
+      - name: Print exact evolution target diagnostics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          def visit(x,p):
+              if isinstance(x,dict):
+                  slot=x.get('slot')
+                  if isinstance(slot,str) and any(slot.startswith(i+':') for i in ('47583','47986','47994','45265','45552','48637','46519','50262','50318','45735','48992','50129','50781','45259','45560','49202','47355','48684','49398','50255','50317','50333','46446','46661','48705','47733','46445','50394','50528','47099','48678','49382','46220','49374')) and x.get('status') in ('FAILED','BLOCKED'):
+                      print(p,json.dumps(x,ensure_ascii=False)[:5000])
+                  for v in x.values(): visit(v,p)
+              elif isinstance(x,list):
+                  for v in x: visit(v,p)
+          for p in pathlib.Path('work/card-auto-connect').rglob('*.json'):
+              try: visit(json.loads(p.read_text()),str(p))
+              except (ValueError,OSError): pass
+          PY
+      - name: Preserve every published record and recover exact previously qualified IDs
+        run: |
+          mkdir -p artifacts
+          node <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+          const p='data/effect-extensions/compiled.json',base=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          const read=(ref,path=p)=>JSON.parse(execFileSync('git',['show',ref+':'+path],{encoding:'utf8',maxBuffer:64*1024*1024}));
+          const before=read(base).records,rows=JSON.parse(fs.readFileSync(p)).records,now=new Map(rows.map(r=>[String(r.officialCardId),r])),old=new Set(before.map(r=>String(r.officialCardId)));
+          assert.equal(rows.length,now.size);for(const r of before)assert.deepEqual(now.get(String(r.officialCardId)),r,'PUBLISHED_RECORD_CHANGED:'+r.officialCardId);
+          const required=[].filter(id=>!old.has(id));
+          const targets=["45284","45562","46826","47206","49414","50134","50190","47661","48034","49040"].filter(id=>!old.has(id));
+          const added=[...now.keys()].filter(id=>!old.has(id)).sort();
+          const candidate=require('./work/card-auto-connect/candidate.json');
+          const verified=new Set(candidate.qualified.map(String));
+          for(const id of added)assert(verified.has(id),'NEW_PRINT_WITHOUT_CURRENT_ENGINE_RECEIPT:'+id);
+          const missing=required.filter(id=>!now.has(id));
+          const out={base,required,targets,added,missing,unresolvedTargets:targets.filter(id=>!now.has(id)),count:added.length};fs.writeFileSync('artifacts/deck-order-exact-delta.json',JSON.stringify(out,null,2)+'\n');
+          console.log('EXECUTION_PROOF_EXACT_DELTA',JSON.stringify(out));
+          assert.equal(missing.length,0,'PREVIOUSLY_QUALIFIED_PRINT_MISSING');
+          console.log('TARGET_RECOVERY',required.length-missing.length,'of',required.length,'; minimum 30 print target:',added.length>=30);
+          assert(added.length>0,'NO_NEW_PRINT_QUALIFIED');
+          NODE
+          node scripts/build-effect-extensions.cjs --check
+          node scripts/sync-reference-effects.cjs --check
+          node scripts/build-pwa-release.cjs --check
+      - name: All exact new slots in Chromium and completed imported-deck match
+        run: |
+          set -euo pipefail
+          pip install playwright==1.56.0
+          bash scripts/install-ci-chromium.sh
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/union-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          export POKECA_TEST_URL=http://127.0.0.1:8765/
+          export POKECA_INTAKE_PREFIX=work/card-auto-connect/browser
+          export POKECA_INTAKE_RELEASE_BASE=$(git rev-parse HEAD)
+          test -s "$POKECA_INTAKE_PREFIX/example-decks.json" || { echo "EXACT_CANDIDATE_DECK_MANIFEST_MISSING"; exit 1; }
+          bash scripts/run-intake-candidate-browser-shards.sh deck-order
+      - name: Save verified candidate without overwriting main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp artifacts/deck-order-exact-delta.json reports/official-effect-continuation/
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/deck-order-candidate.json
+          cp work/card-auto-connect/candidate.json reports/official-effect-continuation/candidate.json
+          git add engine scripts tests data/effect-extensions data/official-effect-intake data/reference-effects/plans.json ui/engine.bundle.js sw.js reports/ij-effect-coverage.json reports/official-effect-continuation
+          git diff --cached --check
+          git commit -m 'checkpoint: verified combined next release'
+          ref="HEAD:refs/heads/battle/issue122-deck-order-qualified-$GITHUB_RUN_ID"
+          for attempt in 1 2 3; do
+            if git push origin "$ref"; then exit 0; fi
+            sleep $((attempt*5))
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deck-order-evidence
+          path: |
+            artifacts/
+            work/card-auto-connect/
+          if-no-files-found: warn
