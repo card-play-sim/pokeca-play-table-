@@ -30,7 +30,21 @@ module.exports=function(fixed,records,{catalog=null}={}){
     const pokemon=row.category==='pokemon',wantsEntry=row.abilities?.some(a=>a.plan?.origin==='activeEntry');
     const wantsRetreat=row.abilities?.some(a=>['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(a.plan?.mechanic));
     const wantsMill=row.attacks?.some(a=>a.plan?.mechanic==='COIN_UNTIL_TAILS_MILL');
-    add(row,wantsEntry||wantsRetreat||wantsMill?3:1);
+    const teamTool=row.mainPlan?.mechanic==='TOOL_NAMED_TEAM_MAX_HP'?row.mainPlan:null;
+    add(row,wantsEntry||wantsRetreat||wantsMill||teamTool?3:1);
+    if(teamTool){
+     const suitable=legal.filter(r=>r.facts.basic&&r.name.startsWith(teamTool.team+'の')&&r.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0));
+     const names=[...new Map(suitable.map(r=>[r.name,r])).values()].slice(0,2);
+     assert(names.length,'MATCH_TEAM_TOOL_RECIPIENT_MISSING:'+teamTool.team);
+     for(const holder of names){
+      add(holder,3);
+      const types=new Set(holder.attacks.flatMap(a=>a.cost||[]).filter(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t)));
+      for(const type of types){
+       const energy=catalog.find(r=>r.category==='energy'&&r.name==='基本'+type+'エネルギー'&&r.mainPlan?.mechanic==='BASIC_ENERGY');
+       assert(energy,'MATCH_TEAM_TOOL_ENERGY_MISSING:'+type);add(energy,4);
+      }
+     }
+    }
     if(pokemon){
      let child=row;
      while(child.facts?.stage>0){

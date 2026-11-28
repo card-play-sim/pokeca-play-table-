@@ -13,7 +13,9 @@ const withheld = new Set(checkpoint.blockers.map(row => String(row.id)));
 assert.equal(withheld.size, checkpoint.blockers.length, 'Duplicate withheld official print IDs');
 const blockedReasons = new Set([
   'UNVERIFIED_HIJ_SCOPE', 'PRINT_IDENTITY_CONFLICT',
-  'ENGINE_EXECUTION_FAILED', 'EXECUTION_EVIDENCE_INCOMPLETE'
+  'ENGINE_EXECUTION_FAILED', 'EXECUTION_EVIDENCE_INCOMPLETE',
+  // Deferred exact-target prints remain withheld; all exclusion assertions below still apply.
+  'DEFERRED_EXACT_TARGET_SCOPE'
 ]);
 for (const row of checkpoint.blockers) {
   assert(blockedReasons.has(row.reason), 'Unknown blocker reason: '+row.reason);

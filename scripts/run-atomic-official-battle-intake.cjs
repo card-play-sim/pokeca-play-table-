@@ -127,6 +127,23 @@ async function main() {
       env.POKECA_INTAKE_RELEASE_BASE=base;
       env.POKECA_INTAKE_PREFIX=work+'/browser';
     }
+    if(name==='EXECUTE_ALL_CARD_EFFECTS_IN_REAL_ENGINE'&&env.POKECA_INTAKE_REQUESTED_TARGETS){
+      const fs=require('node:fs');
+      const requested=env.POKECA_INTAKE_REQUESTED_TARGETS.split(',');
+      if(new Set(requested).size!==requested.length||requested.some(id=>!/^[1-9][0-9]{0,7}$/.test(id)))throw Error('INVALID_REQUESTED_TARGETS');
+      const compiled='data/effect-extensions/compiled.json';
+      const prior=spawnSync('git',['show',base+':'+compiled],{encoding:'utf8',maxBuffer:64*1024*1024});
+      if(prior.status!==0)throw Error('BASE_COMPILED_UNAVAILABLE');
+      const old=new Set(JSON.parse(prior.stdout).records.map(r=>String(r.officialCardId)));
+      const available=new Set(JSON.parse(fs.readFileSync(compiled,'utf8')).records.map(r=>String(r.officialCardId)).filter(id=>!old.has(id)));
+      const selected=requested.filter(id=>available.has(id));
+      const unresolved=requested.filter(id=>!old.has(id)&&!available.has(id));
+      fs.mkdirSync(work,{recursive:true});
+      fs.writeFileSync(work+'/requested-scope.json',JSON.stringify({base,requested,selected,unresolved,alreadyPublished:requested.filter(id=>old.has(id))},null,2));
+      console.log('EXACT_SCOPE_CLASSIFICATION '+JSON.stringify({selected,unresolved}));
+      if(!selected.length)throw Error('NO_REQUESTED_TARGET_COMPILED');
+      env.POKECA_INTAKE_EXACT_TARGETS=selected.join(',');
+    }
     run(command,args,env);
     console.log('ATOMIC_BATTLE_STEP_PASS '+name);
   }

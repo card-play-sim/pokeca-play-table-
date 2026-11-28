@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "registryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
-  "classifiedRegistryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
+  "registryHash": "7014a7a9325a82a19fcd2e7c1121dbeab74049f60042960d9a619e2b5acdbbf8",
+  "classifiedRegistryHash": "7014a7a9325a82a19fcd2e7c1121dbeab74049f60042960d9a619e2b5acdbbf8",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
   "physicalAndroidVerified": false,
   "officialPages": 5198,
   "collectedNewPages": 5017,
-  "explicitEffects": 5285,
+  "explicitEffects": 5283,
   "noExplicitText": 2411,
   "processingPolicy": "COMPILED_IS_NOT_EXECUTION_VERIFIED; UNKNOWN_SEMANTICS_NOT_IMPLEMENTED",
   "categories": {
@@ -21,30 +21,30 @@
     },
     "item": {
       "prints": 299,
-      "compiled": 213,
-      "notImplemented": 86,
+      "compiled": 218,
+      "notImplemented": 81,
       "blocked": 0,
       "executionVerifiedPrints": 37
     },
     "tool": {
       "prints": 100,
-      "compiled": 43,
-      "notImplemented": 57,
+      "compiled": 46,
+      "notImplemented": 54,
       "blocked": 0,
       "executionVerifiedPrints": 8
     },
     "stadium": {
       "prints": 68,
-      "compiled": 10,
-      "notImplemented": 55,
+      "compiled": 15,
+      "notImplemented": 50,
       "blocked": 3,
-      "executionVerifiedPrints": 5
+      "executionVerifiedPrints": 6
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2672,
-      "notImplemented": 982,
-      "blocked": 22,
+      "compiled": 2687,
+      "notImplemented": 966,
+      "blocked": 23,
       "executionVerifiedPrints": 743
     },
     "energy": {
@@ -301,7 +301,7 @@
     {
       "officialCardId": "44388",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44397",
@@ -721,21 +721,6 @@
         "sha256": "aaadc4750858b4e6e264cfb796e11654148b3639725a18be60825e890cdeee71",
         "htmlSha256": "aaadc4750858b4e6e264cfb796e11654148b3639725a18be60825e890cdeee71",
         "textSha256": "b33f4671bcf696dde96fbeb93f0e6890726a888b9bca6fa897c33242484f5f1e"
-      }
-    },
-    {
-      "officialCardId": "47733",
-      "name": "エキサイトスタジアム",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のたねポケモン全員の最大HPは、それぞれ「＋30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47733.json",
-        "sha256": "aa710c838c6243ab1e492f2ab08355fe14f36c429693684b7babd3e756941013",
-        "htmlSha256": "aa710c838c6243ab1e492f2ab08355fe14f36c429693684b7babd3e756941013",
-        "textSha256": "1d82386f7102b61a149b1045aaef925e239dcd8758fad6e43adf67736fe3d468"
       }
     },
     {
@@ -2574,17 +2559,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45259",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45264",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45265",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2715,16 +2690,6 @@
     },
     {
       "officialCardId": "45544",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45552",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45560",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2965,11 +2930,6 @@
     },
     {
       "officialCardId": "45727",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45735",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3679,21 +3639,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46220",
-      "name": "プレシャスキャリー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からたねポケモンを好きなだけ選び、ベンチに出す。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46220.json",
-        "sha256": "a308817f09535212deda2ca322b3808d5e7fd8ed8e8be99873e881c5acc5f780",
-        "htmlSha256": "a308817f09535212deda2ca322b3808d5e7fd8ed8e8be99873e881c5acc5f780",
-        "textSha256": "303d7a657d492c758f8e53d6de4650f378a9d998084a3788be47322699756c38"
-      }
-    },
-    {
       "officialCardId": "46228",
       "name": "パラダイスリゾート",
       "category": "stadium",
@@ -4019,42 +3964,7 @@
       }
     },
     {
-      "officialCardId": "46445",
-      "name": "エキサイトスタジアム",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のたねポケモン全員の最大HPは、それぞれ「＋30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46445.json",
-        "sha256": "4df3be6ef1df270bf913bb8e911154946b0e0dcbb4da4578a7b1673e2cb05c00",
-        "htmlSha256": "4df3be6ef1df270bf913bb8e911154946b0e0dcbb4da4578a7b1673e2cb05c00",
-        "textSha256": "1d82386f7102b61a149b1045aaef925e239dcd8758fad6e43adf67736fe3d468"
-      }
-    },
-    {
-      "officialCardId": "46446",
-      "name": "グラビティーマウンテン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場の2進化ポケモン全員の最大HPは、それぞれ「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46446.json",
-        "sha256": "dafb81224372293c0da8073242c6b9f4faa9b764719a92a4e298c1728ede7488",
-        "htmlSha256": "dafb81224372293c0da8073242c6b9f4faa9b764719a92a4e298c1728ede7488",
-        "textSha256": "0efa1e5c186676bd40beee624dc72feb52f7ce8cf482aa0be97f4858741a14f7"
-      }
-    },
-    {
       "officialCardId": "46482",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46519",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4087,21 +3997,6 @@
       "officialCardId": "46654",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46661",
-      "name": "グラビティーマウンテン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場の2進化ポケモン全員の最大HPは、それぞれ「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46661.json",
-        "sha256": "8fa738998e91301ed389edb386fdd2a237f276fc9acf2c5818f753070efd77dc",
-        "htmlSha256": "8fa738998e91301ed389edb386fdd2a237f276fc9acf2c5818f753070efd77dc",
-        "textSha256": "0efa1e5c186676bd40beee624dc72feb52f7ce8cf482aa0be97f4858741a14f7"
-      }
     },
     {
       "officialCardId": "46666",
@@ -4715,11 +4610,6 @@
     },
     {
       "officialCardId": "50122",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50129",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5429,11 +5319,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50394",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50395",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5604,11 +5489,6 @@
     },
     {
       "officialCardId": "50527",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50528",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6073,21 +5953,6 @@
       }
     },
     {
-      "officialCardId": "47099",
-      "name": "ホップのバッグ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からたねポケモンの「ホップのポケモン」を2枚まで選び、ベンチに出す。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47099.json",
-        "sha256": "79782fadef36f5c2d817f187fd4a3cbd922a119364348b7ab1412971b9b90afd",
-        "htmlSha256": "79782fadef36f5c2d817f187fd4a3cbd922a119364348b7ab1412971b9b90afd",
-        "textSha256": "db0e17f04792dd1c04705c6bed7a4addebaa0e3177a46e39d2984044230697d1"
-      }
-    },
-    {
       "officialCardId": "47100",
       "name": "ホップのこだわりハチマキ",
       "category": "tool",
@@ -6275,21 +6140,6 @@
         "sha256": "8c1fea12f70df384af854d906fe15e305e3f54f00353824a8975cda5f1631943",
         "htmlSha256": "8c1fea12f70df384af854d906fe15e305e3f54f00353824a8975cda5f1631943",
         "textSha256": "62d9f358095f81246cfc857bcacee970a2785032b383cf94c3d53066bf3db425"
-      }
-    },
-    {
-      "officialCardId": "47355",
-      "name": "シロナのパワーウエイト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「シロナのポケモン」の最大HPは「＋70」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47355.json",
-        "sha256": "952b08f0a156f0b662ed1821230ad40fa8447773e57a6e156b891b533d3f320c",
-        "htmlSha256": "952b08f0a156f0b662ed1821230ad40fa8447773e57a6e156b891b533d3f320c",
-        "textSha256": "2ce08284eafba565a5fd518051bf34b4500022ae7d23aa4ad763cd740f834bfb"
       }
     },
     {
@@ -7623,36 +7473,6 @@
       }
     },
     {
-      "officialCardId": "48678",
-      "name": "ホップのバッグ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からたねポケモンの「ホップのポケモン」を2枚まで選び、ベンチに出す。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48678.json",
-        "sha256": "144c23ae4ec7bd84b33afadd562153577ce3d96971a12a8531b31b1aa6d29262",
-        "htmlSha256": "144c23ae4ec7bd84b33afadd562153577ce3d96971a12a8531b31b1aa6d29262",
-        "textSha256": "db0e17f04792dd1c04705c6bed7a4addebaa0e3177a46e39d2984044230697d1"
-      }
-    },
-    {
-      "officialCardId": "48684",
-      "name": "シロナのパワーウエイト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「シロナのポケモン」の最大HPは「＋70」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48684.json",
-        "sha256": "2586ce04019f49b2e83337f1590ec7712a9ae7d3217982cbedea9e00548cd620",
-        "htmlSha256": "2586ce04019f49b2e83337f1590ec7712a9ae7d3217982cbedea9e00548cd620",
-        "textSha256": "2ce08284eafba565a5fd518051bf34b4500022ae7d23aa4ad763cd740f834bfb"
-      }
-    },
-    {
       "officialCardId": "48685",
       "name": "でんきだま",
       "category": "tool",
@@ -8103,21 +7923,6 @@
       }
     },
     {
-      "officialCardId": "49382",
-      "name": "ホップのバッグ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からたねポケモンの「ホップのポケモン」を2枚まで選び、ベンチに出す。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49382.json",
-        "sha256": "ecf21ed126b49f2a6e7797daf5160d6bf351f103a28d1676573d316271ca59fc",
-        "htmlSha256": "ecf21ed126b49f2a6e7797daf5160d6bf351f103a28d1676573d316271ca59fc",
-        "textSha256": "db0e17f04792dd1c04705c6bed7a4addebaa0e3177a46e39d2984044230697d1"
-      }
-    },
-    {
       "officialCardId": "49389",
       "name": "ロケット団のスーパーボール",
       "category": "item",
@@ -8145,21 +7950,6 @@
         "sha256": "c6a78bc059333653e73a1db42b8480bccd65f14e6364c15d196caedea83be77f",
         "htmlSha256": "c6a78bc059333653e73a1db42b8480bccd65f14e6364c15d196caedea83be77f",
         "textSha256": "d6400802e625e50b38b079f9113e970b6350ee283aae3766a0f807b28343761c"
-      }
-    },
-    {
-      "officialCardId": "49398",
-      "name": "シロナのパワーウエイト",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「シロナのポケモン」の最大HPは「＋70」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49398.json",
-        "sha256": "2cc4bb23a5807835d147f74a482aded891ceb223f929e6e7de47dda9d9bd57a7",
-        "htmlSha256": "2cc4bb23a5807835d147f74a482aded891ceb223f929e6e7de47dda9d9bd57a7",
-        "textSha256": "2ce08284eafba565a5fd518051bf34b4500022ae7d23aa4ad763cd740f834bfb"
       }
     },
     {
@@ -8693,21 +8483,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48705",
-      "name": "グラビティーマウンテン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場の2進化ポケモン全員の最大HPは、それぞれ「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48705.json",
-        "sha256": "553c8d8cdf9db1527bfd3ff11e07c472b6578071844b82b192252b972e4af49d",
-        "htmlSha256": "553c8d8cdf9db1527bfd3ff11e07c472b6578071844b82b192252b972e4af49d",
-        "textSha256": "0efa1e5c186676bd40beee624dc72feb52f7ce8cf482aa0be97f4858741a14f7"
-      }
-    },
-    {
       "officialCardId": "48706",
       "name": "ゼロの大空洞",
       "category": "stadium",
@@ -8834,11 +8609,6 @@
     },
     {
       "officialCardId": "48986",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48992",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8979,11 +8749,6 @@
     },
     {
       "officialCardId": "49170",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49202",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9165,21 +8930,6 @@
         "sha256": "a095255d8e27fe3d2a564575018bc52cbdd1d7abbc97c5355db2cab039c056e8",
         "htmlSha256": "a095255d8e27fe3d2a564575018bc52cbdd1d7abbc97c5355db2cab039c056e8",
         "textSha256": "aa2a16fc475e63ca155df0996759e3a5d8f89c6821c6ee6565bbc744c5f9e3e9"
-      }
-    },
-    {
-      "officialCardId": "49374",
-      "name": "プレシャスキャリー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札からたねポケモンを好きなだけ選び、ベンチに出す。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49374.json",
-        "sha256": "21bad6f15c185fdf7ec441fbb04c99c609c1518ba57447377b82e77b92164f8a",
-        "htmlSha256": "21bad6f15c185fdf7ec441fbb04c99c609c1518ba57447377b82e77b92164f8a",
-        "textSha256": "303d7a657d492c758f8e53d6de4650f378a9d998084a3788be47322699756c38"
       }
     },
     {
@@ -9563,27 +9313,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50255",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50265",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50317",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50319",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50333",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9619,11 +9354,6 @@
     },
     {
       "officialCardId": "50554",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50781",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9977,15 +9707,15 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1015
+        "count": 999
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 306
+        "count": 293
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
-        "count": 22
+        "count": 23
       },
       {
         "reason": "UNSUPPORTED_COMBINED_STADIUM_PLAY",
@@ -9996,17 +9726,17 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "a33f7b19ded14f74b48e15d49797323d33bd8da2d54be2b6d085a1687c8702fd",
+    "executionFingerprint": "32ac87d4364ee3521a5598e0e2466331c9734f3ca5453c7744f381306ba32c3d",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 237249,
+    "seq": 239577,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 420,
+      "SUCCEEDED": 421,
       "FAILED": 0,
-      "BLOCKED": 356
+      "BLOCKED": 355
     },
     "categories": {
       "pokemon": {
@@ -10033,9 +9763,9 @@
       "stadium": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 5,
+        "SUCCEEDED": 6,
         "FAILED": 0,
-        "BLOCKED": 5
+        "BLOCKED": 4
       },
       "tool": {
         "PENDING": 0,
