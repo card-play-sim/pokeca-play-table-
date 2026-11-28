@@ -2525,6 +2525,25 @@ function verifyCase(t, e) {
     assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
     const save=p.getResumeSnapshot();assert(p.restoreSession(save).ok);assert.equal(JSON.stringify(p.getSnapshot()),JSON.stringify(after));
   }
+  if(e.plan.mechanic==='TRAINER_COIN_COUNTER'){
+    const action=t.action||o.action,amount=e.plan.amount,[own,other]=before.players;
+    const targets=[other.active,...other.bench].filter(Boolean);
+    if(targets.length<2||[own.active,...targets].some(c=>c.hp-c.damage<=amount*10))return {status:'BLOCKED',reason:'NO_SAFE_COIN_COUNTER_FIXTURE'};
+    const seen=new Set();
+    for(const seed of [0,682]){
+      const initial={...before,referenceRngState:seed},replay=port(initial);assert(replay.dispatch('you',action).ok);
+      const state=replay.getSnapshot(),flips=state.history.slice(before.history.length).filter(ev=>ev.details?.command==='COIN_FLIP'&&typeof ev.details.heads==='boolean'&&!ev.details.reference);
+      assert.equal(flips.length,1);const heads=flips[0].details.heads;seen.add(heads);
+      assert(state.players[0].discard.some(c=>c.id===t.sourceId));
+      const proof=(end,target)=>{for(const c of [own.active,...own.bench,...targets]){const n=end.players.flatMap(p=>[p.active,...p.bench]).find(x=>x?.id===c.id);assert(n);assert.equal(n.damage,c.damage+(c.id===target.id?amount*10:0));}assert.deepEqual(Array.from(S.identities(initial)),Array.from(S.identities(end)));};
+      if(!heads){assert(!state.pendingReferenceChoice);proof(state,own.active);continue;}
+      const choice=state.pendingReferenceChoice;assert.equal(choice?.kind,'TRAINER_COIN_COUNTER');assert.deepEqual(Array.from(choice.options),Array.from(targets,c=>c.id));
+      const saved=replay.getResumeSnapshot();assert(replay.restoreSession(saved).ok);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+      assert.equal(replay.dispatch('you',{type:'resolve_reference_choice',targetInstanceId:own.active.id}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+      for(const target of targets){const next=port(state);assert(next.dispatch('you',{type:'resolve_reference_choice',targetInstanceId:target.id}).ok);const end=next.getSnapshot();assert(!end.pendingReferenceChoice);proof(end,target);assert(end.history.slice(state.history.length).some(ev=>ev.details?.command==='PLACE_DAMAGE_COUNTERS'&&ev.details.targetInstanceId===target.id&&ev.details.counterCount===amount));}
+    }
+    assert.equal(seen.size,2);
+  }
   if(e.plan.mechanic==='TRAINER_FOSSIL_BASIC'){
     const [own,other]=before.players,side=after.players[0],mon=side.bench.find(c=>c.id===t.sourceId);
     assert(mon&&mon.kind==='pokemon'&&mon.basic&&mon.stage===0&&mon.hp===60&&mon.prizeCount===1&&mon.enteredTurn===before.turnNumber);

@@ -1002,6 +1002,7 @@ function referenceChoiceAction(choice,value){
  if(choice.kind==='MULLIGAN')return {...action,drawCount:value};
  if(choice.kind==='CIRCULATOR')return {...action,...value};
  if(choice.kind==='DECK_POKEMON_SEARCH')return {...action,deckCardId:value};
+ if(choice.kind==='TRAINER_COIN_COUNTER')return {...action,targetInstanceId:value};
  return {...action,benchInstanceId:value};
 }
 function preflight(g,actor,action){
@@ -1528,6 +1529,13 @@ function applyPlan(g,actor,card,effect,action){
     assert(Number.isInteger(count)&&count>=0,'INVALID_COUNTER_GRAMMAR_QUANTITY');
     if(count)counters(g,actor,mon,count,{attack:true});
    }
+   break;
+  }
+  case 'TRAINER_COIN_COUNTER':{
+   if(coin(g,actor)){
+    const targets=field(o).map(id);assert(targets.length,'NO_COUNTER_TARGET');
+    g.pendingReferenceChoice={kind:'TRAINER_COIN_COUNTER',playerId:actor,sourceId:id(card),options:targets};
+   }else counters(g,actor,p.active,plan.amount,{sourceType:'TRAINER'});
    break;
   }
   case 'MASS_PLACE_COUNTERS':{
@@ -2394,6 +2402,14 @@ function execute(g,actor,action){
    promoteReferenceBench(g,p,p.bench.findIndex(c=>id(c)===action.benchInstanceId));
   }
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId,choice);
+  else if(choice.kind==='TRAINER_COIN_COUNTER'){
+   const source=p.discard.find(c=>id(c)===choice.sourceId),plan=record(source)?.mainPlan,target=field(opponent(g,actor)).find(c=>id(c)===action.targetInstanceId);
+   assert(plan?.mechanic==='TRAINER_COIN_COUNTER'&&target,'COIN_COUNTER_TARGET_CHANGED');
+   delete g.pendingReferenceChoice;
+   counters(g,actor,target,plan.amount,{sourceType:'TRAINER'});
+   refresh(g);functions().Core.resolveKnockouts(g,actor);
+   return {referenceEffect:true,adoptedPrint:false};
+  }
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
@@ -2585,6 +2601,12 @@ function validateGame(g){
  if(!g.referenceEffectValidation){assert(!nested.some(c=>c.validationReference),'REFERENCE_MODE_REQUIRED');return;}
  assert(g.referenceEffectValidation.adoptedPrints===0,'REFERENCE_ADOPTION_FORBIDDEN');
  const choice=g.pendingReferenceChoice;
+ if(choice?.kind==='TRAINER_COIN_COUNTER'){
+  const owner=player(g,choice.playerId),source=owner.discard.find(c=>id(c)===choice.sourceId);
+  const flip=g.history.findLast(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.command==='COIN_FLIP'&&typeof e.details.heads==='boolean'&&!e.details.reference);
+  const targets=field(opponent(g,choice.playerId)).map(id);
+  assert(choice.playerId===g.turnPlayer&&record(source)?.mainPlan?.mechanic==='TRAINER_COIN_COUNTER'&&flip?.details.heads===true&&targets.length&&JSON.stringify(choice.options)===JSON.stringify(targets),'INVALID_TRAINER_COIN_COUNTER_STATE');
+ }
  if(choice?.kind==='DECK_POKEMON_SEARCH'){
   const owner=player(g,choice.playerId);
   if(choice.rocketCoin){
