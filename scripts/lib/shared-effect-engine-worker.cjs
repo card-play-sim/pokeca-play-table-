@@ -535,9 +535,13 @@ function fixtureResources(manifest,deckIndex,source,e){
   const plan=e.proofHpThreshold,energy=pick(r=>isBasicEnergy(r)&&typeOf(r)===plan.type);
   // Reserve only the physically needed cards, not thirteen copies in a deck
   // whose basic-Energy donor pool may contain fewer than thirteen.
-  const count=Math.max(plan.threshold,kindAttackCost(e,plan.type));
+  const typedCost=(e.cost||[]).filter(t=>t===plan.type).length;
+  const count=Math.max(plan.threshold,typedCost);
   if(!ensure(deckIndex,energy,count))return Object.assign(requirements,{teamBoostBlocked:'NO_HP_THRESHOLD_DECK_RESOURCES'});
-  for(let i=0;i<Math.max(0,count-kindAttackCost(e,plan.type));i++)requirements.push({side:0,zone:'deck',printId:energy.officialCardId});
+  // Colorless requirements need not use this type. Preserve the exact
+  // threshold minus typed cost in the deck before the fixture assigns
+  // prizes and attaches all other available Energy to the attacker.
+  for(let i=0;i<Math.max(0,count-typedCost);i++)requirements.push({side:0,zone:'deck',printId:energy.officialCardId});
  }
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
@@ -778,6 +782,7 @@ function prepare(r, e, kind) {
     }else{
       // Move real typed cards between zones; never synthesize energy counts.
       zown.deck.push(...zown.active.energyCards.splice(0));
+      for(const c of mon.energyCards.filter(c=>c.isSpecial))own.deck.push(mon.energyCards.splice(mon.energyCards.indexOf(c),1)[0]);
       const typed=mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type);
       const needed=plan.mode==='energyThreshold'?plan.threshold:1;
       for(let count=typed.length;count<needed;count++){
@@ -785,7 +790,7 @@ function prepare(r, e, kind) {
         if(!zone)return {blocked:'NO_TYPED_HP_ENERGY_FIXTURE'};
         mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.kind==='energy'&&c.energyType===plan.type),1)[0]);
       }
-      if(mon.energyCards.some(c=>c.isSpecial))return {blocked:'NO_BASIC_ONLY_HP_FIXTURE'};
+      mon.energies=mon.energyCards.map(c=>c.energyType);
     }
     const n=plan.mode==='opponentPrizes'?6-other.prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;
     zown.active.hp=r.facts.hp;
@@ -799,8 +804,11 @@ function prepare(r, e, kind) {
       const below=structuredClone(game),bp=below.players[0],bm=bp.active;
       const indices=bm.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type);
       for(const c of indices.slice(plan.threshold-1))bp.deck.push(bm.energyCards.splice(bm.energyCards.indexOf(c),1)[0]);
-      bm.hp=r.facts.hp;bm.energies=[];
-      assert.equal(port(below).getSnapshot().players[0].active.hp,r.facts.hp);
+      bm.hp=r.facts.hp;bm.energies=bm.energyCards.map(c=>c.energyType);
+      const belowSnapshot=port(below).getSnapshot();
+      assert.equal(belowSnapshot.players[0].active.hp,r.facts.hp);
+      assert.equal(belowSnapshot.players[0].active.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length,plan.threshold-1);
+      assert.deepEqual(Array.from(S.identities(belowSnapshot)),Array.from(S.identities(game)));
     }
     assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
     const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
@@ -4278,8 +4286,9 @@ function verifyCase(t, e) {
     assert.equal(mon.hp,print.facts.hp+plan.hpBonus);
     const baseline=structuredClone(before),side=baseline.players[0],holder=side.active;
     for(const c of holder.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type))side.deck.push(holder.energyCards.splice(holder.energyCards.indexOf(c),1)[0]);
-    holder.hp=print.facts.hp;holder.energies=[];
+    holder.hp=print.facts.hp;holder.energies=holder.energyCards.map(c=>c.energyType);
     const replay=port(baseline),start=replay.getSnapshot();assert.equal(start.players[0].active.hp,print.facts.hp);
+    assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(before)));
     assert(replay.dispatch('you',action).ok);
     verifyPrintedAttack(start,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
     verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);

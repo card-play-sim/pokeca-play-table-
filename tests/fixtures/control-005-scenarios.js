@@ -110,8 +110,17 @@
    for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_DYNAMIC_MAX_HP')){
     const plan=a.plan,opponent=g.players.find(p=>p.id!==side.id);
     const n=plan.mode==='opponentPrizes'?6-opponent.prizeCards.length:c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length;
-    c.hp+=plan.amount*n;
+    c.hp+=plan.amount*(plan.mode==='energyThreshold'?Number(n>=plan.threshold):n);
    }
+   // The HP state on load must reflect both printed continuous abilities.
+   // A threshold bonus is applied once, and a team aura with the same
+   // ability name is counted once, even with multiple physical holders.
+   for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_CONDITIONAL_DAMAGE'&&a.plan.mode==='attachedEnergy'))
+    if(c.energyCards.some(e=>!e.isSpecial&&e.energyType===a.plan.type))c.hp+=a.plan.hpBonus||0;
+   const hpAuras=new Map();
+   for(const holder of [side.active,...side.bench].filter(Boolean))for(const a of record(holder).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_TEAM_MAX_HP'))
+    hpAuras.set(a.name,a.plan.amount);
+   for(const amount of hpAuras.values())c.hp+=amount;
   }
   const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);if(!loaded.ok)throw Error(JSON.stringify(loaded));
   return {game:port.getSnapshot(),sourceId:source.id,activeId:p.active.id,opponentId:o.active.id,firstDeck,variant,extras:Object.fromEntries(Object.entries(extras).map(([k,v])=>[k,v?.id])),row};
