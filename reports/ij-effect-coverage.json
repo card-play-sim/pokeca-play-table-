@@ -5,27 +5,27 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1275,
-      "missing": 427
+      "connected": 1281,
+      "missing": 421
     },
     "J": {
       "total": 870,
-      "connected": 563,
-      "missing": 307
+      "connected": 568,
+      "missing": 302
     }
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1269,
+      "CONNECTED_UNTESTED": 1275,
       "MECHANIC_REQUIRED": 50,
-      "ENGINE_CONNECTION_REQUIRED": 373,
+      "ENGINE_CONNECTION_REQUIRED": 367,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 562,
+      "CONNECTED_UNTESTED": 567,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 264,
+      "ENGINE_CONNECTION_REQUIRED": 259,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -9164,8 +9164,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47099.json"
     },
     {
@@ -9690,8 +9689,7 @@
       "name": "シロナのパワーウエイト",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47355.json"
     },
     {
@@ -14085,8 +14083,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48678.json"
     },
     {
@@ -14110,8 +14107,7 @@
       "name": "シロナのパワーウエイト",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/48684.json"
     },
     {
@@ -15501,8 +15497,7 @@
       "name": "ホップのバッグ",
       "mark": "I",
       "category": "goods",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49382.json"
     },
     {
@@ -15544,8 +15539,7 @@
       "name": "シロナのパワーウエイト",
       "mark": "I",
       "category": "tool",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49398.json"
     },
     {
@@ -16822,8 +16816,7 @@
       "name": "ドンファン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50129.json"
     },
     {
@@ -17412,8 +17405,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50255.json"
     },
     {
@@ -17741,8 +17733,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50317.json"
     },
     {
@@ -17844,8 +17835,7 @@
       "name": "メガシャンデラex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50333.json"
     },
     {
@@ -20122,8 +20112,7 @@
       "name": "メガヒードランex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50781.json"
     },
     {
@@ -21317,22 +21306,22 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1327,
-        "MECHANIC_REQUIRED": 535,
+        "ENGINE_CONNECTED": 1342,
+        "MECHANIC_REQUIRED": 520,
         "ENGINE_CONNECTION_REQUIRED": 2
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1275,
-        "MECHANIC_REQUIRED": 414,
+        "ENGINE_CONNECTED": 1281,
+        "MECHANIC_REQUIRED": 408,
         "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 562,
-        "MECHANIC_REQUIRED": 300,
-        "ENGINE_CONNECTION_REQUIRED": 3,
+        "ENGINE_CONNECTED": 567,
+        "MECHANIC_REQUIRED": 293,
+        "ENGINE_CONNECTION_REQUIRED": 5,
         "EVIDENCE_UNVERIFIED": 4
       },
       "basicEnergyException": {
@@ -21341,7 +21330,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3802,
-    "unconnected": 1271
+    "engineConnected": 3828,
+    "unconnected": 1245
   }
 }
