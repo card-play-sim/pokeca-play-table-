@@ -119,4 +119,12 @@ function parse(html,{enableTeraRule=false}={}){
  return {category:'pokemon',text:'',attacks,abilities,rulesText:[],facts:{hp,evolvesFrom,retreatCost:tokens(cells[2]).length,types,weakness:defense(cells[0],'weakness'),resistance:defense(cells[1],'resistance'),stage,basic:stage===0,prizeCount:prizeCount||1,rulePokemon,teraBenchProtection}};
 }
 if(require.main===module){try{process.stdout.write(JSON.stringify(parse(require('node:fs').readFileSync(0,'utf8'))));}catch(e){process.stderr.write(e.message);process.exitCode=2;}}
-module.exports={parse,text};
+function parseToolAttack(html){
+ const tail=html.match(/<h2[^>]*>ワザ<\/h2>\s*<h4[^>]*>([\s\S]*?)<\/h4>\s*<p[^>]*>([\s\S]*?)<\/p>\s*<\/div>/);
+ assert(tail,'UNSUPPORTED_TOOL_ATTACK_SECTION');
+ const d=tail[1].match(/<span class="f_right Text-fjalla">([^<]*)<\/span>/),header=tail[1].replace(/<span class="f_right Text-fjalla">[^<]*<\/span>/,'');
+ const cost=tokens(header),name=label(header.replace(/<span[^>]*><\/span>/g,'')),damage=d?text(d[1]):'0';
+ assert(name&&/^\d+$/.test(damage),'UNSUPPORTED_TOOL_ATTACK_HEADER');
+ return {name,cost,damage,text:text(tail[2])};
+}
+module.exports={parse,text,parseToolAttack};

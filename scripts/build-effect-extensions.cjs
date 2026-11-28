@@ -57,8 +57,10 @@ function build(intake,read=p=>JSON.parse(fs.readFileSync(p,'utf8'))){
    if(!section||categories[section[1]]!==row.category||(paragraphs[0].includes('<span')?require('./parse-official-pokemon-energy.cjs').text(paragraphs[0]):plain(paragraphs[0]))!==row.text||hash(row.text)!==row.source.textSha256)throw Error('OFFICIAL_TEXT_MISMATCH');
    if(!/^https:\/\/www\.pokemon-card\.com\/assets\/images\/card_images\/large\//.test(row.imageSourceUrl)||!body.includes(row.imageSourceUrl.replace('https://www.pokemon-card.com','')))throw Error('IMAGE_REFERENCE_MISMATCH');
    if(mainText(row.text)!==norm(row.text))throw Error('EMBEDDED_USAGE_RULE_NOT_SUPPORTED');
-   const clean={...row,attacks:[],abilities:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false},rulesText:[],set:'OFFICIAL_PAGE_REFERENCE',cardNumber:''};
+   const printedToolAttack=row.category==='tool'&&['50404','49705','46441'].includes(ident)?[require('./parse-official-pokemon-energy.cjs').parseToolAttack(body)]:[];
+   const clean={...row,attacks:printedToolAttack,abilities:[],facts:{prizeCount:1,rulePokemon:false,teraBenchProtection:false},rulesText:[],set:'OFFICIAL_PAGE_REFERENCE',cardNumber:''};
    const record=compile({records:[clean]}).records[0];if(!record.mainPlan){blocked.push({officialCardId:ident,name,category:row.category,status:'BLOCKED',reason:'UNSUPPORTED_EFFECT_PATTERN',text:row.text,source:row.source});continue;}
+   if(printedToolAttack.length&&(record.mainPlan.mechanic!=='TOOL_GRANTED_ATTACK'||record.attacks.some(a=>!a.plan)))throw Error('UNSUPPORTED_TOOL_ATTACK_EFFECT');
    if((record.mainPlan.sharedWording===true||ijMechanics.has(record.mainPlan.mechanic)||['COIN_DRAW_CARDS','HEAL_ACTIVE_DAMAGE','RETURN_HAND_PRIZE_DRAW','RETURN_HAND_COIN_DRAW','DISCARD_ONE_DRAW_OPP_BENCH'].includes(record.mainPlan.mechanic))&&!hijIds.has(ident))throw Error('OUTSIDE_HIJ_MECHANIC_SCOPE');
    records.push(record);
   }catch(e){blocked.push({officialCardId:ident,status:'BLOCKED',reason:e.message});}

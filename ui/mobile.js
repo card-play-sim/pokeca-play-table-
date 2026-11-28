@@ -392,7 +392,7 @@ window.PokecaMobileBuild='258';
   function pokemonMenu(id,owner){if(owner!=='you')return;if(view().turnPlayer!=='you'){toast('今は相手の番です');return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='ability';container.append(b);}
+    for(const option of options.filter(o=>o.kind==='ability'||o.kind==='fossil_discard').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='ability';container.append(b);}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -450,6 +450,7 @@ window.PokecaMobileBuild='258';
     }
     if(option.kind==='retreat'&&!await confirmAction(`エネルギー${action.energyIds.length}枚をトラッシュして、選んだベンチへにげます。実行しますか？`)){closeSheet();return;}
     if(option.kind==='attack'&&!await confirmAction('「'+option.label+'」を使います。解決後に番が進みます。よろしいですか？')){closeSheet();return;}
+    if(option.kind==='fossil_discard'&&!await confirmAction('この化石とついているカードをトラッシュしますか？')){closeSheet();return;}
     if(option.kind==='ability'&&!await confirmAction('特性「'+option.label+'」を使います。よろしいですか？')){closeSheet();return;}
     closeSheet();const used=dispatch('you',action);
     if(used.ok&&option.kind==='attack'&&view().status==='active'&&view().turnPlayer==='you'&&!view().pendingPrizeSelection&&!view().pendingReferenceChoice){
@@ -946,8 +947,16 @@ window.PokecaMobileBuild='258';
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
+    if(choice.kind==='TOOL_RETRY_BADGE'){
+      openSheet('リトライバッジ','<p id="retry-coin-results"></p><div class="menu-list" id="reference-choice"></div>');
+      $('retry-coin-results').textContent='コインの結果：'+choice.results.map(v=>v?'オモテ':'ウラ').join('・');
+      for(const decision of choice.options)$('reference-choice').append(button(decision==='retry'?'すべて投げなおす':'この結果を使う',()=>{
+        if(dispatch('you',{type:'resolve_reference_choice',retryDecision:decision}).ok){closeSheet();render();}
+      }));
+      return;
+    }
     if(choice.kind==='DECK_POKEMON_SEARCH'){
-      openSheet('山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
+      openSheet(choice.searchMode?(choice.searchMode==='energy'?'山札から基本エネルギーを選ぶ':'山札から好きなカードを選ぶ')+'（残り'+choice.remaining+'枚まで）':'山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
       const owner=port.getSnapshot().players.find(player=>player.id==='you');
       for(const cardId of choice.options){
         const card=owner.deck.find(candidate=>idOf(candidate)===cardId);

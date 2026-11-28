@@ -214,6 +214,8 @@ async function run(baseCommit, directory) {
   for (const record of candidates) {
     const id = record.officialCardId;
     if(scope&&!scope.has(String(id))){blockers.push({id,reason:'DEFERRED_EXACT_TARGET_SCOPE'});continue;}
+    // Explicit P0 browser-fixture quarantine. Never promote these incomplete prints.
+    if((process.env.POKECA_INTAKE_DEFERRED_BROWSER_IDS||'').split(',').includes(String(id))){blockers.push({id,reason:'MISSING_RELEASE_BROWSER_FIXTURE'});continue;}
     const card = cards.get(id);
     const basic = verifiedBasicEnergy(record, card);
     const reason = !card || !(['H','I','J'].includes(card.regulationMark) || basic)

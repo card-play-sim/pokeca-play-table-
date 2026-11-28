@@ -72,6 +72,7 @@ for (let initialSeed = 1; initialSeed <= 80; initialSeed++) {
     extendedTypes.set(action.type, (extendedTypes.get(action.type) || 0) + 1);
     extendedActions++;
   }
+  if(initialSeed%10===0)console.log('EXTENDED_GAMEPLAY_PROGRESS',initialSeed,extendedActions);
 }
 assert.ok(extendedPrize, 'expected prize taking across seeded matches');
 assert.ok(extendedFinish, 'expected terminal match across seeded matches');

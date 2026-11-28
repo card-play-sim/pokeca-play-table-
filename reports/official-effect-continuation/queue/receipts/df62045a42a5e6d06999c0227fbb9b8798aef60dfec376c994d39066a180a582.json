@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_725B4062F0E2E445:19272a79abcc3ea1558f204c61d32ee415ddf5735b0aff6c7e879a492a1c98e6",
   "taskFingerprint": "19272a79abcc3ea1558f204c61d32ee415ddf5735b0aff6c7e879a492a1c98e6",
-  "executionFingerprint": "ea349c690daf2fd6f5f86d748a56cb845b7a8976ecc2fcef86c3ad1c7a3a13f0",
-  "attemptId": "35056fc8-e014-4a3a-8b0c-ad05ca0cad3a",
-  "status": "BLOCKED",
+  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
+  "attemptId": "ff44ba1f-be4b-4d12-8f44-39fafefe488b",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45216:stadium:危険な密林:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "STADIUM_POISON_BOOST",
+        "commands": [
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "34abf50f9e29d8d831f5b74aeca5f059b97c88bb5303b4abfd9a524df808cd1f"
+  "checksum": "44b1399fd2acb893a7ea71e18bfb01688041758e3b83ba0c0f36d18b318a4368"
 }
