@@ -73,6 +73,14 @@ function additionalAttackPlan(entry,text){
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
  // Fixed-count coin outcomes use one deterministic match-owned stream.
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ const nextCoin=text.match(/^次の相手の番、このワザを受けたポケモンがワザを使うとき、相手はコインを([1-9])回投げる。(ウラならそのワザは失敗。|1回でもウラなら、そのワザは失敗。)$/);
+ if(nextCoin&&/^\d+$/.test(printed)&&(Number(nextCoin[1])===1||nextCoin[2].startsWith('1回でも')))
+  return {mechanic:'ATTACK_NEXT_COIN_GATE',commands:['DAMAGE','ADD_STATE'],flips:Number(nextCoin[1]),sharedWording:true};
+ const damageCost=text.match(/^このワザは、このポケモンにダメカンがのっているなら、\[([草炎水雷超闘悪鋼])\]エネルギー1個で使える。$/);
+ if(damageCost&&/^\d+$/.test(printed))
+  return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE'],costOverride:{condition:'damaged',cost:[damageCost[1]]},sharedWording:true};
+ if(/^\d+$/.test(printed)&&text==='このワザは、このポケモンが特殊状態なら、このワザを使うためのエネルギーがこのポケモンについていなくても、使える。')
+  return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE'],costOverride:{condition:'status',cost:[]},sharedWording:true};
  const coinStatus=text.match(/^コインを([1-9])回投げ、オモテの数×([1-9]\d{0,2})ダメージ。(1回でもオモテ|オモテが([1-9])回以上|すべてウラ)なら、相手のバトルポケモンを(マヒ|こんらん|やけど|ねむり|どく)にする。$/);
  const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
  if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))
@@ -692,6 +700,15 @@ function plan(entry,kind){
   }
  }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ if(kind==='MAIN'&&entry.category==='supporter'){
+  if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。$/.test(generic))return guardedSearch('any',3,{windowCount:8,previousKnockout:true,privateSearch:true});
+  if(/^このカードは、自分の手札を1枚トラッシュしなければ使えない。\s*自分の山札から\[雷\]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',4,{type:'雷',discardCost:1,commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']});
+  if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*相手の場のポケモンについているエネルギーを1個選び、トラッシュする。$/.test(generic))return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],anyEnergy:true,previousKnockout:true,sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='item'){
+  if(generic==='自分の山札を上から4枚見て、その中からサポートを好きなだけ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。')return guardedSearch('supporter',4,{windowCount:4});
+  if(generic==='自分の山札を下から7枚見て、その中からポケモンを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。')return guardedSearch('pokemon',1,{windowCount:7,windowBottom:true});
+ }
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
  if(kind==='ABILITY'&&generic==='自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。')return guardedSearch('supporter',1,{emptyHand:true});

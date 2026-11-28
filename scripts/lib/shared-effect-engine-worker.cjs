@@ -563,7 +563,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
- if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
+ if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
   if(target)ensureAttackCost(target,1-deckIndex);
  }
@@ -1304,7 +1304,7 @@ function prepare(r, e, kind) {
     }
     mon.statusCondition=e.plan.holderStatus;
   }
-  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&e.plan.protect==='damageOnly'){
+  if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&e.plan.protect==='damageOnly'){
     const other=frame.game.players[1],printed=E.getReferenceEffectRecord(other.active);
     const attack=printed.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(!printed.facts.basic||printed.facts.types.includes(e.plan.exceptType)||!attack)return {blocked:'NO_QUALIFYING_BASIC_ATTACKER_FIXTURE'};
@@ -1452,6 +1452,11 @@ function prepare(r, e, kind) {
     if(plan.requiresTera&&![own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true))return {blocked:'NO_TERA_ROUTE_FIXTURE'};
     if(plan.heal)for(const target of targets)target.damage=Math.min(target.hp-10,40);
   }
+  if(e.plan.previousKnockout){
+    const g=frame.game;
+    if(g.turnNumber<2)return {blocked:'NO_PREVIOUS_TURN_FIXTURE'};
+    g.history.push({turnNumber:g.turnNumber-1,player:g.players[1].id,type:'knockout',details:{targetPlayerId:g.players[0].id}});
+  }
   if(m==='MASS_ZONE_TRANSFER'){
     const own=frame.game.players[0],plan=e.plan,eligible=c=>massTransferCandidate(c,plan);
     if(plan.onlyHandCard||plan.emptyHand){
@@ -1468,6 +1473,14 @@ function prepare(r, e, kind) {
       if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_TRANSFER_FIXTURE'};
+    if(plan.windowCount){
+      const index=own.deck.findIndex(eligible),chosen=own.deck.splice(index,1)[0];
+      if(plan.windowBottom)own.deck.push(chosen);else own.deck.unshift(chosen);
+    }
+    if(plan.discardCost&&!own.hand.some(c=>c.id!==frame.sourceId)){
+      const index=own.deck.findIndex(c=>!eligible(c));if(index<0)return {blocked:'NO_DISCARD_COST_FIXTURE'};
+      own.hand.push(own.deck.splice(index,1)[0]);
+    }
   }
   if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&e.plan.type){
     const own=frame.game.players[0],plan=e.plan,attached=own.active.energyCards;
@@ -2657,7 +2670,20 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==='MASS_ZONE_TRANSFER'){
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);
-    assert(ids.every(id=>own[plan.zone].some(c=>c.id===id&&massTransferCandidate(c,plan))));
+    const scope=plan.windowCount?(plan.windowBottom?own.deck.slice(-plan.windowCount):own.deck.slice(0,plan.windowCount)):own[plan.zone];
+    assert(ids.every(id=>scope.some(c=>c.id===id&&massTransferCandidate(c,plan))));
+    if(plan.windowCount){
+      const outside=own.deck.find(c=>!scope.includes(c));
+      if(outside){const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,cards:[outside.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+    }
+    if(plan.discardCost){
+      const paid=action.selections.discardCost;assert.equal(paid.length,plan.discardCost);assert(paid.every(id=>own.hand.some(c=>c.id===id&&id!==t.sourceId)&&resolved.discard.some(c=>c.id===id)));
+      const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discardCost:[]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
+    if(plan.previousKnockout){
+      const start=structuredClone(before);start.history=start.history.filter(ev=>!(ev.type==='knockout'&&ev.turnNumber===start.turnNumber-1&&ev.details?.targetPlayerId===own.id));
+      const replay=port(start);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(start));
+    }
     if(plan.category==='pokemonOrBasicEnergy'){
       const pool=own[plan.zone].filter(c=>massTransferCandidate(c,plan));
       for(const kind of ['pokemon','energy']){
@@ -3805,6 +3831,32 @@ function verifyCase(t, e) {
       verifyPrintedAttack(start,end,e,heads*e.plan.unit);
     }
   }
+  if(e.plan.mechanic==='ATTACK_NEXT_COIN_GATE'){
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    const holder=after.players[1].active,source=after.players[0].active;
+    if(holder?.id!==before.players[1].active.id||!source)return {status:'BLOCKED',reason:'NO_SURVIVING_NEXT_COIN_FIXTURE'};
+    assert.equal(holder.referenceNextCoinGate.turn,after.turnNumber);
+    assert.equal(holder.referenceNextCoinGate.flips,e.plan.flips);
+    const print=E.getReferenceEffectRecord(holder);
+    const a=E.getLegalActions(after,'ai').actions.find(a=>a.type==='attack_turn'&&print.attacks[a.attackIndex].plan.mechanic==='VANILLA_DAMAGE');
+    if(!a)return {status:'BLOCKED',reason:'NO_NEXT_COIN_REPLY_FIXTURE'};
+    const seeds=new Map();
+    for(let seed=0;seed<100000&&seeds.size<2;seed++){
+      let state=seed,all=true;for(let i=0;i<e.plan.flips;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;if(state>=0x80000000)all=false;}
+      if(!seeds.has(all))seeds.set(all,seed);
+    }
+    assert.equal(seeds.size,2);
+    for(const [all,seed] of seeds){
+      const start={...after,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('ai',a).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(h=>h.details);
+      assert.equal(events.filter(h=>h?.command==='COIN_FLIP').length,e.plan.flips);
+      assert.equal(events.some(h=>h?.command==='ATTACK_FAILED'&&h.predicate==='nextCoinGate'),!all);
+      assert.equal(events.some(h=>h?.command==='DAMAGE'&&h.targetInstanceId===source.id),all);
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+    }
+  }
   if(e.plan.mechanic==='MASS_COIN_OUTCOME'){
     const q=e.plan,action=t.action||o.action,seeds=new Map();
     for(let seed=0;seed<100000&&seeds.size<q.flips+1;seed++){
@@ -4480,14 +4532,18 @@ function verifyCase(t, e) {
     assert(!after.players[0].hand.some(card=>card.id===t.sourceId));
   }
   if(e.plan.mechanic==="TRAINER_DISCARD_SPECIAL_ENERGY"){
-    const action=t.action||o.action,chosen=action.selections.energy;
+    const action=t.action||o.action,chosen=action.selections.energy,planAnyEnergy=e.plan.anyEnergy;
     assert.equal(chosen.length,1);
-    const target=[before.players[1].active,...before.players[1].bench].find(c=>c.energyCards.some(e=>e.id===chosen[0]&&e.isSpecial));
+    const target=[before.players[1].active,...before.players[1].bench].find(c=>c.energyCards.some(e=>e.id===chosen[0]&&(action && (e.isSpecial||planAnyEnergy))));
     assert(target);assert(after.players[1].discard.some(c=>c.id===chosen[0]));
     const resolved=[after.players[1].active,...after.players[1].bench].find(c=>c.id===target.id);
     assert.deepEqual(resolved.energyCards.map(c=>c.id),target.energyCards.filter(c=>c.id!==chosen[0]).map(c=>c.id));
     const basic=target.energyCards.find(c=>!c.isSpecial);
-    if(basic){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{energy:[basic.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+    if(basic){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{energy:[basic.id]}}).ok,!!planAnyEnergy);if(planAnyEnergy)assert(replay.getSnapshot().players[1].discard.some(c=>c.id===basic.id));else assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+    if(e.plan.previousKnockout){
+      const start=structuredClone(before);start.history=start.history.filter(ev=>!(ev.type==='knockout'&&ev.turnNumber===start.turnNumber-1&&ev.details?.targetPlayerId===start.players[0].id));
+      const replay=port(start);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(start));
+    }
   }
   if(e.plan.mechanic==='STADIUM_STAGE_HP'){
     const plan=e.plan,action=t.action||o.action;
