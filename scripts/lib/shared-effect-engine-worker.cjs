@@ -4976,12 +4976,29 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'&&e.plan.discardAll){
     const action=t.action||o.action,own=before.players[0],next=after.players[0],cards=action.selections.cards,category=c=>c.kind==='energy'&&!c.isSpecial?'basicEnergy':E.getReferenceEffectRecord(c)?.category;
-    assert(own.hand.every(c=>next.discard.some(x=>x.id===c.id)));
-    assert(cards.every(id=>next.hand.some(c=>c.id===id)));assert.equal(next.hand.length,cards.length);
+    const handIds=own.hand.map(c=>c.id),remainingHand=handIds.filter(id=>id!==action.cardId);
+    assert(handIds.includes(action.cardId)&&!Object.hasOwn(action.selections,'discard'));
+    assert.deepEqual(next.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...handIds].sort());
+    assert.deepEqual(next.hand.map(c=>c.id).sort(),[...cards].sort());
+    assert.deepEqual(next.deck.map(c=>c.id).sort(),own.deck.filter(c=>!cards.includes(c.id)).map(c=>c.id).sort());
     const categories=cards.map(id=>category(own.deck.find(c=>c.id===id)));
     assert(categories.every(c=>e.plan.categories.includes(c)));assert.equal(new Set(categories).size,cards.length);
-    assert(e.plan.categories.every(c=>categories.includes(c)));
-    const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[]}}).ok);assert.equal(replay.getSnapshot().players[0].hand.length,0);
+    assert.deepEqual([...categories].sort(),[...e.plan.categories].sort());
+    const realEvents=after.history.slice(before.history.length).map(ev=>ev.details).filter(ev=>ev&&!ev.reference);
+    const discardIndex=realEvents.findIndex(ev=>ev.command==='DISCARD'&&ev.fromZone==='hand'&&JSON.stringify(ev.cardIds)===JSON.stringify(remainingHand));
+    const revealIndex=realEvents.findIndex(ev=>ev.command==='REVEAL'&&JSON.stringify(ev.cardIds)===JSON.stringify(cards));
+    const addIndex=realEvents.findIndex(ev=>ev.command==='ADD_TO_HAND'&&JSON.stringify(ev.cardIds)===JSON.stringify(cards));
+    const shuffleIndex=realEvents.findIndex(ev=>ev.command==='SHUFFLE_DECK');
+    assert(discardIndex>=0&&revealIndex>discardIndex&&addIndex>revealIndex&&shuffleIndex>addIndex);
+    assert.equal(realEvents.filter(ev=>ev.command==='SHUFFLE_DECK').length,1);
+    const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[]}}).ok);
+    const skipped=replay.getSnapshot();assert.equal(skipped.players[0].hand.length,0);
+    assert.deepEqual(skipped.players[0].discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...handIds].sort());
+    assert.deepEqual(S.identities(before),S.identities(skipped));
+    const invalid=[...own.deck.filter(c=>!e.plan.categories.includes(category(c))).slice(0,1).map(c=>[c.id]),[cards[0],cards[0]]];
+    const duplicate=own.deck.find(c=>c.id!==cards[0]&&category(c)===categories[0]);
+    if(duplicate)invalid.push([cards[0],duplicate.id]);
+    for(const ids of invalid){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{cards:ids}}).ok,false);assert.deepEqual(denied.getSnapshot(),before);}
     assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
   }
   if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES"&&!e.plan.discardAll) {
