@@ -235160,6 +235160,489 @@
         "amount": 40,
         "sharedWording": true
       }
+    },
+    {
+      "officialCardId": "45230",
+      "name": "アノホラグサ",
+      "deckName": "アノホラグサ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45230",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045230_P_ANOHORAGUSA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "パワフルニードル",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "80×",
+          "text": "このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×80ダメージ。",
+          "effectId": "reference-45230-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_ENERGY_COINS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "unit": 80
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ざっそうだましい",
+          "text": "相手がすでにとったサイド1枚につき、このポケモンの最大HPは「＋50」される。",
+          "effectId": "reference-45230-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "opponentPrizes",
+            "type": null,
+            "amount": 50,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "アノクサ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45230.json",
+        "sha256": "03633ce6efde31fbc08d78be660fe1286dcb376230e38b72963fe78d45b47bf6",
+        "htmlSha256": "03633ce6efde31fbc08d78be660fe1286dcb376230e38b72963fe78d45b47bf6",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46673",
+      "name": "アノホラグサ",
+      "deckName": "アノホラグサ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46673",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV8a/046673_P_ANOHORAGUSA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "パワフルニードル",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "80×",
+          "text": "このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×80ダメージ。",
+          "effectId": "reference-46673-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_ENERGY_COINS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "unit": 80
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ざっそうだましい",
+          "text": "相手がすでにとったサイド1枚につき、このポケモンの最大HPは「＋50」される。",
+          "effectId": "reference-46673-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "opponentPrizes",
+            "type": null,
+            "amount": 50,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "アノクサ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46673.json",
+        "sha256": "2ca98306a2d814046df8240b94c63b48788034fafd52e5923bc6fb66348ac5e3",
+        "htmlSha256": "2ca98306a2d814046df8240b94c63b48788034fafd52e5923bc6fb66348ac5e3",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47588",
+      "name": "ローブシン",
+      "deckName": "ローブシン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47588",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047588_P_ROBUSHIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ふりまわす",
+          "cost": [
+            "闘",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "コインを2回投げ、オモテの数×50ダメージ追加。",
+          "effectId": "reference-47588-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 50,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "マスターアーツ",
+          "text": "このポケモンについている[闘]エネルギー1個につき、このポケモンの最大HPは「＋40」される。",
+          "effectId": "reference-47588-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "energy",
+            "type": "闘",
+            "amount": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ドテッコツ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47588.json",
+        "sha256": "8a6cc54b612d54b0c28a5590adfcdbf94964da09944b88acdec2dbbcf49e6c7a",
+        "htmlSha256": "8a6cc54b612d54b0c28a5590adfcdbf94964da09944b88acdec2dbbcf49e6c7a",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "47957",
+      "name": "ローブシン",
+      "deckName": "ローブシン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/47957",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV11B/047957_P_ROBUSHIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ふりまわす",
+          "cost": [
+            "闘",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "コインを2回投げ、オモテの数×50ダメージ追加。",
+          "effectId": "reference-47957-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 50,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "マスターアーツ",
+          "text": "このポケモンについている[闘]エネルギー1個につき、このポケモンの最大HPは「＋40」される。",
+          "effectId": "reference-47957-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "energy",
+            "type": "闘",
+            "amount": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ドテッコツ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/47957.json",
+        "sha256": "e7dabcc2d2d235b72037a14dffa564246221c4b0cccd4cc8a90b7513eb5c17b9",
+        "htmlSha256": "e7dabcc2d2d235b72037a14dffa564246221c4b0cccd4cc8a90b7513eb5c17b9",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "49106",
+      "name": "ローブシン",
+      "deckName": "ローブシン",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49106",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/049106_P_ROBUSHIN.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ふりまわす",
+          "cost": [
+            "闘",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "100+",
+          "text": "コインを2回投げ、オモテの数×50ダメージ追加。",
+          "effectId": "reference-49106-attack-0",
+          "plan": {
+            "mechanic": "FIXED_COIN_HITS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "flips": 2,
+            "unit": 50,
+            "base": 100
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "マスターアーツ",
+          "text": "このポケモンについている[闘]エネルギー1個につき、このポケモンの最大HPは「＋40」される。",
+          "effectId": "reference-49106-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "energy",
+            "type": "闘",
+            "amount": 40,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 140,
+        "evolvesFrom": "ドテッコツ",
+        "retreatCost": 3,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/49106.json",
+        "sha256": "c83b4ddde7f4a338b362945251e3c8eee06dae64cbf0a4fa5d7b02419582675b",
+        "htmlSha256": "c83b4ddde7f4a338b362945251e3c8eee06dae64cbf0a4fa5d7b02419582675b",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "48789",
+      "name": "アノホラグサ",
+      "deckName": "アノホラグサ",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48789",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/MC/048789_P_ANOHORAGUSA.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "パワフルニードル",
+          "cost": [
+            "草",
+            "無色",
+            "無色"
+          ],
+          "damage": "80×",
+          "text": "このポケモンについているエネルギーの数ぶんコインを投げ、オモテの数×80ダメージ。",
+          "effectId": "reference-48789-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_ATTACHED_ENERGY_COINS",
+            "commands": [
+              "COIN_FLIP",
+              "DAMAGE"
+            ],
+            "unit": 80
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "ざっそうだましい",
+          "text": "相手がすでにとったサイド1枚につき、このポケモンの最大HPは「＋50」される。",
+          "effectId": "reference-48789-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_DYNAMIC_MAX_HP",
+            "commands": [
+              "MODIFY_MAX_HP"
+            ],
+            "mode": "opponentPrizes",
+            "type": null,
+            "amount": 50,
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 100,
+        "evolvesFrom": "アノクサ",
+        "retreatCost": 3,
+        "types": [
+          "草"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/48789.json",
+        "sha256": "d67ce6de10a58c32e20b0cc1c8b6999e1bd8575c3571b4fa3403d980b280e4dc",
+        "htmlSha256": "d67ce6de10a58c32e20b0cc1c8b6999e1bd8575c3571b4fa3403d980b280e4dc",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [

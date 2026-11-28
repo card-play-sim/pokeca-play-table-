@@ -650,7 +650,7 @@ function prepare(r, e, kind) {
     assert.equal(empty.players[0].active.hp,r.facts.hp);
     assert(n>0);assert.equal(before.players[0].active.hp,r.facts.hp+n*plan.amount);
     assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
-    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&(o.ok??o.enabled));
     if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
     return {...t,port:changed,option,trigger};
   }
@@ -736,22 +736,30 @@ function prepare(r, e, kind) {
   }
   if(m==='PASSIVE_TEAM_ATTACK_BOOST'){
     const plan=e.plan,all=[...records.values()];
-    const line=record=>{
-      if(record.facts.basic)return [record];
-      if(!(record.facts.stage>0))return null;
-      const parent=all.find(x=>x.category==='pokemon'&&x.name===record.facts.evolvesFrom&&x.facts.stage===record.facts.stage-1&&x.attacks.every(a=>a.plan)&&!x.abilities.length);
-      const previous=parent&&line(parent);return previous?[...previous,record]:null;
-    };
+    // Prefer the original simple fixtures, but allow alternative fully
+    // connected evolution parents and ordinary active abilities. Exact
+    // damage, legal evolution and physical identity proofs remain mandatory.
+    const legal=all.filter(x=>x.category==='pokemon'&&x.attacks.length&&x.attacks.every(a=>a.plan)&&x.abilities.every(a=>a.plan));
+    const simpleFirst=[...legal.filter(x=>!x.abilities.length),...legal.filter(x=>x.abilities.length)];
+    const line=record=>evolutionLines(record,simpleFirst).next().value||null;
     const holderChain=line(r);
     if(!holderChain)return {blocked:'NO_TEAM_BOOST_HOLDER_EVOLUTION_LINE'};
-    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=100&&a.cost.length>0&&a.cost.every(t=>['草','炎','水','雷','超','闘','悪','鋼','無色'].includes(t)));
-    const matches=x=>x.category==='pokemon'&&x.officialCardId!==r.officialCardId&&x.name!==r.name&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&attackIndex(x)>=0&&(plan.evolvedSource?x.facts.stage>0:x.facts.basic)&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
-    const attackerChain=all.filter(matches).map(line).find(chain=>chain&&!chain.some(x=>holderChain.some(h=>h.deckName===x.deckName)));
-    if(!attackerChain)return {blocked:'NO_TEAM_BOOST_ATTACKER'};
-    const attacker=attackerChain.at(-1),i=attackIndex(attacker),damage=Number(attacker.attacks[i].damage);
-    const defenders=all.filter(x=>x.category==='pokemon'&&!x.abilities.length&&x.attacks.every(a=>a.plan)&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>damage+plan.amount&&!x.facts.weakness?.types.some(t=>attacker.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>attacker.facts.types.includes(t)));
-    const defenderChain=defenders.map(line).find(Boolean);
-    if(!defenderChain)return {blocked:'NO_TEAM_BOOST_DEFENDER'};
+    const attackIndex=x=>x.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0&&Number(a.damage)<=150&&a.cost.every(t=>['草','炎','水','雷','超','闘','悪','鋼','無色'].includes(t)));
+    // Do not admit continuous abilities as incidental damage modifiers.
+    const ordinary=x=>!x.abilities.length||x.abilities.every(a=>a.plan?.origin==='activeEntry'||a.plan?.commands?.includes('DRAW'));
+    const matches=x=>x.officialCardId!==r.officialCardId&&x.name!==r.name&&ordinary(x)&&attackIndex(x)>=0&&(plan.evolvedSource?x.facts.stage>0:x.facts.basic)&&(!plan.team||x.name.startsWith(plan.team+'の'))&&(!plan.types.length||plan.types.some(t=>x.facts.types.includes(t)));
+    const attackers=simpleFirst.filter(matches);
+    let attackerChain=null,defenderChain=null;
+    for(const candidate of attackers){
+      const chain=line(candidate);
+      if(!chain||chain.some(x=>holderChain.some(h=>h.deckName===x.deckName)))continue;
+      const damage=Number(candidate.attacks[attackIndex(candidate)].damage);
+      const defenders=simpleFirst.filter(x=>!x.abilities.length&&(plan.evolvedTarget?x.facts.stage>0:x.facts.basic)&&x.facts.hp>damage+plan.amount&&!x.facts.weakness?.types.some(t=>candidate.facts.types.includes(t))&&!x.facts.resistance?.types.some(t=>candidate.facts.types.includes(t)));
+      const opponent=defenders.map(line).find(Boolean);
+      if(opponent){attackerChain=chain;defenderChain=opponent;break;}
+    }
+    if(!attackerChain||!defenderChain)return {blocked:attackers.length?'NO_TEAM_BOOST_LEGAL_PAIR':'NO_TEAM_BOOST_ATTACKER'};
+    const attacker=attackerChain.at(-1),i=attackIndex(attacker);
     const ids=chain=>chain.map(x=>x.officialCardId);
     const trigger={...attacker.attacks[i],effectIndex:i,proofTeamBoost:{holderPrint:r.officialCardId,holderChain:ids(holderChain),attackerChain:ids(attackerChain),defenderChain:ids(defenderChain),nonStack:plan.nonStack}};
     const t=prepare(attackerChain[0],trigger,'attack');
