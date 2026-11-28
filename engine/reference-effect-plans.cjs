@@ -699,6 +699,25 @@ function plan(entry,kind){
    return {mechanic:'ENERGY_TYPED_PASSIVE',commands:['ATTACH_ENERGY',({hp:'MODIFY_MAX_HP',boost:'MODIFY_DAMAGE',retreat:'MODIFY_RETREAT_COST',benchGuard:'PREVENT_DAMAGE'})[mode]],energyType:typed[1],mode,amount:Number(typed[3]||typed[4]||0),sharedWording:true};
   }
  }
+ if(kind==='MAIN'&&entry.category==='stadium'){
+  const retreatTeam=generic.match(/^おたがいの場の「([^「」]+)のポケモン」全員のにげるためのエネルギーは、すべてなくなる。$/);
+  const retreatName=generic.match(/^おたがいの「([^「」]+)」全員のにげるためのエネルギーは、それぞれ([1-9])個ぶん少なくなる。$/);
+  if(retreatTeam||retreatName)return {mechanic:'STADIUM_FILTERED_RETREAT',commands:['MODIFY_RETREAT_COST'],team:retreatTeam?.[1]||null,name:retreatName?.[1]||null,free:!!retreatTeam,amount:Number(retreatName?.[2]||0),sharedWording:true};
+  const boostTeam=generic.match(/^おたがいの「([^「」]+)のポケモン」が使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+  if(boostTeam)return {mechanic:'STADIUM_TEAM_BOOST',commands:['MODIFY_DAMAGE'],team:boostTeam[1],amount:Number(boostTeam[2]),sharedWording:true};
+  const reduction=generic.match(/^おたがいの(?:\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモン|「([^「」]+)のポケモン」全員)が、相手のポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
+  if(reduction)return {mechanic:'STADIUM_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],holderType:reduction[1]||null,team:reduction[2]||null,amount:Number(reduction[3]),sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='tool'){
+  const teamBoost=generic.match(/^このカードをつけている「([^「」]+)のポケモン」は、ワザを使うためのエネルギーが\[無色\]エネルギー([1-9])個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+  if(teamBoost)return {mechanic:'TOOL_TEAM_COST_BOOST',commands:['MODIFY_ATTACK_COST','MODIFY_DAMAGE'],team:teamBoost[1],discount:Number(teamBoost[2]),amount:Number(teamBoost[3]),sharedWording:true};
+  const namedBoost=generic.match(/^このカードをつけている「([^「」]+)」が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);
+  if(namedBoost)return {mechanic:'TOOL_NAMED_EX_BOOST',commands:['MODIFY_DAMAGE'],name:namedBoost[1],amount:Number(namedBoost[2]),sharedWording:true};
+  const mega=generic.match(/^このカードをつけているポケモン\(「メガシンカex」をのぞく\)が、相手の「メガシンカex」から受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
+  const ability=generic.match(/^このカードをつけているポケモンが、相手の特性を持つポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
+  const typed=generic.match(/^このカードをつけている\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモンが、相手の((?:\[(?:[草炎水雷超闘悪鋼竜]|無色)\])+?)ポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
+  if(mega||ability||typed)return {mechanic:'TOOL_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],mode:mega?'mega':ability?'ability':'types',holderType:typed?.[1]||null,attackerTypes:typed?[...typed[2].matchAll(/\[([^\]]+)\]/g)].map(x=>x[1]):[],amount:Number(mega?.[1]||ability?.[1]||typed[3]),sharedWording:true};
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'){
   if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。$/.test(generic))return guardedSearch('any',3,{windowCount:8,previousKnockout:true,privateSearch:true});

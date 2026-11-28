@@ -47,6 +47,9 @@ function abilityEnabled(g,card,ability=null){
  }
  return true;
 }
+function matchesNamedType(card,plan){
+ const r=record(card);return !!r&&(!plan.name||r.name===plan.name)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.holderType||r.facts.types.includes(plan.holderType));
+}
 function typedEnergyEffects(card,mode){
  const types=record(card)?.facts.types||[];
  return (card.energyCards||[]).map(c=>record(c)?.mainPlan).filter(p=>p?.mechanic==='ENERGY_TYPED_PASSIVE'&&p.mode===mode&&types.includes(p.energyType));
@@ -101,6 +104,9 @@ function cost(g,mon,attack){
  let discount=0;
  if(toolEnabled(g)&&owner.prizes>other.prizes)for(const t of mon.tools||[]){
   const p=record(t)?.mainPlan;if(p?.mechanic==='TOOL_PRIZE_COST_DISCOUNT')discount+=p.amount;
+ }
+ if(toolEnabled(g))for(const t of mon.tools||[]){
+  const p=record(t)?.mainPlan;if(p?.mechanic==='TOOL_TEAM_COST_BOOST'&&matchesNamedType(mon,p))discount+=p.discount;
  }
  for(const a of enabledAbilities(g,mon))if(a.plan.mechanic==='PASSIVE_NAMED_PRIZE_DISCOUNT'&&a.plan.attackName===attack.name)discount+=6-other.prizes;
  for(const a of enabledAbilities(g,mon))if(a.plan.mechanic==='PASSIVE_CONTEXT_COST_DISCOUNT'){
@@ -175,6 +181,8 @@ function refresh(g){
    for(const e of [...(c.energyCards||[])])if(record(e)?.mainPlan?.mechanic==='ROCKET_ENERGY'&&!record(c).name.startsWith('ロケット団の')){
     c.energyCards.splice(c.energyCards.indexOf(e),1);p.discard.push(e);event(g,p.id,'DISCARD',{cardIds:[id(e)]});
    }
+   const stadiumPlan=record(g.stadium)?.mainPlan;
+   if(stadiumPlan?.mechanic==='STADIUM_FILTERED_RETREAT'&&matchesNamedType(c,stadiumPlan))c.retreatCost=stadiumPlan.free?0:Math.max(0,c.retreatCost-stadiumPlan.amount);
    if(typedEnergyEffects(c,'retreat').length)c.retreatCost=0;
    c.energies=energyUnits(c).map(unit=>unit[0]);
   }
@@ -210,12 +218,16 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
    const plan=record(t)?.mainPlan;
    if(isEx&&plan?.mechanic==='TOOL_EX_ATTACK_BOOST'&&(!plan.nonRuleOnly||!record(source).facts.rulePokemon))amount+=plan.amount;
    if(plan?.mechanic==='TOOL_STATUS_ATTACK_BOOST'&&source.statusCondition===plan.holderStatus)amount+=plan.amount;
+   if(plan?.mechanic==='TOOL_TEAM_COST_BOOST'&&matchesNamedType(source,plan))amount+=plan.amount;
+   if(isEx&&plan?.mechanic==='TOOL_NAMED_EX_BOOST'&&matchesNamedType(source,plan))amount+=plan.amount;
   }
   if(own.referenceExVDamageBoost?.turn===g.turnNumber&&(isEx||/V(?:MAX|STAR|-UNION)?$/.test(record(mon).name)))amount+=own.referenceExVDamageBoost.amount;
  }
  if(!bench&&find(g,id(mon))?.player.id===other.id)amount+=(own.referenceTypedDamageBoosts||[]).filter(boost=>boost.turn===g.turnNumber&&record(source).facts.types.includes(boost.type)).reduce((sum,boost)=>sum+boost.amount,0);
  if(!bench&&other.active===mon){
   amount+=typedEnergyEffects(source,'boost').reduce((sum,p)=>sum+p.amount,0);
+  const stadiumPlan=record(g.stadium)?.mainPlan;
+  if(stadiumPlan?.mechanic==='STADIUM_TEAM_BOOST'&&matchesNamedType(source,stadiumPlan))amount+=stadiumPlan.amount;
   const attacker=record(source),defender=record(mon),nonStack=new Set();
   for(const holder of field(own))for(const a of enabledAbilities(g,holder)){
    const p=a.plan;if(p.mechanic!=='PASSIVE_TEAM_ATTACK_BOOST')continue;
@@ -257,6 +269,16 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   amount=Math.max(0,amount-reduction);
   const teamReduction=(other.referenceTeamDamageReductions||[]).filter(x=>x.turn===g.turnNumber&&(!x.type||record(mon).facts.types.includes(x.type))).reduce((sum,x)=>sum+x.amount,0);
   amount=Math.max(0,amount-teamReduction);
+  const stadiumPlan=record(g.stadium)?.mainPlan;
+  if(stadiumPlan?.mechanic==='STADIUM_FILTERED_REDUCTION'&&matchesNamedType(mon,stadiumPlan))amount=Math.max(0,amount-stadiumPlan.amount);
+  if(toolEnabled(g))for(const t of mon.tools||[]){
+   const p=record(t)?.mainPlan;
+   if(p?.mechanic!=='TOOL_FILTERED_REDUCTION'||!matchesNamedType(mon,p))continue;
+   const applies=p.mode==='mega'?isMegaEvolutionEx(source)&&!isMegaEvolutionEx(mon):
+    p.mode==='ability'?record(source).abilities.some(a=>abilityEnabled(g,source,a)):
+    record(source).facts.types.some(type=>p.attackerTypes.includes(type));
+   if(applies)amount=Math.max(0,amount-p.amount);
+  }
   if(mon.referenceDamageReduction?.turn===g.turnNumber)
    amount=Math.max(0,amount-mon.referenceDamageReduction.amount);
  }
