@@ -1,31 +1,312 @@
 {
-  "baseCommit": "1ab984fa078641857e66dc5dcafac5c4ad3392ca",
+  "baseCommit": "62ade9f06d3f85f212000dd03e6bf9d792c0591d",
   "state": "PREPUBLICATION",
   "qualified": [
-    "46031",
-    "46032",
-    "46284",
-    "46287",
-    "46439",
-    "46440",
-    "46817",
-    "50421",
-    "50441",
-    "50460",
-    "47705",
-    "48077",
-    "49392",
-    "49393",
-    "49394",
-    "49401",
-    "49402",
-    "49409",
-    "47779",
-    "48437"
+    "45799",
+    "48479",
+    "48484",
+    "50491",
+    "50783",
+    "50640",
+    "45216",
+    "45559",
+    "45572",
+    "45859",
+    "45905",
+    "49671",
+    "48428",
+    "48542",
+    "45230",
+    "45264",
+    "45288",
+    "45632",
+    "45638",
+    "45639",
+    "45745",
+    "45784",
+    "45789",
+    "45933",
+    "45938",
+    "46033",
+    "46040",
+    "46041",
+    "46197",
+    "46228",
+    "46270",
+    "46285",
+    "46434",
+    "46438",
+    "46813",
+    "46834",
+    "49639",
+    "49695",
+    "49710",
+    "49711",
+    "50073",
+    "50077",
+    "50101",
+    "50157",
+    "50161",
+    "50165",
+    "50166",
+    "50209",
+    "50212",
+    "50292",
+    "50296",
+    "50298",
+    "50325",
+    "50326",
+    "50330",
+    "50336",
+    "50353",
+    "50401",
+    "50403",
+    "50531",
+    "50545",
+    "50546",
+    "50602",
+    "50849",
+    "50933",
+    "47100",
+    "47101",
+    "47106",
+    "47107",
+    "47252",
+    "47271",
+    "47352",
+    "47393",
+    "47447",
+    "47664",
+    "47702",
+    "47858",
+    "47859",
+    "47926",
+    "47957",
+    "48060",
+    "48082",
+    "48305",
+    "48413",
+    "48419",
+    "48420",
+    "48472",
+    "48509",
+    "48510",
+    "48673",
+    "48689",
+    "48692",
+    "48707",
+    "48708",
+    "48714",
+    "49350",
+    "49408",
+    "49453",
+    "50008",
+    "50076",
+    "50211",
+    "46843",
+    "46845",
+    "47153",
+    "47218",
+    "48661",
+    "49213",
+    "49259",
+    "49365",
+    "49380",
+    "49400",
+    "49437",
+    "50066",
+    "45217",
+    "49456",
+    "49457",
+    "46024"
   ],
   "blockers": [
     {
+      "id": "46309",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47497",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49606",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50470",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50558",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50559",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50561",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47014",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47016",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50618",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50624",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50648",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50661",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50673",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45181",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45256",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45606",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45744",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45755",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45852",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46014",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46019",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46372",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46427",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46744",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46751",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46792",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47221",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47468",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47511",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47657",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47772",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47802",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47812",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45398",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45258",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45567",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45729",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45869",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46013",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46169",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46186",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46711",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47129",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47826",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "46452",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50040",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -33,7 +314,87 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
-      "id": "45230",
+      "id": "48030",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48348",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48366",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48392",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48399",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48450",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45182",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45207",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45243",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45283",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45287",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45633",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45634",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45642",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45680",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45752",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45790",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45866",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45877",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45921",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45939",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -41,7 +402,159 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "45974",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46001",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46002",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46029",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46030",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46034",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46035",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46071",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46183",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46262",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46267",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46282",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46283",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46394",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46402",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46435",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46436",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46525",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "46673",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46702",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46768",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46810",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46823",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48949",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49416",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49642",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49656",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49685",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49701",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49702",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49705",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49707",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49712",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49713",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50051",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50065",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50087",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50088",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50113",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -57,7 +570,135 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "50557",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "50127",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50163",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50164",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50167",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50187",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50195",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50218",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50224",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50225",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50232",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50234",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50238",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50250",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50251",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50256",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50273",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50289",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50290",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50291",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50293",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50294",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50295",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50299",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50300",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50305",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50308",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50310",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50315",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50328",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50329",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50346",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50356",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -65,7 +706,27 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "50390",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "50394",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50404",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50407",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50408",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50521",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -74,6 +735,74 @@
     },
     {
       "id": "50528",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50540",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50543",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50544",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50547",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50553",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50614",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50696",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50929",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50930",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50931",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47031",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47096",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47103",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47105",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47108",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47242",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47289",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -93,7 +822,31 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "47420",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47445",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "47453",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47481",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47490",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47553",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47555",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -101,7 +854,115 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
-      "id": "47957",
+      "id": "47608",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47622",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47686",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47689",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47703",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47754",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47770",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47784",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47789",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47841",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47857",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47876",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47902",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47928",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47976",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48057",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48074",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48261",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48278",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48347",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48350",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48389",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48414",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48415",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48432",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48487",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48507",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48514",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -109,7 +970,51 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "48635",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48685",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48686",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48703",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48704",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48709",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48712",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48739",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "48749",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48840",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48893",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49022",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
@@ -121,12 +1026,268 @@
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
+      "id": "49171",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49224",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49251",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49373",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49375",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49389",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49406",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49455",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49979",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50204",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50206",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50831",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46841",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46847",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47109",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47115",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47127",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47616",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48565",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48706",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48766",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
       "id": "48789",
       "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     },
     {
-      "id": "50040",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "id": "48878",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48940",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48979",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48986",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49048",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49129",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49142",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49145",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49170",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49249",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49250",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49361",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49362",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49396",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49399",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49411",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49454",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49973",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50015",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50036",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50064",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50080",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50084",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50265",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50319",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50334",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50338",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50396",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50536",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50551",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50554",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47771",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "50583",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45792",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46293",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49679",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49687",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47089",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48436",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "48446",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "49331",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "45988",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "46848",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+    },
+    {
+      "id": "47220",
+      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
     }
   ],
   "publicBattleVerified": []

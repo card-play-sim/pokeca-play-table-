@@ -1,8 +1,8 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_E68BBDEF323FF97F:3a285f16072e18f50d1552cabce5c4f458ba34d8d5bf8903e034e7e135303814",
   "taskFingerprint": "3a285f16072e18f50d1552cabce5c4f458ba34d8d5bf8903e034e7e135303814",
-  "executionFingerprint": "ea349c690daf2fd6f5f86d748a56cb845b7a8976ecc2fcef86c3ad1c7a3a13f0",
-  "attemptId": "6fd2c568-d5aa-4c4e-a511-bb6da51b30af",
+  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
+  "attemptId": "59023b56-e4a4-44c2-924a-607a7933bcbc",
   "status": "BLOCKED",
   "result": {
     "status": "BLOCKED",
@@ -16,15 +16,35 @@
       },
       {
         "slot": "48479:stadium:おいわいファンファーレ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "STADIUM_ACTIVE",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "50491:stadium:おいわいファンファーレ:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "STADIUM_ACTIVE",
+        "commands": [
+          "HEAL"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "ad03907e197a0af8e30aae6fc431cf9d631838d5b765bc1483c14bd739767e07"
+  "checksum": "4ea506313ffb9eed47565b2dbb33b4eb7861308aed4153da1b87074386b0b706"
 }

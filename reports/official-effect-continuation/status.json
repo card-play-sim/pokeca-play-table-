@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "cea83d8d2985753300a08d909316e6802afef2b01b05573f6d6a3c0e17f5d4c8",
-  "classifiedRegistryHash": "cea83d8d2985753300a08d909316e6802afef2b01b05573f6d6a3c0e17f5d4c8",
+  "registryHash": "19fa6f8eff8aebf81828cb8a02ea9411243dcdb5698b54417090b2462118bae5",
+  "classifiedRegistryHash": "19fa6f8eff8aebf81828cb8a02ea9411243dcdb5698b54417090b2462118bae5",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,43 +14,43 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 281,
-      "notImplemented": 93,
+      "compiled": 321,
+      "notImplemented": 53,
       "blocked": 0,
-      "executionVerifiedPrints": 42
+      "executionVerifiedPrints": 43
     },
     "item": {
       "prints": 299,
-      "compiled": 219,
-      "notImplemented": 80,
+      "compiled": 262,
+      "notImplemented": 37,
       "blocked": 0,
-      "executionVerifiedPrints": 37
+      "executionVerifiedPrints": 38
     },
     "tool": {
       "prints": 100,
-      "compiled": 61,
-      "notImplemented": 39,
+      "compiled": 95,
+      "notImplemented": 5,
       "blocked": 0,
-      "executionVerifiedPrints": 8
+      "executionVerifiedPrints": 9
     },
     "stadium": {
       "prints": 68,
-      "compiled": 15,
-      "notImplemented": 50,
+      "compiled": 63,
+      "notImplemented": 2,
       "blocked": 3,
-      "executionVerifiedPrints": 6
+      "executionVerifiedPrints": 9
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2704,
-      "notImplemented": 949,
+      "compiled": 2892,
+      "notImplemented": 761,
       "blocked": 23,
-      "executionVerifiedPrints": 743
+      "executionVerifiedPrints": 748
     },
     "energy": {
       "prints": 681,
-      "compiled": 648,
-      "notImplemented": 33,
+      "compiled": 678,
+      "notImplemented": 3,
       "blocked": 0,
       "executionVerifiedPrints": 4
     }
@@ -97,7 +97,7 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50150",
       "evidencePath": "data/effect-extensions/evidence/50150.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-      "parserFingerprint": "f20973823a30c20591de2a1a311472d684cbc50fe57e54efc549163f3825cf93"
+      "parserFingerprint": "98b354dceb41c2585a2394e071084deb6f657ab2e4a01b38bd4f0c2dca12e0c1"
     },
     {
       "status": "BLOCKED",
@@ -105,7 +105,7 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48528",
       "evidencePath": "data/effect-extensions/evidence/48528.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-      "parserFingerprint": "f20973823a30c20591de2a1a311472d684cbc50fe57e54efc549163f3825cf93"
+      "parserFingerprint": "98b354dceb41c2585a2394e071084deb6f657ab2e4a01b38bd4f0c2dca12e0c1"
     },
     {
       "status": "BLOCKED",
@@ -113,7 +113,7 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/48530",
       "evidencePath": "data/effect-extensions/evidence/48530.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-      "parserFingerprint": "f20973823a30c20591de2a1a311472d684cbc50fe57e54efc549163f3825cf93"
+      "parserFingerprint": "98b354dceb41c2585a2394e071084deb6f657ab2e4a01b38bd4f0c2dca12e0c1"
     },
     {
       "status": "BLOCKED",
@@ -121,7 +121,7 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49954",
       "evidencePath": "data/effect-extensions/evidence/49954.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-      "parserFingerprint": "f20973823a30c20591de2a1a311472d684cbc50fe57e54efc549163f3825cf93"
+      "parserFingerprint": "98b354dceb41c2585a2394e071084deb6f657ab2e4a01b38bd4f0c2dca12e0c1"
     },
     {
       "status": "BLOCKED",
@@ -129,7 +129,7 @@
       "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/49955",
       "evidencePath": "data/effect-extensions/evidence/49955.json",
       "reason": "UNSUPPORTED_EVOLUTION_CHAIN",
-      "parserFingerprint": "f20973823a30c20591de2a1a311472d684cbc50fe57e54efc549163f3825cf93"
+      "parserFingerprint": "98b354dceb41c2585a2394e071084deb6f657ab2e4a01b38bd4f0c2dca12e0c1"
     }
   ],
   "compilerBlocked": [
@@ -654,21 +654,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45799",
-      "name": "ロトりぼう",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から4枚見て、その中からサポートを好きなだけ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45799.json",
-        "sha256": "2838fb55679492d88d189c51817c0df649810df626584295e84ab3ab39469a7f",
-        "htmlSha256": "2838fb55679492d88d189c51817c0df649810df626584295e84ab3ab39469a7f",
-        "textSha256": "246190130feada7fc3ea5fcaf1c4fb9fe0e1343ba2c0736830ad6a541824dbdb"
-      }
-    },
-    {
       "officialCardId": "45842",
       "name": "鬼の仮面",
       "category": "item",
@@ -684,21 +669,6 @@
       }
     },
     {
-      "officialCardId": "46309",
-      "name": "おいわいファンファーレ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46309.json",
-        "sha256": "daf8a2e556ada4be7706a33f309d6483b1df9226838d8440255a7aabf7cfaf12",
-        "htmlSha256": "daf8a2e556ada4be7706a33f309d6483b1df9226838d8440255a7aabf7cfaf12",
-        "textSha256": "19bd4a59f37e10edc163f713b8c403dac576320d7fa3f24754898b4dbbd659e8"
-      }
-    },
-    {
       "officialCardId": "47169",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -709,54 +679,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47497",
-      "name": "ロケット団のさいみん装置",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「ロケット団のポケモン」が、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンをねむりにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47497.json",
-        "sha256": "aaadc4750858b4e6e264cfb796e11654148b3639725a18be60825e890cdeee71",
-        "htmlSha256": "aaadc4750858b4e6e264cfb796e11654148b3639725a18be60825e890cdeee71",
-        "textSha256": "b33f4671bcf696dde96fbeb93f0e6890726a888b9bca6fa897c33242484f5f1e"
-      }
-    },
-    {
       "officialCardId": "48249",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48479",
-      "name": "おいわいファンファーレ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48479.json",
-        "sha256": "3772d620529abf6ace40c1d0825a0e6172a33090cafcd43db8d113f6ab06c97d",
-        "htmlSha256": "3772d620529abf6ace40c1d0825a0e6172a33090cafcd43db8d113f6ab06c97d",
-        "textSha256": "19bd4a59f37e10edc163f713b8c403dac576320d7fa3f24754898b4dbbd659e8"
-      }
-    },
-    {
-      "officialCardId": "48484",
-      "name": "逆境ほけん",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンの弱点のタイプと、相手のバトルポケモンのタイプが同じなら、このカードをつけているポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、自分の山札を3枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48484.json",
-        "sha256": "15dba65f359186f2e99ea557f8f985f5bbe0baecc1d7f4a913e27edac323f4bd",
-        "htmlSha256": "15dba65f359186f2e99ea557f8f985f5bbe0baecc1d7f4a913e27edac323f4bd",
-        "textSha256": "f538707a47952f5ed1f8354ec27fd62b03012edaf3da03c437ac1a59c2c0dadb"
-      }
     },
     {
       "officialCardId": "49605",
@@ -774,32 +699,12 @@
       }
     },
     {
-      "officialCardId": "49606",
-      "name": "ウエートレス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49606.json",
-        "sha256": "c6f536bf6ae35d4871e8740040ac28ccf43446558e88f496779c80ef14934324",
-        "htmlSha256": "c6f536bf6ae35d4871e8740040ac28ccf43446558e88f496779c80ef14934324",
-        "textSha256": "a5c674a7163850a1071f6be65d09bb931c93883a3b8b8f299a466c0cd6f8b8e2"
-      }
-    },
-    {
       "officialCardId": "50035",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50037",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50470",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -824,51 +729,6 @@
       }
     },
     {
-      "officialCardId": "50491",
-      "name": "おいわいファンファーレ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50491.json",
-        "sha256": "eb28a3d6fe4d2067d110654abdd7f242c18dd0eda4b2e3b934ba9f2c9c4958fb",
-        "htmlSha256": "eb28a3d6fe4d2067d110654abdd7f242c18dd0eda4b2e3b934ba9f2c9c4958fb",
-        "textSha256": "19bd4a59f37e10edc163f713b8c403dac576320d7fa3f24754898b4dbbd659e8"
-      }
-    },
-    {
-      "officialCardId": "50558",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50559",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50561",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50783",
-      "name": "ハルジオ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら「150」、ウラなら「30」、自分のバトルポケモンのHPを回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50783.json",
-        "sha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
-        "htmlSha256": "bc4ebb31d5c153262cfb34e113658b4ab6c79e153357ec0473609356f986a163",
-        "textSha256": "68cb8900c28207c74874207f8a17c52f78f0a2a37b03b42d8b1cd94b0b1f92e3"
-      }
-    },
-    {
       "officialCardId": "50384",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -884,32 +744,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47014",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47016",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50616",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50618",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50619",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50624",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -929,17 +769,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50640",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50646",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50648",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -959,22 +789,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50661",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50664",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50672",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50673",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1019,11 +839,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45181",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45188",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1055,11 +870,6 @@
     },
     {
       "officialCardId": "45248",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45256",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1124,11 +934,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45606",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45623",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1184,27 +989,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45744",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45755",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45774",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45848",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45852",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1240,16 +1030,6 @@
     },
     {
       "officialCardId": "45975",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46014",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46019",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1299,11 +1079,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46372",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46380",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1330,11 +1105,6 @@
     },
     {
       "officialCardId": "46415",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46427",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1394,17 +1164,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46744",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46747",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46751",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1430,11 +1190,6 @@
     },
     {
       "officialCardId": "46788",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46792",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1470,11 +1225,6 @@
     },
     {
       "officialCardId": "47090",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47221",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1529,22 +1279,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47468",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47474",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47479",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47511",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1574,11 +1314,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47657",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47665",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1589,27 +1324,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47772",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47787",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47802",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47810",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47812",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1839,11 +1559,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45398",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45794",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1884,21 +1599,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45216",
-      "name": "危険な密林",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのどくのポケモン（[悪]ポケモンをのぞく）全員は、どくでのせるダメカンの数がそれぞれ2個多くなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45216.json",
-        "sha256": "bc97cb2740463d3f4cb131a6856f672fb416847d43ecebc7cd07cd5c873a1d72",
-        "htmlSha256": "bc97cb2740463d3f4cb131a6856f672fb416847d43ecebc7cd07cd5c873a1d72",
-        "textSha256": "79f0ac30a8d806ae7b634ce64c09d967dcc3425d0100a6faae80accd6a3e7609"
-      }
-    },
-    {
       "officialCardId": "45233",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1910,11 +1610,6 @@
     },
     {
       "officialCardId": "45253",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45258",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -1934,11 +1629,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45559",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45565",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -1949,22 +1639,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45567",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45570",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45571",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45572",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2009,32 +1689,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45729",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45859",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45869",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45896",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45901",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45905",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2055,11 +1715,6 @@
     },
     {
       "officialCardId": "45999",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46013",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2099,16 +1754,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46169",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46186",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46409",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2135,11 +1780,6 @@
     },
     {
       "officialCardId": "46677",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46711",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2175,11 +1815,6 @@
     },
     {
       "officialCardId": "46787",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47129",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2244,16 +1879,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47826",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49671",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45340",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2314,11 +1939,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48030",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48037",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2334,22 +1954,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48348",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48351",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48358",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48366",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2364,32 +1974,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48392",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48399",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48408",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48426",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48428",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48450",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2429,11 +2019,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48542",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45154",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2464,11 +2049,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45182",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45190",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2477,21 +2057,6 @@
       "officialCardId": "45193",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45207",
-      "name": "おとりよせボックス",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードを使ったら、自分の番は終わる。\n\n自分の山札からグッズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45207.json",
-        "sha256": "a030c8474cab82ba958d38a75fde6187401a47e953c98632693bb3262a7ee38f",
-        "htmlSha256": "a030c8474cab82ba958d38a75fde6187401a47e953c98632693bb3262a7ee38f",
-        "textSha256": "72c071e7a39a121225dd26183a190cb6c767b1c3fac4e5f73517def4acf46ba4"
-      }
     },
     {
       "officialCardId": "45208",
@@ -2529,17 +2094,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45243",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45251",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45264",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -2584,21 +2139,6 @@
       }
     },
     {
-      "officialCardId": "45283",
-      "name": "ヘビーバトン",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているにげるためのエネルギーが4個のポケモンが、バトル場で相手のポケモンからワザのダメージを受けてきぜつしたとき、そのポケモンについている基本エネルギーを3枚まで選び、自分のベンチポケモンに好きなようにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45283.json",
-        "sha256": "d08c04105f212226f8546afc5053e3809471a40989538d3ff56d242672748b8b",
-        "htmlSha256": "d08c04105f212226f8546afc5053e3809471a40989538d3ff56d242672748b8b",
-        "textSha256": "ec988508e95cdea8c9003956330270a7b3f293ddf32d007dfc9d5e68f15f0bd2"
-      }
-    },
-    {
       "officialCardId": "45285",
       "name": "セイジ",
       "category": "supporter",
@@ -2612,26 +2152,6 @@
         "htmlSha256": "39af145b9a74738ba10be2062b2e5e5bbc28f5d056b81145322cc8c552950a4e",
         "textSha256": "33a7cbb79af83066d8b08e8deb67f8bcb100a7dfa7ff5a3d596ae94af03f0965"
       }
-    },
-    {
-      "officialCardId": "45287",
-      "name": "フルメタルラボ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの[鋼]ポケモンが、相手のポケモンから受けるワザのダメージは「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45287.json",
-        "sha256": "079602a15a85de1c176d1e6f1f8d23179cfdc4d3e9acc18c7a881c0ebecfd20f",
-        "htmlSha256": "079602a15a85de1c176d1e6f1f8d23179cfdc4d3e9acc18c7a881c0ebecfd20f",
-        "textSha256": "d7aa42f8703b988e612c9ac2384160988b68530d2f662cad0027c756328db1d1"
-      }
-    },
-    {
-      "officialCardId": "45288",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "45518",
@@ -2704,51 +2224,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45632",
-      "name": "ラブラブボール",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から、相手の場のポケモンと同じ名前のポケモンを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45632.json",
-        "sha256": "1c3342ed52992a2701bb6aa8186a831ad8648625927729bf2289f444c6549e43",
-        "htmlSha256": "1c3342ed52992a2701bb6aa8186a831ad8648625927729bf2289f444c6549e43",
-        "textSha256": "5ed890fd620f61c50ce8f771eb37717e6092ee4717d836f01bd94033d3fb7584"
-      }
-    },
-    {
-      "officialCardId": "45633",
-      "name": "ラッキーメット",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、自分の山札を2枚引く。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45633.json",
-        "sha256": "78b0ad4700f4dd79a0bd9a0e8e2dc181bcf4204ed7fead361012f8b9a3cd3577",
-        "htmlSha256": "78b0ad4700f4dd79a0bd9a0e8e2dc181bcf4204ed7fead361012f8b9a3cd3577",
-        "textSha256": "4b66036bca3a86ebb3a19a34f732f1efb43cad9f758879cb9ddbe76c5630bb16"
-      }
-    },
-    {
-      "officialCardId": "45634",
-      "name": "管理人",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、場に「公民館」が出ているなら、この「管理人」はトラッシュせず、山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45634.json",
-        "sha256": "8bc8402de842ea16e51cf88bb62e02d94f15bbb5c32613ac18efd67735dc5cd6",
-        "htmlSha256": "8bc8402de842ea16e51cf88bb62e02d94f15bbb5c32613ac18efd67735dc5cd6",
-        "textSha256": "1d722f5eed98311b7e382c621310e6f035a50e981206718d02e861d6d077583b"
-      }
-    },
-    {
       "officialCardId": "45636",
       "name": "サザレ",
       "category": "supporter",
@@ -2764,59 +2239,9 @@
       }
     },
     {
-      "officialCardId": "45638",
-      "name": "公民館",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、手札からサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45638.json",
-        "sha256": "da91ea9a9472183089a87a71712fdd7dc24e7c0bc1d7b9f0b20560c60aa971c3",
-        "htmlSha256": "da91ea9a9472183089a87a71712fdd7dc24e7c0bc1d7b9f0b20560c60aa971c3",
-        "textSha256": "39afaf1660a5f8b5e29f42fcf00d0682f1780897ed53c9fb8ee4d00856fe8487"
-      }
-    },
-    {
-      "officialCardId": "45639",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45642",
-      "name": "サバイブギプス",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンのHPがまんたんの状態で、相手のポケモンからワザのダメージを受けてきぜつするとき、そのポケモンはきぜつせず、残りHPが「10」の状態で場に残る。その後、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45642.json",
-        "sha256": "b8e869f680c0e5684508462f48a24696cf6176722e32c66343a8d4cca86e1e0b",
-        "htmlSha256": "b8e869f680c0e5684508462f48a24696cf6176722e32c66343a8d4cca86e1e0b",
-        "textSha256": "edab36ec686d8e70144b103dea0536d7211a1d49bf3299c6e20e6d6591ea1b26"
-      }
-    },
-    {
       "officialCardId": "45665",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45680",
-      "name": "管理人",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、場に「公民館」が出ているなら、この「管理人」はトラッシュせず、山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45680.json",
-        "sha256": "01b73cc836ff2ea0923c6a7102a8402c554c104d6ef552003c1a08471e69d268",
-        "htmlSha256": "01b73cc836ff2ea0923c6a7102a8402c554c104d6ef552003c1a08471e69d268",
-        "textSha256": "1d722f5eed98311b7e382c621310e6f035a50e981206718d02e861d6d077583b"
-      }
     },
     {
       "officialCardId": "45682",
@@ -2894,16 +2319,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45745",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45752",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45754",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2949,51 +2364,6 @@
       }
     },
     {
-      "officialCardId": "45784",
-      "name": "ポケモン回収サイクロン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場のポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45784.json",
-        "sha256": "0dbae52dfb358408ae41bda3ec09cf57faf5d97d104f4f7e5d1095119d0d11a5",
-        "htmlSha256": "0dbae52dfb358408ae41bda3ec09cf57faf5d97d104f4f7e5d1095119d0d11a5",
-        "textSha256": "42efade508cec833a8070fd37b0a3d60f39feae4d38e51676cd9fdf9879c15b8"
-      }
-    },
-    {
-      "officialCardId": "45789",
-      "name": "ハッサク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\n\n自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45789.json",
-        "sha256": "5bb348b1827637f62c5640a99b06bf9ba30d25040e56bd2198d798f5dac58ad5",
-        "htmlSha256": "5bb348b1827637f62c5640a99b06bf9ba30d25040e56bd2198d798f5dac58ad5",
-        "textSha256": "3aec8186fe305a8544ffbe69b19f8476ce79725073af1590ec4689a83ae083f8"
-      }
-    },
-    {
-      "officialCardId": "45790",
-      "name": "お祭り会場",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "エネルギーがついているおたがいのポケモン全員は、特殊状態にならず、受けている特殊状態は、すべて回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45790.json",
-        "sha256": "6c118db2877552634c3d719cd798daa0f46f787f20faf8597d16eae5525631ea",
-        "htmlSha256": "6c118db2877552634c3d719cd798daa0f46f787f20faf8597d16eae5525631ea",
-        "textSha256": "8d085580f5ac7e9456ee30f46982bc4fec3e635ad731e26f74731c55681b9cdc"
-      }
-    },
-    {
       "officialCardId": "45845",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3005,26 +2375,6 @@
     },
     {
       "officialCardId": "45858",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45866",
-      "name": "ハッサク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\n\n自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45866.json",
-        "sha256": "b27714eb7436b04836e677d1e0d2c128c49a0c346e11785c8de147c7d268f350",
-        "htmlSha256": "b27714eb7436b04836e677d1e0d2c128c49a0c346e11785c8de147c7d268f350",
-        "textSha256": "3aec8186fe305a8544ffbe69b19f8476ce79725073af1590ec4689a83ae083f8"
-      }
-    },
-    {
-      "officialCardId": "45877",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3069,11 +2419,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45921",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45929",
       "name": "デンジャラス光線",
       "category": "item",
@@ -3104,21 +2449,6 @@
       }
     },
     {
-      "officialCardId": "45933",
-      "name": "力の砂時計",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の番の終わりに、このカードをつけているポケモンがバトル場にいるなら、自分のトラッシュから基本エネルギーを1枚選び、そのポケモンにつけてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45933.json",
-        "sha256": "3dd762578bd58e4cac14ae3165c178b9de8e91deb8f5771f0f47d8cdc475b8f1",
-        "htmlSha256": "3dd762578bd58e4cac14ae3165c178b9de8e91deb8f5771f0f47d8cdc475b8f1",
-        "textSha256": "13aa491f5b798c5ced13749853b4c693524236b2bbe03f05d723cec81fc84e71"
-      }
-    },
-    {
       "officialCardId": "45937",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -3131,36 +2461,6 @@
         "sha256": "5f38632e31c5e571a375ae24193454642df3b664370ba74d97dd084ead495c8b",
         "htmlSha256": "5f38632e31c5e571a375ae24193454642df3b664370ba74d97dd084ead495c8b",
         "textSha256": "7707492c5e4733f46c4b8e51692d2e33a1007e5112425c66b384fbb9635e6771"
-      }
-    },
-    {
-      "officialCardId": "45938",
-      "name": "ニュートラルセンター",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのポケモン（「ルールを持つポケモン」をのぞく）全員は、相手の「ポケモンex・V」からワザのダメージを受けない。\n\nこのカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45938.json",
-        "sha256": "2d8e41ee649668f32033a9f70c949b0b08d0ff2589df8c12107e16c08928dbf0",
-        "htmlSha256": "2d8e41ee649668f32033a9f70c949b0b08d0ff2589df8c12107e16c08928dbf0",
-        "textSha256": "87fc8af3c4e7284b30d236f559e46989c2ef420dda9d735d32ca727df3830cc5"
-      }
-    },
-    {
-      "officialCardId": "45939",
-      "name": "夜のアカデミー",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を1枚選び、山札の上にもどしてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45939.json",
-        "sha256": "e88a6536a1360b82ea74ab74c0ddf0fdb0fed794c5016c7ac7390a6e5ad0dceb",
-        "htmlSha256": "e88a6536a1360b82ea74ab74c0ddf0fdb0fed794c5016c7ac7390a6e5ad0dceb",
-        "textSha256": "bbe521c7e110e1fd5bc751376dddb63ec7515ed1d1766957d3571c279e083f3b"
       }
     },
     {
@@ -3199,11 +2499,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45974",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45978",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3229,16 +2524,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46001",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46002",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46005",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3254,81 +2539,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46029",
-      "name": "古びたねっこの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46029.json",
-        "sha256": "468245c76994c9704ed3bca36325040464d95c32f356cbe46c1818acc81be866",
-        "htmlSha256": "468245c76994c9704ed3bca36325040464d95c32f356cbe46c1818acc81be866",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "46030",
-      "name": "古びたふたの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46030.json",
-        "sha256": "98619fe44e963bfd0db0cdd6513728aa756db9c290e733cfc8fc900fb71c0ebb",
-        "htmlSha256": "98619fe44e963bfd0db0cdd6513728aa756db9c290e733cfc8fc900fb71c0ebb",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "46033",
-      "name": "きらめく結晶",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、1個ぶん少なくなる。（少なくなるのは、どのタイプのエネルギーでもよい。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46033.json",
-        "sha256": "ec7b6f51033a0c32366b4dff054eec3a3e7298e246c8b3332e96e82c7da34d8e",
-        "htmlSha256": "ec7b6f51033a0c32366b4dff054eec3a3e7298e246c8b3332e96e82c7da34d8e",
-        "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "46034",
-      "name": "重力玉",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンがバトル場にいるかぎり、おたがいのバトルポケモンのにげるためのエネルギーは、それぞれ1個ぶん多くなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46034.json",
-        "sha256": "04bd58f3935b39ee553dc72b01822b3247076228e45d008204e1cbbf7c304f38",
-        "htmlSha256": "04bd58f3935b39ee553dc72b01822b3247076228e45d008204e1cbbf7c304f38",
-        "textSha256": "2c675881a816ba3a8998a1d01743d117c92063977c7b01939be86acc29b7ad45"
-      }
-    },
-    {
-      "officialCardId": "46035",
-      "name": "デラックスボム",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを12個のせる。その後、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46035.json",
-        "sha256": "413f338a720ee76c8b92d72da59773ba4f4699e3d486ee7ce3d1f7f4e1378ecb",
-        "htmlSha256": "413f338a720ee76c8b92d72da59773ba4f4699e3d486ee7ce3d1f7f4e1378ecb",
-        "textSha256": "e41191fe9fa15d731ab9f61ecc70377f17b139f68731efa6f9087cb06202729a"
-      }
-    },
-    {
       "officialCardId": "46039",
       "name": "ブライア",
       "category": "supporter",
@@ -3341,36 +2551,6 @@
         "sha256": "65427d5ef8f412399bc6413b8769715251b30e0b615ca4bfc6b9f7da65c26ceb",
         "htmlSha256": "65427d5ef8f412399bc6413b8769715251b30e0b615ca4bfc6b9f7da65c26ceb",
         "textSha256": "1a3ec21d7f279fd90140f1f2220f2474002f521ec533f33e2c53a0afea8f8665"
-      }
-    },
-    {
-      "officialCardId": "46040",
-      "name": "偉大な大樹",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の場のたねポケモン1匹から進化する1進化ポケモンを、自分の山札から1枚選び、そのポケモンにのせて進化させてよい。進化したなら、続けて2進化ポケモンを1枚選び、進化させてよい。そして山札を切る。（最初の自分の番や、出したばかりのたねポケモンは進化させられない。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46040.json",
-        "sha256": "d2fce254a23614ded29b05ea3287cc69f09e741f7134ccefe49611ebd1076ab9",
-        "htmlSha256": "d2fce254a23614ded29b05ea3287cc69f09e741f7134ccefe49611ebd1076ab9",
-        "textSha256": "c96ea4ebcbff5b8b6da3bfb0f19364885221d5c6179ba0d90be590453edcb504"
-      }
-    },
-    {
-      "officialCardId": "46041",
-      "name": "ゼロの大空洞",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場に「テラスタル」のポケモンがいるプレイヤーが、ベンチに出せるポケモンの数は8匹になる。\n\n（このカードがトラッシュされたときか、自分の場に「テラスタル」のポケモンがいなくなったとき、ベンチが5匹になるまでトラッシュする。おたがいにトラッシュするなら、このカードの持ち主から行う。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46041.json",
-        "sha256": "00c78a70703897c0f077c6a420b40f6078328cb04dc0ab72a56b233d30501e22",
-        "htmlSha256": "00c78a70703897c0f077c6a420b40f6078328cb04dc0ab72a56b233d30501e22",
-        "textSha256": "ccf2c3390c01af11f64d8bc2bae7013adabf440f6055e911daf4e3f0aba0614e"
       }
     },
     {
@@ -3401,21 +2581,6 @@
         "sha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "htmlSha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "textSha256": "7707492c5e4733f46c4b8e51692d2e33a1007e5112425c66b384fbb9635e6771"
-      }
-    },
-    {
-      "officialCardId": "46071",
-      "name": "力の砂時計",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の番の終わりに、このカードをつけているポケモンがバトル場にいるなら、自分のトラッシュから基本エネルギーを1枚選び、そのポケモンにつけてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46071.json",
-        "sha256": "e1615f28f298f0815a840271df478e57e700fbc784293b280f4edebf159dc7c5",
-        "htmlSha256": "e1615f28f298f0815a840271df478e57e700fbc784293b280f4edebf159dc7c5",
-        "textSha256": "13aa491f5b798c5ced13749853b4c693524236b2bbe03f05d723cec81fc84e71"
       }
     },
     {
@@ -3459,36 +2624,6 @@
       }
     },
     {
-      "officialCardId": "46183",
-      "name": "ゼロの大空洞",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場に「テラスタル」のポケモンがいるプレイヤーが、ベンチに出せるポケモンの数は8匹になる。\n\n（このカードがトラッシュされたときか、自分の場に「テラスタル」のポケモンがいなくなったとき、ベンチが5匹になるまでトラッシュする。おたがいにトラッシュするなら、このカードの持ち主から行う。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46183.json",
-        "sha256": "b7516a3cec44dec97877a3c729e8d2c6c411ee2ec26d0ab5be16e010145a5c72",
-        "htmlSha256": "b7516a3cec44dec97877a3c729e8d2c6c411ee2ec26d0ab5be16e010145a5c72",
-        "textSha256": "ccf2c3390c01af11f64d8bc2bae7013adabf440f6055e911daf4e3f0aba0614e"
-      }
-    },
-    {
-      "officialCardId": "46197",
-      "name": "パーフェクトミキサー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを5枚まで選び、トラッシュする。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46197.json",
-        "sha256": "f1ec34b62998a9d31b05449c316d1fa9dfda022c5406401882d81a90f59ae9db",
-        "htmlSha256": "f1ec34b62998a9d31b05449c316d1fa9dfda022c5406401882d81a90f59ae9db",
-        "textSha256": "f0fbf5487b89f1d1e0d0f80f3563126691cde00b12ab9b56ad693efc320deb1c"
-      }
-    },
-    {
       "officialCardId": "46209",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3497,21 +2632,6 @@
       "officialCardId": "46210",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46228",
-      "name": "パラダイスリゾート",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの「コダック」全員のにげるためのエネルギーは、それぞれ1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46228.json",
-        "sha256": "682de859a47e4b31c511dd4e86af0c75368d7d4e95fade788c24ba556c3bec01",
-        "htmlSha256": "682de859a47e4b31c511dd4e86af0c75368d7d4e95fade788c24ba556c3bec01",
-        "textSha256": "2b86d74942cd7e1515e37d3faeca6315572babf5c81cc183d4046ff0601331ff"
-      }
     },
     {
       "officialCardId": "46244",
@@ -3529,69 +2649,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46262",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46267",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46269",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46270",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46282",
-      "name": "おたすけベル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、後攻プレイヤーの最初の番しか使えない。\n\n自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46282.json",
-        "sha256": "5b98db245063e3999b172c4394ba944138c7d2f1a75f387a76e14eb15f20892b",
-        "htmlSha256": "5b98db245063e3999b172c4394ba944138c7d2f1a75f387a76e14eb15f20892b",
-        "textSha256": "19e382d1fe439fd4e6498114d4816ca044dcbc83f183ce203868816e58e7dc84"
-      }
-    },
-    {
-      "officialCardId": "46283",
-      "name": "ダークボール",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を下から7枚見て、その中からポケモンを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46283.json",
-        "sha256": "4dc128ea2e8afaaf0ac59b163736af6b01cb575602fc75941aee8cb03c27db72",
-        "htmlSha256": "4dc128ea2e8afaaf0ac59b163736af6b01cb575602fc75941aee8cb03c27db72",
-        "textSha256": "514818c89b167c76d1f11db9b7a730247be8f0d064e6cce0e029c8ff4c98301a"
-      }
-    },
-    {
-      "officialCardId": "46285",
-      "name": "メガトンブロアー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のポケモン全員についている「ポケモンのどうぐ」と「特殊エネルギー」と、場に出ている「スタジアム」を、すべてトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46285.json",
-        "sha256": "53b2b10ff0cacbbcd41c1010d8df6b7fa401a8bf5af2750c76cc085d6931f2e1",
-        "htmlSha256": "53b2b10ff0cacbbcd41c1010d8df6b7fa401a8bf5af2750c76cc085d6931f2e1",
-        "textSha256": "3ffecb769ccf8242166df89d6cf7fe37184598a2c774bf6930f1b6b5fe9954e3"
-      }
     },
     {
       "officialCardId": "46317",
@@ -3654,16 +2714,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46394",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46402",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46405",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3689,66 +2739,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46434",
-      "name": "推理セット",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から3枚見て、好きな順番に入れ替えて、山札の上にもどす。または、そのカードをすべてウラにして切り、山札の下にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46434.json",
-        "sha256": "36fa90af8608c43de3d5a1ebea55a23492e75efa3c964a01a1727f37434ccc30",
-        "htmlSha256": "36fa90af8608c43de3d5a1ebea55a23492e75efa3c964a01a1727f37434ccc30",
-        "textSha256": "5c55283d949d8944c1bca20275abdcb27ad107f7ab1685309802d6e4df2d4507"
-      }
-    },
-    {
-      "officialCardId": "46435",
-      "name": "スクランブルスイッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを好きなだけ選び、新しいバトルポケモンにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46435.json",
-        "sha256": "c910e18e87cda325f9071ea9ac3923e2aff4c5be28f79e4fe4ef3b8df49687d0",
-        "htmlSha256": "c910e18e87cda325f9071ea9ac3923e2aff4c5be28f79e4fe4ef3b8df49687d0",
-        "textSha256": "4f5f8310ced638b2594bb39a5b02deba491276eaf4336ca25dfa66bfdb30da37"
-      }
-    },
-    {
-      "officialCardId": "46436",
-      "name": "のんびりじゃらし",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、後攻プレイヤーの最初の番しか使えない。\n\n相手の場のポケモンについているエネルギーを1個選び、相手の手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46436.json",
-        "sha256": "776aa7efd8baf094b852d03f37429ad41d24ac486f5f4584088a59f7762459ab",
-        "htmlSha256": "776aa7efd8baf094b852d03f37429ad41d24ac486f5f4584088a59f7762459ab",
-        "textSha256": "1a2786b804fe6e3c5bb43758e247aa79b4886e92c3e188524e0abc830a9de046"
-      }
-    },
-    {
-      "officialCardId": "46438",
-      "name": "希望のアミュレット",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46438.json",
-        "sha256": "6de750a1f72c6ed29a3e689693eda5f5f91cda5f9513b2557a78657f3a6fabac",
-        "htmlSha256": "6de750a1f72c6ed29a3e689693eda5f5f91cda5f9513b2557a78657f3a6fabac",
-        "textSha256": "e0898b0dfee3b1159d2a3b70b702e97955c8f56d32b37267fd52715f1587d228"
-      }
-    },
-    {
       "officialCardId": "46441",
       "name": "ワザマシン フローライト",
       "category": "tool",
@@ -3765,11 +2755,6 @@
     },
     {
       "officialCardId": "46482",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46525",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3839,11 +2824,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46702",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46706",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -3884,11 +2864,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46768",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46798",
       "name": "鬼の仮面",
       "category": "item",
@@ -3904,77 +2879,12 @@
       }
     },
     {
-      "officialCardId": "46810",
-      "name": "ポケモン回収サイクロン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場のポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46810.json",
-        "sha256": "5908827ca5922f040255b34f969aeb76a4abac9b118b941f7c15447ea2ebd8c9",
-        "htmlSha256": "5908827ca5922f040255b34f969aeb76a4abac9b118b941f7c15447ea2ebd8c9",
-        "textSha256": "42efade508cec833a8070fd37b0a3d60f39feae4d38e51676cd9fdf9879c15b8"
-      }
-    },
-    {
-      "officialCardId": "46813",
-      "name": "きらめく結晶",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、1個ぶん少なくなる。（少なくなるのは、どのタイプのエネルギーでもよい。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46813.json",
-        "sha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
-        "htmlSha256": "128355fcfbb9a4675de28a67363018808816866257f67936c86e8ed2452abdde",
-        "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "46823",
-      "name": "アオキの手際",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべてトラッシュし、自分の山札から「ポケモン」「サポート」「基本エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46823.json",
-        "sha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
-        "htmlSha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
-        "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
-      }
-    },
-    {
-      "officialCardId": "46834",
-      "name": "ネリネ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を4枚引く。このカードを使った番の終わりに、自分の手札が5枚以上あるなら、自分の手札をすべてトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46834.json",
-        "sha256": "1716aee14a6e8809d6c84dd2f1dc439af3f095f10d1982dd186d704d81c86a3b",
-        "htmlSha256": "1716aee14a6e8809d6c84dd2f1dc439af3f095f10d1982dd186d704d81c86a3b",
-        "textSha256": "e5cb6b1541c8799ce34f6b267fdecc9c2f0519a89659fcd379cb8d397a6b83a0"
-      }
-    },
-    {
       "officialCardId": "48719",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48908",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48949",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -3999,42 +2909,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49416",
-      "name": "ウエートレス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49416.json",
-        "sha256": "7af355d076efc8310d7e72f4a6a9f36bee3fef12ee682f3605822744dbf5bc7a",
-        "htmlSha256": "7af355d076efc8310d7e72f4a6a9f36bee3fef12ee682f3605822744dbf5bc7a",
-        "textSha256": "a5c674a7163850a1071f6be65d09bb931c93883a3b8b8f299a466c0cd6f8b8e2"
-      }
-    },
-    {
-      "officialCardId": "49639",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49642",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49649",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "49650",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49656",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4064,17 +2944,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49685",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49689",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49695",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4082,36 +2952,6 @@
       "officialCardId": "49699",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49701",
-      "name": "古びたアゴの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49701.json",
-        "sha256": "a7603ccdd8f7cc58cbef8e8ddfec9285126ad75166c4d218c8e1f270181d7096",
-        "htmlSha256": "a7603ccdd8f7cc58cbef8e8ddfec9285126ad75166c4d218c8e1f270181d7096",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "49702",
-      "name": "古びたヒレの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49702.json",
-        "sha256": "aa988f57af4b29c5534a038505e0922b56f7af5bf0bf2213a2a0cd0cdc1e6b2b",
-        "htmlSha256": "aa988f57af4b29c5534a038505e0922b56f7af5bf0bf2213a2a0cd0cdc1e6b2b",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
     },
     {
       "officialCardId": "49704",
@@ -4129,72 +2969,7 @@
       }
     },
     {
-      "officialCardId": "49705",
-      "name": "コアメモリ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「メガジガルデex」は、このカードに書かれているワザを使える。［ワザを使うためのエネルギーは必要。］",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49705.json",
-        "sha256": "295860047764c8119e6b9bc987064be7e2501854ff2ad1ed2e113b6a1819e5a1",
-        "htmlSha256": "295860047764c8119e6b9bc987064be7e2501854ff2ad1ed2e113b6a1819e5a1",
-        "textSha256": "07953152a3978a499e9397d50a36cf44850150608ffbb0c7ddff97470877cc71"
-      }
-    },
-    {
-      "officialCardId": "49707",
-      "name": "ピュール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49707.json",
-        "sha256": "e3c31d4738b1ea0d284da4e7154674fa1e1620adf8b4bfeccbf05359385bea5c",
-        "htmlSha256": "e3c31d4738b1ea0d284da4e7154674fa1e1620adf8b4bfeccbf05359385bea5c",
-        "textSha256": "2038982a85a84160314c1ed8ea6ff94f92ce8deb957464dd71ffe409150868f6"
-      }
-    },
-    {
-      "officialCardId": "49710",
-      "name": "ミアレシティ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の山札からたねポケモンを1枚選び、ベンチに出してよい。そして山札を切る。この効果を使ったなら、自分の番は終わる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49710.json",
-        "sha256": "b8f03d5b66075d5cf3e0634a91b8bdb694665e436977c00dc89094113bc21a3c",
-        "htmlSha256": "b8f03d5b66075d5cf3e0634a91b8bdb694665e436977c00dc89094113bc21a3c",
-        "textSha256": "c1ec7e7b658a11cdfa440276fcdea92d4ae4a9eac40e951cafd2be915cdfcbd7"
-      }
-    },
-    {
-      "officialCardId": "49711",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49712",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49713",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50020",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50051",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4219,57 +2994,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50065",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50073",
-      "name": "ピュール",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50073.json",
-        "sha256": "b43ac2d7c4d7b7ded3c9671cb5a2f47275ecfd5c7b2856ea3bb16ad3f89ce6b7",
-        "htmlSha256": "b43ac2d7c4d7b7ded3c9671cb5a2f47275ecfd5c7b2856ea3bb16ad3f89ce6b7",
-        "textSha256": "2038982a85a84160314c1ed8ea6ff94f92ce8deb957464dd71ffe409150868f6"
-      }
-    },
-    {
-      "officialCardId": "50077",
-      "name": "ミアレシティ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の山札からたねポケモンを1枚選び、ベンチに出してよい。そして山札を切る。この効果を使ったなら、自分の番は終わる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50077.json",
-        "sha256": "58d2e0951a1ab044ab155b942a270ae6a562350e7c6756295a6ade01af64096c",
-        "htmlSha256": "58d2e0951a1ab044ab155b942a270ae6a562350e7c6756295a6ade01af64096c",
-        "textSha256": "c1ec7e7b658a11cdfa440276fcdea92d4ae4a9eac40e951cafd2be915cdfcbd7"
-      }
-    },
-    {
-      "officialCardId": "50087",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50088",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50094",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50101",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4280,11 +3005,6 @@
     },
     {
       "officialCardId": "50110",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50113",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4310,11 +3030,6 @@
     },
     {
       "officialCardId": "47493",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50557",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4404,21 +3119,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50157",
-      "name": "大漁ネット",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のトラッシュから[水]ポケモンと「基本[水]エネルギー」をそれぞれ3枚まで選び、相手に見せて、山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50157.json",
-        "sha256": "ea2e831bc1ad98a514af1ce064ae939baea7570f84c09183637564ccf20bbd8e",
-        "htmlSha256": "ea2e831bc1ad98a514af1ce064ae939baea7570f84c09183637564ccf20bbd8e",
-        "textSha256": "abf931260733602adad0d27345c4ff0fde45a0c46e7b3de51d494f1c2020df93"
-      }
-    },
-    {
       "officialCardId": "50158",
       "name": "変化の書",
       "category": "item",
@@ -4432,71 +3132,6 @@
         "htmlSha256": "89fe3d6bbf2d8cc2d5184a693fb2b634cd0606df89ed4691fc16f4d03f745017",
         "textSha256": "89d9df89e2fa9af786d2b34d1f6a8a6d33f15ac92d69635d9893bd20afb6ef48"
       }
-    },
-    {
-      "officialCardId": "50161",
-      "name": "ホミカの演奏",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "次の相手の番、相手のどくのポケモンは、にげられない。（新しくどくにしたポケモンもふくむ。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50161.json",
-        "sha256": "e296fbc6ba89fb4e5dd73b87123e443a61db07a90fb1222a4e4537580d8f0131",
-        "htmlSha256": "e296fbc6ba89fb4e5dd73b87123e443a61db07a90fb1222a4e4537580d8f0131",
-        "textSha256": "f0c1115eabd0efee6810b2e5f17bcb7bdab929a97ab24de57dbd0498d137d601"
-      }
-    },
-    {
-      "officialCardId": "50163",
-      "name": "アンジュフラエッテ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、場に出ている「プリズムタワー」をトラッシュしなければ場に出せず、「プリズムタワー」を出した番でも場に出せる。\n\nおたがいの場の「メガフラエッテex」全員は、それぞれ最大HPが「+150」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50163.json",
-        "sha256": "e9b3bf9bacefaab48dbfadbdeff7b4cded9e290242384c1255648cdbd53547cf",
-        "htmlSha256": "e9b3bf9bacefaab48dbfadbdeff7b4cded9e290242384c1255648cdbd53547cf",
-        "textSha256": "ebdb45ee0e65a2b9038604d2273dd7ec3c32a4bd2427dccdd5ee8c180dd5abb2"
-      }
-    },
-    {
-      "officialCardId": "50164",
-      "name": "プリズムタワー",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を2枚トラッシュするなら、自分の山札を1枚引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50164.json",
-        "sha256": "c1bb92076cde159446b3ea36b1b980775659cfdf4c3485863261c1d8183a6e33",
-        "htmlSha256": "c1bb92076cde159446b3ea36b1b980775659cfdf4c3485863261c1d8183a6e33",
-        "textSha256": "790a424ab6aa20e2d13f99a9631105ab9750b7f2f9a6b2b9d60e27be1c9af238"
-      }
-    },
-    {
-      "officialCardId": "50165",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50166",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50167",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50187",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50189",
@@ -4514,72 +3149,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50195",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50200",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50209",
-      "name": "ホミカの演奏",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "次の相手の番、相手のどくのポケモンは、にげられない。（新しくどくにしたポケモンもふくむ。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50209.json",
-        "sha256": "6231ac73193f8ee8802a484f183819523810a4366644ac20b0b35b4d9bb70bc0",
-        "htmlSha256": "6231ac73193f8ee8802a484f183819523810a4366644ac20b0b35b4d9bb70bc0",
-        "textSha256": "f0c1115eabd0efee6810b2e5f17bcb7bdab929a97ab24de57dbd0498d137d601"
-      }
-    },
-    {
-      "officialCardId": "50212",
-      "name": "プリズムタワー",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を2枚トラッシュするなら、自分の山札を1枚引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50212.json",
-        "sha256": "8008d09b9002bb600691aa7be23991cea28b19d2ca7050139fe4da8b309be1c5",
-        "htmlSha256": "8008d09b9002bb600691aa7be23991cea28b19d2ca7050139fe4da8b309be1c5",
-        "textSha256": "790a424ab6aa20e2d13f99a9631105ab9750b7f2f9a6b2b9d60e27be1c9af238"
-      }
-    },
-    {
-      "officialCardId": "50218",
-      "name": "ホミカの演奏",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "次の相手の番、相手のどくのポケモンは、にげられない。（新しくどくにしたポケモンもふくむ。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50218.json",
-        "sha256": "8a861e068ea38d2e41d9a4fb3c1ffe0fa1725af712a71c3a54903bed20d1291b",
-        "htmlSha256": "8a861e068ea38d2e41d9a4fb3c1ffe0fa1725af712a71c3a54903bed20d1291b",
-        "textSha256": "f0c1115eabd0efee6810b2e5f17bcb7bdab929a97ab24de57dbd0498d137d601"
-      }
-    },
-    {
       "officialCardId": "50220",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50224",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50225",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4594,22 +3169,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50232",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50234",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50235",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50238",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4639,16 +3199,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50250",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50251",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50252",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4659,22 +3209,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50256",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50262",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50271",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50273",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4704,162 +3244,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50289",
-      "name": "ダークベル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのバトルポケモン（[悪]ポケモンをのぞく）を、それぞれこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50289.json",
-        "sha256": "941ae0b7128dadf3009b55e7ebff3ec87e4e1179056b5ce330ff804799e83f24",
-        "htmlSha256": "941ae0b7128dadf3009b55e7ebff3ec87e4e1179056b5ce330ff804799e83f24",
-        "textSha256": "7f934bcaf83adee390dabcde160b16bae7581114d5290f8f8a1abdb5aa6b31e8"
-      }
-    },
-    {
-      "officialCardId": "50290",
-      "name": "古びたずがいの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50290.json",
-        "sha256": "038cf015580ea28a4b76888075a3f6685ee235013ac4d8ec4d6807182e6eeb0d",
-        "htmlSha256": "038cf015580ea28a4b76888075a3f6685ee235013ac4d8ec4d6807182e6eeb0d",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "50291",
-      "name": "古びたたての化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50291.json",
-        "sha256": "2dcb27a61e89ebd4c001b4652b044d843ad4fbafca240d19bcd03bcd2a0f00b2",
-        "htmlSha256": "2dcb27a61e89ebd4c001b4652b044d843ad4fbafca240d19bcd03bcd2a0f00b2",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "50292",
-      "name": "ごうかいボム",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「メガシンカex」をのぞく）が、バトル場で相手の「メガシンカex」から「240」以上のワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを12個のせる。その後、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50292.json",
-        "sha256": "f31650c0c20aa4feb168d5fca44c5dbdc6e3c1971b1c905ae9e86a3c0219e61f",
-        "htmlSha256": "f31650c0c20aa4feb168d5fca44c5dbdc6e3c1971b1c905ae9e86a3c0219e61f",
-        "textSha256": "e192c4702fccc273dcef898794934a6b897ccb66ef05d47e8ef43a50f32693ff"
-      }
-    },
-    {
-      "officialCardId": "50293",
-      "name": "リトライバッジ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の番ごとに1回、このカードをつけている[無色]ポケモンのワザで自分がコインを投げたとき、そのコインの結果をすべてなくし、はじめからコインを投げなおしてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50293.json",
-        "sha256": "04ccc6b2931c22a4858f358db4250255a1aadd3595b81c8b9035ee562945e141",
-        "htmlSha256": "04ccc6b2931c22a4858f358db4250255a1aadd3595b81c8b9035ee562945e141",
-        "textSha256": "ebf1c9da6c6b1fcbaea83c16596f4b4bbde32b523416e56d3cbc11a568d572b5"
-      }
-    },
-    {
-      "officialCardId": "50294",
-      "name": "カスミの元気",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードを使ったなら、自分の番は終わる。自分の山札から「基本[水]エネルギー」を4枚まで選び、自分のポケモン1匹につける。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50294.json",
-        "sha256": "2a02bb4fd74b30f3c873e0d4a5744c3c9577633a72a4467cec846695540bd470",
-        "htmlSha256": "2a02bb4fd74b30f3c873e0d4a5744c3c9577633a72a4467cec846695540bd470",
-        "textSha256": "987d92916788906920579fc18cfd1db138ed38991aa3758b5faa88300e26d4c1"
-      }
-    },
-    {
-      "officialCardId": "50295",
-      "name": "グラジオの決戦",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\nこの番、自分のポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトルポケモンへのダメージは「+80」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50295.json",
-        "sha256": "0083f1a95cbc4f52a12fec280f37142fb67a1ae761dc3306c130218191610727",
-        "htmlSha256": "0083f1a95cbc4f52a12fec280f37142fb67a1ae761dc3306c130218191610727",
-        "textSha256": "50438b04e7e1c96bdad850efcb8798ae7ec1f497a84dee79610653996455c459"
-      }
-    },
-    {
-      "officialCardId": "50296",
-      "name": "サビ組のしたっぱ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\n\n相手の場のポケモンについているエネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50296.json",
-        "sha256": "aaff99407e3c8de82586927c0dabcf101708aa73de7ff5000ff22afa48a152c7",
-        "htmlSha256": "aaff99407e3c8de82586927c0dabcf101708aa73de7ff5000ff22afa48a152c7",
-        "textSha256": "49cb87f2dc021293c2fe1f13576d0967e27f6d7dac15af79a7beff7392754b13"
-      }
-    },
-    {
-      "officialCardId": "50298",
-      "name": "化石採掘場",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の山札から、名前に「古びた」とつくグッズを2枚まで選び、ベンチに出してよい。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50298.json",
-        "sha256": "3b24d5601ee6b0b08beecb28c34ba235727aaee2ef2426d63ae8634f4cc558b1",
-        "htmlSha256": "3b24d5601ee6b0b08beecb28c34ba235727aaee2ef2426d63ae8634f4cc558b1",
-        "textSha256": "b4b00e1e00b4dd244bbcabc2954eae65552011c12bdf021741304bc6faa7f37c"
-      }
-    },
-    {
-      "officialCardId": "50299",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50300",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50305",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50306",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50308",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4869,17 +3254,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50310",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50311",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50315",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -4887,96 +3262,6 @@
       "officialCardId": "50318",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50325",
-      "name": "ダークベル",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのバトルポケモン（[悪]ポケモンをのぞく）を、それぞれこんらんにする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50325.json",
-        "sha256": "b3c15a8b4c4c723adb5d6d9529fddf1c47ff742a015025208d04497aeef72ee8",
-        "htmlSha256": "b3c15a8b4c4c723adb5d6d9529fddf1c47ff742a015025208d04497aeef72ee8",
-        "textSha256": "7f934bcaf83adee390dabcde160b16bae7581114d5290f8f8a1abdb5aa6b31e8"
-      }
-    },
-    {
-      "officialCardId": "50326",
-      "name": "ごうかいボム",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「メガシンカex」をのぞく）が、バトル場で相手の「メガシンカex」から「240」以上のワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを12個のせる。その後、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50326.json",
-        "sha256": "2953e3ebc8ffd7e93bdf7b69b8cb0623bb669e7d8a03fd9f827c3066facf107a",
-        "htmlSha256": "2953e3ebc8ffd7e93bdf7b69b8cb0623bb669e7d8a03fd9f827c3066facf107a",
-        "textSha256": "e192c4702fccc273dcef898794934a6b897ccb66ef05d47e8ef43a50f32693ff"
-      }
-    },
-    {
-      "officialCardId": "50328",
-      "name": "カスミの元気",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードを使ったなら、自分の番は終わる。自分の山札から「基本[水]エネルギー」を4枚まで選び、自分のポケモン1匹につける。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50328.json",
-        "sha256": "b1633855328fabd1b99c6f1459cb864d1ef030e586654d70a5c93dd09abfb6eb",
-        "htmlSha256": "b1633855328fabd1b99c6f1459cb864d1ef030e586654d70a5c93dd09abfb6eb",
-        "textSha256": "987d92916788906920579fc18cfd1db138ed38991aa3758b5faa88300e26d4c1"
-      }
-    },
-    {
-      "officialCardId": "50329",
-      "name": "グラジオの決戦",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\nこの番、自分のポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトルポケモンへのダメージは「+80」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50329.json",
-        "sha256": "afb85ba10a5268654a52c3a43ca4e81c798d977874139bf4e0c982d9edc67d57",
-        "htmlSha256": "afb85ba10a5268654a52c3a43ca4e81c798d977874139bf4e0c982d9edc67d57",
-        "textSha256": "50438b04e7e1c96bdad850efcb8798ae7ec1f497a84dee79610653996455c459"
-      }
-    },
-    {
-      "officialCardId": "50330",
-      "name": "サビ組のしたっぱ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\n\n相手の場のポケモンについているエネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50330.json",
-        "sha256": "fa3b40be1c4e0b228c457237fab892992cf5fe9205147e9d454c5187d3de9043",
-        "htmlSha256": "fa3b40be1c4e0b228c457237fab892992cf5fe9205147e9d454c5187d3de9043",
-        "textSha256": "49cb87f2dc021293c2fe1f13576d0967e27f6d7dac15af79a7beff7392754b13"
-      }
-    },
-    {
-      "officialCardId": "50336",
-      "name": "グラジオの決戦",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\nこの番、自分のポケモン（「ルールを持つポケモン」をのぞく）が使うワザの、相手のバトルポケモンへのダメージは「+80」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50336.json",
-        "sha256": "91bb30f9e34a8b52cf3ef6f0bc8f882bd998761316e8f1c6bd9335fa11a61d45",
-        "htmlSha256": "91bb30f9e34a8b52cf3ef6f0bc8f882bd998761316e8f1c6bd9335fa11a61d45",
-        "textSha256": "50438b04e7e1c96bdad850efcb8798ae7ec1f497a84dee79610653996455c459"
-      }
     },
     {
       "officialCardId": "50340",
@@ -4994,22 +3279,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50346",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50351",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50353",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50356",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5049,11 +3319,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50390",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50392",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5062,81 +3327,6 @@
       "officialCardId": "50395",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50401",
-      "name": "おいしいおむすび",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンのHPを「30」回復する。自分のトラッシュにある「おいしいおむすび」（このカードをのぞく）1枚につき、回復するHPは「30」多くなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50401.json",
-        "sha256": "7050a27373e76db0b5aae509249729501e98c5ab271365a2800c0ab8a14c7312",
-        "htmlSha256": "7050a27373e76db0b5aae509249729501e98c5ab271365a2800c0ab8a14c7312",
-        "textSha256": "238bd594dc3ca6485e35d909168cb4d8cdf081dfec4a3d2470f1ea48983e8f32"
-      }
-    },
-    {
-      "officialCardId": "50403",
-      "name": "とくちゅうチョッキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「メガシンカex」をのぞく）が、相手の「メガシンカex」から受けるワザのダメージは「-60」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50403.json",
-        "sha256": "5c87f52c400d2d25f4da486eb3a8771738d6991f422383d3a4ca6d74a18983fd",
-        "htmlSha256": "5c87f52c400d2d25f4da486eb3a8771738d6991f422383d3a4ca6d74a18983fd",
-        "textSha256": "16c4a827206f1188dde8d47543116e73a58579e327e02c4180d243d2befb31a3"
-      }
-    },
-    {
-      "officialCardId": "50404",
-      "name": "メガレックウザキャップ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンは、このカードに書かれているワザを使える。［ワザを使うためのエネルギーは必要。］",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50404.json",
-        "sha256": "a874fd6f4379cc425fcacb033696949491283bcbf2ccb3b08033bca4d6a85a2c",
-        "htmlSha256": "a874fd6f4379cc425fcacb033696949491283bcbf2ccb3b08033bca4d6a85a2c",
-        "textSha256": "49ca13c56b7756ca45eca643d0a7152547a073441877baae25e05423796eabad"
-      }
-    },
-    {
-      "officialCardId": "50407",
-      "name": "ヒガナの信頼",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを1個選び、新しいバトルポケモンにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50407.json",
-        "sha256": "e9a15b0d6bcda4089884226a3244a86e04df3995fba55463e2d5ef6f1d0dc485",
-        "htmlSha256": "e9a15b0d6bcda4089884226a3244a86e04df3995fba55463e2d5ef6f1d0dc485",
-        "textSha256": "b8e3586c0b0800587fa58e549ac368539ccde2cecccfce545075760d49ce1099"
-      }
-    },
-    {
-      "officialCardId": "50408",
-      "name": "フウとランの修行",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、名前に「伝説」とつくスタジアムが場に出ているなら、この「フウとランの修行」はトラッシュせず、手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50408.json",
-        "sha256": "96d4c6933a49e389e89124ea8714e0f27ea777fb8e0d88fc0d0938d74be0ca35",
-        "htmlSha256": "96d4c6933a49e389e89124ea8714e0f27ea777fb8e0d88fc0d0938d74be0ca35",
-        "textSha256": "c4d7a911d091207eec3f9c95926d6103ceeb7e0ec781105d8421ade3f79606c5"
-      }
     },
     {
       "officialCardId": "50409",
@@ -5208,11 +3398,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50521",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50527",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5223,112 +3408,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50531",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50533",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50540",
-      "name": "とくちゅうチョッキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモン（「メガシンカex」をのぞく）が、相手の「メガシンカex」から受けるワザのダメージは「-60」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50540.json",
-        "sha256": "15441375c00d75529c633add0c549270ccfcd1b6467d35552982714145931e0d",
-        "htmlSha256": "15441375c00d75529c633add0c549270ccfcd1b6467d35552982714145931e0d",
-        "textSha256": "16c4a827206f1188dde8d47543116e73a58579e327e02c4180d243d2befb31a3"
-      }
-    },
-    {
-      "officialCardId": "50543",
-      "name": "ヒガナの信頼",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを1個選び、新しいバトルポケモンにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50543.json",
-        "sha256": "e0153b538c0722aec76231fe5da01b3a65d7033ece81727b2c851c91727448e3",
-        "htmlSha256": "e0153b538c0722aec76231fe5da01b3a65d7033ece81727b2c851c91727448e3",
-        "textSha256": "b8e3586c0b0800587fa58e549ac368539ccde2cecccfce545075760d49ce1099"
-      }
-    },
-    {
-      "officialCardId": "50544",
-      "name": "フウとランの修行",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を2枚引く。その後、名前に「伝説」とつくスタジアムが場に出ているなら、この「フウとランの修行」はトラッシュせず、手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50544.json",
-        "sha256": "1620d86ebf585372322fee1faa165151a10b1a1b0720bd0bf7f65c78312107fe",
-        "htmlSha256": "1620d86ebf585372322fee1faa165151a10b1a1b0720bd0bf7f65c78312107fe",
-        "textSha256": "c4d7a911d091207eec3f9c95926d6103ceeb7e0ec781105d8421ade3f79606c5"
-      }
-    },
-    {
-      "officialCardId": "50545",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50546",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50547",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50549",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50553",
-      "name": "ヒガナの信頼",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを1個選び、新しいバトルポケモンにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50553.json",
-        "sha256": "53b95b087fa28be34b4cc4a271f17cc6b0210aada91a58f18443c689cd46b012",
-        "htmlSha256": "53b95b087fa28be34b4cc4a271f17cc6b0210aada91a58f18443c689cd46b012",
-        "textSha256": "b8e3586c0b0800587fa58e549ac368539ccde2cecccfce545075760d49ce1099"
-      }
-    },
-    {
-      "officialCardId": "50602",
-      "name": "ウエートレス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50602.json",
-        "sha256": "d8dc2e63253a9256625c3c29eda404ff08d3a1804ac877f655c6d12a2faf4069",
-        "htmlSha256": "d8dc2e63253a9256625c3c29eda404ff08d3a1804ac877f655c6d12a2faf4069",
-        "textSha256": "a5c674a7163850a1071f6be65d09bb931c93883a3b8b8f299a466c0cd6f8b8e2"
-      }
-    },
-    {
-      "officialCardId": "50614",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5373,11 +3458,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50696",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50699",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5391,21 +3471,6 @@
       "officialCardId": "50712",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50849",
-      "name": "ウエートレス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50849.json",
-        "sha256": "aaf39fe77f266796a970d5088176dff288091fb503fc63fcf55746a48ee16828",
-        "htmlSha256": "aaf39fe77f266796a970d5088176dff288091fb503fc63fcf55746a48ee16828",
-        "textSha256": "a5c674a7163850a1071f6be65d09bb931c93883a3b8b8f299a466c0cd6f8b8e2"
-      }
     },
     {
       "officialCardId": "50858",
@@ -5523,66 +3588,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50929",
-      "name": "きずなのタスキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「メガシンカex」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50929.json",
-        "sha256": "58d76ec3686826a648dc25cc6f49bcca57b3a7b4d89b7b3cc3f28c7b7da34ab3",
-        "htmlSha256": "58d76ec3686826a648dc25cc6f49bcca57b3a7b4d89b7b3cc3f28c7b7da34ab3",
-        "textSha256": "9b089fd4885f6628ecffa047d736f00a30a3cd3ceaf20e2d9d207781299bb270"
-      }
-    },
-    {
-      "officialCardId": "50930",
-      "name": "コルニの本気",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番、自分の「メガシンカex」が使うワザの、相手のバトルポケモンへのダメージは、相手がすでにとったサイド1枚につき「+20」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50930.json",
-        "sha256": "59b82942871613f662492224c4e3eb0e25595c31068e10510e6b16b1682830f9",
-        "htmlSha256": "59b82942871613f662492224c4e3eb0e25595c31068e10510e6b16b1682830f9",
-        "textSha256": "1b659c522ef8a37cf32186f19966f79d3eb2d44f698487894bcc1620c85aa092"
-      }
-    },
-    {
-      "officialCardId": "50931",
-      "name": "マキシの熱血",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場の[水]ポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50931.json",
-        "sha256": "2627f9ab724c13503080f130b5efcf8527f621f5287c538543f71fcb524a7604",
-        "htmlSha256": "2627f9ab724c13503080f130b5efcf8527f621f5287c538543f71fcb524a7604",
-        "textSha256": "8c3bd8909eea2cb8611472cc0c6175f437507cd9307976d73e52783e4e7eb709"
-      }
-    },
-    {
-      "officialCardId": "50933",
-      "name": "ファイトアリーナ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン（「ルールを持つポケモン」をのぞく）全員のHPを、それぞれ「20」回復してよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50933.json",
-        "sha256": "8081b2512cb042ebf2c973240c6baf8be18878c4a165c75e3e9b28ee3c5d02df",
-        "htmlSha256": "8081b2512cb042ebf2c973240c6baf8be18878c4a165c75e3e9b28ee3c5d02df",
-        "textSha256": "78446e79153f4b072a0a1c480ea9adc1780df01f624edca6b74365290850edea"
-      }
-    },
-    {
       "officialCardId": "47010",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5599,11 +3604,6 @@
     },
     {
       "officialCardId": "47028",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47031",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5648,21 +3648,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47096",
-      "name": "いいきずぐすり",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のポケモン1匹のHPを「60」回復する。その後、回復したポケモンについているエネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47096.json",
-        "sha256": "5ef5bcbd322878f55c1fa12d23f089b1806a2ce3f247973f505fde1b379c8927",
-        "htmlSha256": "5ef5bcbd322878f55c1fa12d23f089b1806a2ce3f247973f505fde1b379c8927",
-        "textSha256": "f193ec863fec09420b4594091449d0e1cc9aee731694ab082e29f07351ca93c5"
-      }
-    },
-    {
       "officialCardId": "47098",
       "name": "とりかえチケット",
       "category": "item",
@@ -5676,101 +3661,6 @@
         "htmlSha256": "bc94d13974413718adca6ef461f71ab482616eca7bde8c2ca06cd23daf1f4a89",
         "textSha256": "1f9924c32c4f5c3290ec57bdb3ce3c455d69ca761fe587b33c0d9450d93d703b"
       }
-    },
-    {
-      "officialCardId": "47100",
-      "name": "ホップのこだわりハチマキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「ホップのポケモン」は、ワザを使うためのエネルギーが[無色]エネルギー1個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47100.json",
-        "sha256": "9190b5950ec765f1bf87c0bacba2ba8e12723ffb6b3fb7440b5a5b9853d50518",
-        "htmlSha256": "9190b5950ec765f1bf87c0bacba2ba8e12723ffb6b3fb7440b5a5b9853d50518",
-        "textSha256": "fb0e7f7218cd1e20fe829c27c6ce51a61b0e0567d6d0be048f7d3a11102c5aad"
-      }
-    },
-    {
-      "officialCardId": "47101",
-      "name": "リーリエのしんじゅ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「リーリエのポケモン」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、とられるサイドは1枚少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47101.json",
-        "sha256": "95517def3d4257203769dc11796ab6c938e4e0d3224a1a70c4bcf6948b984a99",
-        "htmlSha256": "95517def3d4257203769dc11796ab6c938e4e0d3224a1a70c4bcf6948b984a99",
-        "textSha256": "f8e4f86aa146a4ed807f736bfca92e90ee941b528be5d31bde5126c01f64cf76"
-      }
-    },
-    {
-      "officialCardId": "47103",
-      "name": "怖いお兄さん",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のポケモンを1匹選び、そのポケモンについている「ポケモンのどうぐ」と「特殊エネルギー」を1枚ずつトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47103.json",
-        "sha256": "570e96cea977aaa730cea1d2cc43f81bc37e062c3c154c43b321623e220004df",
-        "htmlSha256": "570e96cea977aaa730cea1d2cc43f81bc37e062c3c154c43b321623e220004df",
-        "textSha256": "f798449f0e195dc9d2a4632ed8351c69421eb627ea4e14688278d1c827989ec0"
-      }
-    },
-    {
-      "officialCardId": "47105",
-      "name": "Nの城",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場の「Nのポケモン」全員のにげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47105.json",
-        "sha256": "328c681b05b2b6ed4da0512cbd3c3b9cea466a4ed67411bea3f68059be767f1d",
-        "htmlSha256": "328c681b05b2b6ed4da0512cbd3c3b9cea466a4ed67411bea3f68059be767f1d",
-        "textSha256": "e397eac3e91ab6408f0792f4873db297d071ff3f94048d6b23785e389dbe120b"
-      }
-    },
-    {
-      "officialCardId": "47106",
-      "name": "ハッコウシティ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のトラッシュから「基本[雷]エネルギー」を2枚まで選び、相手に見せて、手札に加えてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47106.json",
-        "sha256": "770450a990fb24b2f7ee87b31606e1affcdb751fa2ced429e2f753cf8efcac5a",
-        "htmlSha256": "770450a990fb24b2f7ee87b31606e1affcdb751fa2ced429e2f753cf8efcac5a",
-        "textSha256": "1510b46b27e8d05a43d193547b71620725731b7e5ccd0f8f9f041eecc6909bc4"
-      }
-    },
-    {
-      "officialCardId": "47107",
-      "name": "ハロンタウン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの「ホップのポケモン」が使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47107.json",
-        "sha256": "3d48e1c692a8011c376a62f021a831a7978347e22cfdcbe215bf2080d1b89d49",
-        "htmlSha256": "3d48e1c692a8011c376a62f021a831a7978347e22cfdcbe215bf2080d1b89d49",
-        "textSha256": "3dbb2dd2b93b9e565c6bcb573b159b3eef2aa6774faf596ce584cc50f0875b4b"
-      }
-    },
-    {
-      "officialCardId": "47108",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47225",
@@ -5788,21 +3678,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47242",
-      "name": "怖いお兄さん",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "相手のポケモンを1匹選び、そのポケモンについている「ポケモンのどうぐ」と「特殊エネルギー」を1枚ずつトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47242.json",
-        "sha256": "d598089141688bd04f53d51a750a0e3306ff87c7794f2dde4cb0545454576edd",
-        "htmlSha256": "d598089141688bd04f53d51a750a0e3306ff87c7794f2dde4cb0545454576edd",
-        "textSha256": "f798449f0e195dc9d2a4632ed8351c69421eb627ea4e14688278d1c827989ec0"
-      }
-    },
-    {
       "officialCardId": "47247",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5813,74 +3688,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47252",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47271",
-      "name": "スパイクタウンジム",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分の山札から「マリィのポケモン」を1枚選び、相手に見せて、手札に加えてよい。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47271.json",
-        "sha256": "3fbfae9192554947bd4e01577196ed417da4659cc13427466e0766ead8371071",
-        "htmlSha256": "3fbfae9192554947bd4e01577196ed417da4659cc13427466e0766ead8371071",
-        "textSha256": "cb1bd1663cb0fcbc1e6a1cff4babf3dc9e89dc05b8d97ad2b83d74ca5d054b93"
-      }
-    },
-    {
       "officialCardId": "47278",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47289",
-      "name": "いしのどうくつ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの「ダイゴのポケモン」全員が、相手のポケモンから受けるワザのダメージは「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47289.json",
-        "sha256": "851ea103b8345c4f95dcbbefe5c00cfd91074e811f3856216c5ce143b4df7e64",
-        "htmlSha256": "851ea103b8345c4f95dcbbefe5c00cfd91074e811f3856216c5ce143b4df7e64",
-        "textSha256": "51731da924f92307c849ad0a671026f2f9eede4aa2a32f5802c0afe760482e0a"
-      }
-    },
-    {
-      "officialCardId": "47352",
-      "name": "ペパーのサンドウィッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンのHPを「30」回復する。そのポケモンが「ペパーのポケモン」なら、回復するHPは「100」になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47352.json",
-        "sha256": "8c1fea12f70df384af854d906fe15e305e3f54f00353824a8975cda5f1631943",
-        "htmlSha256": "8c1fea12f70df384af854d906fe15e305e3f54f00353824a8975cda5f1631943",
-        "textSha256": "62d9f358095f81246cfc857bcacee970a2785032b383cf94c3d53066bf3db425"
-      }
-    },
-    {
-      "officialCardId": "47393",
-      "name": "ハッコウシティ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のトラッシュから「基本[雷]エネルギー」を2枚まで選び、相手に見せて、手札に加えてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47393.json",
-        "sha256": "a266fa279031005475ac414b998b468d487010cf3f836c1ab2b82f040074eb0d",
-        "htmlSha256": "a266fa279031005475ac414b998b468d487010cf3f836c1ab2b82f040074eb0d",
-        "textSha256": "1510b46b27e8d05a43d193547b71620725731b7e5ccd0f8f9f041eecc6909bc4"
-      }
     },
     {
       "officialCardId": "47399",
@@ -5904,11 +3714,6 @@
     },
     {
       "officialCardId": "47418",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47420",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5939,16 +3744,6 @@
     },
     {
       "officialCardId": "47443",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47445",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47447",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -5998,21 +3793,6 @@
       }
     },
     {
-      "officialCardId": "47481",
-      "name": "ロケット団のスーパーボール",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら進化ポケモンの「ロケット団のポケモン」、ウラならたねポケモンの「ロケット団のポケモン」を自分の山札から1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47481.json",
-        "sha256": "6a1109e59d731cb9aa170531459baee53ce58bfd0e149ddb73edba2adb59a2ce",
-        "htmlSha256": "6a1109e59d731cb9aa170531459baee53ce58bfd0e149ddb73edba2adb59a2ce",
-        "textSha256": "76b22d5d547344897224d0f486048c4cfd8f5e171535e18ef4d1580951b35968"
-      }
-    },
-    {
       "officialCardId": "47482",
       "name": "ロケット団のびっくりボム",
       "category": "item",
@@ -6040,21 +3820,6 @@
         "sha256": "2e7122ebddc35efe4dcb18d33e5dbf021e2faa1c57a2fe1672d5720ec0f3c2c8",
         "htmlSha256": "2e7122ebddc35efe4dcb18d33e5dbf021e2faa1c57a2fe1672d5720ec0f3c2c8",
         "textSha256": "c2059b518cf04021ffff811a937a05ed7d79a722461b13ee309645074064e340"
-      }
-    },
-    {
-      "officialCardId": "47490",
-      "name": "ロケット団のファクトリー",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番に、手札から、名前に「ロケット団」とつくサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分の山札を2枚引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47490.json",
-        "sha256": "5d4013d0f88b335799ea594b402b535be079d3885f871e09c917a3e0efebabd3",
-        "htmlSha256": "5d4013d0f88b335799ea594b402b535be079d3885f871e09c917a3e0efebabd3",
-        "textSha256": "1ee3a97232ad1cfa00cfd9a6c1ed8a8351fdc55f1155fc06f7cb1ec1d5343b88"
       }
     },
     {
@@ -6113,16 +3878,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47553",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47555",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47562",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6148,11 +3903,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47608",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47615",
       "name": "エネルギーコイン",
       "category": "item",
@@ -6168,11 +3918,6 @@
       }
     },
     {
-      "officialCardId": "47622",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47642",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6183,22 +3928,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47664",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47670",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47686",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47689",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6213,36 +3943,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47702",
-      "name": "ツールスクラッパー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47702.json",
-        "sha256": "7971945f0cd10268779a07f38e5cf19eeb5800b7848c861f894ca70a5616d845",
-        "htmlSha256": "7971945f0cd10268779a07f38e5cf19eeb5800b7848c861f894ca70a5616d845",
-        "textSha256": "d42e17276c59bbc0a1dfa2605e6e74f7ac0d3d8747ca394477767433962d2c92"
-      }
-    },
-    {
-      "officialCardId": "47703",
-      "name": "古びたはねの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47703.json",
-        "sha256": "e18c6a141bb611a8fdbc86d470d6aabd89460353b5d34422ed2c3235e52b794e",
-        "htmlSha256": "e18c6a141bb611a8fdbc86d470d6aabd89460353b5d34422ed2c3235e52b794e",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
       "officialCardId": "47742",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6253,32 +3953,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47754",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47770",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47777",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47782",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47784",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47789",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6333,11 +4013,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47841",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47844",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6373,66 +4048,6 @@
       }
     },
     {
-      "officialCardId": "47857",
-      "name": "活力の森",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの[草]ポケモン全員は、出したばかりの番（最初の自分の番をのぞく）でも[草]ポケモンに進化できる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47857.json",
-        "sha256": "4afa18538de8ec7e191e5b6c1d354c6943fc8a9034ff4b5ba911da4591e71779",
-        "htmlSha256": "4afa18538de8ec7e191e5b6c1d354c6943fc8a9034ff4b5ba911da4591e71779",
-        "textSha256": "5de5c49d44abef3fc2eb7b9443681d06798a4ba5aee3dac434bfb67db3b4060e"
-      }
-    },
-    {
-      "officialCardId": "47858",
-      "name": "なみのりビーチ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のバトル場の[水]ポケモンを、ベンチの[水]ポケモンと入れ替えてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47858.json",
-        "sha256": "c182933ec38fdcafc2c1150f5757fc1b1a82dd8ddf0a9e573262c16bd8d4cced",
-        "htmlSha256": "c182933ec38fdcafc2c1150f5757fc1b1a82dd8ddf0a9e573262c16bd8d4cced",
-        "textSha256": "3576cce997a9fe36e716f3f4f5ac6e2e4076cb1859d8b79f51c2a90a701aa279"
-      }
-    },
-    {
-      "officialCardId": "47859",
-      "name": "ミステリーガーデン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47859.json",
-        "sha256": "27079a53c7f4dc77736ff9bd36547ff2160a7d31fa3e484da17aa6214f5206aa",
-        "htmlSha256": "27079a53c7f4dc77736ff9bd36547ff2160a7d31fa3e484da17aa6214f5206aa",
-        "textSha256": "f5fd427a90164a98054e27e4ff4e73231fbf0fc0408d333b4f698edeb32c4a94"
-      }
-    },
-    {
-      "officialCardId": "47876",
-      "name": "ツールスクラッパー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47876.json",
-        "sha256": "0d0afd32c664919bb76f8b8bdc073f326175eb340896a080c19874e6d95584a5",
-        "htmlSha256": "0d0afd32c664919bb76f8b8bdc073f326175eb340896a080c19874e6d95584a5",
-        "textSha256": "d42e17276c59bbc0a1dfa2605e6e74f7ac0d3d8747ca394477767433962d2c92"
-      }
-    },
-    {
       "officialCardId": "47880",
       "name": "ふしぎなアメ",
       "category": "item",
@@ -6448,22 +4063,7 @@
       }
     },
     {
-      "officialCardId": "47902",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47916",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47926",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47928",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6493,11 +4093,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47976",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48016",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6513,16 +4108,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48057",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48060",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48064",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6531,31 +4116,6 @@
       "officialCardId": "48067",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48074",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48082",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48261",
-      "name": "パラダイスリゾート",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの「コダック」全員のにげるためのエネルギーは、それぞれ1個ぶん少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48261.json",
-        "sha256": "00f0578db460695ae59f3db1531180c815144aff89079e302fbb9143c90e3db6",
-        "htmlSha256": "00f0578db460695ae59f3db1531180c815144aff89079e302fbb9143c90e3db6",
-        "textSha256": "2b86d74942cd7e1515e37d3faeca6315572babf5c81cc183d4046ff0601331ff"
-      }
     },
     {
       "officialCardId": "48273",
@@ -6573,47 +4133,7 @@
       }
     },
     {
-      "officialCardId": "48278",
-      "name": "パンクメット",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている[悪]ポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを4個のせる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48278.json",
-        "sha256": "e96994496fd57ae85f515777808323a72934825b20cf58614841ecd3d5b3f3fc",
-        "htmlSha256": "e96994496fd57ae85f515777808323a72934825b20cf58614841ecd3d5b3f3fc",
-        "textSha256": "2bd23b967367e2951af8a01297308ae290da649155e9c2b00cb4964255a95cf9"
-      }
-    },
-    {
-      "officialCardId": "48305",
-      "name": "ミステリーガーデン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48305.json",
-        "sha256": "29a24b14cbe847b5c85e806e9eed4a72d45e3430348c1ccbde87d4f1e7867764",
-        "htmlSha256": "29a24b14cbe847b5c85e806e9eed4a72d45e3430348c1ccbde87d4f1e7867764",
-        "textSha256": "f5fd427a90164a98054e27e4ff4e73231fbf0fc0408d333b4f698edeb32c4a94"
-      }
-    },
-    {
       "officialCardId": "48343",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48347",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48350",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6648,11 +4168,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48389",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48395",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6668,51 +4183,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48413",
-      "name": "ジャンボアイス",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "エネルギーが3個以上ついている自分のバトルポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48413.json",
-        "sha256": "18693c24b78d4f2fd4d0d235476b8877382c3c4aa9de8b2190c9a6d6fa651b0e",
-        "htmlSha256": "18693c24b78d4f2fd4d0d235476b8877382c3c4aa9de8b2190c9a6d6fa651b0e",
-        "textSha256": "507a6f8e0c6505bf46b92772abb78d852582b641a93c199cb972b910abb5e9f2"
-      }
-    },
-    {
-      "officialCardId": "48414",
-      "name": "ヒートバーナー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札から「基本[炎]エネルギー」を1枚トラッシュしなければ使えない。相手の場のポケモンについている「ポケモンのどうぐ」「特殊エネルギー」と場に出ている「スタジアム」の中から1枚選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48414.json",
-        "sha256": "aa6e0782a9aed67b6c16c34a7d8585cb116042ac265aa8091e44f1065f0b7162",
-        "htmlSha256": "aa6e0782a9aed67b6c16c34a7d8585cb116042ac265aa8091e44f1065f0b7162",
-        "textSha256": "c769fa2e3b902ce8235bc6e2a31d7afa10d94ee90b7165185ebe363db4fdf2c4"
-      }
-    },
-    {
-      "officialCardId": "48415",
-      "name": "せいなるおまもり",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の特性を持つポケモンから受けるワザのダメージは「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48415.json",
-        "sha256": "195413be1c20a7195e185df2aa83b9881683c1914a34158c0baff8fb2f0b7e6e",
-        "htmlSha256": "195413be1c20a7195e185df2aa83b9881683c1914a34158c0baff8fb2f0b7e6e",
-        "textSha256": "0ca9da15db6f76c0360be5dbe91ec5f17b6ce65e98f524407c61d1bd556a62e6"
-      }
-    },
-    {
       "officialCardId": "48416",
       "name": "ギーマの一手",
       "category": "supporter",
@@ -6726,41 +4196,6 @@
         "htmlSha256": "5bcb943793d05528b988cf1abcc756ce53420e276cb93eeea52fe4c18e33906a",
         "textSha256": "4492f1e068cb80d81d1e53295af41244f7a0360f8a8fe280276494bccd15be05"
       }
-    },
-    {
-      "officialCardId": "48419",
-      "name": "バトルコロシアム",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのベンチポケモン全員は、相手のワザや特性の効果で、ダメカンがのらない。［ワザのダメージは受ける。］",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48419.json",
-        "sha256": "7db0c1441ddf2e773f31235b51abb159d05b63757f2e7cfa03c83a73370d012b",
-        "htmlSha256": "7db0c1441ddf2e773f31235b51abb159d05b63757f2e7cfa03c83a73370d012b",
-        "textSha256": "c5e4d8ff9e7e754678d7bbc7f308a3a0406cf455addc42d79dc6b5bbaa1fc955"
-      }
-    },
-    {
-      "officialCardId": "48420",
-      "name": "めまいの谷",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのこんらんのポケモンは、進化・退化してもこんらんが回復しない。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48420.json",
-        "sha256": "7981ebf524caaedde7b629fb640e8ce7688a15a192a28a1894830de9f634668a",
-        "htmlSha256": "7981ebf524caaedde7b629fb640e8ce7688a15a192a28a1894830de9f634668a",
-        "textSha256": "bd699877ba856555e34c6db40e3dc445a290c66b1e211bef10ceee7c46da153d"
-      }
-    },
-    {
-      "officialCardId": "48432",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48442",
@@ -6848,21 +4283,6 @@
       }
     },
     {
-      "officialCardId": "48472",
-      "name": "ミステリーガーデン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48472.json",
-        "sha256": "49583479013963e51c2c38b0c23473a034f3491e99f61bf9bfa42b13752346f8",
-        "htmlSha256": "49583479013963e51c2c38b0c23473a034f3491e99f61bf9bfa42b13752346f8",
-        "textSha256": "f5fd427a90164a98054e27e4ff4e73231fbf0fc0408d333b4f698edeb32c4a94"
-      }
-    },
-    {
       "officialCardId": "48476",
       "name": "アセロラのいたずら",
       "category": "supporter",
@@ -6876,11 +4296,6 @@
         "htmlSha256": "62f5d19599d7c08a11afd514bb024208b7bf77f0148907dcf5481a8539a25539",
         "textSha256": "a07c20cc30bb5bd7a88e03498c40ff133bf6ed6a99b6ca7f4865d06797f57c87"
       }
-    },
-    {
-      "officialCardId": "48487",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48490",
@@ -6903,51 +4318,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48507",
-      "name": "ヒートバーナー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札から「基本[炎]エネルギー」を1枚トラッシュしなければ使えない。相手の場のポケモンについている「ポケモンのどうぐ」「特殊エネルギー」と場に出ている「スタジアム」の中から1枚選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48507.json",
-        "sha256": "ed0c3e5be064ae74a835e6aa3be8cb4a79e47883118b89991acd09058074858c",
-        "htmlSha256": "ed0c3e5be064ae74a835e6aa3be8cb4a79e47883118b89991acd09058074858c",
-        "textSha256": "c769fa2e3b902ce8235bc6e2a31d7afa10d94ee90b7165185ebe363db4fdf2c4"
-      }
-    },
-    {
-      "officialCardId": "48509",
-      "name": "せいなるおまもり",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、相手の特性を持つポケモンから受けるワザのダメージは「-30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48509.json",
-        "sha256": "965b62af2947e9f6fa7b5738d9dac8626b7e850f8c2d5165d23c01fa8a507412",
-        "htmlSha256": "965b62af2947e9f6fa7b5738d9dac8626b7e850f8c2d5165d23c01fa8a507412",
-        "textSha256": "0ca9da15db6f76c0360be5dbe91ec5f17b6ce65e98f524407c61d1bd556a62e6"
-      }
-    },
-    {
-      "officialCardId": "48510",
-      "name": "パンクメット",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている[悪]ポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを4個のせる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48510.json",
-        "sha256": "3d477d5ede3a71862c04b3a5c674caa7ad73d52bfce5522526a2f3e0839c762c",
-        "htmlSha256": "3d477d5ede3a71862c04b3a5c674caa7ad73d52bfce5522526a2f3e0839c762c",
-        "textSha256": "2bd23b967367e2951af8a01297308ae290da649155e9c2b00cb4964255a95cf9"
-      }
-    },
-    {
       "officialCardId": "48511",
       "name": "ギーマの一手",
       "category": "supporter",
@@ -6960,21 +4330,6 @@
         "sha256": "af896d03452d93f4d57a27b37d4d93c5f7c2ac51f8f0cfe599cc3aa8320a81dd",
         "htmlSha256": "af896d03452d93f4d57a27b37d4d93c5f7c2ac51f8f0cfe599cc3aa8320a81dd",
         "textSha256": "4492f1e068cb80d81d1e53295af41244f7a0360f8a8fe280276494bccd15be05"
-      }
-    },
-    {
-      "officialCardId": "48514",
-      "name": "バトルコロシアム",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのベンチポケモン全員は、相手のワザや特性の効果で、ダメカンがのらない。［ワザのダメージは受ける。］",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48514.json",
-        "sha256": "7a00431cf05ce6cb164cb01ca29e12e431941cf9c9a7255d1be58e950e08cfcd",
-        "htmlSha256": "7a00431cf05ce6cb164cb01ca29e12e431941cf9c9a7255d1be58e950e08cfcd",
-        "textSha256": "c5e4d8ff9e7e754678d7bbc7f308a3a0406cf455addc42d79dc6b5bbaa1fc955"
       }
     },
     {
@@ -7073,11 +4428,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48635",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48637",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7098,66 +4448,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48673",
-      "name": "ツールスクラッパー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48673.json",
-        "sha256": "d375ac5515ef3ef4168a6d92f8d022e993afdc10911e80b1e760c571f350cf4b",
-        "htmlSha256": "d375ac5515ef3ef4168a6d92f8d022e993afdc10911e80b1e760c571f350cf4b",
-        "textSha256": "d42e17276c59bbc0a1dfa2605e6e74f7ac0d3d8747ca394477767433962d2c92"
-      }
-    },
-    {
-      "officialCardId": "48685",
-      "name": "でんきだま",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「ピカチュウex」が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「+50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48685.json",
-        "sha256": "098e6161d8c84a4dde8a27d2c66eb95e2167116fe8240258972aeaf6ff21ea8b",
-        "htmlSha256": "098e6161d8c84a4dde8a27d2c66eb95e2167116fe8240258972aeaf6ff21ea8b",
-        "textSha256": "cbe1353ee1cee265090652e4e6acb02695b41f939802444fb5280a68b51ba8bf"
-      }
-    },
-    {
-      "officialCardId": "48686",
-      "name": "ぶあついうろこ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている[竜]ポケモンが、相手の[草][炎][水][雷]ポケモンから受けるワザのダメージは「-50」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48686.json",
-        "sha256": "a83598d941fa9733592edb790c5b80270eca3be93cffca543d326315282718e1",
-        "htmlSha256": "a83598d941fa9733592edb790c5b80270eca3be93cffca543d326315282718e1",
-        "textSha256": "20d78d6260ffd3fefabd3b57e7de22ea24d958d591d60d03dd91c51a99c6ca20"
-      }
-    },
-    {
-      "officialCardId": "48689",
-      "name": "ホップのこだわりハチマキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「ホップのポケモン」は、ワザを使うためのエネルギーが[無色]エネルギー1個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48689.json",
-        "sha256": "1bd801eef17f460a8ac1e8b24432ce8b1a07e6e659ca130f8025e86008c754db",
-        "htmlSha256": "1bd801eef17f460a8ac1e8b24432ce8b1a07e6e659ca130f8025e86008c754db",
-        "textSha256": "fb0e7f7218cd1e20fe829c27c6ce51a61b0e0567d6d0be048f7d3a11102c5aad"
-      }
-    },
-    {
       "officialCardId": "48691",
       "name": "アセロラのいたずら",
       "category": "supporter",
@@ -7170,21 +4460,6 @@
         "sha256": "733fee6aa30a236c7b8d4775d5fd3bc497447a8cc431646743724988972c2559",
         "htmlSha256": "733fee6aa30a236c7b8d4775d5fd3bc497447a8cc431646743724988972c2559",
         "textSha256": "a07c20cc30bb5bd7a88e03498c40ff133bf6ed6a99b6ca7f4865d06797f57c87"
-      }
-    },
-    {
-      "officialCardId": "48692",
-      "name": "カナリィ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。自分の山札から[雷]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48692.json",
-        "sha256": "953f1c9c7e3cbda623ff38402bfdd21606b5c6093663f5b16133875c85f71fe6",
-        "htmlSha256": "953f1c9c7e3cbda623ff38402bfdd21606b5c6093663f5b16133875c85f71fe6",
-        "textSha256": "5791c71709c122b0688a0e390da56cd4d2a6a82f53e06d6fa06b8e9aa1b4bc23"
       }
     },
     {
@@ -7218,106 +4493,6 @@
       }
     },
     {
-      "officialCardId": "48703",
-      "name": "Nの城",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場の「Nのポケモン」全員のにげるためのエネルギーは、すべてなくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48703.json",
-        "sha256": "ee2e4c742fd4ca66954d5acd31e910019fdfe7acca4446adb84fac698c5c811e",
-        "htmlSha256": "ee2e4c742fd4ca66954d5acd31e910019fdfe7acca4446adb84fac698c5c811e",
-        "textSha256": "e397eac3e91ab6408f0792f4873db297d071ff3f94048d6b23785e389dbe120b"
-      }
-    },
-    {
-      "officialCardId": "48704",
-      "name": "活力の森",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの[草]ポケモン全員は、出したばかりの番（最初の自分の番をのぞく）でも[草]ポケモンに進化できる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48704.json",
-        "sha256": "ea1b39bce1435c0e88039a33a57c87eda235f13f91d7bcb6a15bd5a7b47b532b",
-        "htmlSha256": "ea1b39bce1435c0e88039a33a57c87eda235f13f91d7bcb6a15bd5a7b47b532b",
-        "textSha256": "5de5c49d44abef3fc2eb7b9443681d06798a4ba5aee3dac434bfb67db3b4060e"
-      }
-    },
-    {
-      "officialCardId": "48707",
-      "name": "ハッコウシティ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のトラッシュから「基本[雷]エネルギー」を2枚まで選び、相手に見せて、手札に加えてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48707.json",
-        "sha256": "9dc5ea0653f5ead689797f584a27f4a1388cb7ad4780da4acf4658641e5bccd8",
-        "htmlSha256": "9dc5ea0653f5ead689797f584a27f4a1388cb7ad4780da4acf4658641e5bccd8",
-        "textSha256": "1510b46b27e8d05a43d193547b71620725731b7e5ccd0f8f9f041eecc6909bc4"
-      }
-    },
-    {
-      "officialCardId": "48708",
-      "name": "ハロンタウン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの「ホップのポケモン」が使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48708.json",
-        "sha256": "8b9bfddef125b3a4b288fbd54f9887096cc46cabc4d399ae17ef1262eec8c8a3",
-        "htmlSha256": "8b9bfddef125b3a4b288fbd54f9887096cc46cabc4d399ae17ef1262eec8c8a3",
-        "textSha256": "3dbb2dd2b93b9e565c6bcb573b159b3eef2aa6774faf596ce584cc50f0875b4b"
-      }
-    },
-    {
-      "officialCardId": "48709",
-      "name": "ミステリーガーデン",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48709.json",
-        "sha256": "71211c3343aad5d4b43e1bc999fc04ee3cb7747fa47edcf0781581c0f16190f8",
-        "htmlSha256": "71211c3343aad5d4b43e1bc999fc04ee3cb7747fa47edcf0781581c0f16190f8",
-        "textSha256": "f5fd427a90164a98054e27e4ff4e73231fbf0fc0408d333b4f698edeb32c4a94"
-      }
-    },
-    {
-      "officialCardId": "48712",
-      "name": "ロケット団のファクトリー",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "この番に、手札から、名前に「ロケット団」とつくサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分の山札を2枚引いてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48712.json",
-        "sha256": "299636075c55bb8db359c2d23e7a907ed4d1aa535b9f3c9ee162f2651538689e",
-        "htmlSha256": "299636075c55bb8db359c2d23e7a907ed4d1aa535b9f3c9ee162f2651538689e",
-        "textSha256": "1ee3a97232ad1cfa00cfd9a6c1ed8a8351fdc55f1155fc06f7cb1ec1d5343b88"
-      }
-    },
-    {
-      "officialCardId": "48714",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48739",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48761",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7338,17 +4513,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48840",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48873",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48893",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7359,11 +4524,6 @@
     },
     {
       "officialCardId": "48963",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49022",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7408,17 +4568,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49171",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49186",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49224",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7429,11 +4579,6 @@
     },
     {
       "officialCardId": "49245",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49251",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7460,21 +4605,6 @@
         "sha256": "33d378a661aecc29227cdc54cf5d57757694b58c95f7717ccefa635113338618",
         "htmlSha256": "33d378a661aecc29227cdc54cf5d57757694b58c95f7717ccefa635113338618",
         "textSha256": "9b25bc8e4c4ca4075c2cabe84ec1202dc4118962717a296a22608d9fcd4f0f1b"
-      }
-    },
-    {
-      "officialCardId": "49350",
-      "name": "いいきずぐすり",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のポケモン1匹のHPを「60」回復する。その後、回復したポケモンについているエネルギーを1個選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49350.json",
-        "sha256": "8543785bc76c6849d2d48570c191b2f9c338c5147856ce7bdeed5110113c0d0b",
-        "htmlSha256": "8543785bc76c6849d2d48570c191b2f9c338c5147856ce7bdeed5110113c0d0b",
-        "textSha256": "f193ec863fec09420b4594091449d0e1cc9aee731694ab082e29f07351ca93c5"
       }
     },
     {
@@ -7508,51 +4638,6 @@
       }
     },
     {
-      "officialCardId": "49373",
-      "name": "古びたはねの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49373.json",
-        "sha256": "d6cdc4debfc2962f66056f612daddf1d6a2bd3be04b1d8dd335570246439703d",
-        "htmlSha256": "d6cdc4debfc2962f66056f612daddf1d6a2bd3be04b1d8dd335570246439703d",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "49375",
-      "name": "ペパーのサンドウィッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンのHPを「30」回復する。そのポケモンが「ペパーのポケモン」なら、回復するHPは「100」になる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49375.json",
-        "sha256": "9f9fe458b27ebeb7bdd9abef4ef7201fa3420cf68fb21205e76ec84dcfd4084e",
-        "htmlSha256": "9f9fe458b27ebeb7bdd9abef4ef7201fa3420cf68fb21205e76ec84dcfd4084e",
-        "textSha256": "62d9f358095f81246cfc857bcacee970a2785032b383cf94c3d53066bf3db425"
-      }
-    },
-    {
-      "officialCardId": "49389",
-      "name": "ロケット団のスーパーボール",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "コインを1回投げる。オモテなら進化ポケモンの「ロケット団のポケモン」、ウラならたねポケモンの「ロケット団のポケモン」を自分の山札から1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49389.json",
-        "sha256": "851be7771ee546099e4ffa580b8718e66cab4f9bcc6f9907e3a567ee39e76dda",
-        "htmlSha256": "851be7771ee546099e4ffa580b8718e66cab4f9bcc6f9907e3a567ee39e76dda",
-        "textSha256": "76b22d5d547344897224d0f486048c4cfd8f5e171535e18ef4d1580951b35968"
-      }
-    },
-    {
       "officialCardId": "49390",
       "name": "ロケット団のびっくりボム",
       "category": "item",
@@ -7565,36 +4650,6 @@
         "sha256": "c6a78bc059333653e73a1db42b8480bccd65f14e6364c15d196caedea83be77f",
         "htmlSha256": "c6a78bc059333653e73a1db42b8480bccd65f14e6364c15d196caedea83be77f",
         "textSha256": "d6400802e625e50b38b079f9113e970b6350ee283aae3766a0f807b28343761c"
-      }
-    },
-    {
-      "officialCardId": "49406",
-      "name": "ホップのこだわりハチマキ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「ホップのポケモン」は、ワザを使うためのエネルギーが[無色]エネルギー1個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「+30」される。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49406.json",
-        "sha256": "861c96ce327c5ad56bd1a0de791b183071e243a8846f67c522ea8752c6fff1b1",
-        "htmlSha256": "861c96ce327c5ad56bd1a0de791b183071e243a8846f67c522ea8752c6fff1b1",
-        "textSha256": "fb0e7f7218cd1e20fe829c27c6ce51a61b0e0567d6d0be048f7d3a11102c5aad"
-      }
-    },
-    {
-      "officialCardId": "49408",
-      "name": "リーリエのしんじゅ",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「リーリエのポケモン」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、とられるサイドは1枚少なくなる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49408.json",
-        "sha256": "999eb5f483ccf75ba94c084eb59bd31ee7e72299922414d755d78288166a7774",
-        "htmlSha256": "999eb5f483ccf75ba94c084eb59bd31ee7e72299922414d755d78288166a7774",
-        "textSha256": "f8e4f86aa146a4ed807f736bfca92e90ee941b528be5d31bde5126c01f64cf76"
       }
     },
     {
@@ -7643,16 +4698,6 @@
       }
     },
     {
-      "officialCardId": "49453",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49455",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49959",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7683,21 +4728,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49979",
-      "name": "カナリィ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。自分の山札から[雷]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49979.json",
-        "sha256": "7df9959d6b348baf7a6bbe9ea22d4b21fd5333080e333d369381b30c0136496e",
-        "htmlSha256": "7df9959d6b348baf7a6bbe9ea22d4b21fd5333080e333d369381b30c0136496e",
-        "textSha256": "5791c71709c122b0688a0e390da56cd4d2a6a82f53e06d6fa06b8e9aa1b4bc23"
-      }
-    },
-    {
       "officialCardId": "49981",
       "name": "バーベナとヘレナ",
       "category": "supporter",
@@ -7723,84 +4753,9 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50008",
-      "name": "カナリィ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札を1枚トラッシュしなければ使えない。自分の山札から[雷]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50008.json",
-        "sha256": "47c42851929b1301365cd5bb578123bbec1f4d92faef33b5c35c091dfb608a42",
-        "htmlSha256": "47c42851929b1301365cd5bb578123bbec1f4d92faef33b5c35c091dfb608a42",
-        "textSha256": "5791c71709c122b0688a0e390da56cd4d2a6a82f53e06d6fa06b8e9aa1b4bc23"
-      }
-    },
-    {
       "officialCardId": "50017",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50076",
-      "name": "活力の森",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの[草]ポケモン全員は、出したばかりの番（最初の自分の番をのぞく）でも[草]ポケモンに進化できる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50076.json",
-        "sha256": "9fa4b5b26ccf7b2343895fbf37acb0956c6d3afe3e5d891de034009674ff0507",
-        "htmlSha256": "9fa4b5b26ccf7b2343895fbf37acb0956c6d3afe3e5d891de034009674ff0507",
-        "textSha256": "5de5c49d44abef3fc2eb7b9443681d06798a4ba5aee3dac434bfb67db3b4060e"
-      }
-    },
-    {
-      "officialCardId": "50204",
-      "name": "ジャンボアイス",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "エネルギーが3個以上ついている自分のバトルポケモンのHPを「80」回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50204.json",
-        "sha256": "0d2e30df16ee56e2464faf39bce5c018994f00c463a334400dd166b8c396a5da",
-        "htmlSha256": "0d2e30df16ee56e2464faf39bce5c018994f00c463a334400dd166b8c396a5da",
-        "textSha256": "507a6f8e0c6505bf46b92772abb78d852582b641a93c199cb972b910abb5e9f2"
-      }
-    },
-    {
-      "officialCardId": "50206",
-      "name": "ツールスクラッパー",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50206.json",
-        "sha256": "6d5917029e86da7c4e9f57767e4a4ea2fbe9e7ab3db1d038bd214b63f59c2fa1",
-        "htmlSha256": "6d5917029e86da7c4e9f57767e4a4ea2fbe9e7ab3db1d038bd214b63f59c2fa1",
-        "textSha256": "d42e17276c59bbc0a1dfa2605e6e74f7ac0d3d8747ca394477767433962d2c92"
-      }
-    },
-    {
-      "officialCardId": "50211",
-      "name": "なみのりビーチ",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのプレイヤーは、自分の番ごとに1回、自分のバトル場の[水]ポケモンを、ベンチの[水]ポケモンと入れ替えてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/50211.json",
-        "sha256": "0ce446e27bd5993a9405c0b583bad3975f7a1b03b9dc59100fb02c0a01ecbb64",
-        "htmlSha256": "0ce446e27bd5993a9405c0b583bad3975f7a1b03b9dc59100fb02c0a01ecbb64",
-        "textSha256": "3576cce997a9fe36e716f3f4f5ac6e2e4076cb1859d8b79f51c2a90a701aa279"
-      }
     },
     {
       "officialCardId": "50423",
@@ -7831,11 +4786,6 @@
         "htmlSha256": "2d3b1c356b417238524907fe2b314a6264049ccf4cbbcfde2a74e9436ecc79e8",
         "textSha256": "b12f2483ab2afc1437f85c0feb05354b27dcc1b7be6b9fb2de6b24d3cdda1283"
       }
-    },
-    {
-      "officialCardId": "50831",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "50838",
@@ -7873,71 +4823,6 @@
       }
     },
     {
-      "officialCardId": "46841",
-      "name": "お祭り会場",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "エネルギーがついているおたがいのポケモン全員は、特殊状態にならず、受けている特殊状態は、すべて回復する。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46841.json",
-        "sha256": "e85c103573837c06d96d92353ee25d0b709fea9ee5fc8c52d1a7014f17f78f94",
-        "htmlSha256": "e85c103573837c06d96d92353ee25d0b709fea9ee5fc8c52d1a7014f17f78f94",
-        "textSha256": "8d085580f5ac7e9456ee30f46982bc4fec3e635ad731e26f74731c55681b9cdc"
-      }
-    },
-    {
-      "officialCardId": "46843",
-      "name": "ゼロの大空洞",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場に「テラスタル」のポケモンがいるプレイヤーが、ベンチに出せるポケモンの数は8匹になる。\n\n（このカードがトラッシュされたときか、自分の場に「テラスタル」のポケモンがいなくなったとき、ベンチが5匹になるまでトラッシュする。おたがいにトラッシュするなら、このカードの持ち主から行う。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46843.json",
-        "sha256": "c423660d02eec692a747dea29c8d33af535bb87cf018ab1566df64ff7dbc21db",
-        "htmlSha256": "c423660d02eec692a747dea29c8d33af535bb87cf018ab1566df64ff7dbc21db",
-        "textSha256": "ccf2c3390c01af11f64d8bc2bae7013adabf440f6055e911daf4e3f0aba0614e"
-      }
-    },
-    {
-      "officialCardId": "46845",
-      "name": "ニュートラルセンター",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "おたがいのポケモン（「ルールを持つポケモン」をのぞく）全員は、相手の「ポケモンex・V」からワザのダメージを受けない。\n\nこのカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46845.json",
-        "sha256": "2532ec81344b9cdb276ab0c5432b5c748dcdd388f32e981cd43664c16f4ddac1",
-        "htmlSha256": "2532ec81344b9cdb276ab0c5432b5c748dcdd388f32e981cd43664c16f4ddac1",
-        "textSha256": "87fc8af3c4e7284b30d236f559e46989c2ef420dda9d735d32ca727df3830cc5"
-      }
-    },
-    {
-      "officialCardId": "46847",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47109",
-      "name": "アオキの手際",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべてトラッシュし、自分の山札から「ポケモン」「サポート」「基本エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47109.json",
-        "sha256": "83b6ca9e56df1c58fb7bc29640bf123e290a10b63553520b55ee0553f7f930cd",
-        "htmlSha256": "83b6ca9e56df1c58fb7bc29640bf123e290a10b63553520b55ee0553f7f930cd",
-        "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
-      }
-    },
-    {
       "officialCardId": "47114",
       "name": "タイム",
       "category": "supporter",
@@ -7951,26 +4836,6 @@
         "htmlSha256": "371527a227511ccae70263487cbc5dc5b9fff7955abb925929b194e98576a98c",
         "textSha256": "c092e82e57a6b888fa4fe990d831ede9f63ad9172fd6a47769301353437a1a44"
       }
-    },
-    {
-      "officialCardId": "47115",
-      "name": "ネリネ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を4枚引く。このカードを使った番の終わりに、自分の手札が5枚以上あるなら、自分の手札をすべてトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47115.json",
-        "sha256": "7399a8ba41a90b48614680437d8bd440e819dc15d0e5c3c940741fe17197e6eb",
-        "htmlSha256": "7399a8ba41a90b48614680437d8bd440e819dc15d0e5c3c940741fe17197e6eb",
-        "textSha256": "e5cb6b1541c8799ce34f6b267fdecc9c2f0519a89659fcd379cb8d397a6b83a0"
-      }
-    },
-    {
-      "officialCardId": "47127",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "47128",
@@ -7989,46 +4854,6 @@
     },
     {
       "officialCardId": "47138",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47153",
-      "name": "ネリネ",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を4枚引く。このカードを使った番の終わりに、自分の手札が5枚以上あるなら、自分の手札をすべてトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47153.json",
-        "sha256": "27aaa89c49cb5f9b641dd5d1fce96cf2433140914f632890c8d8d9b5ea9f6300",
-        "htmlSha256": "27aaa89c49cb5f9b641dd5d1fce96cf2433140914f632890c8d8d9b5ea9f6300",
-        "textSha256": "e5cb6b1541c8799ce34f6b267fdecc9c2f0519a89659fcd379cb8d397a6b83a0"
-      }
-    },
-    {
-      "officialCardId": "47218",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47616",
-      "name": "古びたふたの化石",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、HP60の[無色]タイプのたねポケモンとして、場に出せる。このカードは、特殊状態にならず、にげられない。自分の番の中でなら、場に出ているこのカードをトラッシュできる。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47616.json",
-        "sha256": "8f43e8866e5e2714e987d802f5c97ebcc8b8031b47ab75491fcccd46b277cea6",
-        "htmlSha256": "8f43e8866e5e2714e987d802f5c97ebcc8b8031b47ab75491fcccd46b277cea6",
-        "textSha256": "93de22344ef8ef917afd9feae866b3f36741ebac927b968d862d238806209399"
-      }
-    },
-    {
-      "officialCardId": "48565",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8053,11 +4878,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48661",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48662",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8068,27 +4888,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48706",
-      "name": "ゼロの大空洞",
-      "category": "stadium",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場に「テラスタル」のポケモンがいるプレイヤーが、ベンチに出せるポケモンの数は8匹になる。\n\n（このカードがトラッシュされたときか、自分の場に「テラスタル」のポケモンがいなくなったとき、ベンチが5匹になるまでトラッシュする。おたがいにトラッシュするなら、このカードの持ち主から行う。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48706.json",
-        "sha256": "cae67bdfadfa1c3115edf14befc8e56dc1873f01bf714dd7b222375c1207e3f3",
-        "htmlSha256": "cae67bdfadfa1c3115edf14befc8e56dc1873f01bf714dd7b222375c1207e3f3",
-        "textSha256": "ccf2c3390c01af11f64d8bc2bae7013adabf440f6055e911daf4e3f0aba0614e"
-      }
-    },
-    {
       "officialCardId": "48725",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48766",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8119,11 +4919,6 @@
     },
     {
       "officialCardId": "48870",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48878",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8168,27 +4963,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48940",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48948",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "48970",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48979",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48986",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8238,11 +5018,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49048",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49064",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8278,27 +5053,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49129",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49139",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "49140",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49142",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49145",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8328,11 +5088,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49170",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49206",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8343,32 +5098,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49213",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49249",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49250",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49253",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "49258",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49259",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8438,36 +5173,6 @@
       }
     },
     {
-      "officialCardId": "49361",
-      "name": "推理セット",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札を上から3枚見て、好きな順番に入れ替えて、山札の上にもどす。または、そのカードをすべてウラにして切り、山札の下にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49361.json",
-        "sha256": "d7f4b9489737e34564ce131cebe20f37d7fcd00fc3913a0fefe1812e7e22f006",
-        "htmlSha256": "d7f4b9489737e34564ce131cebe20f37d7fcd00fc3913a0fefe1812e7e22f006",
-        "textSha256": "5c55283d949d8944c1bca20275abdcb27ad107f7ab1685309802d6e4df2d4507"
-      }
-    },
-    {
-      "officialCardId": "49362",
-      "name": "スクランブルスイッチ",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを好きなだけ選び、新しいバトルポケモンにつけ替える。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49362.json",
-        "sha256": "7d45ee2bd2c1c10b6749f107daf333120721a499e9353cfd5e35daddba4dfe6c",
-        "htmlSha256": "7d45ee2bd2c1c10b6749f107daf333120721a499e9353cfd5e35daddba4dfe6c",
-        "textSha256": "4f5f8310ced638b2594bb39a5b02deba491276eaf4336ca25dfa66bfdb30da37"
-      }
-    },
-    {
       "officialCardId": "49363",
       "name": "デンジャラス光線",
       "category": "item",
@@ -8480,21 +5185,6 @@
         "sha256": "3d500c0fea4abe711dd38e9de933bfb3164f9a4153bbe7ba2aa3c6cedc36f938",
         "htmlSha256": "3d500c0fea4abe711dd38e9de933bfb3164f9a4153bbe7ba2aa3c6cedc36f938",
         "textSha256": "2ada2095977d940ead154e371cad597f4fadb57e5bd19445cb35009102c7edb7"
-      }
-    },
-    {
-      "officialCardId": "49365",
-      "name": "のんびりじゃらし",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、後攻プレイヤーの最初の番しか使えない。\n\n相手の場のポケモンについているエネルギーを1個選び、相手の手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49365.json",
-        "sha256": "b0a439ab926f28ca002a0ccf8f33cef129d3477cc7b9e52da1620e851e7294f1",
-        "htmlSha256": "b0a439ab926f28ca002a0ccf8f33cef129d3477cc7b9e52da1620e851e7294f1",
-        "textSha256": "1a2786b804fe6e3c5bb43758e247aa79b4886e92c3e188524e0abc830a9de046"
       }
     },
     {
@@ -8528,21 +5218,6 @@
       }
     },
     {
-      "officialCardId": "49380",
-      "name": "ポケモン回収サイクロン",
-      "category": "item",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の場のポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、手札にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49380.json",
-        "sha256": "cd8ff66e73cebf7c11e3fc9bdc3e3e14ec2bcce3f6adebf53da47d5488710fdb",
-        "htmlSha256": "cd8ff66e73cebf7c11e3fc9bdc3e3e14ec2bcce3f6adebf53da47d5488710fdb",
-        "textSha256": "42efade508cec833a8070fd37b0a3d60f39feae4d38e51676cd9fdf9879c15b8"
-      }
-    },
-    {
       "officialCardId": "49387",
       "name": "リブートポッド",
       "category": "item",
@@ -8555,66 +5230,6 @@
         "sha256": "337da3f972b63049eba08ea57f1b083fdc25fb264a2d0a63eb5a2e2d8276900b",
         "htmlSha256": "337da3f972b63049eba08ea57f1b083fdc25fb264a2d0a63eb5a2e2d8276900b",
         "textSha256": "464839e80fecdc97c9d5198528fc06cd1a91486f3c2c51b51c505bcddf278e8d"
-      }
-    },
-    {
-      "officialCardId": "49396",
-      "name": "きらめく結晶",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、1個ぶん少なくなる。（少なくなるのは、どのタイプのエネルギーでもよい。）",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49396.json",
-        "sha256": "0bff52400fda390a9c99c3d937d74a90167e80e6046dc8d240621342c0e72822",
-        "htmlSha256": "0bff52400fda390a9c99c3d937d74a90167e80e6046dc8d240621342c0e72822",
-        "textSha256": "ed34e19cab2286c095c3ad910fdbb367e51f4a1edc3b5dabc0f9319f88a0e92f"
-      }
-    },
-    {
-      "officialCardId": "49399",
-      "name": "力の砂時計",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の番の終わりに、このカードをつけているポケモンがバトル場にいるなら、自分のトラッシュから基本エネルギーを1枚選び、そのポケモンにつけてよい。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49399.json",
-        "sha256": "b47681e46d6b8fb450818618dbdd99cd1ee715ee5700dde94acfc4145ba83bb2",
-        "htmlSha256": "b47681e46d6b8fb450818618dbdd99cd1ee715ee5700dde94acfc4145ba83bb2",
-        "textSha256": "13aa491f5b798c5ced13749853b4c693524236b2bbe03f05d723cec81fc84e71"
-      }
-    },
-    {
-      "officialCardId": "49400",
-      "name": "デラックスボム",
-      "category": "tool",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードをつけているポケモンが、バトル場で相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを12個のせる。その後、このカードをトラッシュする。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49400.json",
-        "sha256": "9ce48280eec947af29cc7dc852a726a2de94ffdfb6df4821c248ce8fdab23e68",
-        "htmlSha256": "9ce48280eec947af29cc7dc852a726a2de94ffdfb6df4821c248ce8fdab23e68",
-        "textSha256": "e41191fe9fa15d731ab9f61ecc70377f17b139f68731efa6f9087cb06202729a"
-      }
-    },
-    {
-      "officialCardId": "49411",
-      "name": "アオキの手際",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の手札をすべてトラッシュし、自分の山札から「ポケモン」「サポート」「基本エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49411.json",
-        "sha256": "a4bf8556f83083af1bd81e1ff6e1428d132983bb23a10a7942b9151efca7247a",
-        "htmlSha256": "a4bf8556f83083af1bd81e1ff6e1428d132983bb23a10a7942b9151efca7247a",
-        "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
       }
     },
     {
@@ -8663,21 +5278,6 @@
       }
     },
     {
-      "officialCardId": "49437",
-      "name": "ハッサク",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\n\n自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49437.json",
-        "sha256": "dbb7758ee8502bd92885883d0791ff790b079c173c899efe5a876690efce5882",
-        "htmlSha256": "dbb7758ee8502bd92885883d0791ff790b079c173c899efe5a876690efce5882",
-        "textSha256": "3aec8186fe305a8544ffbe69b19f8476ce79725073af1590ec4689a83ae083f8"
-      }
-    },
-    {
       "officialCardId": "49438",
       "name": "ブライア",
       "category": "supporter",
@@ -8693,27 +5293,12 @@
       }
     },
     {
-      "officialCardId": "49454",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49963",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49973",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50012",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50015",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8733,22 +5318,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50036",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50063",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50064",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50066",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8758,42 +5328,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50080",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50084",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50174",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50265",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50319",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50334",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50338",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50396",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8803,27 +5338,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50536",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50551",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50554",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50885",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47771",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8868,11 +5383,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50583",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50586",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8903,11 +5413,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45217",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45587",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8918,27 +5423,7 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45792",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45904",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46293",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49456",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49457",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8954,16 +5439,6 @@
     },
     {
       "officialCardId": "49663",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49679",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49687",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8994,11 +5469,6 @@
     },
     {
       "officialCardId": "50215",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47089",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9043,16 +5513,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "48436",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48446",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "48499",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -9064,11 +5524,6 @@
     },
     {
       "officialCardId": "49194",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49331",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9108,32 +5563,12 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45988",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46024",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46046",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
       "officialCardId": "46051",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "46848",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47220",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9157,11 +5592,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 982
+        "count": 764
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 262
+        "count": 97
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9176,53 +5611,53 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "ea349c690daf2fd6f5f86d748a56cb845b7a8976ecc2fcef86c3ad1c7a3a13f0",
+    "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 248889,
+    "seq": 251217,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 421,
+      "SUCCEEDED": 427,
       "FAILED": 0,
-      "BLOCKED": 355
+      "BLOCKED": 349
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 351,
+        "SUCCEEDED": 353,
         "FAILED": 0,
-        "BLOCKED": 320
+        "BLOCKED": 318
       },
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 30,
+        "SUCCEEDED": 31,
         "FAILED": 0,
-        "BLOCKED": 16
+        "BLOCKED": 15
       },
       "item": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 25,
+        "SUCCEEDED": 26,
         "FAILED": 0,
-        "BLOCKED": 8
+        "BLOCKED": 7
       },
       "stadium": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 6,
+        "SUCCEEDED": 7,
         "FAILED": 0,
-        "BLOCKED": 4
+        "BLOCKED": 3
       },
       "tool": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 6,
+        "SUCCEEDED": 7,
         "FAILED": 0,
-        "BLOCKED": 6
+        "BLOCKED": 5
       },
       "energy": {
         "PENDING": 0,
