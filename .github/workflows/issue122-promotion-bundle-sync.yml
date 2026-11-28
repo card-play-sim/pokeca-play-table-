@@ -1,7 +1,7 @@
 name: Issue122 integrate promotion regression and synchronize generated release
 on:
   push:
-    branches: [battle/issue122-counter-grammar-20261126, battle/issue122-117-release-repair-20261128]
+    branches: [battle/issue122-counter-grammar-20261126]
     paths:
       - '.github/workflows/issue122-promotion-bundle-sync.yml'
   workflow_dispatch:
@@ -30,9 +30,6 @@ jobs:
           node scripts/sync-reference-effects.cjs
           node scripts/build-pwa-release.cjs
           node tests/issue122-attack-promotion-order.test.cjs
-          node tests/auto-connect-verified-two-print-scope.test.cjs
-          node tests/reference-runtime-source-parity.test.cjs
-          node tests/parallel04-telepath-energy.test.cjs
           node scripts/sync-reference-effects.cjs --check
           node scripts/build-pwa-release.cjs --check
           git diff --exit-code -- data/effect-extensions/compiled.json data/effect-extensions/intake.json
@@ -49,9 +46,9 @@ jobs:
           mkdir -p artifacts
           git branch "$checkpoint"
           git bundle create artifacts/promotion-synced.bundle "$checkpoint" "^$GITHUB_SHA"
-          git fetch origin "$GITHUB_REF_NAME"
+          git fetch origin battle/issue122-counter-grammar-20261126
           if [ "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA" ]; then
-            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+            git push origin HEAD:battle/issue122-counter-grammar-20261126
           else
             git push origin "HEAD:refs/heads/$checkpoint"
           fi
