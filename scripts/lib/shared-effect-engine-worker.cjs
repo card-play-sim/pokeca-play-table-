@@ -561,7 +561,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   const energy=reserve(eligible,'deck');if(energy)ensure(deckIndex,energy,Math.min(3,kindAttackCost(e,plan.type)+2));
  }
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='specialEnergy')reserve(r=>r.category==='energy'&&r.mainPlan&&!isBasicEnergy(r),'deck',1);
- if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
+ if(m==='ATTACK_NEXT_HIT_RETALIATION'||m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
   if(target)ensureAttackCost(target,1-deckIndex);
  }
@@ -1265,7 +1265,7 @@ function prepare(r, e, kind) {
     }
     mon.statusCondition=e.plan.holderStatus;
   }
-  if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&e.plan.protect==='damageOnly'){
+  if(m==='ATTACK_NEXT_HIT_RETALIATION'||m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&e.plan.protect==='damageOnly'){
     const other=frame.game.players[1],printed=E.getReferenceEffectRecord(other.active);
     const attack=printed.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(!printed.facts.basic||printed.facts.types.includes(e.plan.exceptType)||!attack)return {blocked:'NO_QUALIFYING_BASIC_ATTACKER_FIXTURE'};
@@ -3708,6 +3708,28 @@ function verifyCase(t, e) {
         if(expected)heads++;
       }
       verifyPrintedAttack(start,end,e,heads*e.plan.unit);
+    }
+  }
+  if(e.plan.mechanic==='ATTACK_NEXT_HIT_RETALIATION'){
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    const holder=after.players[0].active,attacker=after.players[1].active;
+    if(holder?.id!==before.players[0].active.id||attacker?.id!==before.players[1].active.id)return {status:'BLOCKED',reason:'NO_SURVIVING_RETALIATION_FIXTURE'};
+    assert.equal(holder.referenceNextHitRetaliation.turn,after.turnNumber);
+    const print=E.getReferenceEffectRecord(attacker);
+    const action=E.getLegalActions(after,'ai').actions.find(a=>a.type==='attack_turn'&&print.attacks[a.attackIndex].plan.mechanic==='VANILLA_DAMAGE');
+    if(!action)return {status:'BLOCKED',reason:'NO_RETALIATION_REPLY_FIXTURE'};
+    for(const active of [true,false]){
+      const start=JSON.parse(JSON.stringify(after));
+      if(!active)start.players[0].active.referenceNextHitRetaliation.turn--;
+      const replay=port(start);assert(replay.dispatch('ai',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(h=>h.details);
+      const hit=events.find(h=>h?.command==='DAMAGE'&&h.targetInstanceId===holder.id&&h.amount>0);
+      if(!hit)return {status:'BLOCKED',reason:'NO_POSITIVE_RETALIATION_DAMAGE'};
+      const reaction=events.find(h=>h?.mechanic==='ATTACK_NEXT_HIT_RETALIATION'&&h.targetInstanceId===attacker.id&&h.counterCount>0);
+      assert.equal(Boolean(reaction),active);
+      if(active)assert.equal(reaction.counterCount,e.plan.reflect?hit.amount/10:e.plan.counterCount);
+      assert.deepEqual(S.identities(start),S.identities(end));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
     }
   }
   if(e.plan.mechanic==='ATTACK_COIN_DECK_SELECT'){
