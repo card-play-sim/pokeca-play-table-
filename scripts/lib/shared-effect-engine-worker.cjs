@@ -518,6 +518,10 @@ function fixtureResources(manifest,deckIndex,source,e){
  }
  if(m==='MASS_CONTEXT_BONUS'&&plan.predicate==='ownTypedBench')reserve(r=>mon(r,plan.type,plan.stage),'bench');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')reserve(r=>mon(r,plan.type,'evolved'),'deck');
+ if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'&&plan.discardAll){
+  reserve(r=>mon(r,null,0),'deck');reserve(r=>r.category==='supporter','deck');reserve(isBasicEnergy,'deck');
+ }
+ if(m==='TRAINER_RETURN_OPPONENT_ENERGY')reserve(isBasicEnergy,'deck',1);
  if(m==='TRAINER_SWITCH_MOVE_ENERGY'){reserve(r=>mon(r,null,0),'bench');reserveEnergy(null,3);}
  if(m==='TRAINER_DRAW_RETURN_SELF')reserve(r=>r.category==='stadium'&&(plan.stadiumName?r.name===plan.stadiumName:r.name.includes(plan.stadiumContains)),'deck');
  if(m==='MASS_ENERGY_ROUTE'&&plan.windowCount)reserve(isBasicEnergy,'deck');
@@ -1430,6 +1434,12 @@ function prepare(r, e, kind) {
     if(plan.requiresTera&&![own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true))return {blocked:'NO_TERA_ROUTE_FIXTURE'};
     if(plan.heal)for(const target of targets)target.damage=Math.min(target.hp-10,40);
   }
+  if(e.plan.secondFirstTurn)frame.game.turnNumber=2;
+  if(m==='TRAINER_RETURN_OPPONENT_ENERGY'){
+    const other=frame.game.players[1];if(![other.active,...other.bench].some(c=>c.energyCards.length)){
+      const i=other.deck.findIndex(c=>c.kind==='energy'&&!c.isSpecial);if(i<0)return {blocked:'NO_RETURN_ENERGY_FIXTURE'};other.active.energyCards.push(other.deck.splice(i,1)[0]);
+    }
+  }
   if(e.plan.previousKnockout){
     const g=frame.game;
     if(g.turnNumber<2)return {blocked:'NO_PREVIOUS_TURN_FIXTURE'};
@@ -1812,6 +1822,11 @@ function prepare(r, e, kind) {
   }
   if (m === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
     const own = frame.game.players[0];
+    if(e.plan.discardAll){
+      if(own.hand.length<2&&own.deck.length)own.hand.push(own.deck.pop());
+      const category=c=>c.kind==='energy'&&!c.isSpecial?'basicEnergy':E.getReferenceEffectRecord(c)?.category;
+      if(!e.plan.categories.every(cat=>own.deck.some(c=>category(c)===cat)))return {blocked:'NO_ALL_DISCARD_SEARCH_CATEGORIES'};
+    }
     // Leave the source in hand and add usable costs without hiding deck categories.
     while (own.hand.length <= e.plan.cost) {
       const index = own.deck.findIndex(card => card.kind === "pokemon" || card.kind === "energy");
@@ -4632,6 +4647,22 @@ function verifyCase(t, e) {
     assert.equal(current.retreatCost,Math.max(0,previous.retreatCost-e.plan.amount),
       'TOOL_RETREAT_DISCOUNT_INCORRECT');
   }
+  if(e.plan.mechanic==='TRAINER_TOP_ORDER_OR_BOTTOM'){
+    const action=t.action||o.action,own=before.players[0],count=Math.min(own.deck.length,e.plan.count),top=own.deck.slice(0,count).map(c=>c.id),rest=own.deck.slice(count).map(c=>c.id);
+    const ordered=[...top].reverse(),a=port(before);assert(a.dispatch('you',{...action,selections:{mode:['top'],cards:ordered}}).ok);assert.deepEqual(a.getSnapshot().players[0].deck.map(c=>c.id),[...ordered,...rest]);
+    const b=port(before);assert(b.dispatch('you',{...action,selections:{mode:['bottom'],cards:[]}}).ok);const bottom=b.getSnapshot().players[0].deck.map(c=>c.id);assert.deepEqual(bottom.slice(0,rest.length),rest);assert.deepEqual(bottom.slice(rest.length).sort(),top.sort());
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(b.getSnapshot())));
+    if(rest.length){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{mode:['top'],cards:[rest[0],...ordered.slice(1)]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));}
+  }
+  if(e.plan.mechanic==='TRAINER_RETURN_OPPONENT_ENERGY'){
+    const action=t.action||o.action,chosen=action.selections.energy[0],other=before.players[1],next=after.players[1];
+    const holder=[other.active,...other.bench].find(c=>c.energyCards.some(e=>e.id===chosen));assert(holder&&next.hand.some(c=>c.id===chosen));
+    assert(![next.active,...next.bench].some(c=>c.energyCards.some(e=>e.id===chosen)));
+  }
+  if(e.plan.secondFirstTurn){
+    const action=t.action||o.action;assert.equal(before.turnNumber,2);
+    for(const turnNumber of [1,3,4,8]){const state=structuredClone(before);state.turnNumber=turnNumber;const replay=port(state);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));}
+  }
   if(e.plan.mechanic==='DECK_ORDER_SELECT'){
     const action=t.action||o.action,chosen=action.selections.cards,plan=e.plan,i=plan.side==='own'?0:1;
     const owner=before.players[i],original=Array.from(owner.deck,c=>c.id),count=Math.min(plan.count,original.length);
@@ -4715,7 +4746,17 @@ function verifyCase(t, e) {
     }
     verifyPrintedAttack(before, after, e, Number(e.damage)+bonuses.reduce((sum,n)=>sum+n,0));
   }
-  if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
+  if(e.plan.mechanic==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'&&e.plan.discardAll){
+    const action=t.action||o.action,own=before.players[0],next=after.players[0],cards=action.selections.cards,category=c=>c.kind==='energy'&&!c.isSpecial?'basicEnergy':E.getReferenceEffectRecord(c)?.category;
+    assert(own.hand.every(c=>next.discard.some(x=>x.id===c.id)));
+    assert(cards.every(id=>next.hand.some(c=>c.id===id)));assert.equal(next.hand.length,cards.length);
+    const categories=cards.map(id=>category(own.deck.find(c=>c.id===id)));
+    assert(categories.every(c=>e.plan.categories.includes(c)));assert.equal(new Set(categories).size,cards.length);
+    assert(e.plan.categories.every(c=>categories.includes(c)));
+    const replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:[]}}).ok);assert.equal(replay.getSnapshot().players[0].hand.length,0);
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+  }
+  if (e.plan.mechanic === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES"&&!e.plan.discardAll) {
     const action = t.action || o.action;
     const { discard, cards } = action.selections;
     const [own] = before.players;
