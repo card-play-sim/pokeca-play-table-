@@ -680,6 +680,10 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const conditionalHeal=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、自分の番に1回使える。自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
+ if(kind==='ABILITY'&&conditionalHeal)return {mechanic:'MASS_HEAL_OWN',commands:['HEAL'],type:null,target:'choice',amount:Number(conditionalHeal[2]),requiresAttachedType:conditionalHeal[1],sharedWording:true};
+ const hpThreshold=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーが([1-9]\d?)個以上ついているなら、このポケモンは最大HPが「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&hpThreshold)return {mechanic:'PASSIVE_DYNAMIC_MAX_HP',commands:['MODIFY_MAX_HP'],mode:'energyThreshold',type:hpThreshold[1],threshold:Number(hpThreshold[2]),amount:Number(hpThreshold[3]),sharedWording:true};
  const hpPrizes=generic.match(/^相手がすでにとったサイド1枚につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
  const hpEnergy=generic.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギー1個につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='ABILITY'&&(hpPrizes||hpEnergy))return {mechanic:'PASSIVE_DYNAMIC_MAX_HP',commands:['MODIFY_MAX_HP'],mode:hpPrizes?'opponentPrizes':'energy',type:hpEnergy?.[1]||null,amount:Number(hpPrizes?.[1]||hpEnergy[2]),sharedWording:true};

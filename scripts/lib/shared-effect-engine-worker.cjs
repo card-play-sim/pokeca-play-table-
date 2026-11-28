@@ -473,6 +473,8 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ENERGY_ROUTE'&&plan.origin==='activeEntry')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
+ if(m==='MASS_HEAL_OWN'&&plan.requiresAttachedType)reserveEnergy(plan.requiresAttachedType,5);
+ if(e.proofHpThreshold)reserveEnergy(e.proofHpThreshold.type,Math.min(16,e.proofHpThreshold.threshold+7));
  if(m==='MASS_HEAL_OWN'&&plan.type)
   reserve(r=>mon(r,plan.type,0),plan.target==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='ATTACK_GUARDED_DAMAGE'){
@@ -622,7 +624,7 @@ function prepare(r, e, kind) {
   if(m==='PASSIVE_DYNAMIC_MAX_HP'){
     const index=r.attacks.findIndex(a=>a.plan);
     if(index<0)return {blocked:'NO_DYNAMIC_HP_ATTACK_TRIGGER'};
-    const trigger={...r.attacks[index],effectIndex:index},t=prepare(r,trigger,'attack');
+    const trigger={...r.attacks[index],effectIndex:index,...(e.plan.mode==='energyThreshold'?{proofHpThreshold:e.plan}:{})},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
     const game=t.port.getSnapshot(),[own,other]=game.players,mon=own.active,plan=e.plan;
     assert.equal(E.getReferenceEffectRecord(mon)?.officialCardId,r.officialCardId);
@@ -635,7 +637,8 @@ function prepare(r, e, kind) {
       // Move real typed cards between zones; never synthesize energy counts.
       zown.deck.push(...zown.active.energyCards.splice(0));
       const typed=mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type);
-      if(!typed.length){
+      const needed=plan.mode==='energyThreshold'?plan.threshold:1;
+      for(let count=typed.length;count<needed;count++){
         const zone=[own.deck,own.hand].find(cards=>cards.some(c=>!c.isSpecial&&c.kind==='energy'&&c.energyType===plan.type));
         if(!zone)return {blocked:'NO_TYPED_HP_ENERGY_FIXTURE'};
         mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.kind==='energy'&&c.energyType===plan.type),1)[0]);
@@ -645,10 +648,18 @@ function prepare(r, e, kind) {
     const n=plan.mode==='opponentPrizes'?6-other.prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;
     zown.active.hp=r.facts.hp;
     if(plan.mode!=='opponentPrizes')zown.active.energies=[];
-    mon.hp=r.facts.hp+n*plan.amount;
+    const bonus=plan.amount*(plan.mode==='energyThreshold'?Number(n>=plan.threshold):n);
+    mon.hp=r.facts.hp+bonus;
     const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();
     assert.equal(empty.players[0].active.hp,r.facts.hp);
-    assert(n>0);assert.equal(before.players[0].active.hp,r.facts.hp+n*plan.amount);
+    assert(n>0);assert.equal(before.players[0].active.hp,r.facts.hp+bonus);
+    if(plan.mode==='energyThreshold'){
+      const below=structuredClone(game),bp=below.players[0],bm=bp.active;
+      const indices=bm.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type);
+      for(const c of indices.slice(plan.threshold-1))bp.deck.push(bm.energyCards.splice(bm.energyCards.indexOf(c),1)[0]);
+      bm.hp=r.facts.hp;bm.energies=[];
+      assert.equal(port(below).getSnapshot().players[0].active.hp,r.facts.hp);
+    }
     assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
     const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
     if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
@@ -1516,6 +1527,12 @@ function prepare(r, e, kind) {
   if(m==='MASS_HEAL_OWN'){
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
     if(!targets.length)return {blocked:'NO_MASS_HEAL_FIXTURE'};
+    if(e.plan.requiresAttachedType){
+      const source=[own.active,...own.bench].find(c=>c.id===frame.sourceId);
+      const zone=[own.deck,own.hand].find(cards=>cards.some(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.requiresAttachedType));
+      if(!source||!zone)return {blocked:'NO_CONDITIONAL_HEAL_ENERGY_FIXTURE'};
+      if(!source.energyCards.some(c=>!c.isSpecial&&c.energyType===e.plan.requiresAttachedType))source.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.requiresAttachedType),1)[0]);
+    }
     for(const mon of targets)mon.damage=Math.min(mon.hp-10,e.plan.amount==='all'?70:Math.max(10,e.plan.amount+10));
   }
   if(m==='ATTACK_GUARDED_DAMAGE'){
@@ -2791,6 +2808,12 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='MASS_HEAL_OWN'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0];
+    if(plan.requiresAttachedType){
+      const noEnergy=structuredClone(before),side=noEnergy.players[0],source=[side.active,...side.bench].find(c=>c.id===t.sourceId);
+      side.deck.push(...source.energyCards.splice(0));source.energies=[];
+      const denied=port(noEnergy);assert.equal(denied.dispatch('you',action).ok,false);
+      assert.equal(JSON.stringify(B.canonical(denied.getSnapshot())),JSON.stringify(B.canonical(noEnergy)));
+    }
     if(plan.origin==='evolve'){
       const source=[own.active,...own.bench].find(c=>c.id===t.sourceId);assert(source?.evolutionCards?.length&&source.referenceEvolutionWindow===before.referenceActionSequence);
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
@@ -4043,7 +4066,7 @@ function verifyCase(t, e) {
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon),plan=e.plan;
     assert(print.abilities.some(a=>a.effectId===e.effectId));
     const n=plan.mode==='opponentPrizes'?6-before.players[1].prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;
-    assert(n>0);assert.equal(mon.hp,print.facts.hp+n*plan.amount);
+    assert(n>0);assert.equal(mon.hp,print.facts.hp+plan.amount*(plan.mode==='energyThreshold'?Number(n>=plan.threshold):n));
     const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
     assert.deepEqual(bad.getSnapshot(),before);
   }
