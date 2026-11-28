@@ -2,7 +2,7 @@
 // The official page, its parsed effects, common plans, real engine execution,
 // print-specific release and regression checks are ONE repeatable work unit.
 // A fetch/compile success alone never finishes a card.
-const {spawnSync}=require('node:child_process');
+const {spawnSync,spawn}=require('node:child_process');
 const path=require('node:path');
 const work='work/card-auto-connect';
 const idFile='/tmp/official-update-ids.json';
@@ -56,7 +56,51 @@ function run(command,args,env) {
   if (result.error) throw result.error;
   if (result.status!==0) throw Error('ATOMIC_BATTLE_STEP_FAILED '+command+' '+args.join(' ')+' EXIT '+result.status);
 }
-function main() {
+// Only the continuation test writes the durable collector queue. Run it
+// alongside independent, read-only engine tests with separate result files.
+// Parser and ledger contracts still run afterwards, against stable outputs.
+function regressionLanes(steps) {
+  const concurrent=new Set([
+    'tests/control-014-shared-effects.test.cjs',
+    'tests/control-008-extensions.test.cjs',
+    'tests/control-009-expansion.test.cjs',
+    'tests/control-010-effects.test.cjs',
+    'tests/control-011-engine-batch.test.cjs'
+  ]);
+  const primary=[],secondary=[],after=[];
+  for(const step of steps){
+    if(step[2][0]==='tests/control-013-continuation.test.cjs')primary.push(step);
+    else if(concurrent.has(step[2][0]))secondary.push(step);
+    else after.push(step);
+  }
+  return {primary,secondary,after};
+}
+function runAsyncStep([name,command,args],env){
+  return new Promise((resolve,reject)=>{
+    const started=Date.now();
+    console.log('ATOMIC_BATTLE_STEP_START '+name);
+    const child=spawn(command,args,{stdio:'inherit',env});
+    child.once('error',reject);
+    child.once('close',(code,signal)=>{
+      if(code!==0)return reject(Error('ATOMIC_BATTLE_STEP_FAILED '+name+' EXIT '+code+' SIGNAL '+signal));
+      console.log('ATOMIC_BATTLE_STEP_PASS '+name+' elapsedMs='+ (Date.now()-started));
+      resolve();
+    });
+  });
+}
+async function parallelRegression(steps,env,execute=runAsyncStep){
+  const {primary,secondary,after}=regressionLanes(steps);
+  const start=Date.now();
+  const lane=async rows=>{for(const row of rows)await execute(row,env);};
+  // All active children must settle before this stage exits. Never continue
+  // to bundle or publication on a failed regression, even if its peer passes.
+  const results=await Promise.allSettled([lane(primary),lane(secondary)]);
+  const failed=results.filter(x=>x.status==='rejected');
+  if(failed.length)throw Error('PARALLEL_REGRESSION_FAILED '+failed.map(x=>String(x.reason)).join('; '));
+  await lane(after);
+  console.log('ATOMIC_PARALLEL_REGRESSION_COMPLETE elapsedMs='+(Date.now()-start));
+}
+async function main() {
   const limit=Number(process.env.INTAKE_LIMIT || '400');
   const rev=spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'});
   if (rev.status!==0) throw Error('REPOSITORY_COMMIT_REQUIRED');
@@ -67,7 +111,16 @@ function main() {
       steps:steps.map(([name,command,args])=>({name,command,args}))},null,2));
     return;
   }
+  const useParallel=process.env.POKECA_INTAKE_PARALLEL_REGRESSION==='1';
+  let regressionsDone=false;
   for (const [name,command,args] of steps) {
+    if(useParallel&&name.startsWith('FULL_REGRESSION:')){
+      if(!regressionsDone){
+        await parallelRegression(steps.filter(([n])=>n.startsWith('FULL_REGRESSION:')),{...process.env});
+        regressionsDone=true;
+      }
+      continue;
+    }
     console.log('ATOMIC_BATTLE_STEP_START '+name);
     const env={...process.env};
     if(name==='CREATE_REAL_BATTLE_VERIFICATION_FIXTURES') {
@@ -79,5 +132,5 @@ function main() {
   }
   console.log('ATOMIC_BATTLE_INTAKE_COMPLETE: verified release candidate and unresolved mechanic work remain linked; published gameplay pending');
 }
-if(require.main===module)main();
-module.exports={commands};
+if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1;});
+module.exports={commands,regressionLanes,parallelRegression};
