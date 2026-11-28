@@ -733,6 +733,10 @@ function sequencePlan(entry,kind,text,extended=false){
  const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({discardOwnHand:['DISCARD'],blindDiscardOpponent:['DISCARD'],draw:['DRAW'],drawIfHand:['DRAW'],revealHand:['REVEAL'],peekTop:['REVEAL'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
  return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...new Set(commands)],steps,origin,activeOnly,sharedWording:true};
 }
+function stadiumUpgradePlan(text){
+ if(text==='このカードは、場に出ている「プリズムタワー」をトラッシュしなければ場に出せず、「プリズムタワー」を出した番でも場に出せる。おたがいの場の「メガフラエッテex」全員は、それぞれ最大HPが「+150」される。')return {mechanic:'STADIUM_NAMED_UPGRADE_HP',commands:['DISCARD','MODIFY_MAX_HP'],replaces:'プリズムタワー',name:'メガフラエッテex',amount:150,sharedWording:true};
+ return null;
+}
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
@@ -741,7 +745,27 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='stadium'){
+  const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"psychicDraw","commands":["DISCARD","DRAW"],"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。")return {"mechanic":"STADIUM_ACTIVE","mode":"healEnd","commands":["HEAL"],"amount":10,"endTurn":true,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のトラッシュから「基本[雷]エネルギー」を2枚まで選び、相手に見せて、手札に加えてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"lightningRecover","commands":["REVEAL","ADD_TO_HAND"],"amount":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の山札からたねポケモンを1枚選び、ベンチに出してよい。そして山札を切る。この効果を使ったなら、自分の番は終わる。")return {"mechanic":"STADIUM_ACTIVE","mode":"basicBench","commands":["SEARCH_DECK","BENCH_FROM_ZONE","SHUFFLE_DECK"],"amount":1,"endTurn":true,"sharedWording":true};
+  if(generic==="この番に、手札から、名前に「ロケット団」とつくサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分の山札を2枚引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"rocketDraw","commands":["DRAW"],"amount":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を2枚トラッシュするなら、自分の山札を1枚引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"discardDraw","commands":["DISCARD","DRAW"],"amount":1,"cost":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のバトル場の[水]ポケモンを、ベンチの[水]ポケモンと入れ替えてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"waterSwitch","commands":["SWITCH"],"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン(「ルールを持つポケモン」をのぞく)全員のHPを、それぞれ「20」回復してよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"nonRuleHeal","commands":["HEAL"],"amount":20,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の山札から「マリィのポケモン」を1枚選び、相手に見せて、手札に加えてよい。そして山札を切る。")return {"mechanic":"STADIUM_ACTIVE","mode":"marnieSearch","commands":["SEARCH_DECK","REVEAL","ADD_TO_HAND","SHUFFLE_DECK"],"amount":1,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を1枚選び、山札の上にもどしてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"handTop","commands":["RETURN_TO_DECK"],"sharedWording":true};
+  if(generic==="この番、手札からサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"supporterHeal","commands":["HEAL"],"amount":10,"sharedWording":true};
+  if(generic==='おたがいの[草]ポケモン全員は、出したばかりの番(最初の自分の番をのぞく)でも[草]ポケモンに進化できる。')return {mechanic:'STADIUM_GRASS_EVOLUTION',commands:['ADD_STATE'],sharedWording:true};
+  if(generic==='おたがいのこんらんのポケモンは、進化・退化してもこんらんが回復しない。')return {mechanic:'STADIUM_CONFUSION_RETENTION',commands:['STATUS_CONDITION'],sharedWording:true};
+  if(generic==='おたがいのポケモン(「ルールを持つポケモン」をのぞく)全員は、相手の「ポケモンex・V」からワザのダメージを受けない。このカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。')return {mechanic:'STADIUM_NEUTRAL_CENTER',commands:['PREVENT_DAMAGE','ADD_STATE'],sharedWording:true};
+ }
  if(kind==='MAIN'&&entry.category==='energy'){
+  const guard=generic.match(/^このカードは、ポケモンについているかぎり、\[(無色|闘)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(\[闘\])?ポケモンは、相手のポケモンが使うワザの効果を受けない。\(すでに受けている効果は、なくならない。\)$/);
+  if(guard&&(guard[1]==='闘')===Boolean(guard[2]))return {mechanic:'ENERGY_ATTACK_EFFECT_GUARD',commands:['ATTACH_ENERGY','ADD_STATE'],energyType:guard[1],holderType:guard[2]?'闘':null,sharedWording:true};
+  if(generic==='このカードは、ポケモンについているかぎり、[超]エネルギー1個ぶんとしてはたらく。このカードを手札から[超]ポケモンにつけたとき、自分の山札から[超]タイプのたねポケモンを2枚まで選び、ベンチに出す。そして山札を切る。')return {mechanic:'ENERGY_HAND_ATTACH_BASIC_BENCH',commands:['ATTACH_ENERGY','SEARCH_DECK','BENCH_FROM_ZONE','SHUFFLE_DECK'],energyType:'超',limit:2,sharedWording:true};
   const rainbow=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー1個ぶんとしてはたらく。(たね|2進化)ポケモンについているなら、すべてのタイプのエネルギー([12])個ぶんとしてはたらく。$/);
   if(rainbow&&((rainbow[1]==='たね'&&rainbow[2]==='1')||(rainbow[1]==='2進化'&&rainbow[2]==='2')))return {mechanic:'ENERGY_STAGE_RAINBOW',commands:['ATTACH_ENERGY'],stage:rainbow[1]==='たね'?0:2,units:Number(rainbow[2]),sharedWording:true};
   const typed=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼])\]エネルギー1個ぶんとしてはたらく。このカードをつけている\[\1\]ポケモン(は、最大HPが「\+([1-9]\d{0,2})」される。|は、にげるためのエネルギーが、すべてなくなる。|が使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。|は、ベンチにいるかぎり、相手のワザのダメージを受けない。)$/);
@@ -760,6 +784,8 @@ function plan(entry,kind){
   if(reduction)return {mechanic:'STADIUM_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],holderType:reduction[1]||null,team:reduction[2]||null,amount:Number(reduction[3]),sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='tool'){
+  if(generic==='このカードをつけている「メガシンカex」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:true,min:1,limit:1,sharedWording:true};
+  if(generic==='このカードをつけているポケモンが、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:false,min:0,limit:3,sharedWording:true};
   const teamBoost=generic.match(/^このカードをつけている「([^「」]+)のポケモン」は、ワザを使うためのエネルギーが\[無色\]エネルギー([1-9])個ぶん少なくなり、そのポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
   if(teamBoost)return {mechanic:'TOOL_TEAM_COST_BOOST',commands:['MODIFY_ATTACK_COST','MODIFY_DAMAGE'],team:teamBoost[1],discount:Number(teamBoost[2]),amount:Number(teamBoost[3]),sharedWording:true};
   const namedBoost=generic.match(/^このカードをつけている「([^「」]+)」が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);
@@ -800,6 +826,13 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='energy'){
   const recycle=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼]|無色)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(?:\[([草炎水雷超闘悪鋼])\])?ポケモンが使うワザの効果で、このカードがトラッシュされたなら、ワザのダメージや効果のあとに、(手札にもどす|もとのポケモンにつけなおす)。$/);
   if(recycle&&(!recycle[2]||recycle[1]===recycle[2]))return {mechanic:'ENERGY_SELF_ATTACK_RECYCLE',commands:['ATTACH_ENERGY',recycle[3]==='手札にもどす'?'RETURN_TO_HAND':'ATTACH_ENERGY'],energyType:recycle[1],holderType:recycle[2]||null,destination:recycle[3]==='手札にもどす'?'hand':'attached',sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='energy'){
+  if(generic==='このカードは、ポケモンについているかぎり、すべてのタイプのエネルギー1個ぶんとしてはたらく。このカードをつけているポケモンが、相手のポケモンからワザのダメージを受けてきぜつしたとき、とられるサイドは1枚少なくなる。対戦中、自分の「レガシーエネルギー」のこの効果は、1回しかはたらかない。')return {mechanic:'ENERGY_LEGACY_PRIZE_REDUCTION',commands:['ATTACH_ENERGY','ADD_STATE'],amount:1,oncePerGame:true,sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='tool'){
+  const pearl=generic.match(/^このカードをつけている「([^「」]+)のポケモン」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、とられるサイドは([1-9])枚少なくなる。$/);
+  if(pearl)return {mechanic:'TOOL_TEAM_KO_PRIZE_REDUCTION',commands:['ADD_STATE'],team:pearl[1],amount:Number(pearl[2]),sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='item'&&generic==='おたがいのバトルポケモン([悪]ポケモンをのぞく)を、それぞれこんらんにする。')return {mechanic:'TRAINER_BOTH_ACTIVE_CONFUSE',commands:['STATUS_CONDITION'],exceptType:'悪',sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を4枚引く。このカードを使った番の終わりに、自分の手札が5枚以上あるなら、自分の手札をすべてトラッシュする。')return {mechanic:'TRAINER_DRAW_END_DISCARD',commands:['DRAW','ADD_STATE','DISCARD'],amount:4,threshold:5,sharedWording:true};
