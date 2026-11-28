@@ -1050,6 +1050,7 @@ function preflight(g,actor,action){
    if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,o,r.mainPlan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
    if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
    if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
+   if(m==='TRAINER_DRAW_END_DISCARD')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&r.mainPlan.trainer)assert(p.deck.length>0&&p.bench.length<5,'NO_BASIC_BENCH_SEARCH_POSSIBLE');
    if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -2145,6 +2146,11 @@ function applyPlan(g,actor,card,effect,action){
    const amount=plan.tailsAmount!==undefined?(coin(g,actor)?plan.amount:plan.tailsAmount):plan.team&&record(p.active).name.startsWith(plan.team+'の')?plan.teamAmount:plan.amount;
    heal(g,actor,p.active,amount+(plan.discardName?p.discard.filter(c=>id(c)!==id(card)&&record(c)?.name===plan.discardName).length*plan.discardUnit:0));break;
   }
+  case 'TRAINER_DRAW_END_DISCARD':
+   draw(g,p,plan.amount);
+   p.referenceEndHandDiscard={turn:g.turnNumber,threshold:plan.threshold,sourceOfficialCardId:record(card).officialCardId};
+   event(g,actor,'ADD_STATE',{mechanic:m,turn:g.turnNumber,threshold:plan.threshold});
+   break;
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
   case 'TRAINER_TOP_SELECT_DISCARD':{
@@ -2366,8 +2372,17 @@ function afterAction(g,before,actor,action){
  refresh(g);
  if(['bench_basic','evolve','play_active_basic'].includes(action.type))functions().Core.resolveKnockouts(g,actor);
 }
+function resolveTrainerEndHandDiscard(g,actor){
+ const p=player(g,actor),state=p.referenceEndHandDiscard;
+ if(!state||state.turn>g.turnNumber)return;
+ delete p.referenceEndHandDiscard;
+ if(state.turn!==g.turnNumber||p.hand.length<state.threshold)return;
+ const discarded=p.hand.splice(0);p.discard.push(...discarded);
+ event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'hand',mechanic:'TRAINER_DRAW_END_DISCARD',sourceOfficialCardId:state.sourceOfficialCardId});
+}
 function onEndTurn(g,actor){
  if(!g.referenceEffectValidation)return;
+ resolveTrainerEndHandDiscard(g,actor);
  for(const c of field(player(g,actor)))for(const energy of [...c.energyCards])if(record(energy)?.mainPlan?.mechanic==='IGNITION'){
   c.energyCards.splice(c.energyCards.indexOf(energy),1);player(g,actor).discard.push(energy);event(g,actor,'DISCARD',{cardIds:[id(energy)]});
  }
@@ -2539,6 +2554,7 @@ function statuses(g){
   if(card.referenceCannotRetreatTurn===g.turnNumber)add('retreat-lock','この番はにげられない','相手のワザ','この番の終わりまで');
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');
  }
+ for(const p of g.players)if(p.referenceEndHandDiscard?.turn===g.turnNumber)out.push({id:'reference-end-hand-discard-'+p.id,short:'番の終わりに手札確認',label:'手札5枚以上なら全トラッシュ',scope:'PLAYER',playerId:p.id,sourceCard:'ネリネ',sourceEffect:'サポート',start:'カード使用時',duration:'この番の終わり',removal:'番終了時に解決',condition:'手札5枚以上',description:'この番の終わりに手札が5枚以上あるなら、すべてトラッシュする'});
  for(const state of g.referenceItemLock||[])if(g.turnNumber===state.turnNumber)out.push({id:'reference-item-lock-'+state.playerId,short:'グッズ不可',label:'グッズ使用不可',scope:'PLAYER',playerId:state.playerId,sourceCard:'スボミー',sourceEffect:'むずむずかふん',start:'前の番のワザ解決時',duration:'この番の終わりまで',removal:'期限終了',condition:'このプレイヤーの番',description:'手札からグッズを出して使えない'});
  const name={WATCHTOWER:'無色ポケモンの特性なし',NIGHT_MINE:'テラスタルのワザの無色コスト＋1',RUINS:'悪以外のたねをベンチに出すとダメカン2個',JAMMING:'どうぐの効果なし',SUPPRESS_RULE_ABILITIES:'ルールを持つポケモンの特性なし'}[stadium(g)];
  if(name)out.push({id:'reference-stadium',short:name,label:name,scope:'FIELD',sourceCard:g.stadium.name,sourceEffect:'スタジアム',start:'スタジアムが場に出たとき',duration:'このスタジアムが場にあるかぎり',removal:'場を離れたとき',condition:'公式参照版',description:name});

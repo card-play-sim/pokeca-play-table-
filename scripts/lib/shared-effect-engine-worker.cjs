@@ -2474,6 +2474,30 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='TRAINER_DRAW_END_DISCARD'){
+    const [own,other]=before.players,side=after.players[0],plan=e.plan;
+    const drawn=own.deck.slice(0,plan.amount);
+    assert.equal(drawn.length,plan.amount);
+    assert.deepEqual(Array.from(side.hand,c=>c.id),[...own.hand.filter(c=>c.id!==t.sourceId),...drawn].map(c=>c.id));
+    assert.equal(after.turnNumber,before.turnNumber);
+    assert.equal(side.referenceEndHandDiscard?.turn,before.turnNumber);
+    assert.equal(side.referenceEndHandDiscard?.threshold,plan.threshold);
+    for(const count of [0,4,5,6]){
+      const start=structuredClone(after),p=start.players[0];
+      while(p.hand.length>count)p.deck.push(p.hand.pop());
+      while(p.hand.length<count){assert(p.deck.length);p.hand.push(p.deck.shift());}
+      const prior=p.hand.map(c=>c.id),replay=port(start),endAction=E.getLegalActions(start,'you').actions.find(a=>a.type==='end_turn');
+      assert(endAction&&replay.dispatch('you',endAction).ok,'NO_TRAINER_END_DISCARD_END_TURN');
+      const end=replay.getSnapshot(),resolved=end.players[0];
+      assert.equal(end.turnNumber,start.turnNumber+1);
+      assert.equal(resolved.referenceEndHandDiscard,undefined);
+      assert.deepEqual(Array.from(resolved.hand,c=>c.id),count>=plan.threshold?[]:prior);
+      assert(prior.every(id=>count>=plan.threshold?resolved.discard.some(c=>c.id===id):!resolved.discard.some(c=>c.id===id)));
+      const events=end.history.slice(start.history.length).filter(ev=>ev.details?.mechanic==='TRAINER_DRAW_END_DISCARD'&&ev.details.command==='DISCARD');
+      assert.equal(events.length,count>=plan.threshold?1:0);
+      assert.deepEqual(S.identities(start),S.identities(end));
+    }
+  }
   if(e.plan.endTrainerTurn){
     const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
     const route=plan.mechanic==='MASS_ENERGY_ROUTE',key=route?'energy':'cards';
