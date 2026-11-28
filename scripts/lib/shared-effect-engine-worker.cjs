@@ -207,6 +207,27 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(ensure(index,energy,cost+count))
    for(let i=0;i<count;i++)requirements.push({side,zone:'deck',printId:energy.officialCardId});
  }
+ if(m==='STADIUM_NAMED_UPGRADE_HP'){
+  const prior=reserve(r=>r.category==='stadium'&&r.name===plan.replaces&&r.mainPlan,'hand');
+  if(!prior)return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_PREDECESSOR_STADIUM'});
+  requirements.upgradePriorPrint=prior.officialCardId;
+  requirements.upgradeChains=[];
+  for(const side of [0,1]){
+   const index=side===0?deckIndex:1-deckIndex;
+   let chosen=null;
+   outer:for(const target of legal.filter(r=>r.category==='pokemon'&&r.name===plan.name)){
+    for(const chain of evolutionLines(target,legal)){
+     if(!tryReserveChain(manifest.decks[index],reservedPrints,index,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,side,r.officialCardId))))continue;
+     requirements.push({side,zone:'bench',printId:chain[0].officialCardId});
+     for(const r of chain.slice(1))requirements.push({side,zone:'hand',printId:r.officialCardId});
+     chosen=chain.map(r=>r.officialCardId);break outer;
+    }
+   }
+   if(!chosen)return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_NAMED_EVOLUTION_LINE'});
+   requirements.upgradeChains.push(chosen);
+   if(!reserve(r=>mon(r,null,0)&&r.name!==plan.name&&!r.abilities.length,'active',side))return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_NON_TARGET_FIXTURE'});
+  }
+ }
  if(m==='STADIUM_STAGE_HP'){
   const eligible=r=>r.category==='pokemon'&&r.facts.stage===plan.stage&&r.facts.hp+plan.amount>0&&!r.abilities.length&&r.attacks.every(a=>a.plan);
   const ineligible=r=>r.category==='pokemon'&&r.facts.stage!==plan.stage&&!r.abilities.length&&r.attacks.every(a=>a.plan);
@@ -1196,6 +1217,30 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if(m==='STADIUM_NAMED_UPGRADE_HP'){
+    let pp=port(frame.game);
+    for(const side of [0,1]){
+      const chain=fixtureRequirements.upgradeChains[side];
+      if(chain.length>1){
+        const evolved=evolveTeraFixture(pp,chain,false,side);
+        if(evolved.blocked)return evolved;
+        pp=evolved.port;
+      }
+      const named=pp.getSnapshot().players[side].bench.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===chain.at(-1));
+      if(!named)return {blocked:'NO_UPGRADE_NAMED_FIELD_TARGET'};
+    }
+    const before=pp.getSnapshot(),own=before.players[0],prior=own.hand.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===fixtureRequirements.upgradePriorPrint);
+    const upgrade=own.hand.find(c=>c.id===frame.sourceId);
+    if(!prior||!upgrade||before.stadium)return {blocked:'NO_UPGRADE_PHYSICAL_STADIUM_FIXTURE'};
+    const saved=JSON.stringify(before);
+    assert.equal(pp.dispatch('you',{type:'play_stadium',cardId:upgrade.id}).ok,false);
+    assert.equal(JSON.stringify(pp.getSnapshot()),saved);
+    if(!pp.dispatch('you',{type:'play_stadium',cardId:prior.id}).ok)return {blocked:'UPGRADE_PREDECESSOR_PLAY_REJECTED'};
+    frame.game=pp.getSnapshot();
+    assert.equal(frame.game.stadium.id,prior.id);
+    assert.equal(frame.game.turnNumber,before.turnNumber);
+    assert.equal(frame.game.stadiumPlayedTurn,before.turnNumber);
+  }
   const boostBasePhysical={};
   if(e.proofTeamBoost){
     const proof=e.proofTeamBoost,own=frame.game.players[0];
@@ -4340,6 +4385,31 @@ function verifyCase(t, e) {
     assert.deepEqual(resolved.energyCards.map(c=>c.id),target.energyCards.filter(c=>c.id!==chosen[0]).map(c=>c.id));
     const basic=target.energyCards.find(c=>!c.isSpecial);
     if(basic){const replay=port(before);assert.equal(replay.dispatch("you",{...action,selections:{energy:[basic.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
+  }
+  if(e.plan.mechanic==='STADIUM_NAMED_UPGRADE_HP'){
+    const plan=e.plan,action=t.action||o.action,prior=before.stadium;
+    assert.equal(action.type,'play_stadium');
+    assert(prior&&E.getReferenceEffectRecord(prior).name===plan.replaces);
+    assert.equal(before.stadiumPlayedTurn,before.turnNumber);
+    assert.equal(after.stadium?.id,action.cardId);
+    assert.equal(after.turnNumber,before.turnNumber);
+    const owner=after.players.find(side=>side.id===before.stadiumOwner);
+    assert(owner.discard.some(c=>c.id===prior.id));
+    assert(!after.players[0].hand.some(c=>c.id===action.cardId));
+    for(let side=0;side<2;side++){
+      const old=[before.players[side].active,...before.players[side].bench].filter(Boolean);
+      const current=[after.players[side].active,...after.players[side].bench].filter(Boolean);
+      const eligible=c=>E.getReferenceEffectRecord(c).name===plan.name;
+      assert(old.some(eligible)&&old.some(c=>!eligible(c)));
+      for(const c of old){
+        const n=current.find(x=>x.id===c.id);
+        assert(n);assert.equal(n.hp,c.hp+(eligible(c)?plan.amount:0));assert.equal(n.damage,c.damage);
+      }
+    }
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+    const replay=port(after);
+    assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(after));
   }
   if(e.plan.mechanic==='STADIUM_STAGE_HP'){
     const plan=e.plan,action=t.action||o.action;
