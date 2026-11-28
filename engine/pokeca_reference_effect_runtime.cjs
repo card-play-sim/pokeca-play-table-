@@ -34,6 +34,14 @@ function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,co
 function command(g,a,cmd,context={}){functions().Effects.apply(g,cmd,{playerId:a,sourceType:'POKEMON',actionType:'ATTACK',...context});}
 function stadium(g){return record(g.stadium)?.mainPlan?.mechanic;}
 function toolEnabled(g){return stadium(g)!=='JAMMING';}
+function neutralCenterDamageGuard(g,actor,source,target){
+ if(stadium(g)!=='STADIUM_NEUTRAL_CENTER'||find(g,id(target))?.player.id!==opponent(g,actor).id)return false;
+ const a=record(source),d=record(target);
+ return !!a&&!!d&&!d.facts.rulePokemon&&(/ex$/.test(a.name)||/V(?:MAX|STAR|-UNION)?$/.test(a.name));
+}
+function discardReturnAllowed(c){
+ return record(c)?.mainPlan?.mechanic!=='STADIUM_NEUTRAL_CENTER';
+}
 function abilityEnabled(g,card,ability=null){
  const r=record(card),s=stadium(g);
  if(s==='WATCHTOWER'&&r?.facts.types?.includes('無色')||s==='SUPPRESS_RULE_ABILITIES'&&r?.facts.rulePokemon)return false;
@@ -278,6 +286,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  const penalty=energyPenalty+(outgoing?.turn===g.turnNumber?outgoing.amount:0);
  if(find(g,id(mon))?.player.id!==actor)amount=Math.max(0,amount-penalty);
  if(!ignore){
+  if(neutralCenterDamageGuard(g,actor,source,mon))return 0;
   if(bench&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='BENCH_DAMAGE_PROTECTION'))return 0;
   if(bench&&record(mon).facts.teraBenchProtection)return 0;
   if(bench&&find(g,id(mon))?.player.id===other.id&&typedEnergyEffects(mon,'benchGuard').length)return 0;
@@ -464,6 +473,7 @@ function massRouteEnergy(p,plan){
  return p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
 }
 function massTransferCandidate(c,plan){
+ if(plan.zone==='discard'&&['hand','deck'].includes(plan.destination)&&!discardReturnAllowed(c))return false;
  const r=record(c);
  if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
  if(plan.nameExact&&r?.name!==plan.nameExact)return false;
@@ -1136,6 +1146,12 @@ function onBench(g,p,card,fromHand){
  if(stadium(g)==='RUINS'&&record(card).facts.basic&&!record(card).facts.types.includes('悪'))counters(g,p.id,card,2,{sourceType:'STADIUM'});
 }
 function moveChosen(g,p,zone,ids,destination,reveal=true){
+ if(zone==='discard'&&['hand','deck'].includes(destination)){
+  for(const ident of ids){
+   const c=p.discard.find(x=>id(x)===ident);
+   assert(c&&discardReturnAllowed(c),'DISCARD_RETURN_PROHIBITED');
+  }
+ }
  const moved=[];for(const ident of ids){const i=p[zone].findIndex(c=>id(c)===ident);assert(i>=0,'SELECTED_CARD_MISSING');const c=p[zone].splice(i,1)[0];p[destination].push(c);moved.push(c);}
  if(reveal)event(g,p.id,'REVEAL',{cardIds:ids,toPlayer:opponent(g,p.id).id});event(g,p.id,destination==='hand'?'ADD_TO_HAND':destination==='discard'?'DISCARD':'RETURN_TO_DECK',{cardIds:ids,fromZone:zone,...(!reveal?{privateTo:p.id}:{})});return moved;
 }

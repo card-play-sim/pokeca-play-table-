@@ -678,6 +678,7 @@ function plan(entry,kind){
  const generic=text.normalize('NFKC');
  if(kind==='MAIN'&&entry.category==='stadium'){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+  if(generic==='おたがいのポケモン(「ルールを持つポケモン」をのぞく)全員は、相手の「ポケモンex・V」からワザのダメージを受けない。このカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。')return {mechanic:'STADIUM_NEUTRAL_CENTER',commands:['PREVENT_DAMAGE','ADD_STATE'],sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='energy'){
   const guard=generic.match(/^このカードは、ポケモンについているかぎり、\[(無色|闘)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(\[闘\])?ポケモンは、相手のポケモンが使うワザの効果を受けない。\(すでに受けている効果は、なくならない。\)$/);
