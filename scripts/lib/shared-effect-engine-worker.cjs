@@ -704,7 +704,7 @@ function prepare(r, e, kind) {
       mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.energyType===e.plan.type),1)[0]);
     }
     mon.hp=r.facts.hp+e.plan.hpBonus;mon.energies=mon.energyCards.map(c=>c.energyType);
-    const changed=port(game),option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    const changed=port(game),option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&(o.ok??o.enabled)===true);
     if(!option)return {blocked:'NO_CONDITIONAL_DAMAGE_LEGAL_ATTACK'};
     return {...t,port:changed,option,trigger};
   }
@@ -822,7 +822,7 @@ function prepare(r, e, kind) {
       assert.deepEqual(Array.from(S.identities(belowSnapshot)),Array.from(S.identities(game)));
     }
     assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
-    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&(o.ok??o.enabled)===true);
     if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
     return {...t,port:changed,option,trigger};
   }
