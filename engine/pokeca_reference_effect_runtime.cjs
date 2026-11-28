@@ -347,6 +347,9 @@ function scopeHealTargets(p,o,plan){
 }
 function handFlowAvailable(p,o,plan){
  if(plan.mode==='resetOpponent')return o.hand.length+o.deck.length>0;
+ if(plan.mode==='resetOpponentCount')return o.hand.length>0&&o.deck.length>0;
+ if(plan.mode==='resetBothSingleCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
+ if(plan.mode==='opponentMegaCount')return p.deck.length>0&&field(o).some(isMegaEvolutionEx);
  if(plan.mode==='bothDraw')return p.deck.length+o.deck.length>0;
  if(plan.mode==='revealCount')return p.deck.length>0&&o.hand.some(c=>c.kind==='pokemon');
  if(plan.mode==='resetBothCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
@@ -1312,6 +1315,19 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_HAND_FLOW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(plan.mode==='resetOpponent')resetHand(g,o,plan.amount,plan.bottom);
+   if(plan.mode==='resetOpponentCount')resetHand(g,o,o.hand.length,true);
+   if(plan.mode==='opponentMegaCount')draw(g,p,field(o).filter(isMegaEvolutionEx).length);
+   if(plan.mode==='resetBothSingleCoin'){
+    // Complete both returns and shuffles before the single actor-owned coin.
+    for(const side of [p,o]){
+     const cards=side.hand.splice(0);side.deck.push(...cards);
+     event(g,side.id,'RETURN_TO_DECK',{cardIds:cards.map(id),bottomOnly:false});
+     shuffle(g,side);
+    }
+    const heads=coin(g,actor);
+    draw(g,p,heads?plan.amount:plan.tails);
+    draw(g,o,heads?plan.opponentHeads:plan.opponentTails);
+   }
    if(plan.mode==='bothDraw'){draw(g,p,plan.amount);draw(g,o,plan.amount);}
    if(plan.mode==='resetOwnMatch')resetHand(g,p,o.hand.length);
    if(plan.mode==='revealCount'){event(g,actor,'REVEAL',{cardIds:o.hand.map(id),fromZone:'hand',privateTo:actor});draw(g,p,o.hand.filter(c=>c.kind==='pokemon').length);}
