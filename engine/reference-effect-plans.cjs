@@ -215,6 +215,17 @@ function additionalAttackPlan(entry,text){
   const boardBonus=text.match(/^(.+)、([1-9]\d{0,2})ダメージ追加。$/);
   if(boardBonus){
    const clause=boardBonus[1],bonus=Number(boardBonus[2]);
+   const fieldThreshold=clause.match(/^自分の場に\[([草炎水雷超闘悪鋼])\]エネルギーが([1-9]\d?)個以上あるなら$/);
+   const activeThreshold=clause.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーが([1-9]\d?)個以上ついているなら$/);
+   const discardEnergy=clause.match(/^自分のトラッシュに「基本\[([草炎水雷超闘悪鋼])\]エネルギー」が([1-9]\d?)枚以上あるなら$/);
+   const discardAbility=clause.match(/^自分のトラッシュに、特性「([^「」]{1,40})」を持つポケモンが([1-9]\d?)枚以上あるなら$/);
+   if(fieldThreshold||activeThreshold||discardEnergy||discardAbility){
+    const predicate=fieldThreshold?'ownFieldTypedThreshold':activeThreshold?'ownActiveTypedThreshold':discardEnergy?'discardBasicThreshold':'discardAbilityThreshold';
+    const match=fieldThreshold||activeThreshold||discardEnergy||discardAbility;
+    return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate,base,bonus,threshold:Number(match[2]),...(discardAbility?{name:match[1]}:{type:match[1]}),sharedWording:true};
+   }
+   const namedDiscard=clause.match(/^自分のトラッシュに「([^「」]{1,40})」があるなら$/);
+   if(namedDiscard)return {mechanic:'MASS_BOARD_BONUS',commands:['DAMAGE'],predicate:'discardNamed',base,bonus,name:namedDiscard[1],sharedWording:true};
    const patterns=[
     ['healedThisTurn',/^この番に?、このポケモンのHPを回復していたなら$/],
     ['evolvedFromThisTurn',/^この番に?、このポケモンが「([^「」]{1,40})」から進化していたなら$/,'name'],

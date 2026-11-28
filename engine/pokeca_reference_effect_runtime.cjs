@@ -408,6 +408,11 @@ function boardBonusApplies(g,p,o,plan){
   case 'opponentPrizesExact':return o.prizes===plan.threshold;
   case 'ownDeckAtMost':return p.deck.length<=plan.threshold;
   case 'allDamagedBench':return p.bench.length>0&&p.bench.every(c=>c.damage>0);
+  case 'ownFieldTypedThreshold':return field(p).reduce((n,c)=>n+energyUnits(c).filter(u=>u.includes(plan.type)).length,0)>=plan.threshold;
+  case 'ownActiveTypedThreshold':return energyUnits(p.active).filter(u=>u.includes(plan.type)).length>=plan.threshold;
+  case 'discardBasicThreshold':return p.discard.filter(c=>basicEnergy(c)&&c.energyType===plan.type).length>=plan.threshold;
+  case 'discardAbilityThreshold':return p.discard.filter(c=>c.kind==='pokemon'&&record(c)?.abilities.some(a=>a.name===plan.name)).length>=plan.threshold;
+  case 'discardNamed':return p.discard.some(c=>record(c)?.name===plan.name);
   case 'ownBenchNamedDamaged':return p.bench.some(c=>record(c).name===plan.name&&c.damage>0);
   case 'opponentFieldType':return field(o).some(c=>record(c).facts.types.includes(plan.type));
   case 'ownRemainingHp':return p.active.hp-p.active.damage<=plan.threshold;
