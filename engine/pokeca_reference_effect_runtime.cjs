@@ -1474,6 +1474,19 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
+  case 'ATTACK_COIN_PER_TARGET':{
+   // Roll once per physical opponent Pokemon before applying damage; damage
+   // prevention and its own coin effects must not change the target-roll order.
+   const targets=field(o).filter(mon=>coin(g,actor));
+   for(const mon of targets)damage(g,actor,mon,plan.amount,{bench:mon!==o.active});
+   break;
+  }
+  case 'ATTACK_NAMED_STADIUM_SPREAD':{
+   damage(g,actor,o.active,Number(effect.damage));
+   if(g.stadium&&record(g.stadium).name.includes(plan.name))
+    for(const mon of o.bench)damage(g,actor,mon,plan.amount,{bench:true});
+   break;
+  }
   case 'ATTACK_SPREAD_DAMAGE':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(plan.discardAttached!==undefined){

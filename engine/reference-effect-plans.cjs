@@ -450,6 +450,10 @@ function additionalAttackPlan(entry,text){
  if(discardSpread&&/^\d+$/.test(printed)&&((discardSpread[4]==='にも')===(base>0))&&!(discardSpread[2]==='相手のポケモン'&&base>0))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:[...new Set([...deal,'DISCARD','DAMAGE'])],scope:discardSpread[2]==='相手のポケモン'?'opponent':'opponentBench',count:Number.parseInt(discardSpread[3],10),amount:Number(discardSpread[5]),discardAttached:discardSpread[1]==='すべて'?'all':Number.parseInt(discardSpread[1],10),sharedWording:true};
  // Exact scoped spread effects; do not treat damage counters as damage.
+ const coinPerTarget=text.match(/^相手のポケモン全員に対して、それぞれ1回ずつコインを投げ、オモテが出たポケモン全員に、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(coinPerTarget&&printed==='0')return {mechanic:'ATTACK_COIN_PER_TARGET',commands:['COIN_FLIP','DAMAGE'],amount:Number(coinPerTarget[1]),sharedWording:true};
+ const namedStadiumSpread=text.match(/^名前に「([^」]+)」とつくスタジアムが場に出ているなら、相手のベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(namedStadiumSpread&&base>0&&/^\d+$/.test(printed))return {mechanic:'ATTACK_NAMED_STADIUM_SPREAD',commands:['DAMAGE'],name:namedStadiumSpread[1],amount:Number(namedStadiumSpread[2]),sharedWording:true};
  const conditionalDamagedSpread=text.match(/^ダメカンがのっている(相手の|おたがいの)ベンチポケモン(全員|[1-5]匹)にも、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(conditionalDamagedSpread&&base>0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:conditionalDamagedSpread[1]==='相手の'?'opponentBench':'bothBench',filter:'damaged',count:conditionalDamagedSpread[2]==='全員'?null:Number.parseInt(conditionalDamagedSpread[2],10),amount:Number(conditionalDamagedSpread[3]),sharedWording:true};
  const bothSpread=text.match(/^おたがいのベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);

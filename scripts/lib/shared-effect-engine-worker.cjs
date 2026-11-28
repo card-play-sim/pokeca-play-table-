@@ -588,6 +588,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type)&&!r.abilities.length,'bench');
  }
  if(m==='ATTACK_RETURN_SELF_DECK')reserve(r=>mon(r,null,0)&&!r.abilities.length,'bench');
+ if(['ATTACK_COIN_PER_TARGET','ATTACK_NAMED_STADIUM_SPREAD'].includes(m)){
+  const valid=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.length>0&&r.attacks.every(a=>a.plan);
+  const active=reserve(valid,'active',1),bench=reserve(valid,'bench',1),spare=reserve(valid,'bench',1);
+  if(!active||!bench||!spare)return Object.assign(requirements,{spreadBlocked:'NO_SPREAD_TARGET_RESOURCES'});
+  if(m==='ATTACK_NAMED_STADIUM_SPREAD'){
+   const stadium=reserve(r=>r.category==='stadium'&&r.mainPlan&&r.name.includes(plan.name),'deck');
+   if(!stadium)return Object.assign(requirements,{spreadBlocked:'NO_NAMED_STADIUM_RESOURCE'});
+  }
+ }
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='basic'){
   // Reserve an exact, ability-free basic defender before the fixture chooses
   // its default (which may be evolved). Preserve a separate bench for promotion.
@@ -1997,6 +2006,17 @@ function prepare(r, e, kind) {
     const other=frame.game.players[1];
     if(!other.bench.length||!other.prizeCards.length)return {blocked:'NO_PRIZE_SCALED_BENCH_FIXTURE'};
     other.hand.push(other.prizeCards.pop());other.prizes--;
+  }
+  if(['ATTACK_COIN_PER_TARGET','ATTACK_NAMED_STADIUM_SPREAD'].includes(m)){
+    const g=frame.game,own=g.players[0],other=g.players[1];
+    if(other.bench.length<2||[other.active,...other.bench].some(c=>E.getReferenceEffectRecord(c).abilities.length))return {blocked:'NO_CLEAN_MULTI_TARGET_SPREAD_FIXTURE'};
+    if(m==='ATTACK_NAMED_STADIUM_SPREAD'){
+      const eligible=c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c)?.name.includes(e.plan.name);
+      const zone=[own.deck,own.hand,own.discard].find(z=>z.some(eligible));
+      if(!zone)return {blocked:'NO_NAMED_STADIUM_FIXTURE'};
+      if(g.stadium)return {blocked:'EXISTING_STADIUM_FIXTURE'};
+      g.stadium=zone.splice(zone.findIndex(eligible),1)[0];g.stadiumOwner=own.id;
+    }
   }
   if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const own=frame.game.players[0],energy=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
@@ -4037,6 +4057,40 @@ function verifyCase(t, e) {
       assert.deepEqual(S.identities(start),S.identities(end));
       assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
     }
+  }
+  if(e.plan.mechanic==='ATTACK_COIN_PER_TARGET'){
+    const q=e.plan,action=t.action||o.action,side=before.players[1],pool=[side.active,...side.bench],seeds=new Map();
+    if(pool.length<3)return {status:'BLOCKED',reason:'NO_MULTI_TARGET_COIN_FIXTURE'};
+    for(let seed=0;seed<100000&&seeds.size<2**pool.length;seed++){
+      let state=seed,bits='';for(let i=0;i<pool.length;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;bits+=state<0x80000000?'1':'0';}
+      if(!seeds.has(bits))seeds.set(bits,seed);
+    }
+    assert.equal(seeds.size,2**pool.length);
+    for(const [bits,seed] of seeds){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length).map(x=>x.details);
+      const flips=events.filter(x=>x?.command==='COIN_FLIP'&&typeof x.heads==='boolean');
+      assert.equal(flips.map(x=>x.heads?'1':'0').join(''),bits);
+      const hits=events.filter(x=>x?.command==='DAMAGE'&&pool.some(c=>c.id===x.targetInstanceId));
+      assert.deepEqual(hits.map(x=>x.targetInstanceId),pool.filter((c,i)=>bits[i]==='1').map(c=>c.id));
+      if(bits[0]==='1')verifyPrintedAttack(start,end,e,q.amount);
+      assert(hits.filter(x=>x.targetInstanceId!==side.active.id).every(x=>x.amount===q.amount));
+      assert.deepEqual(S.identities(start),S.identities(end));
+    }
+  }
+  if(e.plan.mechanic==='ATTACK_NAMED_STADIUM_SPREAD'){
+    const q=e.plan,action=t.action||o.action,bench=before.players[1].bench;
+    if(!bench.length||!before.stadium)return {status:'BLOCKED',reason:'NO_NAMED_SPREAD_FIXTURE'};
+    assert(E.getReferenceEffectRecord(before.stadium).name.includes(q.name));
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    assert(bench.every(c=>effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===c.id&&ev.amount===q.amount)));
+    const absent=JSON.parse(JSON.stringify(before)),owner=absent.players.find(p=>p.id===absent.stadiumOwner);
+    owner.deck.push(absent.stadium);absent.stadium=null;absent.stadiumOwner=null;
+    const trial=port(absent);assert(trial.dispatch('you',action).ok);
+    const end=trial.getSnapshot();verifyPrintedAttack(absent,end,e,Number(e.damage));
+    assert(!end.history.slice(absent.history.length).some(ev=>ev.details?.command==='DAMAGE'&&bench.some(c=>c.id===ev.details.targetInstanceId)));
+    assert.deepEqual(S.identities(absent),S.identities(end));
   }
   if(e.plan.mechanic==='MASS_COIN_OUTCOME'){
     const q=e.plan,action=t.action||o.action,seeds=new Map();
