@@ -678,6 +678,17 @@ function plan(entry,kind){
  const generic=text.normalize('NFKC');
  if(kind==='MAIN'&&entry.category==='stadium'){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、手札からエネルギーを1枚トラッシュするなら、自分の手札の枚数が、自分の場の[超]ポケモンの数と同じ枚数になるように、山札を引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"psychicDraw","commands":["DISCARD","DRAW"],"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。その場合、自分の番は終わる。")return {"mechanic":"STADIUM_ACTIVE","mode":"healEnd","commands":["HEAL"],"amount":10,"endTurn":true,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のトラッシュから「基本[雷]エネルギー」を2枚まで選び、相手に見せて、手札に加えてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"lightningRecover","commands":["REVEAL","ADD_TO_HAND"],"amount":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の山札からたねポケモンを1枚選び、ベンチに出してよい。そして山札を切る。この効果を使ったなら、自分の番は終わる。")return {"mechanic":"STADIUM_ACTIVE","mode":"basicBench","commands":["SEARCH_DECK","BENCH_FROM_ZONE","SHUFFLE_DECK"],"amount":1,"endTurn":true,"sharedWording":true};
+  if(generic==="この番に、手札から、名前に「ロケット団」とつくサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分の山札を2枚引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"rocketDraw","commands":["DRAW"],"amount":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を2枚トラッシュするなら、自分の山札を1枚引いてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"discardDraw","commands":["DISCARD","DRAW"],"amount":1,"cost":2,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のバトル場の[水]ポケモンを、ベンチの[水]ポケモンと入れ替えてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"waterSwitch","commands":["SWITCH"],"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分のポケモン(「ルールを持つポケモン」をのぞく)全員のHPを、それぞれ「20」回復してよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"nonRuleHeal","commands":["HEAL"],"amount":20,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の山札から「マリィのポケモン」を1枚選び、相手に見せて、手札に加えてよい。そして山札を切る。")return {"mechanic":"STADIUM_ACTIVE","mode":"marnieSearch","commands":["SEARCH_DECK","REVEAL","ADD_TO_HAND","SHUFFLE_DECK"],"amount":1,"sharedWording":true};
+  if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の手札を1枚選び、山札の上にもどしてよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"handTop","commands":["RETURN_TO_DECK"],"sharedWording":true};
+  if(generic==="この番、手札からサポートを出して使っていたプレイヤーは、自分の番ごとに1回、自分のポケモン全員のHPを、それぞれ「10」回復してよい。")return {"mechanic":"STADIUM_ACTIVE","mode":"supporterHeal","commands":["HEAL"],"amount":10,"sharedWording":true};
   if(generic==='おたがいの[草]ポケモン全員は、出したばかりの番(最初の自分の番をのぞく)でも[草]ポケモンに進化できる。')return {mechanic:'STADIUM_GRASS_EVOLUTION',commands:['ADD_STATE'],sharedWording:true};
   if(generic==='おたがいのこんらんのポケモンは、進化・退化してもこんらんが回復しない。')return {mechanic:'STADIUM_CONFUSION_RETENTION',commands:['STATUS_CONDITION'],sharedWording:true};
   if(generic==='おたがいのポケモン(「ルールを持つポケモン」をのぞく)全員は、相手の「ポケモンex・V」からワザのダメージを受けない。このカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。')return {mechanic:'STADIUM_NEUTRAL_CENTER',commands:['PREVENT_DAMAGE','ADD_STATE'],sharedWording:true};

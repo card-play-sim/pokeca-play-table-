@@ -1035,7 +1035,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='EXCITE_DIVE'){assert(p.bench.length<5,'BENCH_FULL');assert(field(p).some(c=>record(c).facts.prizeCount===3&&record(c).facts.types.includes('無色')),'COLORLESS_MEGA_IN_PLAY_REQUIRED');}
  verifyRequests(g,actor,card,a,action);
 }
-function handles(action){return ['evolve','attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
+function handles(action){return ['evolve','use_stadium','attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
 function referenceChoiceAction(choice,value){
  const action={type:'resolve_reference_choice'};
  if(choice.kind==='MULLIGAN')return {...action,drawCount:value};
@@ -1079,6 +1079,85 @@ function retainEvolutionConfusion(g,before){
   event(g,p.id,'STATUS_CONDITION',{targetInstanceId:id(now),status:'CONFUSED',retained:true,sourceOfficialCardId:record(g.stadium).officialCardId});
  }
 }
+function stadiumActivePlan(g){const p=record(g.stadium)?.mainPlan;return p?.mechanic==='STADIUM_ACTIVE'?p:null;}
+function stadiumUseKey(g){return 'stadium:'+id(g.stadium);}
+function stadiumHealTargets(p,plan){return field(p).filter(c=>(c.damage||0)>0&&(plan.mode!=='nonRuleHeal'||!record(c).facts.rulePokemon));}
+function stadiumPsychicCount(p){return field(p).filter(c=>record(c).facts.types.includes('超')).length;}
+function stadiumSupporterUsed(g,actor,rocketOnly=false){
+ return g.history.some(e=>{
+  if(e.turnNumber!==g.turnNumber||e.player!==actor||e.type!=='supporter_used')return false;
+  if(!rocketOnly)return true;
+  const proof=records.get(String(e.details?.referenceOfficialCardId))||record(player(g,actor).discard.find(c=>id(c)===e.details?.cardId));
+  return proof?.category==='supporter'&&proof.name.startsWith('ロケット団');
+ });
+}
+function stadiumCanUse(g,actor){
+ const plan=stadiumActivePlan(g),p=player(g,actor);
+ if(!plan||g.status!=='active'||g.phase!=='main'||g.turnPlayer!==actor||g.attackUsed||g.pendingPrizeSelection||g.pendingReferenceChoice||p.turnLimits?.abilityUses?.[stadiumUseKey(g)])return false;
+ switch(plan.mode){
+  case 'psychicDraw':return p.deck.length>0&&p.hand.some(c=>c.kind==='energy')&&p.hand.length-1<stadiumPsychicCount(p);
+  case 'healEnd':case 'nonRuleHeal':return stadiumHealTargets(p,plan).length>0;
+  case 'lightningRecover':return p.discard.some(c=>basicEnergy(c)&&c.energyType==='雷');
+  case 'basicBench':return p.deck.length>0&&p.bench.length<5;
+  case 'rocketDraw':return p.deck.length>0&&stadiumSupporterUsed(g,actor,true);
+  case 'discardDraw':return p.deck.length>0&&p.hand.length>=plan.cost;
+  case 'waterSwitch':return !!p.active&&record(p.active).facts.types.includes('水')&&p.bench.some(c=>record(c).facts.types.includes('水'));
+  case 'marnieSearch':return p.deck.length>0;
+  case 'handTop':return p.hand.length>0;
+  case 'supporterHeal':return stadiumHealTargets(p,plan).length>0&&stadiumSupporterUsed(g,actor);
+  default:return false;
+ }
+}
+function stadiumActiveRequests(g,actor){
+ const plan=stadiumActivePlan(g),p=player(g,actor);
+ if(!plan||!stadiumCanUse(g,actor))return [];
+ const request=(key,pool,min,max,inspect=false)=>[{key,kind:'CARD',min,max,candidates:copy(pool),...(inspect&&actor==='you'?{inspection:{privateTo:actor,cards:copy(p.deck)}}:{})}];
+ switch(plan.mode){
+  case 'psychicDraw':return request('discard',p.hand.filter(c=>c.kind==='energy'),1,1);
+  case 'discardDraw':return request('discard',p.hand,plan.cost,plan.cost);
+  case 'lightningRecover':{const pool=p.discard.filter(c=>basicEnergy(c)&&c.energyType==='雷');return request('cards',pool,1,Math.min(plan.amount,pool.length));}
+  case 'basicBench':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic);return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
+  case 'marnieSearch':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).name.startsWith('マリィの'));return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
+  case 'waterSwitch':return request('bench',p.bench.filter(c=>record(c).facts.types.includes('水')),1,1);
+  case 'handTop':return request('cards',p.hand,1,1);
+  default:return [];
+ }
+}
+function checkStadiumAction(g,actor,action){
+ assert(id(g.stadium)===action.sourceInstanceId&&stadiumCanUse(g,actor),'STADIUM_EFFECT_NOT_AVAILABLE');
+ const req=stadiumActiveRequests(g,actor);
+ assert(Object.keys(action.selections||{}).every(key=>req.some(r=>r.key===key)),'UNEXPECTED_STADIUM_SELECTION');
+ assert(!action.targetIds?.length,'UNEXPECTED_STADIUM_TARGET');
+ for(const r of req){const chosen=selected(action,r.key);assert(chosen.length>=r.min&&chosen.length<=r.max&&new Set(chosen).size===chosen.length&&chosen.every(i=>r.candidates.some(c=>id(c)===i)),'INVALID_STADIUM_SELECTION:'+r.key);}
+}
+function executeStadiumAction(g,actor,action){
+ checkStadiumAction(g,actor,action);
+ const p=player(g,actor),plan=stadiumActivePlan(g),source=g.stadium,ids=key=>selected(action,key);
+ p.turnLimits||={};p.turnLimits.abilityUses||={};p.turnLimits.abilityUses[stadiumUseKey(g)]=true;
+ g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_used',details:{sourceInstanceId:id(source),sourceOfficialCardId:record(source).officialCardId,mode:plan.mode}});
+ switch(plan.mode){
+  case 'psychicDraw':moveChosen(g,p,'hand',ids('discard'),'discard',false);draw(g,p,stadiumPsychicCount(p)-p.hand.length);break;
+  case 'discardDraw':moveChosen(g,p,'hand',ids('discard'),'discard',false);draw(g,p,plan.amount);break;
+  case 'rocketDraw':draw(g,p,plan.amount);break;
+  case 'healEnd':case 'nonRuleHeal':case 'supporterHeal':for(const mon of stadiumHealTargets(p,plan))heal(g,actor,mon,plan.amount);break;
+  case 'lightningRecover':moveChosen(g,p,'discard',ids('cards'),'hand');break;
+  case 'basicBench':searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});break;
+  case 'marnieSearch':searchSelectedDeck(g,actor,p,ids('cards'));break;
+  case 'waterSwitch':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
+  case 'handTop':{const i=p.hand.findIndex(c=>id(c)===ids('cards')[0]),c=p.hand.splice(i,1)[0];p.deck.unshift(c);event(g,actor,'RETURN_TO_DECK',{cardIds:[id(c)],fromZone:'hand',position:'top',privateTo:actor});break;}
+  default:throw Error('UNKNOWN_STADIUM_ACTIVE_MODE');
+ }
+ refresh(g);functions().Core.resolveKnockouts(g,actor);
+ if(plan.endTurn&&g.status==='active'&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection)functions().Core.endTurn(g,actor);
+ else if(plan.endTurn&&g.status==='active')g.referenceAttackTurnPending=actor;
+}
+function stadiumActions(g,actor){
+ if(!stadiumCanUse(g,actor))return [];
+ const r=record(g.stadium);
+ // Reuse the existing declaration menu renderer and request picker. This
+ // action is not a Pokémon Ability, and is not subject to Ability lock.
+ return [{kind:'ability',label:'スタジアム：'+r.name,action:{type:'use_stadium',sourceInstanceId:id(g.stadium)},requests:stadiumActiveRequests(g,actor),referenceEffect:{name:r.name,effectId:'stadium:'+r.officialCardId,plan:r.mainPlan,text:r.text}}];
+}
 function preflight(g,actor,action){
  if(!g.referenceEffectValidation)return null;
  try{
@@ -1118,6 +1197,8 @@ function preflight(g,actor,action){
    }
    assert(pays(mon,cost(g,mon,a)),'INSUFFICIENT_VERIFIED_ENERGY');verifyRequests(g,actor,mon,a,action);
 
+  }else if(action.type==='use_stadium'){
+   checkStadiumAction(g,actor,action);
   }else if(action.type==='evolve'){
    const errors=withForestTiming(copy(g),actor,action,state=>require('./pokeca_mobile_rules').check(state,actor,action));assert(!errors.length,errors.join(' / '));
   }else if(action.type==='use_ability'){
@@ -2338,6 +2419,8 @@ function execute(g,actor,action){
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
+ }else if(action.type==='use_stadium'){
+  executeStadiumAction(g,actor,action);
  }else if(action.type==='evolve'){
   withForestTiming(g,actor,action,state=>require('./pokeca_mobile_rules').execute(state,actor,action));
  }else if(action.type==='attach_energy'){
@@ -2354,8 +2437,8 @@ function execute(g,actor,action){
   const i=p.hand.findIndex(c=>id(c)===action.cardId),card=p.hand.splice(i,1)[0],r=record(card);
   if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
   else if(action.type==='play_stadium'){
-   if(g.stadium)player(g,g.stadiumOwner).discard.push(g.stadium);g.stadium=card;g.stadiumOwner=actor;g.stadiumPlayedTurn=g.turnNumber;g.stadiumPlayedBy=actor;emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_played',details:{cardId:id(card),cardName:card.name}});
-  }else {p.discard.push(card);if(action.type==='play_supporter'){p.turnLimits||={};p.turnLimits.supporterUsed=true;}applyPlan(g,actor,card,{plan:r.mainPlan},action);}
+   if(g.stadium)player(g,g.stadiumOwner).discard.push(g.stadium);g.stadium=card;g.stadiumOwner=actor;g.stadiumPlayedTurn=g.turnNumber;g.stadiumPlayedBy=actor;if(r.mainPlan.mechanic==='STADIUM_ACTIVE')event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,stadiumPlaced:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_played',details:{cardId:id(card),cardName:card.name}});
+  }else {p.discard.push(card);if(action.type==='play_supporter'){p.turnLimits||={};p.turnLimits.supporterUsed=true;}applyPlan(g,actor,card,{plan:r.mainPlan},action);if(action.type==='play_supporter')g.history.push({turnNumber:g.turnNumber,player:actor,type:'supporter_used',details:{cardId:id(card),cardName:r.name,referenceOfficialCardId:r.officialCardId}});}
   refresh(g);functions().Core.resolveKnockouts(g,actor);
  }
  return {referenceEffect:true,adoptedPrint:false};
@@ -2393,9 +2476,11 @@ function onEndTurn(g,actor){
 // Produce complete effect-specific choices only; the existing inspector checks every candidate.
 function abilityActions(g,actor,card){return (record(card)?.abilities||[]).filter(a=>!passive.has(a.plan?.mechanic)).map(a=>({kind:'ability',label:a.name,action:{type:'use_ability',sourceInstanceId:id(card),abilityId:a.effectId},requests:requests(g,actor,card,a),referenceEffect:a}));}
 function pokemonActions(g,actor,ident){
+ if(g.stadium&&id(g.stadium)===ident)return stadiumActions(g,actor);
  const p=player(g,actor),mon=field(p).find(c=>id(c)===ident);if(!mon)return [];
  const out=abilityActions(g,actor,mon);
  if(p.active===mon){
+  out.push(...stadiumActions(g,actor));
   record(mon).attacks.forEach((a,index)=>out.push({kind:'attack',label:a.name,damage:Number.parseInt(a.damage,10)||0,action:{type:'attack_turn',attackIndex:index},requests:requests(g,actor,mon,a),referenceEffect:a}));
   for(const target of p.bench){
    if(mon.referenceCannotRetreatTurn===g.turnNumber)break;
@@ -2458,6 +2543,7 @@ function completeAction(g,actor,option){
    action.selections[r.key]=eligible;
   }
  }
+ if(action.type==='use_stadium')return action;
  const card=action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
@@ -2540,11 +2626,11 @@ function projectView(view,viewer){
 }
 function plannedCommands(g,actor,action){
  if(!g.referenceEffectValidation)return [];
- const p=player(g,actor),card=action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
+ const p=player(g,actor),card=action.type==='use_stadium'?g.stadium:action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const r=record(card);if(!r)return [];
  const effect=action.type==='attack_turn'?r.attacks[action.attackIndex]:action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
  if(!connected(effect?.plan))return [];
- return effect.plan.commands.map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
+ return (action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
 }
 function statuses(g){
  if(!g.referenceEffectValidation)return [];
@@ -2575,4 +2661,4 @@ function cardInfo(g,actor,ident){
  return {instanceId:ident,entries,referenceOfficialCardId:r.officialCardId,officialPageUrl:r.officialPageUrl,deckPrintAdopted:false};
 }
 function coverage(){return {prints:catalog.records.length,defaults:Object.entries(catalog.defaultValidationReferences).map(([name,ident])=>{const r=records.get(ident);return {name,officialCardId:ident,deckPrintAdopted:false,unconnected:[...r.attacks,...r.abilities].filter(e=>!connected(e.plan)).map(e=>e.name),mainConnected:r.category==='pokemon'||connected(r.mainPlan)};})};}
-module.exports={reduced,promoteReferenceBench,catalog,fullCatalog,referenceRecord:ident=>records.get(String(ident)),record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages,referenceChoiceAction};
+module.exports={stadiumActions,reduced,promoteReferenceBench,catalog,fullCatalog,referenceRecord:ident=>records.get(String(ident)),record,connected,preflight,handles,execute,refresh,afterAction,onEndTurn,pokemonActions,handOptions,completeAction,blockers,coverage,validateGame,projectView,plannedCommands,statuses,cardInfo,energyUnits,damage,damages,referenceChoiceAction};
