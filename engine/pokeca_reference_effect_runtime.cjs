@@ -356,6 +356,7 @@ function scopeHealTargets(p,o,plan){
  const targets=plan.scope==='both'?[...field(p),...field(o)]:plan.scope==='active'?[p.active]:plan.scope==='bench'?p.bench:field(p).filter(c=>record(c).facts.basic);
  return targets.filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
 }
+function trainerConfusionTargets(p,o,plan){return [p.active,o.active].filter(c=>c&&!record(c).facts.types.includes(plan.exceptType)&&c.statusCondition!=='CONFUSED');}
 function handFlowAvailable(p,o,plan){
  if(plan.mode==='resetOpponent')return o.hand.length+o.deck.length>0;
  if(plan.mode==='resetOpponentCount')return o.hand.length>0&&o.deck.length>0;
@@ -1061,6 +1062,7 @@ function preflight(g,actor,action){
     fieldDiscardSelection(g,p,o,card,r.mainPlan,action);
    }
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>r.mainPlan.anyEnergy||e.isSpecial)),'NO_OPPONENT_ENERGY_TARGET');
+   if(m==='TRAINER_BOTH_ACTIVE_CONFUSE')assert(trainerConfusionTargets(p,o,r.mainPlan).length>0,'NO_ELIGIBLE_ACTIVE_CONFUSION_TARGET');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
    if(m==='SUPPORTER_ROCKET_SWITCH_BOTH')assert(record(p.active).name.startsWith('ロケット団の')&&p.bench.some(c=>record(c).name.startsWith('ロケット団の')),'ROCKET_SWITCH_REQUIREMENT');
    if(m==='SUPPORTER_BASIC_SWITCH_CONFUSE')assert(o.bench.some(c=>record(c).facts.basic),'NO_OPPONENT_BASIC_BENCH');
@@ -2039,6 +2041,12 @@ function applyPlan(g,actor,card,effect,action){
   case 'ACTIVE_TOP_SUPPORTER_SEARCH':case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':searchSelectedDeck(g,actor,p,ids('cards'));p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
+  case 'TRAINER_BOTH_ACTIVE_CONFUSE':{
+   const targets=trainerConfusionTargets(p,o,plan);
+   assert(targets.length>0,'NO_ELIGIBLE_ACTIVE_CONFUSION_TARGET');
+   for(const target of targets){target.statusCondition='CONFUSED';event(g,actor,'STATUS_CONDITION',{targetInstanceId:id(target),status:'CONFUSED'});}
+   break;
+  }
   case 'TRAINER_SWITCH_BOTH':
    chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
    if(p.bench.length)chooseBenchSwitch(g,actor,p,ids('ownBench')[0]);

@@ -582,6 +582,12 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(['TOOL_EX_ATTACK_BOOST','TOOL_STATUS_ATTACK_BOOST'].includes(m)&&attack)reserve(r=>r.category==='pokemon'&&r.facts.basic&&(m!=='TOOL_EX_ATTACK_BOOST'||r.name.endsWith('ex'))&&!r.abilities.length&&r.facts.hp>Number(attack.damage)+plan.amount&&!r.facts.weakness?.types.some(t=>target.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>target.facts.types.includes(t)),'active',1);
   }
  }
+ if(m==='TRAINER_BOTH_ACTIVE_CONFUSE'){
+  for(const side of [0,1]){
+   const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
+   if(!reserve(r=>plain(r)&&!r.facts.types.includes(plan.exceptType),'active',side)||!reserve(r=>plain(r)&&r.facts.types.includes(plan.exceptType),'bench',side))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_CONFUSION_TYPE_FIXTURE'});
+  }
+ }
  if(m==='TRAINER_DISCARD_FIELD_CARDS'){
   const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
   for(const side of [0,1]){
@@ -2494,6 +2500,32 @@ function verifyCase(t, e) {
     const invalid=port(before);
     assert.equal(invalid.dispatch("you",{...action,selections:{energy:["unknown-attached-energy"]}}).ok,false);
     assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+  }
+  if(e.plan.mechanic==='TRAINER_BOTH_ACTIVE_CONFUSE'){
+    const action=t.action||o.action,q=e.plan;
+    for(const mask of [0,1,2,3]){
+      const start=structuredClone(before);
+      for(const [index,side] of start.players.entries()){
+        const types=c=>E.getReferenceEffectRecord(c).facts.types;
+        assert(!types(side.active).includes(q.exceptType));
+        const dark=side.bench.findIndex(c=>types(c).includes(q.exceptType));
+        assert(dark>=0,'NO_EXACT_DARK_CONFUSION_FIXTURE');
+        if(mask&(1<<index))[side.active,side.bench[dark]]=[side.bench[dark],side.active];
+      }
+      const replay=port(start),snapshot=replay.getSnapshot(),result=replay.dispatch('you',action);
+      assert.equal(result.ok,mask!==3);
+      const end=replay.getSnapshot();
+      if(mask===3){assert.equal(JSON.stringify(end),JSON.stringify(snapshot));continue;}
+      for(const [index,side] of end.players.entries()){
+        const prev=snapshot.players[index];
+        assert.equal(side.active.id,prev.active.id);
+        assert.equal(side.active.damage,prev.active.damage);
+        assert.equal(side.active.statusCondition,mask&(1<<index)?prev.active.statusCondition:'CONFUSED');
+        assert.deepEqual(Array.from(side.bench,c=>[c.id,c.statusCondition]),Array.from(prev.bench,c=>[c.id,c.statusCondition]));
+      }
+      assert.equal(end.history.slice(snapshot.history.length).filter(ev=>ev.details?.command==='STATUS_CONDITION'&&!ev.details.reference).length,mask===0?2:1);
+      assert.deepEqual(S.identities(snapshot),S.identities(end));
+    }
   }
   if(e.plan.mechanic==='MASS_EFFECT_SEQUENCE'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],other=before.players[1],resolved=after.players[0];
