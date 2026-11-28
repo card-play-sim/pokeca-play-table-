@@ -25,11 +25,11 @@ for(const [name,category,mechanic,amount,...ids] of groups)for(const officialCar
  assert.notEqual(compile({records:[{...row,text:text+'追加条件。'}]}).records[0].mainPlan?.mechanic,mechanic);
  rows.push({...row,mainPlan:p});
 }
-const mon=(id,name,type,mega=false,weakness=null)=>({officialCardId:id,name,deckName:name,category:'pokemon',attacks:[],abilities:[],rulesText:mega?'メガシンカexがきぜつしたとき':'',facts:{types:[type],stage:0,basic:true,hp:400,retreatCost:3,prizeCount:1,weakness},set:'test',cardNumber:id,source:{sha256:'test'},imageSourceUrl:'test'});
+const mon=(id,name,type,mega=false,weakness=null)=>({officialCardId:id,name,deckName:name,category:'pokemon',attacks:[],abilities:[],rulesText:[],facts:{types:[type],stage:0,basic:true,hp:400,retreatCost:3,rulePokemon:mega,prizeCount:mega?3:1,weakness},set:'test',cardNumber:id,source:{sha256:'test'},imageSourceUrl:'test'});
 const card=(r,id)=>({id,name:r.name,kind:r.category,hp:400,damage:0,energyCards:[],tools:[],validationReference:{officialCardId:r.officialCardId,officialName:r.name,set:r.set,cardNumber:r.cardNumber,sourceSha256:r.source.sha256,imageSourceUrl:r.imageSourceUrl,adopted:false}});
 const source=fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8');
 function fixture(row,{type='悪',team=true,mega=true,weak=true,bench=false,jam=false,damaged=false}={}){
- const a=mon('a','attacker','草',mega),d=mon('d',team?'ロケット団のポケモン':'other',type,false,weak?{types:['草'],value:'×2'}:null),o=mon('other','other','無色');
+ const a=mon('a',mega?'メガテストex':'attacker','草',mega),d=mon('d',team?'ロケット団のポケモン':'other',type,false,weak?{types:['草'],value:'×2'}:null),o=mon('other','other','無色');
  const j={...mon('jam','jam','無色'),category:'stadium',mainPlan:{mechanic:'JAMMING'}};
  const catalog={records:[a,d,o,j,...rows]},box={module:{exports:{}},require:n=>{
  if(n==='./pokeca_reference_effect_data')return catalog;
