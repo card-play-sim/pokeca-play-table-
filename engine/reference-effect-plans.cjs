@@ -436,6 +436,9 @@ function additionalAttackPlan(entry,text){
  const moveBenchCounters=text.match(/^自分のベンチ(?:の「(ロケット団|ナンジャモ|シロナ|ホップ|カスミ|ヒビキ|リーリエ|N)のポケモン」|ポケモン)を1匹選び、選んだポケモンにのっているダメカンをすべて、相手の(ポケモン1匹|バトルポケモン)にのせ替える。$/);
  if(moveBenchCounters&&/^\d+$/.test(printed))
   return {mechanic:'ATTACK_MOVE_BENCH_COUNTERS',commands:[...deal,'MOVE_DAMAGE_COUNTERS'],team:moveBenchCounters[1]||null,targetActive:moveBenchCounters[2]==='バトルポケモン',sharedWording:true};
+ const selectedEnergyDamage=text.match(/^相手のポケモン1匹に、このポケモンについている(?:\[([草炎水雷超闘悪鋼])\])?エネルギーの数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ const selectedFixedDamage=text.match(/^相手のポケモン1匹に、([1-9]\d{0,2})ダメージ。このワザのダメージは弱点・抵抗力を計算しない。$/);
+ if(printed==='0'&&(selectedEnergyDamage||selectedFixedDamage))return {mechanic:'ATTACK_SELECTED_ENERGY_DAMAGE',commands:['DAMAGE'],...(selectedEnergyDamage?{type:selectedEnergyDamage[1]||null,unit:Number(selectedEnergyDamage[2])}:{amount:Number(selectedFixedDamage[1]),skipWeakness:true,skipResistance:true}),sharedWording:true};
  const chosenCounters=text.match(/^相手のポケモン1匹に、そのポケモンにのっているダメカンの数×([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(chosenCounters&&printed==='0')
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:'opponent',count:1,counterUnit:Number(chosenCounters[1]),sharedWording:true};

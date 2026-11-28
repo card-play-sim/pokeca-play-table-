@@ -472,7 +472,7 @@ function requests(g,actor,card,effect){
   if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(deckWindow(p.deck,scope))};
  };
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
- if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
+ if(m==='ANY_DAMAGE'||m==='ATTACK_SELECTED_ENERGY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&effect.plan.mode==='chosenCounters'){
   const eligible=opp.filter(c=>directKnockoutEligible(c,effect.plan));
   add('targetIds','POKEMON',eligible.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,eligible.length),Math.min(1,eligible.length));
@@ -1472,6 +1472,13 @@ function applyPlan(g,actor,card,effect,action){
     const count=source.damage/10;
     moveDamageCounters(g,actor,source,defender,count,{attack:true,max:count});
    }
+   break;
+  }
+  case 'ATTACK_SELECTED_ENERGY_DAMAGE':{
+   const mon=field(o).find(c=>id(c)===action.targetIds?.[0]);
+   assert(mon,'SELECTED_DAMAGE_TARGET_REQUIRED');
+   const amount=plan.unit?energyUnits(card).filter(unit=>!plan.type||unit.includes(plan.type)).length*plan.unit:plan.amount;
+   damage(g,actor,mon,amount,{bench:mon!==o.active,skipWeakness:plan.skipWeakness,skipResistance:plan.skipResistance});
    break;
   }
   case 'ATTACK_COIN_PER_TARGET':{
