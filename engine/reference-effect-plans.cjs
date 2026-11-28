@@ -683,7 +683,7 @@ function plan(entry,kind){
   const exact=(name,cost,damage,body)=>a.name===name&&JSON.stringify(a.cost)===JSON.stringify(cost)&&String(a.damage)===damage&&norm(a.text)===body;
   if(generic===grant&&entry.name==='メガレックウザキャップ'&&exact('デルタギフト',['無色'],'0','「メガレックウザキャップ」がついている自分のポケモン全員に、山札から基本エネルギーを1枚ずつつける。そして山札を切る。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],sharedWording:true};
   if(generic===named&&entry.name==='コアメモリ'&&exact('ジオバスター',['闘','闘','闘','闘'],'350','このポケモンについているエネルギーを、すべてトラッシュする。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],holderName:'メガジガルデex',sharedWording:true};
-  if(generic===expires&&entry.name==='ワザマシンフローライト'&&exact('フローライト',['草','水','超'],'0','このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],endTurnDiscard:true,sharedWording:true};
+  if(generic===expires&&entry.name==='ワザマシン フローライト'&&exact('フローライト',['草','水','超'],'0','このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],endTurnDiscard:true,sharedWording:true};
  }
  if(kind==='ATTACK'&&entry.name==='デルタギフト'&&generic==='「メガレックウザキャップ」がついている自分のポケモン全員に、山札から基本エネルギーを1枚ずつつける。そして山札を切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',target:'own',toolName:'メガレックウザキャップ',limit:9,oneEach:true,multi:true,sharedWording:true};
  if(kind==='ATTACK'&&entry.name==='フローライト'&&generic==='このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。')return {mechanic:'TOOL_ATTACK_TERA_HEAL',commands:['DISCARD','HEAL'],sharedWording:true};
