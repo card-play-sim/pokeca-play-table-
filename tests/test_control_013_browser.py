@@ -766,6 +766,12 @@ async def main():
     assert {c['id'] for c in old['energyCards']}<={c['id'] for c in after['players'][0]['hand']}
    if m=='MASS_ZONE_TRANSFER':
     plan=f['e']['plan'];picked=set(option['action']['selections']['cards'])
+    if plan.get('onlyHandCard') or plan.get('emptyHand'):
+     assert len(before['players'][0]['hand'])==(1 if plan.get('onlyHandCard') else 0)
+    if plan.get('privateSearch'):
+     assert not any(ev.get('details',{}).get('command')=='REVEAL' and picked.intersection(ev['details'].get('cardIds',[])) for ev in events)
+    if plan.get('firstTurnAllowed'):
+     assert await page.evaluate("cs=>cs.every(c=>{const r=Pokeca.getReferenceEffectRecord(c);return r.facts.basic&&r.name.startsWith('ロケット団の')})",[c for c in before['players'][0]['deck'] if c['id'] in picked])
     if plan.get('requiresTera'):
      assert before['players'][0]['active']['referenceEvolutionWindow']==before['referenceActionSequence']
      own=before['players'][0]

@@ -907,28 +907,6 @@
       "effectSlots": 4
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6507CA5716C580AEA428",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "47488",
-        "47527",
-        "48702",
-        "49451"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47488.json",
-        "data/effect-extensions/evidence/47527.json",
-        "data/effect-extensions/evidence/48702.json",
-        "data/effect-extensions/evidence/49451.json"
-      ],
-      "printCount": 4,
-      "effectSlots": 4
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_6C0891166FFCCC4A8295",
       "category": "item",
       "effectKind": "item",
@@ -2819,26 +2797,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E6F0B26A88FFAA4BA38C",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45936",
-        "46062",
-        "46068"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45936.json",
-        "data/effect-extensions/evidence/46062.json",
-        "data/effect-extensions/evidence/46068.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E887842AE7C0F49FAE1F",
       "category": "pokemon",
       "effectKind": "attack",
@@ -3336,24 +3294,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/46421.json",
         "data/effect-extensions/evidence/46648.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_10EF3FE0A7C096FAC387",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50287",
-        "50313"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50287.json",
-        "data/effect-extensions/evidence/50313.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -13313,5 +13253,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1271
+  "unfinishedPrints": 1267
 }

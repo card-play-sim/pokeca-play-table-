@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
-  "classifiedRegistryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
+  "registryHash": "b4312d25181df96c6dcd6af587ff5103d300a351254788146ee4950f396dfc93",
+  "classifiedRegistryHash": "b4312d25181df96c6dcd6af587ff5103d300a351254788146ee4950f396dfc93",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,8 +14,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 266,
-      "notImplemented": 108,
+      "compiled": 273,
+      "notImplemented": 101,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
@@ -42,8 +42,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2672,
-      "notImplemented": 982,
+      "compiled": 2674,
+      "notImplemented": 980,
       "blocked": 22,
       "executionVerifiedPrints": 743
     },
@@ -3224,21 +3224,6 @@
       }
     },
     {
-      "officialCardId": "45936",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45936.json",
-        "sha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
-        "htmlSha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
-      }
-    },
-    {
       "officialCardId": "45937",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -3539,21 +3524,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46062",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46062.json",
-        "sha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
-        "htmlSha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
-      }
-    },
-    {
       "officialCardId": "46063",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -3566,21 +3536,6 @@
         "sha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "htmlSha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "textSha256": "7707492c5e4733f46c4b8e51692d2e33a1007e5112425c66b384fbb9635e6771"
-      }
-    },
-    {
-      "officialCardId": "46068",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46068.json",
-        "sha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
-        "htmlSha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
       }
     },
     {
@@ -5059,11 +5014,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50287",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50288",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5240,11 +5190,6 @@
     },
     {
       "officialCardId": "50311",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50313",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6473,21 +6418,6 @@
       }
     },
     {
-      "officialCardId": "47488",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47488.json",
-        "sha256": "32abcfa15b6eba99e81470bfda47e7a1a84ac98bbcd3291c4a1e917c180e936a",
-        "htmlSha256": "32abcfa15b6eba99e81470bfda47e7a1a84ac98bbcd3291c4a1e917c180e936a",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
-      }
-    },
-    {
       "officialCardId": "47490",
       "name": "ロケット団のファクトリー",
       "category": "stadium",
@@ -6545,21 +6475,6 @@
         "sha256": "f362651f4fe36838cc52add1e727a5dc5d9b86ac4ee2aafe20d457032dab97db",
         "htmlSha256": "f362651f4fe36838cc52add1e727a5dc5d9b86ac4ee2aafe20d457032dab97db",
         "textSha256": "c2059b518cf04021ffff811a937a05ed7d79a722461b13ee309645074064e340"
-      }
-    },
-    {
-      "officialCardId": "47527",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47527.json",
-        "sha256": "9b1dcbb2402312aa9ccf045e98f1d3b7e1d8e1a5e0cb46452e3002d9adc6cf84",
-        "htmlSha256": "9b1dcbb2402312aa9ccf045e98f1d3b7e1d8e1a5e0cb46452e3002d9adc6cf84",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
       }
     },
     {
@@ -7758,21 +7673,6 @@
       }
     },
     {
-      "officialCardId": "48702",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48702.json",
-        "sha256": "55f7028d97eba39c2adde5e4bb6b99893d8e205eab662b26250aa561a2966c51",
-        "htmlSha256": "55f7028d97eba39c2adde5e4bb6b99893d8e205eab662b26250aa561a2966c51",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
-      }
-    },
-    {
       "officialCardId": "48703",
       "name": "Nの城",
       "category": "stadium",
@@ -8235,21 +8135,6 @@
         "sha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "htmlSha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "textSha256": "c2059b518cf04021ffff811a937a05ed7d79a722461b13ee309645074064e340"
-      }
-    },
-    {
-      "officialCardId": "49451",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49451.json",
-        "sha256": "1522365a39549cf16c061ccf18f529cfe69f655d737ecaf7fae3a176f8100150",
-        "htmlSha256": "1522365a39549cf16c061ccf18f529cfe69f655d737ecaf7fae3a176f8100150",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
       }
     },
     {
@@ -9977,11 +9862,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1015
+        "count": 1013
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 306
+        "count": 299
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9996,10 +9881,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "a33f7b19ded14f74b48e15d49797323d33bd8da2d54be2b6d085a1687c8702fd",
+    "executionFingerprint": "14de95e5c37e34eca404b3d1bfc208ed97216ed237bec167d1f929fef6378ea3",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 237249,
+    "seq": 239577,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,

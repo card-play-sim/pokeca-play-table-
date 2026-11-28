@@ -1321,6 +1321,10 @@ function prepare(r, e, kind) {
   }
   if(m==='MASS_ZONE_TRANSFER'){
     const own=frame.game.players[0],plan=e.plan,eligible=c=>massTransferCandidate(c,plan);
+    if(plan.onlyHandCard||plan.emptyHand){
+      const moved=own.hand.filter(c=>!plan.onlyHandCard||c.id!==frame.sourceId);
+      own.hand=own.hand.filter(c=>!moved.includes(c));own.deck.push(...moved);
+    }
     if(plan.zone==='discard'){
       for(const zone of [own.deck,own.hand])while(own.discard.filter(eligible).length<plan.limit){
        const index=zone.findIndex(eligible);if(index<0)break;own.discard.push(zone.splice(index,1)[0]);
@@ -2530,7 +2534,21 @@ function verifyCase(t, e) {
       }
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
-    assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.privateSearch)assert(!effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.cardIds?.some(id=>ids.includes(id))));
+    else assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.onlyHandCard||plan.emptyHand){
+      assert.equal(own.hand.length,plan.onlyHandCard?1:0);
+      const denied=structuredClone(before),side=denied.players[0],extra=side.deck.findIndex(c=>!ids.includes(c.id));
+      assert(extra>=0);side.hand.push(side.deck.splice(extra,1)[0]);
+      const retry=port(denied);assert.equal(retry.dispatch('you',action).ok,false);assert.deepEqual(retry.getSnapshot(),denied);
+    }
+    if(plan.firstTurnAllowed){
+      assert(ids.every(id=>own.deck.some(c=>c.id===id&&E.getReferenceEffectRecord(c).facts.basic&&E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))));
+      const first=structuredClone(before);first.turnNumber=1;first.players[0].turnLimits={};
+      const pp=port(first);assert(pp.dispatch('you',action).ok);
+      const used=structuredClone(first);used.players[0].turnLimits={supporterUsed:true};
+      assert.equal(port(used).dispatch('you',action).ok,false);
+    }
     if(plan.origin==='evolve'||plan.origin==='bench'){
       if(plan.origin==='bench'){const source=own.bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);}
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
