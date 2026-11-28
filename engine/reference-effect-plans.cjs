@@ -103,6 +103,8 @@ function additionalAttackPlan(entry,text){
  const lock=text.match(/^コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、(ワザが使えない|にげられない)。$/);
  if(lock&&/^\d+$/.test(printed))return coinPlan(1,base,{lock:lock[1]==='にげられない'?'opponentRetreat':'opponentAttack',when:'all'});
  if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
+ if(/^\d+$/.test(printed)&&/^コインを1回投げ、?オモテなら、次の相手の番、このポケモンはワザのダメージを受けない。$/.test(text))
+  return coinPlan(1,base,{protect:'damageOnly',when:'all'});
  const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
  if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
  if(/^\d+$/.test(printed)&&text==='ウラが出るまでコインを投げ、オモテの数ぶん、相手の山札を上からトラッシュする。')
@@ -657,7 +659,7 @@ function sequencePlan(entry,kind,text,extended=false){
  }
  // No combining attack-only effects with unrelated ability/Trainer semantics.
  // A complete sequence or a distinct entry-origin/single-effect pattern only.
- if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
+ if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!(attack&&steps[0].op==='status'&&steps[0].side==='own')&&!['bench','evolve','active'].includes(origin))return null;
  if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op))&&!(origin==='active'&&steps.length===1&&steps[0].op==='status'&&steps[0].side==='opponent'))return null;
  if(trainer&&steps.some(s=>!(extended?['draw','mill','drawIfHand','revealHand','peekTop']:['draw','mill']).includes(s.op)))return null;
  if(generatedAttack){
@@ -680,6 +682,15 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='energy'){
+  const rainbow=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー1個ぶんとしてはたらく。(たね|2進化)ポケモンについているなら、すべてのタイプのエネルギー([12])個ぶんとしてはたらく。$/);
+  if(rainbow&&((rainbow[1]==='たね'&&rainbow[2]==='1')||(rainbow[1]==='2進化'&&rainbow[2]==='2')))return {mechanic:'ENERGY_STAGE_RAINBOW',commands:['ATTACH_ENERGY'],stage:rainbow[1]==='たね'?0:2,units:Number(rainbow[2]),sharedWording:true};
+  const typed=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼])\]エネルギー1個ぶんとしてはたらく。このカードをつけている\[\1\]ポケモン(は、最大HPが「\+([1-9]\d{0,2})」される。|は、にげるためのエネルギーが、すべてなくなる。|が使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。|は、ベンチにいるかぎり、相手のワザのダメージを受けない。)$/);
+  if(typed){
+   const mode=typed[3]?'hp':typed[4]?'boost':typed[2].includes('にげる')?'retreat':'benchGuard';
+   return {mechanic:'ENERGY_TYPED_PASSIVE',commands:['ATTACH_ENERGY',({hp:'MODIFY_MAX_HP',boost:'MODIFY_DAMAGE',retreat:'MODIFY_RETREAT_COST',benchGuard:'PREVENT_DAMAGE'})[mode]],energyType:typed[1],mode,amount:Number(typed[3]||typed[4]||0),sharedWording:true};
+  }
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
@@ -688,6 +699,10 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const conditionalHeal=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、自分の番に1回使える。自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
+ if(kind==='ABILITY'&&conditionalHeal)return {mechanic:'MASS_HEAL_OWN',commands:['HEAL'],type:null,target:'choice',amount:Number(conditionalHeal[2]),requiresAttachedType:conditionalHeal[1],sharedWording:true};
+ const hpThreshold=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーが([1-9]\d?)個以上ついているなら、このポケモンは最大HPが「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&hpThreshold)return {mechanic:'PASSIVE_DYNAMIC_MAX_HP',commands:['MODIFY_MAX_HP'],mode:'energyThreshold',type:hpThreshold[1],threshold:Number(hpThreshold[2]),amount:Number(hpThreshold[3]),sharedWording:true};
  const hpPrizes=generic.match(/^相手がすでにとったサイド1枚につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
  const hpEnergy=generic.match(/^このポケモンについている\[([草炎水雷超闘悪鋼])\]エネルギー1個につき、このポケモンの最大HPは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='ABILITY'&&(hpPrizes||hpEnergy))return {mechanic:'PASSIVE_DYNAMIC_MAX_HP',commands:['MODIFY_MAX_HP'],mode:hpPrizes?'opponentPrizes':'energy',type:hpEnergy?.[1]||null,amount:Number(hpPrizes?.[1]||hpEnergy[2]),sharedWording:true};
@@ -1032,6 +1047,15 @@ function plan(entry,kind){
  // Official H supporters: a single coin decides how many cards to draw.
  match=generic.match(/^コインを1回投げる。オモテなら([1-9][0-9]*)枚、ウラなら([1-9][0-9]*)枚、自分の山札を引く。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COIN_DRAW_CARDS',commands:['COIN_FLIP','DRAW'],heads:Number(match[1]),tails:Number(match[2])};
+ // Exact active-only trainer healing; counts are energy units, not cards.
+ if(kind==='MAIN'&&entry.category==='item'){
+  const named=generic.match(/^自分のバトルポケモンのHPを「([1-9]\d{0,2})」回復する。そのポケモンが「ペパーのポケモン」なら、回復するHPは「([1-9]\d{0,2})」になる。$/);
+  if(named)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(named[1]),team:'ペパー',teamAmount:Number(named[2]),sharedWording:true};
+  const energy=generic.match(/^エネルギーが([1-9])個以上ついている自分のバトルポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
+  if(energy)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(energy[2]),minimumEnergy:Number(energy[1]),sharedWording:true};
+ }
+ const coinHeal=generic.match(/^コインを1回投げる。オモテなら「([1-9]\d{0,2})」、ウラなら「([1-9]\d{0,2})」、自分のバトルポケモンのHPを回復する。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&coinHeal)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['COIN_FLIP','HEAL'],amount:Number(coinHeal[1]),tailsAmount:Number(coinHeal[2]),sharedWording:true};
  // A heal affecting the Active Pokemon only is not an arbitrary-target heal.
  match=generic.match(/^自分のバトルポケモンのHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
