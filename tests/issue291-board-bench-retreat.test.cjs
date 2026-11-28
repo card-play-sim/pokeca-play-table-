@@ -23,7 +23,7 @@ const rows=[
         "predicate": "ownBenchNamedEnergy",
         "base": 100,
         "bonus": 70,
-        "name": "シャドー[悪]エネルギー",
+        "name": "シャドー悪エネルギー",
         "sharedWording": true
       }
     }
@@ -48,7 +48,7 @@ const rows=[
         "predicate": "ownBenchNamedEnergy",
         "base": 100,
         "bonus": 70,
-        "name": "シャドー[悪]エネルギー",
+        "name": "シャドー悪エネルギー",
         "sharedWording": true
       }
     }
