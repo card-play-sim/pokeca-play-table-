@@ -492,6 +492,15 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
   if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
   if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
+  if(plan.predicate==='ownBenchNamedDamaged')reserve(r=>mon(r,null,0)&&r.name===plan.name,'bench');
+  if(plan.predicate==='opponentFieldType'){
+   reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type),'active',1);
+   reserve(r=>mon(r,null,0)&&r.facts.types.includes(plan.type),'bench',1);
+  }
+  if(['equalActiveEnergy','moreActiveEnergy'].includes(plan.predicate)){
+   const needed=Math.max(1,(e.cost||[]).length);
+   reserveEnergy(null,needed,1-deckIndex);
+  }
   if(plan.predicate==='ownBenchNamed'||plan.predicate==='ownBenchContains'){
    const named=r=>mon(r,null,null)&&(plan.predicate==='ownBenchNamed'?r.name===plan.name:r.name.includes(plan.name));
    if(!reserve(r=>named(r)&&r.facts.basic,'bench')){
@@ -1602,6 +1611,26 @@ function prepare(r, e, kind) {
     if(plan.predicate==='ownPrizesExact'||plan.predicate==='opponentPrizesExact'){
       const side=plan.predicate==='ownPrizesExact'?own:other;
       while(side.prizes>plan.threshold){side.prizes--;side.hand.push(side.prizeCards.pop());}
+    }
+    if(plan.predicate==='ownBenchNamedDamaged'){
+      const matches=own.bench.filter(c=>E.getReferenceEffectRecord(c).name===plan.name);
+      if(!matches.length||matches.every(c=>c.hp<=10))return {blocked:'NO_NAMED_DAMAGED_BENCH'};
+      for(const c of matches)c.damage=Math.min(10,c.hp-10);
+    }
+    if(plan.predicate==='opponentFieldType'&&![other.active,...other.bench].some(c=>E.getReferenceEffectRecord(c).facts.types.includes(plan.type)))return {blocked:'NO_OPPONENT_FIELD_TYPE_FIXTURE'};
+    if(plan.predicate==='ownRemainingHp'){
+      if(own.active.hp<=plan.threshold)return {blocked:'NO_HP_THRESHOLD_NEGATIVE_FIXTURE'};
+      own.active.damage=own.active.hp-plan.threshold;
+    }
+    if(['equalActiveEnergy','moreActiveEnergy'].includes(plan.predicate)){
+      for(const c of other.active.energyCards.splice(0))other.deck.push(c);
+      const target=own.active.energyCards.length-(plan.predicate==='moreActiveEnergy'?1:0);
+      if(target<0)return {blocked:'NO_OWN_ENERGY_FIXTURE'};
+      while(other.active.energyCards.length<target){
+        const zone=[other.deck,other.hand].find(z=>z.some(c=>c.kind==='energy'&&!c.isSpecial));
+        if(!zone)return {blocked:'NO_COMPARISON_ENERGY_FIXTURE'};
+        other.active.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial),1)[0]);
+      }
     }
     if(plan.predicate==='allDamagedBench')for(const mon of own.bench)mon.damage=Math.min(10,mon.hp-10);
     if(plan.predicate==='ownStadium'||plan.predicate==='stadiumContains'){
@@ -2997,6 +3026,11 @@ function verifyCase(t, e) {
         case 'ownDeckAtMost':return own.deck.length<=plan.threshold;
         case 'ownPrizesExact':return own.prizes===plan.threshold;
         case 'opponentPrizesExact':return other.prizes===plan.threshold;
+        case 'ownBenchNamedDamaged':return own.bench.some(c=>rec(c).name===plan.name&&c.damage>0);
+        case 'opponentFieldType':return [other.active,...other.bench].some(c=>rec(c).facts.types.includes(plan.type));
+        case 'ownRemainingHp':return own.active.hp-own.active.damage<=plan.threshold;
+        case 'equalActiveEnergy':return own.active.energyCards.length===other.active.energyCards.length;
+        case 'moreActiveEnergy':return own.active.energyCards.length>other.active.energyCards.length;
         case 'allDamagedBench':return own.bench.length>0&&own.bench.every(c=>c.damage>0);
         case 'ownBenchNamed':case 'ownBenchContains':return own.bench.some(nameMatches);
         case 'ownStadium':return !!g.stadium&&g.stadiumOwner===own.id;
@@ -3031,6 +3065,26 @@ function verifyCase(t, e) {
         if(side.prizes>1){side.prizes--;side.hand.push(side.prizeCards.pop());}
         else if(side.hand.length){side.prizes++;side.prizeCards.push(side.hand.pop());}
         break;
+      }
+      case 'ownBenchNamedDamaged':for(const c of own.bench)if(rec(c).name===plan.name)c.damage=0;break;
+      case 'opponentFieldType':{
+        if(rec(other.active).facts.types.includes(plan.type))return {status:'BLOCKED',reason:'NO_NONMATCHING_ACTIVE_FIXTURE'};
+        for(let i=other.bench.length-1;i>=0;i--)if(rec(other.bench[i]).facts.types.includes(plan.type)){
+          const c=other.bench[i];
+          if(c.evolutionCards?.length||c.energyCards?.length||c.tools?.length)return {status:'BLOCKED',reason:'NO_UNATTACHED_TYPE_BENCH_FIXTURE'};
+          other.bench.splice(i,1);
+          const raw=JSON.parse(JSON.stringify(c));for(const key of ['cardId','damage','enteredTurn','evolvedTurn','energyCards','energies','tools','statusCondition','statusConditionInfo','evolutionCards','validationBase','entryWindow','referenceEvolutionWindow'])delete raw[key];
+          other.deck.push(raw);
+        }break;
+      }
+      case 'ownRemainingHp':own.active.damage=Math.max(0,own.active.hp-plan.threshold-10);break;
+      case 'equalActiveEnergy':case 'moreActiveEnergy':{
+        if(plan.predicate==='equalActiveEnergy'&&other.active.energyCards.length)other.deck.push(other.active.energyCards.pop());
+        else{
+          const zone=[other.deck,other.hand].find(z=>z.some(c=>c.kind==='energy'&&!c.isSpecial));
+          if(!zone)return {status:'BLOCKED',reason:'NO_NEGATIVE_ENERGY_FIXTURE'};
+          other.active.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial),1)[0]);
+        }break;
       }
       case 'allDamagedBench':own.bench[0].damage=0;break;
       case 'ownBenchNamed':case 'ownBenchContains':{

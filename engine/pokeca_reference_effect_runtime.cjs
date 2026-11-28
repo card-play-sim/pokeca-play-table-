@@ -408,6 +408,11 @@ function boardBonusApplies(g,p,o,plan){
   case 'opponentPrizesExact':return o.prizes===plan.threshold;
   case 'ownDeckAtMost':return p.deck.length<=plan.threshold;
   case 'allDamagedBench':return p.bench.length>0&&p.bench.every(c=>c.damage>0);
+  case 'ownBenchNamedDamaged':return p.bench.some(c=>record(c).name===plan.name&&c.damage>0);
+  case 'opponentFieldType':return field(o).some(c=>record(c).facts.types.includes(plan.type));
+  case 'ownRemainingHp':return p.active.hp-p.active.damage<=plan.threshold;
+  case 'equalActiveEnergy':return energyUnits(p.active).length===energyUnits(o.active).length;
+  case 'moreActiveEnergy':return energyUnits(p.active).length>energyUnits(o.active).length;
   case 'ownBenchNamed':return p.bench.some(c=>record(c).name===plan.name);
   case 'ownBenchContains':return p.bench.some(c=>record(c).name.includes(plan.name));
   case 'ownStadium':return !!g.stadium&&g.stadiumOwner===p.id;
