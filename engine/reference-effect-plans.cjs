@@ -672,6 +672,15 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='energy'){
+  const rainbow=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー1個ぶんとしてはたらく。(たね|2進化)ポケモンについているなら、すべてのタイプのエネルギー([12])個ぶんとしてはたらく。$/);
+  if(rainbow&&((rainbow[1]==='たね'&&rainbow[2]==='1')||(rainbow[1]==='2進化'&&rainbow[2]==='2')))return {mechanic:'ENERGY_STAGE_RAINBOW',commands:['ATTACH_ENERGY'],stage:rainbow[1]==='たね'?0:2,units:Number(rainbow[2]),sharedWording:true};
+  const typed=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼])\]エネルギー1個ぶんとしてはたらく。このカードをつけている\[\1\]ポケモン(は、最大HPが「\+([1-9]\d{0,2})」される。|は、にげるためのエネルギーが、すべてなくなる。|が使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。|は、ベンチにいるかぎり、相手のワザのダメージを受けない。)$/);
+  if(typed){
+   const mode=typed[3]?'hp':typed[4]?'boost':typed[2].includes('にげる')?'retreat':'benchGuard';
+   return {mechanic:'ENERGY_TYPED_PASSIVE',commands:['ATTACH_ENERGY',({hp:'MODIFY_MAX_HP',boost:'MODIFY_DAMAGE',retreat:'MODIFY_RETREAT_COST',benchGuard:'PREVENT_DAMAGE'})[mode]],energyType:typed[1],mode,amount:Number(typed[3]||typed[4]||0),sharedWording:true};
+  }
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});

@@ -47,6 +47,10 @@ function abilityEnabled(g,card,ability=null){
  }
  return true;
 }
+function typedEnergyEffects(card,mode){
+ const types=record(card)?.facts.types||[];
+ return (card.energyCards||[]).map(c=>record(c)?.mainPlan).filter(p=>p?.mechanic==='ENERGY_TYPED_PASSIVE'&&p.mode===mode&&types.includes(p.energyType));
+}
 function maxHpBonus(g,card){
  const plan=record(g.stadium)?.mainPlan;
  const fieldHp=plan?.mechanic==='STADIUM_STAGE_HP'&&record(card).facts.stage===plan.stage?plan.amount:0;
@@ -55,13 +59,14 @@ function maxHpBonus(g,card){
   const p=a.plan,n=p.mode==='opponentPrizes'?6-opponent(g,owner.id).prizes:energyUnits(card).filter(u=>u.includes(p.type)).length;
   return sum+p.amount*n;
  },0):0;
- if(!toolEnabled(g))return fieldHp+dynamic;
+ const energyHp=typedEnergyEffects(card,'hp').reduce((sum,p)=>sum+p.amount,0);
+ if(!toolEnabled(g))return fieldHp+dynamic+energyHp;
  return (card.tools||[]).reduce((sum,tool)=>{const plan=record(tool)?.mainPlan;
   if(plan?.mechanic==='HERO_CAPE')return sum+100;
   if(plan?.mechanic==='CONDITIONAL_MAX_HP'&&(!plan.basicOnly||record(card).facts.basic))return sum+plan.amount;
   if(plan?.mechanic==='TOOL_NAMED_TEAM_MAX_HP'&&record(card).name.startsWith(plan.team+'の'))return sum+plan.amount;
   return sum;
- },fieldHp+dynamic);
+ },fieldHp+dynamic+energyHp);
 }
 function basicEnergy(c){return c?.kind==='energy'&&!c.isSpecial&&basicTypes.includes(c.energyType);}
 function energyUnits(mon){
@@ -69,6 +74,11 @@ function energyUnits(mon){
  for(const c of mon.energyCards||[]){
   const r=record(c),m=r?.mainPlan?.mechanic;
   if(m==='ROCKET_ENERGY'){if(record(mon)?.name.startsWith('ロケット団の'))out.push(['超','悪'],['超','悪']);}
+  else if(m==='ENERGY_STAGE_RAINBOW'){
+   const match=record(mon)?.facts.stage===r.mainPlan.stage;
+   for(let i=0;i<(match?r.mainPlan.units:1);i++)out.push(match?[...basicTypes,'無色']:['無色']);
+  }
+  else if(m==='ENERGY_TYPED_PASSIVE')out.push([r.mainPlan.energyType]);
   else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
   else if(m==='IGNITION')for(let i=0;i<(record(mon)?.facts.stage>0?3:1);i++)out.push(['無色']);
   else if(basicEnergy(c))out.push([c.energyType]);
@@ -156,6 +166,7 @@ function refresh(g){
    for(const e of [...(c.energyCards||[])])if(record(e)?.mainPlan?.mechanic==='ROCKET_ENERGY'&&!record(c).name.startsWith('ロケット団の')){
     c.energyCards.splice(c.energyCards.indexOf(e),1);p.discard.push(e);event(g,p.id,'DISCARD',{cardIds:[id(e)]});
    }
+   if(typedEnergyEffects(c,'retreat').length)c.retreatCost=0;
    c.energies=energyUnits(c).map(unit=>unit[0]);
   }
  }
@@ -195,6 +206,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  }
  if(!bench&&find(g,id(mon))?.player.id===other.id)amount+=(own.referenceTypedDamageBoosts||[]).filter(boost=>boost.turn===g.turnNumber&&record(source).facts.types.includes(boost.type)).reduce((sum,boost)=>sum+boost.amount,0);
  if(!bench&&other.active===mon){
+  amount+=typedEnergyEffects(source,'boost').reduce((sum,p)=>sum+p.amount,0);
   const attacker=record(source),defender=record(mon),nonStack=new Set();
   for(const holder of field(own))for(const a of enabledAbilities(g,holder)){
    const p=a.plan;if(p.mechanic!=='PASSIVE_TEAM_ATTACK_BOOST')continue;
@@ -213,6 +225,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  if(!ignore){
   if(bench&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='BENCH_DAMAGE_PROTECTION'))return 0;
   if(bench&&record(mon).facts.teraBenchProtection)return 0;
+  if(bench&&find(g,id(mon))?.player.id===other.id&&typedEnergyEffects(mon,'benchGuard').length)return 0;
   if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
   if(find(g,id(mon))?.player.id===other.id&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&(a.plan.attacker==='basicEx'?record(source).facts.basic&&record(source).name.endsWith('ex'):a.plan.attacker==='ex'?record(source).name.endsWith('ex'):record(source).abilities.some(x=>abilityEnabled(g,source,x)))))return 0;
