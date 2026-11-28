@@ -332,7 +332,13 @@ function activeTrainerLocked(g,actor){const holder=opponent(g,actor).active;retu
 function itemLocked(g,actor){return activeTrainerLocked(g,actor)||!!g.referenceItemLock?.some(x=>x.playerId===actor&&x.turnNumber===g.turnNumber);}
 function handCostMatches(c,plan){return plan.type?basicEnergy(c)&&c.energyType===plan.type:record(c)?.name===plan.costName;}
 function canHealOrClearStatus(card){return card.damage>0||!!card.statusCondition;}
-function isMegaEvolutionEx(card){return card.kind==='pokemon'&&String(record(card).rulesText).includes('メガシンカexがきぜつしたとき');}
+function isMegaEvolutionEx(card){
+ if(card?.kind!=='pokemon')return false;
+ const r=record(card);
+ // The official HTML parser records the exact Mega Evolution ex prize rule
+ // as facts.prizeCount=3; its rulesText is deliberately an empty array.
+ return !!r&&r.category==='pokemon'&&r.facts.rulePokemon&&r.facts.prizeCount===3&&r.name.startsWith('メガ')&&r.name.endsWith('ex');
+}
 function attackSearchCandidate(c,plan){
  const r=record(c),typed=c.kind==='pokemon'&&r?.facts.types?.includes(plan.type);
  if(plan.mechanic==='SEARCH_BASIC_TO_BENCH_ATTACK')return c.kind==='pokemon'&&r?.facts.basic&&(!plan.type||typed)&&(!plan.team||r.name.startsWith(plan.team+'の'))&&(!plan.nameExact||r.name===plan.nameExact);
