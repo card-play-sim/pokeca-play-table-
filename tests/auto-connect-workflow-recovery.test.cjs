@@ -48,3 +48,16 @@ assert.match(concurrency,/format\('incremental-official-effect-ignored-\{0\}', g
 assert.match(concurrency,/\|\| 'incremental-official-effect-intake'/);
 assert.match(concurrency,/cancel-in-progress: false/);
 console.log('PASS: ignored comments cannot replace queued intake runs');
+
+
+// Coordination comments must skip even the preliminary runner; the downstream
+// job retains its independent authorization guard.
+const preliminary=workflow.slice(workflow.indexOf('  scheduled-completion:'),workflow.indexOf('  continue:'));
+const guard=preliminary.slice(preliminary.indexOf('    if: >-'),preliminary.indexOf('    runs-on:'));
+assert.match(guard,/github\.event_name != 'issue_comment' \|\|/);
+assert.match(guard,/github\.event\.issue\.number == 122 && !github\.event\.issue\.pull_request/);
+assert.match(guard,/github\.event\.comment\.user\.login == github\.repository_owner &&/);
+assert.match(guard,/github\.event\.comment\.body == '\/card-auto-connect'/);
+const downstream=workflow.slice(workflow.indexOf('  continue:'),workflow.indexOf('    runs-on:',workflow.indexOf('  continue:')));
+assert.match(downstream,/github\.event\.comment\.body == '\/card-auto-connect'/);
+console.log('PASS: ordinary coordination comments skip the preliminary runner');
