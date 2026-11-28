@@ -94,6 +94,7 @@ function energyUnits(mon){
    for(let i=0;i<(match?r.mainPlan.units:1);i++)out.push(match?[...basicTypes,'無色']:['無色']);
   }
   else if(m==='ENERGY_TYPED_PASSIVE'||m==='ENERGY_SELF_ATTACK_RECYCLE')out.push([r.mainPlan.energyType]);
+  else if(m==='ENERGY_LEGACY_PRIZE_REDUCTION')out.push([...basicTypes,'無色']);
   else if(m==='ATTACHED_ACTIVE_HIT'||m==='ENERGY_HAND_ATTACH_DRAW')out.push(['無色']);
   else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
   else if(m==='IGNITION')for(let i=0;i<(record(mon)?.facts.stage>0?3:1);i++)out.push(['無色']);
@@ -303,12 +304,40 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  return amount;
 }
 function typesConflictForIgnore(g,own,mon,source){return record(source).facts.types.includes('超')&&record(mon).facts.types.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE'));}
+function noteAttackPrizeReduction(g,actor,mon,defender,actualDamage,previousDamage){
+ if(!defender||defender.player.id===actor||actualDamage<=0||previousDamage>=mon.hp||mon.damage<mon.hp)return;
+ const owner=defender.player,tools=toolEnabled(g)?(mon.tools||[]).filter(t=>{const p=record(t)?.mainPlan;return p?.mechanic==='TOOL_TEAM_KO_PRIZE_REDUCTION'&&matchesNamedType(mon,p);}):[];
+ const legacy=(mon.energyCards||[]).find(e=>record(e)?.mainPlan?.mechanic==='ENERGY_LEGACY_PRIZE_REDUCTION');
+ if(!tools.length&&!legacy)return;
+ g.referenceAttackPrizeReductions||=[];
+ if(g.referenceAttackPrizeReductions.some(x=>x.holderId===id(mon)))return;
+ g.referenceAttackPrizeReductions.push({holderId:id(mon),ownerId:owner.id,attackerId:actor,turn:g.turnNumber,tools:tools.map(t=>({attachmentId:id(t),sourceOfficialCardId:record(t).officialCardId,amount:record(t).mainPlan.amount})),legacy:legacy?{attachmentId:id(legacy),sourceOfficialCardId:record(legacy).officialCardId}:null});
+}
+function applyAttackPrizeReductions(g,actor){
+ const pending=g.referenceAttackPrizeReductions||[];
+ delete g.referenceAttackPrizeReductions;
+ for(const entry of pending){
+  const target=find(g,entry.holderId);
+  if(entry.attackerId!==actor||entry.turn!==g.turnNumber||!target||target.player.id!==entry.ownerId||target.card.damage<target.card.hp)continue;
+  const {card,player:owner}=target;
+  let amount=0;
+  for(const t of entry.tools)if(toolEnabled(g)&&(card.tools||[]).some(e=>id(e)===t.attachmentId)){
+   amount+=t.amount;event(g,owner.id,'ADD_STATE',{mechanic:'TOOL_TEAM_KO_PRIZE_REDUCTION',targetInstanceId:id(card),sourceOfficialCardId:t.sourceOfficialCardId,amount:t.amount});
+  }
+  if(entry.legacy&&!owner.referenceLegacyPrizeReductionUsed&&(card.energyCards||[]).some(e=>id(e)===entry.legacy.attachmentId)){
+   owner.referenceLegacyPrizeReductionUsed=true;amount++;
+   event(g,owner.id,'ADD_STATE',{mechanic:'ENERGY_LEGACY_PRIZE_REDUCTION',targetInstanceId:id(card),sourceOfficialCardId:entry.legacy.sourceOfficialCardId,amount:1});
+  }
+  if(amount)card.prizeCount=Math.max(0,record(card).facts.prizeCount-amount);
+ }
+}
 function damage(g,actor,mon,amount,options={}){
  const attacker=player(g,actor).active,defender=find(g,id(mon));
  // Only the opponent's Active Pokémon and only this attack's damage.
  // Do not bypass protection on the bench or on the attacker's own Pokémon.
  const bypass=defender?.player.id!==actor&&defender?.player.active===mon&&!options.bench&&enabledAbilities(g,attacker).some(a=>a.plan.mechanic==='PASSIVE_IGNORE_ACTIVE_DEFENSE');
  if(bypass)options={...options,ignore:true};
+ const previousDamage=mon.damage||0;
  let value=damages(g,actor,mon,amount,options);
  const mayDefend=!options.ignore&&defender?.player.id!==actor&&value>0;
  const abilities=mayDefend?enabledAbilities(g,mon):[];
@@ -375,6 +404,7 @@ function damage(g,actor,mon,amount,options={}){
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
  }
+ noteAttackPrizeReduction(g,actor,mon,defender,value,previousDamage);
  return value;
 }
 function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(benchCounterGuard(g,actor,mon,sourceType)||attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
@@ -1169,6 +1199,7 @@ function finishAttack(g,actor){
   if(choices.length){g.pendingReferenceChoice={...reaction,options:choices};return;}
  }
  delete g.referenceReactions;
+ applyAttackPrizeReductions(g,actor);
  functions().Core.resolveKnockouts(g,actor);
  if(g.status==='finished'){delete g.referenceAttackTurnPending;delete g.pendingReferenceChoice;return;}
  if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;functions().Core.endTurn(g,actor);}
