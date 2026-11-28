@@ -31,6 +31,17 @@ put('pokeca_reference_effect_data','module.exports='+JSON.stringify(catalog)+';'
 put('pokeca_selection_constraints',fs.readFileSync('engine/pokeca_selection_constraints.cjs','utf8'));
 put('pokeca_reference_effect_runtime',fs.readFileSync('engine/pokeca_reference_effect_runtime.cjs','utf8'));
 put('pokeca_reference_validation_adapter',fs.readFileSync('engine/pokeca_reference_validation_adapter.cjs','utf8'));
+// The generated Core/legality guard must use the same reference-scoped bench
+// capacity, including the temporary mandatory discard choice after Area leaves.
+function replaceOnceOrPresent(before,after){
+ if(bundle.includes(after))return;
+ const count=bundle.split(before).length-1;
+ if(count!==1)throw Error('ZERO_AREA_BUNDLE_ANCHOR:'+count);
+ bundle=bundle.replace(before,after);
+}
+replaceOnceOrPresent('p.bench?.length > 5','p.bench?.length > (game.referenceEffectValidation?require("./pokeca_reference_effect_runtime").benchAuditLimit(game,p):5)');
+replaceOnceOrPresent('Array.isArray(p.bench) && p.bench.length > 5','Array.isArray(p.bench) && p.bench.length > (game.referenceEffectValidation?require("./pokeca_reference_effect_runtime").benchAuditLimit(game,p):5)');
+replaceOnceOrPresent('!Array.isArray(p.bench) || p.bench.length >= 5','!Array.isArray(p.bench) || p.bench.length >= (game.referenceEffectValidation?require("./pokeca_reference_effect_runtime").benchLimit(game,p):5)');
 if(!bundle.includes('isSelectionAllowed:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={isSelectionAllowed:req("pokeca_selection_constraints").allows,');
 if(!bundle.includes('resolveReferenceRequest:'))bundle=bundle.replace('window.Pokeca={','window.Pokeca={resolveReferenceRequest:req("pokeca_selection_constraints").resolve,');
 bundle=bundle.replace(
