@@ -499,9 +499,13 @@ function handAndHealPlan(entry,kind,text){
   if(!prefix)return null;body=body.slice(prefix[0].length);
  }
  const damage=attack&&Number(printed)>0?['DAMAGE']:[];
- const hand=(mode,amount,extras={})=>({mechanic:'MASS_HAND_FLOW',mode,amount,commands:[...damage,...(mode.includes('reset')?['RETURN_TO_DECK',...(extras.bottom?[]:['SHUFFLE_DECK'])]:[]),...(mode==='revealCount'?['REVEAL']:[]),...(mode==='resetBothCoin'?['COIN_FLIP']:[]),'DRAW'],...extras,sharedWording:true});
+ const hand=(mode,amount,extras={})=>({mechanic:'MASS_HAND_FLOW',mode,amount,commands:[...damage,...(mode.includes('reset')?['RETURN_TO_DECK',...(extras.bottom?[]:['SHUFFLE_DECK'])]:[]),...(mode==='revealCount'?['REVEAL']:[]),...(['resetBothCoin','resetBothSingleCoin'].includes(mode)?['COIN_FLIP']:[]),'DRAW'],...extras,sharedWording:true});
  const reset=body.match(/^相手は相手自身の手札をすべて(山札にもどして切る|ウラにして切り、山札の下にもどす)。その後、相手は山札を([1-9])枚引く。$/);
  if(reset)return hand('resetOpponent',Number(reset[2]),{bottom:reset[1].includes('下')});
+ if(trainer&&entry.category==='item'&&body==='相手は相手自身の手札を数えたあと、すべてウラにして切り、山札の下にもどす。その後、相手はもどした枚数ぶん、山札を引く。')return hand('resetOpponentCount',0,{bottom:true});
+ const singleCoin=body.match(/^おたがいのプレイヤーは、それぞれ手札をすべて山札にもどして切る。その後、自分はコインを1回投げ、オモテなら自分は([1-9])枚、相手は([1-9])枚、山札を引く。ウラなら自分は([1-9])枚、相手は([1-9])枚、山札を引く。$/);
+ if(trainer&&entry.category==='supporter'&&singleCoin)return hand('resetBothSingleCoin',Number(singleCoin[1]),{opponentHeads:Number(singleCoin[2]),tails:Number(singleCoin[3]),opponentTails:Number(singleCoin[4])});
+ if(trainer&&entry.category==='supporter'&&body==='相手の場の「メガシンカex」の数ぶん、自分の山札を引く。')return hand('opponentMegaCount',0);
  const both=body.match(/^おたがいのプレイヤーは、それぞれ山札を([1-9])枚引く。$/);
  if(both)return hand('bothDraw',Number(both[1]));
  if(attack&&body==='自分の手札をすべて山札にもどして切る。その後、相手の手札の枚数ぶん、自分の山札を引く。')return hand('resetOwnMatch',0);
