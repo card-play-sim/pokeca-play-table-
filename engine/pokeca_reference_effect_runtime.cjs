@@ -289,6 +289,9 @@ function damage(g,actor,mon,amount,options={}){
 function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
 function coin(g,actor){if(g.referenceEffectPreview)return false;const n=referenceRandom(g);assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
 function requirePlan(card,effect){if(!connected(effect?.plan))stop(card,effect);return effect.plan;}
+function poisonRetreatLocked(g,p,card){
+ return p.referencePoisonRetreatLock?.turn===g.turnNumber&&card?.statusCondition==='POISONED';
+}
 function itemLocked(g,actor){return !!g.referenceItemLock?.some(x=>x.playerId===actor&&x.turnNumber===g.turnNumber);}
 function canHealOrClearStatus(card){return card.damage>0||!!card.statusCondition;}
 function isMegaEvolutionEx(card){
@@ -1008,7 +1011,7 @@ function preflight(g,actor,action){
    if(!connected(r?.mainPlan))stop(card,{name:r?.name||card.name},'SPECIAL_ENERGY_EFFECT_NOT_CONNECTED');if(r.mainPlan.mechanic==='ROCKET_ENERGY')assert(record(mon).name.startsWith('ロケット団の'),'ROCKET_POKEMON_ONLY');
   }else if(action.type==='retreat'){
    assert(p.active&&p.bench.some(c=>id(c)===action.benchInstanceId)&&!g.retreatUsed,'RETREAT_NOT_ALLOWED');
-   assert(p.active.referenceCannotRetreatTurn!==g.turnNumber,'RETREAT_DISABLED_THIS_TURN');
+   assert(p.active.referenceCannotRetreatTurn!==g.turnNumber&&!poisonRetreatLocked(g,p,p.active),'RETREAT_DISABLED_THIS_TURN');
    assert(!['ASLEEP','PARALYZED'].includes(p.active.statusCondition),'STATUS_PREVENTS_RETREAT');
    const energies=action.energyIds||[],available=(p.active.energyCards||[]).filter(c=>energies.includes(id(c)));
    assert(new Set(energies).size===energies.length&&available.length===energies.length,'RETREAT_ENERGY_IDS');
@@ -2146,6 +2149,10 @@ function applyPlan(g,actor,card,effect,action){
    const amount=plan.tailsAmount!==undefined?(coin(g,actor)?plan.amount:plan.tailsAmount):plan.team&&record(p.active).name.startsWith(plan.team+'の')?plan.teamAmount:plan.amount;
    heal(g,actor,p.active,amount+(plan.discardName?p.discard.filter(c=>id(c)!==id(card)&&record(c)?.name===plan.discardName).length*plan.discardUnit:0));break;
   }
+  case 'TRAINER_POISON_RETREAT_LOCK':
+   o.referencePoisonRetreatLock={turn:g.turnNumber+1,sourceOfficialCardId:record(card).officialCardId};
+   event(g,actor,'ADD_STATE',{mechanic:m,playerId:o.id,turn:g.turnNumber+1});
+   break;
   case 'TRAINER_DRAW_END_DISCARD':
    draw(g,p,plan.amount);
    p.referenceEndHandDiscard={turn:g.turnNumber,threshold:plan.threshold,sourceOfficialCardId:record(card).officialCardId};
@@ -2383,6 +2390,8 @@ function resolveTrainerEndHandDiscard(g,actor){
 function onEndTurn(g,actor){
  if(!g.referenceEffectValidation)return;
  resolveTrainerEndHandDiscard(g,actor);
+ const p=player(g,actor);
+ if(p.referencePoisonRetreatLock&&p.referencePoisonRetreatLock.turn<=g.turnNumber)delete p.referencePoisonRetreatLock;
  for(const c of field(player(g,actor)))for(const energy of [...c.energyCards])if(record(energy)?.mainPlan?.mechanic==='IGNITION'){
   c.energyCards.splice(c.energyCards.indexOf(energy),1);player(g,actor).discard.push(energy);event(g,actor,'DISCARD',{cardIds:[id(energy)]});
  }
@@ -2395,7 +2404,7 @@ function pokemonActions(g,actor,ident){
  if(p.active===mon){
   record(mon).attacks.forEach((a,index)=>out.push({kind:'attack',label:a.name,damage:Number.parseInt(a.damage,10)||0,action:{type:'attack_turn',attackIndex:index},requests:requests(g,actor,mon,a),referenceEffect:a}));
   for(const target of p.bench){
-   if(mon.referenceCannotRetreatTurn===g.turnNumber)break;
+   if(mon.referenceCannotRetreatTurn===g.turnNumber||poisonRetreatLocked(g,p,mon))break;
    const cards=mon.energyCards||[],required=mon.retreatCost;
    // Search by number of physical cards; a special energy can provide several units.
    // A payment is valid only if removing any one selected card makes it insufficient.
@@ -2555,6 +2564,7 @@ function statuses(g){
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');
  }
  for(const p of g.players)if(p.referenceEndHandDiscard?.turn===g.turnNumber)out.push({id:'reference-end-hand-discard-'+p.id,short:'番の終わりに手札確認',label:'手札5枚以上なら全トラッシュ',scope:'PLAYER',playerId:p.id,sourceCard:'ネリネ',sourceEffect:'サポート',start:'カード使用時',duration:'この番の終わり',removal:'番終了時に解決',condition:'手札5枚以上',description:'この番の終わりに手札が5枚以上あるなら、すべてトラッシュする'});
+ for(const p of g.players)if(p.referencePoisonRetreatLock?.turn===g.turnNumber)out.push({id:'reference-poison-retreat-lock-'+p.id,short:'どくならにげられない',label:'どくのポケモンはにげられない',scope:'PLAYER',playerId:p.id,sourceCard:'ホミカの演奏',sourceEffect:'サポート',start:'次の相手の番',duration:'この番の終わりまで',removal:'番終了時',condition:'にげる時点でどく',description:'この番、どくのポケモンはにげられない'});
  for(const state of g.referenceItemLock||[])if(g.turnNumber===state.turnNumber)out.push({id:'reference-item-lock-'+state.playerId,short:'グッズ不可',label:'グッズ使用不可',scope:'PLAYER',playerId:state.playerId,sourceCard:'スボミー',sourceEffect:'むずむずかふん',start:'前の番のワザ解決時',duration:'この番の終わりまで',removal:'期限終了',condition:'このプレイヤーの番',description:'手札からグッズを出して使えない'});
  const name={WATCHTOWER:'無色ポケモンの特性なし',NIGHT_MINE:'テラスタルのワザの無色コスト＋1',RUINS:'悪以外のたねをベンチに出すとダメカン2個',JAMMING:'どうぐの効果なし',SUPPRESS_RULE_ABILITIES:'ルールを持つポケモンの特性なし'}[stadium(g)];
  if(name)out.push({id:'reference-stadium',short:name,label:name,scope:'FIELD',sourceCard:g.stadium.name,sourceEffect:'スタジアム',start:'スタジアムが場に出たとき',duration:'このスタジアムが場にあるかぎり',removal:'場を離れたとき',condition:'公式参照版',description:name});

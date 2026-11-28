@@ -414,6 +414,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')reserve(r=>r.category==='pokemon'&&!r.facts.rulePokemon,'hand');
+ if(m==='TRAINER_POISON_RETREAT_LOCK'){
+  const free=r=>mon(r,null,0)&&!r.abilities.length&&r.facts.retreatCost===0&&r.attacks.every(a=>a.plan);
+  if(!reserve(free,'active',1)||!reserve(free,'bench',1))return Object.assign(requirements,{teamBoostBlocked:'NO_FREE_RETREAT_POISON_LOCK_FIXTURE'});
+ }
  if(plan.endTrainerTurn){
   const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
   if(!reserve(plain,'active',0)||!reserve(plain,'active',1))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_END_TURN_FIXTURE'});
@@ -2474,6 +2478,31 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='TRAINER_POISON_RETREAT_LOCK'){
+    const plan=e.plan,other=after.players[1];
+    assert.equal(other.referencePoisonRetreatLock?.turn,before.turnNumber+1);
+    assert.equal(after.players[0].referencePoisonRetreatLock,undefined);
+    const next=port(after),end=E.getLegalActions(after,'you').actions.find(a=>a.type==='end_turn');
+    assert(end&&next.dispatch('you',end).ok);
+    const base=next.getSnapshot(),op=base.players[1];
+    assert.equal(base.turnPlayer,op.id);
+    assert(op.bench.length>0&&op.active.retreatCost===0,'NO_FREE_RETREAT_FIXTURE');
+    const action={type:'retreat',benchInstanceId:op.bench[0].id,energyIds:[]};
+    for(const status of [null,'POISONED','CONFUSED','BURNED']){
+      const start=structuredClone(base);start.players[1].active.statusCondition=status;
+      const replay=port(start),snapshot=replay.getSnapshot(),blocked=status==='POISONED';
+      assert.equal(E.getLegalActions(snapshot,op.id).actions.some(a=>a.type==='retreat'),!blocked);
+      assert.equal(replay.dispatch(op.id,action).ok,!blocked);
+      if(blocked)assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(snapshot));
+      else assert.equal(replay.getSnapshot().players[1].active.id,action.benchInstanceId);
+    }
+    const clean=structuredClone(base);delete clean.players[1].referencePoisonRetreatLock;clean.players[1].active.statusCondition='POISONED';
+    const replay=port(clean);assert(replay.dispatch(op.id,action).ok);
+    const swapped=structuredClone(base),p=swapped.players[1];[p.active,p.bench[0]]=[p.bench[0],p.active];p.active.statusCondition='POISONED';
+    const newTarget=port(swapped);assert.equal(newTarget.dispatch(op.id,{...action,benchInstanceId:p.bench[0].id}).ok,false);
+    const expired=port(base),endOther=E.getLegalActions(base,op.id).actions.find(a=>a.type==='end_turn');assert(endOther&&expired.dispatch(op.id,endOther).ok);
+    assert.equal(expired.getSnapshot().players[1].referencePoisonRetreatLock,undefined);
+  }
   if(e.plan.mechanic==='TRAINER_DRAW_END_DISCARD'){
     const [own,other]=before.players,side=after.players[0],plan=e.plan;
     const drawn=own.deck.slice(0,plan.amount);
