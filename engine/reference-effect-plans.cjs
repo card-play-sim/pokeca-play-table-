@@ -75,6 +75,9 @@ function additionalAttackPlan(entry,text){
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
  // Direct knockout effects are not attack damage.
  if(printed==='0'){
+  const chosenCounters=text.match(/^ダメカンが([1-9]\d?)個のっている相手のポケモンを1匹選び、きぜつさせる。$/);
+  const remainingHp=text.match(/^残りHPが「([1-9]\d{0,2})」以下の相手のポケモン全員を、それぞれきぜつさせる。$/);
+  if(chosenCounters||remainingHp)return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:chosenCounters?'chosenCounters':'remainingHpAll',...(chosenCounters?{count:Number(chosenCounters[1])}:{threshold:Number(remainingHp[1])}),sharedWording:true};
   const ko=text.match(/^相手のバトルポケモンが(特殊状態|たねポケモン)なら、そのポケモンをきぜつさせる。$/);
   const counters=text.match(/^相手のバトルポケモンにのっているダメカンが([1-9]\d?)個なら、そのポケモンをきぜつさせる。$/);
   const special=text==='相手のバトルポケモンに特殊エネルギーがついているなら、そのポケモンをきぜつさせる。';
@@ -447,6 +450,10 @@ function additionalAttackPlan(entry,text){
  if(discardSpread&&/^\d+$/.test(printed)&&((discardSpread[4]==='にも')===(base>0))&&!(discardSpread[2]==='相手のポケモン'&&base>0))
   return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:[...new Set([...deal,'DISCARD','DAMAGE'])],scope:discardSpread[2]==='相手のポケモン'?'opponent':'opponentBench',count:Number.parseInt(discardSpread[3],10),amount:Number(discardSpread[5]),discardAttached:discardSpread[1]==='すべて'?'all':Number.parseInt(discardSpread[1],10),sharedWording:true};
  // Exact scoped spread effects; do not treat damage counters as damage.
+ const coinPerTarget=text.match(/^相手のポケモン全員に対して、それぞれ1回ずつコインを投げ、オモテが出たポケモン全員に、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(coinPerTarget&&printed==='0')return {mechanic:'ATTACK_COIN_PER_TARGET',commands:['COIN_FLIP','DAMAGE'],amount:Number(coinPerTarget[1]),sharedWording:true};
+ const namedStadiumSpread=text.match(/^名前に「([^」]+)」とつくスタジアムが場に出ているなら、相手のベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
+ if(namedStadiumSpread&&base>0&&/^\d+$/.test(printed))return {mechanic:'ATTACK_NAMED_STADIUM_SPREAD',commands:['DAMAGE'],name:namedStadiumSpread[1],amount:Number(namedStadiumSpread[2]),sharedWording:true};
  const conditionalDamagedSpread=text.match(/^ダメカンがのっている(相手の|おたがいの)ベンチポケモン(全員|[1-5]匹)にも、(?:それぞれ)?([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
  if(conditionalDamagedSpread&&base>0)return {mechanic:'ATTACK_SPREAD_DAMAGE',commands:['DAMAGE'],scope:conditionalDamagedSpread[1]==='相手の'?'opponentBench':'bothBench',filter:'damaged',count:conditionalDamagedSpread[2]==='全員'?null:Number.parseInt(conditionalDamagedSpread[2],10),amount:Number(conditionalDamagedSpread[3]),sharedWording:true};
  const bothSpread=text.match(/^おたがいのベンチポケモン全員にも、それぞれ([1-9]\d{0,2})ダメージ。\[ベンチは弱点・抵抗力を計算しない。\]$/);
@@ -485,6 +492,12 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'ATTACK_RETURN_SELF_ENERGY',commands:[...deal,'RETURN_TO_HAND'],type:selfEnergyReturn[1]||null,count:Number(selfEnergyReturn[2])};
  if(/^\d+$/.test(printed)&&text==='のぞむなら、このポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'SWITCH_SELF_ATTACK',commands:[...deal,'SWITCH'],optional:true};
+ const typedSwitch=text.match(/^このポケモンをベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモンと入れ替える。$/);
+ if(typedSwitch&&/^\d+$/.test(printed))
+  return {mechanic:'SWITCH_SELF_ATTACK',commands:[...deal,'SWITCH'],type:typedSwitch[1],sharedWording:true};
+ const selfDeckReturn=text.match(/^(のぞむなら、)?このポケモンと、ついているすべてのカードを、(?:自分の)?山札にもどして切る。$/);
+ if(selfDeckReturn&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_RETURN_SELF_DECK',commands:[...deal,'RETURN_TO_DECK','SHUFFLE_DECK'],optional:!!selfDeckReturn[1],sharedWording:true};
  const switchedDamage=text.match(/^相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンに([1-9]\d{0,2})ダメージ。$/);
  if(switchedDamage&&printed==='0')
   return {mechanic:'ATTACK_SWITCH_THEN_DAMAGE',commands:['FORCE_SWITCH','DAMAGE'],amount:Number(switchedDamage[1])};
@@ -789,7 +802,10 @@ function plan(entry,kind){
   if(recycle&&(!recycle[2]||recycle[1]===recycle[2]))return {mechanic:'ENERGY_SELF_ATTACK_RECYCLE',commands:['ATTACH_ENERGY',recycle[3]==='手札にもどす'?'RETURN_TO_HAND':'ATTACH_ENERGY'],energyType:recycle[1],holderType:recycle[2]||null,destination:recycle[3]==='手札にもどす'?'hand':'attached',sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='item'&&generic==='おたがいのバトルポケモン([悪]ポケモンをのぞく)を、それぞれこんらんにする。')return {mechanic:'TRAINER_BOTH_ACTIVE_CONFUSE',commands:['STATUS_CONDITION'],exceptType:'悪',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を4枚引く。このカードを使った番の終わりに、自分の手札が5枚以上あるなら、自分の手札をすべてトラッシュする。')return {mechanic:'TRAINER_DRAW_END_DISCARD',commands:['DRAW','ADD_STATE','DISCARD'],amount:4,threshold:5,sharedWording:true};
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='このカードを使ったなら、自分の番は終わる。自分の山札から「基本[水]エネルギー」を4枚まで選び、自分のポケモン1匹につける。そして山札を切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:'水',limit:4,target:'own',holderType:null,team:null,multi:false,heal:null,endTrainerTurn:true,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='このカードを使ったら、自分の番は終わる。自分の山札からグッズを2枚まで選び、相手に見せて、手札に加える。そして山札を切る。')return guardedSearch('item',2,{endTrainerTurn:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:null,limit:1,target:'own',holderType:null,team:null,multi:false,heal:null,windowCount:6,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。')return {mechanic:'MASS_HAND_FLOW',mode:'optionalDiscardLimit',amount:5,commands:['DISCARD','DRAW'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のバトルポケモンのHPを「30」回復する。自分のトラッシュにある「おいしいおむすび」(このカードをのぞく)1枚につき、回復するHPは「30」多くなる。')return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:30,discardName:'おいしいおむすび',discardUnit:30,sharedWording:true};
