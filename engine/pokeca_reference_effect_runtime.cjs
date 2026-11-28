@@ -369,6 +369,9 @@ function typedEvolutionOrTera(c,plan){
  const facts=record(c).facts;
  return plan.mechanic==='TRAINER_SEARCH_TERA'?facts.teraBenchProtection===true:facts.stage>0&&facts.types.includes(plan.type);
 }
+function massRouteNamedField(p,plan){
+ return !plan.requiresFieldNames||plan.requiresFieldNames.every(name=>field(p).some(c=>record(c)?.name===name));
+}
 function massRouteTargets(p,card,plan){
  return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
 }
@@ -900,7 +903,10 @@ function abilityCheck(g,actor,card,a,action){
  if(['ACTIVE_TOP_SUPPORTER_SEARCH','ACTIVE_TOP_ENERGY_SEARCH'].includes(m))assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
  if(m==='ABILITY_TOP_CARD_OPERATION')assert(p.deck.length>0&&(a.plan.mode!=='swap'||p.hand.length>0),'TOP_CARD_OPERATION_UNAVAILABLE');
- if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
+ if(m==='MASS_ENERGY_ROUTE'){
+  assert(massRouteNamedField(p,a.plan),'MASS_ENERGY_ROUTE_NAMED_FIELD_REQUIRED');
+  assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
+ }
  if(m==='MASS_ZONE_TRANSFER'){
   assert(!a.plan.emptyHand||p.hand.length===0,'SEARCH_EMPTY_HAND_REQUIRED');
   assert(!a.plan.firstOwnTurn||g.turnNumber<=2,'SEARCH_FIRST_OWN_TURN_REQUIRED');

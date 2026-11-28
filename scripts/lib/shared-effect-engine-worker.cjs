@@ -470,6 +470,12 @@ function fixtureResources(manifest,deckIndex,source,e){
   const target=reserve(filter,'deck');
   if(target?.category==='energy'&&kindAttackCost(e,typeOf(target))>0)reserveEnergy(typeOf(target),kindAttackCost(e,typeOf(target))+1);
  }
+ if(m==='MASS_ENERGY_ROUTE'&&plan.requiresFieldNames){
+  for(const name of plan.requiresFieldNames){
+   const reserved=reserve(r=>mon(r,null,0)&&r.name===name&&r.attacks.every(a=>a.plan)&&r.abilities.every(a=>a.plan),'bench');
+   if(!reserved)return Object.assign(requirements,{teamBoostBlocked:'NO_NAMED_ROUTE_FIELD_RESOURCE'});
+  }
+ }
  if(m==='MASS_ENERGY_ROUTE'&&plan.target!=='self'&&(plan.holderType||plan.team)){
   const valid=r=>mon(r,plan.holderType,0)&&(!plan.team||r.name.startsWith(plan.team+'の'));
   if(plan.poisonActive){
@@ -1578,6 +1584,7 @@ function prepare(r, e, kind) {
     const own=frame.game.players[0],plan=e.plan,eligible=c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type);
     const targets=(plan.target==='self'?[own.active]:plan.target==='bench'?own.bench:[own.active,...own.bench]).filter(c=>!plan.holderType||E.getReferenceEffectRecord(c).facts.types.includes(plan.holderType)).filter(c=>!plan.team||E.getReferenceEffectRecord(c).name.startsWith(plan.team+'の'));
     if(!targets.length)return {blocked:'NO_MASS_ROUTE_TARGET'};
+    if(plan.requiresFieldNames&&!plan.requiresFieldNames.every(name=>[own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c)?.name===name)))return {blocked:'NO_NAMED_ROUTE_FIELD_FIXTURE'};
     if(plan.zone!=='deck')for(const zone of [own.deck,own.hand,own.discard].filter(zone=>zone!==own[plan.zone])){
      while(own[plan.zone].filter(eligible).length<Math.min(3,plan.limit)){
       const index=zone.findIndex(eligible);if(index<0)break;own[plan.zone].push(zone.splice(index,1)[0]);
@@ -2732,6 +2739,23 @@ function verifyCase(t, e) {
       assert(effectEvents.some(ev=>ev?.command==='ATTACH_ENERGY'&&ev.energyId===id&&ev.targetInstanceId===targetId));
     }
     assert.equal(resolved.normalEnergyAttached,own.normalEnergyAttached);
+    if(plan.requiresFieldNames){
+      for(const name of plan.requiresFieldNames){
+       const holder=own.bench.find(c=>E.getReferenceEffectRecord(c)?.name===name);
+       if(!holder||holder.energyCards?.length||holder.tools?.length||holder.evolutionCards?.length)return {status:'BLOCKED',reason:'NO_ISOLATED_NAMED_ROUTE_FIELD_PROOF'};
+       const absent=structuredClone(before),side=absent.players[0],index=side.bench.findIndex(c=>c.id===holder.id),raw=side.bench.splice(index,1)[0];
+       for(const key of ['cardId','damage','energyCards','energies','tools','evolutionCards','enteredTurn','evolvedTurn','statusCondition','statusConditionInfo','entryWindow','referenceEvolutionWindow'])delete raw[key];
+       side.hand.push(raw);
+       assert.deepEqual(S.identities(before),S.identities(absent));
+       const denied=port(absent),start=denied.getSnapshot();assert.equal(denied.dispatch('you',action).ok,false);assert.deepEqual(denied.getSnapshot(),start);
+      }
+    }
+    if(plan.selfBenchOnly&&plan.target==='self'){
+      const holder=own.bench.find(c=>c.id===t.sourceId);assert(holder);
+      const swapped=structuredClone(before),side=swapped.players[0],index=side.bench.findIndex(c=>c.id===holder.id);
+      [side.active,side.bench[index]]=[side.bench[index],side.active];
+      const denied=port(swapped),start=denied.getSnapshot();assert.equal(denied.dispatch('you',action).ok,false);assert.deepEqual(denied.getSnapshot(),start);
+    }
     if(plan.origin==='bench'){
       const source=own.bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
