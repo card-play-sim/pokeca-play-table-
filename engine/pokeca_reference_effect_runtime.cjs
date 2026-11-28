@@ -321,7 +321,7 @@ function massRouteTargets(p,card,plan){
  return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
 }
 function massRouteEnergy(p,plan){
- return p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+ return (plan.windowCount?p[plan.zone].slice(0,plan.windowCount):p[plan.zone]).filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
@@ -351,6 +351,7 @@ function handFlowAvailable(p,o,plan){
  if(plan.mode==='resetOpponentCount')return o.hand.length>0&&o.deck.length>0;
  if(plan.mode==='resetBothSingleCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
  if(plan.mode==='opponentMegaCount')return p.deck.length>0&&field(o).some(isMegaEvolutionEx);
+ if(plan.mode==='optionalDiscardLimit')return p.deck.length>0;
  if(plan.mode==='bothDraw')return p.deck.length+o.deck.length>0;
  if(plan.mode==='revealCount')return p.deck.length>0&&o.hand.some(c=>c.kind==='pokemon');
  if(plan.mode==='resetBothCoin')return p.hand.length+p.deck.length+o.hand.length+o.deck.length>0;
@@ -681,7 +682,7 @@ function requests(g,actor,card,effect){
  }
  if(m==='MASS_ENERGY_ROUTE'){
   const plan=effect.plan,targets=massRouteTargets(p,card,plan),pool=targets.length?massRouteEnergy(p,plan):[],max=Math.min(plan.limit,pool.length,plan.oneEach?targets.length:Infinity),min=plan.zone==='deck'?0:plan.allHolders?max:Math.min(1,max);
-  if(plan.zone==='deck')deckRequest('energy',pool,min,max);
+  if(plan.zone==='deck')deckRequest('energy',pool,min,max,plan.windowCount?{limit:plan.windowCount}:undefined);
   else cardRequest('energy',pool,min,max);
   if(plan.target!=='self'){
    for(let i=0;i<(plan.multi?max:1);i++){
@@ -703,6 +704,9 @@ function requests(g,actor,card,effect){
    request.candidates=request.candidates.map(c=>({...c,searchGroup:groups.get(id(c))}));
    request.constraints=[{kind:'distinct',field:'searchGroup',error:'MASS_SEARCH_DUPLICATE_GROUP'}];
   }
+ }
+ if(m==='MASS_HAND_FLOW'&&effect.plan.mode==='optionalDiscardLimit'){
+  const pool=p.hand.filter(c=>id(c)!==id(card));cardRequest('discard',pool,0,pool.length);
  }
  if(m==='MASS_HEAL_SCOPE'&&effect.plan.choice){
   const pool=scopeHealTargets(p,o,effect.plan).filter(c=>c.damage>0);
@@ -1338,6 +1342,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'MASS_ENERGY_ROUTE':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
+   if(plan.windowCount)assert(energy.length<=plan.limit&&new Set(energy).size===energy.length&&energy.every(ident=>massRouteEnergy(p,plan).some(c=>id(c)===ident)),'MASS_ENERGY_WINDOW_SELECTION');
    for(const [i,ident] of energy.entries()){
     const target=plan.target==='self'?card:targets.find(c=>id(c)===ids('attachTo'+(plan.multi?i:0))[0]);
     const index=p[plan.zone].findIndex(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
@@ -1381,6 +1386,12 @@ function applyPlan(g,actor,card,effect,action){
    if(plan.mode==='resetOpponent')resetHand(g,o,plan.amount,plan.bottom);
    if(plan.mode==='resetOpponentCount')resetHand(g,o,o.hand.length,true);
    if(plan.mode==='opponentMegaCount')draw(g,p,field(o).filter(isMegaEvolutionEx).length);
+   if(plan.mode==='optionalDiscardLimit'){
+    const discard=ids('discard');assert(new Set(discard).size===discard.length&&discard.every(ident=>p.hand.some(c=>id(c)===ident&&ident!==id(card))),'INVALID_OPTIONAL_HAND_DISCARD');
+    for(const ident of discard)p.discard.push(p.hand.splice(p.hand.findIndex(c=>id(c)===ident),1)[0]);
+    if(discard.length)event(g,actor,'DISCARD',{cardIds:discard,fromZone:'hand'});
+    draw(g,p,Math.max(0,plan.amount-p.hand.length));
+   }
    if(plan.mode==='resetBothSingleCoin'){
     // Complete both returns and shuffles before the single actor-owned coin.
     for(const side of [p,o]){
@@ -2075,7 +2086,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'HEAL_ACTIVE_DAMAGE':{
    assert(!plan.minimumEnergy||energyUnits(p.active).length>=plan.minimumEnergy,'ACTIVE_ENERGY_MINIMUM_REQUIRED');
    const amount=plan.tailsAmount!==undefined?(coin(g,actor)?plan.amount:plan.tailsAmount):plan.team&&record(p.active).name.startsWith(plan.team+'の')?plan.teamAmount:plan.amount;
-   heal(g,actor,p.active,amount);break;
+   heal(g,actor,p.active,amount+(plan.discardName?p.discard.filter(c=>id(c)!==id(card)&&record(c)?.name===plan.discardName).length*plan.discardUnit:0));break;
   }
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
