@@ -1025,6 +1025,15 @@ function plan(entry,kind){
  // Official H supporters: a single coin decides how many cards to draw.
  match=generic.match(/^コインを1回投げる。オモテなら([1-9][0-9]*)枚、ウラなら([1-9][0-9]*)枚、自分の山札を引く。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&match&&match.slice(1).every(v=>Number.isSafeInteger(Number(v))))return {mechanic:'COIN_DRAW_CARDS',commands:['COIN_FLIP','DRAW'],heads:Number(match[1]),tails:Number(match[2])};
+ // Exact active-only trainer healing; counts are energy units, not cards.
+ if(kind==='MAIN'&&entry.category==='item'){
+  const named=generic.match(/^自分のバトルポケモンのHPを「([1-9]\d{0,2})」回復する。そのポケモンが「ペパーのポケモン」なら、回復するHPは「([1-9]\d{0,2})」になる。$/);
+  if(named)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(named[1]),team:'ペパー',teamAmount:Number(named[2]),sharedWording:true};
+  const energy=generic.match(/^エネルギーが([1-9])個以上ついている自分のバトルポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
+  if(energy)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(energy[2]),minimumEnergy:Number(energy[1]),sharedWording:true};
+ }
+ const coinHeal=generic.match(/^コインを1回投げる。オモテなら「([1-9]\d{0,2})」、ウラなら「([1-9]\d{0,2})」、自分のバトルポケモンのHPを回復する。$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&coinHeal)return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['COIN_FLIP','HEAL'],amount:Number(coinHeal[1]),tailsAmount:Number(coinHeal[2]),sharedWording:true};
  // A heal affecting the Active Pokemon only is not an arbitrary-target heal.
  match=generic.match(/^自分のバトルポケモンのHPを「([1-9][0-9]*)」回復する。$/);
  if(kind==='MAIN'&&entry.category==='supporter'&&match&&Number.isSafeInteger(Number(match[1])))return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:Number(match[1])};
