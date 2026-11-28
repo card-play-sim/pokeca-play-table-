@@ -431,3 +431,20 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
  assert.equal(adaptiveProfile(history,2).learned,undefined,'future/current run must not inform itself');
  console.log('ADAPTIVE_CROSS_RUN_GENERATION_REPAIR PASS');
 }
+
+ // Real quarantine run 46100732026: repair-profile metadata previously caused
+ // a false TRANSPORT diagnosis; the compiler also emitted uncalled helpers.
+ {
+  const {compilerModelGuide}=require('../scripts/local-unknown-effect-generator.cjs');
+  const first={reason:'AssertionError: MODEL_UNCALLED_COMPILER_HELPER:sharedEffect',nextRepair:{timeoutMs:1500000,type:'COMPILE'}};
+  const last={reason:'AssertionError: MODEL_ANCHOR_LABEL_LEAK',nextRepair:{timeoutMs:1500000,type:'ANCHOR'}};
+  assert.equal(repairProfile(JSON.stringify(first)).type,'COMPILE');
+  assert.equal(repairProfile(JSON.stringify(first)+'\n'+JSON.stringify(last)).type,'ANCHOR');
+  assert.equal(repairProfile('LOCAL_MODEL_DEADLINE').type,'TRANSPORT');
+  const compiler='engine/reference-effect-plans.cjs';
+  const site=" const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;";
+  const guide=compilerModelGuide(new Map([['F0_887',{path:compiler,before:site}]]));
+  assert(guide.includes('INSIDE plan(entry,kind)')&&guide.includes('insertBefore at F0_887')&&guide.includes('direct guarded return')&&guide.includes('Do not declare a new helper'));
+  assert.equal(compilerModelGuide(new Map()),'');
+  console.log('COMPILER_GENERATION_PRECISION_REPAIR PASS');
+ }
