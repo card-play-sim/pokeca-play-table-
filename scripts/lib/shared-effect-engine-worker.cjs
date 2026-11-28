@@ -275,6 +275,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(proof.mode==='discardName')reserve(r=>r.name===proof.name,'discard');
   if(proof.mode==='ownAllNames')for(const name of proof.names)if(source.name!==name)reserve(r=>mon(r,null,0)&&r.name===name,'bench');
  }
+ if(m==='ATTACK_REPEAT_TARGET_DAMAGE'){
+  const plain=r=>mon(r,null,0)&&!r.abilities.length&&!r.facts.teraBenchProtection;
+  if(!reserve(plain,'active',1)||!reserve(plain,'bench',1))return Object.assign(requirements,{boardBonusBlocked:'NO_REPEAT_TARGET_DAMAGE_FIXTURE'});
+ }
  if(m==='ATTACK_SPREAD_DAMAGE'&&(plan.filter==='ex'||plan.filter==='exV')){
   reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.facts.teraBenchProtection&&!r.abilities.length,'bench',1);
   reserve(r=>mon(r,null,0)&&!r.facts.rulePokemon&&!r.abilities.length,'bench',1);
@@ -2071,6 +2075,14 @@ function prepare(r, e, kind) {
     if(!source||source.hp<=40)return {blocked:'NO_DAMAGED_BENCH_COUNTER_SOURCE_FIXTURE'};
     source.damage=40;
   }
+  if(m==='ATTACK_REPEAT_TARGET_DAMAGE'){
+    const [own,other]=frame.game.players;
+    const paid=exactBasicAttackPayment(own.active.energyCards,e.cost||[]);
+    if(!paid||!other.bench.length)return {blocked:'NO_REPEAT_TARGET_DAMAGE_PAYMENT_OR_BENCH'};
+    const ids=new Set(paid.map(c=>c.id));
+    for(const c of [...own.active.energyCards])if(!ids.has(c.id))own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(c),1)[0]);
+    own.active.energies=own.active.energyCards.map(c=>c.energyType);
+  }
   if(m==='ATTACK_SPREAD_DAMAGE'&&e.plan.counterUnit)frame.game.players[1].active.damage=20;
   if(m==='ATTACK_SPREAD_DAMAGE'&&e.plan.requiresDamage){
     const bench=frame.game.players[1].bench;
@@ -3799,6 +3811,35 @@ function verifyCase(t, e) {
     assert(moved.every(card=>after.players[1][e.plan.destination].some(now=>now.id===card.id)));
     if(e.plan.destination==="deck") assert(effectEvents.some(step=>step?.command==="REVEAL"&&
       step.privateTo==="you"&&moved.every(card=>step.cardIds.includes(card.id))));
+  }
+  if(e.plan.mechanic==='ATTACK_REPEAT_TARGET_DAMAGE'){
+    const plan=e.plan,action=t.action||o.action,active=defendingSide.active,bench=defendingSide.bench[0];
+    if(!bench||plan.count<2)return {status:'BLOCKED',reason:'NO_REPEAT_TARGET_DAMAGE_SPLIT'};
+    const withAllocation=allocation=>({...action,selections:{...action.selections,allocation}});
+    const prove=(start,allocation)=>{
+      const replay=port(start),chosen=withAllocation(allocation);
+      assert(replay.dispatch('you',chosen).ok);
+      const end=replay.getSnapshot(),events=end.history.slice(start.history.length);
+      assert(events.some(x=>x.type==='attack'&&x.details?.effectId===e.effectId&&x.details?.referenceOfficialCardId===E.getReferenceEffectRecord(attackingSide.active).officialCardId));
+      for(const mon of [active,...defendingSide.bench]){
+        const hits=events.filter(x=>x.details?.command==='DAMAGE'&&!x.details.reference&&x.details.targetInstanceId===mon.id);
+        const count=allocation[mon.id]||0;
+        if(count){assert.equal(hits.length,1);assert.equal(hits[0].details.amount,mon.id===active.id&&start.players[1].active.referenceProtection?0:count*plan.unit);}
+        else assert.equal(hits.length,0);
+      }
+      assert(!events.some(x=>x.details?.command==='PLACE_DAMAGE_COUNTERS'&&!x.details.reference));
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(end)));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(end));
+    };
+    prove(before,{[active.id]:plan.count});
+    const split={[active.id]:plan.count-1,[bench.id]:1};
+    prove(before,split);
+    const protectedState=JSON.parse(JSON.stringify(before));
+    protectedState.players[1].active.referenceProtection={opponentTurn:protectedState.turnNumber};
+    prove(protectedState,split);
+    for(const invalid of [{[active.id]:plan.count-1},{[active.id]:plan.count+1},{[attackingSide.active.id]:plan.count},{[active.id]:plan.count+1,[bench.id]:-1},{[active.id]:plan.count-.5,[bench.id]:.5}]){
+      const replay=port(before);assert.equal(replay.dispatch('you',withAllocation(invalid)).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
   }
   if (["ATTACK_SPLASH_OWN_BENCH","ATTACK_SPREAD_DAMAGE"].includes(e.plan.mechanic)) {
     const plan=e.plan,action=t.action||o.action;

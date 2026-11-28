@@ -612,6 +612,9 @@ function requests(g,actor,card,effect){
   const count=energies.length&&targets.length?1:0;
   deckRequest('energy',energies,count,count);cardRequest('attachTo',targets,count,count);
  }
+ if(m==='ATTACK_REPEAT_TARGET_DAMAGE'){
+  add('allocation','COUNTERS',opp.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),effect.plan.count,effect.plan.count,{allocationUnit:'selection',damagePerSelection:effect.plan.unit});
+ }
  if(m==='PHANTOM'&&o.bench.length){
   const count=effect.plan.counterCount??6;
   add('allocation','COUNTERS',o.bench.map(c=>({id:id(c),name:c.name,damage:c.damage||0,hp:c.hp})),count,count);
@@ -1513,6 +1516,16 @@ function applyPlan(g,actor,card,effect,action){
    damage(g,actor,o.active,Number(effect.damage));
    if(g.stadium&&record(g.stadium).name.includes(plan.name))
     for(const mon of o.bench)damage(g,actor,mon,plan.amount,{bench:true});
+   break;
+  }
+  case 'ATTACK_REPEAT_TARGET_DAMAGE':{
+   const allocation=action.selections?.allocation||{};
+   // One damage calculation per chosen Pokemon, not one hit per selection.
+   // The common allocation gate validates exact count and opponent-only IDs.
+   for(const mon of field(o)){
+    const count=allocation[id(mon)]||0;
+    if(count)damage(g,actor,mon,count*plan.unit,{bench:mon!==o.active,skipWeakness:true,skipResistance:true});
+   }
    break;
   }
   case 'ATTACK_SPREAD_DAMAGE':{

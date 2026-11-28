@@ -427,6 +427,8 @@ function additionalAttackPlan(entry,text){
  if(sonic&&printed==='0')return {mechanic:'ATTACK_RETURN_ENERGY_SPREAD',commands:['RETURN_TO_DECK','SHUFFLE_DECK','DAMAGE'],scope:'opponent',count:null,amount:Number(sonic[1]),optional:false,sharedWording:true};
  if(base===null||printed.endsWith('+'))return null;
  const deal=base?['DAMAGE']:[];
+ const repeatTarget=text.match(/^相手のポケモンを([1-9]\d?)回選び、選んだポケモン全員に、弱点・抵抗力を計算せず、選んだ回数×([1-9]\d{0,2})ダメージ。\((?:1匹を2回以上選べる。)\)$/);
+ if(repeatTarget&&printed==='0')return {mechanic:'ATTACK_REPEAT_TARGET_DAMAGE',commands:['DAMAGE'],count:Number(repeatTarget[1]),unit:Number(repeatTarget[2]),skipWeakness:true,skipResistance:true,sharedWording:true};
  if(/^\d+$/.test(printed)&&text==='このポケモンの特殊状態を、すべて回復する。')
   return {mechanic:'ATTACK_SELF_STATUS_CLEAR',commands:[...deal,'STATUS_CONDITION'],sharedWording:true};
  if(/^\d+$/.test(printed)&&text==='このポケモンと、ついているすべてのカードを、トラッシュする。')
