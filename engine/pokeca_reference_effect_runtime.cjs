@@ -973,7 +973,7 @@ function preflight(g,actor,action){
    if(m==='INSPECTED_OPPONENT_HAND_TRANSFER')assert(o.hand.length>0,'NO_OPPONENT_HAND_TO_INSPECT');
    if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')assert(p.deck.length>0&&p.hand.some(c=>c.kind==='pokemon'&&!record(c).facts.rulePokemon),'NO_NON_RULE_DRAW_COST');
    if(m==='DISCARD_ONE_DRAW_OPP_BENCH')assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
-   if(m==='HEAL_ACTIVE_DAMAGE')assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');
+   if(m==='HEAL_ACTIVE_DAMAGE'){assert(p.active&&(p.active.damage||0)>0,'NO_DAMAGED_ACTIVE_POKEMON');assert(!r.mainPlan.minimumEnergy||energyUnits(p.active).length>=r.mainPlan.minimumEnergy,'ACTIVE_ENERGY_MINIMUM_REQUIRED');}
    if(m==='HEAL_AND_CLEAR_STATUS')assert(field(p).some(canHealOrClearStatus),'NO_HEAL_OR_STATUS_TARGET');
    if(m==='RECYCLE_BASIC_ENERGY')assert(p.discard.some(basicEnergy),'NO_RECOVERABLE_BASIC_ENERGY');
    if(['DISCARD_DECK_TOP','SEARCH_MEGA_EVOLUTION_EX','COIN_SEARCH_POKEMON'].includes(m))assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -2008,7 +2008,11 @@ function applyPlan(g,actor,card,effect,action){
    else finishCoinPokemonSearch(g,p,null);
    return;
   }
-  case 'HEAL_ACTIVE_DAMAGE':heal(g,actor,p.active,plan.amount);break;
+  case 'HEAL_ACTIVE_DAMAGE':{
+   assert(!plan.minimumEnergy||energyUnits(p.active).length>=plan.minimumEnergy,'ACTIVE_ENERGY_MINIMUM_REQUIRED');
+   const amount=plan.tailsAmount!==undefined?(coin(g,actor)?plan.amount:plan.tailsAmount):plan.team&&record(p.active).name.startsWith(plan.team+'の')?plan.teamAmount:plan.amount;
+   heal(g,actor,p.active,amount);break;
+  }
   case 'DRAW_CARDS':draw(g,p,plan.amount);break;
   case 'DISCARD_HAND_DRAW':case 'SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW':discardHandAndDraw(g,actor,p,plan.amount);break;
   case 'TRAINER_TOP_SELECT_DISCARD':{
