@@ -429,6 +429,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   const filter=r=>{
    if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?(!plan.energyType||typeOf(r)===plan.energyType):r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
    if(plan.nameExact&&r.name!==plan.nameExact)return false;
+   if(plan.maxHp!==undefined&&!(r.facts?.hp<=plan.maxHp))return false;
    if(plan.retreatCost!==undefined&&r.facts.retreatCost!==plan.retreatCost)return false;
    if(plan.resistanceType&&!r.facts.resistance?.types?.includes(plan.resistanceType))return false;
    if(plan.category==='any')return true;
@@ -2923,8 +2924,8 @@ function verifyCase(t, e) {
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     if(plan.destination==='discard'&&plan.zone==='deck'){
-      assert.deepEqual(resolved.hand.map(c=>c.id),own.hand.map(c=>c.id));
-      assert.deepEqual(resolved.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...ids].sort());
+      assert.deepEqual(Array.from(resolved.hand,c=>c.id),Array.from(own.hand,c=>c.id));
+      assert.deepEqual(Array.from(resolved.discard,c=>c.id).sort(),[...Array.from(own.discard,c=>c.id),...ids].sort());
       assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ids.every(id=>ev.cardIds?.includes(id))));
       assert(effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));
       const pool=own.deck.filter(c=>massTransferCandidate(c,plan));
@@ -2932,8 +2933,8 @@ function verifyCase(t, e) {
         const chosen=pool.slice(0,count).map(c=>c.id),replay=port(before);
         assert(replay.dispatch('you',{...action,selections:{cards:chosen}}).ok);
         const end=replay.getSnapshot(),side=end.players[0];
-        assert.deepEqual(side.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...chosen].sort());
-        assert.deepEqual(side.hand.map(c=>c.id),own.hand.map(c=>c.id));
+        assert.deepEqual(Array.from(side.discard,c=>c.id).sort(),[...Array.from(own.discard,c=>c.id),...chosen].sort());
+        assert.deepEqual(Array.from(side.hand,c=>c.id),Array.from(own.hand,c=>c.id));
         assert.deepEqual(S.identities(before),S.identities(end));
       }
       if(pool.length>plan.limit){
