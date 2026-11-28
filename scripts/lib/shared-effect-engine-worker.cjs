@@ -572,6 +572,12 @@ function fixtureResources(manifest,deckIndex,source,e){
   const eligible=r=>isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
   const energy=reserve(eligible,'deck');if(energy)ensure(deckIndex,energy,Math.min(3,kindAttackCost(e,plan.type)+2));
  }
+ if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='basic'){
+  // Reserve an exact, ability-free basic defender before the fixture chooses
+  // its default (which may be evolved). Preserve a separate bench for promotion.
+  const target=reserve(r=>r.category==='pokemon'&&r.facts.basic===true&&!r.abilities.length&&r.attacks.length>0&&r.attacks.every(a=>a.plan),'active',1);
+  if(!target)return Object.assign(requirements,{basicKoBlocked:'NO_REGISTERED_BASIC_KO_DEFENDER'});
+ }
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='specialEnergy')reserve(r=>r.category==='energy'&&r.mainPlan&&!isBasicEnergy(r),'deck',1);
  if(m==='ATTACK_NEXT_HIT_RETALIATION'||m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
@@ -1197,6 +1203,7 @@ function prepare(r, e, kind) {
   }
   const fixtureRequirements=fixtureResources(manifest,locations[0].deck,r,e);
   if(fixtureRequirements.teamBoostBlocked)return {blocked:fixtureRequirements.teamBoostBlocked};
+  if(fixtureRequirements.basicKoBlocked)return {blocked:fixtureRequirements.basicKoBlocked};
   const row = {
     fixtureRequirements,
     cardName: r.deckName,
