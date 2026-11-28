@@ -680,6 +680,8 @@ function plan(entry,kind){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
  }
  if(kind==='MAIN'&&entry.category==='energy'){
+  const guard=generic.match(/^このカードは、ポケモンについているかぎり、\[(無色|闘)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(\[闘\])?ポケモンは、相手のポケモンが使うワザの効果を受けない。\(すでに受けている効果は、なくならない。\)$/);
+  if(guard&&(guard[1]==='闘')===Boolean(guard[2]))return {mechanic:'ENERGY_ATTACK_EFFECT_GUARD',commands:['ATTACH_ENERGY','ADD_STATE'],energyType:guard[1],holderType:guard[2]?'闘':null,sharedWording:true};
   const rainbow=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー1個ぶんとしてはたらく。(たね|2進化)ポケモンについているなら、すべてのタイプのエネルギー([12])個ぶんとしてはたらく。$/);
   if(rainbow&&((rainbow[1]==='たね'&&rainbow[2]==='1')||(rainbow[1]==='2進化'&&rainbow[2]==='2')))return {mechanic:'ENERGY_STAGE_RAINBOW',commands:['ATTACH_ENERGY'],stage:rainbow[1]==='たね'?0:2,units:Number(rainbow[2]),sharedWording:true};
   const typed=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼])\]エネルギー1個ぶんとしてはたらく。このカードをつけている\[\1\]ポケモン(は、最大HPが「\+([1-9]\d{0,2})」される。|は、にげるためのエネルギーが、すべてなくなる。|が使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。|は、ベンチにいるかぎり、相手のワザのダメージを受けない。)$/);
