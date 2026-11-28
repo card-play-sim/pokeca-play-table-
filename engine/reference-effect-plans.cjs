@@ -680,7 +680,7 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
- const fan=generic.match(/^最初の自分の番にだけ1回使える。自分の山札から、HPが「([1-9]\d{0,2})」以下の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンを([1-4])枚まで選び、相手に見せて、手札に加える。そして山札を切る。この番、すでに別の「([^「」]+)」を使っていたなら、この特性は使えない。$/);
+ const fan=generic.match(/^最初の自分の番にだけ1回使える。自分の山札から、HPが「([1-9]\d{0,2})」以下の\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモンを([1-4])枚まで選び、相手に見せて、手札に加える。そして山札を切る。この番、すでに別の「([^「」]+)」を使っていたなら、この特性は使えない。$/);
  if(kind==='ABILITY'&&fan)return {mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category:'pokemon',type:fan[2],maxHp:Number(fan[1]),limit:Number(fan[3]),firstOwnTurn:true,sharedSearchName:fan[4],sharedWording:true};
  const teamRetaliation=generic.match(/^このポケモンがいるかぎり、自分のバトル場の\[([草炎水雷超闘悪鋼竜無色])\]ポケモンが、相手のポケモンからワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。$/);
  if(kind==='ABILITY'&&teamRetaliation)return {mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',commands:['PLACE_DAMAGE_COUNTERS'],mode:'team',type:teamRetaliation[1],counterCount:Number(teamRetaliation[2]),sharedWording:true};
