@@ -83,15 +83,17 @@ jobs:
           export POKECA_INTAKE_LOCAL_CANDIDATE=1
           export POKECA_BROWSER_SHARD_COUNT=4
           if [ "$GITHUB_REF_NAME" != parallel/05-integration ]; then export POKECA_BROWSER_SLOTS_ONLY=1; fi
+          POKECA_INTAKE_FIXTURE_MODE=prepare python tests/test_control_013_browser.py
+          export POKECA_INTAKE_FIXTURE_MODE=reuse
+          set -o pipefail
           pids=()
           mkdir -p artifacts
           for shard in 0 1 2 3; do
-            POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python tests/test_control_013_browser.py > "artifacts/all-remaining-shard-$shard.log" 2>&1 &
+            (POKECA_BROWSER_SHARD_INDEX="$shard" POKECA_INTAKE_ARTIFACT="all-remaining-$shard" python -u tests/test_control_013_browser.py 2>&1 | tee "artifacts/all-remaining-shard-$shard.log") &
             pids+=("$!")
           done
           rv=0
           for pid in "${pids[@]}"; do wait "$pid" || rv=1; done
-          for logfile in artifacts/all-remaining-shard-*.log; do tail -n 25 "$logfile"; done
           exit "$rv"
       - name: Persist battle-qualified candidate on isolated branch only
         if: success()
