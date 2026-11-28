@@ -1,20 +1,29 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_FD90A68EC2C5437C:4314ce0c4a9b2b290848fb1341d0a750f79239313aee205ba6df33eec75ba507",
   "taskFingerprint": "4314ce0c4a9b2b290848fb1341d0a750f79239313aee205ba6df33eec75ba507",
-  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
-  "attemptId": "bf29c0f5-c53f-45f4-8274-ea755651b945",
-  "status": "BLOCKED",
+  "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
+  "attemptId": "652e1880-24ab-4b91-b992-a591b21c5976",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "47497:tool:ロケット団のさいみん装置:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACHED_ACTIVE_HIT",
+        "commands": [
+          "STATUS_CONDITION"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "a308c7b2bb95a7db8e110ef37511a3a35fb48c741cb844f2755f0f8137dcbf02"
+  "checksum": "086727b8bbeb8511cfb4454fe378b77a72d62a3c8f31f5a2ed2b90db6d155db8"
 }
