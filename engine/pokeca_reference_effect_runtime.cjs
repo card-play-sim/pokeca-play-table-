@@ -356,7 +356,7 @@ function massRouteTargets(p,card,plan){
  return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
 }
 function massRouteEnergy(p,plan){
- return p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+ return (plan.topWindow?p[plan.zone].slice(0,plan.topWindow):p[plan.zone]).filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
 }
 function massTransferCandidate(c,plan){
  const r=record(c);
@@ -680,9 +680,13 @@ function requests(g,actor,card,effect){
   deckRequest('cards',candidates,0,new Set(candidates.map(c=>record(c).facts.stage)).size);
   out.at(-1).constraints=[{kind:'distinct',field:'stage',error:'DECK_SEARCH_DUPLICATE_STAGE'}];
  }
+ if(m==='ABILITY_TOP_CARD_OPERATION'){
+  if(effect.plan.mode==='peekDiscard')deckRequest('cards',p.deck.slice(0,1),0,Math.min(1,p.deck.length),{limit:1});
+  else cardRequest('cards',p.hand,1,1);
+ }
  if(m==='MASS_ENERGY_ROUTE'){
   const plan=effect.plan,targets=massRouteTargets(p,card,plan),pool=targets.length?massRouteEnergy(p,plan):[],max=Math.min(plan.limit,pool.length,plan.oneEach?targets.length:Infinity),min=plan.zone==='deck'?0:plan.allHolders?max:Math.min(1,max);
-  if(plan.zone==='deck')deckRequest('energy',pool,min,max);
+  if(plan.zone==='deck')deckRequest('energy',pool,min,max,plan.topWindow?{limit:plan.topWindow}:undefined);
   else cardRequest('energy',pool,min,max);
   if(plan.target!=='self'){
    for(let i=0;i<(plan.multi?max:1);i++){
@@ -877,6 +881,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(['ACTIVE_TOP_SUPPORTER_SEARCH','ACTIVE_TOP_ENERGY_SEARCH'].includes(m))assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
+ if(m==='ABILITY_TOP_CARD_OPERATION')assert(p.deck.length>0&&(a.plan.mode!=='swap'||p.hand.length>0),'TOP_CARD_OPERATION_UNAVAILABLE');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER'){
   assert(!a.plan.emptyHand||p.hand.length===0,'SEARCH_EMPTY_HAND_REQUIRED');
@@ -1334,18 +1339,41 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
+  case 'ABILITY_TOP_CARD_OPERATION':{
+   assert(p.deck.length,'TOP_CARD_OPERATION_EMPTY');
+   const top=p.deck[0],chosen=ids('cards');
+   if(plan.mode==='peekDiscard'){
+    assert(chosen.length<=1&&(!chosen.length||chosen[0]===id(top)),'TOP_CARD_DISCARD_CHANGED');
+    event(g,actor,'REVEAL',{cardIds:[id(top)],fromZone:'deck',privateTo:actor});
+    if(chosen.length){p.discard.push(p.deck.shift());event(g,actor,'DISCARD',{cardIds:chosen,fromZone:'deck'});}
+   }else{
+    const index=p.hand.findIndex(c=>id(c)===chosen[0]);assert(chosen.length===1&&index>=0,'TOP_SWAP_HAND_CHANGED');
+    const hand=p.hand[index];p.hand[index]=top;p.deck[0]=hand;
+    event(g,actor,'RETURN_TO_DECK',{cardIds:[id(hand)],topOnly:true,privateTo:actor});
+    event(g,actor,'ADD_TO_HAND',{cardIds:[id(top)],fromZone:'deck',privateTo:actor});
+   }
+   break;
+  }
   case 'MASS_ENERGY_ROUTE':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
+   const inspected=plan.topWindow?p.deck.splice(0,plan.topWindow):null,source=inspected||p[plan.zone];
+   assert(new Set(energy).size===energy.length&&energy.length<=plan.limit&&energy.every(ident=>source.some(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type))),'MASS_ENERGY_ROUTE_SELECTION_CHANGED');
    for(const [i,ident] of energy.entries()){
     const target=plan.target==='self'?card:targets.find(c=>id(c)===ids('attachTo'+(plan.multi?i:0))[0]);
-    const index=p[plan.zone].findIndex(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
+    const index=source.findIndex(c=>id(c)===ident&&basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
     assert(target&&index>=0,'MASS_ENERGY_ROUTE_CHANGED');
-    target.energyCards.push(p[plan.zone].splice(index,1)[0]);
+    target.energyCards.push(source.splice(index,1)[0]);
     event(g,actor,'ATTACH_ENERGY',{energyId:ident,targetInstanceId:id(target),fromZone:plan.zone});
     healed.add(target);
    }
-   if(plan.zone==='deck'){event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});shuffle(g,p);}
+   if(plan.zone==='deck'){
+    event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});
+    if(inspected&&plan.remainder==='shuffleBottom'){
+     for(let i=inspected.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(referenceRandom(g)*(i+1));[inspected[i],inspected[j]]=[inspected[j],inspected[i]];}
+     p.deck.push(...inspected);event(g,actor,'SHUFFLE_DECK',{scope:'inspectedRemainder',count:inspected.length});event(g,actor,'RETURN_TO_DECK',{bottomOnly:true,count:inspected.length});
+    }else{if(inspected)p.deck.push(...inspected);shuffle(g,p);}
+   }
    if(plan.heal)for(const target of healed)if(target.damage>0)heal(g,actor,target,plan.heal==='all'?target.damage:plan.heal);
    if(plan.poisonActive&&healed.has(p.active)){p.active.statusCondition='POISONED';event(g,actor,'STATUS_CONDITION',{status:'POISONED',targetInstanceId:id(p.active)});}
    break;

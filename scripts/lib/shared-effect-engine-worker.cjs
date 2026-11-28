@@ -1508,6 +1508,7 @@ function prepare(r, e, kind) {
      if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_ROUTE_ENERGY'};
+    if(plan.topWindow){const cards=own.deck.filter(eligible);if(cards.length<2||own.deck.length<=plan.topWindow)return {blocked:'NO_TOP_ROUTE_FIXTURE'};for(const [card,pos] of [[cards[0],0],[cards[1],plan.topWindow]]){own.deck.splice(own.deck.indexOf(card),1);own.deck.splice(pos,0,card);}}
     if(plan.oneEach&&targets.length<2)return {blocked:'NO_TWO_DISTINCT_ROUTE_TARGETS'};
     if(plan.oneEach&&own[plan.zone].filter(eligible).length<2)return {blocked:'NO_TWO_PHYSICAL_ROUTE_ENERGIES'};
     if(plan.requiresTera&&![own.active,...own.bench].some(c=>E.getReferenceEffectRecord(c).facts.teraBenchProtection===true))return {blocked:'NO_TERA_ROUTE_FIXTURE'};
@@ -1957,6 +1958,7 @@ function prepare(r, e, kind) {
     }
     assert(player.bench.length >= e.plan.minimum);
   }
+  if(m==='ABILITY_TOP_CARD_OPERATION'){const own=frame.game.players[0];if(!own.deck.length||e.plan.mode==='swap'&&!own.hand.length)return {blocked:'NO_TOP_CARD_OPERATION_FIXTURE'};}
   if (m === "ACTIVE_TOP_ENERGY_SEARCH") {
     const deck=frame.game.players[0].deck;
     const energy=deck.filter(card=>card.kind==="energy");
@@ -2592,9 +2594,32 @@ function verifyCase(t, e) {
     if(plan.optional){const skip=port(before);assert(skip.dispatch('you',{...action,selections:{energy:[],moveTo0:[]}}).ok);assert(!skip.getSnapshot().history.slice(before.history.length).some(x=>x.details?.command==='MOVE_ENERGY'&&!x.details.reference));}
     if(action.type==='attack_turn'&&Number(e.damage)>0)verifyPrintedAttack(before,after,e,Number(e.damage));
   }
+  if(e.plan.mechanic==='ABILITY_TOP_CARD_OPERATION'){
+    const own=before.players[0],next=after.players[0],action=t.action||o.action,chosen=action.selections.cards,top=own.deck[0];
+    if(e.plan.mode==='swap'){
+      const selected=own.hand.find(c=>c.id===chosen[0]);assert(selected);
+      assert.equal(next.deck[0].id,selected.id);assert(next.hand.some(c=>c.id===top.id));
+      assert.deepEqual(next.deck.slice(1).map(c=>c.id),own.deck.slice(1).map(c=>c.id));
+    }else{
+      assert(chosen.length<=1);assert.equal(next.deck.length,own.deck.length-chosen.length);
+      if(chosen.length){assert.equal(chosen[0],top.id);assert(next.discard.some(c=>c.id===top.id));}
+      else assert.deepEqual(next.deck.map(c=>c.id),own.deck.map(c=>c.id));
+      const kept=port(before);assert(kept.dispatch('you',{...action,selections:{cards:[]}}).ok);assert.deepEqual(kept.getSnapshot().players[0].deck.map(c=>c.id),own.deck.map(c=>c.id));
+    }
+    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{cards:[own.deck[1]?.id||'invalid']}}).ok,false);assert.deepEqual(invalid.getSnapshot(),before);
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+  }
   if(e.plan.mechanic==='MASS_ENERGY_ROUTE'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0],energy=action.selections.energy;
     assert(energy.length>0&&energy.length<=plan.limit);
+    if(plan.topWindow){
+     const window=own.deck.slice(0,plan.topWindow),rest=own.deck.slice(plan.topWindow),left=window.filter(c=>!energy.includes(c.id));
+     assert(energy.every(id=>window.some(c=>c.id===id)));
+     if(plan.remainder==='shuffleBottom'){assert.deepEqual(resolved.deck.slice(0,rest.length).map(c=>c.id),rest.map(c=>c.id));assert.deepEqual(resolved.deck.slice(rest.length).map(c=>c.id).sort(),left.map(c=>c.id).sort());}
+     const outside=rest.find(c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type));assert(outside);
+     const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{energy:[outside.id],attachTo0:[own.active.id]}}).ok,false);assert.deepEqual(invalid.getSnapshot(),before);
+     const none=port(before);assert(none.dispatch('you',{...action,selections:{energy:[]}}).ok);assert.deepEqual(Array.from(S.identities(none.getSnapshot())),Array.from(S.identities(before)));
+    }
     for(const [i,id] of energy.entries()){
       const source=own[plan.zone].find(c=>c.id===id);
       assert(source?.kind==='energy'&&!source.isSpecial&&(!plan.type||source.energyType===plan.type));

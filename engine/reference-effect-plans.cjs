@@ -680,6 +680,10 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const topAttach=generic.match(/^(自分の番に1回使える。|自分の番に、このカードを手札から出して進化させたとき、1回使える。)自分の山札を上から4枚見て、その中から(?:「基本\[([草炎水雷超闘悪鋼])\]エネルギー」|基本エネルギー)を好きなだけ選び、自分のポケモンに好きなようにつける。残りのカードは(すべてウラにして切り、山札の下にもどす。|山札にもどして切る。)$/);
+ if(kind==='ABILITY'&&topAttach)return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','RETURN_TO_DECK','SHUFFLE_DECK'],zone:'deck',type:topAttach[2]||null,limit:4,topWindow:4,remainder:topAttach[3].startsWith('すべて')?'shuffleBottom':'shuffle',target:'own',holderType:null,team:null,multi:true,heal:null,...(topAttach[1].includes('進化')?{origin:'evolve'}:{}),sharedWording:true};
+ if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分の山札を上から1枚見て、もとにもどす。のぞむなら、そのカードをトラッシュする。')return {mechanic:'ABILITY_TOP_CARD_OPERATION',commands:['REVEAL','DISCARD'],mode:'peekDiscard',sharedWording:true};
+ if(kind==='ABILITY'&&generic==='自分の番に1回使える。自分の手札を1枚選び、山札の上のカードと入れ替える。')return {mechanic:'ABILITY_TOP_CARD_OPERATION',commands:['RETURN_TO_DECK','ADD_TO_HAND'],mode:'swap',sharedWording:true};
  const costBurn=generic.match(/^自分の番に、自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚トラッシュするなら、1回使える。相手のバトルポケモンをやけどにする。$/);
  if(kind==='ABILITY'&&costBurn)return {mechanic:'ABILITY_HAND_COST_EFFECT',commands:['DISCARD','STATUS_CONDITION'],mode:'burn',type:costBurn[1],sharedWording:true};
  const costSwitch=generic.match(/^自分の番に、自分の手札から「([^「」]+)」を1枚トラッシュするなら、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。$/);
