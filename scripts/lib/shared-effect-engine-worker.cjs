@@ -594,6 +594,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   const target=reserve(r=>r.category==='pokemon'&&r.facts.basic===true&&!r.abilities.length&&r.attacks.length>0&&r.attacks.every(a=>a.plan),'active',1);
   if(!target)return Object.assign(requirements,{basicKoBlocked:'NO_REGISTERED_BASIC_KO_DEFENDER'});
  }
+ if(m==='ATTACK_DIRECT_KNOCKOUT'&&['chosenCounters','remainingHpAll'].includes(plan.mode)){
+  const valid=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.length>0&&r.attacks.every(a=>a.plan)&&r.facts.hp>(plan.mode==='chosenCounters'?plan.count*10:plan.threshold);
+  const active=reserve(valid,'active',1),bench=reserve(valid,'bench',1),spare=reserve(valid,'bench',1);
+  if(!active||!bench||!spare)return Object.assign(requirements,{basicKoBlocked:'NO_MULTI_TARGET_KO_RESOURCES'});
+ }
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='specialEnergy')reserve(r=>r.category==='energy'&&r.mainPlan&&!isBasicEnergy(r),'deck',1);
  if(m==='ATTACK_NEXT_HIT_RETALIATION'||m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
@@ -1839,6 +1844,20 @@ function prepare(r, e, kind) {
     if(q.mode==='counters'){
       if(other.active.hp<=q.count*10)return {blocked:'NO_EXACT_COUNTER_KO_FIXTURE'};
       other.active.damage=q.count*10;
+    }
+    if(['chosenCounters','remainingHpAll'].includes(q.mode)){
+      if(other.bench.length<2)return {blocked:'NO_MULTI_TARGET_KO_BENCH'};
+      if(q.mode==='chosenCounters'){
+        const n=q.count*10;
+        if(other.active.hp<=n||other.bench[0].hp<=n)return {blocked:'NO_COUNTER_TARGET_HP'};
+        other.active.damage=0;other.bench[0].damage=n;
+        for(const mon of other.bench.slice(1))mon.damage=0;
+      }else{
+        if(other.active.hp<=q.threshold||other.bench[0].hp<=q.threshold||other.bench.slice(1).some(c=>c.hp<=q.threshold))return {blocked:'NO_REMAINING_HP_BOUNDARY_FIXTURE'};
+        other.active.damage=other.active.hp-q.threshold;
+        other.bench[0].damage=other.bench[0].hp-Math.max(10,q.threshold-10);
+        for(const mon of other.bench.slice(1))mon.damage=0;
+      }
     }
     if(q.mode==='basic'&&!E.getReferenceEffectRecord(other.active).facts.basic)return {blocked:'NO_BASIC_KO_FIXTURE'};
     if(q.mode==='specialEnergy'){
@@ -3943,7 +3962,37 @@ function verifyCase(t, e) {
       assert(!skip.getSnapshot().pendingReferenceChoice);
     }
   }
-  if(e.plan.mechanic==='ATTACK_DIRECT_KNOCKOUT'){
+  if(e.plan.mechanic==='ATTACK_DIRECT_KNOCKOUT'&&['chosenCounters','remainingHpAll'].includes(e.plan.mode)){
+    const q=e.plan,action=t.action||o.action,side=before.players[1],pool=[side.active,...side.bench];
+    const eligible=mon=>q.mode==='chosenCounters'?mon.damage===q.count*10:mon.hp-mon.damage<=q.threshold;
+    const chosen=q.mode==='chosenCounters'?pool.filter(c=>action.targetIds?.includes(c.id)):pool.filter(eligible);
+    if(!chosen.length||chosen.some(c=>!eligible(c)))return {status:'BLOCKED',reason:'NO_POSITIVE_KO_TARGET'};
+    const exact=(start,end,targets)=>{
+      const events=end.history.slice(start.history.length).map(h=>h.details);
+      assert.deepEqual(events.filter(h=>h?.directKnockout).map(h=>h.targetInstanceId).sort(),targets.map(c=>c.id).sort());
+      assert(!events.some(h=>h?.command==='DAMAGE'&&targets.some(c=>c.id===h.targetInstanceId)));
+      assert(targets.every(c=>!end.players.some(p=>[p.active,...p.bench].some(x=>x?.id===c.id))));
+      assert.deepEqual(S.identities(start),S.identities(end));
+    };
+    exact(before,after,chosen);
+    const protectedState=JSON.parse(JSON.stringify(before)),protectedMon=[protectedState.players[1].active,...protectedState.players[1].bench].find(c=>c.id===chosen[0].id);
+    protectedMon.referenceProtection={opponentTurn:protectedState.turnNumber};
+    const protectedReplay=port(protectedState);assert(protectedReplay.dispatch('you',action).ok);
+    exact(protectedState,protectedReplay.getSnapshot(),chosen.slice(1));
+    const empty=JSON.parse(JSON.stringify(before)),op=empty.players[1];
+    for(const mon of [op.active,...op.bench])mon.damage=0;
+    if([op.active,...op.bench].some(eligible))return {status:'BLOCKED',reason:'NO_NEGATIVE_KO_HP_FIXTURE'};
+    const no=port(empty),none=q.mode==='chosenCounters'?{...action,targetIds:[]}:action;
+    assert(no.dispatch('you',none).ok);exact(empty,no.getSnapshot(),[]);
+    if(q.mode==='chosenCounters'){
+      const wrong=pool.find(c=>!eligible(c));if(!wrong)return {status:'BLOCKED',reason:'NO_WRONG_COUNTER_TARGET'};
+      const bad=port(before);assert.equal(bad.dispatch('you',{...action,targetIds:[wrong.id]}).ok,false);assert.deepEqual(bad.getSnapshot(),before);
+      const alternate=JSON.parse(JSON.stringify(before));alternate.players[1].active.damage=q.count*10;
+      const trial=port(alternate);assert(trial.dispatch('you',{...action,targetIds:[alternate.players[1].active.id]}).ok);
+      exact(alternate,trial.getSnapshot(),[alternate.players[1].active]);
+    }
+  }
+  if(e.plan.mechanic==='ATTACK_DIRECT_KNOCKOUT'&&!['chosenCounters','remainingHpAll'].includes(e.plan.mode)){
     const q=e.plan,action=t.action||o.action,targets=q.mode==='both'?[attackingSide.active,defendingSide.active]:[defendingSide.active];
     for(const mon of targets){
       assert(effectEvents.some(h=>h?.command==='ADD_STATE'&&h.directKnockout===true&&h.targetInstanceId===mon.id));

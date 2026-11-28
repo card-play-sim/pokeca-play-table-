@@ -473,6 +473,10 @@ function requests(g,actor,card,effect){
  };
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
+ if(m==='ATTACK_DIRECT_KNOCKOUT'&&effect.plan.mode==='chosenCounters'){
+  const eligible=opp.filter(c=>directKnockoutEligible(c,effect.plan));
+  add('targetIds','POKEMON',eligible.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,eligible.length),Math.min(1,eligible.length));
+ }
  if(m==='MASS_BOARD_BONUS'&&effect.plan.optional)
   add('stadiumBonus','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュして追加ダメージ'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_DISCARD_STADIUM'&&effect.plan.optional)add('stadiumDiscard','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュする'}]:[],0,g.stadium?1:0);
@@ -1234,7 +1238,8 @@ function directKnockoutEligible(mon,plan){
   case 'status':return Boolean(mon.statusCondition);
   case 'basic':return record(mon).facts.basic===true;
   case 'specialEnergy':return (mon.energyCards||[]).some(c=>c.isSpecial===true);
-  case 'counters':return mon.damage===plan.count*10;
+  case 'counters':case 'chosenCounters':return mon.damage===plan.count*10;
+  case 'remainingHpAll':return mon.hp-mon.damage<=plan.threshold;
   default:throw Error('UNKNOWN_DIRECT_KNOCKOUT_PREDICATE');
  }
 }
@@ -1275,7 +1280,7 @@ function applyPlan(g,actor,card,effect,action){
    return;
   }
   case 'ATTACK_DIRECT_KNOCKOUT':{
-   const targets=plan.mode==='both'?[card,o.active]:[o.active];
+   const targets=plan.mode==='both'?[card,o.active]:plan.mode==='chosenCounters'?field(o).filter(mon=>action.targetIds?.includes(id(mon))):plan.mode==='remainingHpAll'?field(o):[o.active];
    // Mark every target before finishAttack resolves knockouts, prizes and wins.
    // No DAMAGE command or damage-trigger reaction is executed.
    for(const mon of targets){

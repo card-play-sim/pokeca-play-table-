@@ -75,6 +75,9 @@ function additionalAttackPlan(entry,text){
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
  // Direct knockout effects are not attack damage.
  if(printed==='0'){
+  const chosenCounters=text.match(/^ダメカンが([1-9]\d?)個のっている相手のポケモンを1匹選び、きぜつさせる。$/);
+  const remainingHp=text.match(/^残りHPが「([1-9]\d{0,2})」以下の相手のポケモン全員を、それぞれきぜつさせる。$/);
+  if(chosenCounters||remainingHp)return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:chosenCounters?'chosenCounters':'remainingHpAll',...(chosenCounters?{count:Number(chosenCounters[1])}:{threshold:Number(remainingHp[1])}),sharedWording:true};
   const ko=text.match(/^相手のバトルポケモンが(特殊状態|たねポケモン)なら、そのポケモンをきぜつさせる。$/);
   const counters=text.match(/^相手のバトルポケモンにのっているダメカンが([1-9]\d?)個なら、そのポケモンをきぜつさせる。$/);
   const special=text==='相手のバトルポケモンに特殊エネルギーがついているなら、そのポケモンをきぜつさせる。';
