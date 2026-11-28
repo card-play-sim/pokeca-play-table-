@@ -217,6 +217,27 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(ensure(index,energy,cost+count))
    for(let i=0;i<count;i++)requirements.push({side,zone:'deck',printId:energy.officialCardId});
  }
+ if(m==='STADIUM_NAMED_UPGRADE_HP'){
+  const prior=reserve(r=>r.category==='stadium'&&r.name===plan.replaces&&r.mainPlan,'hand');
+  if(!prior)return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_PREDECESSOR_STADIUM'});
+  requirements.upgradePriorPrint=prior.officialCardId;
+  requirements.upgradeChains=[];
+  for(const side of [0,1]){
+   const index=side===0?deckIndex:1-deckIndex;
+   let chosen=null;
+   outer:for(const target of legal.filter(r=>r.category==='pokemon'&&r.name===plan.name)){
+    for(const chain of evolutionLines(target,legal)){
+     if(!tryReserveChain(manifest.decks[index],reservedPrints,index,chain,(i,r)=>ensure(i,r,requiredCopies(requirements,side,r.officialCardId))))continue;
+     requirements.push({side,zone:'bench',printId:chain[0].officialCardId});
+     for(const r of chain.slice(1))requirements.push({side,zone:'hand',printId:r.officialCardId});
+     chosen=chain.map(r=>r.officialCardId);break outer;
+    }
+   }
+   if(!chosen)return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_NAMED_EVOLUTION_LINE'});
+   requirements.upgradeChains.push(chosen);
+   if(!reserve(r=>mon(r,null,0)&&r.name!==plan.name&&!r.abilities.length,'active',side))return Object.assign(requirements,{teamBoostBlocked:'NO_UPGRADE_NON_TARGET_FIXTURE'});
+  }
+ }
  if(m==='STADIUM_STAGE_HP'){
   const eligible=r=>r.category==='pokemon'&&r.facts.stage===plan.stage&&r.facts.hp+plan.amount>0&&!r.abilities.length&&r.attacks.every(a=>a.plan);
   const ineligible=r=>r.category==='pokemon'&&r.facts.stage!==plan.stage&&!r.abilities.length&&r.attacks.every(a=>a.plan);
@@ -349,6 +370,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.metric==='opponentExVCount')reserve(r=>mon(r,null,0)&&/ex$|V(?:MAX|STAR|-UNION)?$/.test(r.name),'bench',1);
  }
  if(m==='ATTACK_MOVE_BENCH_COUNTERS'&&plan.team)reserve(r=>mon(r,null,0)&&r.name.startsWith(plan.team+'の'),'bench');
+ if(m==='ATTACK_RETURN_ENERGY_SPREAD'&&plan.optional)reserve(r=>mon(r,null,0),'bench',1);
  if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
   reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'discard');
   reserveEnergy(plan.type,kindAttackCost(e,plan.type)+2);
@@ -459,6 +481,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   const filter=r=>{
    if(plan.category==='pokemonOrBasicEnergy')return isBasicEnergy(r)?(!plan.energyType||typeOf(r)===plan.energyType):r.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
    if(plan.nameExact&&r.name!==plan.nameExact)return false;
+   if(plan.maxHp!==undefined&&!(r.facts?.hp<=plan.maxHp))return false;
    if(plan.retreatCost!==undefined&&r.facts.retreatCost!==plan.retreatCost)return false;
    if(plan.resistanceType&&!r.facts.resistance?.types?.includes(plan.resistanceType))return false;
    if(plan.category==='any')return true;
@@ -1547,6 +1570,30 @@ function prepare(r, e, kind) {
   };
   const frame = S.create(E, manifest, row);
   if (frame.blocked) return { blocked: frame.blocked };
+  if(m==='STADIUM_NAMED_UPGRADE_HP'){
+    let pp=port(frame.game);
+    for(const side of [0,1]){
+      const chain=fixtureRequirements.upgradeChains[side];
+      if(chain.length>1){
+        const evolved=evolveTeraFixture(pp,chain,false,side);
+        if(evolved.blocked)return evolved;
+        pp=evolved.port;
+      }
+      const named=pp.getSnapshot().players[side].bench.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===chain.at(-1));
+      if(!named)return {blocked:'NO_UPGRADE_NAMED_FIELD_TARGET'};
+    }
+    const before=pp.getSnapshot(),own=before.players[0],prior=own.hand.find(c=>E.getReferenceEffectRecord(c)?.officialCardId===fixtureRequirements.upgradePriorPrint);
+    const upgrade=own.hand.find(c=>c.id===frame.sourceId);
+    if(!prior||!upgrade||before.stadium)return {blocked:'NO_UPGRADE_PHYSICAL_STADIUM_FIXTURE'};
+    const saved=JSON.stringify(before);
+    assert.equal(pp.dispatch('you',{type:'play_stadium',cardId:upgrade.id}).ok,false);
+    assert.equal(JSON.stringify(pp.getSnapshot()),saved);
+    if(!pp.dispatch('you',{type:'play_stadium',cardId:prior.id}).ok)return {blocked:'UPGRADE_PREDECESSOR_PLAY_REJECTED'};
+    frame.game=pp.getSnapshot();
+    assert.equal(frame.game.stadium.id,prior.id);
+    assert.equal(frame.game.turnNumber,before.turnNumber);
+    assert.equal(frame.game.stadiumPlayedTurn,before.turnNumber);
+  }
   if(fixtureRequirements.megaTypeChain){
     const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.megaTypeChain,false,0,'bench');
     if(evolved.blocked)return evolved;
@@ -2486,6 +2533,11 @@ function prepare(r, e, kind) {
       g.stadium=zone.splice(zone.findIndex(eligible),1)[0];g.stadiumOwner=own.id;
     }
   }
+  if(m==='ATTACK_RETURN_ENERGY_SPREAD'){
+    const own=frame.game.players[0],other=frame.game.players[1],plan=e.plan;
+    if(plan.optional&&(!other.bench.length||own.active.energyCards.length<plan.count))return {blocked:'NO_RETURN_ENERGY_SPREAD_FIXTURE'};
+    if(!own.active.energyCards.length)return {blocked:'NO_RETURN_ENERGY_FIXTURE'};
+  }
   if(m==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const own=frame.game.players[0],energy=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
     if(!own.discard.some(energy)){
@@ -2940,6 +2992,21 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='TRAINER_FOSSIL_BASIC'){
+    const [own,other]=before.players,side=after.players[0],mon=side.bench.find(c=>c.id===t.sourceId);
+    assert(mon&&mon.kind==='pokemon'&&mon.basic&&mon.stage===0&&mon.hp===60&&mon.prizeCount===1&&mon.enteredTurn===before.turnNumber);
+    assert.equal(mon.referenceFossilBase.kind,'trainer');assert.equal(mon.referenceFossilBase.cardType,'ITEM');
+    assert(!side.discard.some(c=>c.id===mon.id));assert.deepEqual(S.identities(before),S.identities(after));
+    const discard={type:'discard_fossil',sourceInstanceId:mon.id},replay=port(after);
+    assert(replay.dispatch('you',discard).ok);const end=replay.getSnapshot();
+    const restored=end.players[0].discard.find(c=>c.id===mon.id);assert(restored?.kind==='trainer'&&restored.cardType==='ITEM'&&!restored.referenceFossilBase);
+    assert.equal(end.players[1].prizes,other.prizes);assert.deepEqual(S.identities(before),S.identities(end));
+    assert(!replay.dispatch('you',discard).ok);
+    const promoted=structuredClone(after),p=promoted.players[0],index=p.bench.findIndex(c=>c.id===mon.id);[p.active,p.bench[index]]=[p.bench[index],p.active];
+    const active=port(promoted);assert(!E.getLegalActions(active.getSnapshot(),'you').actions.some(a=>a.type==='retreat'));
+    assert(!active.dispatch('you',{type:'retreat',benchInstanceId:p.bench[index].id,energyIds:[]}).ok);
+    assert(active.dispatch('you',discard).ok);assert.equal(active.getSnapshot().players[1].prizes,other.prizes);
+  }
   if(e.plan.mechanic==='TRAINER_OPPONENT_NAME_SEARCH'){
     const [own,other]=before.players,action=t.action||o.action,names=new Set([other.active,...other.bench].map(c=>E.getReferenceEffectRecord(c).name));
     const pool=own.deck.filter(c=>c.kind==='pokemon'&&names.has(E.getReferenceEffectRecord(c).name));
@@ -3493,8 +3560,8 @@ function verifyCase(t, e) {
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
     if(plan.destination==='discard'&&plan.zone==='deck'){
-      assert.deepEqual(resolved.hand.map(c=>c.id),own.hand.map(c=>c.id));
-      assert.deepEqual(resolved.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...ids].sort());
+      assert.deepEqual(Array.from(resolved.hand,c=>c.id),Array.from(own.hand,c=>c.id));
+      assert.deepEqual(Array.from(resolved.discard,c=>c.id).sort(),[...Array.from(own.discard,c=>c.id),...ids].sort());
       assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ids.every(id=>ev.cardIds?.includes(id))));
       assert(effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'));
       const pool=own.deck.filter(c=>massTransferCandidate(c,plan));
@@ -3502,8 +3569,8 @@ function verifyCase(t, e) {
         const chosen=pool.slice(0,count).map(c=>c.id),replay=port(before);
         assert(replay.dispatch('you',{...action,selections:{cards:chosen}}).ok);
         const end=replay.getSnapshot(),side=end.players[0];
-        assert.deepEqual(side.discard.map(c=>c.id).sort(),[...own.discard.map(c=>c.id),...chosen].sort());
-        assert.deepEqual(side.hand.map(c=>c.id),own.hand.map(c=>c.id));
+        assert.deepEqual(Array.from(side.discard,c=>c.id).sort(),[...Array.from(own.discard,c=>c.id),...chosen].sort());
+        assert.deepEqual(Array.from(side.hand,c=>c.id),Array.from(own.hand,c=>c.id));
         assert.deepEqual(S.identities(before),S.identities(end));
       }
       if(pool.length>plan.limit){
@@ -4549,6 +4616,31 @@ function verifyCase(t, e) {
     assert(replay.dispatch('you',action).ok);
     assert.equal(replay.getSnapshot().players[0].bench.find(c=>c.id===source.id).damage,source.damage);
     assert(!replay.getSnapshot().history.slice(before.history.length).some(step=>step.details?.command==='MOVE_DAMAGE_COUNTERS'&&!step.details.reference));
+  }
+  if(e.plan.mechanic==='ATTACK_RETURN_ENERGY_SPREAD'){
+    const plan=e.plan,action=t.action||o.action;
+    const chosen=plan.optional?action.selections.energy:attackingSide.active.energyCards.map(c=>c.id);
+    const selectedId=action.selections.returnTarget[0];
+    assert(chosen.length>0&&selectedId);
+    const returned=effectEvents.find(ev=>ev?.command==='RETURN_TO_DECK'&&ev.fromZone==='attached');
+    assert(returned);assert.deepEqual(Array.from(returned.cardIds).sort(),Array.from(chosen).sort());
+    assert(chosen.every(id=>after.players[0].deck.some(c=>c.id===id)));
+    assert(effectEvents.some(ev=>ev?.command==='SHUFFLE_DECK'&&!ev.reference));
+    if(plan.optional){
+      verifyPrintedAttack(before,after,e,Number(e.damage));
+      assert(defendingSide.bench.some(c=>c.id===selectedId));
+      assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===selectedId&&ev.amount===plan.amount));
+      const decline=port(before),bad={...action,selections:{...action.selections,energy:[],returnTarget:[]}};
+      assert(decline.dispatch('you',bad).ok);
+      assert(!decline.getSnapshot().history.slice(before.history.length).some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.fromZone==='attached'));
+    }else{
+      assert.equal(chosen.length,attackingSide.active.energyCards.length);
+      if(selectedId===defendingSide.active.id)verifyPrintedAttack(before,after,e,plan.amount);
+      else assert(effectEvents.some(ev=>ev?.command==='DAMAGE'&&ev.targetInstanceId===selectedId&&ev.amount===plan.amount));
+    }
+    const invalid=port(before);
+    assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,returnTarget:[attackingSide.active.id]}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
   }
   if(e.plan.mechanic==='ATTACK_RECYCLE_BASIC_ENERGY'){
     const plan=e.plan,action=t.action||o.action;
@@ -5785,6 +5877,31 @@ function verifyCase(t, e) {
       const start=structuredClone(before);start.history=start.history.filter(ev=>!(ev.type==='knockout'&&ev.turnNumber===start.turnNumber-1&&ev.details?.targetPlayerId===start.players[0].id));
       const replay=port(start);assert.equal(replay.dispatch('you',action).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(start));
     }
+  }
+  if(e.plan.mechanic==='STADIUM_NAMED_UPGRADE_HP'){
+    const plan=e.plan,action=t.action||o.action,prior=before.stadium;
+    assert.equal(action.type,'play_stadium');
+    assert(prior&&E.getReferenceEffectRecord(prior).name===plan.replaces);
+    assert.equal(before.stadiumPlayedTurn,before.turnNumber);
+    assert.equal(after.stadium?.id,action.cardId);
+    assert.equal(after.turnNumber,before.turnNumber);
+    const owner=after.players.find(side=>side.id===before.stadiumOwner);
+    assert(owner.discard.some(c=>c.id===prior.id));
+    assert(!after.players[0].hand.some(c=>c.id===action.cardId));
+    for(let side=0;side<2;side++){
+      const old=[before.players[side].active,...before.players[side].bench].filter(Boolean);
+      const current=[after.players[side].active,...after.players[side].bench].filter(Boolean);
+      const eligible=c=>E.getReferenceEffectRecord(c).name===plan.name;
+      assert(old.some(eligible)&&old.some(c=>!eligible(c)));
+      for(const c of old){
+        const n=current.find(x=>x.id===c.id);
+        assert(n);assert.equal(n.hp,c.hp+(eligible(c)?plan.amount:0));assert.equal(n.damage,c.damage);
+      }
+    }
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+    const replay=port(after);
+    assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+    assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(after));
   }
   if(e.plan.mechanic==='STADIUM_STAGE_HP'){
     const plan=e.plan,action=t.action||o.action;

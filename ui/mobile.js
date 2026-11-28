@@ -392,7 +392,7 @@ window.PokecaMobileBuild='258';
   function pokemonMenu(id,owner){if(owner!=='you')return;if(view().turnPlayer!=='you'){toast('今は相手の番です');return;}
     const options=port.getPokemonActions('you',id),entry=getCard(id);
     openSheet(entry.card.name,'<div class="menu-list" id="pokemon-actions"></div>');const container=$('pokemon-actions');
-    for(const option of options.filter(o=>o.kind==='ability').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='ability';container.append(b);}
+    for(const option of options.filter(o=>o.kind==='ability'||o.kind==='fossil_discard').sort((a,b)=>Number(b.enabled)-Number(a.enabled))){const b=button((option.kind==='ability'?'特性 · ':option.kind==='attack'?'ワザ · ':'')+option.label+(option.kind==='attack'?attackCostLabel(entry.card,option.action.attackIndex??0):'')+(option.used?' · 使用済':''),()=>resolveOption(option),{disabled:!option.enabled});b.dataset.actionKind='ability';container.append(b);}
     // If the action adapter omits a declared ability, expose a guarded
     // engine-validated action instead of silently showing only card info.
     // This does not authorize an ability or bypass Rule Engine legality.
@@ -450,6 +450,7 @@ window.PokecaMobileBuild='258';
     }
     if(option.kind==='retreat'&&!await confirmAction(`エネルギー${action.energyIds.length}枚をトラッシュして、選んだベンチへにげます。実行しますか？`)){closeSheet();return;}
     if(option.kind==='attack'&&!await confirmAction('「'+option.label+'」を使います。解決後に番が進みます。よろしいですか？')){closeSheet();return;}
+    if(option.kind==='fossil_discard'&&!await confirmAction('この化石とついているカードをトラッシュしますか？')){closeSheet();return;}
     if(option.kind==='ability'&&!await confirmAction('特性「'+option.label+'」を使います。よろしいですか？')){closeSheet();return;}
     closeSheet();const used=dispatch('you',action);
     if(used.ok&&option.kind==='attack'&&view().status==='active'&&view().turnPlayer==='you'&&!view().pendingPrizeSelection&&!view().pendingReferenceChoice){
