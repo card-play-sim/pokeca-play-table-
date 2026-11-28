@@ -1587,6 +1587,11 @@ function prepare(r, e, kind) {
     if(!eligible.length)return {blocked:'NO_SCOPE_HEAL_FIXTURE'};
     for(const mon of eligible)mon.damage=Math.min(mon.hp-10,plan.amount==='all'?30:plan.amount+10);
   }
+  if(m==='TRAINER_HAND_TRIM'){
+    const [own,other]=frame.game.players;
+    for(const side of [own,other])while(side.hand.length<e.plan.limit+3&&side.deck.length)side.hand.push(side.deck.shift());
+    if(other.hand.length<=e.plan.limit||e.plan.both&&own.hand.length-1<=e.plan.limit)return {blocked:'NO_HAND_TRIM_FIXTURE'};
+  }
   if(m==='MASS_HAND_FLOW'){
     const [own,other]=frame.game.players,plan=e.plan;
     if(plan.mode==='opponentMegaCount'){
@@ -2524,6 +2529,35 @@ function verifyCase(t, e) {
     assert(next.discard.some(c=>c.id===t.sourceId)&&next.turnLimits.supporterUsed);
     assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
     const save=p.getResumeSnapshot();assert(p.restoreSession(save).ok);assert.equal(JSON.stringify(p.getSnapshot()),JSON.stringify(after));
+  }
+  if(e.plan.mechanic==='TRAINER_HAND_TRIM'){
+    const q=e.plan,action=t.action||o.action,[own,other]=before.players,selected=[];
+    const replay=port(after),expectedSides=[other.id,...(q.both?[own.id]:[])];
+    for(const sideId of expectedSides){
+      let state=replay.getSnapshot(),side=state.players.find(x=>x.id===sideId);
+      while(side.hand.length>q.limit){
+        const choice=state.pendingReferenceChoice;assert.equal(choice?.kind,'TRAINER_HAND_TRIM');assert.equal(choice.playerId,sideId);
+        assert.deepEqual(Array.from(choice.options),Array.from(side.hand,c=>c.id));
+        const nonOwner=state.players.find(x=>x.id!==sideId).id;
+        assert.equal(replay.getView(nonOwner).pendingReferenceChoice.options,undefined);
+        const save=replay.getResumeSnapshot();assert(replay.restoreSession(save).ok);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+        const selectedId=side.hand.at(-1).id,resolve={type:'resolve_reference_choice',handCardId:selectedId};
+        assert.equal(replay.dispatch(nonOwner,resolve).ok,false);assert.equal(replay.dispatch(sideId,{...resolve,handCardId:'invalid'}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+        assert(E.getLegalActions(state,sideId).actions.some(a=>a.type===resolve.type&&a.handCardId===selectedId));
+        assert(replay.dispatch(sideId,resolve).ok);selected.push({sideId,selectedId});
+        const next=replay.getSnapshot();assert.equal(next.players.find(x=>x.id===sideId).hand.length,side.hand.length-1);
+        assert(next.players.find(x=>x.id===sideId).discard.some(c=>c.id===selectedId));state=next;side=state.players.find(x=>x.id===sideId);
+      }
+    }
+    const end=replay.getSnapshot();assert(!end.pendingReferenceChoice);assert.equal(end.turnPlayer,before.turnPlayer);
+    for(const side of [own,other]){
+      const next=end.players.find(x=>x.id===side.id),removed=new Set(selected.filter(x=>x.sideId===side.id).map(x=>x.selectedId));if(side.id===own.id)removed.add(t.sourceId);
+      assert.deepEqual(Array.from(next.hand,c=>c.id),Array.from(side.hand.filter(c=>!removed.has(c.id)),c=>c.id));
+      assert.deepEqual(Array.from(next.deck,c=>c.id),Array.from(side.deck,c=>c.id));
+    }
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(end)));
+    const negative=structuredClone(before);for(const side of negative.players){const keep=side.id===own.id?q.limit+1:q.limit;while(side.hand.length>keep){const i=side.hand.findIndex(c=>c.id!==t.sourceId);side.deck.push(side.hand.splice(i,1)[0]);}}
+    const denied=port(negative);assert.equal(denied.dispatch('you',action).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(negative));
   }
   if(e.plan.mechanic==='TRAINER_COIN_COUNTER'){
     const action=t.action||o.action,amount=e.plan.amount,[own,other]=before.players;

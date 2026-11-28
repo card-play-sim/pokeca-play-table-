@@ -393,6 +393,11 @@ function scopeHealTargets(p,o,plan){
  return targets.filter(c=>c&&(!plan.type||record(c).facts.types.includes(plan.type)));
 }
 function trainerConfusionTargets(p,o,plan){return [p.active,o.active].filter(c=>c&&!fossilStatusImmune(c)&&!record(c).facts.types.includes(plan.exceptType)&&c.statusCondition!=='CONFUSED');}
+function handTrimChoice(g,actor,sourceId,plan){
+ const owner=player(g,actor),other=opponent(g,actor);
+ const next=other.hand.length>plan.limit?other:plan.both&&owner.hand.length>plan.limit?owner:null;
+ return next?{kind:'TRAINER_HAND_TRIM',playerId:next.id,sourceActor:actor,sourceId,options:next.hand.map(id)}:null;
+}
 function handFlowAvailable(p,o,plan){
  if(plan.mode==='resetOpponent')return o.hand.length+o.deck.length>0;
  if(plan.mode==='resetOpponentCount')return o.hand.length>0&&o.deck.length>0;
@@ -1003,6 +1008,7 @@ function referenceChoiceAction(choice,value){
  if(choice.kind==='CIRCULATOR')return {...action,...value};
  if(choice.kind==='DECK_POKEMON_SEARCH')return {...action,deckCardId:value};
  if(choice.kind==='TRAINER_COIN_COUNTER')return {...action,targetInstanceId:value};
+ if(choice.kind==='TRAINER_HAND_TRIM')return {...action,handCardId:value};
  return {...action,benchInstanceId:value};
 }
 function preflight(g,actor,action){
@@ -1067,6 +1073,7 @@ function preflight(g,actor,action){
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&(g.turnNumber!==1||r.mainPlan.mechanic==='SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW'||r.mainPlan.firstTurnAllowed===true)&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
+   if(m==='TRAINER_HAND_TRIM')assert(o.hand.length>r.mainPlan.limit||r.mainPlan.both&&p.hand.length-1>r.mainPlan.limit,'NO_HAND_TRIM_TARGET');
    if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
     assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')assert(p.hand.filter(c=>id(c)!==id(card)).length>=r.mainPlan.count,'SUPPORTER_BOTTOM_COST_REQUIRED');
@@ -1530,6 +1537,10 @@ function applyPlan(g,actor,card,effect,action){
     if(count)counters(g,actor,mon,count,{attack:true});
    }
    break;
+  }
+  case 'TRAINER_HAND_TRIM':{
+   const choice=handTrimChoice(g,actor,id(card),plan);assert(choice,'NO_HAND_TRIM_TARGET');
+   g.pendingReferenceChoice=choice;break;
   }
   case 'TRAINER_COIN_COUNTER':{
    if(coin(g,actor)){
@@ -2402,6 +2413,15 @@ function execute(g,actor,action){
    promoteReferenceBench(g,p,p.bench.findIndex(c=>id(c)===action.benchInstanceId));
   }
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId,choice);
+  else if(choice.kind==='TRAINER_HAND_TRIM'){
+   const owner=player(g,choice.sourceActor),source=owner.discard.find(c=>id(c)===choice.sourceId),plan=record(source)?.mainPlan;
+   assert(plan?.mechanic==='TRAINER_HAND_TRIM'&&p.hand.length>plan.limit,'HAND_TRIM_SOURCE_CHANGED');
+   const i=p.hand.findIndex(c=>id(c)===action.handCardId);assert(i>=0,'HAND_TRIM_CARD_CHANGED');
+   p.discard.push(p.hand.splice(i,1)[0]);event(g,actor,'DISCARD',{cardIds:[action.handCardId],fromZone:'hand'});
+   const next=handTrimChoice(g,choice.sourceActor,choice.sourceId,plan);
+   if(next)g.pendingReferenceChoice=next;else delete g.pendingReferenceChoice;
+   return {referenceEffect:true,adoptedPrint:false};
+  }
   else if(choice.kind==='TRAINER_COIN_COUNTER'){
    const source=p.discard.find(c=>id(c)===choice.sourceId),plan=record(source)?.mainPlan,target=field(opponent(g,actor)).find(c=>id(c)===action.targetInstanceId);
    assert(plan?.mechanic==='TRAINER_COIN_COUNTER'&&target,'COIN_COUNTER_TARGET_CHANGED');
@@ -2601,6 +2621,10 @@ function validateGame(g){
  if(!g.referenceEffectValidation){assert(!nested.some(c=>c.validationReference),'REFERENCE_MODE_REQUIRED');return;}
  assert(g.referenceEffectValidation.adoptedPrints===0,'REFERENCE_ADOPTION_FORBIDDEN');
  const choice=g.pendingReferenceChoice;
+ if(choice?.kind==='TRAINER_HAND_TRIM'){
+  const owner=player(g,choice.sourceActor),source=owner.discard.find(c=>id(c)===choice.sourceId),plan=record(source)?.mainPlan;
+  assert(choice.sourceActor===g.turnPlayer&&plan?.mechanic==='TRAINER_HAND_TRIM'&&JSON.stringify(choice)===JSON.stringify(handTrimChoice(g,choice.sourceActor,choice.sourceId,plan)),'INVALID_TRAINER_HAND_TRIM_STATE');
+ }
  if(choice?.kind==='TRAINER_COIN_COUNTER'){
   const owner=player(g,choice.playerId),source=owner.discard.find(c=>id(c)===choice.sourceId);
   const flip=g.history.findLast(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.command==='COIN_FLIP'&&typeof e.details.heads==='boolean'&&!e.details.reference);
@@ -2633,7 +2657,7 @@ function validateGame(g){
 function projectView(view,viewer){
  if(!view.referenceEffectValidation)return view;
  const choice=view.pendingReferenceChoice;
- if(choice?.kind==='DECK_POKEMON_SEARCH'&&choice.playerId!==viewer)view.pendingReferenceChoice={kind:choice.kind,playerId:choice.playerId};
+ if(['DECK_POKEMON_SEARCH','TRAINER_HAND_TRIM'].includes(choice?.kind)&&choice.playerId!==viewer)view.pendingReferenceChoice={kind:choice.kind,playerId:choice.playerId};
  for(const p of view.players)if(p.prizeSlots)p.prizeSlots=p.prizeSlots.map(x=>x?true:null);
  for(const e of view.history){
   if(e.details?.privateTo&&e.details.privateTo!==viewer)e.details={command:e.details.command,privateTo:e.details.privateTo,redacted:true};
