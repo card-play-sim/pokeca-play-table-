@@ -152,3 +152,11 @@ const rows=[
 ];
 for(const {id,attack} of rows){const proof=JSON.parse(fs.readFileSync('data/effect-extensions/evidence/'+id+'.json','utf8'));assert.equal(crypto.createHash('sha256').update(proof.html).digest('hex'),proof.htmlSha256);const row={...parse(proof.html),officialCardId:id};const rec=compile({records:[row]}).records[0];assert(rec.attacks.every(a=>a.plan)&&rec.abilities.every(a=>a.plan));assert.deepEqual(rec.attacks.find(a=>a.name===attack.name),attack);assert.equal(compile({records:[{...row,attacks:[{...attack,text:attack.text+'自分の山札を1枚引く。'}]}]}).records[0].attacks[0].plan,null);}
 console.log('6 exact scoped spread prints');
+
+// 50225 is owned by 02; only the attack slot is asserted here.
+const matcha=JSON.parse(fs.readFileSync('data/effect-extensions/evidence/50225.json','utf8'));
+assert.equal(crypto.createHash('sha256').update(matcha.html).digest('hex'),matcha.htmlSha256);
+const matchaRow={...parse(matcha.html),officialCardId:'50225'};
+const matchaAttack=compile({records:[matchaRow]}).records[0].attacks.find(a=>a.name==='まっちゃスピン');
+assert.deepEqual(matchaAttack.plan,{"mechanic":"MASS_PLACE_COUNTERS","commands":["PLACE_DAMAGE_COUNTERS"],"target":"all","amount":4,"activeOnly":false,"predicate":"discardAbilityThreshold","name":"ばけがくれ","threshold":6,"sharedWording":true});
+assert.equal(compile({records:[{...matchaRow,attacks:[{...matchaAttack,text:matchaAttack.text+'自分の山札を1枚引く。'}]}]}).records[0].attacks[0].plan,null);

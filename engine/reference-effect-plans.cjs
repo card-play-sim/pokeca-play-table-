@@ -73,6 +73,8 @@ function additionalAttackPlan(entry,text){
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
  // Fixed-count coin outcomes use one deterministic match-owned stream.
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ const discardCounter=text.match(/^自分のトラッシュに、特性「([^「」]{1,40})」を持つポケモンが([1-9]\d?)枚以上あるなら、相手のポケモン全員に、それぞれダメカンを([1-9]\d?)個のせる。$/);
+ if(printed==='0'&&discardCounter)return {mechanic:'MASS_PLACE_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],target:'all',amount:Number(discardCounter[3]),activeOnly:false,predicate:'discardAbilityThreshold',name:discardCounter[1],threshold:Number(discardCounter[2]),sharedWording:true};
  // Direct knockout effects are not attack damage.
  if(printed==='0'){
   const chosenCounters=text.match(/^ダメカンが([1-9]\d?)個のっている相手のポケモンを1匹選び、きぜつさせる。$/);

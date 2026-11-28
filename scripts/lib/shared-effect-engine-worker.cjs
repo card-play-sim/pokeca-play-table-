@@ -400,6 +400,13 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(plan.filter!=='any')reserve(r=>r.category==='pokemon','hand',1);
  }
  if(m==='ABILITY_TYPED_COST_COUNTER')reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
+ if(m==='MASS_PLACE_COUNTERS'&&plan.predicate==='discardAbilityThreshold'){
+  for(let i=0;i<plan.threshold;i++)if(!reserve(r=>r.category==='pokemon'&&r.abilities.some(a=>a.name===plan.name),'discard'))
+   return Object.assign(requirements,{boardBonusBlocked:'NO_REGISTERED_DISCARD_ABILITY_THRESHOLD_RESOURCE'});
+  // Keep both targets free of passive effect protection for the threshold proof.
+  if(!reserve(r=>mon(r,null,0)&&!r.abilities.length,'active',1)||!reserve(r=>mon(r,null,0)&&!r.abilities.length,'bench',1))
+   return Object.assign(requirements,{boardBonusBlocked:'NO_UNPROTECTED_COUNTER_TARGETS'});
+ }
  if(m==='MASS_PLACE_COUNTERS'&&plan.target==='bothAbility'){
   reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
   reserve(r=>mon(r,null,0)&&r.abilities.length===0,'bench',1);
@@ -3103,6 +3110,24 @@ function verifyCase(t, e) {
     const own=before.players[0],all=[own.active,...own.bench,other.active,...other.bench];
     const ids=plan.target==='all'?[other.active,...other.bench].map(c=>c.id):plan.target==='active'?[other.active.id]:plan.target==='damagedOpponent'?[other.active,...other.bench].filter(c=>c.damage>0).map(c=>c.id):plan.target==='bothAbility'?all.filter(c=>E.getReferenceEffectRecord(c).abilities.length>0).map(c=>c.id):action.selections.target;
     if(!ids.length)return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_POSITIVE_FIXTURE'};
+    if(plan.predicate==='discardAbilityThreshold'){
+      const eligible=c=>c.kind==='pokemon'&&E.getReferenceEffectRecord(c)?.abilities.some(a=>a.name===plan.name);
+      if(own.discard.filter(eligible).length<plan.threshold)return {status:'BLOCKED',reason:'NO_DISCARD_ABILITY_THRESHOLD_RESOURCE'};
+      if(!other.bench.length)return {status:'BLOCKED',reason:'NO_COUNTER_BENCH_FIXTURE'};
+      const start=JSON.parse(JSON.stringify(before)),side=start.players[0];
+      while(side.discard.filter(eligible).length>=plan.threshold)side.deck.push(side.discard.splice(side.discard.findIndex(eligible),1)[0]);
+      assert.equal(side.discard.filter(eligible).length,plan.threshold-1);
+      assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(start)));
+      const replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      const end=replay.getSnapshot();
+      assert(!end.history.slice(start.history.length).some(ev=>ev.details?.command==='PLACE_DAMAGE_COUNTERS'&&!ev.details.reference));
+      for(const mon of [other.active,...other.bench]){
+        const result=[end.players[1].active,...end.players[1].bench].find(c=>c?.id===mon.id);
+        assert(result&&result.damage===mon.damage);
+      }
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(end)));
+    }
     if(plan.target==='benchChoice')assert(ids.every(id=>other.bench.some(c=>c.id===id)));
     assert.deepEqual(Array.from(effectEvents.filter(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.counterCount===plan.amount&&!ev.reference),ev=>ev.targetInstanceId).sort(),Array.from(ids).sort());
     if(plan.target==='damagedOpponent'||plan.target==='bothAbility'){

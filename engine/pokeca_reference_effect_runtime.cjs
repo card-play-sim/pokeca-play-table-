@@ -1433,6 +1433,7 @@ function applyPlan(g,actor,card,effect,action){
    break;
   }
   case 'MASS_PLACE_COUNTERS':{
+   if(plan.predicate==='discardAbilityThreshold'&&!boardBonusApplies(g,p,o,plan))break;
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const targets=plan.target==='active'?[o.active]:plan.target==='damagedOpponent'?field(o).filter(c=>c.damage>0):plan.target==='bothAbility'?[...field(p),...field(o)].filter(c=>record(c).abilities.length>0):field(o).filter(c=>plan.target==='all'||ids('target').includes(id(c)));
    for(const mon of targets)counters(g,actor,mon,plan.amount,{attack:action.type==='attack_turn'});
