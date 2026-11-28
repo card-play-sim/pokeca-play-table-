@@ -82,6 +82,10 @@ function additionalAttackPlan(entry,text){
   if(ko||counters||special||both)
    return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:both?'both':special?'specialEnergy':counters?'counters':ko[1]==='特殊状態'?'status':'basic',...(counters?{count:Number(counters[1])}:{}),sharedWording:true};
  }
+ const untilEnergy=text.match(/^ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から(基本エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を選び、このポケモンにつける。そして山札を切る。$/);
+ const untilHand=text==='ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から好きなカードを選び、手札に加える。そして山札を切る。';
+ if(printed==='0'&&(untilEnergy||untilHand))
+  return {mechanic:'ATTACK_COIN_DECK_SELECT',commands:['COIN_FLIP','SEARCH_DECK',untilHand?'ADD_TO_HAND':'ATTACH_ENERGY','SHUFFLE_DECK'],mode:untilHand?'hand':'energy',type:untilEnergy?.[2]||null,sharedWording:true};
  const nextCoin=text.match(/^次の相手の番、このワザを受けたポケモンがワザを使うとき、相手はコインを([1-9])回投げる。(ウラならそのワザは失敗。|1回でもウラなら、そのワザは失敗。)$/);
  if(nextCoin&&/^\d+$/.test(printed)&&(Number(nextCoin[1])===1||nextCoin[2].startsWith('1回でも')))
   return {mechanic:'ATTACK_NEXT_COIN_GATE',commands:['DAMAGE','ADD_STATE'],flips:Number(nextCoin[1]),sharedWording:true};

@@ -1232,6 +1232,16 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'ATTACK_COIN_DECK_SELECT':{
+   let heads=0;
+   while(coin(g,actor))assert(++heads<1000,'COIN_SEQUENCE_LIMIT_SAFE_STOP');
+   if(heads===0)return;
+   const choice={kind:'DECK_POKEMON_SEARCH',playerId:actor,searchMode:plan.mode,energyType:plan.type,sourceId:id(card),limit:heads,remaining:heads,picked:[]};
+   const options=coinDeckOptions(p,choice);
+   if(options.length){choice.options=[...options,null];g.pendingReferenceChoice=choice;}
+   else{event(g,actor,'SEARCH_DECK',{selectedCount:0,destination:plan.mode,privateTo:actor});shuffle(g,p);}
+   return;
+  }
   case 'ATTACK_DIRECT_KNOCKOUT':{
    const targets=plan.mode==='both'?[card,o.active]:[o.active];
    // Mark every target before finishAttack resolves knockouts, prizes and wins.
@@ -2097,6 +2107,29 @@ function applyPlan(g,actor,card,effect,action){
  }
  emit(g,actor,plan,{sourceOfficialCardId:record(card).officialCardId,effectId:effect.effectId||record(card).officialCardId});
 }
+function coinDeckOptions(p,choice){
+ return p.deck.filter(c=>choice.searchMode==='hand'||basicEnergy(c)&&(!choice.energyType||c.energyType===choice.energyType)).map(id);
+}
+function finishCoinAttackSearch(g,p,choice,cardId){
+ assert(p.active&&id(p.active)===choice.sourceId,'COIN_DECK_SOURCE_CHANGED');
+ if(cardId!==null){
+  assert(choice.remaining>0&&coinDeckOptions(p,choice).includes(cardId),'COIN_DECK_SEARCH_TARGET_CHANGED');
+  const card=p.deck.splice(p.deck.findIndex(c=>id(c)===cardId),1)[0];
+  if(choice.searchMode==='hand'){
+   p.hand.push(card);
+   event(g,p.id,'ADD_TO_HAND',{cardIds:[cardId],fromZone:'deck',privateTo:p.id});
+  }else{
+   p.active.energyCards.push(card);
+   event(g,p.id,'ATTACH_ENERGY',{energyId:cardId,targetInstanceId:choice.sourceId,fromZone:'deck'});
+  }
+  choice.picked.push(cardId);choice.remaining--;
+  const options=coinDeckOptions(p,choice);
+  if(choice.remaining>0&&options.length){choice.options=[...options,null];return false;}
+ }
+ event(g,p.id,'SEARCH_DECK',{selectedCount:choice.picked.length,destination:choice.searchMode,privateTo:p.id});
+ shuffle(g,p);
+ return true;
+}
 function finishCoinPokemonSearch(g,p,cardId){
  if(cardId!==null){
   assert(p.deck.some(c=>id(c)===cardId&&c.kind==='pokemon'),'DECK_POKEMON_SEARCH_TARGET_CHANGED');
@@ -2119,7 +2152,10 @@ function execute(g,actor,action){
   else if(g.pendingReferenceChoice.kind==='PROMOTE'){
    promoteReferenceBench(g,p,p.bench.findIndex(c=>id(c)===action.benchInstanceId));
   }
-  else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId);
+  else if(choice.kind==='DECK_POKEMON_SEARCH'){
+   if(choice.searchMode){if(!finishCoinAttackSearch(g,p,choice,action.deckCardId)){refresh(g);return {referenceEffect:true,adoptedPrint:false};}}
+   else finishCoinPokemonSearch(g,p,action.deckCardId);
+  }
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
@@ -2296,7 +2332,21 @@ function validateGame(g){
  const choice=g.pendingReferenceChoice;
  if(choice?.kind==='DECK_POKEMON_SEARCH'){
   const owner=player(g,choice.playerId);
-  const options=owner.deck.filter(card=>card.kind==='pokemon').map(id);
+  const options=choice.searchMode?coinDeckOptions(owner,choice):owner.deck.filter(card=>card.kind==='pokemon').map(id);
+  if(choice.searchMode){
+   const source=owner.active,attackEvent=g.history.findLast(h=>h.type==='attack'&&h.player===owner.id&&h.turnNumber===g.turnNumber);
+   const attack=record(source)?.attacks.find(a=>a.effectId===attackEvent?.details?.effectId);
+   const plan=attack?.plan;
+   assert(plan?.mechanic==='ATTACK_COIN_DECK_SELECT'&&plan.mode===choice.searchMode&&plan.type===choice.energyType&&id(source)===choice.sourceId&&g.referenceAttackTurnPending===owner.id,'INVALID_COIN_DECK_SOURCE');
+   assert(Number.isInteger(choice.limit)&&choice.limit>0&&choice.limit<1000&&Number.isInteger(choice.remaining)&&choice.remaining>0&&Array.isArray(choice.picked)&&new Set(choice.picked).size===choice.picked.length&&choice.remaining+choice.picked.length===choice.limit,'INVALID_COIN_DECK_LIMIT');
+   const events=g.history.filter(h=>h.turnNumber===g.turnNumber&&h.player===owner.id);
+   const attackIndex=events.lastIndexOf(attackEvent);
+   const rolls=events.slice(0,attackIndex).filter(h=>h.details?.command==='COIN_FLIP'&&typeof h.details.heads==='boolean');
+   const last=rolls.slice(-(choice.limit+1));
+   assert(last.length===choice.limit+1&&last.slice(0,-1).every(h=>h.details.heads)&&last.at(-1).details.heads===false,'INVALID_COIN_DECK_PROOF');
+   const destination=choice.searchMode==='hand'?owner.hand:source.energyCards;
+   assert(choice.picked.every(ident=>destination.some(c=>id(c)===ident)),'INVALID_COIN_DECK_PICKED');
+  }
   assert(choice.playerId===g.turnPlayer&&options.length>0&&JSON.stringify(choice.options)===JSON.stringify([...options,null]),
    'INVALID_DECK_POKEMON_SEARCH_STATE');
  }

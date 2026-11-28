@@ -556,6 +556,10 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
+ if(m==='ATTACK_COIN_DECK_SELECT'&&plan.mode==='energy'){
+  const eligible=r=>isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
+  const energy=reserve(eligible,'deck');if(energy)ensure(deckIndex,energy,Math.min(3,kindAttackCost(e,plan.type)+2));
+ }
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='specialEnergy')reserve(r=>r.category==='energy'&&r.mainPlan&&!isBasicEnergy(r),'deck',1);
  if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
@@ -1742,6 +1746,11 @@ function prepare(r, e, kind) {
         p.active.energyCards.splice(p.active.energyCards.indexOf(energy), 1);
         p.deck.push(energy);
       }
+  }
+  if(m==='ATTACK_COIN_DECK_SELECT'){
+    const eligible=c=>e.plan.mode==='hand'||c.kind==='energy'&&!c.isSpecial&&(!e.plan.type||c.energyType===e.plan.type);
+    if(!frame.game.players[0].deck.some(eligible))return {blocked:'NO_COIN_DECK_SELECTION_FIXTURE'};
+    frame.game.referenceRngState=0;
   }
   if(m==='ATTACK_DIRECT_KNOCKOUT'){
     const [own,other]=frame.game.players,q=e.plan;
@@ -3699,6 +3708,40 @@ function verifyCase(t, e) {
         if(expected)heads++;
       }
       verifyPrintedAttack(start,end,e,heads*e.plan.unit);
+    }
+  }
+  if(e.plan.mechanic==='ATTACK_COIN_DECK_SELECT'){
+    const action=t.action||o.action,q=e.plan,eligible=c=>q.mode==='hand'||c.kind==='energy'&&!c.isSpecial&&(!q.type||c.energyType===q.type);
+    const seeds=new Map();for(let seed=0;seed<100000&&seeds.size<3;seed++){
+      let state=seed,n=0;while((state=(Math.imul(state,1664525)+1013904223)>>>0)<0x80000000&&n<3)n++;
+      if(n<=2&&!seeds.has(n))seeds.set(n,seed);
+    }
+    assert.equal(seeds.size,3);
+    for(const [heads,seed] of seeds){
+      const start={...before,referenceRngState:seed},replay=port(start);
+      assert(replay.dispatch('you',action).ok);
+      let end=replay.getSnapshot(),choice=end.pendingReferenceChoice;
+      const steps=end.history.slice(start.history.length).map(h=>h.details);
+      assert.equal(steps.filter(h=>h?.command==='COIN_FLIP'&&typeof h.heads==='boolean').length,heads+1);
+      if(heads===0){assert(!choice);assert(!steps.some(h=>h?.command==='SHUFFLE_DECK'));continue;}
+      assert.equal(choice?.remaining,heads);
+      assert.deepEqual(choice.options,[...end.players[0].deck.filter(eligible).map(c=>c.id),null]);
+      assert.equal(replay.getView('ai').pendingReferenceChoice.options,undefined);
+      const saved=replay.getResumeSnapshot();assert(replay.restoreSession(saved).ok);assert.deepEqual(replay.getSnapshot(),end);
+      assert.equal(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:'forged'}).ok,false);
+      assert.deepEqual(replay.getSnapshot(),end);
+      const chosen=[];
+      while(choice){
+        const selected=choice.options[0];assert(selected!==null);chosen.push(selected);
+        assert(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:selected}).ok);
+        end=replay.getSnapshot();choice=end.pendingReferenceChoice;
+      }
+      assert.equal(chosen.length,Math.min(heads,start.players[0].deck.filter(eligible).length));
+      assert(chosen.every(id=>(q.mode==='hand'?end.players[0].hand:end.players[0].active.energyCards).some(c=>c.id===id)));
+      assert.equal(end.history.slice(start.history.length).filter(h=>h.details?.command==='SHUFFLE_DECK').length,1);
+      assert.deepEqual(S.identities(start),S.identities(end));
+      const skip=port(start);assert(skip.dispatch('you',action).ok);assert(skip.dispatch('you',{type:'resolve_reference_choice',deckCardId:null}).ok);
+      assert(!skip.getSnapshot().pendingReferenceChoice);
     }
   }
   if(e.plan.mechanic==='ATTACK_DIRECT_KNOCKOUT'){
