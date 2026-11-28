@@ -68,6 +68,11 @@ function batchSearchCandidate(c,plan){
  if(plan.filter==='typedPokemonOrStadium')return typed||r?.category==='stadium';
  return r?.category===plan.filter;
 }
+function scopedBoostAttack(r,scope){
+ if(!r?.facts?.basic||r.abilities?.length)return null;
+ return r.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0)||(
+  scope==='mega'&&verifiedMegaRecord(r)?r.attacks.find(a=>a.plan?.mechanic==='CONDITIONAL_ATTACK_BONUS'&&a.plan.predicate==='ownBenchDamaged'&&a.plan.base>0):null);
+}
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
  if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
@@ -192,8 +197,8 @@ function fixtureResources(manifest,deckIndex,source,e){
  const reserveEnergy=(type,count,index=deckIndex)=>!!firstReservable(
   [...manifest.decks[index].cards.map(lookup).filter(Boolean),...legal],
   r=>isBasicEnergy(r)&&(!type||typeOf(r)===type),r=>ensure(index,r,count),source.officialCardId);
- const ensureAttackCost=(record,index)=>{
-  const attack=vanilla(record);if(!attack)return false;
+ const ensureAttackCost=(record,index,selectedAttack=null)=>{
+  const attack=selectedAttack||vanilla(record);if(!attack)return false;
   const needed=new Map();for(const type of attack.cost)needed.set(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type,(needed.get(type==='無色'?(record.facts.types.find(t=>['草','炎','水','雷','超','闘','悪','鋼'].includes(t))||'超'):type)||0)+1);
   return [...needed].every(([t,n])=>reserveEnergy(t,n,index));
  };
@@ -551,8 +556,8 @@ function fixtureResources(manifest,deckIndex,source,e){
   if(!reserve(r=>plain(r)&&(!plan.type||r.facts.types.includes(plan.type)),'bench')||!reserve(plain,'active')||!reserve(plain,'active',1)||!reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck')||!reserveEnergy(null,2))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_RETURN_STACK_RESOURCES'});
  }
  if(m==='TRAINER_SCOPED_ATTACK_BOOST'){
-  const attacker=reserve(r=>vanilla(r)&&!r.abilities.length&&(plan.scope==='nonRule'?!r.facts.rulePokemon:verifiedMegaRecord(r)),'active');
-  if(!attacker||!ensureAttackCost(attacker,deckIndex))return Object.assign(requirements,{teamBoostBlocked:'NO_SCOPED_BOOST_ATTACKER_RESOURCES'});
+  const attacker=reserve(r=>scopedBoostAttack(r,plan.scope)&&(plan.scope==='nonRule'?!r.facts.rulePokemon:verifiedMegaRecord(r)),'active');
+  if(!attacker||!ensureAttackCost(attacker,deckIndex,scopedBoostAttack(attacker,plan.scope)))return Object.assign(requirements,{teamBoostBlocked:'NO_SCOPED_BOOST_ATTACKER_RESOURCES'});
   reserve(r=>mon(r,null,0)&&!r.abilities.length,'active',1);
   reserve(r=>mon(r,null,0)&&Boolean(r.facts.rulePokemon)!==(plan.scope==='mega'),'bench');
  }
@@ -1813,7 +1818,7 @@ function prepare(r, e, kind) {
   if(m==='TRAINER_SCOPED_ATTACK_BOOST'){
     const g=frame.game,[own,other]=g.players,q=e.plan,r=E.getReferenceEffectRecord(own.active);
     if(q.scope==='nonRule'&&r.facts.rulePokemon||q.scope==='mega'&&!verifiedMegaRecord(r))return {blocked:'NO_SCOPED_BOOST_ATTACKER'};
-    const attack=r.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    const attack=scopedBoostAttack(r,q.scope);
     if(!attack)return {blocked:'NO_SCOPED_BOOST_PRINTED_ATTACK'};
     const required=[...attack.cost.filter(t=>t!=='無色'),...attack.cost.filter(t=>t==='無色')];
     for(const en of [...own.active.energyCards])own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(en),1)[0]);
@@ -4785,7 +4790,7 @@ function verifyCase(t, e) {
   if(e.plan.mechanic==='TRAINER_SCOPED_ATTACK_BOOST'){
     const q=e.plan,action=t.action||o.action,own=after.players[0],base=structuredClone(after);delete base.players[0].referenceScopedAttackBoosts;
     assert(own.referenceScopedAttackBoosts.some(x=>x.turn===after.turnNumber&&x.scope===q.scope));
-    const attacks=E.getReferenceEffectRecord(own.active).attacks,a=E.getLegalActions(base,'you').actions.find(a=>a.type==='attack_turn'&&attacks[a.attackIndex].plan.mechanic==='VANILLA_DAMAGE');
+    const record=E.getReferenceEffectRecord(own.active),attack=scopedBoostAttack(record,q.scope),index=record.attacks.indexOf(attack),a=E.getLegalActions(base,'you').actions.find(a=>a.type==='attack_turn'&&a.attackIndex===index);
     if(!a)return {status:'BLOCKED',reason:'NO_SCOPED_BOOST_LEGAL_ATTACK'};
     const damage=state=>{const replay=port(state);assert(replay.dispatch('you',a).ok);return replay.getSnapshot().history.slice(state.history.length).find(ev=>ev.details?.command==='DAMAGE'&&ev.details.targetInstanceId===state.players[1].active.id)?.details.amount;};
     const normal=damage(base),bonus=q.unit?q.unit*(6-base.players[1].prizes):q.amount,def=E.getReferenceEffectRecord(base.players[1].active).facts,att=E.getReferenceEffectRecord(own.active).facts,weak=def.weakness?.types.some(t=>att.types.includes(t))?2:1;
