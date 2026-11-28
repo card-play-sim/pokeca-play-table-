@@ -557,6 +557,15 @@ function fixtureResources(manifest,deckIndex,source,e){
    if(['TOOL_EX_ATTACK_BOOST','TOOL_STATUS_ATTACK_BOOST'].includes(m)&&attack)reserve(r=>r.category==='pokemon'&&r.facts.basic&&(m!=='TOOL_EX_ATTACK_BOOST'||r.name.endsWith('ex'))&&!r.abilities.length&&r.facts.hp>Number(attack.damage)+plan.amount&&!r.facts.weakness?.types.some(t=>target.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>target.facts.types.includes(t)),'active',1);
   }
  }
+ if(m==='TRAINER_DISCARD_FIELD_CARDS'){
+  reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',0);
+  reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
+  if(plan.mode!=='bothTools'){
+   reserve(r=>r.category==='energy'&&r.mainPlan?.mechanic==='IGNITION','deck',1);
+   if(plan.mode!=='opponentHolder')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck',0);
+  }
+  if(plan.costType)reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.costType,'hand');
+ }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
@@ -1713,6 +1722,19 @@ function prepare(r, e, kind) {
     if(!eligible.length)return {blocked:"NO_TOP_SEARCH_FIXTURE"};
     const selected=m==="TRAINER_TOP_POKEMON_TRAINER"?[eligible.find(c=>category(c)==="pokemon"),eligible.find(c=>category(c)==="trainer")].filter(Boolean):eligible.slice(0,plan.amount);
     own.deck=[...selected,...own.deck.filter(c=>!selected.includes(c))];
+  }
+  if(m==='TRAINER_DISCARD_FIELD_CARDS'){
+    const g=frame.game,[own,other]=g.players,q=e.plan;
+    const take=(side,predicate)=>{for(const zone of [side.deck,side.hand]){const i=zone.findIndex(predicate);if(i>=0)return zone.splice(i,1)[0];}return null;};
+    for(const side of [own,other]){
+      if(!side.active.tools.length){const c=take(side,c=>c.kind==='tool');if(!c)return {blocked:'NO_FIELD_DISCARD_TOOL_FIXTURE'};side.active.tools.push(c);}
+    }
+    if(q.mode!=='bothTools'){
+      const special=take(other,c=>c.kind==='energy'&&c.isSpecial);if(!special)return {blocked:'NO_FIELD_DISCARD_SPECIAL_FIXTURE'};other.active.energyCards.push(special);
+      if(!other.active.energyCards.some(c=>!c.isSpecial)){const basic=take(other,c=>c.kind==='energy'&&!c.isSpecial);if(!basic)return {blocked:'NO_FIELD_DISCARD_BASIC_FIXTURE'};other.active.energyCards.push(basic);}
+      if(q.mode!=='opponentHolder'&&!g.stadium){const stadium=take(own,c=>c.kind==='stadium');if(!stadium)return {blocked:'NO_FIELD_DISCARD_STADIUM_FIXTURE'};g.stadium=stadium;g.stadiumOwner=own.id;}
+    }
+    if(q.costType&&!own.hand.some(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===q.costType)){const cost=take(own,c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===q.costType);if(!cost)return {blocked:'NO_FIELD_DISCARD_COST_FIXTURE'};own.hand.push(cost);}
   }
   if(m==="ATTACK_DISCARD_TOOL_BEFORE_DAMAGE"){
     const [own,other]=frame.game.players;
@@ -4410,6 +4432,40 @@ function verifyCase(t, e) {
     assert(source&&entered&&entered.stage===source.stage);
     assert.equal(entered.validationReference.officialCardId,source.validationReference.officialCardId);
     assert(!after.players[0].hand.some(card=>card.id===t.sourceId));
+  }
+  if(e.plan.mechanic==='TRAINER_DISCARD_FIELD_CARDS'){
+    const q=e.plan,action=t.action||o.action,[own,other]=before.players;
+    const candidates=[];
+    for(const side of q.mode==='bothTools'?[own,other]:[other])for(const holder of [side.active,...side.bench]){
+      for(const c of holder.tools)candidates.push({c,side,holder});
+      if(q.mode!=='bothTools')for(const c of holder.energyCards.filter(c=>c.isSpecial))candidates.push({c,side,holder});
+    }
+    if(['opponentAll','opponentOne'].includes(q.mode)&&before.stadium)candidates.push({c:before.stadium,side:before.players.find(p=>p.id===before.stadiumOwner),holder:null});
+    const check=(start,end,chosen)=>{
+      for(const entry of candidates){const p=end.players.find(x=>x.id===entry.side.id);
+        if(chosen.includes(entry.c.id))assert(p.discard.some(c=>c.id===entry.c.id));
+        else if(entry.holder){const h=[p.active,...p.bench].find(c=>c.id===entry.holder.id);assert([...h.tools,...h.energyCards].some(c=>c.id===entry.c.id));}
+        else assert.equal(end.stadium?.id,entry.c.id);
+      }
+      for(const side of start.players)for(const h of [side.active,...side.bench]){
+        const next=end.players.find(p=>p.id===side.id),mon=[next.active,...next.bench].find(c=>c.id===h.id);
+        assert(h.energyCards.filter(c=>!c.isSpecial).every(c=>mon.energyCards.some(x=>x.id===c.id)));
+      }
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(end)));
+    };
+    const selected=q.mode==='opponentAll'?candidates.map(x=>x.c.id):q.mode==='opponentHolder'?Object.entries(action.selections).filter(([k])=>/^(tools|energyCards)\d+$/.test(k)).flatMap(([,v])=>v):action.selections.cards;
+    assert(selected.length>0);check(before,after,selected);
+    if(q.mode==='opponentOne'){
+      for(const entry of candidates){const replay=port(before),nextAction={...action,selections:{...action.selections,cards:[entry.c.id]}};assert(replay.dispatch('you',nextAction).ok);const end=replay.getSnapshot();check(before,end,[entry.c.id]);assert(end.players[0].discard.some(c=>c.id===action.selections.discardCost[0]));}
+      const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{...action.selections,discardCost:[]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));
+    }
+    if(q.mode==='bothTools'&&candidates.length>=2){
+      const ids=candidates.slice(0,2).map(x=>x.c.id),replay=port(before);assert(replay.dispatch('you',{...action,selections:{cards:ids}}).ok);check(before,replay.getSnapshot(),ids);
+    }
+    if(q.mode==='opponentHolder'){
+      const holder=other.active,chosen=candidates.filter(x=>x.holder===holder);
+      assert(chosen.some(x=>x.c.kind==='tool')&&chosen.some(x=>x.c.kind==='energy'));
+    }
   }
   if(e.plan.mechanic==="TRAINER_DISCARD_SPECIAL_ENERGY"){
     const action=t.action||o.action,chosen=action.selections.energy,planAnyEnergy=e.plan.anyEnergy;
