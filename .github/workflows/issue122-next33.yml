@@ -1,11 +1,11 @@
-name: 動的HP共通修復・6印刷版再検証
+name: 残件34印刷版・動的HPと山札順序の共通再検証
 on:
   push:
     branches: [battle/issue122-next33-20261128]
     paths: ['.github/workflows/issue122-next33.yml']
   workflow_dispatch:
 concurrency:
-  group: issue122-next33-dynamic-hp
+  group: issue122-next33
   cancel-in-progress: false
 permissions:
   contents: write
@@ -18,7 +18,7 @@ jobs:
       POKECA_ENGINE_SHARDS: '4'
       POKECA_INTAKE_PARALLEL_REGRESSION: '1'
       POKECA_INTAKE_LOCAL_CANDIDATE: '1'
-      POKECA_INTAKE_REQUESTED_TARGETS: '45230,46673,48789,47588,47957,49106'
+      POKECA_INTAKE_REQUESTED_TARGETS: '45230,46673,48789,47588,47957,49106,50134,50190,47661,48034,49040,47583,47986,47994,48637,50262,50318,50394,50528,46452,47426,45962,50127,50377,50525,47300,47350,47366,47376,47436,47453,48532,48749,49150'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,20 +30,21 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main
-          git fetch origin battle/issue122-next33-qualified-46090365833
-          git checkout --detach d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a
+          git checkout --detach 101a4701a646cba17fd47f6ad49a69bcdf335c6c
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' merge --no-edit origin/main
-          git merge-base --is-ancestor d65f4e3396fd6ceb5cbc7c2fb5cec9ece979f29a HEAD
+          git merge-base --is-ancestor 101a4701a646cba17fd47f6ad49a69bcdf335c6c HEAD
           python - <<'PY'
           import json
           from pathlib import Path
-          changes=json.loads("[{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\",\"to\":\"const mon=c=>Object.assign(c,{hp:record(c).facts.hp,cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\"},{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\",\"to\":\"  // Recalculate fixture-only dynamic HP after physically reassigning zones.\\n  // The actual gateway still validates the derived HP; it is not bypassed.\\n  for(const side of g.players)for(const c of [side.active,...side.bench].filter(Boolean)){\\n   for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_DYNAMIC_MAX_HP')){\\n    const plan=a.plan,opponent=g.players.find(p=>p.id!==side.id);\\n    const n=plan.mode==='opponentPrizes'?6-opponent.prizeCards.length:c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length;\\n    c.hp+=plan.amount*n;\\n   }\\n  }\\n  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\\n    const n=plan.mode==='opponentPrizes'?2:mon.energyCards.filter(c=>c.energyType===plan.type).length;\",\"to\":\"    const n=plan.mode==='opponentPrizes'?6-other.prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;\\n    zown.active.hp=r.facts.hp;\\n    if(plan.mode!=='opponentPrizes')zown.active.energies=[];\\n    mon.hp=r.facts.hp+n*plan.amount;\\n    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\"}]")
+          changes=json.loads("[{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"const mon=c=>Object.assign(c,{cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\",\"to\":\"const mon=c=>Object.assign(c,{hp:record(c).facts.hp,cardId:c.id,damage:0,enteredTurn:0,energyCards:[],energies:[],tools:[]});\"},{\"path\":\"tests/fixtures/control-005-scenarios.js\",\"from\":\"  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\",\"to\":\"  // Recalculate fixture-only dynamic HP after physically reassigning zones.\\n  // The actual gateway still validates the derived HP; it is not bypassed.\\n  for(const side of g.players)for(const c of [side.active,...side.bench].filter(Boolean)){\\n   for(const a of record(c).abilities.filter(a=>a.plan?.mechanic==='PASSIVE_DYNAMIC_MAX_HP')){\\n    const plan=a.plan,opponent=g.players.find(p=>p.id!==side.id);\\n    const n=plan.mode==='opponentPrizes'?6-opponent.prizeCards.length:c.energyCards.filter(e=>!e.isSpecial&&e.energyType===plan.type).length;\\n    c.hp+=plan.amount*n;\\n   }\\n  }\\n  const port=E.createUIPort({getGame:()=>g,setGame:x=>g=x}),loaded=port.loadGame(g);\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\\n    const n=plan.mode==='opponentPrizes'?2:mon.energyCards.filter(c=>c.energyType===plan.type).length;\",\"to\":\"    const n=plan.mode==='opponentPrizes'?6-other.prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;\\n    zown.active.hp=r.facts.hp;\\n    if(plan.mode!=='opponentPrizes')zown.active.energies=[];\\n    mon.hp=r.facts.hp+n*plan.amount;\\n    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();\"},{\"path\":\"scripts/lib/shared-effect-engine-worker.cjs\",\"from\":\"    const original=before.players[i].deck.map(c=>c.id),result=after.players[i].deck.map(c=>c.id),count=Math.min(plan.count,original.length);\\n    assert(count>0);assert.equal(chosen.length,count);assert.deepEqual(Array.from(result.slice(0,count)),Array.from(chosen));\\n    assert.deepEqual([...result].sort(),[...original].sort());\\n    if(!plan.search)assert.deepEqual(Array.from(result.slice(count)),Array.from(original.slice(count)));\\n    const events=after.history.slice(before.history.length);\\n    assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);\\n    assert(events.some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'));\\n    if(count>1){\\n     const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);\\n     assert.deepEqual(Array.from(reverse.getSnapshot().players[i].deck.slice(0,count),c=>c.id),[...chosen].reverse());\\n    }\",\"to\":\"    const owner=before.players[i],original=Array.from(owner.deck,c=>c.id),count=Math.min(plan.count,original.length);\\n    assert(count>0);assert.equal(chosen.length,count);\\n    const assertOrder=(state,picks)=>{\\n      const resolved=state.players[i],result=Array.from(resolved.deck,c=>c.id),expected=[...picks,...original.slice(count)];\\n      let drawn=[];\\n      if(!plan.search&&i===1&&action.type==='attack_turn'&&state.turnPlayer===owner.id&&result.length===original.length-1){\\n        drawn=[picks[0]];\\n        assert(!owner.hand.some(c=>c.id===drawn[0])&&resolved.hand.some(c=>c.id===drawn[0]),'DECK_ORDER_NEXT_TURN_DRAW_EXACT_ID');\\n      }\\n      assert.deepEqual([...result,...drawn].sort(),[...original].sort());\\n      if(plan.search)assert.deepEqual(result.slice(0,count),Array.from(picks));\\n      else assert.deepEqual(result,expected.slice(drawn.length),'DECK_ORDER_REMAINING_EXACT_IDS');\\n      const events=state.history.slice(before.history.length);\\n      assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);\\n      const receipt=events.find(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'&&ev.details.playerId===owner.id);\\n      assert(receipt);assert.deepEqual(Array.from(receipt.details.cardIds),Array.from(picks));\\n    };\\n    assertOrder(after,chosen);\\n    if(count>1){\\n     const reverse=port(before),picks=[...chosen].reverse();assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:picks}}).ok);\\n     assertOrder(reverse.getSnapshot(),picks);\\n    }\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)\\n    if not plan['search']:assert result[count:]==original[count:]\\n    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']\",\"to\":\"    assert len(chosen)==count\\n    owner=before['players'][i];resolved=after['players'][i];drawn=[]\\n    if not plan['search'] and i==1 and option['action']['type']=='attack_turn' and after['turnPlayer']==owner['id'] and len(result)==len(original)-1:\\n     drawn=[chosen[0]]\\n     assert drawn[0] not in [card['id'] for card in owner['hand']]\\n     assert drawn[0] in [card['id'] for card in resolved['hand']]\\n    assert sorted(result+drawn)==sorted(original)\\n    if plan['search']:assert result[:count]==chosen\\n    else:assert result==(chosen+original[count:])[len(drawn):]\\n    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']\\n    assert any(ev.get('details',{}).get('command')=='RETURN_TO_DECK' and ev['details'].get('position')=='top' and ev['details'].get('playerId')==owner['id'] and ev['details'].get('cardIds')==chosen for ev in events)\"},{\"path\":\"tests/fixtures/control-009-extension-manifest.cjs\",\"from\":\"const wantsMill=row.attacks?.some(a=>a.plan?.mechanic==='COIN_UNTIL_TAILS_MILL');\",\"to\":\"const wantsMill=row.attacks?.some(a=>['COIN_UNTIL_TAILS_MILL','DECK_ORDER_SELECT'].includes(a.plan?.mechanic));\"},{\"path\":\"tests/test_control_013_browser.py\",\"from\":\"await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',seed);\",\"to\":\"await page.evaluate('seed=>{let state=seed>>>0;Math.random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296}}',seed);\"}]")
           for change in changes:
               p=Path(change['path']); s=p.read_text()
               assert s.count(change['from'])==1,change['path']
               p.write_text(s.replace(change['from'],change['to']))
           PY
           node --check tests/fixtures/control-005-scenarios.js
+          node --check tests/fixtures/control-009-extension-manifest.cjs
+          python -m py_compile tests/test_control_013_browser.py
           git add engine scripts tests
           node --check engine/reference-effect-plans.cjs
           node --check engine/pokeca_reference_effect_runtime.cjs
@@ -65,6 +66,9 @@ jobs:
               d=json.loads(p.read_text())
               print('QUALIFIED',len(d.get('qualified',[])))
               print('BLOCKERS',dict(collections.Counter(row.get('reason') for row in d.get('blockers',[]))))
+          gaps=pathlib.Path('work/card-auto-connect/execution-gaps.json')
+          if gaps.exists():
+              for row in json.loads(gaps.read_text()).get('gaps',[]): print('EXACT_EXECUTION_GAP',json.dumps(row,ensure_ascii=False)[:2500])
           PY
       - name: Preserve every published record and recover exact previously qualified IDs
         run: |
