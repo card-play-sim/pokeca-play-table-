@@ -177,9 +177,13 @@ function promoteReferenceBench(g,p,index){
 }
 function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceBasicDamageProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceNamedNextDamageBoost;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;delete c.referenceNoWeaknessTurn;delete c.referenceEvolutionWindow;}
 function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);assert(p.active&&index>=0,'INVALID_BENCH_CHOICE');clearActiveEffects(p.active);[p.active,p.bench[index]]=[p.bench[index],p.active];event(g,p.id,'SWITCH',{activeInstanceId:id(p.active)});}
+function scopedAttackBoost(g,p,o,source){
+ return (p.referenceScopedAttackBoosts||[]).filter(x=>x.turn===g.turnNumber&&(x.scope==='nonRule'?!record(source).facts.rulePokemon:x.scope==='mega'&&isMegaEvolutionEx(source))).reduce((n,x)=>n+(x.unit?x.unit*Math.max(0,6-o.prizes):x.amount),0);
+}
 function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false,skipResistance=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
  if(amount===0)return 0;
+ if(!bench&&other.active===mon)amount+=scopedAttackBoost(g,own,other,source);
  if(!bench&&other.active===mon&&source.referenceNamedNextDamageBoost?.turn===g.turnNumber&&source.referenceNamedNextDamageBoost.attackName===null)amount+=source.referenceNamedNextDamageBoost.amount;
  // Supporter bonus applies only to attack damage dealt to the opponent's Active Pokemon ex.
  // Add it BEFORE weakness/resistance and special-energy penalties, and expire by turn number.
@@ -474,6 +478,7 @@ function fieldDiscardSelection(g,p,o,card,plan,action){
  assert(selection.length>=1&&selection.length<=plan.limit&&new Set(selection).size===selection.length&&selection.every(ident=>pool.some(x=>id(x.card)===ident)),'FIELD_DISCARD_SELECTION');
  return selection.map(ident=>pool.find(x=>id(x.card)===ident));
 }
+function stackReturnTargets(p,plan){return field(p).filter(c=>(c!==p.active||p.bench.length>0)&&(!plan.type||record(c).facts.types.includes(plan.type)));}
 function distinctSearchCategory(c){return basicEnergy(c)?'basicEnergy':record(c)?.category;}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
@@ -789,6 +794,13 @@ function requests(g,actor,card,effect){
  }
  if(m==='HEAL_DAMAGE')cardRequest('cards',own.filter(c=>(c.damage||0)>0),1,1);
  if(m==='COIN_FORCE_SWITCH')cardRequest('bench',o.bench,1,1);
+ if(m==='TRAINER_RETURN_OWN_STACK')cardRequest('cards',stackReturnTargets(p,effect.plan),1,1);
+ if(m==='TRAINER_HEAL_DISCARD_ENERGY'){
+  const holders=own.filter(c=>c.damage>0);cardRequest('holder',holders,1,1);
+  for(const [i,h] of holders.entries())if(h.energyCards.length){
+   cardRequest('energy'+i,h.energyCards,0,1);out.at(-1).dependencies=[{kind:'countWhenSelected',key:'holder',value:id(h),count:1}];
+  }
+ }
  if(m==='TRAINER_TOP_ORDER_OR_BOTTOM'){
   const pool=p.deck.slice(0,effect.plan.count);
   add('mode','CARD',[{id:'top',name:'好きな順で山札の上へ'},{id:'bottom',name:'切って山札の下へ'}],1,1);
@@ -1006,6 +1018,9 @@ function preflight(g,actor,action){
     assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
    if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')assert(p.hand.filter(c=>id(c)!==id(card)).length>=r.mainPlan.count,'SUPPORTER_BOTTOM_COST_REQUIRED');
    if(r.mainPlan.secondFirstTurn)assert(g.turnNumber===2,'SECOND_PLAYER_FIRST_TURN_REQUIRED');
+   if(m==='TRAINER_RETURN_OWN_STACK')assert(stackReturnTargets(p,r.mainPlan).length>0,'NO_RETURN_STACK_TARGET');
+   if(m==='TRAINER_SCOPED_ATTACK_BOOST'&&r.mainPlan.onlyHandCard)assert(p.hand.length===1&&id(p.hand[0])===id(card),'ONLY_HAND_CARD_REQUIRED');
+   if(m==='TRAINER_HEAL_DISCARD_ENERGY')assert(field(p).some(c=>c.damage>0),'NO_DAMAGED_POKEMON');
    if(m==='TRAINER_TOP_ORDER_OR_BOTTOM')assert(p.deck.length>0,'TOP_SEARCH_DECK_EMPTY');
    if(m==='TRAINER_RETURN_OPPONENT_ENERGY')assert(field(o).some(c=>c.energyCards?.length),'NO_OPPONENT_ENERGY_TARGET');
    if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'){
@@ -2175,6 +2190,25 @@ function applyPlan(g,actor,card,effect,action){
    const hand=ids('toHand');moveChosen(g,p,'deck',hand,'hand');for(const ident of ids('cards').filter(i=>!hand.includes(i))){const index=p.deck.findIndex(c=>id(c)===ident);event(g,p.id,'REVEAL',{cardIds:[ident],toPlayer:o.id});find(g,ids('attachTo')[0]).card.energyCards.push(p.deck.splice(index,1)[0]);}shuffle(g,p);break;
   }
   case 'ROSA':for(const ident of ids('cards')){const i=p.discard.findIndex(c=>id(c)===ident);find(g,ids('attachTo')[0]).card.energyCards.push(p.discard.splice(i,1)[0]);}break;
+  case 'TRAINER_RETURN_OWN_STACK':{
+   const chosen=ids('cards'),target=stackReturnTargets(p,plan).find(c=>id(c)===chosen[0]);
+   assert(chosen.length===1&&target,'RETURN_STACK_TARGET_CHANGED');
+   returnStack(g,p,target,plan.destination);if(plan.destination==='deck')shuffle(g,p);break;
+  }
+  case 'TRAINER_SCOPED_ATTACK_BOOST':
+   assert(!plan.onlyHandCard||p.hand.length===0,'ONLY_HAND_CARD_REQUIRED');
+   p.referenceScopedAttackBoosts=(p.referenceScopedAttackBoosts||[]).filter(x=>x.turn===g.turnNumber);
+   p.referenceScopedAttackBoosts.push({turn:g.turnNumber,scope:plan.scope,amount:plan.amount??null,unit:plan.unit??null});
+   break;
+  case 'TRAINER_HEAL_DISCARD_ENERGY':{
+   const holders=field(p).filter(c=>c.damage>0),target=holders.find(c=>id(c)===ids('holder')[0]);
+   assert(ids('holder').length===1&&target,'HEAL_ENERGY_TARGET_CHANGED');
+   const chosen=ids('energy'+holders.indexOf(target));
+   assert(chosen.length===Math.min(1,target.energyCards.length)&&chosen.every(ident=>target.energyCards.some(c=>id(c)===ident)),'HEAL_ENERGY_SELECTION_CHANGED');
+   heal(g,actor,target,plan.amount);
+   if(chosen.length)discardSelectedAttachment(g,actor,p,[target],chosen);
+   break;
+  }
   case 'TRAINER_TOP_ORDER_OR_BOTTOM':{
    const count=Math.min(plan.count,p.deck.length),window=p.deck.slice(0,count),mode=ids('mode'),chosen=ids('cards');
    assert(mode.length===1&&['top','bottom'].includes(mode[0]),'TOP_ORDER_MODE_INVALID');

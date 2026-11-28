@@ -686,6 +686,11 @@ function plan(entry,kind){
   if(/^このカードは、後攻プレイヤーの最初の番しか使えない。\s*相手の場のポケモンについているエネルギーを1個選び、相手の手札にもどす。$/.test(generic))return {mechanic:'TRAINER_RETURN_OPPONENT_ENERGY',commands:['RETURN_TO_HAND'],secondFirstTurn:true,sharedWording:true};
   if(/^このカードは、後攻プレイヤーの最初の番しか使えない。\s*自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('supporter',1,{secondFirstTurn:true});
  }
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分の場のポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、手札にもどす。')return {mechanic:'TRAINER_RETURN_OWN_STACK',commands:['RETURN_TO_HAND'],destination:'hand',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の場の[水]ポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、山札にもどして切る。')return {mechanic:'TRAINER_RETURN_OWN_STACK',commands:['RETURN_TO_DECK','SHUFFLE_DECK'],destination:'deck',type:'水',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*この番、自分のポケモン\(「ルールを持つポケモン」をのぞく\)が使うワザの、相手のバトルポケモンへのダメージは「\+80」される。$/.test(generic))return {mechanic:'TRAINER_SCOPED_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],scope:'nonRule',amount:80,onlyHandCard:true,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='この番、自分の「メガシンカex」が使うワザの、相手のバトルポケモンへのダメージは、相手がすでにとったサイド1枚につき「+20」される。')return {mechanic:'TRAINER_SCOPED_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],scope:'mega',unit:20,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のポケモン1匹のHPを「60」回復する。その後、回復したポケモンについているエネルギーを1個選び、トラッシュする。')return {mechanic:'TRAINER_HEAL_DISCARD_ENERGY',commands:['HEAL','DISCARD'],amount:60,sharedWording:true};
  const switchEnergy=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを(1個|好きなだけ)選び、新しいバトルポケモンにつけ替える。$/);
  if(kind==='MAIN'&&switchEnergy&&['item','supporter'].includes(entry.category))return {mechanic:'TRAINER_SWITCH_MOVE_ENERGY',commands:['SWITCH','MOVE_ENERGY'],optional:switchEnergy[1]==='好きなだけ',sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'){
