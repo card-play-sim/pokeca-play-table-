@@ -619,6 +619,38 @@ function prepare(r, e, kind) {
     assert.equal(baseline.players[1].active.retreatCost,E.getReferenceEffectRecord(other.active).facts.retreatCost);
     return {...t,trigger};
   }
+  if(m==='PASSIVE_DYNAMIC_MAX_HP'){
+    const index=r.attacks.findIndex(a=>a.plan);
+    if(index<0)return {blocked:'NO_DYNAMIC_HP_ATTACK_TRIGGER'};
+    const trigger={...r.attacks[index],effectIndex:index},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),[own,other]=game.players,mon=own.active,plan=e.plan;
+    assert.equal(E.getReferenceEffectRecord(mon)?.officialCardId,r.officialCardId);
+    assert(!(mon.tools||[]).length);
+    const zero=structuredClone(game),[zown,zother]=zero.players;
+    if(plan.mode==='opponentPrizes'){
+      if(other.prizeCards.length!==6)return {blocked:'NO_FULL_PRIZE_FIXTURE'};
+      other.hand.push(...other.prizeCards.splice(0,2));other.prizes=other.prizeCards.length;
+    }else{
+      // Move real typed cards between zones; never synthesize energy counts.
+      zown.deck.push(...zown.active.energyCards.splice(0));
+      const typed=mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type);
+      if(!typed.length){
+        const zone=[own.deck,own.hand].find(cards=>cards.some(c=>!c.isSpecial&&c.kind==='energy'&&c.energyType===plan.type));
+        if(!zone)return {blocked:'NO_TYPED_HP_ENERGY_FIXTURE'};
+        mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.kind==='energy'&&c.energyType===plan.type),1)[0]);
+      }
+      if(mon.energyCards.some(c=>c.isSpecial))return {blocked:'NO_BASIC_ONLY_HP_FIXTURE'};
+    }
+    const empty=port(zero).getSnapshot(),changed=port(game),before=changed.getSnapshot();
+    const n=plan.mode==='opponentPrizes'?2:mon.energyCards.filter(c=>c.energyType===plan.type).length;
+    assert.equal(empty.players[0].active.hp,r.facts.hp);
+    assert(n>0);assert.equal(before.players[0].active.hp,r.facts.hp+n*plan.amount);
+    assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
+    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
+    return {...t,port:changed,option,trigger};
+  }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(m)){
     const attackIndex=r.attacks.findIndex(a=>a.plan);
     if(attackIndex<0)return {blocked:'NO_RETREAT_CONTEXT_TRIGGER'};
@@ -1364,6 +1396,10 @@ function prepare(r, e, kind) {
   }
   if(m==='MASS_ZONE_TRANSFER'){
     const own=frame.game.players[0],plan=e.plan,eligible=c=>massTransferCandidate(c,plan);
+    if(plan.onlyHandCard||plan.emptyHand){
+      const moved=own.hand.filter(c=>!plan.onlyHandCard||c.id!==frame.sourceId);
+      own.hand=own.hand.filter(c=>!moved.includes(c));own.deck.push(...moved);
+    }
     if(plan.zone==='discard'){
       for(const zone of [own.deck,own.hand])while(own.discard.filter(eligible).length<plan.limit){
        const index=zone.findIndex(eligible);if(index<0)break;own.discard.push(zone.splice(index,1)[0]);
@@ -2573,7 +2609,21 @@ function verifyCase(t, e) {
       }
     }
     assert(ids.every(id=>resolved[plan.destination].some(c=>c.id===id)&&!resolved[plan.zone].some(c=>c.id===id)));
-    assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.privateSearch)assert(!effectEvents.some(ev=>ev?.command==='REVEAL'&&ev.cardIds?.some(id=>ids.includes(id))));
+    else assert(effectEvents.some(ev=>ev?.command==='REVEAL'&&ids.every(id=>ev.cardIds?.includes(id))));
+    if(plan.onlyHandCard||plan.emptyHand){
+      assert.equal(own.hand.length,plan.onlyHandCard?1:0);
+      const denied=structuredClone(before),side=denied.players[0],extra=side.deck.findIndex(c=>!ids.includes(c.id));
+      assert(extra>=0);side.hand.push(side.deck.splice(extra,1)[0]);
+      const retry=port(denied),beforeRejected=retry.getSnapshot();assert.equal(retry.dispatch('you',action).ok,false);assert.equal(JSON.stringify(B.canonical(retry.getSnapshot())),JSON.stringify(B.canonical(beforeRejected)));
+    }
+    if(plan.firstTurnAllowed){
+      assert(ids.every(id=>own.deck.some(c=>c.id===id&&E.getReferenceEffectRecord(c).facts.basic&&E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))));
+      const first=structuredClone(before);first.turnNumber=1;first.players[0].turnLimits={};
+      const pp=port(first);assert(pp.dispatch('you',action).ok);
+      const used=structuredClone(first);used.players[0].turnLimits={supporterUsed:true};
+      assert.equal(port(used).dispatch('you',action).ok,false);
+    }
     if(plan.origin==='evolve'||plan.origin==='bench'){
       if(plan.origin==='bench'){const source=own.bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);}
       const closed=JSON.parse(JSON.stringify(before));closed.referenceActionSequence++;
@@ -3969,6 +4019,14 @@ function verifyCase(t, e) {
     const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:own.active.id,abilityId:e.effectId}).ok,false);
     assert.equal(JSON.stringify(B.canonical(bad.getSnapshot())),JSON.stringify(B.canonical(before)));
   }
+  if(e.plan.mechanic==='PASSIVE_DYNAMIC_MAX_HP'){
+    const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon),plan=e.plan;
+    assert(print.abilities.some(a=>a.effectId===e.effectId));
+    const n=plan.mode==='opponentPrizes'?6-before.players[1].prizeCards.length:mon.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type).length;
+    assert(n>0);assert.equal(mon.hp,print.facts.hp+n*plan.amount);
+    const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
+    assert.deepEqual(bad.getSnapshot(),before);
+  }
   if(['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(e.plan.mechanic)){
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);
     assert(print.abilities.some(a=>a.effectId===e.effectId));
@@ -4317,6 +4375,23 @@ function verifyCase(t, e) {
     assert(previous&&current,'TOOL_RETREAT_TARGET_MISSING');
     assert.equal(current.retreatCost,Math.max(0,previous.retreatCost-e.plan.amount),
       'TOOL_RETREAT_DISCOUNT_INCORRECT');
+  }
+  if(e.plan.mechanic==='DECK_ORDER_SELECT'){
+    const action=t.action||o.action,chosen=action.selections.cards,plan=e.plan,i=plan.side==='own'?0:1;
+    const original=before.players[i].deck.map(c=>c.id),result=after.players[i].deck.map(c=>c.id),count=Math.min(plan.count,original.length);
+    assert(count>0);assert.equal(chosen.length,count);assert.deepEqual(Array.from(result.slice(0,count)),Array.from(chosen));
+    assert.deepEqual([...result].sort(),[...original].sort());
+    if(!plan.search)assert.deepEqual(Array.from(result.slice(count)),Array.from(original.slice(count)));
+    const events=after.history.slice(before.history.length);
+    assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);
+    assert(events.some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'));
+    if(count>1){
+     const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);
+     assert.deepEqual(Array.from(reverse.getSnapshot().players[i].deck.slice(0,count),c=>c.id),[...chosen].reverse());
+    }
+    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,cards:chosen.slice(1)}}).ok,false);
+    assert.equal(JSON.stringify(B.canonical(invalid.getSnapshot())),JSON.stringify(B.canonical(before)));
+    assert.deepEqual(S.identities(before),S.identities(after));
   }
   if(e.plan.mechanic==='SUPPORTER_ORDERED_BOTTOM_DRAW'){
     const action=t.action||o.action,chosen=action.selections.cards,own=before.players[0],resolved=after.players[0],plan=e.plan;

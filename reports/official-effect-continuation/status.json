@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "7014a7a9325a82a19fcd2e7c1121dbeab74049f60042960d9a619e2b5acdbbf8",
-  "classifiedRegistryHash": "7014a7a9325a82a19fcd2e7c1121dbeab74049f60042960d9a619e2b5acdbbf8",
+  "registryHash": "3ba9b8dcea011ae0ec5c5f449de1de8d796a9797198a54040a5a92672d539012",
+  "classifiedRegistryHash": "3ba9b8dcea011ae0ec5c5f449de1de8d796a9797198a54040a5a92672d539012",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,8 +14,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 266,
-      "notImplemented": 108,
+      "compiled": 278,
+      "notImplemented": 96,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
@@ -42,8 +42,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2687,
-      "notImplemented": 966,
+      "compiled": 2699,
+      "notImplemented": 954,
       "blocked": 23,
       "executionVerifiedPrints": 743
     },
@@ -2529,11 +2529,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "45230",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "45232",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -2619,21 +2614,6 @@
       }
     },
     {
-      "officialCardId": "45284",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45284.json",
-        "sha256": "fafd0eb88715f4ab6b4642644289fabac392c095e6a2456b74582279daec6f14",
-        "htmlSha256": "fafd0eb88715f4ab6b4642644289fabac392c095e6a2456b74582279daec6f14",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
       "officialCardId": "45285",
       "name": "セイジ",
       "category": "supporter",
@@ -2692,21 +2672,6 @@
       "officialCardId": "45544",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45562",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45562.json",
-        "sha256": "e73a1a822f1b137cb437df3258f41408c1771e9a83238eb7d115db3176120d5f",
-        "htmlSha256": "e73a1a822f1b137cb437df3258f41408c1771e9a83238eb7d115db3176120d5f",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
     },
     {
       "officialCardId": "45563",
@@ -3184,21 +3149,6 @@
       }
     },
     {
-      "officialCardId": "45936",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45936.json",
-        "sha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
-        "htmlSha256": "45e24294e7101a220fe8f452c502bbcfa364dde488e36f19d7844b8e00615cef",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
-      }
-    },
-    {
       "officialCardId": "45937",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -3499,21 +3449,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46062",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46062.json",
-        "sha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
-        "htmlSha256": "2fd879989c8792ed7b879c773f76a1b57a491ecff915743cff8153b3f617c325",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
-      }
-    },
-    {
       "officialCardId": "46063",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -3526,21 +3461,6 @@
         "sha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "htmlSha256": "83ee60021852c5dd4263a17cae4aaa91b2a5249315d5e8409d07c4928cb5230f",
         "textSha256": "7707492c5e4733f46c4b8e51692d2e33a1007e5112425c66b384fbb9635e6771"
-      }
-    },
-    {
-      "officialCardId": "46068",
-      "name": "カシオペア",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\n\n自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46068.json",
-        "sha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
-        "htmlSha256": "95dff3a2b91f147d798e57166b872ee6c333807128fe1ee15b51671544eca437",
-        "textSha256": "ee0f32f7c4518eb24031ae5899be5fab5eb443e0cacf98198b7d0c66973b87b7"
       }
     },
     {
@@ -4009,11 +3929,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "46673",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "46675",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -4181,21 +4096,6 @@
         "sha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "htmlSha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
-      }
-    },
-    {
-      "officialCardId": "46826",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46826.json",
-        "sha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
-        "htmlSha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
       }
     },
     {
@@ -4949,11 +4849,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "50287",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "50288",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -5130,11 +5025,6 @@
     },
     {
       "officialCardId": "50311",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "50313",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6198,11 +6088,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47436",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47437",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6323,21 +6208,6 @@
       }
     },
     {
-      "officialCardId": "47488",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47488.json",
-        "sha256": "32abcfa15b6eba99e81470bfda47e7a1a84ac98bbcd3291c4a1e917c180e936a",
-        "htmlSha256": "32abcfa15b6eba99e81470bfda47e7a1a84ac98bbcd3291c4a1e917c180e936a",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
-      }
-    },
-    {
       "officialCardId": "47490",
       "name": "ロケット団のファクトリー",
       "category": "stadium",
@@ -6398,21 +6268,6 @@
       }
     },
     {
-      "officialCardId": "47527",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47527.json",
-        "sha256": "9b1dcbb2402312aa9ccf045e98f1d3b7e1d8e1a5e0cb46452e3002d9adc6cf84",
-        "htmlSha256": "9b1dcbb2402312aa9ccf045e98f1d3b7e1d8e1a5e0cb46452e3002d9adc6cf84",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
-      }
-    },
-    {
       "officialCardId": "47530",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6444,11 +6299,6 @@
     },
     {
       "officialCardId": "47578",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47588",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6494,11 +6344,6 @@
     },
     {
       "officialCardId": "47656",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47661",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6818,11 +6663,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47957",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47966",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6844,11 +6684,6 @@
     },
     {
       "officialCardId": "48029",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7578,21 +7413,6 @@
       }
     },
     {
-      "officialCardId": "48702",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/48702.json",
-        "sha256": "55f7028d97eba39c2adde5e4bb6b99893d8e205eab662b26250aa561a2966c51",
-        "htmlSha256": "55f7028d97eba39c2adde5e4bb6b99893d8e205eab662b26250aa561a2966c51",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
-      }
-    },
-    {
       "officialCardId": "48703",
       "name": "Nの城",
       "category": "stadium",
@@ -7743,11 +7563,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49040",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49055",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -7759,11 +7574,6 @@
     },
     {
       "officialCardId": "49066",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "49106",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -8025,21 +7835,6 @@
         "sha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "htmlSha256": "abc1b57fae3aa0c95a8ad2f56db8d13301bd17f7cbcef07909785b362811a842",
         "textSha256": "c2059b518cf04021ffff811a937a05ed7d79a722461b13ee309645074064e340"
-      }
-    },
-    {
-      "officialCardId": "49451",
-      "name": "ロケット団のランス",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "このカードは、先攻プレイヤーの最初の番でも使える。\n\n自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49451.json",
-        "sha256": "1522365a39549cf16c061ccf18f529cfe69f655d737ecaf7fae3a176f8100150",
-        "htmlSha256": "1522365a39549cf16c061ccf18f529cfe69f655d737ecaf7fae3a176f8100150",
-        "textSha256": "83471bbb5e23c37067bde9edfecdbdef172a8d8d8c512456331cc7457c463193"
       }
     },
     {
@@ -8408,21 +8203,6 @@
       }
     },
     {
-      "officialCardId": "47206",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47206.json",
-        "sha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
-        "htmlSha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
       "officialCardId": "47218",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8504,11 +8284,6 @@
     },
     {
       "officialCardId": "48766",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48789",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -9143,21 +8918,6 @@
       }
     },
     {
-      "officialCardId": "49414",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49414.json",
-        "sha256": "c88cd99158497c8c696e88feeb2ccf503093f8fc02088053a777d4d45cdac1bd",
-        "htmlSha256": "c88cd99158497c8c696e88feeb2ccf503093f8fc02088053a777d4d45cdac1bd",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
       "officialCardId": "49421",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -9707,11 +9467,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 999
+        "count": 987
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 293
+        "count": 281
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9726,10 +9486,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "32ac87d4364ee3521a5598e0e2466331c9734f3ca5453c7744f381306ba32c3d",
+    "executionFingerprint": "ee550e26e8df503aa5734d235cef18fc089845b777031a5ebc8539778fc76391",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 239577,
+    "seq": 244233,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
