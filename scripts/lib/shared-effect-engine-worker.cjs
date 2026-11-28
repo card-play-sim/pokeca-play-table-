@@ -70,6 +70,7 @@ function batchSearchCandidate(c,plan){
 }
 function massTransferCandidate(c,plan){
  const r=E.getReferenceEffectRecord(c);
+ if(plan.maxHp!==undefined&&!(r?.facts?.hp<=plan.maxHp))return false;
  if(plan.category==='pokemonOrBasicEnergy')return c.kind==='energy'&&!c.isSpecial?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
  if(plan.nameExact&&r?.name!==plan.nameExact)return false;
  if(plan.retreatCost!==undefined&&r?.facts?.retreatCost!==plan.retreatCost)return false;
@@ -982,6 +983,15 @@ function prepare(r, e, kind) {
       }
       if(e.plan.condition==='fullHp')assert.equal(defender.damage,0);
     }
+    if(m==='PASSIVE_ACTIVE_HIT_RETALIATION'&&e.plan.mode){
+      const side=game.players[1],mon=side.active;
+      if(e.plan.mode==='knockout')mon.damage=mon.hp-10;
+      if(e.plan.mode==='energy'){
+        const eligible=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
+        while(mon.energyCards.filter(eligible).length<2){const zone=[side.deck,side.hand].find(z=>z.some(eligible));if(!zone)return {blocked:'NO_RETALIATION_TYPED_ENERGY'};mon.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);}
+        if(mon.energyCards.some(c=>c.isSpecial))return {blocked:'RETALIATION_SPECIAL_ENERGY_CONFOUND'};
+      }
+    }
     if(m==='PASSIVE_ENERGY_TEAM_REDUCTION'){
       const [own,other]=game.players,mon=other.active;
       for(const c of [...own.active.energyCards])if(c.isSpecial)own.deck.push(own.active.energyCards.splice(own.active.energyCards.indexOf(c),1)[0]);
@@ -1530,6 +1540,7 @@ function prepare(r, e, kind) {
       if(index>=0&&own.deck.length){const saved=own.prizeCards[index];own.prizeCards[index]=own.deck.shift();own[plan.zone].push(saved);}
     }
     if(!own[plan.zone].some(eligible))return {blocked:'NO_MASS_TRANSFER_FIXTURE'};
+    if(plan.firstOwnTurn){frame.game.turnNumber=1;own.turnLimits={};}
   }
   if(m==='ATTACK_DISCARD_MULTIPLE_SELF_ENERGY'&&e.plan.type){
     const own=frame.game.players[0],plan=e.plan,attached=own.active.energyCards;
@@ -2778,6 +2789,11 @@ function verifyCase(t, e) {
       const denied=structuredClone(before),side=denied.players[0],extra=side.deck.findIndex(c=>!ids.includes(c.id));
       assert(extra>=0);side.hand.push(side.deck.splice(extra,1)[0]);
       const retry=port(denied),beforeRejected=retry.getSnapshot();assert.equal(retry.dispatch('you',action).ok,false);assert.equal(JSON.stringify(B.canonical(retry.getSnapshot())),JSON.stringify(B.canonical(beforeRejected)));
+    }
+    if(plan.firstOwnTurn){
+      assert(before.turnNumber<=2&&ids.every(id=>own.deck.some(c=>c.id===id&&E.getReferenceEffectRecord(c).facts.hp<=plan.maxHp)));
+      for(const mode of ['late','shared']){const denied=structuredClone(before);if(mode==='late')denied.turnNumber=3;else{denied.players[0].turnLimits.abilityNames||={};denied.players[0].turnLimits.abilityNames[plan.sharedSearchName]=true;}const retry=port(denied);assert.equal(retry.dispatch('you',action).ok,false);}
+      assert(resolved.turnLimits.abilityNames[plan.sharedSearchName]);
     }
     if(plan.firstTurnAllowed){
       assert(ids.every(id=>own.deck.some(c=>c.id===id&&E.getReferenceEffectRecord(c).facts.basic&&E.getReferenceEffectRecord(c).name.startsWith('ロケット団の'))));
@@ -4397,8 +4413,14 @@ function verifyCase(t, e) {
     const reactions=effectEvents.filter(ev=>ev?.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION'&&ev.effectId===e.effectId);
     assert.equal(reactions.length,1);assert.equal(reactions[0].targetInstanceId,attacker.id);
     if(e.plan.status){assert.equal(reactions[0].command,'STATUS_CONDITION');assert.equal(reactions[0].status,e.plan.status);}
-    else{assert.equal(reactions[0].counterCount,e.plan.counterCount);
-      assert(effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===attacker.id&&ev.counterCount===e.plan.counterCount));
+    else{const expected=e.plan.mode==='energy'?defender.energyCards.filter(c=>!c.isSpecial&&c.energyType===e.plan.type).length*e.plan.counterCount:e.plan.counterCount;assert.equal(reactions[0].counterCount,expected);
+      assert(effectEvents.some(ev=>ev?.command==='PLACE_DAMAGE_COUNTERS'&&ev.targetInstanceId===attacker.id&&ev.counterCount===expected));
+    }
+    if(e.plan.mode==='energy'||e.plan.mode==='knockout'){
+      const negative=structuredClone(before),side=negative.players[1];
+      if(e.plan.mode==='energy'){for(const c of side.active.energyCards.filter(c=>!c.isSpecial&&c.energyType===e.plan.type))side.deck.push(side.active.energyCards.splice(side.active.energyCards.indexOf(c),1)[0]);side.active.energies=[];}
+      else side.active.damage=0;
+      const retry=port(negative);assert(retry.dispatch('you',action).ok);assert(!retry.getSnapshot().history.slice(before.history.length).some(ev=>ev.details?.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION'&&ev.details?.effectId===e.effectId));
     }
     // Zero attack damage must not trigger the reaction.
     const protectedGame=JSON.parse(JSON.stringify(before));protectedGame.players[1].active.referenceProtection={opponentTurn:before.turnNumber};

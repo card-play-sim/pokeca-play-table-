@@ -274,6 +274,19 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
  return amount;
 }
 function typesConflictForIgnore(g,own,mon,source){return record(source).facts.types.includes('超')&&record(mon).facts.types.includes('竜')&&field(own).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='FAIRY_ZONE'));}
+function hitRetaliations(g,side,mon,attacker,value){
+ if(value<=0)return [];
+ const out=[];
+ for(const holder of field(side))for(const a of enabledAbilities(g,holder)){
+  const p=a.plan;if(p.mechanic!=='PASSIVE_ACTIVE_HIT_RETALIATION')continue;
+  if(p.mode==='team'){if(side.active!==mon||!record(mon).facts.types.includes(p.type))continue;}
+  else {if(holder!==mon||p.mode!=='energy'&&side.active!==mon)continue;if(p.mode==='knockout'&&mon.damage<mon.hp)continue;}
+  const count=p.mode==='energy'?energyUnits(mon).filter(u=>u.includes(p.type)).length*p.counterCount:p.counterCount;
+  if(!p.status&&!count)continue;
+  out.push({kind:'ACTIVE_HIT_RETALIATION',playerId:side.id,attackerId:id(attacker),effectId:a.effectId,status:p.status,counterCount:count});
+ }
+ return out;
+}
 function damage(g,actor,mon,amount,options={}){
  const attacker=player(g,actor).active,defender=find(g,id(mon));
  // Only the opponent's Active Pokémon and only this attack's damage.
@@ -303,11 +316,9 @@ function damage(g,actor,mon,amount,options={}){
   mon.damage=mon.hp-survival.plan.remainingHp;
   event(g,defender.player.id,'ADD_STATE',{mechanic:survival.plan.mechanic,targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
  }
- if(value>0&&defender?.player.id!==actor&&defender?.player.active===mon){
-  for(const a of enabledAbilities(g,mon).filter(a=>a.plan.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION')){
-   g.referenceReactions||=[];
-   g.referenceReactions.push({kind:'ACTIVE_HIT_RETALIATION',playerId:defender.player.id,attackerId:id(attacker),effectId:a.effectId,status:a.plan.status,counterCount:a.plan.counterCount});
-  }
+ if(value>0&&defender&&defender.player.id!==actor){
+  const reactions=hitRetaliations(g,defender.player,mon,attacker,value);
+  if(reactions.length){g.referenceReactions||=[];g.referenceReactions.push(...reactions);}
  }
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
   g.referenceReactions||=[];g.referenceReactions.push({kind:'CIRCULATOR',playerId:defender.player.id,attackerId:id(attacker),sourceOfficialCardId:record(mon.tools.find(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')).officialCardId});
@@ -363,6 +374,7 @@ function massTransferCandidate(c,plan){
  if(plan.category==='pokemonOrBasicEnergy')return basicEnergy(c)?(!plan.energyType||c.energyType===plan.energyType):r?.category==='pokemon'&&(!plan.type||r.facts.types.includes(plan.type))&&(!Number.isInteger(plan.stage)||r.facts.stage===plan.stage)&&(!plan.team||r.name.startsWith(plan.team+'の'));
  if(plan.nameExact&&r?.name!==plan.nameExact)return false;
  if(plan.retreatCost!==undefined&&r?.facts?.retreatCost!==plan.retreatCost)return false;
+ if(plan.maxHp!==undefined&&!(r?.facts?.hp<=plan.maxHp))return false;
  if(plan.resistanceType&&!r?.facts?.resistance?.types?.includes(plan.resistanceType))return false;
  if(plan.category==='any')return !!r;
  if(plan.nameContains&&(!r||!r.name.includes(plan.nameContains)))return false;
@@ -885,6 +897,8 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER'){
   assert(!a.plan.emptyHand||p.hand.length===0,'SEARCH_EMPTY_HAND_REQUIRED');
+  assert(!a.plan.firstOwnTurn||g.turnNumber<=2,'SEARCH_FIRST_OWN_TURN_REQUIRED');
+  assert(!a.plan.sharedSearchName||!p.turnLimits?.abilityNames?.[a.plan.sharedSearchName],'SHARED_SEARCH_ALREADY_USED');
   assert(a.plan.zone==='deck'?p.deck.length>0:p.discard.some(c=>massTransferCandidate(c,a.plan)),'NO_MASS_TRANSFER_SOURCE');
  }
  if(m==='MASS_HEAL_SCOPE')assert(scopeHealTargets(p,opponent(g,actor),a.plan).some(c=>c.damage>0),'NO_SCOPE_HEAL_TARGET');
@@ -1391,6 +1405,7 @@ function applyPlan(g,actor,card,effect,action){
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(plan.zone==='deck')searchSelectedDeck(g,actor,p,ids('cards'),{reveal:!plan.privateSearch});
    else {moveChosen(g,p,'discard',ids('cards'),plan.destination);if(plan.destination==='deck')shuffle(g,p);}
+   if(plan.sharedSearchName){p.turnLimits.abilityNames||={};p.turnLimits.abilityNames[plan.sharedSearchName]=true;}
    break;
   case 'MASS_HAND_FLOW':
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
