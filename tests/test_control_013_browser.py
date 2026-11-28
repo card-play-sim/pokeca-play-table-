@@ -300,6 +300,10 @@ async def main():
      assert defender_print==r['officialCardId'],('DEFENDER_CURRENT_PRINT_MISMATCH',defender_print,r['officialCardId'])
      if m=='PASSIVE_FULL_HP_SURVIVAL' and not r['facts']['basic']:
       assert before['players'][1]['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
+   if m=='ATTACK_NAMED_NEXT_DAMAGE_BOOST':
+    plan=f['e']['plan']
+    assert after['players'][0]['active']['referenceNamedNextDamageBoost']=={'turn':before['turnNumber']+2,'attackName':plan['attackName'],'amount':plan['amount']}
+    assert f['printedDamageEvents'] and all(event in events for event in f['printedDamageEvents'])
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
             'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',

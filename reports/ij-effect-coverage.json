@@ -10,8 +10,8 @@
     },
     "J": {
       "total": 870,
-      "connected": 563,
-      "missing": 307
+      "connected": 565,
+      "missing": 305
     }
   },
   "counts": {
@@ -23,9 +23,9 @@
       "EXECUTION_PASS": 6
     },
     "J": {
-      "CONNECTED_UNTESTED": 562,
+      "CONNECTED_UNTESTED": 564,
       "MECHANIC_REQUIRED": 42,
-      "ENGINE_CONNECTION_REQUIRED": 264,
+      "ENGINE_CONNECTION_REQUIRED": 262,
       "EXECUTION_PASS": 1,
       "EVIDENCE_UNVERIFIED": 1
     }
@@ -16822,8 +16822,7 @@
       "name": "ドンファン",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50129.json"
     },
     {
@@ -20122,8 +20121,7 @@
       "name": "メガヒードランex",
       "mark": "J",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/50781.json"
     },
     {
@@ -21317,8 +21315,8 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1319,
-        "MECHANIC_REQUIRED": 538,
+        "ENGINE_CONNECTED": 1327,
+        "MECHANIC_REQUIRED": 530,
         "ENGINE_CONNECTION_REQUIRED": 7
       },
       "I": {
@@ -21330,8 +21328,8 @@
       },
       "J": {
         "total": 869,
-        "ENGINE_CONNECTED": 562,
-        "MECHANIC_REQUIRED": 300,
+        "ENGINE_CONNECTED": 564,
+        "MECHANIC_REQUIRED": 298,
         "ENGINE_CONNECTION_REQUIRED": 3,
         "EVIDENCE_UNVERIFIED": 4
       },
@@ -21341,7 +21339,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3794,
-    "unconnected": 1279
+    "engineConnected": 3804,
+    "unconnected": 1269
   }
 }

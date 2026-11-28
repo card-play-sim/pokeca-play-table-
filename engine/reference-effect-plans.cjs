@@ -752,6 +752,8 @@ function plan(entry,kind){
   return {mechanic:'ABILITY_EVOLVE_MULTI_COUNTERS',commands:['PLACE_DAMAGE_COUNTERS'],origin:'evolve',count:Number(evolveCounters[1]),amount:Number(evolveCounters[2]),sharedWording:true};
  if(kind==='ATTACK'&&generic==='のぞむなら、このポケモンを手札にもどす。(ポケモン以外のカードは、すべてトラッシュする。)'&&/^\d+$/.test(String(entry.damage||'0')))
   return {mechanic:'ATTACK_OPTIONAL_RETURN_POKEMON',commands:['DAMAGE','RETURN_TO_HAND','DISCARD'],sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンは、相手のたねポケモンの「ポケモンex」からワザのダメージを受けない。')
+  return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:'basicEx',sharedWording:true};
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
@@ -923,6 +925,12 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&namedLock&&/^\d+$/.test(String(entry.damage||'0'))
     &&String(entry.name||'')===namedLock[1])
   return {mechanic:'ATTACK_NAMED_NEXT_TURN_LOCK',commands:['DAMAGE','ADD_STATE'],attackName:namedLock[1]};
+ const namedBoost=generic.match(/^次の自分の番、このポケモンの「([^」]+)」のダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ATTACK'&&namedBoost&&/^\d+$/.test(String(entry.damage||'0'))&&String(entry.name||'')===namedBoost[1])
+  return {mechanic:'ATTACK_NAMED_NEXT_DAMAGE_BOOST',commands:['DAMAGE','ADD_STATE'],attackName:namedBoost[1],amount:Number(namedBoost[2]),sharedWording:true};
+ const nextActiveBoost=generic.match(/^次の自分の番、このポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ATTACK'&&nextActiveBoost&&/^\d+$/.test(String(entry.damage||'0')))
+  return {mechanic:'ATTACK_NAMED_NEXT_DAMAGE_BOOST',commands:['DAMAGE','ADD_STATE'],attackName:null,amount:Number(nextActiveBoost[1]),sharedWording:true};
  // Match complete printed effect slots only; unknown official text still fails closed.
  const typedStatus=generic.match(/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら、そのポケモンを(マヒ|やけど|どく|ねむり|こんらん)にする。$/);
  if(kind==='ATTACK'&&printedAmount&&typedStatus){
