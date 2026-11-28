@@ -290,7 +290,7 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
-    elif not trigger or m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
+    elif not trigger or m in ('PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
       assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
@@ -300,6 +300,10 @@ async def main():
      assert defender_print==r['officialCardId'],('DEFENDER_CURRENT_PRINT_MISMATCH',defender_print,r['officialCardId'])
      if m=='PASSIVE_FULL_HP_SURVIVAL' and not r['facts']['basic']:
       assert before['players'][1]['active']['evolutionCards'], 'LEGAL_EVOLUTION_STACK_REQUIRED'
+   if m=='ATTACK_NAMED_NEXT_DAMAGE_BOOST':
+    plan=f['e']['plan']
+    assert after['players'][0]['active']['referenceNamedNextDamageBoost']=={'turn':before['turnNumber']+2,'attackName':plan['attackName'],'amount':plan['amount']}
+    assert f['printedDamageEvents'] and all(event in events for event in f['printedDamageEvents'])
    if m in ('VANILLA_DAMAGE','ATTACK_UNDAMAGED_BONUS','ATTACK_ATTACHED_TOOL_COUNT','BENCH_COUNT_DAMAGE','FULL_BENCH_REQUIRED_DAMAGE','SELF_COUNTER_DAMAGE','COIN_BONUS_DAMAGE',
             'ACTIVE_AND_BENCH_DAMAGE','ATTACK_SPLASH_DAMAGE','ATTACK_DISCARD_OPPONENT_DECK_TOP','ATTACK_DISCARD_HAND_DRAW','ATTACK_IGNORE_DAMAGE_RULES',
             'PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ATTACK_DISCARD_BENCH_ENERGY_BONUS',
@@ -443,6 +447,11 @@ async def main():
     assert entered['validationReference']['officialCardId']==r['officialCardId']
     assert entered['stage']==before_source['stage']
     assert all(card['id']!=ident for card in after['players'][0]['hand'])
+   if m=='PASSIVE_OPPONENT_RETREAT_INCREASE':
+    other=before['players'][1]['active']
+    printed=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c).facts.retreatCost",other)
+    assert other['retreatCost']==printed+f['e']['plan']['amount']
+    assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
    if m in ('PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'):
     source=before['players'][0]['active']
     assert source['energyCards']
@@ -613,6 +622,14 @@ async def main():
     assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
    if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
     assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='TOOL_NAMED_TEAM_MAX_HP':
+    target=option['action']['targetInstanceId']
+    old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)
+    mon=next(c for c in [after['players'][0]['active'],*after['players'][0]['bench']] if c['id']==target)
+    plan=f['e']['plan']
+    name=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c).name",old)
+    assert name.startswith(plan['team']+'の')
+    assert mon['hp']==old['hp']+plan['amount'] and mon['damage']==old['damage']
    if m=='TOOL_LOW_HP_RETREAT_DISCOUNT':
     target=option['action']['targetInstanceId']
     old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)
