@@ -769,10 +769,21 @@ function plan(entry,kind){
   const tera=generic.match(/^このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、([1-9])個ぶん少なくなる。\(少なくなるのは、どのタイプのエネルギーでもよい。\)$/);
   if(tera)return {mechanic:'TOOL_TERA_ANY_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(tera[1]),sharedWording:true};
  }
+ if(kind==='MAIN'&&entry.category==='energy'){
+  const recycle=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼]|無色)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(?:\[([草炎水雷超闘悪鋼])\])?ポケモンが使うワザの効果で、このカードがトラッシュされたなら、ワザのダメージや効果のあとに、(手札にもどす|もとのポケモンにつけなおす)。$/);
+  if(recycle&&(!recycle[2]||recycle[1]===recycle[2]))return {mechanic:'ENERGY_SELF_ATTACK_RECYCLE',commands:['ATTACH_ENERGY',recycle[3]==='手札にもどす'?'RETURN_TO_HAND':'ATTACH_ENERGY'],energyType:recycle[1],holderType:recycle[2]||null,destination:recycle[3]==='手札にもどす'?'hand':'attached',sharedWording:true};
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:null,limit:1,target:'own',holderType:null,team:null,multi:false,heal:null,windowCount:6,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。')return {mechanic:'MASS_HAND_FLOW',mode:'optionalDiscardLimit',amount:5,commands:['DISCARD','DRAW'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のバトルポケモンのHPを「30」回復する。自分のトラッシュにある「おいしいおむすび」(このカードをのぞく)1枚につき、回復するHPは「30」多くなる。')return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:30,discardName:'おいしいおむすび',discardUnit:30,sharedWording:true};
+ const switchEnergy=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを(1個|好きなだけ)選び、新しいバトルポケモンにつけ替える。$/);
+ if(kind==='MAIN'&&switchEnergy&&['item','supporter'].includes(entry.category))return {mechanic:'TRAINER_SWITCH_MOVE_ENERGY',commands:['SWITCH','MOVE_ENERGY'],optional:switchEnergy[1]==='好きなだけ',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'){
+  if(generic==='自分の山札を2枚引く。その後、名前に「伝説」とつくスタジアムが場に出ているなら、この「フウとランの修行」はトラッシュせず、手札にもどす。')return {mechanic:'TRAINER_DRAW_RETURN_SELF',commands:['DRAW','RETURN_TO_HAND'],amount:2,stadiumContains:'伝説',destination:'hand',sharedWording:true};
+  if(generic==='自分の山札を2枚引く。その後、場に「公民館」が出ているなら、この「管理人」はトラッシュせず、山札にもどして切る。')return {mechanic:'TRAINER_DRAW_RETURN_SELF',commands:['DRAW','RETURN_TO_DECK','SHUFFLE_DECK'],amount:2,stadiumName:'公民館',destination:'deck',sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分の山札から好きなカードを5枚まで選び、トラッシュする。そして山札を切る。')return {mechanic:'TRAINER_DECK_DISCARD',commands:['SEARCH_DECK','DISCARD','SHUFFLE_DECK'],limit:5,sharedWording:true};
  const fieldDiscard=(mode,extra={})=>({mechanic:'TRAINER_DISCARD_FIELD_CARDS',commands:['DISCARD'],mode,sharedWording:true,...extra});
  if(kind==='MAIN'&&entry.category==='item'){
   if(generic==='おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。')return fieldDiscard('bothTools',{limit:2});
