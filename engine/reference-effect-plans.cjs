@@ -82,6 +82,10 @@ function additionalAttackPlan(entry,text){
   if(ko||counters||special||both)
    return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:both?'both':special?'specialEnergy':counters?'counters':ko[1]==='特殊状態'?'status':'basic',...(counters?{count:Number(counters[1])}:{}),sharedWording:true};
  }
+ const retaliation=text.match(/^次の相手の番、このポケモンがワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。$/);
+ const reflect=text==='次の相手の番、このポケモンがワザのダメージを受けたとき、受けたダメージぶんのダメカンを、ワザを使ったポケモンにのせる。';
+ if(/^\d+$/.test(printed)&&(retaliation||reflect))
+  return {mechanic:'ATTACK_NEXT_HIT_RETALIATION',commands:['DAMAGE','ADD_STATE'],counterCount:retaliation?Number(retaliation[1]):null,reflect,sharedWording:true};
  const untilEnergy=text.match(/^ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から(基本エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を選び、このポケモンにつける。そして山札を切る。$/);
  const untilHand=text==='ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から好きなカードを選び、手札に加える。そして山札を切る。';
  if(printed==='0'&&(untilEnergy||untilHand))
@@ -745,7 +749,24 @@ function plan(entry,kind){
   const attach=body.match(/^このカードを手札からポケモンにつけたとき、自分の山札を([1-9])枚引く。$/);
   if(isEnergy&&generic.startsWith(energyPrefix)&&attach)return {mechanic:'ENERGY_HAND_ATTACH_DRAW',commands:['ATTACH_ENERGY','DRAW'],amount:Number(attach[1]),sharedWording:true};
  }
+ if(kind==='MAIN'&&entry.category==='energy'){
+  const status=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼])\]エネルギー1個ぶんとしてはたらく。このカードをつけている\[\1\]ポケモンは、特殊状態にならず、受けている特殊状態は、すべて回復する。$/);
+  if(status)return {mechanic:'ENERGY_TYPED_PASSIVE',commands:['ATTACH_ENERGY','STATUS_CONDITION'],energyType:status[1],mode:'statusGuard',amount:0,sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='stadium'){
+  if(generic==='エネルギーがついているおたがいのポケモン全員は、特殊状態にならず、受けている特殊状態は、すべて回復する。')return {mechanic:'STADIUM_ENERGY_STATUS_GUARD',commands:['STATUS_CONDITION'],sharedWording:true};
+  if(generic==='おたがいのベンチポケモン全員は、相手のワザや特性の効果で、ダメカンがのらない。[ワザのダメージは受ける。]')return {mechanic:'STADIUM_BENCH_COUNTER_GUARD',commands:['PLACE_DAMAGE_COUNTERS'],sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='tool'){
+  const gravity=generic.match(/^このカードをつけているポケモンがバトル場にいるかぎり、おたがいのバトルポケモンのにげるためのエネルギーは、それぞれ([1-9])個ぶん多くなる。$/);
+  if(gravity)return {mechanic:'TOOL_BOTH_ACTIVE_RETREAT_INCREASE',commands:['MODIFY_RETREAT_COST'],amount:Number(gravity[1]),sharedWording:true};
+  const tera=generic.match(/^このカードをつけている「テラスタル」のポケモンがワザを使うとき、そのワザを使うためのエネルギーは、([1-9])個ぶん少なくなる。\(少なくなるのは、どのタイプのエネルギーでもよい。\)$/);
+  if(tera)return {mechanic:'TOOL_TERA_ANY_COST_DISCOUNT',commands:['MODIFY_ATTACK_COST'],amount:Number(tera[1]),sharedWording:true};
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:null,limit:1,target:'own',holderType:null,team:null,multi:false,heal:null,windowCount:6,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。')return {mechanic:'MASS_HAND_FLOW',mode:'optionalDiscardLimit',amount:5,commands:['DISCARD','DRAW'],sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のバトルポケモンのHPを「30」回復する。自分のトラッシュにある「おいしいおむすび」(このカードをのぞく)1枚につき、回復するHPは「30」多くなる。')return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:30,discardName:'おいしいおむすび',discardUnit:30,sharedWording:true};
  const fieldDiscard=(mode,extra={})=>({mechanic:'TRAINER_DISCARD_FIELD_CARDS',commands:['DISCARD'],mode,sharedWording:true,...extra});
  if(kind==='MAIN'&&entry.category==='item'){
   if(generic==='おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。')return fieldDiscard('bothTools',{limit:2});
