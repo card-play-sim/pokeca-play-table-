@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "19fa6f8eff8aebf81828cb8a02ea9411243dcdb5698b54417090b2462118bae5",
-  "classifiedRegistryHash": "19fa6f8eff8aebf81828cb8a02ea9411243dcdb5698b54417090b2462118bae5",
+  "registryHash": "cc07cc5f948238c287c6958af3f9f4297fd48b1376c0901d63d7c0b4df6877d0",
+  "classifiedRegistryHash": "cc07cc5f948238c287c6958af3f9f4297fd48b1376c0901d63d7c0b4df6877d0",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -17,7 +17,7 @@
       "compiled": 321,
       "notImplemented": 53,
       "blocked": 0,
-      "executionVerifiedPrints": 43
+      "executionVerifiedPrints": 45
     },
     "item": {
       "prints": 299,
@@ -31,21 +31,21 @@
       "compiled": 95,
       "notImplemented": 5,
       "blocked": 0,
-      "executionVerifiedPrints": 9
+      "executionVerifiedPrints": 10
     },
     "stadium": {
       "prints": 68,
       "compiled": 63,
       "notImplemented": 2,
       "blocked": 3,
-      "executionVerifiedPrints": 9
+      "executionVerifiedPrints": 10
     },
     "pokemon": {
       "prints": 3676,
       "compiled": 2892,
       "notImplemented": 761,
       "blocked": 23,
-      "executionVerifiedPrints": 748
+      "executionVerifiedPrints": 782
     },
     "energy": {
       "prints": 681,
@@ -5611,32 +5611,32 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
+    "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 251217,
+    "seq": 253545,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,
       "RUNNING": 0,
-      "SUCCEEDED": 427,
+      "SUCCEEDED": 466,
       "FAILED": 0,
-      "BLOCKED": 349
+      "BLOCKED": 310
     },
     "categories": {
       "pokemon": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 353,
+        "SUCCEEDED": 388,
         "FAILED": 0,
-        "BLOCKED": 318
+        "BLOCKED": 283
       },
       "supporter": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 31,
+        "SUCCEEDED": 33,
         "FAILED": 0,
-        "BLOCKED": 15
+        "BLOCKED": 13
       },
       "item": {
         "PENDING": 0,
@@ -5648,16 +5648,16 @@
       "stadium": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 7,
+        "SUCCEEDED": 8,
         "FAILED": 0,
-        "BLOCKED": 3
+        "BLOCKED": 2
       },
       "tool": {
         "PENDING": 0,
         "RUNNING": 0,
-        "SUCCEEDED": 7,
+        "SUCCEEDED": 8,
         "FAILED": 0,
-        "BLOCKED": 5
+        "BLOCKED": 4
       },
       "energy": {
         "PENDING": 0,
