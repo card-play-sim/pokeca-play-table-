@@ -470,3 +470,20 @@ repairLoopTest().catch(e=>{console.error(e);process.exitCode=1;});
   assert.equal(require('../scripts/local-unknown-effect-generator.cjs').omitRejectedPatch(receipt),true);
   console.log('EXACT_UNCONNECTED_MECHANIC_REPAIR PASS');
  }
+
+{
+ const {validateDisconnectedRepair,adaptiveProfile}=require('../scripts/local-unknown-effect-generator.cjs');
+ const compiler='engine/reference-effect-plans.cjs',runtime='engine/pokeca_reference_effect_runtime.cjs',worker='scripts/lib/shared-effect-engine-worker.cjs';
+ const base={[compiler]:"function plan(){return null;}",[runtime]:"const m='KNOWN';",[worker]:"const m='KNOWN';"};
+ const bad={...base,[compiler]:"function plan(){return {mechanic:'PASSIVE_COIN_SIDES_GUARD'};}"};
+ assert.throws(()=>validateDisconnectedRepair(base,bad,''),/MODEL_UNCONNECTED_MECHANIC:PASSIVE_COIN_SIDES_GUARD/);
+ assert.doesNotThrow(()=>validateDisconnectedRepair(base,{...base,[compiler]:"function plan(){return {mechanic:'KNOWN'};}"},''));
+ assert.doesNotThrow(()=>validateDisconnectedRepair(bad,bad,''));
+ const first=recordHistory(null,[{sharedTaskId:mkId(951)}],'QUARANTINE_FAILED',1,fp,'UNCONNECTED_EFFECT:PREVENT_EFFECT');
+ const second=recordHistory(first,[{sharedTaskId:mkId(952)}],'QUARANTINE_FAILED',2,fp,'UNCONNECTED_EFFECT:PASSIVE_COIN_SIDES_GUARD');
+ const learned=adaptiveProfile(second,3);
+ assert(learned.learned.includes('CONNECTION'));
+ assert.equal(learned.connectionContext,true);
+ assert(learned.maxTokens>=3200);
+ console.log('INITIAL_MECHANIC_WIRING_PREFLIGHT PASS');
+}
