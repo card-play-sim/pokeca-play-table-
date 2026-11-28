@@ -117,7 +117,7 @@ function energyUnits(mon){
    const match=record(mon)?.facts.stage===r.mainPlan.stage;
    for(let i=0;i<(match?r.mainPlan.units:1);i++)out.push(match?[...basicTypes,'無色']:['無色']);
   }
-  else if(m==='ENERGY_TYPED_PASSIVE'||m==='ENERGY_SELF_ATTACK_RECYCLE'||m==='ENERGY_ATTACK_EFFECT_GUARD')out.push([r.mainPlan.energyType]);
+  else if(m==='ENERGY_TYPED_PASSIVE'||m==='ENERGY_SELF_ATTACK_RECYCLE'||m==='ENERGY_ATTACK_EFFECT_GUARD'||m==='ENERGY_HAND_ATTACH_BASIC_BENCH')out.push([r.mainPlan.energyType]);
   else if(m==='ENERGY_LEGACY_PRIZE_REDUCTION')out.push([...basicTypes,'無色']);
   else if(m==='ATTACHED_ACTIVE_HIT'||m==='ENERGY_HAND_ATTACH_DRAW')out.push(['無色']);
   else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
@@ -588,6 +588,21 @@ function attachedMovePool(p,o,card,plan){
 function selectedAttachmentUnits(card,energy,plan){
  const units=energyUnits({...card,energyCards:[energy]});
  return plan.type?units.filter(types=>types.includes(plan.type)).length:units.length;
+}
+function handAttachBenchTriggered(card,holder){
+ const plan=record(card)?.mainPlan;
+ return plan?.mechanic==='ENERGY_HAND_ATTACH_BASIC_BENCH'&&!!holder&&record(holder).facts.types.includes(plan.energyType);
+}
+function handAttachBenchRequests(g,actor,card,holder){
+ if(!handAttachBenchTriggered(card,holder))return [];
+ const p=player(g,actor),plan=record(card).mainPlan;
+ const candidates=p.deck.filter(c=>c.kind==='pokemon'&&record(c)?.facts.basic&&record(c).facts.types.includes(plan.energyType));
+ return [{key:'cards',kind:'CARD',min:0,max:Math.max(0,Math.min(plan.limit,5-p.bench.length,candidates.length)),candidates:copy(candidates.map(c=>({...c,basic:true,stage:0}))),...(actor==='you'?{inspection:{privateTo:actor,cards:copy(p.deck)}}:{})}];
+}
+function verifyHandAttachBench(g,actor,card,holder,action){
+ if(record(card)?.mainPlan?.mechanic!=='ENERGY_HAND_ATTACH_BASIC_BENCH')return;
+ const req=handAttachBenchRequests(g,actor,card,holder)[0],chosen=selected(action,'cards');
+ assert(chosen.length<=(req?.max||0)&&new Set(chosen).size===chosen.length&&chosen.every(i=>req?.candidates.some(c=>id(c)===i)),'INVALID_ENERGY_BENCH_SELECTION');
 }
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
@@ -1072,6 +1087,7 @@ function preflight(g,actor,action){
   }else if(action.type==='attach_energy'){
    const card=p.hand[action.cardIndex],mon=action.target==='active'?p.active:p.bench[action.target],r=record(card);assert(card?.kind==='energy'&&mon&&!p.normalEnergyAttached,'ENERGY_ATTACHMENT_NOT_ALLOWED');
    if(!connected(r?.mainPlan))stop(card,{name:r?.name||card.name},'SPECIAL_ENERGY_EFFECT_NOT_CONNECTED');if(r.mainPlan.mechanic==='ROCKET_ENERGY')assert(record(mon).name.startsWith('ロケット団の'),'ROCKET_POKEMON_ONLY');
+   verifyHandAttachBench(g,actor,card,mon,action);
   }else if(action.type==='retreat'){
    assert(p.active&&p.bench.some(c=>id(c)===action.benchInstanceId)&&!g.retreatUsed,'RETREAT_NOT_ALLOWED');
    assert(p.active.referenceCannotRetreatTurn!==g.turnNumber,'RETREAT_DISABLED_THIS_TURN');
@@ -2287,6 +2303,7 @@ function execute(g,actor,action){
  }else if(action.type==='attach_energy'){
   const card=p.hand.splice(action.cardIndex,1)[0],mon=action.target==='active'?p.active:p.bench[action.target];mon.energyCards.push(card);p.normalEnergyAttached=true;event(g,actor,'ATTACH_ENERGY',{cardId:id(card),targetInstanceId:id(mon)});
   const plan=record(card)?.mainPlan;if(plan?.mechanic==='ENERGY_HAND_ATTACH_DRAW')draw(g,p,plan.amount);
+  if(handAttachBenchTriggered(card,mon)&&p.bench.length<5){searchSelectedDeck(g,actor,p,selected(action,'cards'),{destination:'bench'});refresh(g);functions().Core.resolveKnockouts(g,actor);}
  }else if(action.type==='retreat'){
   for(const ident of action.energyIds||[]){const i=p.active.energyCards.findIndex(c=>id(c)===ident);p.discard.push(p.active.energyCards.splice(i,1)[0]);}switchMon(g,p,action.benchInstanceId);g.retreatUsed=true;
  }else if(action.type==='attack_turn'){
@@ -2378,7 +2395,7 @@ function handOptions(g,actor,ident){
  }
  for(const c of field(p)){
   if(card.kind==='tool')out.push({key:id(c),label:'どうぐをつける',action:{type:'attach_tool',cardId:ident,targetInstanceId:id(c)}});
-  if(card.kind==='energy')out.push({key:id(c),label:'エネルギーをつける',action:{type:'attach_energy',cardIndex:p.hand.indexOf(card),target:p.active===c?'active':p.bench.indexOf(c)}});
+  if(card.kind==='energy')out.push({key:id(c),label:'エネルギーをつける',action:{type:'attach_energy',cardIndex:p.hand.indexOf(card),target:p.active===c?'active':p.bench.indexOf(c)},requests:handAttachBenchRequests(g,actor,card,c)});
  }
  return out;
 }
@@ -2400,7 +2417,7 @@ function completeAction(g,actor,option){
    action.selections[r.key]=eligible;
   }
  }
- const card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
+ const card=action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
  if(m==='SWITCH_SELF_ATTACK'&&effect.plan.optional&&p.bench.length)action.targetIds=[id(p.bench[0])];
@@ -2482,7 +2499,7 @@ function projectView(view,viewer){
 }
 function plannedCommands(g,actor,action){
  if(!g.referenceEffectValidation)return [];
- const p=player(g,actor),card=action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
+ const p=player(g,actor),card=action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const r=record(card);if(!r)return [];
  const effect=action.type==='attack_turn'?r.attacks[action.attackIndex]:action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
  if(!connected(effect?.plan))return [];
