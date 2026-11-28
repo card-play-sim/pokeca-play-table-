@@ -1310,10 +1310,11 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='EXCITE_DIVE'){assert(p.bench.length<5,'BENCH_FULL');assert(field(p).some(c=>record(c).facts.prizeCount===3&&record(c).facts.types.includes('無色')),'COLORLESS_MEGA_IN_PLAY_REQUIRED');}
  verifyRequests(g,actor,card,a,action);
 }
-function handles(action){return ['evolve','use_stadium','attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
+function handles(action){return ['end_turn','evolve','use_stadium','attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
 function referenceChoiceAction(choice,value){
  const action={type:'resolve_reference_choice'};
  if(choice.kind==='MULLIGAN')return {...action,drawCount:value};
+ if(choice.kind==='TOOL_END_TURN_ENERGY')return {...action,energyId:value};
  if(choice.kind==='CIRCULATOR'||choice.kind==='TOOL_HEAVY_BATON')return {...action,...value};
  if(choice.kind==='DECK_POKEMON_SEARCH'||choice.kind==='TOOL_KO_SEARCH')return {...action,deckCardId:value};
  return {...action,benchInstanceId:value};
@@ -1472,7 +1473,7 @@ function executeStadiumAction(g,actor,action){
   default:throw Error('UNKNOWN_STADIUM_ACTIVE_MODE');
  }
  refresh(g);functions().Core.resolveKnockouts(g,actor);
- if(plan.endTurn&&g.status==='active'&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection)functions().Core.endTurn(g,actor);
+ if(plan.endTurn&&g.status==='active'&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection)requestEndTurn(g,actor);
  else if(plan.endTurn&&g.status==='active')g.referenceAttackTurnPending=actor;
 }
 function stadiumActions(g,actor){
@@ -1500,6 +1501,7 @@ function preflight(g,actor,action){
   const p=player(g,actor),o=opponent(g,actor);
   if(!handles(action))return {handled:false,errors:[]};
   assert(g.status==='active'&&g.phase==='main'&&g.turnPlayer===actor&&!g.attackUsed,'REFERENCE_ACTION_NOT_ALLOWED');
+  if(action.type==='end_turn'){assert(!g.pendingPrizeSelection,'PRIZE_SELECTION_REQUIRED');return {handled:true,errors:[]};}
   if(action.type==='attack'||action.type==='effect_attack')throw Error('REFERENCE_ATTACK_TURN_ACTION_REQUIRED');
   if(action.type==='attack_turn'){
    const mon=p.active,r=record(mon),a=r?.attacks[action.attackIndex];assert(mon&&a,'ATTACK_MISSING');requirePlan(mon,a);
@@ -1734,7 +1736,7 @@ function finishAttack(g,actor){
  applyAttackPrizeReductions(g,actor);
  functions().Core.resolveKnockouts(g,actor);
  if(g.status==='finished'){delete g.referenceAttackTurnPending;delete g.pendingReferenceChoice;return;}
- if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;functions().Core.endTurn(g,actor);}
+ if(!g.pendingPrizeSelection&&!g.pendingReferenceChoice){delete g.referenceAttackTurnPending;requestEndTurn(g,actor);}
 }
 function chooseBenchSwitch(g,actor,owner,selectedId){
  assert(owner&&owner.active,'SWITCH_ACTIVE_REQUIRED');
@@ -3054,13 +3056,16 @@ function finishTrainerTurn(g,actor){
  if(g.status==='finished')return;
  assert(g.turnPlayer===actor,'TRAINER_TURN_CHANGED_BEFORE_END');
  if(g.pendingPrizeSelection||g.pendingReferenceChoice){g.referenceAttackTurnPending=actor;return;}
- functions().Core.endTurn(g,actor);
+ requestEndTurn(g,actor);
 }
 function execute(g,actor,action){
  const check=preflight(g,actor,action);assert(check?.handled&&!check.errors.length,check?.errors.join(';')||'NOT_REFERENCE_ACTION');
  const p=player(g,actor);p.turnLimits||={supporterUsed:false,abilityUses:{}};
- if(action.type==='resolve_reference_choice'){
+ if(action.type==='end_turn'){
+  requestEndTurn(g,actor);
+ }else if(action.type==='resolve_reference_choice'){
   const choice=g.pendingReferenceChoice;
+  if(choice.kind==='TOOL_END_TURN_ENERGY'){resolveEndTurnEnergy(g,actor,choice,action.energyId);return {referenceEffect:true,adoptedPrint:false};}
   if(choice.kind==='CIRCULATOR'){
    const attacker=find(g,choice.attackerId),target=attacker.player.bench.find(c=>id(c)===action.benchInstanceId);assert(target,'CIRCULATOR_TARGET_CHANGED');
    const i=attacker.card.energyCards.findIndex(e=>id(e)===action.energyId);assert(i>=0,'CIRCULATOR_ENERGY_CHANGED');target.energyCards.push(attacker.card.energyCards.splice(i,1)[0]);event(g,actor,'MOVE_ENERGY',{energyId:action.energyId,targetInstanceId:id(target),effect:'CIRCULATOR',sourceOfficialCardId:choice.sourceOfficialCardId});
@@ -3094,7 +3099,7 @@ function execute(g,actor,action){
   const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);if(!effect.plan.repeated)mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
  }else{
   const i=p.hand.findIndex(c=>id(c)===action.cardId),card=p.hand.splice(i,1)[0],r=record(card);
-  if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];if(['TOOL_KO_SEARCH','TOOL_HEAVY_BATON'].includes(r.mainPlan.mechanic))event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,toolAttached:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
+  if(action.type==='attach_tool'){find(g,action.targetInstanceId).card.tools=[card];if(['TOOL_KO_SEARCH','TOOL_HEAVY_BATON','TOOL_END_TURN_ENERGY'].includes(r.mainPlan.mechanic))event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,toolAttached:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'attach_tool',details:{cardId:id(card),targetInstanceId:action.targetInstanceId}});}
   else if(action.type==='play_stadium'){
    if(g.stadium)player(g,g.stadiumOwner).discard.push(g.stadium);g.stadium=card;g.stadiumOwner=actor;g.stadiumPlayedTurn=g.turnNumber;g.stadiumPlayedBy=actor;if(r.mainPlan.mechanic==='STADIUM_ACTIVE')event(g,actor,'ADD_STATE',{sourceOfficialCardId:r.officialCardId,stadiumPlaced:true});else emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_played',details:{cardId:id(card),cardName:card.name}});
   }else {p.discard.push(card);if(action.type==='play_supporter'){p.turnLimits||={};p.turnLimits.supporterUsed=true;}applyPlan(g,actor,card,{plan:r.mainPlan},action);if(action.type==='play_supporter')g.history.push({turnNumber:g.turnNumber,player:actor,type:'supporter_used',details:{cardId:id(card),cardName:r.name,referenceOfficialCardId:r.officialCardId}});}
@@ -3122,10 +3127,37 @@ function afterAction(g,before,actor,action){
  retainEvolutionConfusion(g,before);
  if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;delete g.referenceAttackAwaitingPromotion;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
-  const a=g.referenceAttackTurnPending;delete g.referenceAttackTurnPending;functions().Core.endTurn(g,a);
+  const a=g.referenceAttackTurnPending;delete g.referenceAttackTurnPending;requestEndTurn(g,a);
  }
  refresh(g);
  if(['bench_basic','evolve','play_active_basic'].includes(action.type))functions().Core.resolveKnockouts(g,actor);
+}
+function endTurnEnergyContext(g,actor){
+ const owner=player(g,actor),holder=owner.active;
+ if(!holder||holder.damage>=holder.hp||!toolEnabled(g))return null;
+ const attached=(holder.tools||[]).find(t=>record(t)?.mainPlan?.mechanic==='TOOL_END_TURN_ENERGY');
+ if(!attached)return null;
+ return {owner,holder,attached,options:owner.discard.filter(basicEnergy).map(id)};
+}
+function requestEndTurn(g,actor){
+ const ctx=endTurnEnergyContext(g,actor);
+ if(ctx?.options.length){
+  g.referenceAttackTurnPending=actor;
+  g.pendingReferenceChoice={kind:'TOOL_END_TURN_ENERGY',playerId:actor,turn:g.turnNumber,holderId:id(ctx.holder),attachmentId:id(ctx.attached),sourceOfficialCardId:record(ctx.attached).officialCardId,options:[...ctx.options,null]};
+  return;
+ }
+ functions().Core.endTurn(g,actor);
+}
+function resolveEndTurnEnergy(g,actor,choice,energyId){
+ const ctx=endTurnEnergyContext(g,actor);
+ assert(ctx&&choice.turn===g.turnNumber&&choice.holderId===id(ctx.holder)&&choice.attachmentId===id(ctx.attached)&&choice.sourceOfficialCardId===record(ctx.attached).officialCardId&&(energyId===null||ctx.options.includes(energyId)),'END_TURN_ENERGY_SOURCE_CHANGED');
+ if(energyId!==null){
+  const i=ctx.owner.discard.findIndex(c=>id(c)===energyId);
+  ctx.holder.energyCards.push(ctx.owner.discard.splice(i,1)[0]);
+  event(g,actor,'ATTACH_ENERGY',{cardId:energyId,targetInstanceId:id(ctx.holder),fromZone:'discard',sourceOfficialCardId:choice.sourceOfficialCardId});
+ }
+ delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;
+ functions().Core.endTurn(g,actor);
 }
 function resolveTrainerEndHandDiscard(g,actor){
  const p=player(g,actor),state=p.referenceEndHandDiscard;
@@ -3271,6 +3303,10 @@ function validateGame(g){
  if(!g.referenceEffectValidation){assert(!nested.some(c=>c.validationReference),'REFERENCE_MODE_REQUIRED');return;}
  assert(g.referenceEffectValidation.adoptedPrints===0,'REFERENCE_ADOPTION_FORBIDDEN');
  const choice=g.pendingReferenceChoice;
+ if(choice?.kind==='TOOL_END_TURN_ENERGY'){
+  const ctx=endTurnEnergyContext(g,choice.playerId);
+  assert(ctx&&ctx.options.length>0&&choice.playerId===g.turnPlayer&&g.referenceAttackTurnPending===g.turnPlayer&&choice.turn===g.turnNumber&&choice.holderId===id(ctx.holder)&&choice.attachmentId===id(ctx.attached)&&choice.sourceOfficialCardId===record(ctx.attached).officialCardId&&JSON.stringify(choice.options)===JSON.stringify([...ctx.options,null]),'INVALID_END_TURN_ENERGY_STATE');
+ }
  if(choice?.kind==='TOOL_HEAVY_BATON'){
   const options=heavyBatonOptions(g,choice);
   assert(g.referenceAttackTurnPending===g.turnPlayer&&choice.playerId!==g.turnPlayer&&Number.isInteger(choice.moved)&&choice.moved>=0&&choice.moved<choice.limit&&options.length>0&&JSON.stringify(choice.options)===JSON.stringify(options),'INVALID_HEAVY_BATON_STATE');
@@ -3318,12 +3354,12 @@ function projectView(view,viewer){
  return view;
 }
 function plannedCommands(g,actor,action){
- if(!g.referenceEffectValidation)return [];
+ if(!g.referenceEffectValidation||action.type==='end_turn')return [];
  const p=player(g,actor),card=action.type==='use_stadium'?g.stadium:action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const r=record(card);if(!r)return [];
  const effect=action.type==='attack_turn'?r.attacks[action.attackIndex]:action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
  if(!connected(effect?.plan))return [];
- return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&['TOOL_KO_SEARCH','TOOL_HEAVY_BATON'].includes(effect.plan.mechanic))?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
+ return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&['TOOL_KO_SEARCH','TOOL_HEAVY_BATON','TOOL_END_TURN_ENERGY'].includes(effect.plan.mechanic))?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
 }
 function statuses(g){
  if(!g.referenceEffectValidation)return [];
