@@ -54,6 +54,18 @@ function typedEnergyEffects(card,mode){
  const types=record(card)?.facts.types||[];
  return (card.energyCards||[]).map(c=>record(c)?.mainPlan).filter(p=>p?.mechanic==='ENERGY_TYPED_PASSIVE'&&p.mode===mode&&types.includes(p.energyType));
 }
+function statusGuard(g,card){
+ return typedEnergyEffects(card,'statusGuard').length>0||
+  stadium(g)==='STADIUM_ENERGY_STATUS_GUARD'&&(card.energyCards||[]).length>0;
+}
+function applySpecialStatus(g,actor,card,status,details={}){
+ if(statusGuard(g,card)){event(g,actor,'STATUS_CONDITION',{...details,status,targetInstanceId:id(card),prevented:true});return false;}
+ card.statusCondition=status;event(g,actor,'STATUS_CONDITION',{...details,status,targetInstanceId:id(card)});return true;
+}
+function benchCounterGuard(g,actor,card,sourceType='POKEMON'){
+ const target=find(g,id(card));
+ return stadium(g)==='STADIUM_BENCH_COUNTER_GUARD'&&sourceType==='POKEMON'&&!!target&&target.player.id!==actor&&target.player.bench.includes(card);
+}
 function maxHpBonus(g,card){
  const plan=record(g.stadium)?.mainPlan;
  const fieldHp=plan?.mechanic==='STADIUM_STAGE_HP'&&record(card).facts.stage===plan.stage?plan.amount:0;
@@ -116,6 +128,17 @@ function cost(g,mon,attack){
   else if(p.mode==='ownAllNames'&&p.names.every(name=>field(owner).some(x=>record(x)?.name===name)))discount+=c.length;
  }
  while(discount-->0){const i=c.indexOf('無色');if(i<0)break;c.splice(i,1);}
+ if(toolEnabled(g)&&record(mon).facts.teraBenchProtection){
+  const anyDiscount=(mon.tools||[]).reduce((sum,t)=>{const p=record(t)?.mainPlan;return sum+(p?.mechanic==='TOOL_TERA_ANY_COST_DISCOUNT'?p.amount:0);},0);
+  // Choose a legal reduction using actual supplied units, not a fixed color.
+  const count=Math.min(c.length,anyDiscount);
+  if(count){
+   const candidates=[];
+   function choose(start,left,remove){if(!left){candidates.push(c.filter((_,i)=>!remove.includes(i)));return;}for(let i=start;i<=c.length-left;i++)choose(i+1,left-1,[...remove,i]);}
+   choose(0,count,[]);
+   return candidates.find(x=>pays(mon,x))||candidates[0];
+  }
+ }
  return c;
 }
 // Optional deterministic match-owned random stream. Persist referenceRngState
@@ -161,6 +184,7 @@ function refresh(g){
    if(energyUnits(c).some(unit=>unit.some(type=>freeTypes.has(type))))c.retreatCost=0;
   }
   if(p.active)p.active.retreatCost+=field(opponent(g,p.id)).flatMap(c=>enabledAbilities(g,c)).filter(a=>a.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE').reduce((sum,a)=>sum+a.plan.amount,0);
+  if(p.active&&toolEnabled(g))p.active.retreatCost+=g.players.flatMap(side=>side.active?.tools||[]).reduce((sum,t)=>{const p=record(t)?.mainPlan;return sum+(p?.mechanic==='TOOL_BOTH_ACTIVE_RETREAT_INCREASE'?p.amount:0);},0);
   // Continuous retreat modifiers are recomputed after each action.
   if(toolEnabled(g))for(const c of field(p)){
    const discount=(c.tools||[]).reduce((total,tool)=>{
@@ -177,6 +201,7 @@ function refresh(g){
    if(stadiumPlan?.mechanic==='STADIUM_FILTERED_RETREAT'&&matchesNamedType(c,stadiumPlan))c.retreatCost=stadiumPlan.free?0:Math.max(0,c.retreatCost-stadiumPlan.amount);
    if(typedEnergyEffects(c,'retreat').length)c.retreatCost=0;
    c.energies=energyUnits(c).map(unit=>unit[0]);
+   if(statusGuard(g,c)&&c.statusCondition){const previous=c.statusCondition;c.statusCondition=null;delete c.statusConditionInfo;event(g,p.id,'STATUS_CONDITION',{targetInstanceId:id(c),previous,cleared:true});}
   }
  }
 }
@@ -352,7 +377,7 @@ function damage(g,actor,mon,amount,options={}){
  }
  return value;
 }
-function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
+function counters(g,actor,mon,count,{attack=false,sourceType='POKEMON'}={}){if(benchCounterGuard(g,actor,mon,sourceType)||attack&&mon.referenceProtection?.opponentTurn===g.turnNumber){event(g,actor,'PLACE_DAMAGE_COUNTERS',{prevented:true,targetInstanceId:id(mon)});return;}command(g,actor,{command:'PLACE_DAMAGE_COUNTERS',counterCount:count},{targetIds:[id(mon)],sourceType,actionType:attack?'ATTACK':sourceType==='STADIUM'?'TRAINER':'ABILITY'});}
 function coin(g,actor){if(g.referenceEffectPreview)return false;const n=referenceRandom(g);assert(Number.isFinite(n)&&n>=0&&n<1,'INVALID_RNG');const heads=n<.5;event(g,actor,'COIN_FLIP',{heads});return heads;}
 function requirePlan(card,effect){if(!connected(effect?.plan))stop(card,effect);return effect.plan;}
 function itemLocked(g,actor){return !!g.referenceItemLock?.some(x=>x.playerId===actor&&x.turnNumber===g.turnNumber);}
@@ -1120,7 +1145,7 @@ function finishAttack(g,actor){
    if(reaction.drawCount)draw(g,owner,reaction.drawCount);
    if(attacker&&reaction.counterCount)command(g,owner.id,{command:'PLACE_DAMAGE_COUNTERS',counterCount:reaction.counterCount},{targetIds:[id(attacker.card)],sourceType:'TRAINER',actionType:'TRAINER'});
    if(attacker&&reaction.status&&attacker.player.active===attacker.card){
-    attacker.card.statusCondition=reaction.status;event(g,owner.id,'STATUS_CONDITION',{status:reaction.status,targetInstanceId:id(attacker.card),sourceOfficialCardId:reaction.sourceOfficialCardId});
+    applySpecialStatus(g,owner.id,attacker.card,reaction.status,{sourceOfficialCardId:reaction.sourceOfficialCardId});
    }
    if(reaction.consume){
     const holder=find(g,reaction.holderId)?.card,i=holder?.tools?.findIndex(t=>id(t)===reaction.attachmentId)??-1;
@@ -1133,8 +1158,7 @@ function finishAttack(g,actor){
   if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
    if(reaction.status){
     if(attacker.player.active!==attacker.card)continue;
-    attacker.card.statusCondition=reaction.status;
-    event(g,reaction.playerId,'STATUS_CONDITION',{status:reaction.status,targetInstanceId:id(attacker.card),effectId:reaction.effectId,mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION'});
+    applySpecialStatus(g,reaction.playerId,attacker.card,reaction.status,{effectId:reaction.effectId,mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION'});
    }else{
     counters(g,reaction.playerId,attacker.card,reaction.counterCount);
     event(g,reaction.playerId,'ADD_STATE',{mechanic:'PASSIVE_ACTIVE_HIT_RETALIATION',targetInstanceId:id(attacker.card),counterCount:reaction.counterCount,effectId:reaction.effectId});
@@ -1159,7 +1183,7 @@ function moveDamageCounters(g,actor,source,target,count,{attack=false,max=3}={})
  assert(source&&target&&source!==target,'COUNTER_MOVE_TARGET_INVALID');
  assert(Number.isInteger(count)&&count>=1&&count<=max,'COUNTER_MOVE_COUNT_INVALID');
  assert((source.damage||0)>=count*10,'COUNTER_MOVE_SOURCE_INSUFFICIENT');
- if(attack&&target.referenceProtection?.opponentTurn===g.turnNumber)return;
+ if(benchCounterGuard(g,actor,target)||attack&&target.referenceProtection?.opponentTurn===g.turnNumber)return;
  source.damage-=count*10;
  counters(g,actor,target,count,{attack});
  event(g,actor,'MOVE_DAMAGE_COUNTERS',{sourceInstanceId:id(source),targetInstanceId:id(target),counterCount:count});
@@ -1352,7 +1376,7 @@ function applyPlan(g,actor,card,effect,action){
      case 'mill':{const side=step.side==='opponent'?o:p,discarded=side.deck.splice(0,step.amount);side.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:side.id});break;}
      case 'healSelf':if(card.damage>0)heal(g,actor,card,step.amount);break;
      case 'drain':if(amount>0&&card.damage>0)heal(g,actor,card,amount);break;
-     case 'status':if(!protectedTarget){target.statusCondition=step.status;event(g,actor,'STATUS_CONDITION',{status:step.status,targetInstanceId:id(target)});}break;
+     case 'status':if(!protectedTarget){applySpecialStatus(g,actor,target,step.status);}break;
      case 'retreatLock':if(!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+step.offset;break;
      case 'attackLock':card.referenceCannotAttackTurn=g.turnNumber+step.offset;break;
      case 'reduce':card.referenceDamageReduction={turn:g.turnNumber+1,amount:step.amount};break;
@@ -1377,7 +1401,7 @@ function applyPlan(g,actor,card,effect,action){
    }
    if(plan.zone==='deck'){event(g,actor,'SEARCH_DECK',{selectedCount:energy.length,destination:'attached',privateTo:actor});shuffle(g,p);}
    if(plan.heal)for(const target of healed)if(target.damage>0)heal(g,actor,target,plan.heal==='all'?target.damage:plan.heal);
-   if(plan.poisonActive&&healed.has(p.active)){p.active.statusCondition='POISONED';event(g,actor,'STATUS_CONDITION',{status:'POISONED',targetInstanceId:id(p.active)});}
+   if(plan.poisonActive&&healed.has(p.active)){applySpecialStatus(g,actor,p.active,'POISONED');}
    break;
   }
   case 'SUPPORTER_MEGA_HEAL_RETURN_ENERGY':{
@@ -1628,7 +1652,7 @@ function applyPlan(g,actor,card,effect,action){
    const amount=plan.failOnTails&&!met?0:plan.base+(plan.unit||0)*heads+(met?(plan.bonus||0):0);
    damage(g,actor,target,amount);
    if(met){
-    if(plan.status&&!protectedTarget){target.statusCondition=plan.status;event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(target)});}
+    if(plan.status&&!protectedTarget){applySpecialStatus(g,actor,target,plan.status);}
     if(plan.recoil)command(g,actor,{command:'DAMAGE',amount:plan.recoil},{targetIds:[id(card)]});
     if(plan.heal)heal(g,actor,card,plan.heal);
     if(plan.mill){const discarded=o.deck.splice(0,heads);o.discard.push(...discarded);event(g,actor,'DISCARD',{cardIds:discarded.map(id),fromZone:'deck',playerId:o.id});}
@@ -1757,8 +1781,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='HEAL_SELF_ATTACK')heal(g,actor,card,plan.amount);
    if(m==='ATTACK_HEAL_TEAM')for(const own of field(p))heal(g,actor,own,plan.amount);
    if(m==='ATTACK_APPLY_STATUS'&&o.active===mon&&(!plan.defenderType||record(mon).facts.types.includes(plan.defenderType))){
-    mon.statusCondition=plan.status;
-    event(g,actor,'STATUS_CONDITION',{status:plan.status,targetInstanceId:id(mon)});
+    applySpecialStatus(g,actor,mon,plan.status);
    }
    if(m==='ATTACK_DRAW')draw(g,p,plan.draw);
    if(m==='ATTACK_DISCARD_STADIUM'&&g.stadium&&(!plan.optional||ids('stadiumDiscard').length>0)){
@@ -1775,7 +1798,7 @@ function applyPlan(g,actor,card,effect,action){
    if(m==='ATTACK_NAMED_NEXT_DAMAGE_BOOST')card.referenceNamedNextDamageBoost={turn:g.turnNumber+2,attackName:plan.attackName,amount:plan.amount};
    if(m==='RETREAT_LOCK_ATTACK')mon.referenceCannotRetreatTurn=g.turnNumber+1;
    if(m==='ATTACK_DAMAGE_REDUCTION')card.referenceDamageReduction={turn:g.turnNumber+1,amount:plan.amount};
-   if(m==='COIN_PARALYZE_ATTACK'&&coin(g,actor)){o.active.statusCondition='PARALYZED';event(g,actor,'STATUS_CONDITION',{status:'PARALYZED',targetInstanceId:id(o.active)});}
+   if(m==='COIN_PARALYZE_ATTACK'&&coin(g,actor)){applySpecialStatus(g,actor,o.active,'PARALYZED');}
    if(m==='DISCARD_ALL_SELF_ENERGY_ATTACK'){
     const discarded=(card.energyCards||[]).splice(0);
     p.discard.push(...discarded);
@@ -1806,7 +1829,7 @@ function applyPlan(g,actor,card,effect,action){
     p.discard.push(discarded);
     event(g,actor,'DISCARD',{cardIds:[id(discarded)],sourceInstanceId:id(card)});
    }
-   if(m==='CONFUSION'){o.active.statusCondition='CONFUSED';event(g,actor,'STATUS_CONDITION',{status:'CONFUSED',targetInstanceId:id(o.active)});}
+   if(m==='CONFUSION'){applySpecialStatus(g,actor,o.active,'CONFUSED');}
    if(m==='ITEM_LOCK'){g.referenceItemLock||=[];g.referenceItemLock.push({playerId:o.id,turnNumber:g.turnNumber+1});}
    if(m==='RETURN_SELF_HAND')returnStack(g,p,card,'hand');
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK')searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
@@ -2002,8 +2025,7 @@ function applyPlan(g,actor,card,effect,action){
    break;
   case 'SUPPORTER_BASIC_SWITCH_CONFUSE':
    chooseBenchSwitch(g,actor,o,ids('opponentBench')[0]);
-   o.active.statusCondition='CONFUSED';
-   event(g,actor,'STATUS_CONDITION',{targetInstanceId:id(o.active),status:'CONFUSED'});
+   applySpecialStatus(g,actor,o.active,'CONFUSED');
    break;
   case 'SUPPORTER_SWITCH_EX_HEAL':{
    const previous=p.active;
