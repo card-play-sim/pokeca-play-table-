@@ -5,8 +5,8 @@
   "audit": {
     "I": {
       "total": 1702,
-      "connected": 1289,
-      "missing": 413
+      "connected": 1292,
+      "missing": 410
     },
     "J": {
       "total": 870,
@@ -16,9 +16,9 @@
   },
   "counts": {
     "I": {
-      "CONNECTED_UNTESTED": 1283,
+      "CONNECTED_UNTESTED": 1286,
       "MECHANIC_REQUIRED": 50,
-      "ENGINE_CONNECTION_REQUIRED": 359,
+      "ENGINE_CONNECTION_REQUIRED": 356,
       "EVIDENCE_UNVERIFIED": 4,
       "EXECUTION_PASS": 6
     },
@@ -10677,8 +10677,7 @@
       "name": "ローブシン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47588.json"
     },
     {
@@ -12019,8 +12018,7 @@
       "name": "ローブシン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/47957.json"
     },
     {
@@ -14879,8 +14877,7 @@
       "name": "ローブシン",
       "mark": "I",
       "category": "pokemon",
-      "status": "ENGINE_CONNECTION_REQUIRED",
-      "reason": "NO_EFFECT_PLAN",
+      "status": "CONNECTED_UNTESTED",
       "proof": "data/effect-extensions/evidence/49106.json"
     },
     {
@@ -21296,15 +21293,15 @@
     "groups": {
       "H": {
         "total": 1864,
-        "ENGINE_CONNECTED": 1353,
+        "ENGINE_CONNECTED": 1356,
         "MECHANIC_REQUIRED": 506,
-        "ENGINE_CONNECTION_REQUIRED": 5
+        "ENGINE_CONNECTION_REQUIRED": 2
       },
       "I": {
         "total": 1702,
-        "ENGINE_CONNECTED": 1289,
+        "ENGINE_CONNECTED": 1292,
         "MECHANIC_REQUIRED": 397,
-        "ENGINE_CONNECTION_REQUIRED": 12,
+        "ENGINE_CONNECTION_REQUIRED": 9,
         "EVIDENCE_UNVERIFIED": 4
       },
       "J": {
@@ -21320,7 +21317,7 @@
       }
     },
     "total": 5073,
-    "engineConnected": 3849,
-    "unconnected": 1224
+    "engineConnected": 3855,
+    "unconnected": 1218
   }
 }

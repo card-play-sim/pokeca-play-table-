@@ -650,7 +650,7 @@ function prepare(r, e, kind) {
     assert.equal(empty.players[0].active.hp,r.facts.hp);
     assert(n>0);assert.equal(before.players[0].active.hp,r.facts.hp+n*plan.amount);
     assert.deepEqual(Array.from(S.identities(empty)),Array.from(S.identities(before)));
-    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&o.ok);
+    const option=changed.getPokemonActions('you',mon.id).find(o=>o.kind==='attack'&&o.action.attackIndex===index&&(o.ok??o.enabled));
     if(!option)return {blocked:'NO_DYNAMIC_HP_LEGAL_ATTACK'};
     return {...t,port:changed,option,trigger};
   }
