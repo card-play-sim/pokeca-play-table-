@@ -492,6 +492,17 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
   if(plan.predicate==='stadiumPresent')reserve(r=>r.category==='stadium'&&r.mainPlan?.mechanic==='JAMMING','deck');
   if(plan.predicate==='ownNamedEnergy')reserve(r=>r.category==='energy'&&r.name===plan.name,'deck');
+  if(plan.predicate==='ownBenchNamedEnergy'){
+   reserve(r=>r.category==='energy'&&r.name===plan.name&&r.mainPlan,'deck');
+   reserve(r=>mon(r,null,0)&&r.facts.types.includes('悪')&&!r.abilities.length,'bench');
+  }
+  if(['opponentRetreatZero','opponentRetreatAtLeast'].includes(plan.predicate)){
+   const match=r=>plan.predicate==='opponentRetreatZero'?r.facts.retreatCost===0:r.facts.retreatCost>=plan.threshold;
+   const eligible=r=>mon(r,null,0)&&!r.abilities.length;
+   reserve(r=>eligible(r)&&match(r),'active',1);
+   reserve(r=>eligible(r)&&!match(r),'bench',1);
+  }
+  if(plan.predicate==='ownBenchTera')reserveTera('bench');
   if(['ownFieldTypedThreshold','ownActiveTypedThreshold','discardBasicThreshold'].includes(plan.predicate))reserveEnergy(plan.type,plan.threshold+kindAttackCost(e,plan.type));
   if(plan.predicate==='discardAbilityThreshold')for(let i=0;i<plan.threshold;i++)reserve(r=>r.category==='pokemon'&&r.abilities.some(a=>a.name===plan.name),'discard');
   if(plan.predicate==='discardNamed')reserve(r=>r.name===plan.name,'discard');
@@ -1565,6 +1576,11 @@ function prepare(r, e, kind) {
     }
   }
   if(m==='MASS_BOARD_BONUS'){
+    if(e.plan.predicate==='ownBenchTera'&&fixtureRequirements.teraChain){
+      const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.teraChain);
+      if(evolved.blocked)return evolved;
+      frame.game=evolved.port.getSnapshot();
+    }
     if(fixtureRequirements.namedBenchChain){
       const evolved=evolveTeraFixture(port(frame.game),fixtureRequirements.namedBenchChain,false);
       if(evolved.blocked)return evolved;
@@ -1609,6 +1625,14 @@ function prepare(r, e, kind) {
       const i=own.deck.findIndex(c=>c.kind==='stadium'&&E.getReferenceEffectRecord(c).mainPlan?.mechanic==='JAMMING');
       if(i<0)return {blocked:'NO_STADIUM_PREDICATE_FIXTURE'};
       g.stadium=own.deck.splice(i,1)[0];g.stadiumOwner=own.id;
+    }
+    if(plan.predicate==='ownBenchNamedEnergy'){
+      const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;
+      const holder=own.bench.find(c=>E.getReferenceEffectRecord(c).facts.types.includes('悪')&&!c.energyCards.length);
+      if(!holder)return {blocked:'NO_BENCH_NAMED_ENERGY_HOLDER'};
+      const zone=[own.deck,own.hand,own.discard].find(cards=>cards.some(eligible));
+      if(!zone)return {blocked:'NO_BENCH_NAMED_ENERGY_FIXTURE'};
+      holder.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
     }
     if(plan.predicate==='ownNamedEnergy'){
       const eligible=c=>c.kind==='energy'&&E.getReferenceEffectRecord(c)?.name===plan.name;
@@ -3044,6 +3068,10 @@ function verifyCase(t, e) {
         case 'becameActive':return g.history.some(h=>h.turnNumber===g.turnNumber&&h.player===own.id&&h.details?.command==='SWITCH'&&h.details.activeInstanceId===own.active.id);
         case 'sharedFieldType':return [own.active,...own.bench].some(a=>[other.active,...other.bench].some(b=>rec(a).facts.types.some(type=>rec(b).facts.types.includes(type))));
         case 'ownNamedEnergy':return own.active.energyCards.some(c=>c.name===plan.name);
+        case 'ownBenchNamedEnergy':return own.bench.some(mon=>mon.energyCards.some(c=>rec(c)?.category==='energy'&&rec(c).name===plan.name));
+        case 'opponentRetreatZero':return other.active.retreatCost===0;
+        case 'opponentRetreatAtLeast':return other.active.retreatCost>=plan.threshold;
+        case 'ownBenchTera':return own.bench.some(c=>rec(c).facts.teraBenchProtection===true);
         case 'stadiumPresent':return Boolean(g.stadium);
         case 'ownHandEmpty':return own.hand.length===0;
         case 'ownDeckAtMost':return own.deck.length<=plan.threshold;
@@ -3132,8 +3160,18 @@ function verifyCase(t, e) {
         }break;
       }
       case 'allDamagedBench':own.bench[0].damage=0;break;
-      case 'ownBenchNamed':case 'ownBenchContains':{
-        for(let i=own.bench.length-1;i>=0;i--)if(nameMatches(own.bench[i])){
+      case 'ownBenchNamedEnergy':
+        for(const holder of own.bench)for(const c of [...holder.energyCards])if(rec(c)?.name===plan.name){
+          own.deck.push(holder.energyCards.splice(holder.energyCards.indexOf(c),1)[0]);
+          holder.energies=holder.energyCards.map(c=>c.energyType);
+        }break;
+      case 'opponentRetreatZero':case 'opponentRetreatAtLeast':{
+        const i=other.bench.findIndex(c=>plan.predicate==='opponentRetreatZero'?c.retreatCost>0:c.retreatCost<plan.threshold);
+        if(i<0)return {status:'BLOCKED',reason:'NO_NEGATIVE_RETREAT_FIXTURE'};
+        [other.active,other.bench[i]]=[other.bench[i],other.active];break;
+      }
+      case 'ownBenchTera':case 'ownBenchNamed':case 'ownBenchContains':{
+        for(let i=own.bench.length-1;i>=0;i--)if(plan.predicate==='ownBenchTera'?rec(own.bench[i]).facts.teraBenchProtection===true:nameMatches(own.bench[i])){
           const c=own.bench.splice(i,1)[0];
           const raw=card=>{
             const out=JSON.parse(JSON.stringify(card));

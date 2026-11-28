@@ -401,6 +401,10 @@ function boardBonusApplies(g,p,o,plan){
   case 'evolvedFromThisTurn':return p.active.evolvedTurn===g.turnNumber&&(p.active.evolutionCards?.at(-2)?.validationReference?.officialName||p.active.validationBase?.validationReference?.officialName)===plan.name;
   case 'becameActive':return enteredActiveThisTurn(g,p,p.active);
   case 'sharedFieldType':return field(p).some(own=>field(o).some(other=>record(own).facts.types.some(type=>record(other).facts.types.includes(type))));
+  case 'ownBenchNamedEnergy':return p.bench.some(mon=>mon.energyCards.some(c=>record(c)?.category==='energy'&&record(c).name===plan.name));
+  case 'opponentRetreatZero':return o.active.retreatCost===0;
+  case 'opponentRetreatAtLeast':return o.active.retreatCost>=plan.threshold;
+  case 'ownBenchTera':return p.bench.some(c=>record(c).facts.teraBenchProtection===true);
   case 'ownNamedEnergy':return p.active.energyCards.some(c=>record(c)?.category==='energy'&&record(c).name===plan.name);
   case 'stadiumPresent':return Boolean(g.stadium);
   case 'ownHandEmpty':return p.hand.length===0;
