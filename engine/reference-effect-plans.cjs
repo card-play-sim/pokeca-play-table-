@@ -676,6 +676,17 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='tool'&&entry.attacks?.length===1){
+  const a=entry.attacks[0],grant='このカードをつけているポケモンは、このカードに書かれているワザを使える。[ワザを使うためのエネルギーは必要。]';
+  const named='このカードをつけている「メガジガルデex」は、このカードに書かれているワザを使える。[ワザを使うためのエネルギーは必要。]';
+  const expires=grant+'ポケモンについているこのカードは、自分の番の終わりにトラッシュする。';
+  const exact=(name,cost,damage,body)=>a.name===name&&JSON.stringify(a.cost)===JSON.stringify(cost)&&String(a.damage)===damage&&norm(a.text)===body;
+  if(generic===grant&&entry.name==='メガレックウザキャップ'&&exact('デルタギフト',['無色'],'0','「メガレックウザキャップ」がついている自分のポケモン全員に、山札から基本エネルギーを1枚ずつつける。そして山札を切る。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],sharedWording:true};
+  if(generic===named&&entry.name==='コアメモリ'&&exact('ジオバスター',['闘','闘','闘','闘'],'350','このポケモンについているエネルギーを、すべてトラッシュする。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],holderName:'メガジガルデex',sharedWording:true};
+  if(generic===expires&&entry.name==='ワザマシンフローライト'&&exact('フローライト',['草','水','超'],'0','このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。'))return {mechanic:'TOOL_GRANTED_ATTACK',commands:['ADD_STATE'],endTurnDiscard:true,sharedWording:true};
+ }
+ if(kind==='ATTACK'&&entry.name==='デルタギフト'&&generic==='「メガレックウザキャップ」がついている自分のポケモン全員に、山札から基本エネルギーを1枚ずつつける。そして山札を切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',target:'own',toolName:'メガレックウザキャップ',limit:9,oneEach:true,multi:true,sharedWording:true};
+ if(kind==='ATTACK'&&entry.name==='フローライト'&&generic==='このポケモンについているエネルギーをすべてトラッシュし、自分の「テラスタル」のポケモン全員のHPを、すべて回復する。')return {mechanic:'TOOL_ATTACK_TERA_HEAL',commands:['DISCARD','HEAL'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='stadium'){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
   if(generic==="おたがいのプレイヤーは、自分の番ごとに1回、自分の場のたねポケモン1匹から進化する1進化ポケモンを、自分の山札から1枚選び、そのポケモンにのせて進化させてよい。進化したなら、続けて2進化ポケモンを1枚選び、進化させてよい。そして山札を切る。(最初の自分の番や、出したばかりのたねポケモンは進化させられない。)")return {mechanic:'STADIUM_ACTIVE',mode:'greatTree',commands:['SEARCH_DECK','ADD_STATE','SHUFFLE_DECK'],sharedWording:true};

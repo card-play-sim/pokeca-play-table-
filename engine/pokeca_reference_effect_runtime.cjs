@@ -34,6 +34,20 @@ function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,co
 function command(g,a,cmd,context={}){functions().Effects.apply(g,cmd,{playerId:a,sourceType:'POKEMON',actionType:'ATTACK',...context});}
 function stadium(g){return record(g.stadium)?.mainPlan?.mechanic;}
 function toolEnabled(g){return stadium(g)!=='JAMMING';}
+function grantedAttacks(g,mon){
+ if(!mon||!toolEnabled(g))return [];
+ return (mon.tools||[]).flatMap(t=>{
+  const rec=record(t),plan=rec?.mainPlan;
+  if(plan?.mechanic!=='TOOL_GRANTED_ATTACK'||plan.holderName&&record(mon)?.name!==plan.holderName)return [];
+  return rec.attacks.filter(a=>connected(a.plan)).map(a=>({...a,toolAttackId:id(t)+':'+a.effectId,toolSourceOfficialCardId:rec.officialCardId}));
+ });
+}
+function usableAttacks(g,mon){return [...(record(mon)?.attacks||[]),...grantedAttacks(g,mon)];}
+function attackForAction(g,mon,action){
+ if(!Number.isInteger(action.attackIndex)||action.attackIndex<0)return null;
+ const a=usableAttacks(g,mon)[action.attackIndex];
+ return a&&(a.toolAttackId||null)===(action.toolAttackId||null)?a:null;
+}
 function neutralCenterDamageGuard(g,actor,source,target){
  if(stadium(g)!=='STADIUM_NEUTRAL_CENTER'||find(g,id(target))?.player.id!==opponent(g,actor).id)return false;
  const a=record(source),d=record(target);
@@ -536,7 +550,7 @@ function typedEvolutionOrTera(c,plan){
  return plan.mechanic==='TRAINER_SEARCH_TERA'?facts.teraBenchProtection===true:facts.stage>0&&facts.types.includes(plan.type);
 }
 function massRouteTargets(p,card,plan){
- return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の')));
+ return (plan.target==='self'?[card]:plan.target==='bench'?p.bench:field(p)).filter(c=>c&&(!plan.holderType||record(c).facts.types.includes(plan.holderType))&&(!plan.team||record(c).name.startsWith(plan.team+'の'))&&(!plan.toolName||(c.tools||[]).some(t=>record(t)?.name===plan.toolName)));
 }
 function massRouteEnergy(p,plan){
  return p[plan.zone].filter(c=>basicEnergy(c)&&(!plan.type||c.energyType===plan.type));
@@ -1298,7 +1312,7 @@ function preflight(g,actor,action){
   if(action.type==='end_turn'){assert(!g.pendingPrizeSelection,'PRIZE_SELECTION_REQUIRED');return {handled:true,errors:[]};}
   if(action.type==='attack'||action.type==='effect_attack')throw Error('REFERENCE_ATTACK_TURN_ACTION_REQUIRED');
   if(action.type==='attack_turn'){
-   const mon=p.active,r=record(mon),a=r?.attacks[action.attackIndex];assert(mon&&a,'ATTACK_MISSING');requirePlan(mon,a);
+   const mon=p.active,a=attackForAction(g,mon,action);assert(mon&&a,'ATTACK_MISSING');requirePlan(mon,a);
    assert(g.turnNumber!==1,'FIRST_PLAYER_FIRST_TURN_ATTACK');assert(!(a.plan.noSecondPlayerFirstTurn&&g.turnNumber===2),'SECOND_PLAYER_FIRST_TURN_ATTACK_RESTRICTED');assert(mon.referenceCannotAttackTurn!==g.turnNumber,'ATTACK_DISABLED_THIS_TURN');assert(!(mon.referenceNamedAttackLock?.turn===g.turnNumber&&mon.referenceNamedAttackLock.attackName===a.name),'NAMED_ATTACK_LOCKED_THIS_TURN');assert(mon.referenceAttackLockUntilSwitch?.attackName!==a.name,'ATTACK_LOCKED_UNTIL_SWITCH');
    assert(!['ASLEEP','PARALYZED'].includes(mon.statusCondition),'ATTACK_BLOCKED_BY_STATUS');
    if(!a.cost.every(t=>[...basicTypes,'無色'].includes(t)))stop(mon,a,'UNREVIEWED_ENERGY_SYMBOL');
@@ -1723,7 +1737,12 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
-  case 'MASS_ENERGY_ROUTE':{
+  case 'TOOL_ATTACK_TERA_HEAL':{
+    discardSelectedAttachment(g,actor,p,[card],(card.energyCards||[]).map(id));
+    for(const mon of field(p))if(record(mon)?.facts.teraBenchProtection===true&&mon.damage>0)heal(g,actor,mon,mon.damage);
+    break;
+   }
+   case 'MASS_ENERGY_ROUTE':{
    if(action.type==='attack_turn'&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const energy=ids('energy'),targets=massRouteTargets(p,card,plan),healed=new Set();
    for(const [i,ident] of energy.entries()){
@@ -2504,7 +2523,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'HAMMER':if(coin(g,actor)){const e=ids('energy')[0];if(e){const mon=field(o).find(c=>c.energyCards.some(c=>id(c)===e));o.discard.push(mon.energyCards.splice(mon.energyCards.findIndex(c=>id(c)===e),1)[0]);}}break;
   default:throw Error('UNCONNECTED_EFFECT:'+m);
  }
- emit(g,actor,plan,{sourceOfficialCardId:record(card).officialCardId,effectId:effect.effectId||record(card).officialCardId});
+ if(!effect.toolAttackId)emit(g,actor,plan,{sourceOfficialCardId:record(card).officialCardId,effectId:effect.effectId||record(card).officialCardId});
 }
 function finishCoinPokemonSearch(g,p,cardId){
  if(cardId!==null){
@@ -2569,7 +2588,7 @@ function execute(g,actor,action){
  }else if(action.type==='retreat'){
   for(const ident of action.energyIds||[]){const i=p.active.energyCards.findIndex(c=>id(c)===ident);p.discard.push(p.active.energyCards.splice(i,1)[0]);}switchMon(g,p,action.benchInstanceId);g.retreatUsed=true;
  }else if(action.type==='attack_turn'){
-  const card=p.active,effect=record(card).attacks[action.attackIndex],recycle=selfAttackRecycleCandidates(card),historyStart=g.history.length;applyPlan(g,actor,card,effect,action);resolveSelfAttackRecycle(g,actor,recycle,historyStart);g.history.push({turnNumber:g.turnNumber,player:actor,type:'attack',details:{effectId:effect.effectId,referenceOfficialCardId:record(card).officialCardId}});refresh(g);finishAttack(g,actor);
+  const card=p.active,effect=attackForAction(g,card,action),recycle=selfAttackRecycleCandidates(card),historyStart=g.history.length;applyPlan(g,actor,card,effect,action);resolveSelfAttackRecycle(g,actor,recycle,historyStart);g.history.push({turnNumber:g.turnNumber,player:actor,type:'attack',details:{effectId:effect.effectId,referenceOfficialCardId:effect.toolSourceOfficialCardId||record(card).officialCardId}});refresh(g);finishAttack(g,actor);
  }else if(action.type==='use_ability'){
   const card=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),effect=record(card).abilities.find(a=>a.effectId===action.abilityId);applyPlan(g,actor,card,effect,action);if(!effect.plan.repeated)mark(p,card,effect);g.history.push({turnNumber:g.turnNumber,player:actor,type:'ability_used',details:{effectId:effect.effectId}});functions().Core.resolveKnockouts(g,actor);
  }else{
@@ -2635,6 +2654,12 @@ function resolveEndTurnEnergy(g,actor,choice,energyId){
 }
 function onEndTurn(g,actor){
  if(!g.referenceEffectValidation)return;
+ if(toolEnabled(g))for(const c of field(player(g,actor)))for(const t of [...(c.tools||[])]){
+  const plan=record(t)?.mainPlan;
+  if(plan?.mechanic!=='TOOL_GRANTED_ATTACK'||!plan.endTurnDiscard)continue;
+  c.tools.splice(c.tools.indexOf(t),1);player(g,actor).discard.push(t);
+  event(g,actor,'DISCARD',{cardIds:[id(t)],sourceInstanceId:id(c),sourceOfficialCardId:record(t).officialCardId,fromZone:'attached'});
+ }
  for(const c of field(player(g,actor)))for(const energy of [...c.energyCards])if(record(energy)?.mainPlan?.mechanic==='IGNITION'){
   c.energyCards.splice(c.energyCards.indexOf(energy),1);player(g,actor).discard.push(energy);event(g,actor,'DISCARD',{cardIds:[id(energy)]});
  }
@@ -2647,7 +2672,7 @@ function pokemonActions(g,actor,ident){
  const out=abilityActions(g,actor,mon);
  if(p.active===mon){
   out.push(...stadiumActions(g,actor));
-  record(mon).attacks.forEach((a,index)=>out.push({kind:'attack',label:a.name,damage:Number.parseInt(a.damage,10)||0,action:{type:'attack_turn',attackIndex:index},requests:requests(g,actor,mon,a),referenceEffect:a}));
+  usableAttacks(g,mon).forEach((a,index)=>out.push({kind:'attack',label:a.name,damage:Number.parseInt(a.damage,10)||0,action:{type:'attack_turn',attackIndex:index,...(a.toolAttackId?{toolAttackId:a.toolAttackId}:{})},requests:requests(g,actor,mon,a),referenceEffect:a}));
   for(const target of p.bench){
    if(mon.referenceCannotRetreatTurn===g.turnNumber)break;
    const cards=mon.energyCards||[],required=mon.retreatCost;
@@ -2711,7 +2736,7 @@ function completeAction(g,actor,option){
  }
  if(action.type==='use_stadium')return action;
  const card=action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
- const effect=action.type==='attack_turn'?record(card)?.attacks[action.attackIndex]:action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
+ const effect=action.type==='attack_turn'?attackForAction(g,card,action):action.type==='use_ability'?record(card)?.abilities.find(a=>a.effectId===action.abilityId):{plan:record(card)?.mainPlan};
  const m=effect?.plan?.mechanic;
  if(m==='SWITCH_SELF_ATTACK'&&effect.plan.optional&&p.bench.length)action.targetIds=[id(p.bench[0])];
  if(m==='MASS_ATTACHED_ENERGY_MOVE'&&effect.plan.count!==null){
@@ -2806,9 +2831,9 @@ function plannedCommands(g,actor,action){
  if(!g.referenceEffectValidation||action.type==='end_turn')return [];
  const p=player(g,actor),card=action.type==='use_stadium'?g.stadium:action.type==='attach_energy'?p.hand[action.cardIndex]:action.cardId?p.hand.find(c=>id(c)===action.cardId):action.sourceInstanceId?[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId):p.active;
  const r=record(card);if(!r)return [];
- const effect=action.type==='attack_turn'?r.attacks[action.attackIndex]:action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
+ const effect=action.type==='attack_turn'?attackForAction(g,card,action):action.type==='use_ability'?r.abilities.find(a=>a.effectId===action.abilityId):{name:r.name,text:r.text,plan:r.mainPlan};
  if(!connected(effect?.plan))return [];
- return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&['TOOL_KO_SEARCH','TOOL_HEAVY_BATON','TOOL_END_TURN_ENERGY'].includes(effect.plan.mechanic))?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:r.officialCardId,sourceText:effect.text||r.text}));
+ return ((action.type==='play_stadium'&&effect.plan.mechanic==='STADIUM_ACTIVE'||action.type==='attach_tool'&&['TOOL_KO_SEARCH','TOOL_HEAVY_BATON','TOOL_END_TURN_ENERGY'].includes(effect.plan.mechanic))?['ADD_STATE']:effect.plan.commands).map((command,i)=>({order:i+1,command,mechanic:effect.plan.mechanic,referenceOfficialCardId:effect.toolSourceOfficialCardId||r.officialCardId,sourceText:effect.text||r.text}));
 }
 function statuses(g){
  if(!g.referenceEffectValidation)return [];
