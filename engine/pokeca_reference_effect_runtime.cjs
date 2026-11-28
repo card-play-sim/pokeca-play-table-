@@ -28,7 +28,8 @@ function blocked(card,effect,reason='IMPLEMENTATION_OR_OFFICIAL_RULING_REQUIRED'
 }
 function stop(card,effect,reason){throw Error('UNCONNECTED_EFFECT:'+JSON.stringify(blocked(card,effect,reason)));}
 function assert(ok,message){if(!ok)throw Error(message);}
-function connected(plan){return !!plan&&!unresolved.has(plan.mechanic);}
+function fossilBridgeReady(){return typeof module.exports.fossilCanBench==='function'&&typeof module.exports.fossilBenchFromZone==='function';}
+function connected(plan){return !!plan&&!unresolved.has(plan.mechanic)&&(plan.mechanic!=='STADIUM_ACTIVE'||plan.mode!=='fossilBench'||fossilBridgeReady());}
 function event(g,a,command,details={}){g.history.push({turnNumber:g.turnNumber,player:a,type:'effect_command',details:{command,...copy(details)}});}
 function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,command,{reference:true,...extra});}
 function command(g,a,cmd,context={}){functions().Effects.apply(g,cmd,{playerId:a,sourceType:'POKEMON',actionType:'ATTACK',...context});}
@@ -1324,6 +1325,27 @@ function executeGreatTree(g,actor,action){
  }
  event(g,actor,'SEARCH_DECK',{privateTo:actor,destination:'evolve'});shuffle(g,p);
 }
+// Stadium owns selection and shuffle; the item owner supplies legal field conversion.
+function fossilStadiumPool(g,p){
+ if(!fossilBridgeReady())return [];
+ return p.deck.filter(c=>c.kind==='trainer'&&c.cardType==='ITEM'&&record(c)?.name.startsWith('古びた')&&module.exports.fossilCanBench(g,p,c,'deck'));
+}
+function fossilStadiumSelection(g,p,plan){
+ const pool=fossilStadiumPool(g,p);
+ return {pool,max:Math.max(0,Math.min(plan.amount,benchLimit(g,p)-p.bench.length,pool.length))};
+}
+function executeFossilStadium(g,actor,p,plan,selectedIds){
+ assert(fossilBridgeReady(),'FOSSIL_ITEM_BRIDGE_UNAVAILABLE');
+ const {pool,max}=fossilStadiumSelection(g,p,plan);
+ assert(Array.isArray(selectedIds)&&selectedIds.length<=max&&new Set(selectedIds).size===selectedIds.length&&selectedIds.every(x=>pool.some(c=>id(c)===x)),'INVALID_FOSSIL_STADIUM_SELECTION');
+ for(const ident of selectedIds){
+  const card=p.deck.find(c=>id(c)===ident);assert(card&&module.exports.fossilCanBench(g,p,card,'deck'),'FOSSIL_STADIUM_SOURCE_CHANGED');
+  module.exports.fossilBenchFromZone(g,p,card,'deck');
+  assert(!p.deck.some(c=>id(c)===ident)&&p.bench.some(c=>id(c)===ident),'FOSSIL_STADIUM_PHYSICAL_MOVE_REQUIRED');
+ }
+ event(g,actor,'SEARCH_DECK',{selectedCount:selectedIds.length,destination:'bench',privateTo:p.id});
+ shuffle(g,p);
+}
 function stadiumCanUse(g,actor){
  const plan=stadiumActivePlan(g),p=player(g,actor);
  if(!plan||g.status!=='active'||g.phase!=='main'||g.turnPlayer!==actor||g.attackUsed||g.pendingPrizeSelection||g.pendingReferenceChoice||p.turnLimits?.abilityUses?.[stadiumUseKey(g)])return false;
@@ -1331,6 +1353,7 @@ function stadiumCanUse(g,actor){
   case 'psychicDraw':return p.deck.length>0&&p.hand.some(c=>c.kind==='energy')&&p.hand.length-1<stadiumPsychicCount(p);
   case 'healEnd':case 'nonRuleHeal':return stadiumHealTargets(p,plan).length>0;
   case 'lightningRecover':return p.discard.some(c=>basicEnergy(c)&&c.energyType==='雷');
+  case 'fossilBench':return fossilBridgeReady()&&p.deck.length>0&&p.bench.length<benchLimit(g,p);
   case 'basicBench':return p.deck.length>0&&p.bench.length<benchLimit(g,p);
   case 'greatTree':return g.turnNumber>2&&p.deck.length>0&&greatTreeTargets(g,p).length>0;
   case 'rocketDraw':return p.deck.length>0&&stadiumSupporterUsed(g,actor,true);
@@ -1351,6 +1374,7 @@ function stadiumActiveRequests(g,actor){
   case 'discardDraw':return request('discard',p.hand,plan.cost,plan.cost);
   case 'lightningRecover':{const pool=p.discard.filter(c=>basicEnergy(c)&&c.energyType==='雷');return request('cards',pool,1,Math.min(plan.amount,pool.length));}
   case 'greatTree':return greatTreeRequests(g,actor);
+  case 'fossilBench':{const {pool,max}=fossilStadiumSelection(g,p,plan);return request('cards',pool,0,max,true);}
   case 'basicBench':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).facts.basic);return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
   case 'marnieSearch':{const pool=p.deck.filter(c=>c.kind==='pokemon'&&record(c).name.startsWith('マリィの'));return request('cards',pool,0,Math.min(plan.amount,pool.length),true);}
   case 'waterSwitch':return request('bench',p.bench.filter(c=>record(c).facts.types.includes('水')),1,1);
@@ -1377,6 +1401,7 @@ function executeStadiumAction(g,actor,action){
   case 'healEnd':case 'nonRuleHeal':case 'supporterHeal':for(const mon of stadiumHealTargets(p,plan))heal(g,actor,mon,plan.amount);break;
   case 'lightningRecover':moveChosen(g,p,'discard',ids('cards'),'hand');break;
   case 'greatTree':executeGreatTree(g,actor,action);break;
+  case 'fossilBench':executeFossilStadium(g,actor,p,plan,ids('cards'));break;
   case 'basicBench':searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});break;
   case 'marnieSearch':searchSelectedDeck(g,actor,p,ids('cards'));break;
   case 'waterSwitch':chooseBenchSwitch(g,actor,p,ids('bench')[0]);break;
