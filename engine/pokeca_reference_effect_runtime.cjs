@@ -536,6 +536,7 @@ function requests(g,actor,card,effect){
   cardRequest(key,list,min,max);
   if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(deckWindow(p.deck,scope))};
  };
+ if(m==='TRAINER_POKEMON_EXCHANGE'){const pool=p.hand.filter(c=>c.kind==='pokemon');cardRequest('returnCards',pool,1,Math.min(effect.plan.limit,pool.length));}
  if(['BENCH_COUNTER_DAMAGE','BENCH_EX_DAMAGE'].includes(m))add('targetIds','POKEMON',o.bench.filter(c=>m!=='BENCH_EX_DAMAGE'||record(c).facts.rulePokemon).map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='ANY_DAMAGE')add('targetIds','POKEMON',opp.map(c=>({instanceId:id(c),name:c.name})),1,1);
  if(m==='MASS_BOARD_BONUS'&&effect.plan.optional)
@@ -1073,6 +1074,7 @@ function preflight(g,actor,action){
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&(g.turnNumber!==1||r.mainPlan.mechanic==='SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW'||r.mainPlan.firstTurnAllowed===true)&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
    if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
+   if(m==='TRAINER_POKEMON_EXCHANGE')assert(p.hand.some(c=>c.kind==='pokemon'),'NO_POKEMON_TO_EXCHANGE');
    if(m==='TRAINER_HAND_TRIM')assert(o.hand.length>r.mainPlan.limit||r.mainPlan.both&&p.hand.length-1>r.mainPlan.limit,'NO_HAND_TRIM_TARGET');
    if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
     assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
@@ -1536,6 +1538,13 @@ function applyPlan(g,actor,card,effect,action){
     assert(Number.isInteger(count)&&count>=0,'INVALID_COUNTER_GRAMMAR_QUANTITY');
     if(count)counters(g,actor,mon,count,{attack:true});
    }
+   break;
+  }
+  case 'TRAINER_POKEMON_EXCHANGE':{
+   const returned=ids('returnCards');assert(returned.length>0&&returned.length<=plan.limit&&returned.every(ident=>p.hand.some(c=>id(c)===ident&&c.kind==='pokemon')),'POKEMON_EXCHANGE_RETURN_CHANGED');
+   moveChosen(g,p,'hand',returned,'deck');
+   event(g,actor,'RETURN_TO_DECK',{mechanic:'TRAINER_POKEMON_EXCHANGE',sourceId:id(card),returned:[...returned]});
+   g.pendingReferenceChoice=pokemonExchangeChoice(p,id(card),returned,[]);
    break;
   }
   case 'TRAINER_HAND_TRIM':{
@@ -2379,6 +2388,10 @@ function applyPlan(g,actor,card,effect,action){
  }
  emit(g,actor,plan,{sourceOfficialCardId:record(card).officialCardId,effectId:effect.effectId||record(card).officialCardId});
 }
+function pokemonExchangeChoice(p,sourceId,returned,picked){
+ const options=p.deck.filter(c=>c.kind==='pokemon').map(id);
+ return picked.length<returned.length&&options.length?{kind:'DECK_POKEMON_SEARCH',playerId:p.id,exchange:true,sourceId,returned:[...returned],picked:[...picked],options:[...options,null]}:null;
+}
 function coinPokemonCandidate(c,filter){
  if(c.kind!=='pokemon')return false;
  if(!filter?.rocketCoin)return true;
@@ -2411,6 +2424,18 @@ function execute(g,actor,action){
   else if(g.pendingReferenceChoice.kind==='MULLIGAN'){draw(g,p,action.drawCount);}
   else if(g.pendingReferenceChoice.kind==='PROMOTE'){
    promoteReferenceBench(g,p,p.bench.findIndex(c=>id(c)===action.benchInstanceId));
+  }
+  else if(choice.kind==='DECK_POKEMON_SEARCH'&&choice.exchange){
+   const picked=[...choice.picked],target=action.deckCardId;
+   if(target!==null){
+    assert(p.deck.some(c=>id(c)===target&&c.kind==='pokemon'),'POKEMON_EXCHANGE_SEARCH_CHANGED');
+    moveChosen(g,p,'deck',[target],'hand');picked.push(target);
+    event(g,actor,'ADD_TO_HAND',{mechanic:'TRAINER_POKEMON_EXCHANGE',sourceId:choice.sourceId,picked:target});
+   }
+   const next=target===null?null:pokemonExchangeChoice(p,choice.sourceId,choice.returned,picked);
+   if(next)g.pendingReferenceChoice=next;
+   else{delete g.pendingReferenceChoice;event(g,actor,'SEARCH_DECK',{selectedCount:picked.length,destination:'hand',privateTo:actor});shuffle(g,p);}
+   return {referenceEffect:true,adoptedPrint:false};
   }
   else if(choice.kind==='DECK_POKEMON_SEARCH')finishCoinPokemonSearch(g,p,action.deckCardId,choice);
   else if(choice.kind==='TRAINER_HAND_TRIM'){
@@ -2633,6 +2658,12 @@ function validateGame(g){
  }
  if(choice?.kind==='DECK_POKEMON_SEARCH'){
   const owner=player(g,choice.playerId);
+  if(choice.exchange){
+   const source=owner.discard.find(c=>id(c)===choice.sourceId),plan=record(source)?.mainPlan;
+   const history=g.history.filter(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.mechanic==='TRAINER_POKEMON_EXCHANGE'&&e.details.sourceId===choice.sourceId);
+   const returned=history.find(e=>e.details.command==='RETURN_TO_DECK')?.details.returned,picked=history.filter(e=>e.details.command==='ADD_TO_HAND').map(e=>e.details.picked);
+   assert(plan?.mechanic==='TRAINER_POKEMON_EXCHANGE'&&Array.isArray(returned)&&returned.length>0&&returned.length<=plan.limit&&new Set(returned).size===returned.length&&new Set(picked).size===picked.length&&picked.every(ident=>owner.hand.some(c=>id(c)===ident&&c.kind==='pokemon'))&&JSON.stringify(choice)===JSON.stringify(pokemonExchangeChoice(owner,choice.sourceId,returned,picked)),'INVALID_POKEMON_EXCHANGE_STATE');
+  }
   if(choice.rocketCoin){
    const source=owner.discard.find(c=>id(c)===choice.sourceId);
    const flip=g.history.findLast(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.command==='COIN_FLIP'&&typeof e.details.heads==='boolean'&&!e.details.reference);

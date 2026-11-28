@@ -1587,6 +1587,11 @@ function prepare(r, e, kind) {
     if(!eligible.length)return {blocked:'NO_SCOPE_HEAL_FIXTURE'};
     for(const mon of eligible)mon.damage=Math.min(mon.hp-10,plan.amount==='all'?30:plan.amount+10);
   }
+  if(m==='TRAINER_POKEMON_EXCHANGE'){
+    const own=frame.game.players[0];
+    while(own.hand.filter(c=>c.kind==='pokemon').length<2){const i=own.deck.findIndex(c=>c.kind==='pokemon');if(i<0)return {blocked:'NO_EXCHANGE_HAND_POKEMON'};own.hand.push(own.deck.splice(i,1)[0]);}
+    if(!own.deck.some(c=>c.kind==='pokemon'))return {blocked:'NO_EXCHANGE_DECK_POKEMON'};
+  }
   if(m==='TRAINER_HAND_TRIM'){
     const [own,other]=frame.game.players;
     for(const side of [own,other])while(side.hand.length<e.plan.limit+3&&side.deck.length)side.hand.push(side.deck.shift());
@@ -2529,6 +2534,30 @@ function verifyCase(t, e) {
     assert(next.discard.some(c=>c.id===t.sourceId)&&next.turnLimits.supporterUsed);
     assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
     const save=p.getResumeSnapshot();assert(p.restoreSession(save).ok);assert.equal(JSON.stringify(p.getSnapshot()),JSON.stringify(after));
+  }
+  if(e.plan.mechanic==='TRAINER_POKEMON_EXCHANGE'){
+    const action=t.action||o.action,own=before.players[0],pool=own.hand.filter(c=>c.kind==='pokemon');
+    for(const n of [1,2]){
+      const returned=Array.from(pool.slice(0,n),c=>c.id),act={...action,selections:{returnCards:returned}};
+      for(const count of [0,n]){
+        const replay=port(before);assert(replay.dispatch('you',act).ok);let state=replay.getSnapshot();
+        assert(returned.every(id=>state.players[0].deck.some(c=>c.id===id)&&!state.players[0].hand.some(c=>c.id===id)));
+        assert(!state.history.slice(before.history.length).some(ev=>ev.details?.command==='SHUFFLE_DECK'&&!ev.details.reference));
+        const picked=[];
+        for(let i=0;i<count;i++){
+          const choice=state.pendingReferenceChoice;assert(choice?.exchange&&choice.kind==='DECK_POKEMON_SEARCH');assert.equal(replay.getView('ai').pendingReferenceChoice.options,undefined);
+          const options=state.players[0].deck.filter(c=>c.kind==='pokemon');assert.deepEqual(Array.from(choice.options),[...Array.from(options,c=>c.id),null]);
+          const saved=replay.getResumeSnapshot();assert(replay.restoreSession(saved).ok);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));
+          const bad=state.players[0].deck.find(c=>c.kind!=='pokemon');if(bad){assert.equal(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:bad.id}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(state));}
+          const selected=returned[i];assert(choice.options.includes(selected));assert(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:selected}).ok);picked.push(selected);state=replay.getSnapshot();
+        }
+        if(state.pendingReferenceChoice){assert(replay.dispatch('you',{type:'resolve_reference_choice',deckCardId:null}).ok);state=replay.getSnapshot();}
+        assert(!state.pendingReferenceChoice);assert.equal(state.history.slice(before.history.length).filter(ev=>ev.details?.command==='SHUFFLE_DECK'&&!ev.details.reference).length,1);
+        const expected=own.hand.filter(c=>c.id!==t.sourceId&&!returned.includes(c.id)).map(c=>c.id).concat(picked);
+        assert.deepEqual(Array.from(state.players[0].hand,c=>c.id).sort(),Array.from(expected).sort());assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(state)));
+      }
+    }
+    const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{returnCards:[]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));
   }
   if(e.plan.mechanic==='TRAINER_HAND_TRIM'){
     const q=e.plan,action=t.action||o.action,[own,other]=before.players,selected=[];

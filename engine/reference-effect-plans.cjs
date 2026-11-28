@@ -948,6 +948,7 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&activeEntryEnergy)
   return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:activeEntryEnergy[1],limit:Number(activeEntryEnergy[2]),target:'self',holderType:null,team:null,multi:false,heal:null,activeOnly:true,origin:'activeEntry',repeated:true,sharedWording:true};
  const additional=kind==='ATTACK'?additionalAttackPlan(entry,generic):null;
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==="自分の手札からポケモンを2枚まで選び、相手に見せて、山札にもどす。その後、もどした枚数ぶんまで、自分の山札からポケモンを選び、相手に見せて、手札に加える。そして山札を切る。")return {mechanic:'TRAINER_POKEMON_EXCHANGE',commands:['REVEAL','RETURN_TO_DECK','SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],limit:2,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==="相手は相手自身の手札を、3枚になるようにトラッシュする。")return {mechanic:'TRAINER_HAND_TRIM',commands:['DISCARD'],limit:3,both:false,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==="おたがいのプレイヤーは、それぞれ自分の手札が5枚になるようにトラッシュする。(トラッシュは相手から行う。手札が5枚以下のプレイヤーはトラッシュしない。)")return {mechanic:'TRAINER_HAND_TRIM',commands:['DISCARD'],limit:5,both:true,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==="コインを1回投げオモテなら、相手のポケモン1匹に、ダメカンを2個のせる。ウラなら、自分のバトルポケモンに、ダメカンを2個のせる。")return {mechanic:'TRAINER_COIN_COUNTER',commands:['COIN_FLIP','PLACE_DAMAGE_COUNTERS'],amount:2,sharedWording:true};
