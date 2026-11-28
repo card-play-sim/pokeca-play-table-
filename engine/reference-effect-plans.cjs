@@ -677,6 +677,15 @@ function plan(entry,kind){
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ if(kind==='MAIN'&&entry.category==='supporter'){
+  if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。$/.test(generic))return guardedSearch('any',3,{windowCount:8,previousKnockout:true,privateSearch:true});
+  if(/^このカードは、自分の手札を1枚トラッシュしなければ使えない。\s*自分の山札から\[雷\]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',4,{type:'雷',discardCost:1,commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']});
+  if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*相手の場のポケモンについているエネルギーを1個選び、トラッシュする。$/.test(generic))return {mechanic:'TRAINER_DISCARD_SPECIAL_ENERGY',commands:['DISCARD'],anyEnergy:true,previousKnockout:true,sharedWording:true};
+ }
+ if(kind==='MAIN'&&entry.category==='item'){
+  if(generic==='自分の山札を上から4枚見て、その中からサポートを好きなだけ選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。')return guardedSearch('supporter',4,{windowCount:4});
+  if(generic==='自分の山札を下から7枚見て、その中からポケモンを1枚選び、相手に見せて、手札に加える。残りのカードは山札にもどして切る。')return guardedSearch('pokemon',1,{windowCount:7,windowBottom:true});
+ }
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
  if(kind==='ABILITY'&&generic==='自分の手札が1枚もないなら、自分の番に1回使える。自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。')return guardedSearch('supporter',1,{emptyHand:true});
