@@ -677,6 +677,13 @@ function plan(entry,kind){
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
+ const fieldDiscard=(mode,extra={})=>({mechanic:'TRAINER_DISCARD_FIELD_CARDS',commands:['DISCARD'],mode,sharedWording:true,...extra});
+ if(kind==='MAIN'&&entry.category==='item'){
+  if(generic==='おたがいの場のポケモンについている「ポケモンのどうぐ」を2枚まで選び、トラッシュする。')return fieldDiscard('bothTools',{limit:2});
+  if(/^このカードは、自分の手札から「基本\[炎\]エネルギー」を1枚トラッシュしなければ使えない。\s*相手の場のポケモンについている「ポケモンのどうぐ」「特殊エネルギー」と場に出ている「スタジアム」の中から1枚選び、トラッシュする。$/.test(generic))return fieldDiscard('opponentOne',{limit:1,costType:'炎'});
+  if(generic==='相手のポケモン全員についている「ポケモンのどうぐ」と「特殊エネルギー」と、場に出ている「スタジアム」を、すべてトラッシュする。')return fieldDiscard('opponentAll');
+ }
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='相手のポケモンを1匹選び、そのポケモンについている「ポケモンのどうぐ」と「特殊エネルギー」を1枚ずつトラッシュする。')return fieldDiscard('opponentHolder');
  if(kind==='MAIN'&&entry.category==='supporter'){
   if(/^このカードは、前の相手の番に、自分のポケモンがきぜつしていなければ使えない。\s*自分の山札を上から8枚見て、その中からカードを3枚まで選び、手札に加える。残りのカードは山札にもどして切る。$/.test(generic))return guardedSearch('any',3,{windowCount:8,previousKnockout:true,privateSearch:true});
   if(/^このカードは、自分の手札を1枚トラッシュしなければ使えない。\s*自分の山札から\[雷\]ポケモンを4枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',4,{type:'雷',discardCost:1,commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK']});
