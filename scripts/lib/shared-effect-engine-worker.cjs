@@ -4533,6 +4533,23 @@ function verifyCase(t, e) {
       (before.players[1].active.statusCondition?e.plan.bonus:0));
   }
 
+  if(e.plan.mechanic==='ATTACK_NAMED_NEXT_DAMAGE_BOOST'){
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    const state=after.players[0].active.referenceNamedNextDamageBoost;
+    assert.equal(state?.turn,before.turnNumber+2);assert.equal(state?.attackName,e.plan.attackName);assert.equal(state?.amount,e.plan.amount);
+    for(const [offset,bonus] of [[2,e.plan.amount],[4,0]]){
+      const start=JSON.parse(JSON.stringify(before));
+      start.turnNumber=before.turnNumber+offset;
+      start.players[0].active.referenceNamedNextDamageBoost=JSON.parse(JSON.stringify(state));
+      const replay=port(start);
+      assert(replay.dispatch('you',t.action||o.action).ok);
+      const result=replay.getSnapshot();
+      verifyPrintedAttack(start,result,e,Number(e.damage)+bonus);
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(result)));
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(B.canonical(replay.getSnapshot())),JSON.stringify(B.canonical(result)));
+    }
+  }
   if (e.plan.mechanic === "ATTACK_NAMED_NEXT_TURN_LOCK") {
     verifyPrintedAttack(before, after, e, Number(e.damage) || 0);
     const lock=after.players[0].active.referenceNamedAttackLock;

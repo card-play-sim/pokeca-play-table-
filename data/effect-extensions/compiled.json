@@ -231960,6 +231960,346 @@
         "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "mainPlan": null
+    },
+    {
+      "officialCardId": "45265",
+      "name": "メタグロス",
+      "deckName": "メタグロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45265",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045265_P_METAGUROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コメットパンチ",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "60",
+          "text": "次の自分の番、このポケモンの「コメットパンチ」のダメージは「+60」される。",
+          "effectId": "reference-45265-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_DAMAGE_BOOST",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "コメットパンチ",
+            "amount": 60,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ラスターブラスト",
+          "cost": [
+            "鋼",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "200",
+          "text": "このポケモンについているエネルギーを2個選び、トラッシュする。",
+          "effectId": "reference-45265-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "count": 2
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "メタング",
+        "retreatCost": 3,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45265.json",
+        "sha256": "93d40b5183a5d13ed92e7e7466f9e78321ca32e0c7ed3900cee253fb1337f514",
+        "htmlSha256": "93d40b5183a5d13ed92e7e7466f9e78321ca32e0c7ed3900cee253fb1337f514",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "45552",
+      "name": "メタグロス",
+      "deckName": "メタグロス",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/45552",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SV5M/045552_P_METAGUROSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "コメットパンチ",
+          "cost": [
+            "鋼"
+          ],
+          "damage": "60",
+          "text": "次の自分の番、このポケモンの「コメットパンチ」のダメージは「+60」される。",
+          "effectId": "reference-45552-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_DAMAGE_BOOST",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "コメットパンチ",
+            "amount": 60,
+            "sharedWording": true
+          }
+        },
+        {
+          "name": "ラスターブラスト",
+          "cost": [
+            "鋼",
+            "無色",
+            "無色",
+            "無色"
+          ],
+          "damage": "200",
+          "text": "このポケモンについているエネルギーを2個選び、トラッシュする。",
+          "effectId": "reference-45552-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_DISCARD_MULTIPLE_SELF_ENERGY",
+            "commands": [
+              "DAMAGE",
+              "DISCARD"
+            ],
+            "count": 2
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 180,
+        "evolvesFrom": "メタング",
+        "retreatCost": 3,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 2,
+        "basic": false,
+        "prizeCount": 1,
+        "rulePokemon": false,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/45552.json",
+        "sha256": "eb6693b102981b1778352444a217312b717896dfeaf33810e5fe057f8ca0728d",
+        "htmlSha256": "eb6693b102981b1778352444a217312b717896dfeaf33810e5fe057f8ca0728d",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "46519",
+      "name": "ルカリオex",
+      "deckName": "ルカリオex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/46519",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/SVM/046519_P_RUKARIOEX.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "はどうアッパー",
+          "cost": [
+            "闘"
+          ],
+          "damage": "50",
+          "text": "",
+          "effectId": "reference-46519-attack-0",
+          "plan": {
+            "mechanic": "VANILLA_DAMAGE",
+            "commands": [
+              "DAMAGE"
+            ]
+          }
+        },
+        {
+          "name": "トルネードラッシュ",
+          "cost": [
+            "闘",
+            "無色"
+          ],
+          "damage": "100",
+          "text": "次の自分の番、このポケモンの「トルネードラッシュ」のダメージは「+100」される。",
+          "effectId": "reference-46519-attack-1",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_DAMAGE_BOOST",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "トルネードラッシュ",
+            "amount": 100,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 260,
+        "evolvesFrom": "リオル",
+        "retreatCost": 2,
+        "types": [
+          "闘"
+        ],
+        "weakness": {
+          "types": [
+            "超"
+          ],
+          "value": "×2"
+        },
+        "resistance": null,
+        "stage": 1,
+        "basic": false,
+        "prizeCount": 2,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/46519.json",
+        "sha256": "6f3f86d1db9971224fd2ee26b8ee5217979eaab3c1329c9c3e727b30c9f371dd",
+        "htmlSha256": "6f3f86d1db9971224fd2ee26b8ee5217979eaab3c1329c9c3e727b30c9f371dd",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
+    },
+    {
+      "officialCardId": "50781",
+      "name": "メガヒードランex",
+      "deckName": "メガヒードランex",
+      "set": "OFFICIAL_PAGE_REFERENCE",
+      "cardNumber": "",
+      "officialPageUrl": "https://www.pokemon-card.com/card-search/details.php/card/50781",
+      "imageSourceUrl": "https://www.pokemon-card.com/assets/images/card_images/large/M-P/050781_P_MHIDORANIEKKUSU.jpg",
+      "category": "pokemon",
+      "deckPrintAdopted": false,
+      "attacks": [
+        {
+          "name": "ギガンティックプレス",
+          "cost": [
+            "鋼",
+            "鋼",
+            "鋼"
+          ],
+          "damage": "140",
+          "text": "次の自分の番、このポケモンの「ギガンティックプレス」のダメージは「+140」される。",
+          "effectId": "reference-50781-attack-0",
+          "plan": {
+            "mechanic": "ATTACK_NAMED_NEXT_DAMAGE_BOOST",
+            "commands": [
+              "DAMAGE",
+              "ADD_STATE"
+            ],
+            "attackName": "ギガンティックプレス",
+            "amount": 140,
+            "sharedWording": true
+          }
+        }
+      ],
+      "abilities": [
+        {
+          "name": "こうみつどアーマー",
+          "text": "このポケモンのHPがまんたんの状態なら、このポケモンが相手のポケモンから受けるワザのダメージは「-60」される。",
+          "effectId": "reference-50781-ability-0",
+          "plan": {
+            "mechanic": "PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION",
+            "commands": [
+              "PREVENT_DAMAGE"
+            ],
+            "amount": 60,
+            "condition": "fullHp",
+            "sharedWording": true
+          }
+        }
+      ],
+      "rulesText": [],
+      "text": "",
+      "facts": {
+        "hp": 300,
+        "evolvesFrom": null,
+        "retreatCost": 4,
+        "types": [
+          "鋼"
+        ],
+        "weakness": {
+          "types": [
+            "炎"
+          ],
+          "value": "×2"
+        },
+        "resistance": {
+          "types": [
+            "草"
+          ],
+          "value": "-30"
+        },
+        "stage": 0,
+        "basic": true,
+        "prizeCount": 3,
+        "rulePokemon": true,
+        "teraBenchProtection": false
+      },
+      "source": {
+        "kind": "saved-official-extension",
+        "path": "data/effect-extensions/evidence/50781.json",
+        "sha256": "f2e23d666651af20c9b71873da22fe37b2f90f1dcb2713d4c252f00ca1be14d5",
+        "htmlSha256": "f2e23d666651af20c9b71873da22fe37b2f90f1dcb2713d4c252f00ca1be14d5",
+        "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "mainPlan": null
     }
   ],
   "blocked": [
@@ -232131,7 +232471,7 @@
     {
       "officialCardId": "44388",
       "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
+      "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE"
     },
     {
       "officialCardId": "44397",

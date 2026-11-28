@@ -923,6 +923,9 @@ function plan(entry,kind){
  if(kind==='ATTACK'&&namedLock&&/^\d+$/.test(String(entry.damage||'0'))
     &&String(entry.name||'')===namedLock[1])
   return {mechanic:'ATTACK_NAMED_NEXT_TURN_LOCK',commands:['DAMAGE','ADD_STATE'],attackName:namedLock[1]};
+ const namedBoost=generic.match(/^次の自分の番、このポケモンの「([^」]+)」のダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ATTACK'&&namedBoost&&/^\d+$/.test(String(entry.damage||'0'))&&String(entry.name||'')===namedBoost[1])
+  return {mechanic:'ATTACK_NAMED_NEXT_DAMAGE_BOOST',commands:['DAMAGE','ADD_STATE'],attackName:namedBoost[1],amount:Number(namedBoost[2]),sharedWording:true};
  // Match complete printed effect slots only; unknown official text still fails closed.
  const typedStatus=generic.match(/^相手のバトルポケモンが\[([草炎水雷超闘悪鋼竜無色])\]ポケモンなら、そのポケモンを(マヒ|やけど|どく|ねむり|こんらん)にする。$/);
  if(kind==='ATTACK'&&printedAmount&&typedStatus){
