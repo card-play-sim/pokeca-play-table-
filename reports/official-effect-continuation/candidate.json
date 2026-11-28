@@ -1,30 +1,293 @@
 {
-  "baseCommit": "202bc721fe7ab25537edb92cd67018fac338a077",
+  "baseCommit": "58c1dc967b1d7f237540d7ef5dfb9b0f47358c9c",
   "state": "PREPUBLICATION",
   "qualified": [
-    "45932",
-    "46815",
-    "47436",
-    "47661",
-    "48034",
-    "49040",
-    "49397"
+    "46309",
+    "47497",
+    "49606",
+    "50040",
+    "50470",
+    "50558",
+    "50559",
+    "50561",
+    "47014",
+    "47016",
+    "50618",
+    "50624",
+    "50648",
+    "50661",
+    "45181",
+    "45256",
+    "45606",
+    "45744",
+    "46019",
+    "46372",
+    "46427",
+    "46744",
+    "46792",
+    "47221",
+    "47772",
+    "47802",
+    "47812",
+    "45398",
+    "45258",
+    "45567",
+    "45729",
+    "45869",
+    "46013",
+    "46169",
+    "46186",
+    "46711",
+    "47129",
+    "47826",
+    "48366",
+    "48392",
+    "48399",
+    "48450",
+    "45182",
+    "45207",
+    "45243",
+    "45283",
+    "45287",
+    "45633",
+    "45634",
+    "45642",
+    "45680",
+    "45752",
+    "45790",
+    "45866",
+    "45877",
+    "45921",
+    "45939",
+    "45974",
+    "46001",
+    "46002",
+    "46029",
+    "46030",
+    "46034",
+    "46035",
+    "46071",
+    "46183",
+    "46262",
+    "46282",
+    "46283",
+    "46394",
+    "46402",
+    "46435",
+    "46436",
+    "46525",
+    "46673",
+    "46768",
+    "46810",
+    "46823",
+    "48949",
+    "49416",
+    "49642",
+    "49656",
+    "49701",
+    "49702",
+    "49705",
+    "49707",
+    "49712",
+    "49713",
+    "50051",
+    "50087",
+    "50088",
+    "50557",
+    "50163",
+    "50164",
+    "50167",
+    "50195",
+    "50218",
+    "50224",
+    "50234",
+    "50250",
+    "50251",
+    "50256",
+    "50273",
+    "50289",
+    "50290",
+    "50291",
+    "50294",
+    "50295",
+    "50299",
+    "50300",
+    "50308",
+    "50310",
+    "50315",
+    "50328",
+    "50329",
+    "50346",
+    "50390",
+    "50404",
+    "50407",
+    "50540",
+    "50543",
+    "50547",
+    "50553",
+    "50614",
+    "50696",
+    "50929",
+    "50931",
+    "47031",
+    "47096",
+    "47103",
+    "47105",
+    "47108",
+    "47242",
+    "47289",
+    "47350",
+    "47376",
+    "47420",
+    "47445",
+    "47481",
+    "47490",
+    "47553",
+    "47555",
+    "47588",
+    "47608",
+    "47622",
+    "47689",
+    "47703",
+    "47754",
+    "47770",
+    "47784",
+    "47789",
+    "47841",
+    "47857",
+    "47876",
+    "47902",
+    "47928",
+    "47976",
+    "48074",
+    "48261",
+    "48278",
+    "48347",
+    "48389",
+    "48414",
+    "48415",
+    "48432",
+    "48487",
+    "48507",
+    "48514",
+    "48635",
+    "48685",
+    "48686",
+    "48703",
+    "48704",
+    "48709",
+    "48712",
+    "48739",
+    "48840",
+    "48893",
+    "49022",
+    "49106",
+    "49171",
+    "49224",
+    "49251",
+    "49373",
+    "49375",
+    "49389",
+    "49406",
+    "49455",
+    "49979",
+    "50204",
+    "50206",
+    "50831",
+    "46841",
+    "46847",
+    "47109",
+    "47115",
+    "47616",
+    "48565",
+    "48706",
+    "48766",
+    "48789",
+    "48940",
+    "48979",
+    "48986",
+    "49048",
+    "49129",
+    "49145",
+    "49170",
+    "49249",
+    "49361",
+    "49362",
+    "49396",
+    "49399",
+    "49411",
+    "49454",
+    "49973",
+    "50015",
+    "50036",
+    "50265",
+    "50319",
+    "50334",
+    "50338",
+    "50396",
+    "50536",
+    "50551",
+    "50554",
+    "47771",
+    "50583",
+    "45792",
+    "46293",
+    "49687",
+    "47089",
+    "48436",
+    "48446",
+    "49331",
+    "45988",
+    "46848",
+    "47220"
   ],
   "blockers": [
     {
       "id": "44431",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "UNVERIFIED_HIJ_SCOPE"
     },
     {
       "id": "44446",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "UNVERIFIED_HIJ_SCOPE"
     },
     {
       "id": "44449",
-      "reason": "DEFERRED_EXACT_TARGET_SCOPE"
+      "reason": "UNVERIFIED_HIJ_SCOPE"
     },
     {
       "id": "46452",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "50673",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "45755",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "45852",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "46014",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "46751",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "47468",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "47511",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "47657",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
@@ -32,7 +295,11 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "45230",
+      "id": "48030",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "48348",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
@@ -40,11 +307,55 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "46673",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "id": "46267",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "46702",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "49685",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50065",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50113",
+      "reason": "ENGINE_EXECUTION_FAILED"
     },
     {
       "id": "50127",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "50187",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50225",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50232",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "50238",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50293",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50305",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50356",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
@@ -56,6 +367,14 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
+      "id": "50408",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "50521",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
       "id": "50525",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
@@ -64,11 +383,15 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "47300",
+      "id": "50544",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "47350",
+      "id": "50930",
+      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "47300",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
@@ -76,20 +399,20 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "47376",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
-    },
-    {
       "id": "47453",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "47588",
+      "id": "47686",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "47957",
+      "id": "48057",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+    },
+    {
+      "id": "48350",
+      "reason": "ENGINE_EXECUTION_FAILED"
     },
     {
       "id": "48532",
@@ -100,16 +423,40 @@
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "49106",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
-    },
-    {
       "id": "49150",
       "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
     },
     {
-      "id": "48789",
-      "reason": "EXECUTION_EVIDENCE_INCOMPLETE"
+      "id": "47127",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "48878",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "49142",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "49250",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50064",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50080",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "50084",
+      "reason": "ENGINE_EXECUTION_FAILED"
+    },
+    {
+      "id": "49679",
+      "reason": "ENGINE_EXECUTION_FAILED"
     }
   ],
   "publicBattleVerified": []

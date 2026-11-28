@@ -1,23 +1,44 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_7568A9ADA012AEE6:4ab138a97d7181a236c63df8c4f85a65caab6acb0d5831a080b0e3cd5d5b48b2",
   "taskFingerprint": "4ab138a97d7181a236c63df8c4f85a65caab6acb0d5831a080b0e3cd5d5b48b2",
-  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
-  "attemptId": "3068cb7e-4a88-4579-91d2-bd1af8753386",
-  "status": "BLOCKED",
+  "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
+  "attemptId": "7daae6e9-e4f6-46a8-bb57-009ea4427368",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "50561:attack:らいごう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "50661:attack:らいごう:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "RECOIL_DAMAGE",
+        "commands": [
+          "DAMAGE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ],
+        "reused": true
       },
       {
         "slot": "45954:attack:もうかのとっしん:1",
@@ -53,5 +74,5 @@
       }
     ]
   },
-  "checksum": "b8815a4c6469ab15930ab37953f40cb550c5d6732e85cd8f763f88f4ecaff23d"
+  "checksum": "72ead0c59e1eaa0bd390dfa31bdeedc2ac61529c5fb185611b14fcb077330bbb"
 }

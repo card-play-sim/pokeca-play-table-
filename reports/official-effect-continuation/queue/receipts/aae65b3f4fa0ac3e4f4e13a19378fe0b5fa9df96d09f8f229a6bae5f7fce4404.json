@@ -1,18 +1,28 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_B0A135168E7B8462:d71bfb8a196c2617bb54144f0725e8977c6bfe6bb6638627f3c7a8ec3cafb9a9",
   "taskFingerprint": "d71bfb8a196c2617bb54144f0725e8977c6bfe6bb6638627f3c7a8ec3cafb9a9",
-  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
-  "attemptId": "4a6a1501-f0b4-4cec-8fa3-9fe45498adde",
-  "status": "BLOCKED",
+  "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
+  "attemptId": "3aac8bb7-2584-48db-b862-ff16d50964e1",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45258:attack:リパルサーアックス:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_NEXT_HIT_RETALIATION",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45559:attack:リパルサーアックス:0",
@@ -32,8 +42,19 @@
       },
       {
         "slot": "45567:attack:リパルサーアックス:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "ATTACK_NEXT_HIT_RETALIATION",
+        "commands": [
+          "DAMAGE",
+          "ADD_STATE"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "45572:attack:リパルサーアックス:0",
@@ -53,5 +74,5 @@
       }
     ]
   },
-  "checksum": "9f3c01869404e52a04224d8a7cd36b07369b70139bcc0c0240352440abfc802c"
+  "checksum": "6717eb08052587c5f9298acac3e738704c00546c1eb46f3a1165f08279dea37c"
 }
