@@ -73,6 +73,14 @@ function additionalAttackPlan(entry,text){
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
  // Fixed-count coin outcomes use one deterministic match-owned stream.
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ const nextCoin=text.match(/^次の相手の番、このワザを受けたポケモンがワザを使うとき、相手はコインを([1-9])回投げる。(ウラならそのワザは失敗。|1回でもウラなら、そのワザは失敗。)$/);
+ if(nextCoin&&/^\d+$/.test(printed)&&(Number(nextCoin[1])===1||nextCoin[2].startsWith('1回でも')))
+  return {mechanic:'ATTACK_NEXT_COIN_GATE',commands:['DAMAGE','ADD_STATE'],flips:Number(nextCoin[1]),sharedWording:true};
+ const damageCost=text.match(/^このワザは、このポケモンにダメカンがのっているなら、\[([草炎水雷超闘悪鋼])\]エネルギー1個で使える。$/);
+ if(damageCost&&/^\d+$/.test(printed))
+  return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE'],costOverride:{condition:'damaged',cost:[damageCost[1]]},sharedWording:true};
+ if(/^\d+$/.test(printed)&&text==='このワザは、このポケモンが特殊状態なら、このワザを使うためのエネルギーがこのポケモンについていなくても、使える。')
+  return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE'],costOverride:{condition:'status',cost:[]},sharedWording:true};
  const coinStatus=text.match(/^コインを([1-9])回投げ、オモテの数×([1-9]\d{0,2})ダメージ。(1回でもオモテ|オモテが([1-9])回以上|すべてウラ)なら、相手のバトルポケモンを(マヒ|こんらん|やけど|ねむり|どく)にする。$/);
  const statusMap={'マヒ':'PARALYZED','こんらん':'CONFUSED','やけど':'BURNED','ねむり':'ASLEEP','どく':'POISONED'};
  if(coinStatus&&printed===coinStatus[2]+'×'&&Number(coinStatus[4]||1)<=Number(coinStatus[1]))

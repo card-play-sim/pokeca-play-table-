@@ -82,7 +82,9 @@ function pays(mon,cost){
  return match(0,units);
 }
 function cost(g,mon,attack){
- const c=[...attack.cost],owner=inPlay(g).find(x=>x.card===mon)?.player;
+ const override=attack.plan?.costOverride;
+ const eligible=override&&(override.condition==='damaged'?mon.damage>0:override.condition==='status'?Boolean(mon.statusCondition):false);
+ const c=[...(eligible?override.cost:attack.cost)],owner=inPlay(g).find(x=>x.card===mon)?.player;
  if(stadium(g)==='NIGHT_MINE'&&record(mon).facts.teraBenchProtection)c.push('無色');
  if(!owner)return c;
  const other=opponent(g,owner.id);
@@ -160,7 +162,7 @@ function refresh(g){
   }
  }
 }
-function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceActiveEntryWindow','referenceActiveEntryTurn','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
+function reduced(card){const out=copy(card);if(out.evolutionCards?.length){const base=out.validationBase;assert(base,'EVOLUTION_BASE_METADATA_MISSING');Object.assign(out,copy(base));}for(const k of ['damage','energies','energyCards','tools','evolutionCards','statusCondition','referenceProtection','referenceBasicDamageProtection','referenceNextCoinGate','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','enteredTurn','evolvedTurn','entryWindow','referenceEvolutionWindow','referenceActiveEntryWindow','referenceActiveEntryTurn','referenceNoWeaknessTurn','validationBase'])delete out[k];return out;}
 function returnStack(g,p,mon,zone){
  const stack=[reduced(mon),...(mon.evolutionCards||[]).map(reduced),...(mon.energyCards||[]),...(mon.tools||[])];
  if(p.active===mon)p.active=null;else p.bench.splice(p.bench.indexOf(mon),1);
@@ -175,7 +177,7 @@ function promoteReferenceBench(g,p,index){
  if(record(p.active).attacks.some(attack=>attack.plan?.predicate==='becameActive'))
   event(g,p.id,'SWITCH',{activeInstanceId:id(p.active)});
 }
-function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceBasicDamageProtection;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceNamedNextDamageBoost;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;delete c.referenceNoWeaknessTurn;delete c.referenceEvolutionWindow;}
+function clearActiveEffects(c){if(!c)return;c.statusCondition=null;delete c.statusConditionInfo;delete c.referenceProtection;delete c.referenceBasicDamageProtection;delete c.referenceNextCoinGate;delete c.referenceCannotAttackTurn;delete c.referenceNamedAttackLock;delete c.referenceNamedNextDamageBoost;delete c.referenceCannotRetreatTurn;delete c.referenceDamageReduction;delete c.referenceOutgoingDamagePenalty;delete c.referenceAttackLockUntilSwitch;delete c.referenceNoWeaknessTurn;delete c.referenceEvolutionWindow;}
 function switchMon(g,p,target){const index=p.bench.findIndex(c=>id(c)===target);assert(p.active&&index>=0,'INVALID_BENCH_CHOICE');clearActiveEffects(p.active);[p.active,p.bench[index]]=[p.bench[index],p.active];event(g,p.id,'SWITCH',{activeInstanceId:id(p.active)});}
 function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false,skipResistance=false}={}){
  const own=player(g,actor),other=opponent(g,actor),source=own.active;
@@ -1208,12 +1210,26 @@ function applyPlan(g,actor,card,effect,action){
   event(g,actor,'CONFUSION_ATTACK_FAILED',{targetInstanceId:id(card)});
   return;
  }
+ if(action.type==='attack_turn'&&card.referenceNextCoinGate?.turn===g.turnNumber){
+  let allHeads=true;
+  for(let i=0;i<card.referenceNextCoinGate.flips;i++)if(!coin(g,actor))allHeads=false;
+  if(!allHeads){event(g,actor,'ATTACK_FAILED',{effectId:effect.effectId,predicate:'nextCoinGate'});return;}
+ }
  if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&plan.trainer){
   assert(card.kind==='trainer'&&card.cardType==='ITEM'&&p.bench.length<5,'INVALID_BASIC_BENCH_ITEM');
   searchSelectedDeck(g,actor,p,ids('cards'),{destination:'bench'});
   return;
  }
  switch(m){
+  case 'ATTACK_NEXT_COIN_GATE':{
+   const defender=o.active;
+   if(Number(effect.damage)>0)damage(g,actor,defender,Number(effect.damage));
+   if(defender.referenceProtection?.opponentTurn!==g.turnNumber){
+    defender.referenceNextCoinGate={turn:g.turnNumber+1,flips:plan.flips};
+    event(g,actor,'ADD_STATE',{targetInstanceId:id(defender),mechanic:m,flips:plan.flips});
+   }
+   break;
+  }
   case 'ATTACK_NAMED_DISCARD_BENCH':{
    if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    const chosen=ids('cards');
@@ -2117,7 +2133,7 @@ function afterAction(g,before,actor,action){
   const c=field(player(g,actor)).find(c=>id(c)===action.cardId);if(c&&action.type==='bench_basic'){onBench(g,player(g,actor),c,true);c.entryWindow=g.referenceActionSequence;}
  }
  if(action.type==='evolve'){
-  const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
+  const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceNextCoinGate','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
  }
  if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;delete g.referenceAttackAwaitingPromotion;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
@@ -2295,6 +2311,7 @@ function statuses(g){
   const r=record(card),add=(suffix,label,effect,duration)=>out.push({id:'reference-'+id(card)+'-'+suffix,short:label,label,scope:'POKEMON',targetInstanceId:id(card),playerId:p.id,sourceCard:r.name,sourceEffect:effect,start:'公式参照版の効果解決時',duration,removal:'ベンチへの移動・進化・期限終了など、エンジンの条件に従う',condition:'参照ID '+r.officialCardId,description:label});
   if(card.referenceProtection&&g.turnNumber<=card.referenceProtection.opponentTurn)add('protection','ワザのダメージ・効果を受けない','あなをほる','次の相手の番の終わりまで');
   if(card.referenceBasicDamageProtection&&g.turnNumber<=card.referenceBasicDamageProtection.turn)add('basic-protection',card.referenceBasicDamageProtection.allAttackers?'ワザのダメージを受けない':card.referenceBasicDamageProtection.exceptType?card.referenceBasicDamageProtection.exceptType+'以外のたねポケモンのワザのダメージを受けない':'たねポケモンのワザのダメージを受けない','前の番のワザ','次の相手の番の終わりまで');
+  if(card.referenceNextCoinGate?.turn===g.turnNumber)add('next-coin-gate','ワザ使用時コイン'+card.referenceNextCoinGate.flips+'回すべてオモテ','相手のワザ','この番の終わりまで');
   if(card.referenceDamageReduction?.turn===g.turnNumber)add('attack-damage-reduction','受けるワザのダメージ −'+card.referenceDamageReduction.amount,'前の番のワザ','この番の終わりまで');
   if(card.referenceCannotRetreatTurn===g.turnNumber)add('retreat-lock','この番はにげられない','相手のワザ','この番の終わりまで');
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');
