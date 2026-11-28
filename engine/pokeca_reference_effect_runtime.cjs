@@ -82,6 +82,7 @@ function energyUnits(mon){
    for(let i=0;i<(match?r.mainPlan.units:1);i++)out.push(match?[...basicTypes,'無色']:['無色']);
   }
   else if(m==='ENERGY_TYPED_PASSIVE')out.push([r.mainPlan.energyType]);
+  else if(m==='ATTACHED_ACTIVE_HIT'||m==='ENERGY_HAND_ATTACH_DRAW')out.push(['無色']);
   else if(m==='COLORLESS_MULTI_ENERGY')for(let i=0;i<r.mainPlan.units;i++)out.push(['無色']);
   else if(m==='IGNITION')for(let i=0;i<(record(mon)?.facts.stage>0?3:1);i++)out.push(['無色']);
   else if(basicEnergy(c))out.push([c.energyType]);
@@ -314,17 +315,36 @@ function damage(g,actor,mon,amount,options={}){
    if(heads){survival=a;break;}
   }
  }
+ let survivalTool=null;
+ if(!survival&&mayDefend&&value>0&&mon.damage===0&&value>=mon.hp&&toolEnabled(g)){
+  survivalTool=(mon.tools||[]).find(t=>record(t)?.mainPlan?.mechanic==='TOOL_FULL_HP_SURVIVAL');
+  if(survivalTool)survival={plan:record(survivalTool).mainPlan,effectId:'tool:'+record(survivalTool).officialCardId};
+ }
  command(g,actor,{command:'DAMAGE',amount:value},{targetIds:[id(mon)]});
  // Survival is not damage reduction: retain the actual attack DAMAGE event
  // and leave exactly 10 HP before the normal knockout/prize resolution.
  if(survival&&mon.damage>=mon.hp){
   mon.damage=mon.hp-survival.plan.remainingHp;
+  if(survivalTool){
+   mon.tools.splice(mon.tools.indexOf(survivalTool),1);defender.player.discard.push(survivalTool);
+   event(g,defender.player.id,'DISCARD',{cardIds:[id(survivalTool)],sourceOfficialCardId:record(survivalTool).officialCardId});
+  }
   event(g,defender.player.id,'ADD_STATE',{mechanic:survival.plan.mechanic,targetInstanceId:id(mon),remainingHp:survival.plan.remainingHp,effectId:survival.effectId});
  }
  if(value>0&&defender?.player.id!==actor&&defender?.player.active===mon){
   for(const a of enabledAbilities(g,mon).filter(a=>a.plan.mechanic==='PASSIVE_ACTIVE_HIT_RETALIATION')){
    g.referenceReactions||=[];
    g.referenceReactions.push({kind:'ACTIVE_HIT_RETALIATION',playerId:defender.player.id,attackerId:id(attacker),effectId:a.effectId,status:a.plan.status,counterCount:a.plan.counterCount});
+  }
+ }
+ if(value>0&&!options.bench&&defender?.player.id!==actor&&defender?.player.active===mon){
+  for(const attached of [...(mon.energyCards||[]),...(toolEnabled(g)?mon.tools||[]:[])]){
+   const r=record(attached),p=r?.mainPlan;
+   if(p?.mechanic!=='ATTACHED_ACTIVE_HIT'||!matchesNamedType(mon,p)||value<p.minDamage)continue;
+   if(p.megaOnly&&(!isMegaEvolutionEx(attacker)||isMegaEvolutionEx(mon)))continue;
+   if(p.weakness&&!record(mon).facts.weakness?.types.some(t=>record(attacker).facts.types.includes(t)))continue;
+   g.referenceReactions||=[];
+   g.referenceReactions.push({kind:'ATTACHED_ACTIVE_HIT',playerId:defender.player.id,attackerId:id(attacker),holderId:id(mon),attachmentId:id(attached),sourceOfficialCardId:r.officialCardId,counterCount:p.counterCount,drawCount:p.drawCount,status:p.status,consume:p.consume});
   }
  }
  if(value>0&&!options.bench&&defender?.player.active===mon&&toolEnabled(g)&&(mon.tools||[]).some(t=>record(t)?.mainPlan?.mechanic==='CIRCULATOR')){
@@ -1094,7 +1114,22 @@ function finishAttack(g,actor){
  if(g.pendingReferenceChoice?.kind==='PROMOTE'&&g.pendingReferenceChoice.playerId===actor&&!player(g,actor).active){g.referenceAttackAwaitingPromotion=true;return;}
  delete g.referenceAttackAwaitingPromotion;
  while(g.referenceReactions?.length){
-  const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);if(!attacker)continue;
+  const reaction=g.referenceReactions.shift(),attacker=find(g,reaction.attackerId);
+  if(reaction.kind==='ATTACHED_ACTIVE_HIT'){
+   const owner=player(g,reaction.playerId);
+   if(reaction.drawCount)draw(g,owner,reaction.drawCount);
+   if(attacker&&reaction.counterCount)command(g,owner.id,{command:'PLACE_DAMAGE_COUNTERS',counterCount:reaction.counterCount},{targetIds:[id(attacker.card)],sourceType:'TRAINER',actionType:'TRAINER'});
+   if(attacker&&reaction.status&&attacker.player.active===attacker.card){
+    attacker.card.statusCondition=reaction.status;event(g,owner.id,'STATUS_CONDITION',{status:reaction.status,targetInstanceId:id(attacker.card),sourceOfficialCardId:reaction.sourceOfficialCardId});
+   }
+   if(reaction.consume){
+    const holder=find(g,reaction.holderId)?.card,i=holder?.tools?.findIndex(t=>id(t)===reaction.attachmentId)??-1;
+    if(i>=0){owner.discard.push(holder.tools.splice(i,1)[0]);event(g,owner.id,'DISCARD',{cardIds:[reaction.attachmentId],sourceOfficialCardId:reaction.sourceOfficialCardId});}
+   }
+   event(g,owner.id,'ADD_STATE',{mechanic:reaction.kind,sourceOfficialCardId:reaction.sourceOfficialCardId});
+   continue;
+  }
+  if(!attacker)continue;
   if(reaction.kind==='ACTIVE_HIT_RETALIATION'){
    if(reaction.status){
     if(attacker.player.active!==attacker.card)continue;
@@ -2136,6 +2171,7 @@ function execute(g,actor,action){
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
  }else if(action.type==='attach_energy'){
   const card=p.hand.splice(action.cardIndex,1)[0],mon=action.target==='active'?p.active:p.bench[action.target];mon.energyCards.push(card);p.normalEnergyAttached=true;event(g,actor,'ATTACH_ENERGY',{cardId:id(card),targetInstanceId:id(mon)});
+  const plan=record(card)?.mainPlan;if(plan?.mechanic==='ENERGY_HAND_ATTACH_DRAW')draw(g,p,plan.amount);
  }else if(action.type==='retreat'){
   for(const ident of action.energyIds||[]){const i=p.active.energyCards.findIndex(c=>id(c)===ident);p.discard.push(p.active.energyCards.splice(i,1)[0]);}switchMon(g,p,action.benchInstanceId);g.retreatUsed=true;
  }else if(action.type==='attack_turn'){

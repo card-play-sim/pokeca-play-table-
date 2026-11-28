@@ -700,6 +700,20 @@ function plan(entry,kind){
   const typed=generic.match(/^このカードをつけている\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモンが、相手の((?:\[(?:[草炎水雷超闘悪鋼竜]|無色)\])+?)ポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
   if(mega||ability||typed)return {mechanic:'TOOL_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],mode:mega?'mega':ability?'ability':'types',holderType:typed?.[1]||null,attackerTypes:typed?[...typed[2].matchAll(/\[([^\]]+)\]/g)].map(x=>x[1]):[],amount:Number(mega?.[1]||ability?.[1]||typed[3]),sharedWording:true};
  }
+ if(kind==='MAIN'&&['tool','energy'].includes(entry.category)){
+  const energyPrefix='このカードは、ポケモンについているかぎり、[無色]エネルギー1個ぶんとしてはたらく。';
+  const isEnergy=entry.category==='energy',body=isEnergy&&generic.startsWith(energyPrefix)?generic.slice(energyPrefix.length):generic;
+  const hit=body.match(/^(このカードをつけているポケモンの弱点のタイプと、相手のバトルポケモンのタイプが同じなら、)?このカードをつけている(?:\[([草炎水雷超闘悪鋼竜]|無色)\]|「([^「」]+)のポケモン」)?(ポケモン)?が、バトル場で相手のポケモンからワザのダメージを受けたとき、(ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。|ワザを使ったポケモンをねむりにする。|自分の山札を([1-9])枚引く。)(その後、このカードをトラッシュする。)?$/);
+  const mega=body.match(/^このカードをつけているポケモン\(「メガシンカex」をのぞく\)が、バトル場で相手の「メガシンカex」から「([1-9]\d{0,2})」以上のワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。その後、このカードをトラッシュする。$/);
+  if((hit&&Boolean(hit[3])!==Boolean(hit[4])||mega)&&(!isEnergy||generic.startsWith(energyPrefix)&&hit&&!hit[1]&&!hit[2]&&!hit[3]&&hit[6]&&!hit[8])){
+   const counterCount=Number(mega?.[2]||hit?.[6]||0),drawCount=Number(hit?.[7]||0),status=!counterCount&&!drawCount?'ASLEEP':null,consume=!!mega||!!hit?.[8];
+   return {mechanic:'ATTACHED_ACTIVE_HIT',commands:[...(isEnergy?['ATTACH_ENERGY']:[]),counterCount?'PLACE_DAMAGE_COUNTERS':drawCount?'DRAW':'STATUS_CONDITION',...(consume?['DISCARD']:[])],holderType:hit?.[2]||null,team:hit?.[3]||null,weakness:!!hit?.[1],megaOnly:!!mega,minDamage:Number(mega?.[1]||1),counterCount,drawCount,status,consume,energyType:isEnergy?'無色':null,sharedWording:true};
+  }
+  const survive=body.match(/^このカードをつけているポケモンのHPがまんたんの状態で、相手のポケモンからワザのダメージを受けてきぜつするとき、そのポケモンはきぜつせず、残りHPが「([1-9]\d?)」の状態で場に残る。その後、このカードをトラッシュする。$/);
+  if(!isEnergy&&survive)return {mechanic:'TOOL_FULL_HP_SURVIVAL',commands:['ADD_STATE','DISCARD'],remainingHp:Number(survive[1]),sharedWording:true};
+  const attach=body.match(/^このカードを手札からポケモンにつけたとき、自分の山札を([1-9])枚引く。$/);
+  if(isEnergy&&generic.startsWith(energyPrefix)&&attach)return {mechanic:'ENERGY_HAND_ATTACH_DRAW',commands:['ATTACH_ENERGY','DRAW'],amount:Number(attach[1]),sharedWording:true};
+ }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*自分の山札から好きなカードを2枚まで選び、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('any',2,{onlyHandCard:true,privateSearch:true});
  if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、先攻プレイヤーの最初の番でも使える。\s*自分の山札からたねポケモンの「ロケット団のポケモン」を3枚まで選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('pokemon',3,{firstTurnAllowed:true,team:'ロケット団',stage:0});
