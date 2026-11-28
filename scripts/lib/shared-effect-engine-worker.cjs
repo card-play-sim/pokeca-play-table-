@@ -2698,8 +2698,22 @@ function verifyCase(t, e) {
      assert(energy.every(id=>window.some(c=>c.id===id)));
      if(plan.remainder==='shuffleBottom'){assert.deepEqual(resolved.deck.slice(0,rest.length).map(c=>c.id),rest.map(c=>c.id));assert.deepEqual(resolved.deck.slice(rest.length).map(c=>c.id).sort(),left.map(c=>c.id).sort());}
      const outside=rest.find(c=>c.kind==='energy'&&!c.isSpecial&&(!plan.type||c.energyType===plan.type));assert(outside);
-     const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{energy:[outside.id],attachTo0:[own.active.id]}}).ok,false);assert.deepEqual(invalid.getSnapshot(),before);
+     const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{energy:[outside.id],...(plan.target==='self'?{}:{attachTo0:action.selections.attachTo0})}}).ok,false);assert.deepEqual(invalid.getSnapshot(),before);
      const none=port(before);assert(none.dispatch('you',{...action,selections:{energy:[]}}).ok);assert.deepEqual(Array.from(S.identities(none.getSnapshot())),Array.from(S.identities(before)));
+     if(plan.target==='self'&&plan.origin==='bench'&&plan.limit===1){
+      const holder=own.bench.find(c=>c.id===t.sourceId);assert(holder);
+      const afterHolder=resolved.bench.find(c=>c.id===t.sourceId);assert(afterHolder);
+      assert.equal(afterHolder.energyCards.length,holder.energyCards.length+energy.length);
+      for(const mon of [own.active,...own.bench].filter(c=>c.id!==t.sourceId)){const next=[resolved.active,...resolved.bench].find(c=>c.id===mon.id);assert.deepEqual(next.energyCards,mon.energyCards);}
+      const pool=window.filter(c=>c.kind==='energy'&&!c.isSpecial);
+      if(pool.length>=2){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{energy:pool.slice(0,2).map(c=>c.id)}}).ok,false);assert.deepEqual(denied.getSnapshot(),before);}
+      const nonEnergy=window.find(c=>c.kind!=='energy'||c.isSpecial);
+      if(nonEnergy){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{energy:[nonEnergy.id]}}).ok,false);assert.deepEqual(denied.getSnapshot(),before);}
+     }
+     if(plan.holderType==='竜'&&plan.topWindow===6){
+      const wrong=[own.active,...own.bench].find(c=>!E.getReferenceEffectRecord(c).facts.types.includes('竜'));
+      if(wrong){const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{energy:[energy[0]],attachTo0:[wrong.id]}}).ok,false);assert.deepEqual(denied.getSnapshot(),before);}
+     }
     }
     for(const [i,id] of energy.entries()){
       const source=own[plan.zone].find(c=>c.id===id);
