@@ -29,9 +29,10 @@ module.exports=function(fixed,records,{catalog=null}={}){
    for(const row of records){
     const pokemon=row.category==='pokemon',wantsEntry=row.abilities?.some(a=>a.plan?.origin==='activeEntry');
     const wantsRetreat=row.abilities?.some(a=>['PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT'].includes(a.plan?.mechanic));
-    const wantsMill=row.attacks?.some(a=>a.plan?.mechanic==='COIN_UNTIL_TAILS_MILL');
+    const wantsMill=row.attacks?.some(a=>['COIN_UNTIL_TAILS_MILL','DECK_ORDER_SELECT'].includes(a.plan?.mechanic));
     const teamTool=row.mainPlan?.mechanic==='TOOL_NAMED_TEAM_MAX_HP'?row.mainPlan:null;
-    add(row,wantsEntry||wantsRetreat||wantsMill||teamTool?3:1);
+    const statusTool=row.mainPlan?.mechanic==='TOOL_STATUS_ATTACK_BOOST';
+    add(row,statusTool?4:wantsEntry||wantsRetreat||wantsMill||teamTool?3:1);
     if(teamTool){
      const suitable=legal.filter(r=>r.facts.basic&&r.name.startsWith(teamTool.team+'の')&&r.attacks.some(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0));
      const names=[...new Map(suitable.map(r=>[r.name,r])).values()].slice(0,2);

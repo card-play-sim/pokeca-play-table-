@@ -640,9 +640,17 @@ async def main():
     plan=f['e']['plan'];i=0 if plan['side']=='own' else 1
     chosen=option['action']['selections']['cards'];original=[card['id'] for card in before['players'][i]['deck']];result=[card['id'] for card in after['players'][i]['deck']]
     count=min(plan['count'],len(original))
-    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)
-    if not plan['search']:assert result[count:]==original[count:]
+    assert len(chosen)==count
+    owner=before['players'][i];resolved=after['players'][i];drawn=[]
+    if not plan['search'] and i==1 and option['action']['type']=='attack_turn' and after['turnPlayer']==owner['id'] and len(result)==len(original)-1:
+     drawn=[chosen[0]]
+     assert drawn[0] not in [card['id'] for card in owner['hand']]
+     assert drawn[0] in [card['id'] for card in resolved['hand']]
+    assert sorted(result+drawn)==sorted(original)
+    if plan['search']:assert result[:count]==chosen
+    else:assert result==(chosen+original[count:])[len(drawn):]
     assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']
+    assert any(ev.get('details',{}).get('command')=='RETURN_TO_DECK' and ev['details'].get('position')=='top' and ev['details'].get('playerId')==owner['id'] and ev['details'].get('cardIds')==chosen for ev in events)
    if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':
     action=option['action'];chosen=action['selections']['cards'];plan=f['e']['plan']
     own=before['players'][0];resolved=after['players'][0]
@@ -661,6 +669,26 @@ async def main():
       mon=next(n for n in new if n['id']==old_mon['id'])
       assert mon['hp']==old_mon['hp']+(plan['amount'] if stage==plan['stage'] else 0)
       assert mon['damage']==old_mon['damage']
+   if m=='TOOL_STATUS_ATTACK_BOOST':
+    plan=f['e']['plan'];holder=after['players'][0]['active'];target=after['players'][1]['active']
+    assert holder['statusCondition']==plan['holderStatus']
+    assert any(card['id']==ident for card in holder['tools'])
+    printed=await page.evaluate("c=>Pokeca.getReferenceEffectRecord(c)",holder)
+    idx=next(i for i,a in enumerate(printed['attacks']) if a.get('plan',{}).get('mechanic')=='VANILLA_DAMAGE' and int(a['damage'])>0)
+    opts=await page.evaluate("id=>PokecaMobile.port.getPokemonActions('you',id)",holder['id'])
+    attack=next(o for o in opts if o['kind']=='attack' and o['action']['attackIndex']==idx)
+    await page.locator(f'#self-active [data-card-id="{holder["id"]}"]').tap()
+    await page.locator('#pokemon-actions').get_by_role('button',name='ワザを使う',exact=True).tap()
+    attack_button=page.locator(f'#attack-actions [data-action-kind="attack"][data-attack-index="{idx}"]')
+    assert await attack_button.is_enabled(), 'STATUS_TOOL_ATTACK_NOT_ENABLED'
+    await attack_button.tap()
+    await select_effect_targets(page,attack)
+    n=len(after['history'])
+    await page.wait_for_function("n=>document.querySelector('#confirm-dialog').open||PokecaMobile.port.getSnapshot().history.length>n",arg=n,timeout=12000)
+    if await page.locator('#confirm-ok').is_visible():await page.locator('#confirm-ok').tap()
+    await page.wait_for_function('n=>PokecaMobile.port.getSnapshot().history.length>n',arg=n)
+    after=await snap()
+    assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==target['id'] and ev['details'].get('amount')==int(printed['attacks'][idx]['damage'])+plan['amount'] for ev in after['history'][n:])
    if m=='TOOL_NAMED_TEAM_MAX_HP':
     target=option['action']['targetInstanceId']
     old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)
@@ -999,7 +1027,7 @@ async def main():
     await page.locator('#reference-import-choices button').first.wait_for(timeout=15000)
    except Exception:
     raise AssertionError(f"Reference deck import failed: status={await page.locator('#reference-import-status').inner_text()} sheet={await page.locator('#sheet-content').inner_text()} errors={errors}")
-   await page.evaluate('seed=>{Math.random=()=>seed/4294967296}',seed);await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
+   await page.evaluate('seed=>{let state=seed>>>0;Math.random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296}}',seed);await page.locator('#reference-import-choices button').first.tap();await page.locator('#confirm-ok').tap();await finish_opening(page)
    await page.wait_for_function('!document.getElementById("sheet").open||document.getElementById("reference-choice")')
    for _ in range(10):
     pending=(await snap()).get('pendingReferenceChoice')
