@@ -474,6 +474,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresMegaType)reserve(r=>mon(r,plan.requiresMegaType,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
+ if(e.proofAbilityEnergy)reserveEnergy(e.proofAbilityEnergy,4);
  if(e.proofConditionalRetreat==='opponentEx')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'bench',1);
  if(e.proofConditionalRetreat==='benchAura')reserve(r=>mon(r,null,0)&&r.facts.retreatCost>0&&!r.abilities.length,'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresAttachedType)reserveEnergy(plan.requiresAttachedType,5);
@@ -598,6 +599,18 @@ function evolveTeraFixture(pp,chain,requireTera=true,side=0,zone='bench',targetI
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='PASSIVE_CONDITIONAL_DAMAGE'&&e.plan.mode==='attachedEnergy'){
+    const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    if(index<0)return {blocked:'NO_CONDITIONAL_DAMAGE_ATTACK'};
+    const trigger={...r.attacks[index],effectIndex:index,proofAbilityEnergy:e.plan.type},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),side=game.players[0],mon=side.active;
+    const zone=[side.deck,side.hand].find(cards=>cards.some(c=>!c.isSpecial&&c.energyType===e.plan.type));
+    if(!zone||mon.energyCards.some(c=>c.isSpecial||c.energyType===e.plan.type))return {blocked:'NO_CONDITIONAL_DAMAGE_ENERGY_FIXTURE'};
+    mon.energyCards.push(zone.splice(zone.findIndex(c=>!c.isSpecial&&c.energyType===e.plan.type),1)[0]);
+    return {...t,port:port(game),trigger};
+  }
+  if(m==='PASSIVE_CONDITIONAL_DAMAGE'||m==='PASSIVE_ENERGY_TEAM_REDUCTION')return {blocked:'MISSING_EXACT_CONDITIONAL_DAMAGE_BATTLE_FIXTURE'};
   if(m==='PASSIVE_CONDITIONAL_RETREAT'){
     const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(index<0)return {blocked:'NO_CONDITIONAL_RETREAT_ATTACK'};
@@ -4093,6 +4106,17 @@ function verifyCase(t, e) {
     verifyPrintedAttack(baseline,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
     verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);
     assert.deepEqual(S.identities(before),S.identities(after));
+  }
+  if(e.plan.mechanic==='PASSIVE_CONDITIONAL_DAMAGE'&&e.plan.mode==='attachedEnergy'){
+    const plan=e.plan,mon=before.players[0].active,print=E.getReferenceEffectRecord(mon),action=t.action||o.action;
+    assert.equal(mon.hp,print.facts.hp+plan.hpBonus);
+    const baseline=structuredClone(before),side=baseline.players[0],holder=side.active;
+    for(const c of holder.energyCards.filter(c=>!c.isSpecial&&c.energyType===plan.type))side.deck.push(holder.energyCards.splice(holder.energyCards.indexOf(c),1)[0]);
+    holder.hp=print.facts.hp;holder.energies=[];
+    const replay=port(baseline),start=replay.getSnapshot();assert.equal(start.players[0].active.hp,print.facts.hp);
+    assert(replay.dispatch('you',action).ok);
+    verifyPrintedAttack(start,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
+    verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);
   }
   if(e.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT'){
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);

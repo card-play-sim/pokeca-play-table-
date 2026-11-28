@@ -680,6 +680,14 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const hpAndDamage=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、このポケモンの最大HPは「\+([1-9]\d{0,2})」され、このポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&hpAndDamage)return {mechanic:'PASSIVE_CONDITIONAL_DAMAGE',commands:['MODIFY_MAX_HP','MODIFY_DAMAGE'],mode:'attachedEnergy',type:hpAndDamage[1],hpBonus:Number(hpAndDamage[2]),amount:Number(hpAndDamage[3]),sharedWording:true};
+ const megaDamage=generic.match(/^自分の場に\[([草炎水雷超闘悪鋼竜無色])\]タイプの「メガシンカex」がいるなら、このポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&megaDamage)return {mechanic:'PASSIVE_CONDITIONAL_DAMAGE',commands:['MODIFY_DAMAGE'],mode:'megaType',type:megaDamage[1],amount:Number(megaDamage[2]),sharedWording:true};
+ const abilityDamage=generic.match(/^このポケモンが使うワザの、相手のバトル場の特性を持つポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
+ if(kind==='ABILITY'&&abilityDamage)return {mechanic:'PASSIVE_CONDITIONAL_DAMAGE',commands:['MODIFY_DAMAGE'],mode:'opponentAbility',amount:Number(abilityDamage[1]),sharedWording:true};
+ const teamEnergyReduction=generic.match(/^このポケモンがいるかぎり、\[([草炎水雷超闘悪鋼])\]エネルギーがついている自分のポケモン全員が、相手のポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。(この特性の効果は重ならない。)?$/);
+ if(kind==='ABILITY'&&teamEnergyReduction)return {mechanic:'PASSIVE_ENERGY_TEAM_REDUCTION',commands:['PREVENT_DAMAGE'],type:teamEnergyReduction[1],amount:Number(teamEnergyReduction[2]),nonStack:!!teamEnergyReduction[3],sharedWording:true};
  const megaHeal=generic.match(/^自分の場に\[([草炎水雷超闘悪鋼竜無色])\]タイプの「メガシンカex」がいるなら、自分の番に1回使える。自分のポケモン1匹のHPを「([1-9]\d{0,2})」回復する。$/);
  if(kind==='ABILITY'&&megaHeal)return {mechanic:'MASS_HEAL_OWN',commands:['HEAL'],type:null,target:'choice',amount:Number(megaHeal[2]),requiresMegaType:megaHeal[1],sharedWording:true};
  if(kind==='ABILITY'&&generic==='相手の場に「ポケモンex」がいるなら、このポケモンはにげるためのエネルギーが、すべてなくなる。')return {mechanic:'PASSIVE_CONDITIONAL_RETREAT',commands:['MODIFY_RETREAT_COST'],mode:'opponentEx',sharedWording:true};
