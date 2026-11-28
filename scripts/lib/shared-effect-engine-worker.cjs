@@ -473,6 +473,9 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='MASS_ENERGY_ROUTE'&&plan.origin==='activeEntry')reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand');
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
+ if(m==='MASS_HEAL_OWN'&&plan.requiresMegaType)reserve(r=>mon(r,plan.requiresMegaType,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
+ if(e.proofConditionalRetreat==='opponentEx')reserve(r=>mon(r,null,0)&&r.name.endsWith('ex')&&!r.abilities.length,'bench',1);
+ if(e.proofConditionalRetreat==='benchAura')reserve(r=>mon(r,null,0)&&r.facts.retreatCost>0&&!r.abilities.length,'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresAttachedType)reserveEnergy(plan.requiresAttachedType,5);
  if(e.proofHpThreshold)reserveEnergy(e.proofHpThreshold.type,Math.min(16,e.proofHpThreshold.threshold+7));
  if(m==='MASS_HEAL_OWN'&&plan.type)
@@ -595,6 +598,34 @@ function evolveTeraFixture(pp,chain,requireTera=true,side=0,zone='bench',targetI
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='PASSIVE_CONDITIONAL_RETREAT'){
+    const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
+    if(index<0)return {blocked:'NO_CONDITIONAL_RETREAT_ATTACK'};
+    const trigger={...r.attacks[index],effectIndex:index,proofConditionalRetreat:e.plan.mode},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const game=t.port.getSnapshot(),[own,other]=game.players,holder=own.active;
+    if(E.getReferenceEffectRecord(holder)?.officialCardId!==r.officialCardId)return {blocked:'NO_RETREAT_HOLDER'};
+    if(e.plan.mode==='opponentEx'){
+      if(!other.bench.some(c=>E.getReferenceEffectRecord(c).name.endsWith('ex'))||E.getReferenceEffectRecord(other.active).name.endsWith('ex'))return {blocked:'NO_EX_BENCH_FIXTURE'};
+      assert.equal(holder.retreatCost,0);
+      const without=structuredClone(game),op=without.players[1];
+      for(const c of op.bench.filter(c=>E.getReferenceEffectRecord(c).name.endsWith('ex'))){
+        if(c.evolutionCards?.length||c.energyCards?.length||c.tools?.length)return {blocked:'EX_FIXTURE_STACK'};
+        op.bench.splice(op.bench.indexOf(c),1);const bare={...c};for(const key of ['cardId','damage','energyCards','energies','tools','evolutionCards','enteredTurn','statusCondition'])delete bare[key];op.hand.push(bare);
+      }
+      assert.equal(port(without).getSnapshot().players[0].active.retreatCost,r.facts.retreatCost);
+    }else{
+      const recipient=own.bench.find(c=>E.getReferenceEffectRecord(c).facts.retreatCost>0&&!E.getReferenceEffectRecord(c).abilities.length&&!c.tools?.length);
+      if(!recipient)return {blocked:'NO_RETREAT_AURA_RECIPIENT'};
+      assert.equal(holder.retreatCost,r.facts.retreatCost);
+      const swapped=structuredClone(game),side=swapped.players[0],i=side.bench.findIndex(c=>c.id===recipient.id);
+      [side.active,side.bench[i]]=[side.bench[i],side.active];
+      const changed=port(swapped).getSnapshot();
+      assert.equal(changed.players[0].active.retreatCost,Math.max(0,E.getReferenceEffectRecord(recipient).facts.retreatCost-e.plan.amount));
+      assert.equal(changed.players[0].bench[i].retreatCost,r.facts.retreatCost);
+    }
+    return {...t,trigger};
+  }
   if(m==='PASSIVE_OPPONENT_RETREAT_INCREASE'){
     const attackIndex=r.attacks.findIndex(a=>a.plan?.mechanic==='SCALED_ATTACK_DAMAGE'&&a.plan.metric==='opponentRetreat');
     if(attackIndex<0)return {blocked:'NO_RETREAT_INCREASE_TRIGGER'};
@@ -1527,6 +1558,7 @@ function prepare(r, e, kind) {
   if(m==='MASS_HEAL_OWN'){
     const own=frame.game.players[0],targets=(e.plan.target==='active'?[own.active]:[own.active,...own.bench]).filter(c=>!e.plan.type||E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
     if(!targets.length)return {blocked:'NO_MASS_HEAL_FIXTURE'};
+    if(e.plan.requiresMegaType&&!own.bench.some(c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき')&&E.getReferenceEffectRecord(c).facts.types.includes(e.plan.requiresMegaType)))return {blocked:'NO_TYPED_MEGA_HEAL_FIXTURE'};
     if(e.plan.requiresAttachedType){
       const source=[own.active,...own.bench].find(c=>c.id===frame.sourceId);
       const zone=[own.deck,own.hand].find(cards=>cards.some(c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.requiresAttachedType));
@@ -2808,6 +2840,14 @@ function verifyCase(t, e) {
   }
   if(e.plan.mechanic==='MASS_HEAL_OWN'){
     const plan=e.plan,action=t.action||o.action,own=before.players[0],resolved=after.players[0];
+    if(plan.requiresMegaType){
+      const without=structuredClone(before),side=without.players[0];
+      for(const c of side.bench.filter(c=>String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき')&&E.getReferenceEffectRecord(c).facts.types.includes(plan.requiresMegaType))){
+        assert(!c.evolutionCards?.length&&!c.energyCards?.length&&!c.tools?.length);
+        side.bench.splice(side.bench.indexOf(c),1);const bare={...c};for(const key of ['cardId','damage','energyCards','energies','tools','evolutionCards','enteredTurn','statusCondition'])delete bare[key];side.hand.push(bare);
+      }
+      const denied=port(without);assert.equal(denied.dispatch('you',action).ok,false);
+    }
     if(plan.requiresAttachedType){
       const noEnergy=structuredClone(before),side=noEnergy.players[0],source=[side.active,...side.bench].find(c=>c.id===t.sourceId);
       side.deck.push(...source.energyCards.splice(0));source.energies=[];
@@ -4053,6 +4093,12 @@ function verifyCase(t, e) {
     verifyPrintedAttack(baseline,replay.getSnapshot(),t.trigger,Number(t.trigger.damage));
     verifyPrintedAttack(before,after,t.trigger,Number(t.trigger.damage)+plan.amount);
     assert.deepEqual(S.identities(before),S.identities(after));
+  }
+  if(e.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT'){
+    const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);
+    assert(print.abilities.some(a=>a.effectId===e.effectId));
+    assert.equal(mon.retreatCost,e.plan.mode==='opponentEx'?0:print.facts.retreatCost);
+    const bad=port(before);assert.equal(bad.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
   }
   if(e.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE'){
     const [own,other]=before.players;
