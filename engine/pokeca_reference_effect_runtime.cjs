@@ -2301,6 +2301,12 @@ function finishCoinPokemonSearch(g,p,cardId){
   shuffle(g,p);
  }
 }
+function finishTrainerTurn(g,actor){
+ if(g.status==='finished')return;
+ assert(g.turnPlayer===actor,'TRAINER_TURN_CHANGED_BEFORE_END');
+ if(g.pendingPrizeSelection||g.pendingReferenceChoice){g.referenceAttackTurnPending=actor;return;}
+ functions().Core.endTurn(g,actor);
+}
 function execute(g,actor,action){
  const check=preflight(g,actor,action);assert(check?.handled&&!check.errors.length,check?.errors.join(';')||'NOT_REFERENCE_ACTION');
  const p=player(g,actor);p.turnLimits||={supporterUsed:false,abilityUses:{}};
@@ -2333,6 +2339,7 @@ function execute(g,actor,action){
    if(g.stadium)player(g,g.stadiumOwner).discard.push(g.stadium);g.stadium=card;g.stadiumOwner=actor;g.stadiumPlayedTurn=g.turnNumber;g.stadiumPlayedBy=actor;emit(g,actor,r.mainPlan,{sourceOfficialCardId:r.officialCardId});g.history.push({turnNumber:g.turnNumber,player:actor,type:'stadium_played',details:{cardId:id(card),cardName:card.name}});
   }else {p.discard.push(card);if(action.type==='play_supporter'){p.turnLimits||={};p.turnLimits.supporterUsed=true;}applyPlan(g,actor,card,{plan:r.mainPlan},action);}
   refresh(g);functions().Core.resolveKnockouts(g,actor);
+  if(['play_item','play_supporter'].includes(action.type)&&r.mainPlan.endTrainerTurn)finishTrainerTurn(g,actor);
  }
  return {referenceEffect:true,adoptedPrint:false};
 }

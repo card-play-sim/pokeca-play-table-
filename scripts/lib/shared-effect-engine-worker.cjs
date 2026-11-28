@@ -414,6 +414,14 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='SUPPORTER_NON_RULE_DISCARD_DRAW')reserve(r=>r.category==='pokemon'&&!r.facts.rulePokemon,'hand');
+ if(plan.endTrainerTurn){
+  const plain=r=>mon(r,null,0)&&!r.abilities.length&&r.attacks.every(a=>a.plan);
+  if(!reserve(plain,'active',0)||!reserve(plain,'active',1))return Object.assign(requirements,{teamBoostBlocked:'NO_EXACT_END_TURN_FIXTURE'});
+  for(let i=0;i<plan.limit;i++){
+   const predicate=m==='MASS_ENERGY_ROUTE'?r=>isBasicEnergy(r)&&typeOf(r)===plan.type:r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH';
+   if(!reserve(predicate,'deck'))return Object.assign(requirements,{teamBoostBlocked:'NO_FULL_END_TURN_RESOURCE_FIXTURE'});
+  }
+ }
  if(m==='MASS_ZONE_TRANSFER'){
   if(plan.requiresTera)reserveTera('bench');
   const filter=r=>{
@@ -2466,6 +2474,33 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.endTrainerTurn){
+    const plan=e.plan,action=t.action||o.action,[own,other]=before.players;
+    const route=plan.mechanic==='MASS_ENERGY_ROUTE',key=route?'energy':'cards';
+    const eligible=own.deck.filter(c=>route?c.kind==='energy'&&!c.isSpecial&&c.energyType===plan.type:E.getReferenceEffectRecord(c).category==='item');
+    assert(eligible.length>=plan.limit,'NO_FULL_END_TURN_FIXTURE');
+    const verifyEnd=(start,end)=>{
+      assert.equal(end.turnNumber,start.turnNumber+1);
+      assert.equal(end.turnPlayer,other.id);
+      assert(!end.history.slice(start.history.length).some(ev=>ev.type==='attack'));
+      assert(end.players[0].discard.some(c=>c.id===t.sourceId));
+      assert.deepEqual(S.identities(start),S.identities(end));
+    };
+    verifyEnd(before,after);
+    const selections={[key]:eligible.slice(0,plan.limit).map(c=>c.id)};
+    if(route)selections.attachTo0=[own.active.id];
+    const maximum=port(before);assert(maximum.dispatch('you',{...action,selections}).ok);
+    const end=maximum.getSnapshot();verifyEnd(before,end);
+    const destination=route?end.players[0].active.energyCards:end.players[0].hand;
+    assert(selections[key].every(id=>destination.some(c=>c.id===id)));
+    const skip=port(before);assert(skip.dispatch('you',{...action,selections:{[key]:[]}}).ok);verifyEnd(before,skip.getSnapshot());
+    const invalid=port(before),wrong=own.deck.find(c=>!eligible.some(e=>e.id===c.id));
+    assert(wrong,'NO_INELIGIBLE_END_TURN_RESOURCE');
+    assert.equal(invalid.dispatch('you',{...action,selections:{...selections,[key]:[wrong.id]}}).ok,false);
+    assert.equal(JSON.stringify(invalid.getSnapshot()),JSON.stringify(before));
+    const stopped=port(end);assert.equal(stopped.dispatch('you',{...action,selections}).ok,false);
+    assert.equal(JSON.stringify(stopped.getSnapshot()),JSON.stringify(end));
+  }
   if (e.plan.mechanic === "SWITCH_SELF_ATTACK" && e.plan.optional) {
     const action = t.action || o.action;
     const target = before.players[0].bench[0];
