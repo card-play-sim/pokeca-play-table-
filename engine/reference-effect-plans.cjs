@@ -729,6 +729,7 @@ function plan(entry,kind){
   if(reduction)return {mechanic:'STADIUM_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],holderType:reduction[1]||null,team:reduction[2]||null,amount:Number(reduction[3]),sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='tool'){
+  if(generic==="自分の番ごとに1回、このカードをつけている[無色]ポケモンのワザで自分がコインを投げたとき、そのコインの結果をすべてなくし、はじめからコインを投げなおしてよい。")return {mechanic:'TOOL_RETRY_BADGE',commands:['COIN_FLIP'],holderType:'無色',oncePerTurn:true,sharedWording:true};
   if(generic==='このカードをつけている「メガシンカex」が、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを1枚選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:true,min:1,limit:1,sharedWording:true};
   if(generic==='このカードをつけているポケモンが、相手のポケモンからワザのダメージを受けてきぜつしたとき、自分の山札から好きなカードを3枚まで選び、手札に加える。そして山札を切る。')return {mechanic:'TOOL_KO_SEARCH',commands:['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK'],megaOnly:false,min:0,limit:3,sharedWording:true};
   if(generic==='このカードをつけているにげるためのエネルギーが4個のポケモンが、バトル場で相手のポケモンからワザのダメージを受けてきぜつしたとき、そのポケモンについている基本エネルギーを3枚まで選び、自分のベンチポケモンに好きなようにつけ替える。')return {mechanic:'TOOL_HEAVY_BATON',commands:['MOVE_ENERGY'],retreat:4,limit:3,sharedWording:true};

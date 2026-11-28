@@ -946,6 +946,14 @@ window.PokecaMobileBuild='258';
   }
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
+    if(choice.kind==='TOOL_RETRY_BADGE'){
+      openSheet('リトライバッジ','<p id="retry-coin-results"></p><div class="menu-list" id="reference-choice"></div>');
+      $('retry-coin-results').textContent='コインの結果：'+choice.results.map(v=>v?'オモテ':'ウラ').join('・');
+      for(const decision of choice.options)$('reference-choice').append(button(decision==='retry'?'すべて投げなおす':'この結果を使う',()=>{
+        if(dispatch('you',{type:'resolve_reference_choice',retryDecision:decision}).ok){closeSheet();render();}
+      }));
+      return;
+    }
     if(choice.kind==='DECK_POKEMON_SEARCH'){
       openSheet('山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
       const owner=port.getSnapshot().players.find(player=>player.id==='you');
