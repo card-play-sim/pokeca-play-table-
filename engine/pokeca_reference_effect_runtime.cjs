@@ -307,10 +307,12 @@ function typedRecoveryCandidate(c,plan){return c.kind==='pokemon'?record(c).fact
 // The same scope defines the private picker and its resolution.
 const topDeckEffects={
  ACTIVE_TOP_SUPPORTER_SEARCH:{limit:6,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'},
+ ACTIVE_TOP_ENERGY_SEARCH:{limit:6,remainder:'shuffleBottom',reveal:true,kind:'energy'},
  RECON:{limit:2,remainder:'bottom',reveal:false},
  TOP_SUPPORTER_SEARCH:{limit:7,remainder:'shuffle',reveal:true,cardType:'SUPPORTER'}
 };
 const deckWindow=(deck,scope)=>scope?deck.slice(0,scope.limit):deck;
+const topDeckCandidate=(c,scope)=>(!scope.cardType||c.cardType===scope.cardType)&&(!scope.kind||c.kind===scope.kind);
 function typedEvolutionOrTera(c,plan){
  if(c.kind!=='pokemon')return false;
  const facts=record(c).facts;
@@ -625,8 +627,8 @@ function requests(g,actor,card,effect){
  }
  if(topDeckEffects[m]){
   const scope=topDeckEffects[m],window=deckWindow(p.deck,scope);
-  const eligible=scope.cardType?window.filter(c=>c.cardType===scope.cardType):window;
-  deckRequest('cards',eligible,scope.cardType?0:Math.min(1,eligible.length),Math.min(1,eligible.length),scope);
+  const eligible=window.filter(c=>topDeckCandidate(c,scope));
+  deckRequest('cards',eligible,(scope.cardType||scope.kind)?0:Math.min(1,eligible.length),Math.min(1,eligible.length),scope);
  }
  if(['ULTRA_BALL','CYRANO','HILDA','BROCK','MEOWTH_ENTRY','POKEPAD','POFFIN','AKAMATSU'].includes(m)){
   let candidates=p.deck.filter(c=>m==='CYRANO'?c.kind==='pokemon'&&record(c).name.endsWith('ex'):m==='MEOWTH_ENTRY'?c.cardType==='SUPPORTER':m==='POKEPAD'?c.kind==='pokemon'&&!record(c).facts.rulePokemon:m==='POFFIN'?c.kind==='pokemon'&&record(c).facts.basic&&record(c).facts.hp<=70:m==='AKAMATSU'?basicEnergy(c):m==='HILDA'?c.kind==='energy'||c.kind==='pokemon'&&!record(c).facts.basic:c.kind==='pokemon');
@@ -835,7 +837,7 @@ function abilityCheck(g,actor,card,a,action){
  assert(zone==='HAND'||abilityEnabled(g,card,a),'ABILITY_SUPPRESSED');
  assert(!passive.has(m),'CONTINUOUS_ABILITY_NOT_DECLARABLE');assert(a.plan.repeated===true||!used(p,card,a),'ABILITY_ALREADY_USED');
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
- if(m==='ACTIVE_TOP_SUPPORTER_SEARCH')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
+ if(['ACTIVE_TOP_SUPPORTER_SEARCH','ACTIVE_TOP_ENERGY_SEARCH'].includes(m))assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
  if(m==='MASS_ENERGY_ROUTE')assert(massRouteTargets(p,card,a.plan).length&&(a.plan.zone==='deck'?p.deck.length>0:massRouteEnergy(p,a.plan).length>0),'NO_MASS_ENERGY_ROUTE');
  if(m==='MASS_ZONE_TRANSFER'){
@@ -1018,9 +1020,15 @@ function inspectDeckTopToHand(g,p,scope,chosenIds){
  assert(chosenIds.length<=1,'DECK_INSPECTION_SELECTION_COUNT_INVALID');
  const top=p.deck.splice(0,scope.limit);
  const chosen=top.find(c=>id(c)===chosenIds[0]);
- assert(!chosenIds.length||chosen,'DECK_INSPECTION_SELECTION_CHANGED');
+ assert(!chosenIds.length||(chosen&&topDeckCandidate(chosen,scope)),'DECK_INSPECTION_SELECTION_CHANGED');
  if(chosen)p.hand.push(chosen);
- p.deck.push(...top.filter(c=>c!==chosen));
+ const rest=top.filter(c=>c!==chosen);
+ if(scope.remainder==='shuffleBottom'){
+  for(let i=rest.length-1;i>0;i--){const j=g.referenceEffectPreview?i:Math.floor(referenceRandom(g)*(i+1));[rest[i],rest[j]]=[rest[j],rest[i]];}
+  event(g,p.id,'SHUFFLE_DECK',{scope:'inspectedRemainder',count:rest.length});
+  event(g,p.id,'RETURN_TO_DECK',{bottomOnly:true,count:rest.length});
+ }
+ p.deck.push(...rest);
  if(chosen&&scope.reveal)event(g,p.id,'REVEAL',{cardIds:[id(chosen)],toPlayer:opponent(g,p.id).id});
  event(g,p.id,'ADD_TO_HAND',{cardIds:chosen?[id(chosen)]:[],...(!scope.reveal?{privateTo:p.id}:{}),fromZone:'deck'});
  if(scope.remainder==='shuffle')shuffle(g,p);
@@ -1904,7 +1912,7 @@ function applyPlan(g,actor,card,effect,action){
   case 'ADRENA_BRAIN':{
    const source=find(g,ids('source')[0]).card,to=find(g,ids('target')[0]).card,count=action.selections.count;moveDamageCounters(g,actor,source,to,count);break;
   }
-  case 'ACTIVE_TOP_SUPPORTER_SEARCH':case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
+  case 'ACTIVE_TOP_SUPPORTER_SEARCH':case 'ACTIVE_TOP_ENERGY_SEARCH':case 'RECON':case 'TOP_SUPPORTER_SEARCH':inspectDeckTopToHand(g,p,topDeckEffects[m],ids('cards'));break;
   case 'RUN_AWAY_DRAW':draw(g,p,3);returnStack(g,p,card,'deck');shuffle(g,p);break;
   case 'MEOWTH_ENTRY':searchSelectedDeck(g,actor,p,ids('cards'));p.turnLimits.abilityNames||={};p.turnLimits.abilityNames.MEOWTH_ENTRY=true;break;
   case 'TRAINER_SWITCH_BOTH':
