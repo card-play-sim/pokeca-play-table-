@@ -166,3 +166,28 @@ assert.throws(()=>mergeShardResults(parallelParts,parallelReceipts.map((r,i)=>i=
 assert.throws(()=>mergeShardResults(parallelParts,parallelReceipts.map((r,i)=>i===0?{...r,cases:[...r.cases,parallelReceipts[1].cases[0]]}:r)),/FOREIGN_OR_DUPLICATE/);
 assert.throws(()=>mergeShardResults(parallelParts,parallelReceipts.slice(1)),/RECEIPT_COUNT/);
 console.log('ENGINE_PARALLEL_PARTITION_AND_FAIL_CLOSED_MERGE_PASS');
+
+
+// The optional parallel executor must run every existing regression exactly
+// once, await both lanes, and never proceed to the final contracts on failure.
+(async()=>{
+ const {regressionLanes,parallelRegression}=require('../scripts/run-atomic-official-battle-intake.cjs');
+ const regressions=steps.filter(([name])=>name.startsWith('FULL_REGRESSION:'));
+ const {primary,secondary,after}=regressionLanes(regressions);
+ assert.equal(primary.length,1);assert.equal(secondary.length,5);assert.equal(after.length,2);
+ assert.deepEqual([...primary,...secondary,...after].map(s=>s[0]).sort(),regressions.map(s=>s[0]).sort());
+ let active=0,peak=0;const seen=[];
+ const execute=async ([name])=>{active++;peak=Math.max(peak,active);await new Promise(resolve=>setImmediate(resolve));seen.push(name);active--;};
+ await parallelRegression(regressions,{},execute);
+ assert.equal(peak,2);
+ assert.deepEqual(seen.slice().sort(),regressions.map(s=>s[0]).sort());
+ assert.deepEqual(seen.slice(-2),after.map(s=>s[0]));
+ const attempted=[];
+ await assert.rejects(parallelRegression(regressions,{},async ([name])=>{
+  attempted.push(name);
+  if(name===primary[0][0])throw Error('synthetic required regression failure');
+ }),/PARALLEL_REGRESSION_FAILED/);
+ assert(!after.some(([name])=>attempted.includes(name)));
+ assert(secondary.every(([name])=>attempted.includes(name)));
+ console.log('PARALLEL_REGRESSION_FAIL_CLOSED_PASS');
+})().catch(error=>{console.error(error);process.exitCode=1;});
