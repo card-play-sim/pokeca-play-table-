@@ -50,6 +50,8 @@ module.exports=function(fixed,records,{catalog=null}={}){
      let child=row;
      while(child.facts?.stage>0){
       const parent=(byName.get(child.facts.evolvesFrom)||[]).find(r=>r.facts?.stage===child.facts.stage-1);
+      const fossil=child.facts.stage===1&&!parent?catalog.find(r=>r.category==='item'&&r.name===child.facts.evolvesFrom&&r.mainPlan?.mechanic==='TRAINER_FOSSIL_BASIC'):null;
+      if(fossil){add(fossil,2);break;}
       assert(parent,'MATCH_EVOLUTION_PARENT_MISSING:'+child.name);
       add(parent,wantsEntry||wantsRetreat||wantsMill?4:2);child=parent;
      }
