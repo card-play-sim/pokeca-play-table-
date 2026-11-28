@@ -664,6 +664,10 @@ function sequencePlan(entry,kind,text,extended=false){
  const commands=[...(attack&&Number(printed)>0?['DAMAGE']:[]),...steps.flatMap(s=>({discardOwnHand:['DISCARD'],blindDiscardOpponent:['DISCARD'],draw:['DRAW'],drawIfHand:['DRAW'],revealHand:['REVEAL'],peekTop:['REVEAL'],mill:['DISCARD'],healSelf:['HEAL'],drain:['HEAL'],status:['STATUS_CONDITION'],retreatLock:['ADD_STATE'],attackLock:['ADD_STATE'],reduce:['ADD_STATE'],discardAttached:['DISCARD'],itemLock:['ADD_STATE'],noWeakness:['ADD_STATE']})[s.op])];
  return {mechanic:'MASS_EFFECT_SEQUENCE',commands:[...new Set(commands)],steps,origin,activeOnly,sharedWording:true};
 }
+function stadiumUpgradePlan(text){
+ if(text==='このカードは、場に出ている「プリズムタワー」をトラッシュしなければ場に出せず、「プリズムタワー」を出した番でも場に出せる。おたがいの場の「メガフラエッテex」全員は、それぞれ最大HPが「+150」される。')return {mechanic:'STADIUM_NAMED_UPGRADE_HP',commands:['DISCARD','MODIFY_MAX_HP'],replaces:'プリズムタワー',name:'メガフラエッテex',amount:150,sharedWording:true};
+ return null;
+}
 function plan(entry,kind){
  const text=kind==='MAIN'?mainText(entry.text):norm(entry.text);
  if(kind==='ATTACK'&&text===''&&/^\d+$/.test(String(entry.damage)))return {mechanic:'VANILLA_DAMAGE',commands:['DAMAGE']};
@@ -672,6 +676,9 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='stadium'){
+  const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+ }
  if(kind==='MAIN'&&entry.category==='energy'){
   const rainbow=generic.match(/^このカードは、ポケモンについているかぎり、\[無色\]エネルギー1個ぶんとしてはたらく。(たね|2進化)ポケモンについているなら、すべてのタイプのエネルギー([12])個ぶんとしてはたらく。$/);
   if(rainbow&&((rainbow[1]==='たね'&&rainbow[2]==='1')||(rainbow[1]==='2進化'&&rainbow[2]==='2')))return {mechanic:'ENERGY_STAGE_RAINBOW',commands:['ATTACH_ENERGY'],stage:rainbow[1]==='たね'?0:2,units:Number(rainbow[2]),sharedWording:true};

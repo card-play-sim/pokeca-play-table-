@@ -66,9 +66,17 @@ function benchCounterGuard(g,actor,card,sourceType='POKEMON'){
  const target=find(g,id(card));
  return stadium(g)==='STADIUM_BENCH_COUNTER_GUARD'&&sourceType==='POKEMON'&&!!target&&target.player.id!==actor&&target.player.bench.includes(card);
 }
+function stadiumPlacementAllowed(g,card,plan,currentName){
+ if(card.kind!=='stadium'||g.stadium?.name===card.name)return false;
+ if(plan?.mechanic==='STADIUM_NAMED_UPGRADE_HP')return !!g.stadium&&currentName===plan.replaces;
+ return g.stadiumPlayedTurn!==g.turnNumber;
+}
+function namedStadiumHpBonus(plan,name){
+ return plan?.mechanic==='STADIUM_NAMED_UPGRADE_HP'&&name===plan.name?plan.amount:0;
+}
 function maxHpBonus(g,card){
  const plan=record(g.stadium)?.mainPlan;
- const fieldHp=plan?.mechanic==='STADIUM_STAGE_HP'&&record(card).facts.stage===plan.stage?plan.amount:0;
+ const fieldHp=(plan?.mechanic==='STADIUM_STAGE_HP'&&record(card).facts.stage===plan.stage?plan.amount:0)+namedStadiumHpBonus(plan,record(card).name);
  const owner=find(g,id(card))?.player;
  const dynamic=owner?enabledAbilities(g,card).filter(a=>a.plan.mechanic==='PASSIVE_DYNAMIC_MAX_HP').reduce((sum,a)=>{
   const p=a.plan,n=p.mode==='opponentPrizes'?6-opponent(g,owner.id).prizes:energyUnits(card).filter(u=>u.includes(p.type)).length;
@@ -1059,7 +1067,7 @@ function preflight(g,actor,action){
    if(action.type==='attach_tool')assert(card.kind==='tool'&&field(p).some(c=>id(c)===action.targetInstanceId&&!(c.tools||[]).length),'TOOL_ATTACHMENT_NOT_ALLOWED');
    if(action.type==='play_item')assert(card.cardType==='ITEM'&&!itemLocked(g,actor),'ITEM_NOT_ALLOWED');
    if(action.type==='play_supporter')assert(card.cardType==='SUPPORTER'&&(g.turnNumber!==1||r.mainPlan.mechanic==='SUPPORTER_FIRST_TURN_DISCARD_HAND_DRAW'||r.mainPlan.firstTurnAllowed===true)&&!p.turnLimits?.supporterUsed,'SUPPORTER_NOT_ALLOWED');
-   if(action.type==='play_stadium')assert(card.kind==='stadium'&&g.stadiumPlayedTurn!==g.turnNumber&&g.stadium?.name!==card.name,'STADIUM_NOT_ALLOWED');
+   if(action.type==='play_stadium')assert(stadiumPlacementAllowed(g,card,r.mainPlan,record(g.stadium)?.name),'STADIUM_NOT_ALLOWED');
    const m=r.mainPlan.mechanic;
    if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
     assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
