@@ -290,6 +290,11 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
+    elif m=='PASSIVE_CONDITIONAL_RETREAT':
+     assert trigger and trigger.get('proofConditionalRetreat')==f['e']['plan']['mode']
+     assert attack_print==r['officialCardId']
+     expected=0 if f['e']['plan']['mode']=='opponentEx' else r['facts']['retreatCost']
+     assert before['players'][0]['active']['retreatCost']==expected, ('CONDITIONAL_RETREAT_COST_MISMATCH',r['officialCardId'])
     elif not trigger or m in ('PASSIVE_DYNAMIC_MAX_HP','PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
