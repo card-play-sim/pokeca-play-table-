@@ -302,8 +302,11 @@ jobs:
     if: >-
       (github.event_name == 'schedule' ||
        (github.event_name == 'workflow_dispatch' && inputs.release_only && github.actor == github.repository_owner) ||
+       (github.event_name == 'issue_comment' && github.event.issue.number == 122 && !github.event.issue.pull_request &&
+        github.event.comment.author_association == 'OWNER' && github.event.comment.user.login == github.repository_owner &&
+        github.event.comment.body == '/card-auto-connect') ||
        (github.event_name == 'workflow_run' && github.event.workflow_run.path == '.github/workflows/continue-official-effects.yml' &&
-        github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'success' &&
+        (github.event.workflow_run.event == 'schedule' || github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') && github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) &&
       github.ref == 'refs/heads/main' && github.repository == 'card-play-sim/pokeca-play-table-' &&
       (vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == '' || vars.UNKNOWN_EFFECT_AUTO_CANDIDATE == 'reviewed-composition-v1')
