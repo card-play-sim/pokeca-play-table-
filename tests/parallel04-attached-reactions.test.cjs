@@ -76,7 +76,7 @@ for(const row of rows){
   const jam=fixture(row,{jam:true,weak:false});jam.run(400);assert.equal(jam.defender.damage,400);assert.equal(jam.opp.discard.length,0);
  }else{
   const f=fixture(row);assert.equal(f.runtime.energyUnits(f.defender)[0][0],'無色');
-  f.defender.energyCards=[];f.opp.hand=[f.attached];f.g.turnPlayer='ai';
+  f.defender.energyCards=[];f.opp.hand=[f.attached];f.g.turnPlayer='ai';f.g.phase='main';
   f.runtime.execute(f.g,'ai',{type:'attach_energy',cardIndex:0,target:'active'});
   assert.equal(f.opp.hand.length,4);assert.equal(f.defender.energyCards[0],f.attached);assert.equal(f.opp.normalEnergyAttached,true);
  }
