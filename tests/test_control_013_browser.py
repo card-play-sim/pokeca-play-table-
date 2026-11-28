@@ -613,6 +613,12 @@ async def main():
     assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
    if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
     assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':
+    action=option['action'];chosen=action['selections']['cards'];plan=f['e']['plan']
+    own=before['players'][0];resolved=after['players'][0]
+    assert len(chosen)==plan['count']
+    assert [c['id'] for c in resolved['deck']]==[c['id'] for c in own['deck'][plan['draw']:]]+chosen
+    assert [c['id'] for c in resolved['hand']]==[c['id'] for c in own['hand'] if c['id']!=action['cardId'] and c['id'] not in chosen]+[c['id'] for c in own['deck'][:plan['draw']]]
    if m=='TOOL_LOW_HP_RETREAT_DISCOUNT':
     target=option['action']['targetInstanceId']
     old=next(c for c in [before['players'][0]['active'],*before['players'][0]['bench']] if c['id']==target)

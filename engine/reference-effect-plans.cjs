@@ -1063,6 +1063,8 @@ function plan(entry,kind){
  // a near match is intentionally not connected until separately verified.
  if(kind==='MAIN'&&entry.category==='tool'&&generic==='このカードをつけているポケモンは、にげるためのエネルギーが2個ぶん少なくなる。')
   return {mechanic:'TOOL_RETREAT_DISCOUNT_TWO',commands:['MODIFY_RETREAT_COST'],amount:2};
+ const orderedBottomDraw=generic.match(/^自分の手札を([1-9])枚選び、好きな順番に入れ替えて、山札の下にもどす。その後、山札を([1-9])枚引く。\(自分の手札を\1枚もどせないなら、このカードは使えない。\)$/);
+ if(kind==='MAIN'&&entry.category==='supporter'&&orderedBottomDraw)return {mechanic:'SUPPORTER_ORDERED_BOTTOM_DRAW',commands:['RETURN_TO_DECK','DRAW'],count:Number(orderedBottomDraw[1]),draw:Number(orderedBottomDraw[2]),sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='このカードは、自分の手札を1枚トラッシュしなければ使えない。自分の手札が6枚になるように、山札を引く。')
   return {mechanic:'SUPPORTER_DISCARD_ONE_DRAW_TO_SIX',commands:['DISCARD','DRAW'],limit:6};
  if(kind==='ATTACK'&&generic==='相手の手札を見る。'&&/^\d+$/.test(String(entry.damage||'0')))

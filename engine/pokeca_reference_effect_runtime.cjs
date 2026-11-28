@@ -715,6 +715,7 @@ function requests(g,actor,card,effect){
  if(m==='SEARCH_MEGA_EVOLUTION_EX')deckRequest('cards',p.deck.filter(isMegaEvolutionEx),0,1);
  if(m==='DISCARD_ONE_DRAW_OPP_BENCH')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
  if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
+ if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')cardRequest('cards',p.hand.filter(c=>id(c)!==id(card)),effect.plan.count,effect.plan.count);
  if(m==='RECYCLE_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='HEAL_AND_CLEAR_STATUS')cardRequest('cards',own.filter(canHealOrClearStatus),1,1);
  if(m==='RECOVER_NON_RULE_AND_ENERGY'){const pool=p.discard.filter(nonRuleRecovery);cardRequest('cards',pool,1,Math.min(effect.plan.amount,pool.length));}
@@ -917,6 +918,7 @@ function preflight(g,actor,action){
    const m=r.mainPlan.mechanic;
    if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')
     assert(p.hand.some(c=>id(c)!==id(card)),'SUPPORTER_DISCARD_COST_REQUIRED');
+   if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')assert(p.hand.filter(c=>id(c)!==id(card)).length>=r.mainPlan.count,'SUPPORTER_BOTTOM_COST_REQUIRED');
    if(m==='DISCARD_TO_SEARCH_DISTINCT_CATEGORIES'){
     assert(p.hand.length-1>=r.mainPlan.cost,'HAND_DISCARD_COST_REQUIRED');
     assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
@@ -1915,6 +1917,13 @@ function applyPlan(g,actor,card,effect,action){
    event(g,actor,'DISCARD',{cardIds:[discardId],fromZone:'hand',privateTo:actor});
    if(o.bench.length>0)draw(g,p,o.bench.length);
    break;
+  }
+  case 'SUPPORTER_ORDERED_BOTTOM_DRAW':{
+   const chosen=ids('cards'),moved=[];
+   for(const ident of chosen){const index=p.hand.findIndex(c=>id(c)===ident);assert(index>=0,'SUPPORTER_BOTTOM_CARD_MISSING');moved.push(p.hand.splice(index,1)[0]);}
+   p.deck.push(...moved);
+   event(g,actor,'RETURN_TO_DECK',{cardIds:chosen,fromZone:'hand',position:'bottom',privateTo:actor});
+   draw(g,p,plan.draw);break;
   }
   case 'SUPPORTER_DISCARD_ONE_DRAW_TO_SIX':{
    const discardId=ids('discard')[0],index=p.hand.findIndex(c=>id(c)===discardId);

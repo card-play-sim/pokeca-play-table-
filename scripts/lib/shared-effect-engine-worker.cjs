@@ -1583,6 +1583,13 @@ function prepare(r, e, kind) {
     while(own.hand.length<e.plan.cost&&own.deck.length>e.plan.amount)own.hand.push(own.deck.shift());
     if(own.hand.length<e.plan.cost||!own.deck.length)return {blocked:'NO_ABILITY_COST_FIXTURE'};
   }
+  if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW'){
+    const own=frame.game.players[0];
+    while(own.hand.filter(c=>c.id!==frame.sourceId).length<e.plan.count){
+      const donor=own.deck.shift();if(!donor)return {blocked:'NO_BOTTOM_COST_FIXTURE'};own.hand.push(donor);
+    }
+    if(own.deck.length<e.plan.draw)return {blocked:'NO_BOTTOM_DRAW_FIXTURE'};
+  }
   if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
     const player=frame.game.players[0];
     if(!player.hand.some(card=>card.id!==frame.sourceId)){
@@ -4208,6 +4215,17 @@ function verifyCase(t, e) {
     assert(previous&&current,'TOOL_RETREAT_TARGET_MISSING');
     assert.equal(current.retreatCost,Math.max(0,previous.retreatCost-e.plan.amount),
       'TOOL_RETREAT_DISCOUNT_INCORRECT');
+  }
+  if(e.plan.mechanic==='SUPPORTER_ORDERED_BOTTOM_DRAW'){
+    const action=t.action||o.action,chosen=action.selections.cards,own=before.players[0],resolved=after.players[0],plan=e.plan;
+    assert.equal(chosen.length,plan.count);
+    assert.deepEqual(Array.from(resolved.deck,c=>c.id),[...Array.from(own.deck.slice(plan.draw),c=>c.id),...chosen]);
+    assert.deepEqual(Array.from(resolved.hand,c=>c.id),[...Array.from(own.hand.filter(c=>c.id!==action.cardId&&!chosen.includes(c.id)),c=>c.id),...Array.from(own.deck.slice(0,plan.draw),c=>c.id)]);
+    const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);
+    assert.deepEqual(Array.from(reverse.getSnapshot().players[0].deck.slice(-plan.count),c=>c.id),[...chosen].reverse());
+    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,cards:chosen.slice(1)}}).ok,false);
+    assert.equal(JSON.stringify(B.canonical(invalid.getSnapshot())),JSON.stringify(B.canonical(before)));
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
   }
   if(e.plan.mechanic==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX'){
     const action=t.action||o.action,chosen=action.selections?.discard;
