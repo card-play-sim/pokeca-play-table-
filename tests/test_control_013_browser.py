@@ -290,6 +290,45 @@ async def main():
      if plan.get('evolvedTarget'):assert other['active']['evolutionCards']
      assert any(ev.get('details',{}).get('command')=='DAMAGE' and ev['details'].get('targetInstanceId')==other['active']['id'] and ev['details'].get('amount')==int(trigger['damage'])+plan['amount'] for ev in events)
      assert f['printedDamageEvents'] and all(ev in events for ev in f['printedDamageEvents'])
+    elif m=='PASSIVE_CONDITIONAL_RETREAT':
+     assert attack_print==r['officialCardId'],('RETREAT_SOURCE_PRINT_MISMATCH',attack_print,r['officialCardId'])
+     plan=f['e']['plan']
+     own=before['players'][0]
+     assert own['active']['retreatCost']==(0 if plan['mode']=='opponentEx' else r['facts']['retreatCost'])
+     proof=await page.evaluate("""({game,mode,amount})=>{
+       const g=structuredClone(game),side=g.players[0],enemy=g.players[1],rec=c=>Pokeca.getReferenceEffectRecord(c);
+       const source=side.active,base=rec(source).facts.retreatCost;
+       let current=g;
+       const port=Pokeca.createUIPort({getGame:()=>current,setGame:x=>current=x});
+       if(!port.loadGame(g).ok)return false;
+       const old=port.getSnapshot();
+       if(port.dispatch('you',{type:'use_ability',sourceInstanceId:source.id,abilityId:rec(source).abilities.find(a=>a.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT').effectId}).ok)return false;
+       if(JSON.stringify(port.getSnapshot())!==JSON.stringify(old))return false;
+       if(mode==='opponentEx'){
+         if(![enemy.active,...enemy.bench].some(c=>rec(c).name.endsWith('ex')))return false;
+         if(enemy.active&&rec(enemy.active).name.endsWith('ex'))return false;
+         for(const c of enemy.bench.filter(c=>rec(c).name.endsWith('ex'))){
+           if(c.energyCards?.length||c.tools?.length||c.evolutionCards?.length)return false;
+           enemy.bench.splice(enemy.bench.indexOf(c),1);
+           const bare={...c};for(const key of ['damage','energyCards','energies','tools','evolutionCards','enteredTurn','statusCondition'])delete bare[key];
+           enemy.hand.push(bare);
+         }
+         return port.loadGame(g).ok&&port.getSnapshot().players[0].active.retreatCost===base;
+       }
+       const idx=side.bench.findIndex(c=>rec(c).facts.retreatCost>0&&!rec(c).abilities.length&&!c.tools?.length);
+       if(idx<0)return false;
+       const recipient=side.bench[idx],expected=Math.max(0,rec(recipient).facts.retreatCost-amount);
+       [side.active,side.bench[idx]]=[recipient,source];
+       if(!port.loadGame(g).ok)return false;
+       const next=port.getSnapshot().players[0];
+       return next.active.retreatCost===expected&&next.bench[idx].retreatCost===base;
+     }""",{'game':before,'mode':plan['mode'],'amount':plan.get('amount',0)})
+     assert proof,'CONDITIONAL_RETREAT_BROWSER_POSITIVE_NEGATIVE_PROOF'
+    elif m in ('PASSIVE_CONDITIONAL_DAMAGE','PASSIVE_TEAM_MAX_HP','PASSIVE_ACTIVE_TRAINER_LOCK'):
+     assert attack_print==r['officialCardId'],('PASSIVE_SOURCE_PRINT_MISMATCH',attack_print,r['officialCardId'])
+     assert any(a['effectId']==f['e']['effectId'] for a in r['abilities'])
+     if m=='PASSIVE_CONDITIONAL_DAMAGE' and f['e']['plan']['mode']=='attachedEnergy':
+      assert before['players'][0]['active']['hp']==r['facts']['hp']+f['e']['plan']['hpBonus']
     elif not trigger or m in ('PASSIVE_DYNAMIC_MAX_HP','PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','PASSIVE_NAMED_PRIZE_DISCOUNT','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_CONTEXT_COST_DISCOUNT'):
      assert attack_print==r['officialCardId']
      if m=='PASSIVE_CONTEXT_COST_DISCOUNT':
