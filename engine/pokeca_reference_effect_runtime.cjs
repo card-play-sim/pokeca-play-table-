@@ -3053,11 +3053,12 @@ function applyPlan(g,actor,card,effect,action,skipConfusion=false){
   case 'RETURN_HAND_COIN_DRAW':resetHand(g,p,()=>coin(g,actor)?plan.heads:plan.tails);break;
   case 'COIN_DRAW_CARDS':draw(g,p,coin(g,actor)?plan.heads:plan.tails);break;
   case 'COIN_SEARCH_POKEMON':{
-   if(!coin(g,actor))return;
-   // Official FAQ 7589 and 9139: shuffle after a search with no pick.
-   const options=p.deck.filter(candidate=>candidate.kind==='pokemon').map(id);
-   if(options.length)g.pendingReferenceChoice={kind:'DECK_POKEMON_SEARCH',playerId:actor,options:[...options,null]};
-   else finishCoinPokemonSearch(g,p,null);
+   const heads=coin(g,actor);
+   if(!heads&&!plan.rocketCoin)return;
+   const filter=plan.rocketCoin?{rocketCoin:true,heads}:null;
+   const options=p.deck.filter(candidate=>coinPokemonCandidate(candidate,filter)).map(id);
+   if(options.length)g.pendingReferenceChoice={kind:'DECK_POKEMON_SEARCH',playerId:actor,options:[...options,null],...(filter?{...filter,sourceId:id(card)}:{})};
+   else finishCoinPokemonSearch(g,p,null,filter);
    return;
   }
   case 'HEAL_ACTIVE_DAMAGE':{
@@ -3254,9 +3255,14 @@ function finishCoinAttackSearch(g,p,choice,cardId){
  shuffle(g,p);
  return true;
 }
-function finishCoinPokemonSearch(g,p,cardId){
+function coinPokemonCandidate(c,filter){
+ if(c.kind!=='pokemon')return false;
+ if(!filter?.rocketCoin)return true;
+ const r=record(c);return !!r&&r.name.startsWith('ロケット団の')&&(filter.heads?r.facts.stage>0:r.facts.basic===true);
+}
+function finishCoinPokemonSearch(g,p,cardId,filter=null){
  if(cardId!==null){
-  assert(p.deck.some(c=>id(c)===cardId&&c.kind==='pokemon'),'DECK_POKEMON_SEARCH_TARGET_CHANGED');
+  assert(p.deck.some(c=>id(c)===cardId&&coinPokemonCandidate(c,filter)),'DECK_POKEMON_SEARCH_TARGET_CHANGED');
   searchSelectedDeck(g,p.id,p,[cardId]);
  }else{
   event(g,p.id,'SEARCH_DECK',{selectedCount:0,destination:'hand',privateTo:p.id});
@@ -3310,7 +3316,7 @@ function execute(g,actor,action){
   }
   else if(choice.kind==='DECK_POKEMON_SEARCH'){
    if(choice.searchMode){if(!finishCoinAttackSearch(g,p,choice,action.deckCardId)){refresh(g);return {referenceEffect:true,adoptedPrint:false};}}
-   else finishCoinPokemonSearch(g,p,action.deckCardId);
+   else finishCoinPokemonSearch(g,p,action.deckCardId,choice);
   }
   else if(choice.kind==='TOOL_KO_SEARCH'){if(!finishToolKoSearch(g,p,choice,action.deckCardId))return {referenceEffect:true,adoptedPrint:false};}
   else if(choice.kind==='TOOL_HEAVY_BATON'){if(!finishHeavyBaton(g,choice,action))return {referenceEffect:true,adoptedPrint:false};}
@@ -3607,7 +3613,12 @@ function validateGame(g){
  }
  if(choice?.kind==='DECK_POKEMON_SEARCH'){
   const owner=player(g,choice.playerId);
-  const options=choice.searchMode?coinDeckOptions(owner,choice):owner.deck.filter(card=>card.kind==='pokemon').map(id);
+  if(choice.rocketCoin){
+   const source=owner.discard.find(c=>id(c)===choice.sourceId);
+   const flip=g.history.findLast(e=>e.turnNumber===g.turnNumber&&e.player===choice.playerId&&e.details?.command==='COIN_FLIP'&&typeof e.details.heads==='boolean'&&!e.details.reference);
+   assert(!choice.searchMode&&record(source)?.mainPlan?.rocketCoin===true&&typeof choice.heads==='boolean'&&flip?.details.heads===choice.heads,'INVALID_ROCKET_COIN_SEARCH_STATE');
+  }
+  const options=choice.searchMode?coinDeckOptions(owner,choice):owner.deck.filter(card=>coinPokemonCandidate(card,choice)).map(id);
   if(choice.searchMode){
    const source=owner.active,attackEvent=g.history.findLast(h=>h.type==='attack'&&h.player===owner.id&&h.turnNumber===g.turnNumber);
    const attack=record(source)?.attacks.find(a=>a.effectId===attackEvent?.details?.effectId);

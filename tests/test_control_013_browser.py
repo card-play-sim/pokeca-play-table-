@@ -250,6 +250,11 @@ async def main():
    if m=='COIN_SEARCH_POKEMON':
     choice=after['pendingReferenceChoice']
     assert choice['kind']=='DECK_POKEMON_SEARCH'
+    if f['e']['plan'].get('rocketCoin'):
+     flips=[ev['details']['heads'] for ev in after['history'][len(before['history']):] if ev.get('details',{}).get('command')=='COIN_FLIP' and isinstance(ev['details'].get('heads'),bool) and not ev['details'].get('reference')]
+     assert len(flips)==1 and choice.get('heads')==flips[0] and choice.get('rocketCoin') is True
+     pool=await page.evaluate("(args)=>args.cards.filter(c=>{const r=Pokeca.getReferenceEffectRecord(c);return c.kind==='pokemon'&&r?.name.startsWith('ロケット団の')&&(args.heads?r.facts.stage>0:r.facts.basic===true);}).map(c=>c.id)",{'cards':before['players'][0]['deck'],'heads':flips[0]})
+     assert pool and choice['options']==[*pool,None]
     picked=choice['options'][0]
     await page.wait_for_function('document.getElementById("save-status").textContent==="自動保存済"')
     await c.set_offline(True)
