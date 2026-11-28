@@ -1,25 +1,50 @@
 {
   "jobId": "OFFICIAL_SHARED_EFFECT_F8081C5AA2DD531F:00679ee091148db6ca8d3db43513695504ea61c4d0b4ac2835af4f727550f581",
   "taskFingerprint": "00679ee091148db6ca8d3db43513695504ea61c4d0b4ac2835af4f727550f581",
-  "executionFingerprint": "8eff1d42f43da387a0e37a6f5df26bda58ea537cd123af22d10bf42ea14ffb34",
-  "attemptId": "8e6e34c8-06c8-4c65-b414-e014107a8092",
-  "status": "BLOCKED",
+  "executionFingerprint": "a7630d0f30a02647411fae7380d8d5bf96c7a4907afef81606381877d63a1ba5",
+  "attemptId": "15258cb5-73e4-4e01-bec6-bf2f415efaf2",
+  "status": "SUCCEEDED",
   "result": {
-    "status": "BLOCKED",
+    "status": "SUCCEEDED",
     "stage": "REGISTERED_ENGINE_INTEGRATION_CHECK_NOT_NEW_SEMANTIC_APPROVAL",
-    "reason": "REVIEW_CASE_RESULTS",
     "cases": [
       {
         "slot": "45256:ability:ほりまくり:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "DISCARD",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       },
       {
         "slot": "46744:ability:ほりまくり:0",
-        "status": "BLOCKED",
-        "reason": "OFFICIAL_REFERENCE_NOT_REGISTERED"
+        "mechanic": "MASS_ZONE_TRANSFER",
+        "commands": [
+          "SEARCH_DECK",
+          "REVEAL",
+          "DISCARD",
+          "SHUFFLE_DECK"
+        ],
+        "status": "SUCCEEDED",
+        "checks": [
+          "LEGAL_ACTION_OR_PASSIVE_GUARD",
+          "INVALID_ACTION_ROLLBACK",
+          "AI_UI_LEGAL_PARITY",
+          "PHYSICAL_CARD_CONSERVATION",
+          "EXACT_SAVE_RESTORE"
+        ]
       }
     ]
   },
-  "checksum": "f3d9fff73b329efeedbacb31af829165f95a8096acb5222c4a986f162a930bd5"
+  "checksum": "5ec806bdc1b12eecfa67e71cf4522fe0dce4154d2cc85a4b48bdcf330fd7e31d"
 }
