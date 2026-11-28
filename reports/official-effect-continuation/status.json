@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
-  "classifiedRegistryHash": "65691b67f5bc1873290ca819d904c0b6799238a0592cbf5b94a952b492c58632",
+  "registryHash": "a5620f20854b7dbea44f1b7066d331c39ea0d65e8447da5474b74efd66de8bfe",
+  "classifiedRegistryHash": "a5620f20854b7dbea44f1b7066d331c39ea0d65e8447da5474b74efd66de8bfe",
   "fullReplayDeferred": false,
   "source": "OFFICIAL_SAVED_HTML_HASH_AND_EXISTING_COMPILER",
   "referenceOnly": true,
@@ -14,8 +14,8 @@
   "categories": {
     "supporter": {
       "prints": 374,
-      "compiled": 266,
-      "notImplemented": 108,
+      "compiled": 271,
+      "notImplemented": 103,
       "blocked": 0,
       "executionVerifiedPrints": 42
     },
@@ -42,8 +42,8 @@
     },
     "pokemon": {
       "prints": 3676,
-      "compiled": 2672,
-      "notImplemented": 982,
+      "compiled": 2676,
+      "notImplemented": 978,
       "blocked": 22,
       "executionVerifiedPrints": 743
     },
@@ -2644,21 +2644,6 @@
       }
     },
     {
-      "officialCardId": "45284",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45284.json",
-        "sha256": "fafd0eb88715f4ab6b4642644289fabac392c095e6a2456b74582279daec6f14",
-        "htmlSha256": "fafd0eb88715f4ab6b4642644289fabac392c095e6a2456b74582279daec6f14",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
       "officialCardId": "45285",
       "name": "セイジ",
       "category": "supporter",
@@ -2727,21 +2712,6 @@
       "officialCardId": "45560",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "45562",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/45562.json",
-        "sha256": "e73a1a822f1b137cb437df3258f41408c1771e9a83238eb7d115db3176120d5f",
-        "htmlSha256": "e73a1a822f1b137cb437df3258f41408c1771e9a83238eb7d115db3176120d5f",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
     },
     {
       "officialCardId": "45563",
@@ -4286,21 +4256,6 @@
         "sha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "htmlSha256": "ccf42cc585dc5825d741b0fea670e4f1111c162529dd55b9ff31ef04c4a9c1b8",
         "textSha256": "4280339ab3d388b67259018a164dd5fab5a3993628fbd9bc5bb367b25a2e918f"
-      }
-    },
-    {
-      "officialCardId": "46826",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/46826.json",
-        "sha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
-        "htmlSha256": "5574d28b85a6ce516de7e5d9f261aaaa5fed256834c5d16edea9c8556e8ec001",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
       }
     },
     {
@@ -6348,11 +6303,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "47436",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "47437",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -6644,11 +6594,6 @@
     },
     {
       "officialCardId": "47656",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "47661",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -6994,11 +6939,6 @@
     },
     {
       "officialCardId": "48029",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
-      "officialCardId": "48034",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
@@ -7923,11 +7863,6 @@
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
     },
     {
-      "officialCardId": "49040",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
-    },
-    {
       "officialCardId": "49055",
       "status": "BLOCKED",
       "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN"
@@ -8615,21 +8550,6 @@
         "sha256": "27aaa89c49cb5f9b641dd5d1fce96cf2433140914f632890c8d8d9b5ea9f6300",
         "htmlSha256": "27aaa89c49cb5f9b641dd5d1fce96cf2433140914f632890c8d8d9b5ea9f6300",
         "textSha256": "e5cb6b1541c8799ce34f6b267fdecc9c2f0519a89659fcd379cb8d397a6b83a0"
-      }
-    },
-    {
-      "officialCardId": "47206",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/47206.json",
-        "sha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
-        "htmlSha256": "03b7130b2d14ec22e21071c3ae52966f23611e284907bda8a555aa7481b19059",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
       }
     },
     {
@@ -9393,21 +9313,6 @@
       }
     },
     {
-      "officialCardId": "49414",
-      "name": "暗号マニアの解読",
-      "category": "supporter",
-      "status": "BLOCKED",
-      "reason": "UNSUPPORTED_EFFECT_PATTERN",
-      "text": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "source": {
-        "kind": "saved-official-extension",
-        "path": "data/effect-extensions/evidence/49414.json",
-        "sha256": "c88cd99158497c8c696e88feeb2ccf503093f8fc02088053a777d4d45cdac1bd",
-        "htmlSha256": "c88cd99158497c8c696e88feeb2ccf503093f8fc02088053a777d4d45cdac1bd",
-        "textSha256": "55e46d674c3c585315b3ec692c82f934238c78a7a2e72da9f61d251d41d3ff61"
-      }
-    },
-    {
       "officialCardId": "49421",
       "name": "クセロシキのたくらみ",
       "category": "supporter",
@@ -9977,11 +9882,11 @@
     "compiler": [
       {
         "reason": "UNSUPPORTED_POKEMON_OR_ENERGY_EFFECT_PATTERN",
-        "count": 1015
+        "count": 1011
       },
       {
         "reason": "UNSUPPORTED_EFFECT_PATTERN",
-        "count": 306
+        "count": 301
       },
       {
         "reason": "OUTSIDE_HIJ_MECHANIC_SCOPE",
@@ -9996,10 +9901,10 @@
   "queue": {
     "processed": 0,
     "stopped": false,
-    "executionFingerprint": "a33f7b19ded14f74b48e15d49797323d33bd8da2d54be2b6d085a1687c8702fd",
+    "executionFingerprint": "7aa1ba3e4c184b243f1f9f2e2831df2af6561c742834e92cf07b2f1ba4199b3a",
     "staleSuccesses": 0,
     "inputBlocked": 0,
-    "seq": 237249,
+    "seq": 239577,
     "totalJobs": 776,
     "counts": {
       "PENDING": 0,

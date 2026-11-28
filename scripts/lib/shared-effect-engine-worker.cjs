@@ -4216,6 +4216,23 @@ function verifyCase(t, e) {
     assert.equal(current.retreatCost,Math.max(0,previous.retreatCost-e.plan.amount),
       'TOOL_RETREAT_DISCOUNT_INCORRECT');
   }
+  if(e.plan.mechanic==='DECK_ORDER_SELECT'){
+    const action=t.action||o.action,chosen=action.selections.cards,plan=e.plan,i=plan.side==='own'?0:1;
+    const original=before.players[i].deck.map(c=>c.id),result=after.players[i].deck.map(c=>c.id),count=Math.min(plan.count,original.length);
+    assert(count>0);assert.equal(chosen.length,count);assert.deepEqual(Array.from(result.slice(0,count)),Array.from(chosen));
+    assert.deepEqual([...result].sort(),[...original].sort());
+    if(!plan.search)assert.deepEqual(Array.from(result.slice(count)),Array.from(original.slice(count)));
+    const events=after.history.slice(before.history.length);
+    assert.equal(events.some(ev=>ev.details?.command==='SHUFFLE_DECK'),plan.search);
+    assert(events.some(ev=>ev.details?.command==='RETURN_TO_DECK'&&ev.details.position==='top'&&ev.details.privateTo==='you'));
+    if(count>1){
+     const reverse=port(before);assert(reverse.dispatch('you',{...action,selections:{...action.selections,cards:[...chosen].reverse()}}).ok);
+     assert.deepEqual(Array.from(reverse.getSnapshot().players[i].deck.slice(0,count),c=>c.id),[...chosen].reverse());
+    }
+    const invalid=port(before);assert.equal(invalid.dispatch('you',{...action,selections:{...action.selections,cards:chosen.slice(1)}}).ok,false);
+    assert.equal(JSON.stringify(B.canonical(invalid.getSnapshot())),JSON.stringify(B.canonical(before)));
+    assert.deepEqual(S.identities(before),S.identities(after));
+  }
   if(e.plan.mechanic==='SUPPORTER_ORDERED_BOTTOM_DRAW'){
     const action=t.action||o.action,chosen=action.selections.cards,own=before.players[0],resolved=after.players[0],plan=e.plan;
     assert.equal(chosen.length,plan.count);

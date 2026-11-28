@@ -393,30 +393,6 @@
       "effectSlots": 5
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_A614D93B4A575D0DAC2C",
-      "category": "supporter",
-      "effectKind": "supporter",
-      "exampleOfficialText": "自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "45284",
-        "45562",
-        "46826",
-        "47206",
-        "49414"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/45284.json",
-        "data/effect-extensions/evidence/45562.json",
-        "data/effect-extensions/evidence/46826.json",
-        "data/effect-extensions/evidence/47206.json",
-        "data/effect-extensions/evidence/49414.json"
-      ],
-      "printCount": 5,
-      "effectSlots": 5
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_CB499D687ACBA009485E",
       "category": "supporter",
       "effectKind": "supporter",
@@ -2839,28 +2815,6 @@
       "effectSlots": 3
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_E887842AE7C0F49FAE1F",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の山札を上から5枚見て、好きな順番に入れ替えて、山札の上にもどす。",
-      "printedDamage": "0",
-      "energyCost": [
-        "超"
-      ],
-      "officialCardIds": [
-        "47661",
-        "48034",
-        "49040"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47661.json",
-        "data/effect-extensions/evidence/48034.json",
-        "data/effect-extensions/evidence/49040.json"
-      ],
-      "printCount": 3,
-      "effectSlots": 3
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_EA6C6C460C3DB2444697",
       "category": "pokemon",
       "effectKind": "ability",
@@ -3997,24 +3951,6 @@
       "officialEvidencePaths": [
         "data/effect-extensions/evidence/47490.json",
         "data/effect-extensions/evidence/48712.json"
-      ],
-      "printCount": 2,
-      "effectSlots": 2
-    },
-    {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_3958F711F49F8CF70C18",
-      "category": "pokemon",
-      "effectKind": "ability",
-      "exampleOfficialText": "このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。",
-      "printedDamage": null,
-      "energyCost": [],
-      "officialCardIds": [
-        "50134",
-        "50190"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/50134.json",
-        "data/effect-extensions/evidence/50190.json"
       ],
       "printCount": 2,
       "effectSlots": 2
@@ -10148,24 +10084,6 @@
       "effectSlots": 1
     },
     {
-      "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_794CA43A8815543F18B4",
-      "category": "pokemon",
-      "effectKind": "attack",
-      "exampleOfficialText": "相手の山札を上から5枚見て、好きな順番に入れ替えて、山札の上にもどす。",
-      "printedDamage": "0",
-      "energyCost": [
-        "無色"
-      ],
-      "officialCardIds": [
-        "47436"
-      ],
-      "officialEvidencePaths": [
-        "data/effect-extensions/evidence/47436.json"
-      ],
-      "printCount": 1,
-      "effectSlots": 1
-    },
-    {
       "sharedTaskId": "OFFICIAL_SHARED_MECHANIC_7B3D5D88AAB9006C1E59",
       "category": "pokemon",
       "effectKind": "attack",
@@ -13313,5 +13231,5 @@
       "effectSlots": 1
     }
   ],
-  "unfinishedPrints": 1271
+  "unfinishedPrints": 1266
 }

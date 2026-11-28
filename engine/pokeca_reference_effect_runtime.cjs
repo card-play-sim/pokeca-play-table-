@@ -715,6 +715,11 @@ function requests(g,actor,card,effect){
  if(m==='SEARCH_MEGA_EVOLUTION_EX')deckRequest('cards',p.deck.filter(isMegaEvolutionEx),0,1);
  if(m==='DISCARD_ONE_DRAW_OPP_BENCH')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
  if(m==='SUPPORTER_DISCARD_ONE_DRAW_TO_SIX')cardRequest('discard',p.hand.filter(c=>id(c)!==id(card)),1,1);
+ if(m==='DECK_ORDER_SELECT'){
+  const plan=effect.plan,deck=(plan.side==='own'?p:o).deck,count=Math.min(plan.count,deck.length),pool=plan.search?deck:deck.slice(0,count);
+  if(plan.search)deckRequest('cards',pool,count,count);
+  else {cardRequest('cards',pool,count,count);if(actor==='you')out.at(-1).inspection={privateTo:actor,cards:copy(pool)};}
+ }
  if(m==='SUPPORTER_ORDERED_BOTTOM_DRAW')cardRequest('cards',p.hand.filter(c=>id(c)!==id(card)),effect.plan.count,effect.plan.count);
  if(m==='RECYCLE_BASIC_ENERGY')cardRequest('cards',p.discard.filter(basicEnergy),1,Math.min(effect.plan.amount,p.discard.filter(basicEnergy).length));
  if(m==='HEAL_AND_CLEAR_STATUS')cardRequest('cards',own.filter(canHealOrClearStatus),1,1);
@@ -829,6 +834,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_SWITCH_OWN'){assert(p.bench.length>0,'NO_OWN_BENCH');if(a.plan.selfBenchOnly)assert(zone==='BENCH'&&p.bench.some(c=>id(c)===id(card)),'BENCH_SOURCE_REQUIRED');}
  if(m==='ABILITY_EVOLVE_FORCE_SWITCH')assert(opponent(g,actor).bench.some(c=>!a.plan.maxRemainingHp||(c.hp-(c.damage||0)>0&&c.hp-(c.damage||0)<=a.plan.maxRemainingHp)),'NO_OPPONENT_BENCH');
+ if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_SEARCH_TYPED_EVOLUTION')assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='ABILITY_DRAW_CARDS')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
  if(m==='ABILITY_TYPED_COST_COUNTER')assert(p.active===card&&p.hand.some(c=>basicEnergy(c)&&c.energyType===a.plan.type),'COUNTER_COST_OR_ACTIVE_REQUIRED');
@@ -934,6 +940,7 @@ function preflight(g,actor,action){
    if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,o,r.mainPlan),'NO_HAND_FLOW_CHANGE');
    if(m==='MASS_HEAL_OWN')assert(massHealTargets(p,r.mainPlan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
    if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'DRAW_DECK_EMPTY');
+   if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>e.isSpecial)),'NO_OPPONENT_SPECIAL_ENERGY');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
@@ -1916,6 +1923,21 @@ function applyPlan(g,actor,card,effect,action){
    p.discard.push(p.hand.splice(index,1)[0]);
    event(g,actor,'DISCARD',{cardIds:[discardId],fromZone:'hand',privateTo:actor});
    if(o.bench.length>0)draw(g,p,o.bench.length);
+   break;
+  }
+  case 'DECK_ORDER_SELECT':{
+   const owner=plan.side==='own'?p:o,chosen=ids('cards'),count=Math.min(plan.count,owner.deck.length),window=owner.deck.slice(0,count);
+   assert(chosen.length===count&&new Set(chosen).size===count,'DECK_ORDER_COUNT');
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(plan.search){
+    const moved=chosen.map(ident=>{const index=owner.deck.findIndex(c=>id(c)===ident);assert(index>=0,'DECK_ORDER_CARD_MISSING');return owner.deck.splice(index,1)[0];});
+    event(g,actor,'SEARCH_DECK',{selectedCount:count,privateTo:actor});shuffle(g,owner);owner.deck.unshift(...moved);
+   }else{
+    const moved=chosen.map(ident=>window.find(c=>id(c)===ident));assert(moved.every(Boolean),'DECK_ORDER_WINDOW');
+    event(g,actor,'REVEAL',{cardIds:window.map(id),fromZone:'deck',privateTo:actor});
+    owner.deck.splice(0,count,...moved);
+   }
+   event(g,actor,'RETURN_TO_DECK',{cardIds:chosen,position:'top',playerId:owner.id,privateTo:actor});
    break;
   }
   case 'SUPPORTER_ORDERED_BOTTOM_DRAW':{

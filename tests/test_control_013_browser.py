@@ -613,6 +613,13 @@ async def main():
     assert picked[0] in {card['id'] for card in after['players'][1]['discard']}
    if m=='ATTACK_BASIC_DAMAGE_PROTECTION':
     assert after['players'][0]['active']['referenceBasicDamageProtection']=={'turn':before['turnNumber']+1,'exceptType':f['e']['plan']['exceptType']}
+   if m=='DECK_ORDER_SELECT':
+    plan=f['e']['plan'];i=0 if plan['side']=='own' else 1
+    chosen=option['action']['selections']['cards'];original=[card['id'] for card in before['players'][i]['deck']];result=[card['id'] for card in after['players'][i]['deck']]
+    count=min(plan['count'],len(original))
+    assert len(chosen)==count and result[:count]==chosen and sorted(result)==sorted(original)
+    if not plan['search']:assert result[count:]==original[count:]
+    assert any(ev.get('details',{}).get('command')=='SHUFFLE_DECK' for ev in events)==plan['search']
    if m=='SUPPORTER_ORDERED_BOTTOM_DRAW':
     action=option['action'];chosen=action['selections']['cards'];plan=f['e']['plan']
     own=before['players'][0];resolved=after['players'][0]

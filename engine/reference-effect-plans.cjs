@@ -672,6 +672,10 @@ function plan(entry,kind){
  if(draw&&/^\d+$/.test(String(entry.damage||'0')))return {mechanic:'ATTACK_DRAW',commands:['DAMAGE','DRAW'],draw:Number(draw[1])};
  const known=byText.get(text);if(known)return {...known,commands:[...known.commands]};
  const generic=text.normalize('NFKC');
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札から好きなカードを2枚選ぶ。残りの山札を切り、選んだカードを好きな順番に入れ替えて、山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:2,search:true,sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
+ const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
+ if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
 
  if(kind==='ATTACK'&&/^\d+$/.test(String(entry.damage??'0'))){
   const acquire=(mode,amount,extra={})=>({mechanic:'MASS_HAND_ACQUISITION',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),...(mode==='search'?['SEARCH_DECK','ADD_TO_HAND','SHUFFLE_DECK']:['DRAW'])],mode,amount,sharedWording:true,...extra});
