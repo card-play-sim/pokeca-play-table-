@@ -28,7 +28,7 @@ function blocked(card,effect,reason='IMPLEMENTATION_OR_OFFICIAL_RULING_REQUIRED'
 }
 function stop(card,effect,reason){throw Error('UNCONNECTED_EFFECT:'+JSON.stringify(blocked(card,effect,reason)));}
 function assert(ok,message){if(!ok)throw Error(message);}
-function fossilBridgeReady(){return typeof module.exports.fossilCanBench==='function'&&typeof module.exports.fossilBenchFromZone==='function';}
+function fossilBridgeReady(){return typeof module.exports.fossilCandidate==='function'&&typeof module.exports.putFossilFromZone==='function';}
 function connected(plan){return !!plan&&!unresolved.has(plan.mechanic)&&(plan.mechanic!=='STADIUM_ACTIVE'||plan.mode!=='fossilBench'||fossilBridgeReady());}
 function event(g,a,command,details={}){g.history.push({turnNumber:g.turnNumber,player:a,type:'effect_command',details:{command,...copy(details)}});}
 function emit(g,a,plan,extra={}){for(const command of plan.commands)event(g,a,command,{reference:true,...extra});}
@@ -1327,8 +1327,8 @@ function executeGreatTree(g,actor,action){
 }
 // Stadium owns selection and shuffle; the item owner supplies legal field conversion.
 function fossilStadiumPool(g,p){
- if(!fossilBridgeReady())return [];
- return p.deck.filter(c=>c.kind==='trainer'&&c.cardType==='ITEM'&&record(c)?.name.startsWith('古びた')&&module.exports.fossilCanBench(g,p,c,'deck'));
+ if(!fossilBridgeReady()||!p.active)return [];
+ return p.deck.filter(c=>c.kind==='trainer'&&c.cardType==='ITEM'&&record(c)?.name.startsWith('古びた')&&module.exports.fossilCandidate(c));
 }
 function fossilStadiumSelection(g,p,plan){
  const pool=fossilStadiumPool(g,p);
@@ -1339,8 +1339,8 @@ function executeFossilStadium(g,actor,p,plan,selectedIds){
  const {pool,max}=fossilStadiumSelection(g,p,plan);
  assert(Array.isArray(selectedIds)&&selectedIds.length<=max&&new Set(selectedIds).size===selectedIds.length&&selectedIds.every(x=>pool.some(c=>id(c)===x)),'INVALID_FOSSIL_STADIUM_SELECTION');
  for(const ident of selectedIds){
-  const card=p.deck.find(c=>id(c)===ident);assert(card&&module.exports.fossilCanBench(g,p,card,'deck'),'FOSSIL_STADIUM_SOURCE_CHANGED');
-  module.exports.fossilBenchFromZone(g,p,card,'deck');
+  const card=p.deck.find(c=>id(c)===ident);assert(card&&p.active&&p.bench.length<benchLimit(g,p)&&module.exports.fossilCandidate(card),'FOSSIL_STADIUM_SOURCE_CHANGED');
+  module.exports.putFossilFromZone(g,p,card,'deck');
   assert(!p.deck.some(c=>id(c)===ident)&&p.bench.some(c=>id(c)===ident),'FOSSIL_STADIUM_PHYSICAL_MOVE_REQUIRED');
  }
  event(g,actor,'SEARCH_DECK',{selectedCount:selectedIds.length,destination:'bench',privateTo:p.id});
@@ -1353,7 +1353,7 @@ function stadiumCanUse(g,actor){
   case 'psychicDraw':return p.deck.length>0&&p.hand.some(c=>c.kind==='energy')&&p.hand.length-1<stadiumPsychicCount(p);
   case 'healEnd':case 'nonRuleHeal':return stadiumHealTargets(p,plan).length>0;
   case 'lightningRecover':return p.discard.some(c=>basicEnergy(c)&&c.energyType==='雷');
-  case 'fossilBench':return fossilBridgeReady()&&p.deck.length>0&&p.bench.length<benchLimit(g,p);
+  case 'fossilBench':return fossilBridgeReady()&&!!p.active&&p.deck.length>0&&p.bench.length<benchLimit(g,p);
   case 'basicBench':return p.deck.length>0&&p.bench.length<benchLimit(g,p);
   case 'greatTree':return g.turnNumber>2&&p.deck.length>0&&greatTreeTargets(g,p).length>0;
   case 'rocketDraw':return p.deck.length>0&&stadiumSupporterUsed(g,actor,true);
