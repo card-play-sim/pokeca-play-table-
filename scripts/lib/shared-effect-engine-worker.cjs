@@ -363,7 +363,7 @@ function fixtureResources(manifest,deckIndex,source,e){
    }
   }
  }
- if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)||m==='MASS_BOARD_BONUS'&&plan.predicate==='evolvedFromThisTurn')&&!source.facts.basic){
+ if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON','ATTACK_RETURN_SELF_DECK'].includes(m)||m==='MASS_BOARD_BONUS'&&plan.predicate==='evolvedFromThisTurn')&&!source.facts.basic){
   for(const line of evolutionLines(source,legal)){
    if(!tryReserveChain(manifest.decks[deckIndex],reservedPrints,deckIndex,line.slice(0,-1),(i,r)=>ensure(i,r,requiredCopies(requirements,0,r.officialCardId))))continue;
    requirements.evolvedSourceChain=line.map(x=>x.officialCardId);
@@ -583,6 +583,11 @@ function fixtureResources(manifest,deckIndex,source,e){
   const eligible=r=>isBasicEnergy(r)&&(!plan.type||typeOf(r)===plan.type);
   const energy=reserve(eligible,'deck');if(energy)ensure(deckIndex,energy,Math.min(3,kindAttackCost(e,plan.type)+2));
  }
+ if(m==='SWITCH_SELF_ATTACK'&&plan.type){
+  reserve(r=>mon(r,plan.type,0)&&!r.abilities.length,'bench');
+  reserve(r=>mon(r,null,0)&&!r.facts.types.includes(plan.type)&&!r.abilities.length,'bench');
+ }
+ if(m==='ATTACK_RETURN_SELF_DECK')reserve(r=>mon(r,null,0)&&!r.abilities.length,'bench');
  if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='basic'){
   // Reserve an exact, ability-free basic defender before the fixture chooses
   // its default (which may be evolved). Preserve a separate bench for promotion.
@@ -2218,7 +2223,7 @@ function prepare(r, e, kind) {
     if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&own.bench.length>=5)return {blocked:"NO_BENCH_SEARCH_SPACE"};
     if(!own.deck.some(c=>batchSearchCandidate(c,e.plan)))return {blocked:"NO_EXACT_SEARCH_FIXTURE_RESOURCE"};
   }
-  if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON'].includes(m)||m==='MASS_BOARD_BONUS'&&e.plan.predicate==='evolvedFromThisTurn')&&!r.facts.basic){
+  if((['ABILITY_EVOLVE_MULTI_COUNTERS','ATTACK_OPTIONAL_RETURN_POKEMON','ATTACK_RETURN_SELF_DECK'].includes(m)||m==='MASS_BOARD_BONUS'&&e.plan.predicate==='evolvedFromThisTurn')&&!r.facts.basic){
     const chain=fixtureRequirements.evolvedSourceChain;
     if(!chain)return {blocked:'NO_EVOLVED_SOURCE_FULL_LINE'};
     const own=frame.game.players[0],child=own.active;
@@ -2428,6 +2433,41 @@ function verifyCase(t, e) {
   const after = p.getSnapshot();
   const [attackingSide, defendingSide] = before.players;
   const effectEvents = after.history.slice(before.history.length).map(event => event.details);
+  if(e.plan.mechanic==='SWITCH_SELF_ATTACK'&&e.plan.type){
+    const action=t.action||o.action,own=before.players[0],eligible=own.bench.filter(c=>E.getReferenceEffectRecord(c).facts.types.includes(e.plan.type));
+    if(!eligible.length)return {status:'BLOCKED',reason:'NO_TYPED_SWITCH_FIXTURE'};
+    assert(eligible.some(c=>c.id===action.targetIds?.[0]));
+    assert.equal(after.players[0].active.id,action.targetIds[0]);
+    assert(after.players[0].bench.some(c=>c.id===own.active.id));
+    verifyPrintedAttack(before,after,e,Number(e.damage));
+    const wrong=own.bench.find(c=>!eligible.some(x=>x.id===c.id));
+    if(!wrong)return {status:'BLOCKED',reason:'NO_WRONG_TYPE_SWITCH_FIXTURE'};
+    const bad=port(before);assert.equal(bad.dispatch('you',{...action,targetIds:[wrong.id]}).ok,false);assert.deepEqual(bad.getSnapshot(),before);
+    const missing=port(before);assert.equal(missing.dispatch('you',{...action,targetIds:[]}).ok,false);assert.deepEqual(missing.getSnapshot(),before);
+    assert.deepEqual(S.identities(before),S.identities(after));
+  }
+  if(e.plan.mechanic==='ATTACK_RETURN_SELF_DECK'){
+    const action=t.action||o.action,source=before.players[0].active;
+    if(!before.players[0].bench.length)return {status:'BLOCKED',reason:'NO_RETURN_PROMOTION_FIXTURE'};
+    const stack=[source,...(source.evolutionCards||[]),...(source.energyCards||[]),...(source.tools||[])].map(c=>c.id);
+    if(!source.energyCards.length)return {status:'BLOCKED',reason:'NO_RETURN_ATTACHMENT_FIXTURE'};
+    for(const mode of e.plan.optional?['stay','return']:['return']){
+      const replay=port(before),chosen=e.plan.optional?{...action,selections:{...action.selections,mode:[mode]}}:action;
+      assert(replay.dispatch('you',chosen).ok);
+      const end=replay.getSnapshot(),side=end.players[0],events=end.history.slice(before.history.length).map(x=>x.details);
+      verifyPrintedAttack(before,end,e,Number(e.damage));
+      if(mode==='return'){
+        assert(stack.every(id=>side.deck.some(c=>c.id===id)));
+        assert(![side.active,...side.bench].some(c=>c?.id===source.id));
+        assert(events.some(ev=>ev?.command==='RETURN_TO_DECK'&&stack.every(id=>ev.cardIds.includes(id))));
+        assert.equal(events.filter(ev=>ev?.command==='SHUFFLE_DECK').length,1);
+      }else{
+        assert.equal(side.active?.id,source.id);
+        assert(!events.some(ev=>ev?.command==='RETURN_TO_DECK'||ev?.command==='SHUFFLE_DECK'));
+      }
+      assert.deepEqual(S.identities(end),S.identities(before));
+    }
+  }
   if (e.plan.mechanic === "SWITCH_SELF_ATTACK" && e.plan.optional) {
     const action = t.action || o.action;
     const target = before.players[0].bench[0];

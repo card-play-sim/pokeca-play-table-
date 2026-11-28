@@ -477,7 +477,11 @@ function requests(g,actor,card,effect){
   add('stadiumBonus','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュして追加ダメージ'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_DISCARD_STADIUM'&&effect.plan.optional)add('stadiumDiscard','CARD',g.stadium?[{id:'discard-stadium',name:'スタジアムをトラッシュする'}]:[],0,g.stadium?1:0);
  if(m==='ATTACK_OPTIONAL_RECOIL_BONUS')add('recoilBonus','CARD',[{id:'accept-recoil',name:'追加ダメージを与え、自分にもダメージ'}],0,1);
- if(m==='SWITCH_SELF_ATTACK')add('targetIds','POKEMON',p.bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,p.bench.length),Math.min(1,p.bench.length));
+ if(m==='SWITCH_SELF_ATTACK'){
+  const bench=p.bench.filter(c=>!effect.plan.type||record(c).facts.types.includes(effect.plan.type));
+  add('targetIds','POKEMON',bench.map(c=>({instanceId:id(c),name:c.name})),effect.plan.optional?0:Math.min(1,bench.length),Math.min(1,bench.length));
+ }
+ if(m==='ATTACK_RETURN_SELF_DECK'&&effect.plan.optional)add('mode','CARD',[{id:'stay',name:'場に残す'},{id:'return',name:'山札にもどす'}],1,1);
  if(m==='ATTACK_SWITCH_THEN_DAMAGE'){
   const bench=o.active.referenceProtection?.opponentTurn===g.turnNumber?[]:o.bench;
   add('targetIds','POKEMON',bench.map(c=>({instanceId:id(c),name:c.name})),Math.min(1,bench.length),Math.min(1,bench.length));
@@ -1905,8 +1909,12 @@ function applyPlan(g,actor,card,effect,action){
    break;
   }
   case 'SWITCH_SELF_ATTACK':
-   if(plan.optional&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if((plan.optional||plan.type)&&Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
    if(action.targetIds?.length)switchMon(g,p,action.targetIds[0]);
+   break;
+  case 'ATTACK_RETURN_SELF_DECK':
+   if(Number(effect.damage)>0)damage(g,actor,o.active,Number(effect.damage));
+   if(!plan.optional||ids('mode')[0]==='return'){returnStack(g,p,card,'deck');shuffle(g,p);}
    break;
   case 'ATTACK_SWITCH_THEN_DAMAGE':
    if(action.targetIds?.length){

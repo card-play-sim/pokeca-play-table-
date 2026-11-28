@@ -485,6 +485,12 @@ function additionalAttackPlan(entry,text){
   return {mechanic:'ATTACK_RETURN_SELF_ENERGY',commands:[...deal,'RETURN_TO_HAND'],type:selfEnergyReturn[1]||null,count:Number(selfEnergyReturn[2])};
  if(/^\d+$/.test(printed)&&text==='のぞむなら、このポケモンをベンチポケモンと入れ替える。')
   return {mechanic:'SWITCH_SELF_ATTACK',commands:[...deal,'SWITCH'],optional:true};
+ const typedSwitch=text.match(/^このポケモンをベンチの\[([草炎水雷超闘悪鋼竜無色])\]ポケモンと入れ替える。$/);
+ if(typedSwitch&&/^\d+$/.test(printed))
+  return {mechanic:'SWITCH_SELF_ATTACK',commands:[...deal,'SWITCH'],type:typedSwitch[1],sharedWording:true};
+ const selfDeckReturn=text.match(/^(のぞむなら、)?このポケモンと、ついているすべてのカードを、(?:自分の)?山札にもどして切る。$/);
+ if(selfDeckReturn&&/^\d+$/.test(printed))
+  return {mechanic:'ATTACK_RETURN_SELF_DECK',commands:[...deal,'RETURN_TO_DECK','SHUFFLE_DECK'],optional:!!selfDeckReturn[1],sharedWording:true};
  const switchedDamage=text.match(/^相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。その後、新しく出てきたポケモンに([1-9]\d{0,2})ダメージ。$/);
  if(switchedDamage&&printed==='0')
   return {mechanic:'ATTACK_SWITCH_THEN_DAMAGE',commands:['FORCE_SWITCH','DAMAGE'],amount:Number(switchedDamage[1])};
