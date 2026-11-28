@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 180
     env:
       INTAKE_LIMIT: '10000'
-      POKECA_INTAKE_REQUESTED_TARGETS: ${{ github.ref_name == 'parallel/05-integration' && '47779,48437,50421,50441,50460,47705,48077,46284,50040,46287,49392,46032,49394,46031,49393,46817,49402,46440,49409,46439,49401,45181,45182,48399,46270,47016,50234,50315,46002,47802,48450,48739,50557,50614,47352,49375,48413,50204,50783,47622,47902,48714,49455,45217,49711,50545,50167,50299,50300' || '' }}
+      POKECA_INTAKE_REQUESTED_TARGETS: ${{ github.ref_name == 'parallel/05-integration' && '47779,48437,50421,50441,50460,47705,48077,46284,50040,46287,49392,46032,49394,46031,49393,46817,49402,46440,49409,46439,49401,45181,45182,48399,46270,47016,50234,50315,46002,47802,48450,48739,50557,50614,47352,49375,48413,50204,50783,47622,47902,48714,49455,45217,49711,50545,50167,50299,50300,50470,50346,46525,50583,48347,48487' || '' }}
       POKECA_INTAKE_PARALLEL_REGRESSION: '1'
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +50,7 @@ jobs:
             node tests/issue291-attack-self-status-coin-protection.test.cjs
             node tests/issue291-energy-conditional-ability.test.cjs
             node tests/parallel04-special-energy.test.cjs
+            node tests/issue291-retreat-mega-ability.test.cjs
           fi
           node scripts/run-atomic-official-battle-intake.cjs
       - name: Verify candidate exact-print browser gameplay

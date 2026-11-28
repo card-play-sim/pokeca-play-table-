@@ -7,7 +7,7 @@ const records=new Map(fullCatalog.records.map(r=>[r.officialCardId,r]));
 const copy=x=>JSON.parse(JSON.stringify(x)),id=c=>c?.id||c?.cardId;
 const basicTypes=['草','炎','水','雷','超','闘','悪','鋼'];
 const unresolved=new Set();
-const passive=new Set(['PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL','PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_DYNAMIC_MAX_HP']);
+const passive=new Set(['PASSIVE_COIN_DAMAGE_GUARD','PASSIVE_COIN_KO_SURVIVAL','PASSIVE_ACTIVE_HIT_RETALIATION','PASSIVE_IGNORE_ACTIVE_DEFENSE','PASSIVE_FULL_HP_SURVIVAL','SKYLINE','FAIRY_ZONE','BENCH_NON_RULE_PROTECTION','BENCH_DAMAGE_PROTECTION','PASSIVE_INCOMING_ATTACK_DAMAGE_REDUCTION','PASSIVE_CONTEXT_ATTACK_GATE','PASSIVE_ROCKET_TEAM_ATTACK_GATE','ACTIVE_OPPONENT_ABILITY_SUPPRESSION','PASSIVE_TYPED_ATTACK_IMMUNITY','PASSIVE_NAMED_PRIZE_DISCOUNT','PASSIVE_CONTEXT_COST_DISCOUNT','PASSIVE_TEAM_ATTACK_BOOST','PASSIVE_EMPTY_ENERGY_RETREAT','PASSIVE_TYPED_TEAM_RETREAT','PASSIVE_OPPONENT_RETREAT_INCREASE','PASSIVE_DYNAMIC_MAX_HP','PASSIVE_CONDITIONAL_RETREAT']);
 const functions=()=>({Effects:require('./pokeca_effect_service'),Core:require('./pokeca_engine_core')});
 function current(card){return card?.evolutionCards?.length?card.evolutionCards.at(-1):card;}
 function record(card){
@@ -139,6 +139,12 @@ function unconnectedAutomatic(g){
  for(const {card} of inPlay(g))for(const a of record(card)?.abilities||[])if(!a.plan&&/いるかぎり|ダメージを受けたとき/.test(a.text)&&abilityEnabled(g,card,a))return blocked(card,a,'UNCONNECTED_AUTOMATIC_ABILITY');
  return null;
 }
+function conditionalRetreat(g,p,c){
+ const own=enabledAbilities(g,c).some(a=>a.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT'&&a.plan.mode==='opponentEx');
+ const free=own&&field(opponent(g,p.id)).some(x=>record(x).name.endsWith('ex'));
+ const reduction=c===p.active?p.bench.flatMap(x=>enabledAbilities(g,x)).filter(a=>a.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT'&&a.plan.mode==='benchAura').reduce((sum,a)=>sum+a.plan.amount,0):0;
+ return Math.max(0,(free?0:c.retreatCost)-reduction);
+}
 function refresh(g){
  if(!g.referenceEffectValidation)return;
  for(const {card} of inPlay(g)){
@@ -153,6 +159,7 @@ function refresh(g){
    if(!(c.energyCards||[]).length&&enabledAbilities(g,c).some(a=>a.plan.mechanic==='PASSIVE_EMPTY_ENERGY_RETREAT'))c.retreatCost=0;
    if(energyUnits(c).some(unit=>unit.some(type=>freeTypes.has(type))))c.retreatCost=0;
   }
+  for(const c of field(p))c.retreatCost=conditionalRetreat(g,p,c);
   if(p.active)p.active.retreatCost+=field(opponent(g,p.id)).flatMap(c=>enabledAbilities(g,c)).filter(a=>a.plan.mechanic==='PASSIVE_OPPONENT_RETREAT_INCREASE').reduce((sum,a)=>sum+a.plan.amount,0);
   // Continuous retreat modifiers are recomputed after each action.
   if(toolEnabled(g))for(const c of field(p)){
@@ -879,6 +886,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='MASS_HAND_FLOW')assert(handFlowAvailable(p,opponent(g,actor),a.plan),'NO_HAND_FLOW_CHANGE');
  if(m==='MASS_HEAL_OWN'){
   assert(!a.plan.requiresAttachedType||energyUnits(card).some(u=>u.includes(a.plan.requiresAttachedType)),'HEAL_SOURCE_ENERGY_REQUIRED');
+  assert(!a.plan.requiresMegaType||field(p).some(c=>isMegaEvolutionEx(c)&&record(c).facts.types.includes(a.plan.requiresMegaType)),'HEAL_MEGA_TYPE_REQUIRED');
   assert(massHealTargets(p,a.plan).some(c=>c.damage>0),'NO_MASS_HEAL_TARGET');
  }
  if(m==='MASS_PRIZE_DRAW')assert(p.deck.length>0,'ABILITY_DRAW_DECK_EMPTY');
