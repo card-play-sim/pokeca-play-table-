@@ -103,6 +103,8 @@ function additionalAttackPlan(entry,text){
  const lock=text.match(/^コインを1回投げオモテなら、次の相手の番、このワザを受けたポケモンは、(ワザが使えない|にげられない)。$/);
  if(lock&&/^\d+$/.test(printed))return coinPlan(1,base,{lock:lock[1]==='にげられない'?'opponentRetreat':'opponentAttack',when:'all'});
  if(/^\d+$/.test(printed)&&text==='コインを1回投げウラなら、このワザは失敗。オモテなら、次の相手の番、このポケモンはワザのダメージや効果を受けない。')return coinPlan(1,base,{failOnTails:true,protect:true,when:'all'});
+ if(/^\d+$/.test(printed)&&/^コインを1回投げ、?オモテなら、次の相手の番、このポケモンはワザのダメージを受けない。$/.test(text))
+  return coinPlan(1,base,{protect:'damageOnly',when:'all'});
  const healBonus=text.match(/^コインを1回投げオモテなら、([1-9]\d{0,2})ダメージ追加し、このポケモンのHPを「([1-9]\d{0,2})」回復する。$/);
  if(healBonus&&base!==null&&printed.endsWith('+'))return coinPlan(1,base,{bonus:Number(healBonus[1]),heal:Number(healBonus[2]),when:'all'});
  if(/^\d+$/.test(printed)&&text==='ウラが出るまでコインを投げ、オモテの数ぶん、相手の山札を上からトラッシュする。')
@@ -653,7 +655,7 @@ function sequencePlan(entry,kind,text,extended=false){
  }
  // No combining attack-only effects with unrelated ability/Trainer semantics.
  // A complete sequence or a distinct entry-origin/single-effect pattern only.
- if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!['bench','evolve','active'].includes(origin))return null;
+ if(steps.length===1&&!['drain','noWeakness','mill','healSelf'].includes(steps[0].op)&&!(attack&&steps[0].op==='status'&&steps[0].side==='own')&&!['bench','evolve','active'].includes(origin))return null;
  if(ability&&steps.some(s=>!['draw','mill','healSelf'].includes(s.op))&&!(origin==='active'&&steps.length===1&&steps[0].op==='status'&&steps[0].side==='opponent'))return null;
  if(trainer&&steps.some(s=>!(extended?['draw','mill','drawIfHand','revealHand','peekTop']:['draw','mill']).includes(s.op)))return null;
  if(generatedAttack){

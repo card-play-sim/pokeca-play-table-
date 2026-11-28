@@ -216,7 +216,7 @@ function damages(g,actor,mon,amount,{bench=false,ignore=false,skipWeakness=false
   if(bench&&!record(mon).facts.rulePokemon&&field(other).some(c=>enabledAbilities(g,c).some(a=>a.plan.mechanic==='BENCH_NON_RULE_PROTECTION')))return 0;
   if(mon.referenceProtection?.opponentTurn===g.turnNumber)return 0;
   if(find(g,id(mon))?.player.id===other.id&&enabledAbilities(g,mon).some(a=>a.plan.mechanic==='PASSIVE_TYPED_ATTACK_IMMUNITY'&&(a.plan.attacker==='basicEx'?record(source).facts.basic&&record(source).name.endsWith('ex'):a.plan.attacker==='ex'?record(source).name.endsWith('ex'):record(source).abilities.some(x=>abilityEnabled(g,source,x)))))return 0;
-  if(find(g,id(mon))?.player.id===other.id&&mon.referenceBasicDamageProtection?.turn===g.turnNumber&&record(source).facts.basic&&(!mon.referenceBasicDamageProtection.exceptType||!record(source).facts.types.includes(mon.referenceBasicDamageProtection.exceptType)))return 0;
+  if(find(g,id(mon))?.player.id===other.id&&mon.referenceBasicDamageProtection?.turn===g.turnNumber&&(mon.referenceBasicDamageProtection.allAttackers===true||record(source).facts.basic&&(!mon.referenceBasicDamageProtection.exceptType||!record(source).facts.types.includes(mon.referenceBasicDamageProtection.exceptType))))return 0;
  }
  if(!bench){
   const r=record(mon),types=record(source).facts.types||[];
@@ -1550,7 +1550,8 @@ function applyPlan(g,actor,card,effect,action){
     if(plan.lock==='selfAttack')card.referenceCannotAttackTurn=g.turnNumber+2;
     if(plan.lock==='opponentAttack'&&!protectedTarget)target.referenceCannotAttackTurn=g.turnNumber+1;
     if(plan.lock==='opponentRetreat'&&!protectedTarget)target.referenceCannotRetreatTurn=g.turnNumber+1;
-    if(plan.protect)card.referenceProtection={opponentTurn:g.turnNumber+1};
+    if(plan.protect==='damageOnly')card.referenceBasicDamageProtection={turn:g.turnNumber+1,allAttackers:true,exceptType:null};
+    else if(plan.protect)card.referenceProtection={opponentTurn:g.turnNumber+1};
    }
    break;
   }
@@ -2293,7 +2294,7 @@ function statuses(g){
  for(const {player:p,card} of inPlay(g)){
   const r=record(card),add=(suffix,label,effect,duration)=>out.push({id:'reference-'+id(card)+'-'+suffix,short:label,label,scope:'POKEMON',targetInstanceId:id(card),playerId:p.id,sourceCard:r.name,sourceEffect:effect,start:'公式参照版の効果解決時',duration,removal:'ベンチへの移動・進化・期限終了など、エンジンの条件に従う',condition:'参照ID '+r.officialCardId,description:label});
   if(card.referenceProtection&&g.turnNumber<=card.referenceProtection.opponentTurn)add('protection','ワザのダメージ・効果を受けない','あなをほる','次の相手の番の終わりまで');
-  if(card.referenceBasicDamageProtection&&g.turnNumber<=card.referenceBasicDamageProtection.turn)add('basic-protection',card.referenceBasicDamageProtection.exceptType?card.referenceBasicDamageProtection.exceptType+'以外のたねポケモンのワザのダメージを受けない':'たねポケモンのワザのダメージを受けない','前の番のワザ','次の相手の番の終わりまで');
+  if(card.referenceBasicDamageProtection&&g.turnNumber<=card.referenceBasicDamageProtection.turn)add('basic-protection',card.referenceBasicDamageProtection.allAttackers?'ワザのダメージを受けない':card.referenceBasicDamageProtection.exceptType?card.referenceBasicDamageProtection.exceptType+'以外のたねポケモンのワザのダメージを受けない':'たねポケモンのワザのダメージを受けない','前の番のワザ','次の相手の番の終わりまで');
   if(card.referenceDamageReduction?.turn===g.turnNumber)add('attack-damage-reduction','受けるワザのダメージ −'+card.referenceDamageReduction.amount,'前の番のワザ','この番の終わりまで');
   if(card.referenceCannotRetreatTurn===g.turnNumber)add('retreat-lock','この番はにげられない','相手のワザ','この番の終わりまで');
   if(card.referenceCannotAttackTurn&&g.turnNumber<=card.referenceCannotAttackTurn)add('attack-lock','次の自分の番はワザ使用不可','むげんのやいば','次の自分の番の終わりまで');

@@ -556,7 +556,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
- if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
+ if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
   if(target)ensureAttackCost(target,1-deckIndex);
  }
@@ -1260,7 +1260,7 @@ function prepare(r, e, kind) {
     }
     mon.statusCondition=e.plan.holderStatus;
   }
-  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'){
+  if(m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&e.plan.protect==='damageOnly'){
     const other=frame.game.players[1],printed=E.getReferenceEffectRecord(other.active);
     const attack=printed.attacks.find(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(!printed.facts.basic||printed.facts.types.includes(e.plan.exceptType)||!attack)return {blocked:'NO_QUALIFYING_BASIC_ATTACKER_FIXTURE'};
@@ -3710,7 +3710,26 @@ function verifyCase(t, e) {
           if(q.lock==='selfAttack')assert.equal(target.referenceCannotAttackTurn,start.turnNumber+2);
           if(q.lock==='opponentAttack')assert.equal(target.referenceCannotAttackTurn,start.turnNumber+1);
           if(q.lock==='opponentRetreat')assert.equal(target.referenceCannotRetreatTurn,start.turnNumber+1);
-          if(q.protect)assert.equal(target.referenceProtection.opponentTurn,start.turnNumber+1);
+          if(q.protect==='damageOnly'){
+            assert.equal(target.referenceBasicDamageProtection.turn,start.turnNumber+1);
+            assert.equal(target.referenceBasicDamageProtection.allAttackers,true);
+            assert(!target.referenceProtection,'damage-only must not grant effect immunity');
+          }else if(q.protect)assert.equal(target.referenceProtection.opponentTurn,start.turnNumber+1);
+        }
+      }
+      if(q.protect==='damageOnly'){
+        const holder=end.players[0].active;
+        if(holder?.id!==src||end.players[1].active?.id!==dst)return {status:'BLOCKED',reason:'NO_SURVIVING_COIN_PROTECTION_FIXTURE'};
+        assert.equal(Boolean(holder.referenceBasicDamageProtection?.turn===end.turnNumber),met);
+        assert(!holder.referenceProtection,'damage-only must not prevent effects');
+        if(met){
+          const baseline=JSON.parse(JSON.stringify(end));delete baseline.players[0].active.referenceBasicDamageProtection;
+          const print=E.getReferenceEffectRecord(baseline.players[1].active);
+          const actions=E.getLegalActions(baseline,'ai').actions.filter(a=>a.type==='attack_turn'&&print.attacks[a.attackIndex].plan.mechanic==='VANILLA_DAMAGE');
+          const applied=(state,a)=>{const ported=port(state);if(!ported.dispatch('ai',a).ok)return undefined;return ported.getSnapshot().history.slice(state.history.length).find(h=>h.details?.command==='DAMAGE'&&h.details.targetInstanceId===src)?.details.amount;};
+          let tested=false;
+          for(const a of actions){const normal=applied(baseline,a);if(!(normal>0))continue;assert.equal(applied(end,a),0);assert.equal(applied({...end,turnNumber:end.turnNumber+2},a),normal);tested=true;break;}
+          if(!tested)return {status:'BLOCKED',reason:'NO_COIN_PROTECTION_DAMAGE_FIXTURE'};
         }
       }
       assert.deepEqual(S.identities(start),S.identities(end));
