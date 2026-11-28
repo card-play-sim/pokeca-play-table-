@@ -73,6 +73,15 @@ function additionalAttackPlan(entry,text){
  const base=/^\d{1,3}\+?$/.test(printed)?Number.parseInt(printed,10):null;
  // Fixed-count coin outcomes use one deterministic match-owned stream.
  const coinPlan=(flips,base,extra={})=>({mechanic:'MASS_COIN_OUTCOME',commands:['COIN_FLIP','DAMAGE',...(extra.status?['STATUS_CONDITION']:[]),...(extra.heal?['HEAL']:[]),...(extra.mill?['DISCARD']:[]),...(extra.lock||extra.protect?['ADD_STATE']:[])],flips,base,...extra,sharedWording:true});
+ // Direct knockout effects are not attack damage.
+ if(printed==='0'){
+  const ko=text.match(/^相手のバトルポケモンが(特殊状態|たねポケモン)なら、そのポケモンをきぜつさせる。$/);
+  const counters=text.match(/^相手のバトルポケモンにのっているダメカンが([1-9]\d?)個なら、そのポケモンをきぜつさせる。$/);
+  const special=text==='相手のバトルポケモンに特殊エネルギーがついているなら、そのポケモンをきぜつさせる。';
+  const both=text==='おたがいのバトルポケモンをきぜつさせる。';
+  if(ko||counters||special||both)
+   return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:both?'both':special?'specialEnergy':counters?'counters':ko[1]==='特殊状態'?'status':'basic',...(counters?{count:Number(counters[1])}:{}),sharedWording:true};
+ }
  const nextCoin=text.match(/^次の相手の番、このワザを受けたポケモンがワザを使うとき、相手はコインを([1-9])回投げる。(ウラならそのワザは失敗。|1回でもウラなら、そのワザは失敗。)$/);
  if(nextCoin&&/^\d+$/.test(printed)&&(Number(nextCoin[1])===1||nextCoin[2].startsWith('1回でも')))
   return {mechanic:'ATTACK_NEXT_COIN_GATE',commands:['DAMAGE','ADD_STATE'],flips:Number(nextCoin[1]),sharedWording:true};

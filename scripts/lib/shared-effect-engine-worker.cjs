@@ -556,6 +556,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }
  }
  if(m==='ATTACK_DISCARD_TOOL_BEFORE_DAMAGE')reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','deck',1);
+ if(m==='ATTACK_DIRECT_KNOCKOUT'&&plan.mode==='specialEnergy')reserve(r=>r.category==='energy'&&r.mainPlan&&!isBasicEnergy(r),'deck',1);
  if(m==='ATTACK_NEXT_COIN_GATE'||m==='ATTACK_BASIC_DAMAGE_PROTECTION'||m==='MASS_COIN_OUTCOME'&&plan.protect==='damageOnly'){
   const target=reserve(r=>vanilla(r)&&!r.facts.types.includes(plan.exceptType)&&r.facts.hp>Number(e.damage||0)&&!r.facts.weakness?.types.some(t=>source.facts.types.includes(t)),'active',1);
   if(target)ensureAttackCost(target,1-deckIndex);
@@ -1741,6 +1742,24 @@ function prepare(r, e, kind) {
         p.active.energyCards.splice(p.active.energyCards.indexOf(energy), 1);
         p.deck.push(energy);
       }
+  }
+  if(m==='ATTACK_DIRECT_KNOCKOUT'){
+    const [own,other]=frame.game.players,q=e.plan;
+    if(q.mode==='status')other.active.statusCondition='CONFUSED';
+    if(q.mode==='counters'){
+      if(other.active.hp<=q.count*10)return {blocked:'NO_EXACT_COUNTER_KO_FIXTURE'};
+      other.active.damage=q.count*10;
+    }
+    if(q.mode==='basic'&&!E.getReferenceEffectRecord(other.active).facts.basic)return {blocked:'NO_BASIC_KO_FIXTURE'};
+    if(q.mode==='specialEnergy'){
+      const eligible=c=>c.kind==='energy'&&c.isSpecial===true;
+      if(!other.active.energyCards.some(eligible)){
+        const zone=[other.deck,other.hand].find(z=>z.some(eligible));
+        if(!zone)return {blocked:'NO_SPECIAL_ENERGY_KO_FIXTURE'};
+        other.active.energyCards.push(zone.splice(zone.findIndex(eligible),1)[0]);
+      }
+    }
+    if(q.mode==='both'&&(!own.bench.length||!other.bench.length))return {blocked:'NO_SIMULTANEOUS_KO_BENCH_FIXTURE'};
   }
   if (m === "DISCARD_TO_SEARCH_DISTINCT_CATEGORIES") {
     const own = frame.game.players[0];
@@ -3680,6 +3699,26 @@ function verifyCase(t, e) {
         if(expected)heads++;
       }
       verifyPrintedAttack(start,end,e,heads*e.plan.unit);
+    }
+  }
+  if(e.plan.mechanic==='ATTACK_DIRECT_KNOCKOUT'){
+    const q=e.plan,action=t.action||o.action,targets=q.mode==='both'?[attackingSide.active,defendingSide.active]:[defendingSide.active];
+    for(const mon of targets){
+      assert(effectEvents.some(h=>h?.command==='ADD_STATE'&&h.directKnockout===true&&h.targetInstanceId===mon.id));
+      assert(!after.players.some(side=>[side.active,...side.bench].some(c=>c?.id===mon.id)),'DIRECT_KO_NOT_RESOLVED');
+      assert(!effectEvents.some(h=>h?.command==='DAMAGE'&&h.targetInstanceId===mon.id&&typeof h.amount==='number'));
+    }
+    const protect=JSON.parse(JSON.stringify(before));protect.players[1].active.referenceProtection={opponentTurn:protect.turnNumber};
+    const replay=port(protect);assert(replay.dispatch('you',action).ok);
+    assert(!replay.getSnapshot().history.slice(protect.history.length).some(h=>h.details?.directKnockout&&h.details.targetInstanceId===defendingSide.active.id));
+    if(['status','counters','specialEnergy'].includes(q.mode)){
+      const negative=JSON.parse(JSON.stringify(before)),side=negative.players[1];
+      if(q.mode==='status')side.active.statusCondition=null;
+      if(q.mode==='counters')side.active.damage=Math.max(0,(q.count-1)*10);
+      if(q.mode==='specialEnergy')for(const c of [...side.active.energyCards])if(c.isSpecial)side.deck.push(side.active.energyCards.splice(side.active.energyCards.indexOf(c),1)[0]);
+      const trial=port(negative);assert(trial.dispatch('you',action).ok);
+      assert(!trial.getSnapshot().history.slice(negative.history.length).some(h=>h.details?.directKnockout));
+      assert.deepEqual(S.identities(negative),S.identities(trial.getSnapshot()));
     }
   }
   if(e.plan.mechanic==='ATTACK_NEXT_COIN_GATE'){

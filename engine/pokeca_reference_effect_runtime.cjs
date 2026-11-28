@@ -1200,6 +1200,17 @@ function discardSelectedAttachment(g,actor,owner,eligible,selection){
   event(g,actor,'DISCARD',{cardIds:[ident],sourceInstanceId:id(mon),fromZone:'attached'});
  }
 }
+function directKnockoutEligible(mon,plan){
+ if(!mon)return false;
+ switch(plan.mode){
+  case 'both':return true;
+  case 'status':return Boolean(mon.statusCondition);
+  case 'basic':return record(mon).facts.basic===true;
+  case 'specialEnergy':return (mon.energyCards||[]).some(c=>c.isSpecial===true);
+  case 'counters':return mon.damage===plan.count*10;
+  default:throw Error('UNKNOWN_DIRECT_KNOCKOUT_PREDICATE');
+ }
+}
 function applyPlan(g,actor,card,effect,action){
  const p=player(g,actor),o=opponent(g,actor),plan=effect.plan,m=plan.mechanic,ids=key=>selected(action,key),target=()=>find(g,action.targetIds?.[0])?.card;
  // Confusion is an attack-wide rule, not a property of one damage mechanic.
@@ -1221,6 +1232,17 @@ function applyPlan(g,actor,card,effect,action){
   return;
  }
  switch(m){
+  case 'ATTACK_DIRECT_KNOCKOUT':{
+   const targets=plan.mode==='both'?[card,o.active]:[o.active];
+   // Mark every target before finishAttack resolves knockouts, prizes and wins.
+   // No DAMAGE command or damage-trigger reaction is executed.
+   for(const mon of targets){
+    if(!directKnockoutEligible(mon,plan)||mon!==card&&mon.referenceProtection?.opponentTurn===g.turnNumber)continue;
+    mon.damage=Math.max(mon.damage||0,mon.hp);
+    event(g,actor,'ADD_STATE',{targetInstanceId:id(mon),mechanic:m,directKnockout:true});
+   }
+   break;
+  }
   case 'ATTACK_NEXT_COIN_GATE':{
    const defender=o.active;
    if(Number(effect.damage)>0)damage(g,actor,defender,Number(effect.damage));
