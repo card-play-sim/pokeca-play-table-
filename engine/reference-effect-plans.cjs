@@ -231,6 +231,10 @@ function additionalAttackPlan(entry,text){
     ['evolvedFromThisTurn',/^この番に?、このポケモンが「([^「」]{1,40})」から進化していたなら$/,'name'],
     ['becameActive',/^この番に?、このポケモンがベンチからバトル場に出ていたなら$/],
     ['sharedFieldType',/^自分の場に、相手の場のポケモンと同じタイプのポケモンがいるなら$/],
+    ['ownBenchNamedEnergy',/^自分のベンチポケモンに「([^「」]{1,40}エネルギー)」がついているなら$/,'name'],
+    ['opponentRetreatZero',/^相手のバトルポケモンのにげるためのエネルギーがないなら$/],
+    ['opponentRetreatAtLeast',/^相手のバトルポケモンのにげるためのエネルギーが([1-9]\d?)個以上なら$/,'threshold'],
+    ['ownBenchTera',/^自分のベンチに「テラスタル」のポケモンがいるなら$/],
     ['ownNamedEnergy',/^このポケモンに「([^「」]{1,40}エネルギー)」がついているなら$/,'name'],
     ['ownHandEmpty',/^自分の手札が1枚もないなら$/],
     ['ownPrizesExact',/^自分のサイドの残り枚数が([1-6])枚なら$/,'threshold'],
@@ -784,6 +788,7 @@ function plan(entry,kind){
   const recycle=generic.match(/^このカードは、ポケモンについているかぎり、\[([草炎水雷超闘悪鋼]|無色)\]エネルギー1個ぶんとしてはたらく。このカードをつけている(?:\[([草炎水雷超闘悪鋼])\])?ポケモンが使うワザの効果で、このカードがトラッシュされたなら、ワザのダメージや効果のあとに、(手札にもどす|もとのポケモンにつけなおす)。$/);
   if(recycle&&(!recycle[2]||recycle[1]===recycle[2]))return {mechanic:'ENERGY_SELF_ATTACK_RECYCLE',commands:['ATTACH_ENERGY',recycle[3]==='手札にもどす'?'RETURN_TO_HAND':'ATTACH_ENERGY'],energyType:recycle[1],holderType:recycle[2]||null,destination:recycle[3]==='手札にもどす'?'hand':'attached',sharedWording:true};
  }
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='おたがいのバトルポケモン([悪]ポケモンをのぞく)を、それぞれこんらんにする。')return {mechanic:'TRAINER_BOTH_ACTIVE_CONFUSE',commands:['STATUS_CONDITION'],exceptType:'悪',sharedWording:true};
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:null,limit:1,target:'own',holderType:null,team:null,multi:false,heal:null,windowCount:6,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。')return {mechanic:'MASS_HAND_FLOW',mode:'optionalDiscardLimit',amount:5,commands:['DISCARD','DRAW'],sharedWording:true};
