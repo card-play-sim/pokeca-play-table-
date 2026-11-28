@@ -49,7 +49,7 @@ function abilityEnabled(g,card,ability=null){
 }
 function conditionalDamageBonus(g,own,source,target){
  return enabledAbilities(g,source).filter(a=>a.plan.mechanic==='PASSIVE_CONDITIONAL_DAMAGE').reduce((sum,a)=>{
-  const p=a.plan,ok=p.mode==='attachedEnergy'?energyUnits(source).some(u=>u.includes(p.type)):p.mode==='megaType'?field(own).some(c=>isMegaEvolutionEx(c)&&record(c).facts.types.includes(p.type)):p.mode==='opponentAbility'?record(target).abilities.some(x=>abilityEnabled(g,target,x)):false;
+  const p=a.plan,ok=p.mode==='attachedEnergy'?energyUnits(source).some(u=>u.includes(p.type)):p.mode==='megaType'?field(own).some(c=>isMegaEvolutionEx(c)&&record(c).facts.types.includes(p.type)):p.mode==='opponentAbility'?record(target).abilities.some(x=>abilityEnabled(g,target,x)):p.mode==='handCountsEqual'?own.hand.length===opponent(g,own.id).hand.length:false;
   return sum+(ok?p.amount:0);
  },0);
 }
@@ -121,6 +121,7 @@ function cost(g,mon,attack){
   else if(p.mode==='opponentBench')discount+=other.bench.length;
   else if(p.mode==='opponentHandExact'&&other.hand.length===p.count)discount+=c.length;
   else if(p.mode==='ownAllNames'&&p.names.every(name=>field(owner).some(x=>record(x)?.name===name)))discount+=c.length;
+  else if(p.mode==='handCountsEqual'&&p.attackName===attack.name&&owner.hand.length===other.hand.length)discount+=attack.cost.filter(t=>t==='無色').length;
  }
  while(discount-->0){const i=c.indexOf('無色');if(i<0)break;c.splice(i,1);}
  return c;
@@ -902,6 +903,7 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='HAND_LIMIT_DRAW_ABILITY')assert(p.hand.length<a.plan.limit&&p.deck.length>0,'HAND_LIMIT_DRAW_UNAVAILABLE');
  if(['ACTIVE_TOP_SUPPORTER_SEARCH','ACTIVE_TOP_ENERGY_SEARCH'].includes(m))assert(p.deck.length>0,'ABILITY_SEARCH_DECK_EMPTY');
  if(m==='MASS_ATTACHED_ENERGY_MOVE')assert(attachedMovePool(p,opponent(g,actor),card,a.plan).pool.length>0,'NO_ATTACHED_ENERGY_MOVE');
+ if(m==='ABILITY_ENTRY_DISCARD_STADIUM')assert(g.stadium,'ABILITY_STADIUM_REQUIRED');
  if(m==='ABILITY_TOP_CARD_OPERATION')assert(p.deck.length>0&&(a.plan.mode!=='swap'||p.hand.length>0),'TOP_CARD_OPERATION_UNAVAILABLE');
  if(m==='MASS_ENERGY_ROUTE'){
   assert(massRouteNamedField(p,a.plan),'MASS_ENERGY_ROUTE_NAMED_FIELD_REQUIRED');
@@ -1366,6 +1368,7 @@ function applyPlan(g,actor,card,effect,action){
    }
    break;
   }
+  case 'ABILITY_ENTRY_DISCARD_STADIUM':assert(g.stadium,'ABILITY_STADIUM_REQUIRED');discardCurrentStadium(g,actor);break;
   case 'ABILITY_TOP_CARD_OPERATION':{
    assert(p.deck.length,'TOP_CARD_OPERATION_EMPTY');
    const top=p.deck[0],chosen=ids('cards');

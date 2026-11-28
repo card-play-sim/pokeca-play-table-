@@ -709,7 +709,7 @@ function prepare(r, e, kind) {
     return {...t,port:changed,option,trigger};
   }
   if(m==='PASSIVE_CONDITIONAL_DAMAGE'){
-    const plan=e.plan,index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'||a.plan?.mechanic==='CONTEXT_ATTACK_BONUS'&&a.plan.predicate==='ownEnergyType');
+    const plan=e.plan,index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'||a.plan?.mechanic==='CONTEXT_ATTACK_BONUS'&&a.plan.predicate==='ownEnergyType'||plan.mode==='handCountsEqual'&&a.plan?.mechanic==='ATTACK_NAMED_NEXT_TURN_LOCK');
     if(index<0)return {blocked:'NO_CONDITIONAL_DAMAGE_TRIGGER'};
     const trigger={...r.attacks[index],effectIndex:index,proofConditionalDamage:plan},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -717,6 +717,11 @@ function prepare(r, e, kind) {
     if(E.getReferenceEffectRecord(own.active)?.officialCardId!==r.officialCardId)return {blocked:'NO_EXACT_DAMAGE_SOURCE'};
     if(plan.mode==='megaType'&&!own.bench.some(c=>verifiedMegaRecord(E.getReferenceEffectRecord(c))&&E.getReferenceEffectRecord(c).facts.types.includes(plan.type)))return {blocked:'NO_TYPED_MEGA_DAMAGE_FIXTURE'};
     if(plan.mode==='opponentAbility'&&(!E.getReferenceEffectRecord(other.active).abilities.length||!other.bench.some(c=>!E.getReferenceEffectRecord(c).abilities.length)))return {blocked:'NO_ABILITY_AND_NONABILITY_TARGETS'};
+    if(plan.mode==='handCountsEqual'){
+      while(own.hand.length>other.hand.length)own.deck.push(own.hand.pop());
+      while(other.hand.length>own.hand.length)other.deck.push(other.hand.pop());
+      return {...t,option:undefined,port:port(game),trigger};
+    }
     return {...t,trigger};
   }
   if(m==='PASSIVE_CONDITIONAL_RETREAT'){
@@ -933,7 +938,7 @@ function prepare(r, e, kind) {
     const plan=e.plan;
     const preferred=r.attacks.findIndex(a=>a.cost.includes('無色')&&['VANILLA_DAMAGE','ATTACK_NAMED_NEXT_TURN_LOCK','NO_NEXT_ATTACK'].includes(a.plan?.mechanic)&&Number(a.damage)>0);
     // A continuous cost modifier applies to every printed attack, not just fixed-damage attacks.
-    const attackIndex=preferred>=0?preferred:r.attacks.findIndex(a=>a.cost.includes('無色')&&a.plan);
+    const attackIndex=plan.attackName?r.attacks.findIndex(a=>a.name===plan.attackName&&a.plan&&a.cost.every(t=>t==='無色')):preferred>=0?preferred:r.attacks.findIndex(a=>a.cost.includes('無色')&&a.plan);
     if(attackIndex<0)return {blocked:'NO_CONTEXT_COST_ATTACK_FIXTURE'};
     const trigger={...r.attacks[attackIndex],effectIndex:attackIndex,proofContextCost:plan},t=prepare(r,trigger,'attack');
     if(t.blocked)return t;
@@ -942,6 +947,9 @@ function prepare(r, e, kind) {
       const eligible=c=>E.getReferenceEffectRecord(c)?.name===plan.name;
       for(const zone of [own.hand,own.deck]){const i=zone.findIndex(eligible);if(i>=0){own.discard.push(zone.splice(i,1)[0]);break;}}
       if(!own.discard.some(eligible))return {blocked:'NO_CONTEXT_COST_DISCARD_FIXTURE'};
+    }else if(plan.mode==='handCountsEqual'){
+      while(own.hand.length>other.hand.length)own.deck.push(own.hand.pop());
+      while(other.hand.length>own.hand.length)other.deck.push(other.hand.pop());
     }else if(plan.mode==='opponentHandExact'){
       while(other.hand.length>plan.count)other.deck.push(other.hand.pop());
       while(other.hand.length<plan.count&&other.deck.length)other.hand.push(other.deck.pop());
@@ -964,6 +972,7 @@ function prepare(r, e, kind) {
       keep.push(own.active.energyCards.splice(i,1)[0]);
     }
     own.deck.push(...own.active.energyCards);own.active.energyCards=keep;
+    if(plan.mode==='handCountsEqual'){own.active.energies=keep.map(c=>c.energyType);return {...t,option:undefined,port:port(game),trigger};}
     return {...t,port:port(game),trigger};
   }
   if(m==='PASSIVE_NAMED_PRIZE_DISCOUNT'){
@@ -2853,6 +2862,21 @@ function verifyCase(t, e) {
     const other=before.players[0].bench.find(c=>!String(E.getReferenceEffectRecord(c).rulesText).includes('メガシンカexがきぜつしたとき'));
     if(other){const replay=port(before);assert.equal(replay.dispatch('you',{...action,selections:{cards:[other.id]}}).ok,false);assert.equal(JSON.stringify(replay.getSnapshot()),JSON.stringify(before));}
   }
+  if(e.plan.mechanic==='ABILITY_ENTRY_DISCARD_STADIUM'){
+    const action=t.action||o.action,owner=before.players.find(p=>p.id===before.stadiumOwner),afterOwner=after.players.find(p=>p.id===owner.id);
+    assert(before.stadium&&after.stadium===null&&after.stadiumOwner===null);
+    assert(afterOwner.discard.some(c=>c.id===before.stadium.id));
+    assert.deepEqual(S.identities(before),S.identities(after));
+    assert(effectEvents.some(ev=>ev?.command==='DISCARD'&&ev.fromZone==='stadium'&&ev.cardIds.includes(before.stadium.id)));
+    const source=before.players[0].bench.find(c=>c.id===t.sourceId);assert(source&&source.entryWindow===before.referenceActionSequence);
+    for(const mode of ['closed','absent']){
+      const state=structuredClone(before);
+      if(mode==='closed')state.referenceActionSequence++;
+      else{state.players.find(p=>p.id===state.stadiumOwner).discard.push(state.stadium);state.stadium=null;state.stadiumOwner=null;}
+      const replay=port(state),start=replay.getSnapshot();
+      assert.equal(replay.dispatch('you',action).ok,false);assert.deepEqual(replay.getSnapshot(),start);
+    }
+  }
   if(e.plan.mechanic==='MASS_ZONE_TRANSFER'){
     const plan=e.plan,action=t.action||o.action,ids=action.selections.cards,own=before.players[0],resolved=after.players[0];
     assert(ids.length>0&&ids.length<=plan.limit);
@@ -4358,6 +4382,10 @@ function verifyCase(t, e) {
       const matches=c=>verifiedMegaRecord(E.getReferenceEffectRecord(c))&&E.getReferenceEffectRecord(c).facts.types.includes(plan.type);
       assert(!matches(own.active));const holders=own.bench.filter(matches);assert(holders.length);
       for(const c of holders)moveMegaFixtureToHand(own,c);
+    }else if(plan.mode==='handCountsEqual'){
+      assert.equal(own.hand.length,other.hand.length);
+      if(!other.deck.length)return {status:'BLOCKED',reason:'NO_HAND_COUNT_NEGATIVE_RESOURCE'};
+      other.hand.push(other.deck.pop());
     }else{
       const idx=other.bench.findIndex(c=>!E.getReferenceEffectRecord(c).abilities.length);assert(idx>=0);
       assert(E.getReferenceEffectRecord(other.active).abilities.length);
@@ -4408,6 +4436,10 @@ function verifyCase(t, e) {
     if(plan.mode==='discardName'){
       const eligible=c=>E.getReferenceEffectRecord(c)?.name===plan.name;
       own.deck.push(...own.discard.filter(eligible));own.discard=own.discard.filter(c=>!eligible(c));
+    }else if(plan.mode==='handCountsEqual'){
+      assert.equal(own.hand.length,other.hand.length);
+      if(!other.deck.length)return {status:'BLOCKED',reason:'NO_HAND_COUNT_COST_NEGATIVE_RESOURCE'};
+      other.hand.push(other.deck.pop());
     }else if(plan.mode==='opponentHandExact'){
       other.deck.push(other.hand.pop());
     }else if(plan.mode==='opponentBench'){
