@@ -566,6 +566,14 @@ function fixtureResources(manifest,deckIndex,source,e){
   reserve(r=>r.category==='pokemon'&&r.facts.basic&&r.name.startsWith(plan.team+'の')&&!r.abilities.length,'active');
   reserve(r=>r.category==='pokemon'&&r.facts.basic&&!r.name.startsWith(plan.team+'の')&&!r.abilities.length,'bench');
  }
+ if(m==='TOOL_RETRY_BADGE'){
+  const attack=a=>a.plan?.mechanic==='FIXED_COIN_HITS'&&a.plan.flips>=2&&a.plan.flips<=4&&a.plan.unit>0&&(a.plan.base||0)+a.plan.flips*a.plan.unit<=120&&a.cost.length<=3&&a.cost.every(t=>t==='無色');
+  const target=reserve(r=>mon(r,'無色',0)&&!r.abilities.length&&r.attacks.some(attack),'active');
+  if(!target)return Object.assign(requirements,{teamBoostBlocked:'NO_RETRY_BADGE_COLORLESS_COIN_ATTACK'});
+  const trigger=target.attacks.find(attack);
+  if(trigger.cost.length&&!reserveEnergy(null,trigger.cost.length))return Object.assign(requirements,{teamBoostBlocked:'NO_RETRY_BADGE_BASIC_PAYMENT'});
+  if(!reserve(r=>mon(r,null,0)&&!r.abilities.length&&r.facts.hp>(trigger.plan.base||0)+trigger.plan.unit*trigger.plan.flips&&!r.facts.weakness?.types.some(t=>target.facts.types.includes(t))&&!r.facts.resistance?.types.some(t=>target.facts.types.includes(t)),'active',1))return Object.assign(requirements,{teamBoostBlocked:'NO_RETRY_BADGE_SAFE_DEFENDER'});
+ }
  if(['TOOL_EX_ATTACK_BOOST','TOOL_PRIZE_COST_DISCOUNT','TOOL_STATUS_ATTACK_BOOST'].includes(m)){
   // The attachment alone proves nothing. Reserve a basic, ability-free attacker
   // whose first ordinary attack has a small colorless cost and real printed damage.
@@ -4160,6 +4168,65 @@ function verifyCase(t, e) {
       const invalid=port(before);
       assert.equal(invalid.dispatch('you',{...action,selections:{mode:['boost'],ownBench:[target]}}).ok,false);
       assert.deepEqual(invalid.getSnapshot(),before);
+    }
+  }
+  if(e.plan.mechanic==='TOOL_RETRY_BADGE'){
+    const action=t.action||o.action,holder=after.players[0].active,print=E.getReferenceEffectRecord(holder);
+    if(holder.id!==action.targetInstanceId||!holder.tools.some(c=>c.id===t.sourceId)||!print.facts.types.includes('無色'))return {status:'BLOCKED',reason:'NO_RETRY_BADGE_ACTIVE_HOLDER'};
+    const eligible=a=>a.plan?.mechanic==='FIXED_COIN_HITS'&&a.plan.flips>=2&&a.plan.flips<=4&&a.plan.unit>0&&(a.plan.base||0)+a.plan.flips*a.plan.unit<=120&&a.cost.length<=3&&a.cost.every(t=>t==='無色');
+    const idx=print.attacks.findIndex(eligible);
+    if(idx<0)return {status:'BLOCKED',reason:'NO_RETRY_BADGE_COIN_ATTACK'};
+    const attack={...print.attacks[idx],effectIndex:idx},plan=attack.plan,attackAction={type:'attack_turn',attackIndex:idx};
+    const start=JSON.parse(JSON.stringify(after)),own=start.players[0],defender=start.players[1].active;
+    if(holder.statusCondition||defender.statusCondition||defender.tools?.length||E.getReferenceEffectRecord(defender).abilities.length||defender.hp-defender.damage<=(plan.base||0)+plan.flips*plan.unit)return {status:'BLOCKED',reason:'RETRY_BADGE_CONFOUNDED_FIXTURE'};
+    own.deck.push(...own.active.energyCards.splice(0));own.active.energies=[];
+    for(const type of attack.cost){
+      const zone=[own.deck,own.hand].find(cards=>cards.some(c=>c.kind==='energy'&&!c.isSpecial&&(type==='無色'||c.energyType===type)));
+      if(!zone)return {status:'BLOCKED',reason:'NO_RETRY_BADGE_PAYMENT'};
+      own.active.energyCards.push(zone.splice(zone.findIndex(c=>c.kind==='energy'&&!c.isSpecial&&(type==='無色'||c.energyType===type)),1)[0]);
+    }
+    // Choose a deterministic seed whose two entire groups yield distinct nonzero damage.
+    const count=xs=>xs.filter(Boolean).length;
+    const groups=seed=>{
+      let state=seed;const rolls=[];
+      for(let i=0;i<2*plan.flips;i++){state=(Math.imul(state,1664525)+1013904223)>>>0;rolls.push(state<2147483648);}
+      return [rolls.slice(0,plan.flips),rolls.slice(plan.flips)];
+    };
+    let seed=0;while(seed<10000){const [first,second]=groups(seed);if(count(first)>0&&count(second)>0&&count(first)!==count(second))break;seed++;}
+    assert(seed<10000,'NO_DISTINCT_RETRY_GROUP_SEED');start.referenceRngState=seed;
+    const [initial,replacement]=groups(seed);
+    const without=JSON.parse(JSON.stringify(start));without.players[0].discard.push(...without.players[0].active.tools.splice(0));
+    const control=port(without);
+    if(!control.dispatch('you',attackAction).ok)return {status:'BLOCKED',reason:'NO_RETRY_BADGE_LEGAL_ATTACK'};
+    assert(!control.getSnapshot().pendingReferenceChoice);
+    verifyPrintedAttack(without,control.getSnapshot(),attack,(plan.base||0)+count(initial)*plan.unit);
+    for(const decision of ['keep','retry']){
+      const replay=port(start);assert(replay.dispatch('you',attackAction).ok);
+      const pending=replay.getSnapshot(),choice=pending.pendingReferenceChoice;
+      assert.equal(choice?.kind,'TOOL_RETRY_BADGE');
+      assert.equal(choice.attachmentId,t.sourceId);
+      assert.deepEqual(Array.from(choice.results),initial);
+      assert.deepEqual(Array.from(choice.options),['keep','retry']);
+      assert.equal(pending.players[1].active.damage,defender.damage);
+      assert.equal(pending.turnNumber,start.turnNumber);
+      assert(!pending.history.slice(start.history.length).some(ev=>ev.type==='attack'));
+      const saved=JSON.stringify(pending);
+      assert.equal(replay.dispatch('ai',{type:'resolve_reference_choice',retryDecision:decision}).ok,false);
+      assert.equal(replay.dispatch('you',{type:'resolve_reference_choice',retryDecision:'invalid'}).ok,false);
+      assert.equal(JSON.stringify(replay.getSnapshot()),saved);
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(replay.getSnapshot()),saved);
+      assert(replay.dispatch('you',{type:'resolve_reference_choice',retryDecision:decision}).ok);
+      const resolved=replay.getSnapshot(),expected=decision==='retry'?replacement:initial;
+      assert(!resolved.pendingReferenceChoice);
+      const events=resolved.history.slice(pending.history.length);
+      assert.deepEqual(Array.from(events.filter(ev=>ev.player==='you'&&ev.details?.command==='COIN_FLIP'),ev=>ev.details.heads),expected);
+      verifyPrintedAttack(start,resolved,attack,(plan.base||0)+count(expected)*plan.unit);
+      assert.equal(resolved.players[0].referenceRetryTurn===start.turnNumber,decision==='retry');
+      assert.deepEqual(Array.from(S.identities(start)),Array.from(S.identities(resolved)));
+      const final=JSON.stringify(resolved);
+      assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+      assert.equal(JSON.stringify(replay.getSnapshot()),final);
     }
   }
   if(['TOOL_EX_ATTACK_BOOST','TOOL_PRIZE_COST_DISCOUNT','TOOL_STATUS_ATTACK_BOOST'].includes(e.plan.mechanic)){
