@@ -442,6 +442,37 @@ function selectedAttachmentUnits(card,energy,plan){
  const units=energyUnits({...card,energyCards:[energy]});
  return plan.type?units.filter(types=>types.includes(plan.type)).length:units.length;
 }
+function fieldDiscardPool(g,p,o,plan){
+ const pool=[];
+ for(const owner of plan.mode==='bothTools'?[p,o]:[o])for(const holder of field(owner)){
+  for(const c of holder.tools||[])pool.push({card:c,owner,holder,zone:'tools'});
+  if(plan.mode!=='bothTools')for(const c of holder.energyCards||[])if(c.isSpecial)pool.push({card:c,owner,holder,zone:'energyCards'});
+ }
+ if(['opponentOne','opponentAll'].includes(plan.mode)&&g.stadium)pool.push({card:g.stadium,owner:player(g,g.stadiumOwner),holder:null,zone:'stadium'});
+ return pool;
+}
+function fieldDiscardHolders(pool){return [...new Set(pool.map(x=>x.holder).filter(Boolean))];}
+function fieldDiscardCost(p,card,plan){return p.hand.filter(c=>id(c)!==id(card)&&basicEnergy(c)&&c.energyType===plan.costType);}
+function fieldDiscardSelection(g,p,o,card,plan,action){
+ const pool=fieldDiscardPool(g,p,o,plan),chosen=key=>selected(action,key);
+ assert(pool.length>0,'NO_FIELD_DISCARD_TARGET');
+ if(plan.costType){const cost=chosen('discardCost');assert(cost.length===1&&fieldDiscardCost(p,card,plan).some(c=>id(c)===cost[0]),'FIELD_DISCARD_COST_REQUIRED');}
+ if(plan.mode==='opponentAll')return pool;
+ if(plan.mode==='opponentHolder'){
+  const holders=fieldDiscardHolders(pool),target=chosen('holder');
+  assert(target.length===1&&holders.some(c=>id(c)===target[0]),'FIELD_DISCARD_HOLDER_REQUIRED');
+  const result=[];
+  for(const [i,holder] of holders.entries())for(const zone of ['tools','energyCards']){
+   const eligible=pool.filter(x=>x.holder===holder&&x.zone===zone),selection=chosen(zone+i);
+   assert(selection.length===(id(holder)===target[0]&&eligible.length?1:0)&&selection.every(ident=>eligible.some(x=>id(x.card)===ident)),'FIELD_DISCARD_HOLDER_SELECTION');
+   if(selection.length)result.push(eligible.find(x=>id(x.card)===selection[0]));
+  }
+  return result;
+ }
+ const selection=chosen('cards');
+ assert(selection.length>=1&&selection.length<=plan.limit&&new Set(selection).size===selection.length&&selection.every(ident=>pool.some(x=>id(x.card)===ident)),'FIELD_DISCARD_SELECTION');
+ return selection.map(ident=>pool.find(x=>id(x.card)===ident));
+}
 function requests(g,actor,card,effect){
  const p=player(g,actor),o=opponent(g,actor),m=effect.plan?.mechanic,out=[];
  const add=(key,kind,candidates,min,max,extra={})=>out.push({key,kind,min,max,candidates:copy(candidates),...extra});
@@ -754,6 +785,19 @@ function requests(g,actor,card,effect){
  }
  if(m==='HEAL_DAMAGE')cardRequest('cards',own.filter(c=>(c.damage||0)>0),1,1);
  if(m==='COIN_FORCE_SWITCH')cardRequest('bench',o.bench,1,1);
+ if(m==='TRAINER_DISCARD_FIELD_CARDS'){
+  const plan=effect.plan,pool=fieldDiscardPool(g,p,o,plan);
+  if(plan.costType)cardRequest('discardCost',fieldDiscardCost(p,card,plan),1,1);
+  if(plan.mode==='opponentHolder'){
+   const holders=fieldDiscardHolders(pool);cardRequest('holder',holders,1,1);
+   for(const [i,holder] of holders.entries())for(const zone of ['tools','energyCards']){
+    const candidates=pool.filter(x=>x.holder===holder&&x.zone===zone).map(x=>x.card);
+    if(!candidates.length)continue;
+    cardRequest(zone+i,candidates,0,1);
+    out.at(-1).dependencies=[{kind:'countWhenSelected',key:'holder',value:id(holder),count:1}];
+   }
+  }else if(plan.mode!=='opponentAll')cardRequest('cards',pool.map(x=>({...x.card,attachedTo:x.holder?.name,ownerId:x.owner.id})),1,Math.min(plan.limit,pool.length));
+ }
  if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')cardRequest('energy',opp.flatMap(c=>(c.energyCards||[]).filter(e=>effect.plan.anyEnergy||e.isSpecial)),1,1);
  if(m==='HAMMER'){const energies=opp.flatMap(c=>c.energyCards||[]);cardRequest('energy',energies,energies.length?1:0,1);}
  if(m==='ROSA'){
@@ -967,6 +1011,11 @@ function preflight(g,actor,action){
    if(m==='SEARCH_BASIC_TO_BENCH_ATTACK'&&r.mainPlan.trainer)assert(p.deck.length>0&&p.bench.length<5,'NO_BASIC_BENCH_SEARCH_POSSIBLE');
    if(m==='DECK_ORDER_SELECT')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
    if(m==='TRAINER_SEARCH_TERA')assert(p.deck.length>0,'NO_DECK_SEARCH_POSSIBLE');
+   if(m==='TRAINER_DISCARD_FIELD_CARDS'){
+    assert(fieldDiscardPool(g,p,o,r.mainPlan).length>0,'NO_FIELD_DISCARD_TARGET');
+    if(r.mainPlan.costType)assert(fieldDiscardCost(p,card,r.mainPlan).length>0,'FIELD_DISCARD_COST_REQUIRED');
+    fieldDiscardSelection(g,p,o,card,r.mainPlan,action);
+   }
    if(m==='TRAINER_DISCARD_SPECIAL_ENERGY')assert(field(o).some(c=>(c.energyCards||[]).some(e=>r.mainPlan.anyEnergy||e.isSpecial)),'NO_OPPONENT_ENERGY_TARGET');
    if(m==='TRAINER_SWITCH_BOTH')assert(o.bench.length>0,'NO_OPPONENT_BENCH');
    if(m==='SUPPORTER_ROCKET_SWITCH_BOTH')assert(record(p.active).name.startsWith('ロケット団の')&&p.bench.some(c=>record(c).name.startsWith('ロケット団の')),'ROCKET_SWITCH_REQUIREMENT');
@@ -2087,6 +2136,20 @@ function applyPlan(g,actor,card,effect,action){
    const hand=ids('toHand');moveChosen(g,p,'deck',hand,'hand');for(const ident of ids('cards').filter(i=>!hand.includes(i))){const index=p.deck.findIndex(c=>id(c)===ident);event(g,p.id,'REVEAL',{cardIds:[ident],toPlayer:o.id});find(g,ids('attachTo')[0]).card.energyCards.push(p.deck.splice(index,1)[0]);}shuffle(g,p);break;
   }
   case 'ROSA':for(const ident of ids('cards')){const i=p.discard.findIndex(c=>id(c)===ident);find(g,ids('attachTo')[0]).card.energyCards.push(p.discard.splice(i,1)[0]);}break;
+  case 'TRAINER_DISCARD_FIELD_CARDS':{
+   const chosen=fieldDiscardSelection(g,p,o,card,plan,action);
+   if(plan.costType){
+    const ident=ids('discardCost')[0];p.discard.push(p.hand.splice(p.hand.findIndex(c=>id(c)===ident),1)[0]);
+    event(g,actor,'DISCARD',{cardIds:[ident],fromZone:'hand'});
+   }
+   for(const x of chosen){
+    const ident=id(x.card);
+    if(x.zone==='stadium'){x.owner.discard.push(g.stadium);g.stadium=null;g.stadiumOwner=null;}
+    else x.owner.discard.push(x.holder[x.zone].splice(x.holder[x.zone].findIndex(c=>id(c)===ident),1)[0]);
+    event(g,actor,'DISCARD',{cardIds:[ident],fromZone:x.zone==='stadium'?'stadium':'attached',ownerId:x.owner.id,...(x.holder?{sourceInstanceId:id(x.holder)}:{})});
+   }
+   break;
+  }
   case 'TRAINER_DISCARD_SPECIAL_ENERGY':{
    if(plan.previousKnockout)assert(wasKnockedOut(g,actor),'PREVIOUS_OPPONENT_KNOCKOUT_REQUIRED');
    const selected=ids('energy');assert(selected.length===1&&field(o).some(c=>c.energyCards.some(e=>id(e)===selected[0]&&(plan.anyEnergy||e.isSpecial))),'SELECTED_ATTACHMENT_CHANGED');
