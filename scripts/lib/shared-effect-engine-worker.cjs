@@ -399,6 +399,7 @@ function fixtureResources(manifest,deckIndex,source,e){
   }else reserve(r=>plan.filter==='any'||r.category===plan.filter,'hand',1);
   if(plan.filter!=='any')reserve(r=>r.category==='pokemon','hand',1);
  }
+ if(m==='ABILITY_HAND_COST_EFFECT')reserve(r=>plan.type?isBasicEnergy(r)&&typeOf(r)===plan.type:r.name===plan.costName,'hand');
  if(m==='ABILITY_TYPED_COST_COUNTER')reserve(r=>isBasicEnergy(r)&&typeOf(r)===plan.type,'hand');
  if(m==='MASS_PLACE_COUNTERS'&&plan.target==='bothAbility'){
   reserve(r=>mon(r,null,0)&&r.abilities.length>0,'bench',1);
@@ -474,6 +475,7 @@ function fixtureResources(manifest,deckIndex,source,e){
  if(m==='SUPPORTER_MEGA_HEAL_RETURN_ENERGY')reserve(r=>mon(r,null,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'active');
  if(m==='MASS_HEAL_SCOPE'&&plan.type)reserve(r=>mon(r,plan.type,0),plan.scope==='active'&&source.category!=='pokemon'?'active':'bench');
  if(m==='MASS_HEAL_OWN'&&plan.requiresMegaType)reserve(r=>mon(r,plan.requiresMegaType,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
+ if(e.proofTrainerLock){reserve(r=>r.category==='item'&&r.mainPlan?.mechanic==='SWITCH','hand',1);reserve(r=>r.category==='tool'&&r.mainPlan?.mechanic==='CIRCULATOR','hand',1);}
  if(e.proofAbilityEnergy)reserveEnergy(e.proofAbilityEnergy,4);
  if(e.proofConditionalDamage?.mode==='megaType')reserve(r=>mon(r,e.proofConditionalDamage.type,0)&&String(r.rulesText).includes('メガシンカexがきぜつしたとき'),'bench');
  if(e.proofConditionalDamage?.mode==='opponentAbility'){
@@ -605,6 +607,28 @@ function evolveTeraFixture(pp,chain,requireTera=true,side=0,zone='bench',targetI
 function prepare(r, e, kind) {
   const idx = e.effectIndex ?? 0,
     m = e.plan.mechanic;
+  if(m==='PASSIVE_TEAM_MAX_HP'||m==='PASSIVE_ACTIVE_TRAINER_LOCK'){
+    const index=r.attacks.findIndex(a=>a.plan);
+    if(index<0)return {blocked:'NO_PASSIVE_HP_LOCK_TRIGGER'};
+    const trigger={...r.attacks[index],effectIndex:index,proofTrainerLock:m==='PASSIVE_ACTIVE_TRAINER_LOCK'},t=prepare(r,trigger,'attack');
+    if(t.blocked)return t;
+    const g=t.port.getSnapshot(),[own,other]=g.players;
+    if(E.getReferenceEffectRecord(own.active)?.officialCardId!==r.officialCardId||!own.bench.length)return {blocked:'NO_PASSIVE_HP_LOCK_SOURCE'};
+    if(m==='PASSIVE_TEAM_MAX_HP'){
+      for(const mon of [own.active,...own.bench])assert.equal(mon.hp,E.getReferenceEffectRecord(mon).facts.hp+e.plan.amount);
+      for(const mon of [other.active,...other.bench])assert.equal(mon.hp,E.getReferenceEffectRecord(mon).facts.hp);
+    }else{
+      const pp=port(g),end=E.getLegalActions(g,'you').actions.find(a=>a.type==='end_turn');
+      if(!end||!pp.dispatch('you',end).ok)return {blocked:'TRAINER_LOCK_END_TURN'};
+      const snapshot=pp.getSnapshot(),op=snapshot.players[1],item=op.hand.find(c=>c.cardType==='ITEM'),tool=op.hand.find(c=>c.kind==='tool');
+      if(!item||!tool||op.active.tools?.length)return {blocked:'NO_TRAINER_LOCK_HAND_FIXTURE'};
+      const actions=[{type:'play_item',cardId:item.id},{type:'attach_tool',cardId:tool.id,targetInstanceId:op.active.id}];
+      for(const action of actions){assert.equal(pp.dispatch('ai',action).ok,false);assert.equal(JSON.stringify(pp.getSnapshot()),JSON.stringify(snapshot));}
+      const without=structuredClone(snapshot),side=without.players[0];[side.active,side.bench[0]]=[side.bench[0],side.active];
+      const unlocked=port(without);assert(unlocked.dispatch('ai',actions[1]).ok);
+    }
+    return {...t,trigger};
+  }
   if(m==='PASSIVE_CONDITIONAL_DAMAGE'&&e.plan.mode==='attachedEnergy'){
     const index=r.attacks.findIndex(a=>a.plan?.mechanic==='VANILLA_DAMAGE'&&Number(a.damage)>0);
     if(index<0)return {blocked:'NO_CONDITIONAL_DAMAGE_ATTACK'};
@@ -1728,6 +1752,11 @@ function prepare(r, e, kind) {
     const own=frame.game.players[0],valid=c=>c.kind==='pokemon'&&!E.getReferenceEffectRecord(c).facts.rulePokemon;
     if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
     if(!own.hand.some(valid))return {blocked:'NO_NON_RULE_DRAW_COST_FIXTURE'};
+  }
+  if(m==='ABILITY_HAND_COST_EFFECT'){
+    const own=frame.game.players[0],valid=c=>e.plan.type?c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type:E.getReferenceEffectRecord(c)?.name===e.plan.costName;
+    if(!own.hand.some(valid)){const i=own.deck.findIndex(valid);if(i>=0)own.hand.push(own.deck.splice(i,1)[0]);}
+    if(!own.hand.some(valid))return {blocked:'NO_HAND_ABILITY_COST'};
   }
   if(m==='ABILITY_TYPED_COST_COUNTER'){
     const own=frame.game.players[0],valid=c=>c.kind==='energy'&&!c.isSpecial&&c.energyType===e.plan.type;
@@ -2994,6 +3023,13 @@ function verifyCase(t, e) {
       if(!universe.some(c=>!ids.includes(c.id)))return {status:'BLOCKED',reason:'NO_SCOPED_COUNTER_NEGATIVE_FIXTURE'};
     }
   }
+  if(e.plan.mechanic==='ABILITY_HAND_COST_EFFECT'){
+    const plan=e.plan,action=t.action||o.action,paid=action.selections.discard[0];
+    assert(before.players[0].hand.some(c=>c.id===paid));assert(after.players[0].discard.some(c=>c.id===paid));
+    if(plan.mode==='switch')assert.equal(after.players[1].active.id,action.selections.target[0]);else assert.equal(after.players[1].active.statusCondition,'BURNED');
+    const denied=port(before);assert.equal(denied.dispatch('you',{...action,selections:{...action.selections,discard:[]}}).ok,false);assert.equal(JSON.stringify(denied.getSnapshot()),JSON.stringify(before));
+    assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(after)));
+  }
   if(e.plan.mechanic==='ABILITY_TYPED_COST_COUNTER'){
     const own=before.players[0],other=before.players[1],action=t.action||o.action,energy=action.selections.discard[0],target=action.selections.target[0];
     assert.equal(own.active.id,t.sourceId);
@@ -4166,6 +4202,10 @@ function verifyCase(t, e) {
     verifyPrintedAttack(before,after,trigger,amount+plan.amount);
     assert.deepEqual(Array.from(S.identities(before)),Array.from(S.identities(start)));
     assert(replay.restoreSession(replay.getResumeSnapshot()).ok);
+  }
+  if(['PASSIVE_TEAM_MAX_HP','PASSIVE_ACTIVE_TRAINER_LOCK'].includes(e.plan.mechanic)){
+    const mon=before.players[0].active;assert(E.getReferenceEffectRecord(mon).abilities.some(a=>a.effectId===e.effectId));
+    const denied=port(before);assert.equal(denied.dispatch('you',{type:'use_ability',sourceInstanceId:mon.id,abilityId:e.effectId}).ok,false);
   }
   if(e.plan.mechanic==='PASSIVE_CONDITIONAL_RETREAT'){
     const mon=before.players[0].active,print=E.getReferenceEffectRecord(mon);

@@ -680,6 +680,13 @@ function plan(entry,kind){
  if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるなら、自分の番に1回使える。自分の山札から好きなカードを1枚選ぶ。残りの山札を切り、選んだカードを山札の上にもどす。')return {mechanic:'DECK_ORDER_SELECT',commands:['SEARCH_DECK','SHUFFLE_DECK','RETURN_TO_DECK'],side:'own',count:1,search:true,activeOnly:true,sharedWording:true};
  const opponentOrder=generic.match(/^相手の山札を上から([1-9])枚見て、好きな順番に入れ替えて、山札の上にもどす。$/);
  if(kind==='ATTACK'&&opponentOrder&&/^\d+$/.test(String(entry.damage??'0').normalize('NFKC')))return {mechanic:'DECK_ORDER_SELECT',commands:[...(Number(entry.damage)>0?['DAMAGE']:[]),'REVEAL','RETURN_TO_DECK'],side:'opponent',count:Number(opponentOrder[1]),search:false,sharedWording:true};
+ const costBurn=generic.match(/^自分の番に、自分の手札から「基本\[([草炎水雷超闘悪鋼])\]エネルギー」を1枚トラッシュするなら、1回使える。相手のバトルポケモンをやけどにする。$/);
+ if(kind==='ABILITY'&&costBurn)return {mechanic:'ABILITY_HAND_COST_EFFECT',commands:['DISCARD','STATUS_CONDITION'],mode:'burn',type:costBurn[1],sharedWording:true};
+ const costSwitch=generic.match(/^自分の番に、自分の手札から「([^「」]+)」を1枚トラッシュするなら、1回使える。相手のベンチポケモンを1匹選び、バトルポケモンと入れ替える。$/);
+ if(kind==='ABILITY'&&costSwitch)return {mechanic:'ABILITY_HAND_COST_EFFECT',commands:['DISCARD','SWITCH'],mode:'switch',costName:costSwitch[1],sharedWording:true};
+ if(kind==='ABILITY'&&generic==='このポケモンがバトル場にいるかぎり、相手は手札から「グッズ」を出して使えず、「ポケモンのどうぐ」も出してつけられない。')return {mechanic:'PASSIVE_ACTIVE_TRAINER_LOCK',commands:['ADD_STATE'],sharedWording:true};
+ const teamHp=generic.match(/^このポケモンがいるかぎり、自分の場のポケモン全員の最大HPは、それぞれ「\+([1-9]\d{0,2})」される。この効果は、この特性を持つポケモンが何匹いても、重ならない。$/);
+ if(kind==='ABILITY'&&teamHp)return {mechanic:'PASSIVE_TEAM_MAX_HP',commands:['MODIFY_MAX_HP'],amount:Number(teamHp[1]),sharedWording:true};
  const hpAndDamage=generic.match(/^このポケモンに\[([草炎水雷超闘悪鋼])\]エネルギーがついているなら、このポケモンの最大HPは「\+([1-9]\d{0,2})」され、このポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='ABILITY'&&hpAndDamage)return {mechanic:'PASSIVE_CONDITIONAL_DAMAGE',commands:['MODIFY_MAX_HP','MODIFY_DAMAGE'],mode:'attachedEnergy',type:hpAndDamage[1],hpBonus:Number(hpAndDamage[2]),amount:Number(hpAndDamage[3]),sharedWording:true};
  const megaDamage=generic.match(/^自分の場に\[([草炎水雷超闘悪鋼竜無色])\]タイプの「メガシンカex」がいるなら、このポケモンが使うワザの、相手のバトルポケモンへのダメージは「\+([1-9]\d{0,2})」される。$/);
