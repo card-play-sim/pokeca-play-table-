@@ -678,6 +678,8 @@ function plan(entry,kind){
  const generic=text.normalize('NFKC');
  if(kind==='MAIN'&&entry.category==='stadium'){
   const upgrade=stadiumUpgradePlan(generic);if(upgrade)return upgrade;
+  if(generic==='おたがいの[草]ポケモン全員は、出したばかりの番(最初の自分の番をのぞく)でも[草]ポケモンに進化できる。')return {mechanic:'STADIUM_GRASS_EVOLUTION',commands:['ADD_STATE'],sharedWording:true};
+  if(generic==='おたがいのこんらんのポケモンは、進化・退化してもこんらんが回復しない。')return {mechanic:'STADIUM_CONFUSION_RETENTION',commands:['STATUS_CONDITION'],sharedWording:true};
   if(generic==='おたがいのポケモン(「ルールを持つポケモン」をのぞく)全員は、相手の「ポケモンex・V」からワザのダメージを受けない。このカードは、トラッシュにあるかぎり、手札に加えられず、山札にもどせない。')return {mechanic:'STADIUM_NEUTRAL_CENTER',commands:['PREVENT_DAMAGE','ADD_STATE'],sharedWording:true};
  }
  if(kind==='MAIN'&&entry.category==='energy'){

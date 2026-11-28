@@ -1035,13 +1035,49 @@ function abilityCheck(g,actor,card,a,action){
  if(m==='EXCITE_DIVE'){assert(p.bench.length<5,'BENCH_FULL');assert(field(p).some(c=>record(c).facts.prizeCount===3&&record(c).facts.types.includes('無色')),'COLORLESS_MEGA_IN_PLAY_REQUIRED');}
  verifyRequests(g,actor,card,a,action);
 }
-function handles(action){return ['attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
+function handles(action){return ['evolve','attack_turn','effect_attack','attack','use_ability','play_item','play_supporter','play_stadium','attach_tool','attach_energy','retreat','resolve_reference_choice'].includes(action.type);}
 function referenceChoiceAction(choice,value){
  const action={type:'resolve_reference_choice'};
  if(choice.kind==='MULLIGAN')return {...action,drawCount:value};
  if(choice.kind==='CIRCULATOR')return {...action,...value};
  if(choice.kind==='DECK_POKEMON_SEARCH')return {...action,deckCardId:value};
  return {...action,benchInstanceId:value};
+}
+// The Stadium only waives the timing rule. Keep species, stage, turn,
+ // hand identity, and other ordinary evolution legality in MobileRules.
+function forestEvolutionAllowed(g,actor,action){
+ if(stadium(g)!=='STADIUM_GRASS_EVOLUTION'||g.turnNumber<=2||g.turnPlayer!==actor)return false;
+ const p=player(g,actor),source=field(p).find(c=>id(c)===action.targetInstanceId),next=p.hand.find(c=>id(c)===action.cardId);
+ if(!source||!next||next.kind!=='pokemon'||!record(source)?.facts.types.includes('草')||!record(next)?.facts.types.includes('草'))return false;
+ if(!Number.isInteger(source.enteredTurn)||source.enteredTurn>g.turnNumber)return false;
+ // Official FAQ: active Shingetsu prohibits the Stadium's early evolution.
+ if(inPlay(g).some(({card})=>record(card)?.abilities.some(a=>a.name==='しんげつ'&&abilityEnabled(g,card,a))))return false;
+ return source.enteredTurn===g.turnNumber||source.evolvedTurn===g.turnNumber;
+}
+function withForestTiming(g,actor,action,run){
+ if(!forestEvolutionAllowed(g,actor,action))return run(g);
+ const target=field(player(g,actor)).find(c=>id(c)===action.targetInstanceId);
+ const entered=target.enteredTurn,previous=target.evolvedTurn,had=Object.prototype.hasOwnProperty.call(target,'evolvedTurn');
+ target.enteredTurn=Math.min(entered,g.turnNumber-1);
+ if(previous===g.turnNumber)delete target.evolvedTurn;
+ let completed=false;
+ try{const result=run(g);completed=true;return result;}
+ finally{
+  target.enteredTurn=entered;
+  if(!completed||target.evolvedTurn!==g.turnNumber){if(had)target.evolvedTurn=previous;else delete target.evolvedTurn;}
+ }
+}
+function retainEvolutionConfusion(g,before){
+ if(stadium(g)!=='STADIUM_CONFUSION_RETENTION'||id(before.stadium)!==id(g.stadium))return;
+ for(const p of g.players){
+  const prev=player(before,p.id).active,now=p.active;
+  if(!prev||!now||id(prev)!==id(now)||prev.statusCondition!=='CONFUSED'||now.statusCondition||statusGuard(g,now))continue;
+  const oldStack=(prev.evolutionCards||[]).map(id),newStack=(now.evolutionCards||[]).map(id);
+  if(oldStack.length===newStack.length||!oldStack.slice(0,Math.min(oldStack.length,newStack.length)).every((v,i)=>v===newStack[i]))continue;
+  now.statusCondition='CONFUSED';
+  if(prev.statusConditionInfo!==undefined)now.statusConditionInfo=copy(prev.statusConditionInfo);else delete now.statusConditionInfo;
+  event(g,p.id,'STATUS_CONDITION',{targetInstanceId:id(now),status:'CONFUSED',retained:true,sourceOfficialCardId:record(g.stadium).officialCardId});
+ }
 }
 function preflight(g,actor,action){
  if(!g.referenceEffectValidation)return null;
@@ -1082,6 +1118,8 @@ function preflight(g,actor,action){
    }
    assert(pays(mon,cost(g,mon,a)),'INSUFFICIENT_VERIFIED_ENERGY');verifyRequests(g,actor,mon,a,action);
 
+  }else if(action.type==='evolve'){
+   const errors=withForestTiming(copy(g),actor,action,state=>require('./pokeca_mobile_rules').check(state,actor,action));assert(!errors.length,errors.join(' / '));
   }else if(action.type==='use_ability'){
    const mon=[...field(p),...p.hand].find(c=>id(c)===action.sourceInstanceId),a=record(mon)?.abilities.find(a=>a.effectId===action.abilityId);assert(mon&&a,'ABILITY_MISSING');requirePlan(mon,a);abilityCheck(g,actor,mon,a,action);
   }else if(action.type==='attach_energy'){
@@ -2300,6 +2338,8 @@ function execute(g,actor,action){
   else switchMon(g,p,action.benchInstanceId);
   delete g.pendingReferenceChoice;
   if(choice.kind==='CIRCULATOR'||choice.kind==='PROMOTE'&&g.referenceAttackAwaitingPromotion)finishAttack(g,g.referenceAttackTurnPending);
+ }else if(action.type==='evolve'){
+  withForestTiming(g,actor,action,state=>require('./pokeca_mobile_rules').execute(state,actor,action));
  }else if(action.type==='attach_energy'){
   const card=p.hand.splice(action.cardIndex,1)[0],mon=action.target==='active'?p.active:p.bench[action.target];mon.energyCards.push(card);p.normalEnergyAttached=true;event(g,actor,'ATTACH_ENERGY',{cardId:id(card),targetInstanceId:id(mon)});
   const plan=record(card)?.mainPlan;if(plan?.mechanic==='ENERGY_HAND_ATTACH_DRAW')draw(g,p,plan.amount);
@@ -2336,6 +2376,7 @@ function afterAction(g,before,actor,action){
  if(action.type==='evolve'){
   const c=find(g,action.targetInstanceId)?.card;if(c){c.referenceEvolutionWindow=g.referenceActionSequence;c.validationBase||=reduced(current(find(before,action.targetInstanceId).card));for(const k of ['referenceProtection','referenceBasicDamageProtection','referenceCannotAttackTurn','referenceNamedAttackLock','referenceNamedNextDamageBoost','referenceCannotRetreatTurn','referenceDamageReduction','referenceOutgoingDamagePenalty','referenceAttackLockUntilSwitch','referenceNoWeaknessTurn'])delete c[k];}
  }
+ retainEvolutionConfusion(g,before);
  if(g.status==='finished'){delete g.pendingReferenceChoice;delete g.referenceAttackTurnPending;delete g.referenceAttackAwaitingPromotion;}
  if(g.referenceAttackTurnPending&&!g.pendingReferenceChoice&&!g.pendingPrizeSelection&&g.status==='active'){
   const a=g.referenceAttackTurnPending;delete g.referenceAttackTurnPending;functions().Core.endTurn(g,a);
