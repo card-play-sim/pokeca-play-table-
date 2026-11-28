@@ -947,7 +947,7 @@ window.PokecaMobileBuild='258';
   function showReferenceChoice(){
     const state=view(),choice=state.pendingReferenceChoice;if(!choice||choice.playerId!=='you'||state.pendingPrizeSelection)return;
     if(choice.kind==='DECK_POKEMON_SEARCH'){
-      openSheet('山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
+      openSheet(choice.searchMode?(choice.searchMode==='energy'?'山札から基本エネルギーを選ぶ':'山札から好きなカードを選ぶ')+'（残り'+choice.remaining+'枚まで）':'山札からポケモンを選ぶ','<div class="selection-grid" id="reference-choice"></div>');
       const owner=port.getSnapshot().players.find(player=>player.id==='you');
       for(const cardId of choice.options){
         const card=owner.deck.find(candidate=>idOf(candidate)===cardId);

@@ -82,6 +82,10 @@ function additionalAttackPlan(entry,text){
   if(ko||counters||special||both)
    return {mechanic:'ATTACK_DIRECT_KNOCKOUT',commands:['ADD_STATE'],mode:both?'both':special?'specialEnergy':counters?'counters':ko[1]==='特殊状態'?'status':'basic',...(counters?{count:Number(counters[1])}:{}),sharedWording:true};
  }
+ const untilEnergy=text.match(/^ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から(基本エネルギー|「基本\[([草炎水雷超闘悪鋼])\]エネルギー」)を選び、このポケモンにつける。そして山札を切る。$/);
+ const untilHand=text==='ウラが出るまでコインを投げ、オモテの数ぶんまで、自分の山札から好きなカードを選び、手札に加える。そして山札を切る。';
+ if(printed==='0'&&(untilEnergy||untilHand))
+  return {mechanic:'ATTACK_COIN_DECK_SELECT',commands:['COIN_FLIP','SEARCH_DECK',untilHand?'ADD_TO_HAND':'ATTACH_ENERGY','SHUFFLE_DECK'],mode:untilHand?'hand':'energy',type:untilEnergy?.[2]||null,sharedWording:true};
  const nextCoin=text.match(/^次の相手の番、このワザを受けたポケモンがワザを使うとき、相手はコインを([1-9])回投げる。(ウラならそのワザは失敗。|1回でもウラなら、そのワザは失敗。)$/);
  if(nextCoin&&/^\d+$/.test(printed)&&(Number(nextCoin[1])===1||nextCoin[2].startsWith('1回でも')))
   return {mechanic:'ATTACK_NEXT_COIN_GATE',commands:['DAMAGE','ADD_STATE'],flips:Number(nextCoin[1]),sharedWording:true};
@@ -726,6 +730,20 @@ function plan(entry,kind){
   const ability=generic.match(/^このカードをつけているポケモンが、相手の特性を持つポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
   const typed=generic.match(/^このカードをつけている\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモンが、相手の((?:\[(?:[草炎水雷超闘悪鋼竜]|無色)\])+?)ポケモンから受けるワザのダメージは「-([1-9]\d{0,2})」される。$/);
   if(mega||ability||typed)return {mechanic:'TOOL_FILTERED_REDUCTION',commands:['MODIFY_DAMAGE'],mode:mega?'mega':ability?'ability':'types',holderType:typed?.[1]||null,attackerTypes:typed?[...typed[2].matchAll(/\[([^\]]+)\]/g)].map(x=>x[1]):[],amount:Number(mega?.[1]||ability?.[1]||typed[3]),sharedWording:true};
+ }
+ if(kind==='MAIN'&&['tool','energy'].includes(entry.category)){
+  const energyPrefix='このカードは、ポケモンについているかぎり、[無色]エネルギー1個ぶんとしてはたらく。';
+  const isEnergy=entry.category==='energy',body=isEnergy&&generic.startsWith(energyPrefix)?generic.slice(energyPrefix.length):generic;
+  const hit=body.match(/^(このカードをつけているポケモンの弱点のタイプと、相手のバトルポケモンのタイプが同じなら、)?このカードをつけている(?:\[([草炎水雷超闘悪鋼竜]|無色)\]|「([^「」]+)のポケモン」)?(ポケモン)?が、バトル場で相手のポケモンからワザのダメージを受けたとき、(ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。|ワザを使ったポケモンをねむりにする。|自分の山札を([1-9])枚引く。)(その後、このカードをトラッシュする。)?$/);
+  const mega=body.match(/^このカードをつけているポケモン\(「メガシンカex」をのぞく\)が、バトル場で相手の「メガシンカex」から「([1-9]\d{0,2})」以上のワザのダメージを受けたとき、ワザを使ったポケモンにダメカンを([1-9]\d?)個のせる。その後、このカードをトラッシュする。$/);
+  if((hit&&Boolean(hit[3])!==Boolean(hit[4])||mega)&&(!isEnergy||generic.startsWith(energyPrefix)&&hit&&!hit[1]&&!hit[2]&&!hit[3]&&hit[6]&&!hit[8])){
+   const counterCount=Number(mega?.[2]||hit?.[6]||0),drawCount=Number(hit?.[7]||0),status=!counterCount&&!drawCount?'ASLEEP':null,consume=!!mega||!!hit?.[8];
+   return {mechanic:'ATTACHED_ACTIVE_HIT',commands:[...(isEnergy?['ATTACH_ENERGY']:[]),counterCount?'PLACE_DAMAGE_COUNTERS':drawCount?'DRAW':'STATUS_CONDITION',...(consume?['DISCARD']:[])],holderType:hit?.[2]||null,team:hit?.[3]||null,weakness:!!hit?.[1],megaOnly:!!mega,minDamage:Number(mega?.[1]||1),counterCount,drawCount,status,consume,energyType:isEnergy?'無色':null,sharedWording:true};
+  }
+  const survive=body.match(/^このカードをつけているポケモンのHPがまんたんの状態で、相手のポケモンからワザのダメージを受けてきぜつするとき、そのポケモンはきぜつせず、残りHPが「([1-9]\d?)」の状態で場に残る。その後、このカードをトラッシュする。$/);
+  if(!isEnergy&&survive)return {mechanic:'TOOL_FULL_HP_SURVIVAL',commands:['ADD_STATE','DISCARD'],remainingHp:Number(survive[1]),sharedWording:true};
+  const attach=body.match(/^このカードを手札からポケモンにつけたとき、自分の山札を([1-9])枚引く。$/);
+  if(isEnergy&&generic.startsWith(energyPrefix)&&attach)return {mechanic:'ENERGY_HAND_ATTACH_DRAW',commands:['ATTACH_ENERGY','DRAW'],amount:Number(attach[1]),sharedWording:true};
  }
  const guardedSearch=(category,limit,extras)=>({mechanic:'MASS_ZONE_TRANSFER',commands:['SEARCH_DECK',...(extras.privateSearch?[]:['REVEAL']),'ADD_TO_HAND','SHUFFLE_DECK'],zone:'deck',destination:'hand',category,type:null,stage:null,team:null,limit,activeOnly:false,sharedWording:true,...extras});
  const fieldDiscard=(mode,extra={})=>({mechanic:'TRAINER_DISCARD_FIELD_CARDS',commands:['DISCARD'],mode,sharedWording:true,...extra});
