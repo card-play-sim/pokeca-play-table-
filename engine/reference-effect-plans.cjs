@@ -788,6 +788,17 @@ function plan(entry,kind){
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の山札を上から6枚見て、その中から基本エネルギーを1枚選び、自分のポケモンにつける。残りのカードは山札にもどして切る。')return {mechanic:'MASS_ENERGY_ROUTE',commands:['SEARCH_DECK','ATTACH_ENERGY','SHUFFLE_DECK'],zone:'deck',type:null,limit:1,target:'own',holderType:null,team:null,multi:false,heal:null,windowCount:6,sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札が5枚になるように、山札を引く。のぞむなら、山札を引く前に、自分の手札を好きなだけトラッシュする。')return {mechanic:'MASS_HAND_FLOW',mode:'optionalDiscardLimit',amount:5,commands:['DISCARD','DRAW'],sharedWording:true};
  if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のバトルポケモンのHPを「30」回復する。自分のトラッシュにある「おいしいおむすび」(このカードをのぞく)1枚につき、回復するHPは「30」多くなる。')return {mechanic:'HEAL_ACTIVE_DAMAGE',commands:['HEAL'],amount:30,discardName:'おいしいおむすび',discardUnit:30,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の手札をすべてトラッシュし、自分の山札から「ポケモン」「サポート」「基本エネルギー」を1枚ずつ選び、相手に見せて、手札に加える。そして山札を切る。')return {mechanic:'DISCARD_TO_SEARCH_DISTINCT_CATEGORIES',commands:['DISCARD','SEARCH_DECK','REVEAL','ADD_TO_HAND','SHUFFLE_DECK'],discardAll:true,categories:['pokemon','supporter','basicEnergy'],sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'){
+  if(generic==='自分の山札を上から3枚見て、好きな順番に入れ替えて、山札の上にもどす。または、そのカードをすべてウラにして切り、山札の下にもどす。')return {mechanic:'TRAINER_TOP_ORDER_OR_BOTTOM',commands:['REVEAL','RETURN_TO_DECK'],count:3,sharedWording:true};
+  if(/^このカードは、後攻プレイヤーの最初の番しか使えない。\s*相手の場のポケモンについているエネルギーを1個選び、相手の手札にもどす。$/.test(generic))return {mechanic:'TRAINER_RETURN_OPPONENT_ENERGY',commands:['RETURN_TO_HAND'],secondFirstTurn:true,sharedWording:true};
+  if(/^このカードは、後攻プレイヤーの最初の番しか使えない。\s*自分の山札からサポートを1枚選び、相手に見せて、手札に加える。そして山札を切る。$/.test(generic))return guardedSearch('supporter',1,{secondFirstTurn:true});
+ }
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分の場のポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、手札にもどす。')return {mechanic:'TRAINER_RETURN_OWN_STACK',commands:['RETURN_TO_HAND'],destination:'hand',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='自分の場の[水]ポケモンを1匹選び、そのポケモンと、ついているすべてのカードを、山札にもどして切る。')return {mechanic:'TRAINER_RETURN_OWN_STACK',commands:['RETURN_TO_DECK','SHUFFLE_DECK'],destination:'deck',type:'水',sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&/^このカードは、自分の手札がこのカード1枚だけのときにしか使えない。\s*この番、自分のポケモン\(「ルールを持つポケモン」をのぞく\)が使うワザの、相手のバトルポケモンへのダメージは「\+80」される。$/.test(generic))return {mechanic:'TRAINER_SCOPED_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],scope:'nonRule',amount:80,onlyHandCard:true,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='supporter'&&generic==='この番、自分の「メガシンカex」が使うワザの、相手のバトルポケモンへのダメージは、相手がすでにとったサイド1枚につき「+20」される。')return {mechanic:'TRAINER_SCOPED_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],scope:'mega',unit:20,sharedWording:true};
+ if(kind==='MAIN'&&entry.category==='item'&&generic==='自分のポケモン1匹のHPを「60」回復する。その後、回復したポケモンについているエネルギーを1個選び、トラッシュする。')return {mechanic:'TRAINER_HEAL_DISCARD_ENERGY',commands:['HEAL','DISCARD'],amount:60,sharedWording:true};
  const switchEnergy=generic.match(/^自分のバトルポケモンをベンチポケモンと入れ替える。その後、ベンチに入れ替えたポケモンについているエネルギーを(1個|好きなだけ)選び、新しいバトルポケモンにつけ替える。$/);
  if(kind==='MAIN'&&switchEnergy&&['item','supporter'].includes(entry.category))return {mechanic:'TRAINER_SWITCH_MOVE_ENERGY',commands:['SWITCH','MOVE_ENERGY'],optional:switchEnergy[1]==='好きなだけ',sharedWording:true};
  if(kind==='MAIN'&&entry.category==='supporter'){
