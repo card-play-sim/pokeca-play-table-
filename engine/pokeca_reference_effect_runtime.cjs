@@ -256,6 +256,21 @@ function damage(g,actor,mon,amount,options={}){
   event(g,defender.player.id,'ADD_STATE',{mechanic:a.plan.mechanic,targetInstanceId:id(mon),effectId:a.effectId,heads});
   if(heads){event(g,defender.player.id,'PREVENT_DAMAGE',{targetInstanceId:id(mon),amount:value,effectId:a.effectId});value=0;break;}
  }
+ // A typed berry reduces actual incoming attack damage, after weakness/resistance.
+ // Only consume the physical Tool if its effect is enabled and the matching attack would deal damage.
+ if(mayDefend&&value>0&&toolEnabled(g)){
+  const types=record(attacker).facts.types||[];
+  for(const t of [...(mon.tools||[])]){
+   const plan=record(t)?.mainPlan;
+   if(plan?.mechanic!=='TOOL_TYPED_DAMAGE_REDUCTION_DISCARD'||!types.includes(plan.attackerType)||value<=0)continue;
+   const reduction=Math.min(value,plan.amount);
+   value-=reduction;
+   mon.tools.splice(mon.tools.indexOf(t),1);
+   defender.player.discard.push(t);
+   event(g,defender.player.id,'MODIFY_DAMAGE',{targetInstanceId:id(mon),amount:-reduction,sourceOfficialCardId:record(t).officialCardId});
+   event(g,defender.player.id,'DISCARD',{cardIds:[id(t)],sourceOfficialCardId:record(t).officialCardId});
+  }
+ }
  let survival=mayDefend&&mon.damage===0&&value>=mon.hp&&abilities.find(a=>a.plan.mechanic==='PASSIVE_FULL_HP_SURVIVAL');
  if(!survival&&mayDefend&&value>0&&mon.damage+value>=mon.hp){
   for(const a of abilities.filter(a=>a.plan.mechanic==='PASSIVE_COIN_KO_SURVIVAL')){

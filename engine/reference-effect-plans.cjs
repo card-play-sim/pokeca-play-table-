@@ -777,6 +777,9 @@ function plan(entry,kind){
  const passiveImmune=generic.match(/^このポケモンは、相手の(特性を持つポケモン|「ポケモンex」)からワザのダメージを受けない。$/);
  if(kind==='ABILITY'&&passiveImmune)
   return {mechanic:'PASSIVE_TYPED_ATTACK_IMMUNITY',commands:['PREVENT_DAMAGE'],attacker:passiveImmune[1]==='特性を持つポケモン'?'ability':'ex',sharedWording:true};
+ const typedBerry=generic.match(/^このカードをつけているポケモンが、相手の\[([草炎水雷超闘悪鋼竜]|無色)\]ポケモンからワザのダメージを受けるとき、そのダメージは「-([1-9]\d{0,2})」され、このカードをトラッシュする。$/);
+ if(kind==='MAIN'&&entry.category==='tool'&&typedBerry)
+  return {mechanic:'TOOL_TYPED_DAMAGE_REDUCTION_DISCARD',commands:['MODIFY_DAMAGE','DISCARD'],attackerType:typedBerry[1],amount:Number(typedBerry[2]),sharedWording:true};
  const toolAttackBoost=generic.match(/^このカードをつけているポケモン(\(「ルールを持つポケモン」をのぞく\))?が使うワザの、相手のバトル場の「ポケモンex」へのダメージは「\+([1-9]\d{0,2})」される。$/);
  if(kind==='MAIN'&&entry.category==='tool'&&toolAttackBoost)
   return {mechanic:'TOOL_EX_ATTACK_BOOST',commands:['MODIFY_DAMAGE'],nonRuleOnly:Boolean(toolAttackBoost[1]),amount:Number(toolAttackBoost[2]),sharedWording:true};
